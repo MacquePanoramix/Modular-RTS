@@ -6,7 +6,7 @@
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
-**Working names:** **Wonder Gather** is the design and brand name; **WonderGatherRTS** is the Unity project and repository name; **The Wanderer** is the first prototype slice. The final commercial title remains open.
+**Working names:** **Wonder Gather** is the design and brand name; **WonderGatherRTS** is the Unity project name; **Modular-RTS** is the GitHub repository; **The Wanderer** is the first prototype slice. The final commercial title remains open.
 
 This document synthesizes the complete recovered design conversation and the current prototype. It replaces short summaries as the primary design reference. When a future decision changes something here, update this file in the same commit as the affected work.
 
