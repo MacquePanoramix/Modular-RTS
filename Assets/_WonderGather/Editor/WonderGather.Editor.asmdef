@@ -1,0 +1,1 @@
+{"name":"WonderGather.Editor","references":["WonderGather.Runtime","Unity.AI.Navigation","Unity.RenderPipelines.Universal.Runtime"],"includePlatforms":["Editor"]}

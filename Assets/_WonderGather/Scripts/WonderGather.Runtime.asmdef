@@ -1,0 +1,1 @@
+{"name":"WonderGather.Runtime","rootNamespace":"WonderGather","references":["Unity.InputSystem","Unity.AI.Navigation","Unity.ugui"]}
