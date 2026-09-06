@@ -4,11 +4,11 @@ Analyzed September 6, 2026. New local repository; the initial implementation is 
 
 ## Confirmed foundation
 
-- Unity 6000.3.12f1, installed under Program Files/Unity/Hub/Editor.
+- Unity 6000.6.0f1, installed under Program Files/Unity/Hub/Editor. The project was migrated from its initial Unity 6000.3.12f1 baseline while still at the first prototype stage.
 - Assets, Packages and ProjectSettings form a new project under this repository root.
-- Universal 3D template extracted from the installed editor's bundled template archive. GraphicsSettings references its URP asset; QualitySettings preserves template pipeline choices.
+- Universal 3D template foundation migrated to Unity 6.6. GraphicsSettings references its URP asset; QualitySettings preserves the template pipeline choices through Unity's serialized-settings upgrade.
 - Input System enabled (`activeInputHandler: 1`); runtime owns one programmatic Gameplay action map.
-- Package pins: AI Navigation 2.0.0, Input System 1.17.0, URP 17.3.0, Test Framework 1.4.2, uGUI 2.0.0, Visual Studio integration 2.0.22. The bundled template's Input System 1.12.0 failed compilation against the installed editor (removed BuildTarget.ReservedCFE API); 1.17.0 replaces it. Unity resolved the template's older URP request to 17.3.0; the manifest now pins that resolved version explicitly. The resolved lockfile is authoritative after import.
+- Package pins after the Unity 6.6 migration: AI Navigation 2.0.14, Input System 1.20.0, URP 17.6.0, Test Framework 1.8.0, uGUI 2.6.0, and Visual Studio integration 2.0.26. Unity 6.6 also added its required Physics Core 2D, TetGen, and Timeline Foundation modules. The resolved lockfile is authoritative after import. The original 6.3 setup required an Input System update from the template's incompatible 1.12.0 package; that historical issue remains resolved.
 - No callable Unity MCP provider was exposed in this task. Local Unity batch execution is available.
 - No existing game repository or project was found in the task or Documents/Codex search. The project is newly created, not an edit of an existing user project.
 

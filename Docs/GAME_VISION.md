@@ -245,7 +245,7 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 ## Technical direction
 
-**Locked for the current project:** Unity 6.3 LTS with the Universal Render Pipeline. The project is organized under `Assets/_WonderGather`, separate from third-party content.
+**Locked for the current project:** Unity 6.6 with the Universal Render Pipeline. The project is organized under `Assets/_WonderGather`, separate from third-party content.
 
 **Locked architectural principles:** modular components; data separate from runtime behavior; explicit ownership; command objects between input and action; editor automation for repetitive setup; automated tests for deterministic rules and important integration; Git/GitHub as the shared source of truth.
 
@@ -263,7 +263,7 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 **Implemented:**
 
-- a Unity 6.3 URP project and local Git repository;
+- a Unity 6.6 URP project and GitHub repository;
 - a fully 3D test scene with one selectable Wanderer;
 - smooth bounded camera pan, rotation, zoom, and selected-unit focus;
 - mouse selection, deselection, order feedback, and destination marker;
@@ -336,7 +336,7 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 
 | Date | Topic | Status | Decision or hypothesis | What could change it |
 |---|---|---|---|---|
-| 2026-09-06 | Engine foundation | Locked for current project | Unity 6.3 LTS and URP | A demonstrated engine-level blocker |
+| 2026-09-06 | Engine foundation | Locked for current project | Unity 6.6 and URP; migrated early from Unity 6.3 LTS | A demonstrated engine-level blocker or a deliberate future LTS transition |
 | 2026-09-06 | First slice | Implemented, awaiting feel acceptance | The Wanderer proves camera, selection, commands, and one-unit navigation | Hands-on playtest feedback |
 | 2026-09-06 | Repository visibility | Production choice | Publish the source at `MacquePanoramix/Modular-RTS` | A later explicit decision to make it private |
 

@@ -5,7 +5,7 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 ## Open and play
 
 1. In Unity Hub, add this folder as an existing project.
-2. Open it using Unity **6000.3.12f1** (installed locally).
+2. Open it using Unity **6000.6.0f1** (installed locally).
 3. Open `Assets/_WonderGather/Scenes/TheWanderer.unity` and press Play.
 4. Click the gold capsule, then right-click the meadow. The unit should route around the stone wall.
 
