@@ -6,7 +6,7 @@ namespace WonderGather
     {
         [SerializeField] private RtsInput input;
         [SerializeField] private SelectionController selection;
-        [SerializeField] private float panSpeed = 15, rotationSpeed = 80, smoothing = 10;
+        [SerializeField] private float panSpeed = 15, rotationSpeed = 80, zoomSensitivity = .002f, smoothing = 10;
         [SerializeField] private float minDistance = 5, maxDistance = 42, boundary = 25;
         private Vector3 target, current;
         private float yaw, currentYaw, distance = 23, currentDistance = 23;
@@ -21,7 +21,7 @@ namespace WonderGather
             target += rotation * direction * (panSpeed * Mathf.Lerp(.35f, 1.6f, distance / maxDistance) * dt);
             if (input.FocusPressed && selection.Selected != null) target = selection.Selected.transform.position;
             target = new Vector3(Mathf.Clamp(target.x, -boundary, boundary), 0, Mathf.Clamp(target.z, -boundary, boundary));
-            distance = Mathf.Clamp(distance * Mathf.Exp(-input.Zoom * .0015f), minDistance, maxDistance);
+            distance = Mathf.Clamp(distance * Mathf.Exp(-input.Zoom * zoomSensitivity), minDistance, maxDistance);
             float blend = 1 - Mathf.Exp(-smoothing * dt);
             current = Vector3.Lerp(current, target, blend);
             currentYaw = Mathf.LerpAngle(currentYaw, yaw, blend);
