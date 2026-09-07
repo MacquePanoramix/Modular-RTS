@@ -15,5 +15,7 @@ namespace WonderGather
     public sealed class CommandDispatcher
     {
         public bool Dispatch(IUnitCommand command, UnitMotor unit) => command != null && command.Execute(unit);
+        public bool Dispatch(GroupMoveCommand command, System.Collections.Generic.IReadOnlyList<SelectableUnit> units)
+            => command != null && command.Execute(units);
     }
 }

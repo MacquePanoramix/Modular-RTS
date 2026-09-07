@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 6, 2026
+**Last updated:** September 7, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -274,11 +274,11 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 **Awaiting design acceptance:** camera feel, zoom range, pan/rotation speed, unit acceleration and turning, selection clarity, and destination feedback after hands-on playtesting.
 
-**First hands-on feedback:** the prototype's features and overall camera smoothing felt good. Mouse-wheel zoom felt slightly too slow, so its sensitivity was increased by roughly one third while preserving the same smoothing and distance limits. The adjusted speed awaits a short retest.
+**First hands-on feedback:** the prototype's features and overall camera smoothing felt good. Mouse-wheel sensitivity increased from 0.0015 to 0.002. The retest accepted this as good enough for now, with a slightly faster zoom a possible later tuning pass. The Wanderer is provisionally accepted as the foundation for group control.
 
 ### Prototype 1.2 — The Group
 
-**Planned direction:** multiple selectable units, drag/box selection, formation destinations, and simple local separation. Exact formation behavior should be chosen through playtesting.
+**Implemented for playtesting:** eight selectable units in TheGroup, click and Shift-click selection, drag-box and additive box selection, selection rings/count, group-center camera focus, and group orders with separate arrival slots. NavMesh local avoidance handles nearby agents. All slots must be reachable and separated before an order is issued; rejected orders preserve existing destinations. Formation spacing and movement feel await hands-on acceptance. See `Docs/GroupPlaytest.md`.
 
 ### Prototype 1.3 — The Little Settlement
 
@@ -339,9 +339,9 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | Date | Topic | Status | Decision or hypothesis | What could change it |
 |---|---|---|---|---|
 | 2026-09-06 | Engine foundation | Locked for current project | Unity 6.6 and URP; migrated early from Unity 6.3 LTS | A demonstrated engine-level blocker or a deliberate future LTS transition |
-| 2026-09-06 | First slice | Implemented, awaiting feel acceptance | The Wanderer proves camera, selection, commands, and one-unit navigation | Hands-on playtest feedback |
+| 2026-09-06 | First slice | Provisionally accepted | The Wanderer proves camera, selection, commands, and one-unit navigation | Hands-on playtest feedback |
 | 2026-09-06 | Repository visibility | Production choice | Publish the source at `MacquePanoramix/Modular-RTS` | A later explicit decision to make it private |
-| 2026-09-07 | Prototype camera tuning | Implemented, awaiting retest | Preserve smooth wheel zoom and increase sensitivity from 0.0015 to 0.0020 | Hands-on retest feedback |
+| 2026-09-07 | Prototype camera tuning | Provisionally accepted | Preserve smooth wheel zoom and increase sensitivity from 0.0015 to 0.0020 | Hands-on retest feedback |
 
 Add future entries with the decision, its status, the evidence behind it, and what kind of playtest or new requirement would justify revisiting it.
 

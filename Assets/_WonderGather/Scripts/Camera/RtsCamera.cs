@@ -19,7 +19,7 @@ namespace WonderGather
             var rotation = Quaternion.Euler(0, yaw, 0);
             var direction = new Vector3(input.Pan.x, 0, input.Pan.y);
             target += rotation * direction * (panSpeed * Mathf.Lerp(.35f, 1.6f, distance / maxDistance) * dt);
-            if (input.FocusPressed && selection.Selected != null) target = selection.Selected.transform.position;
+            if (input.FocusPressed && selection.Count > 0) target = selection.Center;
             target = new Vector3(Mathf.Clamp(target.x, -boundary, boundary), 0, Mathf.Clamp(target.z, -boundary, boundary));
             distance = Mathf.Clamp(distance * Mathf.Exp(-input.Zoom * zoomSensitivity), minDistance, maxDistance);
             float blend = 1 - Mathf.Exp(-smoothing * dt);

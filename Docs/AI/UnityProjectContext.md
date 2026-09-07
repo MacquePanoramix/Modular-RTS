@@ -1,6 +1,6 @@
 # Unity project context
 
-Analyzed September 6, 2026. New local repository; the initial implementation is recorded in Git. See Docs/Validation.md for the completed compile, three passing PlayMode tests, Windows build and inspected scene preview.
+Updated September 7, 2026 for Prototype 1.2, The Group. See Docs/Validation.md for execution evidence and Docs/GroupPlaytest.md for the current playtest.
 
 ## Confirmed foundation
 
@@ -16,13 +16,15 @@ Analyzed September 6, 2026. New local repository; the initial implementation is 
 
 All first-party runtime code is in Assets/_WonderGather/Scripts, namespace WonderGather, assembly WonderGather.Runtime. Unity.InputSystem, Unity.AI.Navigation and Unity.ugui are explicit assembly references.
 
-RtsInput owns actions. SelectionController owns a single current selection and dispatches commands. MoveCommand contains destination intent. UnitMotor validates and applies complete NavMesh paths. RtsCamera owns a smoothed position, angle and zoom. SelectableUnit controls its visual ring. WandererHud shows temporary playtest instructions and order status.
+RtsInput owns actions, including press/release/hold and Shift state. SelectionController owns the selection list and drag state, with an explicitly serialized roster for box selection. GroupMoveCommand plans spaced destinations and validates all paths before applying any. UnitMotor separates path planning from execution. MoveCommand still supports individual orders. RtsCamera focuses the selection center; SelectableUnit owns its ring. WandererHud draws the drag box, selected count, and order feedback.
 
 Editor-only WonderGather.Editor contains scene creation, preview and Windows build entry points. Tests live in their own PlayMode test assembly. No networking, save system, economy or animation framework exists yet.
 
 ## Startup and assets
 
-WandererSetup.Create creates TheWanderer scene, Wanderer prefab, materials and baked NavMesh. It sets TheWanderer as the only enabled build scene. The scene wires all references explicitly. Layer 6 is Walkable and distinguishes commandable ground from obstacles and units. The camera world mask includes Default and Walkable.
+WandererSetup.Create creates the original TheWanderer scene, Wanderer prefab, materials and baked NavMesh. GroupSetup.Create copies that scene into TheGroup, places eight prefab instances, wires the selection roster, and configures high-quality NavMesh avoidance with varied priorities. It refuses to overwrite an existing Group scene. TheGroup is the first enabled build scene; TheWanderer remains enabled for regression tests. GroupSetup.BuildWindows builds only TheGroup into Builds/WindowsGroup. Layer 6 is Walkable and distinguishes commandable ground from obstacles and units. The camera world mask includes Default and Walkable.
+
+For future runtime spawning, extend roster ownership explicitly; current box selection covers the scene's configured friendly units. Formations are destination grids, not rigid travel constraints. Invalid whole-group orders preserve previous destinations; automatic formation reshaping is deferred.
 
 Use private serialized fields, PascalCase types/methods, explicit dependency wiring and small components. New scene creation must not overwrite an existing scene. Preserve Unity-generated metadata and the package lock in Git.
 

@@ -32,10 +32,13 @@ namespace WonderGather.Editor
         }
 
         public static void CapturePreview()
+        { CapturePreview(ScenePath, "Docs/Images/TheWanderer.png"); }
+
+        public static void CapturePreview(string scenePath, string imagePath)
         {
             bool previousAsyncCompilation = ShaderUtil.allowAsyncCompilation;
             ShaderUtil.allowAsyncCompilation = false;
-            EditorSceneManager.OpenScene(ScenePath);
+            EditorSceneManager.OpenScene(scenePath);
             var camera = Object.FindFirstObjectByType<Camera>();
             var target = new RenderTexture(1280, 720, 24);
             var previous = RenderTexture.active;
@@ -46,7 +49,7 @@ namespace WonderGather.Editor
             texture.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);
             texture.Apply();
             Directory.CreateDirectory("Docs/Images");
-            File.WriteAllBytes("Docs/Images/TheWanderer.png", texture.EncodeToPNG());
+            File.WriteAllBytes(imagePath, texture.EncodeToPNG());
             camera.targetTexture = null;
             RenderTexture.active = previous;
             Object.DestroyImmediate(texture);

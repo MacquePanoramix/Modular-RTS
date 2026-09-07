@@ -43,3 +43,23 @@ ProjectSettings were created from the bundled template and upgraded to Unity 6.6
 ## Camera tuning — September 7, 2026
 
 Based on the first hands-on playtest, mouse-wheel zoom sensitivity increased from 0.0015 to 0.0020, approximately 33 percent. The exponential zoom response, smoothing, and minimum/maximum distances are unchanged. An isolated Unity 6000.6.0f1 validation copy compiled successfully and passed all three PlayMode tests in 5.78 seconds. Final speed acceptance requires a short user retest.
+
+## Prototype 1.2 — The Group — September 7, 2026
+
+Implemented eight-unit selection and movement in the separate TheGroup scene. The user provisionally accepted the earlier camera feel and zoom sensitivity; further tuning is deferred.
+
+| Check | Result |
+|---|---|
+| Unity 6000.6.0f1 PlayMode suite | 10 passed, 0 failed; 14.97 seconds |
+| Selection | Click/toggle, box/additive selection, deduplication, disabled and behind-camera units, lifecycle cleanup passed |
+| Group navigation | All eight agents routed around the wall and reached separate destinations |
+| Invalid group orders | Disconnected, edge and non-finite targets preserve existing destinations |
+| Formation layout | Counts 1, 2, 5, 8 and 9, rotation and spacing passed |
+| Windows x64 development build | Passed; GROUP_BUILD_OK; Unity exit code 0 |
+| Scene preview | Rendered with graphics enabled and visually inspected; eight units, terrain and wall visible |
+| Existing assets | Original Wanderer scene, prefab and NavMesh preserved |
+| Physical mouse/keyboard playtest | Pending user feedback; see GroupPlaytest.md |
+
+Validation used an isolated project copy. A long staging path initially prevented package import; a shorter path resolved it. Testing exposed crowding at arrival with 1.8-unit spacing. The minimum spacing now leaves room for an arriving agent between settled neighbours (2.4 units for these agents), and the complete suite passed afterward.
+
+TheGroup is the default build scene. TheWanderer remains enabled in Editor build settings for regression tests; the separate Group Windows build includes TheGroup only. Preview: Images/TheGroup.png. Local executable: ../Builds/WindowsGroup/WonderGather.exe. Generated builds, logs and XML test reports remain excluded from Git. The rendered preview validates scene appearance, not runtime HUD interaction. Movement uses destination slots and independent navigation; automatic formation reshaping and locked formations during travel are deferred.
