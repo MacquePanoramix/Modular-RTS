@@ -1,4 +1,4 @@
-# Wonder Gather — The Group
+# Wonder Gather â€” The Gatherer
 
 A first playable foundation for a slow, fully 3D RTS about civilizations designed by their players.
 
@@ -6,14 +6,14 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 
 1. In Unity Hub, add this folder as an existing project.
 2. Open it using Unity **6000.6.0f1** (installed locally).
-3. Open `Assets/_WonderGather/Scenes/TheGroup.unity` and press Play.
-4. Drag a box around the gold capsules, then right-click across the wall. The group should route around it and arrive at separate destinations.
+3. Open `Assets/_WonderGather/Scenes/TheGatherer.unity` and press Play.
+4. Select workers and right-click the green supply node. They gather, carry supplies to the blue depot, and repeat.
 
-See `Docs/GroupPlaytest.md` for Shift-click, box selection, group movement, and the current playtest. The earlier `TheWanderer` scene remains available for comparison. The current standalone build is `Builds/WindowsGroup/WonderGather.exe`.
+See `Docs/GathererPlaytest.md` for the current playtest. The earlier `TheWanderer` and `TheGroup` scenes remain available for comparison. The current standalone build is `Builds/WindowsGatherer/WonderGather.exe`.
 
-For a quick playtest without opening Unity, run `Builds/WindowsGroup/WonderGather.exe`. Keep the executable together with its data folders. GitHub contains the source; generated caches and Windows builds remain local. Use a short local folder path when cloning.
+For a quick playtest without opening Unity, run `Builds/WindowsGatherer/WonderGather.exe`. Keep the executable together with its data folders. GitHub contains the source; generated caches and Windows builds remain local. Use a short local folder path when cloning.
 
-If the scene has not yet been generated, use **Wonder Gather → Create Wanderer Scene**. This command creates the scene, unit prefab, materials, baked navigation and build scene entry. It will not overwrite an existing Wanderer scene.
+If the scene has not yet been generated, use **Wonder Gather â†’ Create Wanderer Scene**. This command creates the scene, unit prefab, materials, baked navigation and build scene entry. It will not overwrite an existing Wanderer scene.
 
 | Control | Action |
 |---|---|
@@ -23,7 +23,7 @@ If the scene has not yet been generated, use **Wonder Gather → Create Wanderer
 | Left click | Select; empty ground clears selection |
 | Shift + left click | Toggle a unit in the selection |
 | Left drag / Shift + left drag | Box-select / add boxed units |
-| Right click | Order selected group to spaced destinations |
+| Right click | Move on terrain, gather at green supplies, deliver carried supplies at blue depot |
 | Escape | Deselect |
 | F | Center camera on selected group |
 
@@ -33,16 +33,17 @@ If the scene has not yet been generated, use **Wonder Gather → Create Wanderer
 - Owned Input System action map with balanced enable/disable/disposal.
 - Selection ring, destination marker and order feedback.
 - Move commands separated from mouse input and navigation execution.
-- NavMesh movement that accepts only complete routes. Invalid orders preserve the current route.
+- Movement searches for a reachable alternative when the requested destination is blocked or disconnected; non-finite orders preserve the current route.
+- Workers collect finite supplies, carry at most five, deposit them, and repeat. Movement interrupts work while preserving cargo.
 - Reusable Wanderer prefab; The Group scene contains eight units with click, Shift-click, and box selection.
 - Group movement validates every destination before issuing the order; agents use local avoidance and separate arrival slots.
 - Automated PlayMode coverage for obstacle routing, invalid destinations and selection lifecycle.
 
-Camera tuning is on **RTS Camera → Rts Camera**. Unit movement tuning is on the **Wanderer prefab → Nav Mesh Agent**. Placeholder geometry and colors establish readable testing conditions, not a final art direction.
+The Gatherer inherits the preferred 0.005 zoom. Camera tuning is on **RTS Camera â†’ Rts Camera**. Unit movement tuning is on the **Wanderer prefab â†’ Nav Mesh Agent**. Placeholder geometry and colors establish readable testing conditions, not a final art direction.
 
 ## Technical structure
 
-`RtsInput → SelectionController → CommandDispatcher → GroupMoveCommand → UnitMotor → NavMeshAgent`
+`RtsInput â†’ SelectionController â†’ CommandDispatcher â†’ GroupMoveCommand â†’ UnitMotor â†’ NavMeshAgent`
 
 `RtsCamera` consumes input and selected-unit position independently. `SelectableUnit` owns selection presentation. `WandererSetup` is editor-only scene authoring. Runtime and test assemblies have separate boundaries. There is no static game state or scene-wide lookup in production update loops.
 

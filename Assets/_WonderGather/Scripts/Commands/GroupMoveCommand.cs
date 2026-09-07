@@ -48,19 +48,35 @@ namespace WonderGather
                         if (cost < best) { best = cost; unitIndex = u; slotIndex = s; }
                     }
                 }
-                if (unitIndex < 0 || !units[unitIndex].Motor.TryPlanMove(slots[slotIndex], out paths[unitIndex], out targets[unitIndex])) return false;
-                for (int other = 0; other < units.Count; other++)
-                {
-                    if (!assigned[other]) continue;
-                    float clearance = units[unitIndex].Motor.Radius + units[other].Motor.Radius + .1f;
-                    if ((targets[unitIndex] - targets[other]).sqrMagnitude < clearance * clearance) return false;
-                }
+                if (unitIndex < 0 || !ReachableDestination.Plan(units[unitIndex].Motor, slots[slotIndex], out paths[unitIndex], out targets[unitIndex])) return false;
+                var anchor = targets[unitIndex];
+                bool fits = Fits(anchor, targets, assigned, gap);
+                // Compact into reachable nearby ground while keeping room for arrivals.
+                for (int ring = 1; !fits && ring <= units.Count + 2; ring++)
+                    for (int direction = 0; !fits && direction < 16; direction++)
+                    {
+                        float angle = direction * Mathf.PI / 8;
+                        var candidate = anchor + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (ring * gap);
+                        if (units[unitIndex].Motor.TryPlanMove(candidate, out var route, out var point) && Fits(point, targets, assigned, gap))
+                        { paths[unitIndex] = route; targets[unitIndex] = point; fits = true; }
+                    }
+                if (!fits) return false;
                 assigned[unitIndex] = true;
                 slots.RemoveAt(slotIndex);
             }
             // No frames elapse between validation and dispatch.
             for (int i = 0; i < units.Count; i++)
-                if (!units[i].Motor.ApplyMove(paths[i], targets[i])) return false;
+                {
+                    if (!units[i].Motor.ApplyMove(paths[i], targets[i])) return false;
+                    if (units[i].TryGetComponent<Gatherer>(out var worker)) worker.CancelOrder();
+                }
+            return true;
+        }
+
+        private static bool Fits(Vector3 point, Vector3[] targets, bool[] assigned, float gap)
+        {
+            for (int i = 0; i < targets.Length; i++)
+                if (assigned[i] && (point-targets[i]).sqrMagnitude < gap * gap * .99f) return false;
             return true;
         }
 

@@ -8,13 +8,22 @@ namespace WonderGather
     {
         public Vector3 Destination { get; }
         public MoveCommand(Vector3 destination) => Destination = destination;
-        public bool Execute(UnitMotor unit) => unit != null && unit.TryMove(Destination);
+        public bool Execute(UnitMotor unit)
+        {
+            if (unit == null || !ReachableDestination.Plan(unit, Destination, out var path, out var point) || !unit.ApplyMove(path, point)) return false;
+            if (unit.TryGetComponent<Gatherer>(out var worker)) worker.CancelOrder();
+            return true;
+        }
     }
 
     // Future order sources (AI, replay, network) enter through this boundary.
     public sealed class CommandDispatcher
     {
         public bool Dispatch(IUnitCommand command, UnitMotor unit) => command != null && command.Execute(unit);
+        public int Dispatch(ReturnSuppliesCommand command, System.Collections.Generic.IReadOnlyList<SelectableUnit> units)
+            => command == null ? 0 : command.Execute(units);
+        public int Dispatch(GatherCommand command, System.Collections.Generic.IReadOnlyList<SelectableUnit> units)
+            => command == null ? 0 : command.Execute(units);
         public bool Dispatch(GroupMoveCommand command, System.Collections.Generic.IReadOnlyList<SelectableUnit> units)
             => command != null && command.Execute(units);
     }

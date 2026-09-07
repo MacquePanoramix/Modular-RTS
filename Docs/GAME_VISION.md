@@ -274,11 +274,15 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 **Awaiting design acceptance:** camera feel, zoom range, pan/rotation speed, unit acceleration and turning, selection clarity, and destination feedback after hands-on playtesting.
 
-**First hands-on feedback:** the prototype's features and overall camera smoothing felt good. Mouse-wheel sensitivity increased from 0.0015 to 0.002. The retest accepted this as good enough for now, with a slightly faster zoom a possible later tuning pass. The Wanderer is provisionally accepted as the foundation for group control.
+**First hands-on feedback:** the prototype's features and overall camera smoothing felt good. Mouse-wheel sensitivity increased from 0.0015 to 0.002. The retest initially accepted this as good enough; the user then chose and saved 0.005 as the preferred zoom sensitivity. The Wanderer is provisionally accepted as the foundation for group control.
 
 ### Prototype 1.2 — The Group
 
-**Implemented for playtesting:** eight selectable units in TheGroup, click and Shift-click selection, drag-box and additive box selection, selection rings/count, group-center camera focus, and group orders with separate arrival slots. NavMesh local avoidance handles nearby agents. All slots must be reachable and separated before an order is issued; rejected orders preserve existing destinations. Formation spacing and movement feel await hands-on acceptance. See `Docs/GroupPlaytest.md`.
+**Accepted in first hands-on playtest:** eight selectable units in TheGroup, click and Shift-click selection, drag-box and additive box selection, selection rings/count, group-center camera focus, and group orders with separate arrival slots. NavMesh local avoidance handles nearby agents. The user requested that unreachable clicks move toward the next best available place. Movement now resolves reachable alternatives and adjusts nearby slots while preserving separation. Invalid numerical orders and groups with no available space still preserve existing destinations. See `Docs/GroupPlaytest.md`.
+
+### The Gatherer — first step toward The Little Settlement
+
+**Implemented for playtesting:** one placeholder supply resource, one drop-off point, eight workers, five-unit carry capacity, gathering and repeated delivery, finite resource accounting, stored-resource HUD, and cancellation/resumption through orders. The user approved this production step after accepting The Group. Exact values and resource fiction remain prototype choices; this does not lock the final resource list.
 
 ### Prototype 1.3 — The Little Settlement
 

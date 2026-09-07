@@ -43,7 +43,7 @@ namespace WonderGather.Editor
             var target = new RenderTexture(1280, 720, 24);
             var previous = RenderTexture.active;
             camera.targetTexture = target;
-            camera.Render();
+            for (int warmup = 0; warmup < 3; warmup++) RenderPipeline.SubmitRenderRequest(camera, new RenderPipeline.StandardRequest { destination = target });
             RenderTexture.active = target;
             var texture = new Texture2D(1280, 720, TextureFormat.RGB24, false);
             texture.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);

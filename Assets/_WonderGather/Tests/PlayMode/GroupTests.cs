@@ -101,7 +101,7 @@ namespace WonderGather.Tests
             Assert.That(selection.MoveSelection(new Vector3(-10, 0, 8)), Is.True);
             var destinations = new Vector3[units.Length];
             for (int i = 0; i < units.Length; i++) destinations[i] = units[i].Motor.Destination;
-            foreach (var destination in new[] { new Vector3(39, 0, 0), new Vector3(32, 0, 0), new Vector3(float.NaN, 0, 0) })
+            foreach (var destination in new[] { new Vector3(float.PositiveInfinity, 0, 0), new Vector3(float.NaN, 0, 0) })
             {
                 Assert.That(selection.MoveSelection(destination), Is.False);
                 for (int i = 0; i < units.Length; i++) Assert.That(units[i].Motor.Destination, Is.EqualTo(destinations[i]));

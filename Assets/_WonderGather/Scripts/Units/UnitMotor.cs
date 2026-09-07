@@ -40,10 +40,15 @@ namespace WonderGather
             Destination = resolved;
             return true;
         }
+        public void Stop()
+        {
+            if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh) { agent.isStopped = true; agent.ResetPath(); agent.velocity = Vector3.zero; }
+            Destination = transform.position;
+        }
         private static bool IsFinite(Vector3 value) => float.IsFinite(value.x) && float.IsFinite(value.y) && float.IsFinite(value.z);
         private void OnDisable()
         {
-            if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh) agent.ResetPath();
+            if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh) { agent.isStopped = true; agent.ResetPath(); agent.velocity = Vector3.zero; }
         }
     }
 }

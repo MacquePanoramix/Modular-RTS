@@ -5,7 +5,10 @@ namespace WonderGather
     public sealed class WandererHud : MonoBehaviour
     {
         [SerializeField] private SelectionController selection;
-        private static Rect PanelRect => new Rect(18, 18, 470, 165);
+        [SerializeField] private ResourceDepot depot;
+        [SerializeField] private ResourceNode resource;
+        public void ConfigureEconomy(ResourceDepot home, ResourceNode node) { depot = home; resource = node; }
+        private Rect PanelRect => new Rect(18, 18, 520, depot != null ? 215 : 165);
         public bool ContainsScreenPoint(Vector2 point) => PanelRect.Contains(new Vector2(point.x, Screen.height - point.y));
         public void Configure(SelectionController value) => selection = value;
         private void OnGUI()
@@ -25,11 +28,20 @@ namespace WonderGather
                 GUI.color = color;
             }
             GUILayout.BeginArea(PanelRect, GUI.skin.box);
-            GUILayout.Label("WONDER GATHER  /  THE GROUP");
+            GUILayout.Label(depot != null ? "WONDER GATHER  /  THE GATHERER" : "WONDER GATHER  /  THE GROUP");
             GUILayout.Label("WASD / Arrows: pan     Q / E: rotate     Wheel: zoom");
             GUILayout.Label("Click / drag: select     Shift: toggle click / add box");
             GUILayout.Label("Right click: move     Esc: clear     F: focus group");
             GUILayout.Label("Selected: " + selection.Count);
+            if (depot != null)
+            {
+                int carried = 0, working = 0;
+                foreach (var unit in selection.SelectedUnits)
+                    if (unit.TryGetComponent<Gatherer>(out var worker)) { carried += worker.Carried; if (worker.State != Gatherer.Activity.Idle) working++; }
+                GUILayout.Label("Supplies stored: " + depot.Stored + "   Remaining: " + (resource != null ? resource.Remaining : 0));
+                GUILayout.Label("Selected workers active: " + working + "   Carrying: " + carried);
+                GUILayout.Label("Right-click green supplies: gather / blue depot: deliver");
+            }
             GUILayout.Space(8);
             GUILayout.Label(selection.Status);
             GUILayout.EndArea();

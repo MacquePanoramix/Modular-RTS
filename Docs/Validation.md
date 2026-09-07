@@ -63,3 +63,24 @@ Implemented eight-unit selection and movement in the separate TheGroup scene. Th
 Validation used an isolated project copy. A long staging path initially prevented package import; a shorter path resolved it. Testing exposed crowding at arrival with 1.8-unit spacing. The minimum spacing now leaves room for an arriving agent between settled neighbours (2.4 units for these agents), and the complete suite passed afterward.
 
 TheGroup is the default build scene. TheWanderer remains enabled in Editor build settings for regression tests; the separate Group Windows build includes TheGroup only. Preview: Images/TheGroup.png. Local executable: ../Builds/WindowsGroup/WonderGather.exe. Generated builds, logs and XML test reports remain excluded from Git. The rendered preview validates scene appearance, not runtime HUD interaction. Movement uses destination slots and independent navigation; automatic formation reshaping and locked formations during travel are deferred.
+
+## The Gatherer and reachable movement — September 7, 2026
+
+The user accepted The Group and chose 0.005 zoom. The Gatherer is the first implemented step toward The Little Settlement, using one provisional supply resource and one depot.
+
+| Check | Result |
+|---|---|
+| Unity 6000.6.0f1 complete PlayMode suite | 14 passed, 0 failed; 91,8194654 seconds |
+| Reachable movement | Island, edge, wall and far-off targets resolve to complete routes and separate destinations; eight units arrive at fallback slots |
+| Economy | Eight workers exhaust all 120 supplies through repeated trips; remaining + carried + stored stays exactly 120; carrying stays within 0–5 |
+| Interruption and lifecycle | Move orders cancel work and retain cargo; manual delivery works; disabled workers stop; unavailable resource returns carried cargo |
+| Regressions | Existing group routing, selection, layout and strict navigation tests pass |
+| Windows x64 development build | Passed; GATHERER_BUILD_OK |
+| Scene preview | Rendered with graphics and visually inspected |
+| Physical input and gameplay feel | Pending user playtest in GathererPlaytest.md |
+
+The initial 14-test suite passed. An additional disable-position assertion then exposed residual movement after ResetPath; explicitly stopping the agent and clearing velocity fixed it. The final suite above includes that assertion. Existing Unity 6.6 obsolete object-discovery warnings remain in older editor/test code; new code uses current discovery APIs. Generated reports and logs remain local and excluded from Git.
+
+New scene: Assets/_WonderGather/Scenes/TheGatherer.unity. Local build: Builds/WindowsGatherer/WonderGather.exe. Preview: Docs/Images/TheGatherer.png. Earlier scenes remain available; the standalone build starts only TheGatherer. No packages, render settings or existing prefab GUIDs were changed. User recovery files and unrelated local settings remain untouched.
+
+Scope limits: fixed interaction offsets, one placeholder resource and depot, no persistence or construction/production. Nearby formation search is bounded and may still reject an order when no suitable space is found. Gathering requires a complete route to its interaction spot. This is a playable prototype, not a final economy or resource balance.

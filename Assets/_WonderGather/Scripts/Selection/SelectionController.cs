@@ -82,10 +82,22 @@ namespace WonderGather
             if (destinationMarker != null)
             {
                 destinationMarker.gameObject.SetActive(accepted);
-                if (accepted) destinationMarker.position = destination + Vector3.up * .07f;
+                if (accepted)
+                {
+                    var resolved = Vector3.zero;
+                    foreach (var unit in selected) resolved += unit.Motor.Destination;
+                    destinationMarker.position = resolved / Count + Vector3.up * .07f;
+                }
             }
             markerUntil = Time.unscaledTime + 2;
-            Status = accepted ? "Moving to separate destinations." : "No room or route for the whole group. Try more open ground.";
+            Status = accepted ? "Moving toward the nearest available destinations." : "No reachable space for this group.";
+            return accepted;
+        }
+        public int GatherSelection(ResourceNode resource)
+        {
+            int accepted = commands.Dispatch(new GatherCommand(resource), selected);
+            SelectionChanged();
+            Status = accepted > 0 ? accepted + " workers gathering. Deliveries repeat automatically." : "No selected worker can gather there.";
             return accepted;
         }
         private void Update()
@@ -119,9 +131,18 @@ namespace WonderGather
             if (input.MovePressed && Count > 0)
             {
                 selecting = false;
-                if (Physics.Raycast(worldCamera.ScreenPointToRay(input.Pointer), out var hit, 500, worldMask, QueryTriggerInteraction.Ignore)
-                    && hit.collider.gameObject.layer == 6) MoveSelection(hit.point);
-                else { SelectionChanged(); Status = "Right-click open ground."; }
+                if (Physics.Raycast(worldCamera.ScreenPointToRay(input.Pointer), out var hit, 500, worldMask, QueryTriggerInteraction.Ignore))
+                {
+                    var node = hit.collider.GetComponentInParent<ResourceNode>();
+                    if (node != null) GatherSelection(node);
+                    else if (hit.collider.GetComponentInParent<ResourceDepot>() is ResourceDepot depot)
+                    {
+                        int accepted = commands.Dispatch(new ReturnSuppliesCommand(depot), selected);
+                        SelectionChanged(); Status = accepted > 0 ? "Returning carried supplies." : "Selected workers have no supplies to return.";
+                    }
+                    else MoveSelection(hit.point);
+                }
+                else { SelectionChanged(); Status = "Right-click terrain or a resource."; }
             }
         }
         private void OnApplicationFocus(bool focus) { if (!focus) selecting = false; }
