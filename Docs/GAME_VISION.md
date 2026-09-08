@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 7, 2026
+**Last updated:** September 8, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -352,3 +352,8 @@ Add future entries with the decision, its status, the evidence behind it, and wh
 ## Provenance
 
 This source of truth is based on the recovered “Branch · Game Concept Development” conversation and the current repository state. A prior 49-page dossier was referenced in that conversation, but the actual attachment contents were not available in this task. Ideas mentioned only by the assistant have been labeled **Possible**, **Direction**, or **Open** unless the user explicitly accepted them. Future user decisions take precedence over this document.
+
+
+## Gatherer playtest follow-up — September 8, 2026
+
+The user reported that the gathering loop worked. The requested HUD clipping correction is implemented. The next proposed step remains construction within The Little Settlement: spend gathered supplies to place a building and send a worker to complete it, followed by unit production. Resource names and balance values remain provisional.

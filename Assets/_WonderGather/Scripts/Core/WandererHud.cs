@@ -8,7 +8,10 @@ namespace WonderGather
         [SerializeField] private ResourceDepot depot;
         [SerializeField] private ResourceNode resource;
         public void ConfigureEconomy(ResourceDepot home, ResourceNode node) { depot = home; resource = node; }
-        private Rect PanelRect => new Rect(18, 18, 520, depot != null ? 215 : 165);
+        private Rect panelRect = new Rect(18, 18, 520, 260);
+        private GUIStyle wrappedLabel;
+        private Rect PanelRect => panelRect;
+        private void Label(string text) => GUILayout.Label(text, wrappedLabel);
         public bool ContainsScreenPoint(Vector2 point) => PanelRect.Contains(new Vector2(point.x, Screen.height - point.y));
         public void Configure(SelectionController value) => selection = value;
         private void OnGUI()
@@ -27,23 +30,30 @@ namespace WonderGather
                 GUI.DrawTexture(new Rect(rect.xMax - 2, rect.y, 2, rect.height), Texture2D.whiteTexture);
                 GUI.color = color;
             }
-            GUILayout.BeginArea(PanelRect, GUI.skin.box);
-            GUILayout.Label(depot != null ? "WONDER GATHER  /  THE GATHERER" : "WONDER GATHER  /  THE GROUP");
-            GUILayout.Label("WASD / Arrows: pan     Q / E: rotate     Wheel: zoom");
-            GUILayout.Label("Click / drag: select     Shift: toggle click / add box");
-            GUILayout.Label("Right click: move     Esc: clear     F: focus group");
-            GUILayout.Label("Selected: " + selection.Count);
+            wrappedLabel ??= new GUIStyle(GUI.skin.label) { wordWrap = true };
+            float width = Mathf.Max(1, Mathf.Min(520, Screen.width - 36));
+            GUILayout.BeginArea(new Rect(18, 18, width, Mathf.Max(1, Screen.height - 36)));
+            GUILayout.BeginVertical(GUI.skin.box);
+            Label(depot != null ? "WONDER GATHER  /  THE GATHERER" : "WONDER GATHER  /  THE GROUP");
+            Label("WASD / Arrows: pan     Q / E: rotate     Wheel: zoom");
+            Label("Click / drag: select     Shift: toggle click / add box");
+            Label("Right click: move     Esc: clear     F: focus group");
+            Label("Selected: " + selection.Count);
             if (depot != null)
             {
                 int carried = 0, working = 0;
                 foreach (var unit in selection.SelectedUnits)
                     if (unit.TryGetComponent<Gatherer>(out var worker)) { carried += worker.Carried; if (worker.State != Gatherer.Activity.Idle) working++; }
-                GUILayout.Label("Supplies stored: " + depot.Stored + "   Remaining: " + (resource != null ? resource.Remaining : 0));
-                GUILayout.Label("Selected workers active: " + working + "   Carrying: " + carried);
-                GUILayout.Label("Right-click green supplies: gather / blue depot: deliver");
+                Label("Supplies stored: " + depot.Stored + "   Remaining: " + (resource != null ? resource.Remaining : 0));
+                Label("Selected workers active: " + working + "   Carrying: " + carried);
+                Label("Right-click green supplies: gather / blue depot: deliver");
             }
             GUILayout.Space(8);
-            GUILayout.Label(selection.Status);
+            Label(selection.Status);
+            GUILayout.EndVertical();
+            // Use the content's actual height for both the box and world-input exclusion.
+            if (Event.current.type == EventType.Repaint)
+                panelRect = new Rect(18, 18, width, GUILayoutUtility.GetLastRect().height);
             GUILayout.EndArea();
         }
     }

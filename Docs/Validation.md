@@ -84,3 +84,9 @@ The initial 14-test suite passed. An additional disable-position assertion then 
 New scene: Assets/_WonderGather/Scenes/TheGatherer.unity. Local build: Builds/WindowsGatherer/WonderGather.exe. Preview: Docs/Images/TheGatherer.png. Earlier scenes remain available; the standalone build starts only TheGatherer. No packages, render settings or existing prefab GUIDs were changed. User recovery files and unrelated local settings remain untouched.
 
 Scope limits: fixed interaction offsets, one placeholder resource and depot, no persistence or construction/production. Nearby formation search is bounded and may still reject an order when no suitable space is found. Gathering requires a complete route to its interaction spot. This is a playable prototype, not a final economy or resource balance.
+
+## HUD clipping correction — September 8, 2026
+
+The user accepted the gathering loop and reported that the final status line was clipped. The economy HUD still used a fixed 215-pixel height. The panel now takes its height from its laid-out contents, wraps labels, and limits its width to the Game view. Pointer exclusion uses the actual visible panel bounds.
+
+Unity 6000.6.0f1 compiled the change. A temporary PlayMode capture completed in a separate rendered Editor session, and the 804 × 400 image was visually inspected: all rows and the final gathering status fit inside the panel. Evidence: Images/GathererHud.png. The batch screenshot attempt could not produce an image; the rendered Editor check succeeded. Temporary probe code was removed. The Windows x64 development build succeeded (GATHERER_BUILD_OK); the existing gameplay suite was not repeated for this presentation-only change.
