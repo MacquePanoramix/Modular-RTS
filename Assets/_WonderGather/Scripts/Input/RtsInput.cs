@@ -9,7 +9,7 @@ namespace WonderGather
     {
         private InputActionMap map;
         private WandererHud hud;
-        private InputAction pan, rotate, zoom, point, select, move, clear, focus, additive;
+        private InputAction pan, rotate, zoom, point, select, move, clear, focus, additive, build;
         public Vector2 Pan => Active ? pan.ReadValue<Vector2>() : Vector2.zero;
         public float Rotate => Active ? rotate.ReadValue<float>() : 0;
         public float Zoom => WorldPointer ? zoom.ReadValue<Vector2>().y : 0;
@@ -21,6 +21,7 @@ namespace WonderGather
         public bool CanSelectWorld => WorldPointer;
         public bool MovePressed => WorldPointer && move.WasPressedThisFrame();
         public bool ClearPressed => Active && clear.WasPressedThisFrame();
+        public bool BuildPressed => Active && build.WasPressedThisFrame();
         public bool FocusPressed => Active && focus.WasPressedThisFrame();
         private bool Active => isActiveAndEnabled && Application.isFocused;
         private bool WorldPointer => Active && Pointer.x >= 0 && Pointer.y >= 0
@@ -44,6 +45,7 @@ namespace WonderGather
             select = map.AddAction("Select", InputActionType.Button, "<Mouse>/leftButton");
             move = map.AddAction("Move", InputActionType.Button, "<Mouse>/rightButton");
             clear = map.AddAction("Clear", InputActionType.Button, "<Keyboard>/escape");
+            build = map.AddAction("Build", InputActionType.Button, "<Keyboard>/b");
             focus = map.AddAction("Focus", InputActionType.Button, "<Keyboard>/f");
             additive = map.AddAction("Additive", InputActionType.Button, "<Keyboard>/leftShift");
             additive.AddBinding("<Keyboard>/rightShift");

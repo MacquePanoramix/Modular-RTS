@@ -68,6 +68,7 @@ namespace WonderGather
             for (int i = 0; i < units.Count; i++)
                 {
                     if (!units[i].Motor.ApplyMove(paths[i], targets[i])) return false;
+                    if (units[i].TryGetComponent<Builder>(out var builder)) builder.CancelOrder();
                     if (units[i].TryGetComponent<Gatherer>(out var worker)) worker.CancelOrder();
                 }
             return true;

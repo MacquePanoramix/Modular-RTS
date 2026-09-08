@@ -90,3 +90,23 @@ Scope limits: fixed interaction offsets, one placeholder resource and depot, no 
 The user accepted the gathering loop and reported that the final status line was clipped. The economy HUD still used a fixed 215-pixel height. The panel now takes its height from its laid-out contents, wraps labels, and limits its width to the Game view. Pointer exclusion uses the actual visible panel bounds.
 
 Unity 6000.6.0f1 compiled the change. A temporary PlayMode capture completed in a separate rendered Editor session, and the 804 × 400 image was visually inspected: all rows and the final gathering status fit inside the panel. Evidence: Images/GathererHud.png. The batch screenshot attempt could not produce an image; the rendered Editor check succeeded. Temporary probe code was removed. The Windows x64 development build succeeded (GATHERER_BUILD_OK); the existing gameplay suite was not repeated for this presentation-only change.
+
+## Construction — September 8, 2026
+
+The Little Settlement now supports preview placement, stored-supply payment and one-worker construction. Workshop values (20 supplies, eight seconds, three-unit footprint) are provisional asset data. Previous prototype scenes and 0.005 zoom are preserved.
+
+| Check | Result |
+|---|---|
+| Unity 6000.6.0f1 PlayMode suite | 18 gameplay tests plus one temporary visual probe passed; 126.58 seconds |
+| Invalid placement | Insufficient funds, wall, island, edge, non-finite coordinates and unit overlap reject without payment |
+| Preview cancellation | No supplies spent |
+| Construction | Worker travels and finishes; duplicate footprint rejected; payment occurs once |
+| Interruption | Move pauses progress; resume finishes without extra cost; gathering replaces building; disable releases site |
+| Navigation | Completed workshop footprint is absent from the walkable NavMesh |
+| Existing systems | All 14 movement, selection and gathering regression tests passed |
+| Visual check | Separate rendered Editor capture inspected; workshop, progress and HUD visible; temporary probe removed afterward |
+| Windows x64 development build | Passed; SETTLEMENT_BUILD_OK |
+
+The first run passed 17/18; the failing invalid-placement test had incorrectly treated the clear world origin as a wall. The test was corrected to the authored wall at x=4. The final full run above passed. A subsequent capture verified minor HUD wording changes on visible ground. Physical B-key and mouse placement feel await user playtesting; tests exercise the same placement and order APIs. Existing obsolete discovery warnings in older Editor/test code remain unchanged.
+
+Scene: Assets/_WonderGather/Scenes/TheSettlement.unity. Local executable: Builds/WindowsSettlement/WonderGather.exe. Visual evidence: Images/Construction.png. See ConstructionPlaytest.md. No packages or existing scene/prefab GUIDs were changed. Placement assumes the current flat terrain; unit production, multiple builders per site, demolition/refunds and persistence remain deferred.

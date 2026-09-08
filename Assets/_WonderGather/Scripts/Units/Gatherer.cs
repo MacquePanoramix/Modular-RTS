@@ -21,6 +21,7 @@ namespace WonderGather
             if (!isActiveAndEnabled || node == null || !node.isActiveAndEnabled || node.Remaining <= 0 || depot == null || !depot.isActiveAndEnabled) return false;
             var target = Carried >= capacity ? depot.transform.position : node.transform.position;
             if (!motor.TryMove(target + workOffset)) return false;
+            if(TryGetComponent<Builder>(out var builder)) builder.CancelOrder();
             resource = node; timer = 0;
             State = Carried >= capacity ? Activity.ToDepot : Activity.ToResource;
             return true;
@@ -29,6 +30,7 @@ namespace WonderGather
         {
             if (!isActiveAndEnabled || home == null || !home.isActiveAndEnabled || Carried == 0
                 || !motor.TryMove(home.transform.position + workOffset)) return false;
+            if(TryGetComponent<Builder>(out var builder)) builder.CancelOrder();
             depot = home; resource = null; timer = 0; State = Activity.ToDepot;
             return true;
         }

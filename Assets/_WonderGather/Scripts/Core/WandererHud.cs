@@ -9,6 +9,8 @@ namespace WonderGather
         [SerializeField] private ResourceNode resource;
         public void ConfigureEconomy(ResourceDepot home, ResourceNode node) { depot = home; resource = node; }
         private Rect panelRect = new Rect(18, 18, 520, 260);
+        private ConstructionController construction;
+        private void Awake() => construction=GetComponent<ConstructionController>();
         private GUIStyle wrappedLabel;
         private Rect PanelRect => panelRect;
         private void Label(string text) => GUILayout.Label(text, wrappedLabel);
@@ -34,7 +36,7 @@ namespace WonderGather
             float width = Mathf.Max(1, Mathf.Min(520, Screen.width - 36));
             GUILayout.BeginArea(new Rect(18, 18, width, Mathf.Max(1, Screen.height - 36)));
             GUILayout.BeginVertical(GUI.skin.box);
-            Label(depot != null ? "WONDER GATHER  /  THE GATHERER" : "WONDER GATHER  /  THE GROUP");
+            Label(construction != null ? "WONDER GATHER  /  THE SETTLEMENT" : depot != null ? "WONDER GATHER  /  THE GATHERER" : "WONDER GATHER  /  THE GROUP");
             Label("WASD / Arrows: pan     Q / E: rotate     Wheel: zoom");
             Label("Click / drag: select     Shift: toggle click / add box");
             Label("Right click: move     Esc: clear     F: focus group");
@@ -45,8 +47,13 @@ namespace WonderGather
                 foreach (var unit in selection.SelectedUnits)
                     if (unit.TryGetComponent<Gatherer>(out var worker)) { carried += worker.Carried; if (worker.State != Gatherer.Activity.Idle) working++; }
                 Label("Supplies stored: " + depot.Stored + "   Remaining: " + (resource != null ? resource.Remaining : 0));
-                Label("Selected workers active: " + working + "   Carrying: " + carried);
+                Label("Selected gatherers active: " + working + "   Carrying: " + carried);
                 Label("Right-click green supplies: gather / blue depot: deliver");
+            }
+            if(construction!=null)
+            {
+                Label(construction.BuildHint);
+                if(!string.IsNullOrEmpty(construction.ProgressText)) Label(construction.ProgressText);
             }
             GUILayout.Space(8);
             Label(selection.Status);

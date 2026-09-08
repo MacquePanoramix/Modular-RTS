@@ -6,12 +6,12 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 
 1. In Unity Hub, add this folder as an existing project.
 2. Open it using Unity **6000.6.0f1** (installed locally).
-3. Open `Assets/_WonderGather/Scenes/TheGatherer.unity` and press Play.
-4. Select workers and right-click the green supply node. They gather, carry supplies to the blue depot, and repeat.
+3. Open `Assets/_WonderGather/Scenes/TheSettlement.unity` and press Play.
+4. Select workers and right-click the green supply node. They gather, carry supplies to the blue depot, and repeat. After storing 20 supplies, select a worker and press B to place a workshop.
 
-See `Docs/GathererPlaytest.md` for the current playtest. The earlier `TheWanderer` and `TheGroup` scenes remain available for comparison. The current standalone build is `Builds/WindowsGatherer/WonderGather.exe`.
+See `Docs/ConstructionPlaytest.md` for the current playtest. The earlier `TheWanderer` and `TheGroup` scenes remain available for comparison. The current standalone build is `Builds/WindowsSettlement/WonderGather.exe`.
 
-For a quick playtest without opening Unity, run `Builds/WindowsGatherer/WonderGather.exe`. Keep the executable together with its data folders. GitHub contains the source; generated caches and Windows builds remain local. Use a short local folder path when cloning.
+For a quick playtest without opening Unity, run `Builds/WindowsSettlement/WonderGather.exe`. Keep the executable together with its data folders. GitHub contains the source; generated caches and Windows builds remain local. Use a short local folder path when cloning.
 
 If the scene has not yet been generated, use **Wonder Gather â†’ Create Wanderer Scene**. This command creates the scene, unit prefab, materials, baked navigation and build scene entry. It will not overwrite an existing Wanderer scene.
 
@@ -24,7 +24,8 @@ If the scene has not yet been generated, use **Wonder Gather â†’ Create Wan
 | Shift + left click | Toggle a unit in the selection |
 | Left drag / Shift + left drag | Box-select / add boxed units |
 | Right click | Move on terrain, gather at green supplies, deliver carried supplies at blue depot |
-| Escape | Deselect |
+| B | Place a workshop; left-click confirms valid ground |
+| Escape | Cancel placement / deselect |
 | F | Center camera on selected group |
 
 ## First slice

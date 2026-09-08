@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_WonderGather/Scenes/TheSettlement.unity
+    guid: bd23c9094144c094e9ad2c9788a68b7e
+  - enabled: 1
     path: Assets/_WonderGather/Scenes/TheGatherer.unity
     guid: 2b1f02d046de9e74397d98585d8f88f0
   - enabled: 1

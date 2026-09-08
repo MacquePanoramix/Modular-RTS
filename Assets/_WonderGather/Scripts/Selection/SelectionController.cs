@@ -13,6 +13,8 @@ namespace WonderGather
         [SerializeField] private float formationSpacing = 2.4f;
         private readonly List<SelectableUnit> selected = new List<SelectableUnit>();
         private readonly CommandDispatcher commands = new CommandDispatcher();
+        private ConstructionController construction;
+        private void Awake() => construction=GetComponent<ConstructionController>();
         private float markerUntil;
         private bool selecting, dragging, additiveAtPress;
         private Vector2 start, end;
@@ -31,6 +33,7 @@ namespace WonderGather
         public bool IsDragging => selecting && dragging;
         public Rect DragRect => Rect.MinMaxRect(Mathf.Min(start.x, end.x), Mathf.Min(start.y, end.y), Mathf.Max(start.x, end.x), Mathf.Max(start.y, end.y));
         public string Status { get; private set; } = "Click or drag to select units.";
+        public void ReportStatus(string message) => Status=message;
         public void Configure(RtsInput source, Camera camera, Transform marker)
         { input = source; worldCamera = camera; destinationMarker = marker; }
         public void ConfigureUnits(SelectableUnit[] units) => availableUnits = units;
@@ -102,6 +105,11 @@ namespace WonderGather
         }
         private void Update()
         {
+            if(construction!=null)
+            {
+                if(input.BuildPressed) {selecting=false;if(construction.Placing) construction.CancelPlacement();else construction.BeginPlacement();return;}
+                if(construction.Placing) {selecting=false;construction.HandleInput(input,worldCamera);return;}
+            }
             for (int i = selected.Count - 1; i >= 0; i--)
                 if (selected[i] == null || !selected[i].isActiveAndEnabled) { selected.RemoveAt(i); SelectionChanged(); }
             if (input.ClearPressed) { selecting = false; Select(null); }
@@ -140,6 +148,7 @@ namespace WonderGather
                         int accepted = commands.Dispatch(new ReturnSuppliesCommand(depot), selected);
                         SelectionChanged(); Status = accepted > 0 ? "Returning carried supplies." : "Selected workers have no supplies to return.";
                     }
+                    else if(construction!=null && hit.collider.GetComponentInParent<BuildingSite>() is BuildingSite site) construction.Resume(site);
                     else MoveSelection(hit.point);
                 }
                 else { SelectionChanged(); Status = "Right-click terrain or a resource."; }
