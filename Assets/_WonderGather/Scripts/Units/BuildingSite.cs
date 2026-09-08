@@ -5,6 +5,9 @@ namespace WonderGather
     {
         [SerializeField] private BuildingDefinition definition;
         [SerializeField] private Transform model;
+        [SerializeField] private GameObject selectionRing;
+        public void ConfigureSelection(GameObject ring)=>selectionRing=ring;
+        public void SetSelected(bool selected){if(selectionRing!=null) selectionRing.SetActive(selected);}
         public BuildingDefinition Definition => definition;
         public float Progress { get; private set; }
         public bool Complete => Progress >= 1;
@@ -29,6 +32,6 @@ namespace WonderGather
             model.localScale=new Vector3(definition.Size,height,definition.Size);
             model.localPosition=Vector3.up*height*.5f;
         }
-        private void OnDisable() { if(Worker!=null) Worker.CancelOrder(); }
+        private void OnDisable() { SetSelected(false); if(Worker!=null) Worker.CancelOrder(); }
     }
 }

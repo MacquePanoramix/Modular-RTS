@@ -40,20 +40,38 @@ namespace WonderGather
             Label("WASD / Arrows: pan     Q / E: rotate     Wheel: zoom");
             Label("Click / drag: select     Shift: toggle click / add box");
             Label("Right click: move     Esc: clear     F: focus group");
-            Label("Selected: " + selection.Count);
+            Label(selection.SelectedBuilding!=null?"Selected: Workshop":"Selected: " + selection.Count);
             if (depot != null)
             {
                 int carried = 0, working = 0;
                 foreach (var unit in selection.SelectedUnits)
                     if (unit.TryGetComponent<Gatherer>(out var worker)) { carried += worker.Carried; if (worker.State != Gatherer.Activity.Idle) working++; }
                 Label("Supplies stored: " + depot.Stored + "   Remaining: " + (resource != null ? resource.Remaining : 0));
-                Label("Selected gatherers active: " + working + "   Carrying: " + carried);
-                Label("Right-click green supplies: gather / blue depot: deliver");
+                if(selection.SelectedBuilding==null)
+                {
+                    Label("Selected gatherers active: " + working + "   Carrying: " + carried);
+                    Label("Right-click green supplies: gather / blue depot: deliver");
+                }
             }
-            if(construction!=null)
+            if(construction!=null && selection.SelectedBuilding==null)
             {
                 Label(construction.BuildHint);
                 if(!string.IsNullOrEmpty(construction.ProgressText)) Label(construction.ProgressText);
+            }
+            if(selection.SelectedBuilding!=null)
+            {
+                Label(selection.SelectedBuilding.Complete?"Workshop complete":"Construction: "+Mathf.RoundToInt(selection.SelectedBuilding.Progress*100)+"%");
+                var producer=selection.SelectedProducer;
+                if(producer!=null)
+                {
+                    Label(producer.Summary);
+                    GUILayout.BeginHorizontal();
+                    GUI.enabled=producer.CanTrain;
+                    if(GUILayout.Button("Train worker — "+producer.Cost+" supplies (T)")) selection.OrderProduction();
+                    GUI.enabled=producer.QueueCount>0;
+                    if(GUILayout.Button("Cancel last / refund")) selection.OrderProduction(true);
+                    GUI.enabled=true;GUILayout.EndHorizontal();
+                }
             }
             GUILayout.Space(8);
             Label(selection.Status);

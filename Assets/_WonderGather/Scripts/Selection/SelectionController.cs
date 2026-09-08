@@ -14,7 +14,34 @@ namespace WonderGather
         private readonly List<SelectableUnit> selected = new List<SelectableUnit>();
         private readonly CommandDispatcher commands = new CommandDispatcher();
         private ConstructionController construction;
-        private void Awake() => construction=GetComponent<ConstructionController>();
+        private int nextWorkerSlot;
+        private void Awake(){construction=GetComponent<ConstructionController>();nextWorkerSlot=availableUnits.Length;}
+        public BuildingSite SelectedBuilding {get;private set;}
+        public UnitProducer SelectedProducer=>SelectedBuilding!=null?SelectedBuilding.GetComponent<UnitProducer>():null;
+        public bool HasSelection=>Count>0 || SelectedBuilding!=null;
+        public int AllocateWorkerSlot()=>nextWorkerSlot++;
+        public void RegisterUnit(SelectableUnit unit)
+        {
+            if(unit==null || System.Array.IndexOf(availableUnits,unit)>=0) return;
+            System.Array.Resize(ref availableUnits,availableUnits.Length+1);availableUnits[availableUnits.Length-1]=unit;
+        }
+        public void UnregisterUnit(SelectableUnit unit)
+        {
+            var units=new List<SelectableUnit>(availableUnits);units.Remove(unit);availableUnits=units.ToArray();if(selected.Remove(unit)) SelectionChanged();
+        }
+        private void ClearBuilding(){if(SelectedBuilding!=null) SelectedBuilding.SetSelected(false);SelectedBuilding=null;}
+        public void SelectBuilding(BuildingSite site)
+        {
+            ClearSelection();SelectedBuilding=site!=null && site.isActiveAndEnabled?site:null;
+            if(SelectedBuilding!=null) SelectedBuilding.SetSelected(true);
+            SelectionChanged();Status=SelectedBuilding==null?"No selection.":SelectedBuilding.Complete?(SelectedProducer!=null?"Workshop selected. Train workers with T or the button.":"Workshop complete."):"Workshop is under construction.";
+        }
+        public bool OrderProduction(bool cancel=false)
+        {
+            bool accepted=commands.Dispatch(new ProductionCommand(cancel),SelectedProducer);
+            Status=accepted?(cancel?"Last worker cancelled and refunded.":"Worker added to production queue."):"Cannot change production: check completion, supplies and queue space.";
+            return accepted;
+        }
         private float markerUntil;
         private bool selecting, dragging, additiveAtPress;
         private Vector2 start, end;
@@ -25,6 +52,7 @@ namespace WonderGather
         {
             get
             {
+                if(SelectedBuilding!=null) return SelectedBuilding.transform.position;
                 var center = Vector3.zero;
                 foreach (var unit in selected) if (unit != null) center += unit.transform.position;
                 return Count > 0 ? center / Count : center;
@@ -41,6 +69,7 @@ namespace WonderGather
         public void Select(SelectableUnit unit) => Select(unit, false);
         public void Select(SelectableUnit unit, bool toggle)
         {
+            ClearBuilding();
             if (!toggle) ClearSelection();
             if (unit != null && unit.isActiveAndEnabled)
             {
@@ -57,6 +86,7 @@ namespace WonderGather
         }
         private void ClearSelection()
         {
+            ClearBuilding();
             foreach (var unit in selected) if (unit != null) unit.SetSelected(false);
             selected.Clear();
         }
@@ -68,6 +98,7 @@ namespace WonderGather
         // Rect uses screen coordinates with bottom-left origin, independent of drag direction.
         public void SelectBox(Rect rect, bool additive)
         {
+            ClearBuilding();
             if (!additive) ClearSelection();
             foreach (var unit in availableUnits)
             {
@@ -110,6 +141,8 @@ namespace WonderGather
                 if(input.BuildPressed) {selecting=false;if(construction.Placing) construction.CancelPlacement();else construction.BeginPlacement();return;}
                 if(construction.Placing) {selecting=false;construction.HandleInput(input,worldCamera);return;}
             }
+            if(SelectedBuilding!=null && !SelectedBuilding.isActiveAndEnabled) SelectBuilding(null);
+            if(input.TrainPressed) OrderProduction();
             for (int i = selected.Count - 1; i >= 0; i--)
                 if (selected[i] == null || !selected[i].isActiveAndEnabled) { selected.RemoveAt(i); SelectionChanged(); }
             if (input.ClearPressed) { selecting = false; Select(null); }
@@ -129,7 +162,9 @@ namespace WonderGather
                         else
                         {
                             bool hit = Physics.Raycast(worldCamera.ScreenPointToRay(end), out var info, 500, worldMask, QueryTriggerInteraction.Ignore);
-                            Select(hit ? info.collider.GetComponentInParent<SelectableUnit>() : null, additiveAtPress);
+                            var building=hit?info.collider.GetComponentInParent<BuildingSite>():null;
+                            if(building!=null) SelectBuilding(building);
+                            else Select(hit ? info.collider.GetComponentInParent<SelectableUnit>() : null, additiveAtPress);
                         }
                     }
                     selecting = false;

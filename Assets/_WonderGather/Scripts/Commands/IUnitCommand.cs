@@ -21,6 +21,7 @@ namespace WonderGather
     public sealed class CommandDispatcher
     {
         public bool Dispatch(IUnitCommand command, UnitMotor unit) => command != null && command.Execute(unit);
+        public bool Dispatch(ProductionCommand command, UnitProducer producer)=>command.Execute(producer);
         public bool Dispatch(BuildCommand command, Builder worker) => command!=null && command.Execute(worker);
         public int Dispatch(ReturnSuppliesCommand command, System.Collections.Generic.IReadOnlyList<SelectableUnit> units)
             => command == null ? 0 : command.Execute(units);

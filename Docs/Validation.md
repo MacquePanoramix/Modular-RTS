@@ -110,3 +110,22 @@ The Little Settlement now supports preview placement, stored-supply payment and 
 The first run passed 17/18; the failing invalid-placement test had incorrectly treated the clear world origin as a wall. The test was corrected to the authored wall at x=4. The final full run above passed. A subsequent capture verified minor HUD wording changes on visible ground. Physical B-key and mouse placement feel await user playtesting; tests exercise the same placement and order APIs. Existing obsolete discovery warnings in older Editor/test code remain unchanged.
 
 Scene: Assets/_WonderGather/Scenes/TheSettlement.unity. Local executable: Builds/WindowsSettlement/WonderGather.exe. Visual evidence: Images/Construction.png. See ConstructionPlaytest.md. No packages or existing scene/prefab GUIDs were changed. Placement assumes the current flat terrain; unit production, multiple builders per site, demolition/refunds and persistence remain deferred.
+
+## Worker production — September 8, 2026
+
+The user accepted construction. The Little Settlement now includes one worker production option per completed workshop, with provisional 10-supply cost, six-second duration and three-entry queue capacity.
+
+| Check | Result |
+|---|---|
+| Unity 6000.6.0f1 full PlayMode suite | 22 gameplay tests passed, 0 failed; 207.89 seconds |
+| Final selection-feedback follow-up | Four production tests passed again |
+| Queue rules | Unfinished buildings, insufficient funds and full queues reject without payment; cancellation refunds and preserves earlier progress |
+| Produced worker | Spawns safely, joins box selection, moves, gathers and completes another building; destruction unregisters it |
+| Blocked exit | Ready worker waits; opening space spawns it without another charge |
+| Multiple workshops and lifecycle | Independent queues; disabled producer pauses; destruction refunds pending orders while depot exists |
+| Rendered PlayMode capture | Separate visual probe passed; production controls and spawned worker inspected in Images/Production.png |
+| Windows x64 development build | Passed; PRODUCTION_BUILD_OK |
+
+Temporary capture code was removed before the player build. Tests and logs remain local. The source scene starts with zero stored supplies; test funding was confined to tests. Physical T-key and button interaction still needs user playtesting. No packages, base prefab GUIDs or earlier scene files were changed. Existing obsolete discovery warnings in older Editor/test code remain.
+
+Scene: Assets/_WonderGather/Scenes/TheProduction.unity. Local build: Builds/WindowsProduction/WonderGather.exe. See ProductionPlaytest.md. Limits: one worker type, no rally point/population cap/persistence, bounded nearby spawn search and simple expanding gathering offsets. Production data is assumed fixed during a match; values remain open for future tuning.

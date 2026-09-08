@@ -64,6 +64,7 @@ namespace WonderGather
             var site=Instantiate(prefab,point,Quaternion.identity);
             if(!commands.Dispatch(new BuildCommand(site),worker))
             {site.gameObject.SetActive(false);Destroy(site.gameObject);depot.Deposit(definition.Cost);return false;}
+            if(site.TryGetComponent<UnitProducer>(out var producer)) producer.Configure(depot,selection,worker.GetComponent<UnitMotor>().Destination);
             LastSite=site;CancelPlacement();Status="Workshop placed. Worker assigned.";return true;
         }
         public void Resume(BuildingSite site)

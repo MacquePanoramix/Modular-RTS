@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6394058432990258866
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458531339390243349, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6951938900395489401, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      propertyPath: m_Name
+      value: ProducedWorker
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6951938900395489401, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6158135139296967814}
+    - targetCorrespondingSourceObject: {fileID: 6951938900395489401, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 534633885787278003}
+    - targetCorrespondingSourceObject: {fileID: 6951938900395489401, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6527200526131482835}
+  m_SourcePrefab: {fileID: 100100000, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+--- !u!1 &4091095696721272523 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6951938900395489401, guid: 6d628f39a8ab6584aa6211dfca6bce98, type: 3}
+  m_PrefabInstance: {fileID: 6394058432990258866}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6158135139296967814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4091095696721272523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7a3ad5203c91ad4d9fc153b9d326e3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.Gatherer
+  depot: {fileID: 0}
+  workOffset: {x: 0, y: 0, z: 0}
+  capacity: 5
+  secondsPerUnit: 0.5
+--- !u!114 &534633885787278003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4091095696721272523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d40fe830845125409648e204f0cc5dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.Builder
+--- !u!114 &6527200526131482835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4091095696721272523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1878761b942045441a4178ecd8aa82d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.ProducedWorker
