@@ -129,3 +129,33 @@ The user accepted construction. The Little Settlement now includes one worker pr
 Temporary capture code was removed before the player build. Tests and logs remain local. The source scene starts with zero stored supplies; test funding was confined to tests. Physical T-key and button interaction still needs user playtesting. No packages, base prefab GUIDs or earlier scene files were changed. Existing obsolete discovery warnings in older Editor/test code remain.
 
 Scene: Assets/_WonderGather/Scenes/TheProduction.unity. Local build: Builds/WindowsProduction/WonderGather.exe. See ProductionPlaytest.md. Limits: one worker type, no rally point/population cap/persistence, bounded nearby spawn search and simple expanding gathering offsets. Production data is assumed fixed during a match; values remain open for future tuning.
+
+
+## Civilization blueprints — September 9, 2026
+
+Unity 6000.6.0f1 imported the new scripts and authored both sample scenes,
+blueprint assets and starting-base prefab (CIVILIZATION_SETUP_OK). The first
+launch was blocked by license activation; the subsequent editor run succeeded.
+
+- Full PlayMode suite: 27 passed, 0 failed;
+  280,8304446 seconds. Local evidence: TestResults/civilization-full.xml.
+- Five civilization tests cover data-driven starting setups, the complete
+  gathering/construction/production chain, produced blueprint inheritance,
+  construction and gathering permissions, seeded/unseeded cycles, missing
+  references, duplicate IDs and nonblocking economy warnings.
+- The first targeted run passed 4/5. Its gather-to-20 test reached 15 delivered
+  supplies at a 55-second deadline. The deadline was increased to 90 seconds
+  for four real trips; assertions and production behavior were retained, with
+  diagnostic worker state added on failure. The full suite above passed.
+- Separate rendered PlayMode visual probe passed; screenshot in
+  Images/Civilization.png. Temporary probe source and metadata removed before
+  the player build.
+- Windows x64 development build passed (CIVILIZATION_BUILD_OK), output
+  Builds/WindowsCivilization/WonderGather.exe.
+
+The report proves structural reachability only. It does not prove whole-chain
+affordability, finite-map resource sufficiency, resilience, or competitive
+legality. Supplies remain the only resource; worker prefab contracts and one
+recipe per building are current limits. Physical controls, ease of editing and
+design feel await user playtesting. Existing obsolete API warnings in older
+test/editor sources remain. No packages or older authored scenes were changed.

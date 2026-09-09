@@ -1,3 +1,8 @@
+> Current milestone: **Civilization blueprints**. Open
+> `Assets/_WonderGather/Scenes/TheCivilization.unity`.
+> See [Civilization playtest](Docs/CivilizationPlaytest.md) for editable assets,
+> the provisioned sample, and validation limits.
+
 # Wonder Gather â€” The Gatherer
 
 A first playable foundation for a slow, fully 3D RTS about civilizations designed by their players.

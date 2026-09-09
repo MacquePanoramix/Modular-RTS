@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_WonderGather/Scenes/TheCivilization.unity
+    guid: f8741162d9599a24e976f9352a5b81dd
+  - enabled: 1
+    path: Assets/_WonderGather/Scenes/TheProvisionedCivilization.unity
+    guid: 4376f9fb5777a3d4db7854b541496c13
+  - enabled: 1
     path: Assets/_WonderGather/Scenes/TheProduction.unity
     guid: e25c420f4a0d29346b48f54da3699b09
   - enabled: 1

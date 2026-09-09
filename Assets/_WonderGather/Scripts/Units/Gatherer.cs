@@ -18,6 +18,7 @@ namespace WonderGather
         private void Awake() => motor = GetComponent<UnitMotor>();
         public bool Gather(ResourceNode node)
         {
+            if(TryGetComponent<UnitIdentity>(out var identity) && (identity.Blueprint==null || !identity.Blueprint.GathersSupplies)) return false;
             if (!isActiveAndEnabled || node == null || !node.isActiveAndEnabled || node.Remaining <= 0 || depot == null || !depot.isActiveAndEnabled) return false;
             var target = Carried >= capacity ? depot.transform.position : node.transform.position;
             if (!motor.TryMove(target + workOffset)) return false;

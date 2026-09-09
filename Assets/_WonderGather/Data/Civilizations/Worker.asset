@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e43a0f2061b05d84d9f437498f6545e6, type: 3}
+  m_Name: Worker
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.UnitBlueprint
+  id: worker
+  displayName: Worker
+  production: {fileID: 11400000, guid: 19c63824cd8db0449abc967fac8895c6, type: 2}
+  gathersSupplies: 1
+  builds:
+  - {fileID: 11400000, guid: 73f1590f4b6499d46b0d123a03f97885, type: 2}

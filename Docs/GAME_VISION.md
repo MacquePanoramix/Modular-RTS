@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 8, 2026
+**Last updated:** September 9, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -367,3 +367,42 @@ The user approved proceeding from the accepted Gatherer to construction. Impleme
 ## Unit production — September 8, 2026
 
 The user accepted construction and approved unit production. Implemented for playtesting: selecting a completed workshop, training one worker type with stored supplies, a three-entry queue, cancellation/refunds, safe nearby spawning, and full selection/gathering/building integration for produced workers. The provisional worker costs 10 supplies and takes six seconds; these values and queue size are not locked design decisions. This completes the first gather → build → produce loop of The Little Settlement. Civilization data and production relationships remain the next planned foundation after playtest acceptance.
+
+
+## Civilization blueprint foundation — September 9, 2026
+
+The user accepted the production result and approved working together on the
+civilization blueprint foundation. The gather → build → produce loop is now
+provisionally accepted. This milestone adds editable starting-base, unit,
+building and civilization assets, construction permissions, production links,
+runtime starting setup and inheritance of produced workers' blueprints.
+Inspector tooling checks structural reachability and reports missing supply
+gathering. Warnings preserve intentional challenge designs; invalid runtime
+references must be corrected before instantiation.
+
+The standard sample preserves eight starting workers and zero stored supplies.
+A provisioned sample uses three workers and 40 supplies to demonstrate that
+data changes affect play. These are implementation examples, not locked
+factions or balance choices. The central base is a completed depot placeholder.
+Each building currently supports one produced unit type; the framework's first
+unit prefab contract remains a worker with optional gather/build permissions.
+
+Only supplies are implemented. The report does not simulate complete economic
+chains or prove resilience, map feasibility, or competitive legality. The
+two-cost distinction is preserved: existing in-match costs are reused; no
+design-budget formula or inferred balance pricing is introduced. That design
+work remains open, as do new resource types and the polished graph editor.
+
+After playtesting this foundation, collaboratively choose a small second role
+or production chain to test meaningful civilization variation, then develop
+design-value rules with concrete examples before moving to Three Temperaments.
+This is a proposed next refinement, not a newly locked roadmap.
+
+
+**Collaboration clarification:** The user reaffirmed that their specific vision
+and aesthetic guide must direct the work. Check in with concrete proposals
+before introducing visual direction, new unit roles or meaningful design
+changes. Technical sample assets are provisional. The current written guide
+captures grounded fantasy, quiet awe, expressive bodies and rejection of
+slapstick physics; the location of any more detailed aesthetic source has been
+requested and must be reviewed before visual decisions.

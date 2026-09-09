@@ -34,7 +34,7 @@ namespace WonderGather
         {
             ClearSelection();SelectedBuilding=site!=null && site.isActiveAndEnabled?site:null;
             if(SelectedBuilding!=null) SelectedBuilding.SetSelected(true);
-            SelectionChanged();Status=SelectedBuilding==null?"No selection.":SelectedBuilding.Complete?(SelectedProducer!=null?"Workshop selected. Train workers with T or the button.":"Workshop complete."):"Workshop is under construction.";
+            SelectionChanged();Status=SelectedBuilding==null?"No selection.":SelectedBuilding.Complete?(SelectedProducer!=null?SelectedBuilding.Definition.DisplayName+" selected. Train units with T or the button.":SelectedBuilding.Definition.DisplayName+" complete."):SelectedBuilding.Definition.DisplayName+" is under construction.";
         }
         public bool OrderProduction(bool cancel=false)
         {

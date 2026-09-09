@@ -8,7 +8,15 @@ namespace WonderGather
         [SerializeField] private GameObject selectionRing;
         public void ConfigureSelection(GameObject ring)=>selectionRing=ring;
         public void SetSelected(bool selected){if(selectionRing!=null) selectionRing.SetActive(selected);}
+        public bool HasVisual=>model!=null;
+        public BuildingBlueprint Blueprint {get;private set;}
         public BuildingDefinition Definition => definition;
+        public void ApplyBlueprint(BuildingBlueprint data)
+        {
+            Blueprint=data;definition=data.Construction;gameObject.name=data.DisplayName;
+            if(TryGetComponent<UnitProducer>(out var producer)) producer.SetBlueprint(data.Produces);
+        }
+        public void CompleteAtStart(){Progress=1;UpdateModel();}
         public float Progress { get; private set; }
         public bool Complete => Progress >= 1;
         public Builder Worker { get; private set; }

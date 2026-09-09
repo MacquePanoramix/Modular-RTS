@@ -10,7 +10,8 @@ namespace WonderGather
         public void ConfigureEconomy(ResourceDepot home, ResourceNode node) { depot = home; resource = node; }
         private Rect panelRect = new Rect(18, 18, 520, 260);
         private ConstructionController construction;
-        private void Awake() => construction=GetComponent<ConstructionController>();
+        private CivilizationSession civilization;
+        private void Awake(){construction=GetComponent<ConstructionController>();civilization=GetComponent<CivilizationSession>();}
         private GUIStyle wrappedLabel;
         private Rect PanelRect => panelRect;
         private void Label(string text) => GUILayout.Label(text, wrappedLabel);
@@ -36,11 +37,11 @@ namespace WonderGather
             float width = Mathf.Max(1, Mathf.Min(520, Screen.width - 36));
             GUILayout.BeginArea(new Rect(18, 18, width, Mathf.Max(1, Screen.height - 36)));
             GUILayout.BeginVertical(GUI.skin.box);
-            Label(construction != null ? "WONDER GATHER  /  THE SETTLEMENT" : depot != null ? "WONDER GATHER  /  THE GATHERER" : "WONDER GATHER  /  THE GROUP");
+            Label(civilization!=null && civilization.Definition!=null ? "WONDER GATHER / "+civilization.Definition.DisplayName : construction != null ? "WONDER GATHER  /  THE SETTLEMENT" : depot != null ? "WONDER GATHER  /  THE GATHERER" : "WONDER GATHER  /  THE GROUP");
             Label("WASD / Arrows: pan     Q / E: rotate     Wheel: zoom");
             Label("Click / drag: select     Shift: toggle click / add box");
             Label("Right click: move     Esc: clear     F: focus group");
-            Label(selection.SelectedBuilding!=null?"Selected: Workshop":"Selected: " + selection.Count);
+            Label(selection.SelectedBuilding!=null?"Selected: "+selection.SelectedBuilding.Definition.DisplayName:"Selected: " + selection.Count);
             if (depot != null)
             {
                 int carried = 0, working = 0;
@@ -56,18 +57,22 @@ namespace WonderGather
             if(construction!=null && selection.SelectedBuilding==null)
             {
                 Label(construction.BuildHint);
+                var choices=construction.AvailableBuildings();
+                if(choices.Count>1) foreach(var choice in choices)
+                    if(GUILayout.Button("Build "+choice.DisplayName+" ("+choice.Construction.Cost+" supplies)"))
+                    {construction.ChooseBuilding(choice);construction.BeginPlacement();}
                 if(!string.IsNullOrEmpty(construction.ProgressText)) Label(construction.ProgressText);
             }
             if(selection.SelectedBuilding!=null)
             {
-                Label(selection.SelectedBuilding.Complete?"Workshop complete":"Construction: "+Mathf.RoundToInt(selection.SelectedBuilding.Progress*100)+"%");
+                Label(selection.SelectedBuilding.Complete?selection.SelectedBuilding.Definition.DisplayName+" complete":"Construction: "+Mathf.RoundToInt(selection.SelectedBuilding.Progress*100)+"%");
                 var producer=selection.SelectedProducer;
                 if(producer!=null)
                 {
                     Label(producer.Summary);
                     GUILayout.BeginHorizontal();
                     GUI.enabled=producer.CanTrain;
-                    if(GUILayout.Button("Train worker — "+producer.Cost+" supplies (T)")) selection.OrderProduction();
+                    if(GUILayout.Button("Train "+producer.UnitName+" — "+producer.Cost+" supplies (T)")) selection.OrderProduction();
                     GUI.enabled=producer.QueueCount>0;
                     if(GUILayout.Button("Cancel last / refund")) selection.OrderProduction(true);
                     GUI.enabled=true;GUILayout.EndHorizontal();

@@ -7,17 +7,24 @@ namespace WonderGather
     {
         [SerializeField] private WorkerProductionDefinition definition;
         [SerializeField,Min(1)] private int queueCapacity=3;
+        private UnitBlueprint blueprint;
         private BuildingSite site;
+        public string UnitName=>blueprint!=null?blueprint.DisplayName:"Worker";
+        public void SetBlueprint(UnitBlueprint data)
+        {
+            if(QueueCount>0) throw new System.InvalidOperationException("Cannot replace a recipe while orders are queued.");
+            blueprint=data;definition=data!=null?data.Production:null;
+        }
         private ResourceDepot depot;
         private SelectionController roster;
         private Vector3 approach;
         private float elapsed, retryAfter;
         public int QueueCount {get;private set;}
         public int Capacity=>queueCapacity;
-        public int Cost=>definition.Cost;
+        public int Cost=>definition!=null?definition.Cost:0;
         public float Progress=>QueueCount==0?0:Mathf.Clamp01(elapsed/definition.Seconds);
         public bool WaitingForExit {get;private set;}
-        public bool CanTrain=>isActiveAndEnabled && site!=null && site.isActiveAndEnabled && site.Complete && depot!=null && depot.isActiveAndEnabled && roster!=null && QueueCount<queueCapacity && depot.Stored>=Cost;
+        public bool CanTrain=>definition!=null && isActiveAndEnabled && site!=null && site.isActiveAndEnabled && site.Complete && depot!=null && depot.isActiveAndEnabled && roster!=null && QueueCount<queueCapacity && depot.Stored>=Cost;
         public SelectableUnit LastProduced {get;private set;}
         public string Summary=>"Workers queued: "+QueueCount+" / "+queueCapacity+(QueueCount==0?"":" | "+Mathf.RoundToInt(Progress*100)+"%")+(WaitingForExit?" — exit blocked":"");
         public void SetDefinition(WorkerProductionDefinition data)=>definition=data;
@@ -59,10 +66,11 @@ namespace WonderGather
             retryAfter=Time.time+.25f;
             if(!FindExit(out var position)){WaitingForExit=true;return;}
             var worker=Instantiate(definition.Prefab,position,Quaternion.identity);
+            if(blueprint!=null) UnitIdentity.Apply(worker,blueprint);
             var agent=worker.GetComponent<NavMeshAgent>();
             if(!agent.isOnNavMesh || !agent.Warp(position)){worker.SetActive(false);Destroy(worker);WaitingForExit=true;return;}
             int slot=roster.AllocateWorkerSlot();
-            worker.name="Worker "+(slot+1);
+            worker.name=UnitName+" "+(slot+1);
             var offset=Quaternion.Euler(0,slot%8*45,0)*Vector3.right*(3.4f+2.6f*(slot/8));
             worker.GetComponent<Gatherer>().Configure(depot,offset);
             agent.avoidancePriority=30+slot%12*4;

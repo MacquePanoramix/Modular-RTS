@@ -26,9 +26,13 @@ namespace WonderGather
             }
             return path!=null;
         }
+        public bool CanBuild(BuildingBlueprint data)
+        {
+            return !TryGetComponent<UnitIdentity>(out var identity) || (identity.Blueprint!=null && identity.Blueprint.CanBuild(data));
+        }
         public bool Build(BuildingSite site)
         {
-            if(site==null || site.Complete || (site.Worker!=null && site.Worker!=this)
+            if(site==null || !CanBuild(site.Blueprint) || site.Complete || (site.Worker!=null && site.Worker!=this)
                 || !Plan(site.transform.position,site.Definition.Size,out var path,out var point)) return false;
             if(!site.Claim(this)) return false;
             if(!motor.ApplyMove(path,point)) {site.Release(this);return false;}

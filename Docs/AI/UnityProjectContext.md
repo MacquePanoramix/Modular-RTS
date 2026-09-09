@@ -1,6 +1,6 @@
 # Unity project context
 
-Updated September 8, 2026 for The Little Settlement production loop. See Docs/Validation.md for execution evidence and Docs/ProductionPlaytest.md for the current playtest.
+Updated September 9, 2026 for civilization blueprints. See Docs/Validation.md for execution evidence and Docs/CivilizationPlaytest.md for the current playtest.
 
 ## Confirmed foundation
 
@@ -49,3 +49,36 @@ BuildingDefinition owns provisional cost, duration and footprint. ConstructionCo
 ProductionSetup.Create creates TheProduction from TheSettlement, with a ProductionWorkshop prefab variant and ProducedWorker prefab variant; older scenes and base prefabs stay unchanged. WorkerProductionDefinition owns the prefab, cost and duration. Each UnitProducer owns its queue, timer, exit search and stored-supply payments/refunds. ConstructionController supplies the depot, roster and reachable work position when placing a production workshop. ProductionCommand enters through CommandDispatcher.
 
 SelectionController now distinguishes a selected building from selected units and owns explicit RegisterUnit/UnregisterUnit and worker-slot allocation. ProducedWorker registers on initialization and unregisters on destruction. New workers get the depot and distinct work offsets at spawn. Exit search checks physical space, matching NavMesh agent settings and connectivity to the workshop approach. No runtime scene search is used. T and HUD buttons queue workers; cancellation removes the last order. TheProduction is the first build scene; ProductionSetup.BuildWindows builds it into Builds/WindowsProduction.
+
+
+## Civilization foundation
+
+CivilizationDefinition owns a starting base, starting supply count, counted
+starting units and explicit unit/building rosters. UnitBlueprint references
+WorkerProductionDefinition, optional supply gathering and construction links.
+BuildingBlueprint references a BuildingSite prefab (whose BuildingDefinition
+is authoritative) and one optional produced UnitBlueprint. Stable IDs must be
+unique across both rosters. Blueprint data remains immutable during runtime.
+
+CivilizationSession starts TheCivilization and TheProvisionedCivilization from
+these assets after structural validation and initial spawn-space checks. It
+wires the starting depot, selection roster, HUD, construction and workers
+explicitly. UnitIdentity carries unit data; Gatherer and Builder enforce its
+permissions. ConstructionController offers the union of selected units' build
+links and chooses a permitted builder. UnitProducer applies the produced
+blueprint before registering the new worker. Earlier scenes without identities
+retain their established behavior.
+
+CivilizationValidator computes structural reachability by fixed point and
+issues supply/bootstrap warnings. Broken references/component contracts/IDs
+are errors; unreachable and resource-limited designs are warnings. It does not
+solve cumulative affordability, finite resources, survivability, or map paths.
+CivilizationInspector exposes the report and textual links beneath normal
+asset editing. No additional packages, graph-editor framework, runtime scene
+search, save format, research system or design-cost formula were added.
+
+CivilizationSetup.Create authors two new scenes and sample assets through
+Unity; it refuses to overwrite existing scenes. BuildWindows builds both
+scenes into Builds/WindowsCivilization with the standard sample first. Existing
+scenes stay enabled for regressions. No changes to older authored scenes or
+the 0.005 zoom preference are required by this milestone.
