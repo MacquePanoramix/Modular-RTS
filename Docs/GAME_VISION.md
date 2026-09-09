@@ -449,3 +449,25 @@ aesthetic. The next proposed design discussion remains multiple customizable
 unit/building blueprints and meaningful production chains, with the user
 choosing roles and capabilities before implementation. Cloud sharing and
 running-match saves remain separate possibilities.
+
+
+## Multiple unit blueprints — September 9, 2026
+
+The user accepted the saving/library prototype and approved multiple editable
+unit blueprints, starting from an editable worker template. This slice adds
+Add/Duplicate/Rename/Remove, per-blueprint starting counts and gather/build
+permissions, one selected trained blueprint per workshop, saving and playtests.
+Copies get distinct IDs and zero starting units. Removing a blueprint also
+removes its starting entries and clears its training link after confirmation.
+
+Eight blueprints and eight total starting units are provisional test-map/UI
+bounds. Each workshop still supports one trained type; multiple training
+options in a building remain a later extension. All types share the existing
+worker body and production cost/time. Example Gatherer and Builder names are
+playtest suggestions, not fixed roles or faction templates. Blank-template
+creation remains possible future work; this slice starts from editable workers.
+
+Saved factions now use version 2; version-1 saves open without rewriting and
+upgrade on explicit save with a backup. No aesthetic, lore, stat list, design
+budget or final graph layout is locked. Review the editing experience together
+before expanding buildings, training options or blueprint customization.

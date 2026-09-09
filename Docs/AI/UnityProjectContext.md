@@ -1,6 +1,6 @@
 # Unity project context
 
-Updated September 9, 2026 for civilization blueprints. See Docs/Validation.md for execution evidence and Docs/FactionLibraryPlaytest.md for the current playtest.
+Updated September 9, 2026 for multiple unit blueprints. See Docs/Validation.md for execution evidence and Docs/MultipleBlueprintPlaytest.md for the current playtest.
 
 ## Confirmed foundation
 
@@ -141,3 +141,36 @@ Standalone close requests use Application.wantsToQuit with save/discard/cancel;
 the map's input is disabled while a quit prompt is active. Editor Stop Play
 Mode does not participate in that player lifecycle. Prior scenes and packages
 are unchanged; the existing creator build command includes the new features.
+
+
+## Multiple unit blueprint extension
+
+FactionDraft now owns a bounded unit list and per-unit starting counts. Existing
+Worker/StartingWorkers/SetStartingSetup methods remain compatibility accessors
+for the first unit; TotalStartingUnits describes the faction-wide count.
+SetFactionSetup changes name/supplies without touching the mixed starting roster.
+AddUnit uses the original read-only worker recipe; duplicates copy permissions,
+receive new stable IDs and zero starting count. RemoveUnit releases its owned
+copy, removes starting entries and clears the matching workshop link. The
+creator UI asks for confirmation before removal. No authored assets change.
+
+The current fixed-card view is extended with a scrollable blueprint list,
+per-unit details and a workshop target picker. Each building still produces
+one unit type through the existing runtime UnitProducer. The existing session
+already spawns mixed starting entries and applies UnitIdentity. The playtest
+HUD now names a single selected unit's blueprint. No scene/prefab/package
+changes are required; TheFactionCreator remains the entry scene.
+
+FactionRecord writes strict version-2 records with a unit array and trained ID.
+The worker field identifies the supported recipe template, independently of
+user-defined roster IDs (including after removal of the original worker).
+Version 1 is strictly checked and migrated in memory to one named Worker.
+Reads never rewrite; an explicit save/rename upgrades with the existing backup.
+Unknown nested fields/versions, duplicate IDs and dangling links are rejected.
+Workspace dirty tracking includes every unit and relationship using a length-
+prefixed snapshot that can represent temporarily invalid names during editing.
+
+The final prototype bounds are 1–8 unit blueprints and 0–8 total starting units.
+All use the existing worker prefab and recipe, with optional gather/build.
+Multiple production options per building and building roster editing remain
+future work. See MultipleBlueprintPlaytest.md and Validation.md for evidence.

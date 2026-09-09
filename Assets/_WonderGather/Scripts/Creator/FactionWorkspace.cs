@@ -15,8 +15,11 @@ namespace WonderGather
         public string SaveState=>IsDirty?"Unsaved changes":HasFile?"All changes saved":"New faction — not saved yet";
         private string State()
         {
-            // Dirty tracking must also represent temporarily invalid text while it is edited.
-            return Draft.Definition.DisplayName+"\n"+Draft.StartingWorkers+"/"+Draft.Definition.StartingSupplies+"/"+Draft.Worker.GathersSupplies+"/"+Draft.Worker.CanBuild(Draft.Workshop)+"/"+(Draft.Workshop.Produces!=null);
+            var state=new System.Text.StringBuilder();
+            void Part(string value){value=value??"";state.Append(value.Length).Append(':').Append(value);}
+            Part(Draft.Definition.DisplayName);Part(Draft.Definition.StartingSupplies.ToString());Part(Draft.Workshop.Produces?.Id);
+            foreach(var unit in Draft.Units){Part(unit.Id);Part(unit.DisplayName);Part(Draft.StartingCount(unit).ToString());Part(unit.GathersSupplies.ToString());Part(unit.CanBuild(Draft.Workshop).ToString());}
+            return state.ToString();
         }
         public FactionWorkspace(CivilizationDefinition example,FactionStore storage)
         {template=example;store=storage;Draft=new FactionDraft(example);cleanState=State();}
@@ -42,7 +45,7 @@ namespace WonderGather
                 var record=FactionRecord.Capture(Draft,copy||CurrentId==null?Guid.NewGuid().ToString("N"):CurrentId);
                 if(copyName!=null) record.Name=copyName.Trim();
                 var saved=store.Save(record,copy?null:token);
-                Draft.SetStartingSetup(saved.Name,Draft.StartingWorkers,Draft.Definition.StartingSupplies);
+                Draft.SetFactionSetup(saved.Name,Draft.Definition.StartingSupplies);
                 CurrentId=saved.Id;token=saved.Token;cleanState=State();Message=copy?"Saved a separate copy.":"Faction saved.";return true;
             }
             catch(Exception error) when(FactionStore.IsStorageError(error)){Message="Could not save. Your draft is intact. "+error.Message;return false;}
@@ -68,7 +71,7 @@ namespace WonderGather
             try
             {
                 var entry=store.Read(id);if(id==CurrentId && entry.Token!=token) throw new System.IO.IOException("This faction changed outside the creator. Open it again before renaming it.");entry.Record.Name=(name??"").Trim();var saved=store.Save(entry.Record,entry.Token);
-                if(CurrentId==id){Draft.SetStartingSetup(saved.Name,Draft.StartingWorkers,Draft.Definition.StartingSupplies);token=saved.Token;cleanState=State();}
+                if(CurrentId==id){Draft.SetFactionSetup(saved.Name,Draft.Definition.StartingSupplies);token=saved.Token;cleanState=State();}
                 Message="Saved faction renamed.";return true;
             }
             catch(Exception error) when(FactionStore.IsStorageError(error)){Message="Could not rename: "+error.Message;return false;}

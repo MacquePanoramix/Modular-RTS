@@ -1,4 +1,7 @@
-> Current milestone: **Faction saving and library**. Open
+Current milestone: multiple editable unit blueprints. Open TheFactionCreator.
+See [Multiple blueprint playtest](Docs/MultipleBlueprintPlaytest.md).
+
+> Previous milestone: **Faction saving and library**. Open
 > `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run
 > `Builds/WindowsFactionCreator/WonderGather.exe`.
 > See [Faction library playtest](Docs/FactionLibraryPlaytest.md).
@@ -13,7 +16,7 @@
 > See [Civilization playtest](Docs/CivilizationPlaytest.md) for editable assets,
 > the provisioned sample, and validation limits.
 
-# Wonder Gather â€” The Gatherer
+# Wonder Gather
 
 A first playable foundation for a slow, fully 3D RTS about civilizations designed by their players.
 
@@ -21,12 +24,19 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 
 1. In Unity Hub, add this folder as an existing project.
 2. Open it using Unity **6000.6.0f1** (installed locally).
-3. Open `Assets/_WonderGather/Scenes/TheProduction.unity` and press Play.
-4. Select workers and right-click the green supply node. They gather, carry supplies to the blue depot, and repeat. After storing 20 supplies, select a worker and press B to place a workshop. Once built, left-click it and press T to train a worker for 10 supplies.
+3. Open `Assets/_WonderGather/Scenes/TheFactionCreator.unity` and press Play.
+4. Add or duplicate worker blueprints, edit their starting counts and
+   gather/build capabilities, then select Workshop to choose its trained type.
+5. Save the faction and launch its playtest. Return to the creator to keep
+   editing. Save before stopping Unity Play Mode.
 
-See `Docs/ProductionPlaytest.md` for the current playtest. The earlier `TheWanderer` and `TheGroup` scenes remain available for comparison. The current standalone build is `Builds/WindowsProduction/WonderGather.exe`.
+See [Multiple blueprint playtest](Docs/MultipleBlueprintPlaytest.md) for a
+concrete two-role test. Earlier scenes remain available for comparison.
 
-For a quick playtest without opening Unity, run `Builds/WindowsProduction/WonderGather.exe`. Keep the executable together with its data folders. GitHub contains the source; generated caches and Windows builds remain local. Use a short local folder path when cloning.
+For a playtest without opening Unity, run
+`Builds/WindowsFactionCreator/WonderGather.exe`. Keep the executable together
+with its data folders. GitHub contains source; generated caches and Windows
+builds remain local. Use a short local folder path when cloning.
 
 If the scene has not yet been generated, use **Wonder Gather â†’ Create Wanderer Scene**. This command creates the scene, unit prefab, materials, baked navigation and build scene entry. It will not overwrite an existing Wanderer scene.
 

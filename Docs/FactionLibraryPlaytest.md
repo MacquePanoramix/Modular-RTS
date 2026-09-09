@@ -47,14 +47,15 @@ creator requires reopening it or saving your draft as a new copy.
 
 ## Current limits
 
-Format version 1 records the first creator's name, starting base/worker/workshop
-IDs, worker/supply counts, and gather/build/train links. It is a faction design,
-not a running match save. Costs and prefabs come from the game's current
-supported blueprint collection. Unsupported future versions are refused;
-there is no older released save format to migrate yet.
+Format version 2 records the faction name, template IDs, all editable unit
+blueprint IDs/names/counts/capabilities, starting supplies and the workshop's
+trained blueprint ID. Version-1 files still open without being rewritten;
+explicit Save or Rename upgrades them with a backup. It saves faction designs,
+not running matches. Costs and prefabs come from the supported game templates.
+See MultipleBlueprintPlaytest.md for the current editing controls.
 
-No cloud sync, sharing, import UI, autosave, save-game progress, faction budgets
-or extra blueprint types are included. Those remain separate decisions.
+No cloud sync, sharing, import UI, autosave, save-game progress or faction budgets
+are included. Those remain separate decisions.
 
 Focus feedback on save-state clarity, library navigation and whether the
 confirmation choices make it clear what will be kept or replaced.

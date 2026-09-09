@@ -60,7 +60,7 @@ namespace WonderGather.Tests
         [Test] public void UnsupportedIncompleteAndUnknownFilesAreLeftIntact()
         {
             var workspace=creator.Workspace;Assert.That(workspace.Save(),Is.True);string id=workspace.CurrentId,path=store.FilePath(id),valid=File.ReadAllText(path);
-            foreach(var invalid in new[]{valid.Replace("\"version\": 1","\"version\": 99"),valid.Replace("\"workers\": 8,",""),valid.Replace("{","{\"futureData\":42,"),"{ incomplete",valid.Replace("\"workers\": 8","\"workers\": -2")})
+            foreach(var invalid in new[]{valid.Replace("\"version\": 2","\"version\": 99"),valid.Replace("\"start\": 8,",""),valid.Replace("{","{\"futureData\":42,"),"{ incomplete",valid.Replace("\"start\": 8","\"start\": -2")})
             {
                 File.WriteAllText(path,invalid);var before=workspace.Draft;
                 Assert.That(workspace.Open(id,true),Is.False);Assert.That(workspace.Draft,Is.SameAs(before));
@@ -96,7 +96,7 @@ namespace WonderGather.Tests
         [Test] public void ActiveRenameAndConcurrentWriteConflictsPreserveExternalEdits()
         {
             var workspace=creator.Workspace;Assert.That(workspace.Save(),Is.True);string id=workspace.CurrentId;
-            var entry=store.Read(id);entry.Record.Workers=2;store.Save(entry.Record,entry.Token);
+            var entry=store.Read(id);entry.Record.Units[0].Start=2;store.Save(entry.Record,entry.Token);
             string external=File.ReadAllText(store.FilePath(id));Assert.That(workspace.Rename(id,"Rename attempt"),Is.False);
             Assert.That(File.ReadAllText(store.FilePath(id)),Is.EqualTo(external));Assert.That(workspace.Open(id),Is.True);
             workspace.Draft.SetStartingSetup("Local change",4,40);

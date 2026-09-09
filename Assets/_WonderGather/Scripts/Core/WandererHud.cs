@@ -42,6 +42,8 @@ namespace WonderGather
             Label("Click / drag: select     Shift: toggle click / add box");
             Label("Right click: move     Esc: clear     F: focus group");
             Label(selection.SelectedBuilding!=null?"Selected: "+selection.SelectedBuilding.Definition.DisplayName:"Selected: " + selection.Count);
+            if(selection.Count==1 && selection.SelectedUnits[0].TryGetComponent<UnitIdentity>(out var identity) && identity.Blueprint!=null)
+                Label("Blueprint: "+identity.Blueprint.DisplayName);
             if (depot != null)
             {
                 int carried = 0, working = 0;

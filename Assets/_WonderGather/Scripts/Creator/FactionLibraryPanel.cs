@@ -50,7 +50,7 @@ namespace WonderGather
                 foreach(var entry in entries)
                 {
                     var old=GUI.backgroundColor;GUI.backgroundColor=selected==entry?new Color(.67f,.83f,.75f):Color.white;
-                    string summary=entry.CanOpen?entry.Record.Workers+" workers / "+entry.Record.Supplies+" supplies":"Needs attention";
+                    string summary=entry.CanOpen?entry.Record.Workers+" units / "+entry.Record.Supplies+" supplies":"Needs attention";
                     if(GUILayout.Button(entry.Name+"\n"+summary,button,GUILayout.MinHeight(64))){selected=entry;detailsScroll=Vector2.zero;}
                     GUI.backgroundColor=old;
                 }
@@ -63,10 +63,9 @@ namespace WonderGather
                     if(selected.CanOpen)
                     {
                         var record=selected.Record;
-                        GUILayout.Label("Starting workers: "+record.Workers+"   Supplies: "+record.Supplies,body);
-                        GUILayout.Label("Gather supplies: "+(record.Gathers?"yes":"no"),body);
-                        GUILayout.Label("Build workshop: "+(record.Builds?"yes":"no"),body);
-                        GUILayout.Label("Train workers: "+(record.Trains?"yes":"no"),body);
+                        GUILayout.Label("Starting units: "+record.Workers+"   Supplies: "+record.Supplies,body);
+                        foreach(var unit in record.Units)
+                            GUILayout.Label(unit.Name+" — "+unit.Start+" at start; gather "+(unit.Gathers?"yes":"no")+", build "+(unit.Builds?"yes":"no")+(record.TrainedId==unit.Id?"; workshop trains this unit":""),body);
                     }
                     else GUILayout.Label(selected.Problem,body);
                     GUILayout.Space(20);GUI.enabled=selected.CanOpen;

@@ -6,7 +6,10 @@ namespace WonderGather
     {
         private FactionCreator creator;
         private readonly FactionLibraryPanel library=new FactionLibraryPanel();
-        private int selected=1;
+        private int selected=2;
+        private FactionDraft shownDraft;
+        private UnitBlueprint pendingRemove;
+        private Vector2 unitScroll;
         private Vector2 detailScroll,warningScroll;
         private GUIStyle title,subtitle,body,small,card,button,field;
         private readonly Color background=new Color(.075f,.095f,.105f);
@@ -27,17 +30,7 @@ namespace WonderGather
         private static void Fill(Rect rect,Color color)
         {var previous=GUI.color;GUI.color=color;GUI.DrawTexture(rect,Texture2D.whiteTexture);GUI.color=previous;}
         private void Label(Rect rect,string text,GUIStyle style=null)=>GUI.Label(rect,text,style??body);
-        private void Stroke(Vector2 a,Vector2 b)
-        {
-            var matrix=GUI.matrix;var delta=b-a;GUI.matrix=matrix*Matrix4x4.TRS(new Vector3(a.x,a.y,0),Quaternion.Euler(0,0,Mathf.Atan2(delta.y,delta.x)*Mathf.Rad2Deg),Vector3.one);
-            Fill(new Rect(0,-1,delta.magnitude,2),accent);GUI.matrix=matrix;
-        }
-        private void Edge(Vector2 a,Vector2 b,string text,Rect label)
-        {
-            var direction=(b-a).normalized;var side=new Vector2(-direction.y,direction.x);
-            Stroke(a,b);Stroke(b,b-direction*12+side*6);Stroke(b,b-direction*12-side*6);
-            Label(label,text,small);
-        }
+        private static string ShortName(string value)=>value.Length>18?value.Substring(0,15)+"…":value;
         private void Card(Rect rect,int id,string text)
         {
             var previous=GUI.backgroundColor;GUI.backgroundColor=selected==id?accent:Color.white;
@@ -56,6 +49,14 @@ namespace WonderGather
         {
             if(GUILayout.Button((value?"ON   ":"OFF   ")+label,button)) return !value;return value;
         }
+        private void DrawRemove(FactionDraft draft)
+        {
+            Fill(new Rect(300,130,680,460),panel);
+            Label(new Rect(326,150,628,46),"Remove unit blueprint?",title);
+            Label(new Rect(326,212,628,170),"Remove “"+pendingRemove.DisplayName+"”? Starting units removed: "+draft.StartingCount(pendingRemove)+"."+(draft.Workshop.Produces==pendingRemove?" The workshop's training link will also be cleared.":"")+" Other blueprints keep their choices. Your saved faction changes only when you save.",body);
+            if(GUI.Button(new Rect(326,410,304,46),"Remove blueprint",button)){draft.RemoveUnit(pendingRemove);pendingRemove=null;selected=2;detailScroll=Vector2.zero;}
+            if(GUI.Button(new Rect(650,410,304,46),"Cancel",button)) pendingRemove=null;
+        }
         private void OnGUI()
         {
             Styles();
@@ -66,12 +67,15 @@ namespace WonderGather
                 GUI.enabled=true;return;
             }
             var draft=creator.Draft;if(draft==null) return;
+            if(shownDraft!=draft){shownDraft=draft;selected=2;pendingRemove=null;unitScroll=Vector2.zero;}
+            selected=Mathf.Clamp(selected,0,draft.Units.Count+1);
             var oldMatrix=GUI.matrix;
             float scale=Mathf.Min(Screen.width/1280f,Screen.height/720f);
             var offset=new Vector3((Screen.width-1280*scale)*.5f,(Screen.height-720*scale)*.5f,0);
             GUI.matrix=Matrix4x4.TRS(offset,Quaternion.identity,Vector3.one*scale);
             Fill(new Rect(0,0,1280,720),background);
             if(library.Draw(creator,title,body,small,button,field,panel)){GUI.matrix=oldMatrix;return;}
+            if(pendingRemove!=null){DrawRemove(draft);GUI.matrix=oldMatrix;return;}
             Label(new Rect(28,18,630,42),"Create your faction",title);
             GUI.enabled=!creator.Busy;
             if(GUI.Button(new Rect(680,20,110,40),"Save",button)){GUI.FocusControl(null);creator.Workspace.Save();}
@@ -86,56 +90,68 @@ namespace WonderGather
             GUILayout.Label("Faction name",body);
             string name=GUILayout.TextField(draft.Definition.DisplayName,64,field);
             GUILayout.Space(18);
-            int workers=Stepper("Workers",draft.StartingWorkers,1,0,8);
-            GUILayout.Space(12);
             int supplies=Stepper("Stored supplies",draft.Definition.StartingSupplies,10,0,120);
-            if(name!=draft.Definition.DisplayName || workers!=draft.StartingWorkers || supplies!=draft.Definition.StartingSupplies)
-                draft.SetStartingSetup(name,workers,supplies);
+            if(name!=draft.Definition.DisplayName || supplies!=draft.Definition.StartingSupplies) draft.SetFactionSetup(name,supplies);
+            GUILayout.Space(18);GUILayout.Label("Starting units: "+draft.TotalStartingUnits+" / "+FactionDraft.MaxStartingUnits,body);
+            GUILayout.Label("Select a unit blueprint to set its starting count.",small);
             GUILayout.Space(18);GUILayout.Label("Starting base: 1",body);
             GUILayout.Label("One supply depot begins completed.",small);
-            GUILayout.Space(12);GUILayout.Label("Starting limits are provisional.",small);
+            GUILayout.Space(12);GUILayout.Label("Map limits and shared worker visuals are provisional.",small);
             GUILayout.EndArea();
 
-            Label(new Rect(306,130,560,34),"Blueprint relationships",subtitle);
-            Label(new Rect(306,168,550,30),"Select a card to inspect and change its links.",small);
-            Card(new Rect(326,224,170,98),0,"Starting base\nSupply depot");
-            Card(new Rect(686,224,180,98),1,"Worker\n"+draft.StartingWorkers+" at start");
-            Card(new Rect(686,420,180,98),2,"Workshop\n"+(draft.Workshop.Produces!=null?"Trains workers":"Training disabled"));
-            if(draft.StartingWorkers>0) Edge(new Vector2(502,256),new Vector2(678,256),"Starts with",new Rect(524,222,140,30));
-            else Label(new Rect(520,245,150,52),"No starting workers",small);
-            if(draft.Worker.CanBuild(draft.Workshop)) Edge(new Vector2(726,330),new Vector2(726,412),"Builds",new Rect(657,362,65,30));
-            if(draft.Workshop.Produces!=null) Edge(new Vector2(824,412),new Vector2(824,330),"Trains",new Rect(831,362,70,30));
-            Label(new Rect(310,354,280,110),draft.Worker.GathersSupplies?"Worker gathers supplies.\nSupplies pay for construction and training.":"Supply gathering is disabled.\nYour starting stock may run out.",body);
-            Label(new Rect(306,534,565,28),"Links show what can be reached, not guaranteed affordability.",small);
+            Label(new Rect(306,128,560,34),"Blueprint relationships",subtitle);
+            Card(new Rect(306,170,270,66),0,"Starting base\nSupply depot");
+            Card(new Rect(594,170,294,66),1,"Workshop\n"+(draft.Workshop.Produces!=null?"Trains: "+ShortName(draft.Workshop.Produces.DisplayName):"Training disabled"));
+            GUI.enabled=!creator.Busy && draft.Units.Count<FactionDraft.MaxUnitBlueprints;
+            if(GUI.Button(new Rect(306,248,270,38),"Add worker blueprint",button))
+            {draft.AddUnit();selected=draft.Units.Count+1;unitScroll.y=float.MaxValue;detailScroll=Vector2.zero;GUI.FocusControl(null);}
+            GUI.enabled=!creator.Busy;
+            Label(new Rect(594,252,290,32),draft.Units.Count+" / "+FactionDraft.MaxUnitBlueprints+" unit blueprints",small);
+            GUILayout.BeginArea(new Rect(306,298,582,250));unitScroll=GUILayout.BeginScrollView(unitScroll);
+            for(int i=0;i<draft.Units.Count;i++)
+            {
+                var unit=draft.Units[i];var previous=GUI.backgroundColor;GUI.backgroundColor=selected==i+2?accent:Color.white;
+                string links="Base → "+draft.StartingCount(unit)+" at start"+(unit.CanBuild(draft.Workshop)?"   |   Builds workshop":"")+(draft.Workshop.Produces==unit?"   |   Workshop trains this":"");
+                if(GUILayout.Button(unit.DisplayName+"\n"+links,button,GUILayout.Width(552),GUILayout.MinHeight(64)))
+                {selected=i+2;detailScroll=Vector2.zero;GUI.FocusControl(null);}
+                GUI.backgroundColor=previous;
+            }
+            GUILayout.EndScrollView();GUILayout.EndArea();
 
-            GUILayout.BeginArea(new Rect(940,128,300,428));
-            detailScroll=GUILayout.BeginScrollView(detailScroll);
-            GUILayout.Label(selected==0?"Starting base":selected==1?"Worker":"Workshop",subtitle);
-            GUILayout.Space(14);
+            GUILayout.BeginArea(new Rect(940,128,300,428));detailScroll=GUILayout.BeginScrollView(detailScroll);
+            GUILayout.Label(selected==0?"Starting base":selected==1?"Workshop":"Unit blueprint",subtitle);GUILayout.Space(12);
             if(selected==0)
             {
                 GUILayout.Label("Your faction begins here.",body);GUILayout.Space(12);
-                GUILayout.Label("Stores delivered supplies and starts completed. It does not train units in this first example.",body);
-                GUILayout.Space(16);GUILayout.Label("Adjust the starting workers and stock in the left panel.",small);
+                GUILayout.Label("Stores delivered supplies and starts completed. It does not train units in this prototype.",body);
+                GUILayout.Space(16);GUILayout.Label("Set starting counts on each unit blueprint. The shared total is limited to eight for this map.",small);
             }
-            else if(selected==1)
+            else if(selected>=2)
             {
-                GUILayout.Label("Capabilities",body);
-                bool gathers=Toggle("Gather supplies",draft.Worker.GathersSupplies);
-                bool builds=Toggle("Construct workshop",draft.Worker.CanBuild(draft.Workshop));
-                if(gathers!=draft.Worker.GathersSupplies || builds!=draft.Worker.CanBuild(draft.Workshop)) draft.SetWorkerPermissions(gathers,builds);
-                GUILayout.Space(18);
-                GUILayout.Label("Training cost: "+draft.Worker.Production.Cost+" supplies",body);
-                GUILayout.Label("Training time: "+draft.Worker.Production.Seconds+" seconds",body);
-                GUILayout.Space(12);GUILayout.Label("Newly trained workers inherit these same capabilities.",small);
+                var unit=draft.Units[selected-2];
+                GUILayout.Label("Blueprint name",body);string unitName=GUILayout.TextField(unit.DisplayName,64,field,GUILayout.Width(278));
+                int count=Stepper("At start",draft.StartingCount(unit),1,0,FactionDraft.MaxStartingUnits-draft.TotalStartingUnits+draft.StartingCount(unit));
+                bool gathers=Toggle("Gather supplies",unit.GathersSupplies);
+                bool builds=Toggle("Construct workshop",unit.CanBuild(draft.Workshop));
+                if(unitName!=unit.DisplayName || gathers!=unit.GathersSupplies || builds!=unit.CanBuild(draft.Workshop)) draft.ConfigureUnit(unit,unitName,gathers,builds);
+                if(count!=draft.StartingCount(unit)) draft.SetStartingCount(unit,count);
+                GUILayout.Space(10);GUILayout.Label("Training: "+unit.Production.Cost+" supplies / "+unit.Production.Seconds+" seconds",small);
+                GUILayout.Label(draft.Workshop.Produces==unit?"The workshop trains this blueprint.":"Select Workshop to change its trained blueprint.",small);
+                GUI.enabled=!creator.Busy && draft.Units.Count<FactionDraft.MaxUnitBlueprints;
+                if(GUILayout.Button("Duplicate blueprint",button)){draft.AddUnit(unit);selected=draft.Units.Count+1;unitScroll.y=float.MaxValue;GUI.FocusControl(null);}
+                GUI.enabled=!creator.Busy && draft.Units.Count>1;
+                if(GUILayout.Button("Remove blueprint…",button)){pendingRemove=unit;GUI.FocusControl(null);}
+                GUI.enabled=!creator.Busy;
+                if(draft.Units.Count==1) GUILayout.Label("Keep at least one blueprint. Its starting count may be zero.",small);
             }
             else
             {
-                bool produces=Toggle("Train workers",draft.Workshop.Produces!=null);
-                if(produces!=(draft.Workshop.Produces!=null)) draft.SetProduction(produces);
-                GUILayout.Space(18);GUILayout.Label("Construction cost: "+draft.Workshop.Construction.Cost+" supplies",body);
-                GUILayout.Label("Build time: "+draft.Workshop.Construction.Seconds+" seconds",body);
-                GUILayout.Space(12);GUILayout.Label("Workers need construction permission to create this building. Training requires a completed workshop.",small);
+                GUILayout.Label("Choose the blueprint this workshop trains.",body);GUILayout.Space(10);
+                if(GUILayout.Button((draft.Workshop.Produces==null?"● ":"○ ")+"No training",button)) draft.SetProductionUnit(null);
+                foreach(var unit in draft.Units)
+                    if(GUILayout.Button((draft.Workshop.Produces==unit?"● ":"○ ")+unit.DisplayName,button)) draft.SetProductionUnit(unit);
+                GUILayout.Space(14);GUILayout.Label("Construction: "+draft.Workshop.Construction.Cost+" supplies / "+draft.Workshop.Construction.Seconds+" seconds",small);
+                GUILayout.Label("One trained blueprint per workshop for this slice. All trained units inherit that blueprint's capabilities.",small);
             }
             GUILayout.EndScrollView();GUILayout.EndArea();
             Fill(new Rect(24,588,890,108),panel);

@@ -222,3 +222,42 @@ one previous backup and recoverable deletion were exercised on Windows; cloud
 sync and other operating systems were not validated. Editor Stop Play Mode
 bypasses player quit prompts. Physical UI interactions and flow acceptance
 remain user playtests. No package or authored scene changes were required.
+
+
+## Multiple unit blueprints — September 9, 2026
+
+- Baseline: e370cf0, prior regression/persistence and Windows build passed.
+  Primary user changes to TheGroup, PackageManagerSettings, URPProjectSettings
+  and the Recovery assets were preserved. Validation used the isolated WGGroup
+  copy with Unity 6000.6.0f1, unchanged packages and existing creator scenes.
+- First targeted run: 18/19 passed. A boundary test exposed AddUnit returning
+  early at the roster limit before rejecting a foreign blueprint reference.
+  Ownership checking now precedes that limit. No assertion was removed.
+- Final full PlayMode suite: 46 passed, 0 failed, 317,184863
+  seconds. Result: Docs/TestResults/units-full.xml (local ignored artifact).
+- Six new permanent tests cover independent clones, map/roster limits, invalid
+  names and foreign references, removal of linked units, complete round trips
+  after removing the original blueprint, dirty tracking, strict nested format
+  checks, legacy migration without read-time writes and with save-time backup,
+  and mixed starting units followed by workshop construction and production
+  of the selected blueprint with the correct permissions.
+- Existing malformed-save tests now target version 2 and per-unit start fields;
+  separate new tests preserve version-1 compatibility and unknown-field refusal.
+- Rendered visual probe passed. Inspected UnitBlueprints,
+  WorkshopBlueprintChoice, BlueprintRemovalPrompt and UnitBlueprintsMany in
+  Docs/Images, including the eight-blueprint list and long names. This checks
+  rendered states; manual mouse interaction/feel remains user acceptance work.
+- The first long-name capture exposed horizontal overflow in the detail panel.
+  After the full suite, presentation-only width/compact-label corrections
+  were applied and the rendered probe rerun successfully before building.
+- Removed the temporary probe before the Windows x64 development build.
+  Build method WonderGather.Editor.FactionCreatorSetup.BuildWindows reported
+  CREATOR_BUILD_OK; output Builds/WindowsFactionCreator/WonderGather.exe.
+
+Save tests used owned temporary directories, never actual player saves. No
+scene, prefab, package or project settings changes were required. The schema
+is version 2 with strict read support for version 1; an older game build cannot
+read new version-2 files. Prototype scope remains one trained unit type per
+workshop, shared worker visuals/recipe, eight blueprints and eight starting
+units. This is not validation of final graph design, balance, localization,
+controller support, other platforms or multiple recipes per production queue.
