@@ -1,6 +1,6 @@
 # Unity project context
 
-Updated September 9, 2026 for civilization blueprints. See Docs/Validation.md for execution evidence and Docs/FactionCreatorPlaytest.md for the current playtest.
+Updated September 9, 2026 for civilization blueprints. See Docs/Validation.md for execution evidence and Docs/FactionLibraryPlaytest.md for the current playtest.
 
 ## Confirmed foundation
 
@@ -111,3 +111,33 @@ Builds/WindowsFactionCreator. Earlier scenes stay in build settings for tests.
 No package changes or modifications to existing scene assets are required.
 The creator's sample contract is intentionally one worker and one workshop.
 Do not imply arbitrary content editing, save/load or a final visual design.
+
+
+## Faction persistence
+
+FactionWorkspace now owns the runtime draft, clean-state snapshot, current file
+ID and optimistic version token. FactionCreator delegates draft access to it;
+the prior creator/playtest API remains intact. Explicit storage injection lets
+tests use unique temporary directories without touching player saves.
+
+FactionRecord version 1 is a strict flat DTO for the existing settlement-1
+template. Stable blueprint IDs and all current editable fields are written
+with Utf8JsonWriter and read with JsonDocument (Unity 6.6's bundled BCL
+System.Text.Json; no added package). Unknown, duplicate, missing or unsupported
+fields/versions and invalid bounds are refused. No Unity object serialization
+or reflection-based JSON serialization is used.
+
+FactionStore uses Application.persistentDataPath/Factions in normal play.
+Generated GUID filenames prevent display names becoming paths. Small files
+are written on explicit user actions: a flushed temporary file replaces the
+destination atomically, retaining one .bak. A short-lived exclusive lock
+serializes cooperative writers; a content hash rejects stale updates.
+Deletion moves the saved file into Deleted. Reads validate before the workspace
+replaces/disposes its current draft; failed operations retain the current data.
+
+FactionLibraryPanel owns transient library, naming and confirmation views.
+The existing scaled creator view supplies toolbar and save-state feedback.
+Standalone close requests use Application.wantsToQuit with save/discard/cancel;
+the map's input is disabled while a quit prompt is active. Editor Stop Play
+Mode does not participate in that player lifecycle. Prior scenes and packages
+are unchanged; the existing creator build command includes the new features.

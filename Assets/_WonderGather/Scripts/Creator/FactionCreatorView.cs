@@ -5,6 +5,7 @@ namespace WonderGather
     public sealed class FactionCreatorView : MonoBehaviour
     {
         private FactionCreator creator;
+        private readonly FactionLibraryPanel library=new FactionLibraryPanel();
         private int selected=1;
         private Vector2 detailScroll,warningScroll;
         private GUIStyle title,subtitle,body,small,card,button,field;
@@ -58,7 +59,7 @@ namespace WonderGather
         private void OnGUI()
         {
             Styles();
-            if(creator.Playing)
+            if(creator.Playing && !creator.QuitPending)
             {
                 GUI.enabled=!creator.Busy;
                 if(GUI.Button(creator.ReturnButton,creator.Busy?"Returning...":"Return to faction creator",button)) creator.ReturnToCreator();
@@ -70,8 +71,14 @@ namespace WonderGather
             var offset=new Vector3((Screen.width-1280*scale)*.5f,(Screen.height-720*scale)*.5f,0);
             GUI.matrix=Matrix4x4.TRS(offset,Quaternion.identity,Vector3.one*scale);
             Fill(new Rect(0,0,1280,720),background);
-            Label(new Rect(28,18,800,42),"Create your faction",title);
-            Label(new Rect(28,64,1220,38),creator.Status,body);
+            if(library.Draw(creator,title,body,small,button,field,panel)){GUI.matrix=oldMatrix;return;}
+            Label(new Rect(28,18,630,42),"Create your faction",title);
+            GUI.enabled=!creator.Busy;
+            if(GUI.Button(new Rect(680,20,110,40),"Save",button)){GUI.FocusControl(null);creator.Workspace.Save();}
+            if(GUI.Button(new Rect(800,20,160,40),"Save as copy",button)){GUI.FocusControl(null);library.Copy(creator.Workspace);}
+            if(GUI.Button(new Rect(970,20,160,40),"Faction library",button)){GUI.FocusControl(null);library.OpenLibrary(creator.Workspace);}
+            if(GUI.Button(new Rect(1140,20,116,40),"Exit",button)) creator.RequestQuit();
+            Label(new Rect(28,64,1220,38),string.IsNullOrEmpty(creator.Workspace.Message)?creator.Status:creator.Workspace.Message,body);
             Fill(new Rect(24,112,246,460),panel);Fill(new Rect(286,112,622,460),panel);Fill(new Rect(924,112,332,460),panel);
             GUI.enabled=!creator.Busy;
             GUILayout.BeginArea(new Rect(40,128,214,428));
@@ -141,7 +148,7 @@ namespace WonderGather
             GUI.enabled=!creator.Busy && draft.Report.CanInstantiate;
             if(GUI.Button(new Rect(934,588,322,52),creator.Busy?"Opening playtest...":"Playtest faction  →",button)){GUI.FocusControl(null);creator.Playtest();}
             GUI.enabled=true;
-            Label(new Rect(934,650,322,45),"Draft lasts this session. Return from playtesting to keep editing.",small);
+            Label(new Rect(934,650,322,45),creator.Workspace.SaveState,small);
             GUI.matrix=oldMatrix;
         }
     }

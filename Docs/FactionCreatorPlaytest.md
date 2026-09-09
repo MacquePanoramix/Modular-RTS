@@ -17,9 +17,11 @@ Play Mode, or run `Builds/WindowsFactionCreator/WonderGather.exe`.
 6. Use Return to faction creator in the upper right. Edit your draft and try
    again. Each map starts fresh; your draft choices remain intact.
 
-The draft lasts only for the current application/Play Mode session. Closing
-the game or stopping Play Mode discards it. Save/load is not implemented yet.
-Editing the draft does not modify the example ScriptableObject assets.
+Use Save or Save as copy to keep a faction between sessions. Faction library
+opens, renames and deletes saved designs. Unsaved edits remain session-only;
+save before stopping Unity Play Mode. See FactionLibraryPlaytest.md for the
+save-state prompts, recovery files and current format limits. Editing a draft
+does not modify the example ScriptableObject assets.
 
 ## What to look for
 
@@ -46,7 +48,7 @@ The starting map limits are 0–8 workers and 0–120 stored supplies. They are
 prototype bounds, not a design budget or balancing formula. Costs remain
 visible but fixed. Blueprint cards have fixed positions; graph dragging,
 additional types, new recipes, bodies, equipment, technologies, visual
-customization and saved faction files are future work.
+customization are future work. Saved faction files are now supported.
 
 Warnings check structural reachability and basic supply availability. They do
 not prove whole-chain affordability, map resource sufficiency or competitive

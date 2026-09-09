@@ -429,3 +429,23 @@ locked by this implementation. The 0–8 workers and 0–120 supplies controls a
 test-map bounds. Save/load, broader blueprint content, full visual graph
 editing and the final HUD design remain future work. Review clarity and feel
 with the user before choosing the next creator refinement.
+
+
+## Faction saving and library — September 9, 2026
+
+The user provisionally accepted the first creator and approved saving,
+loading and duplicating factions as the next implementation. Added for
+playtesting: Save, Save as copy, library Open/Rename/Delete, unsaved-change
+feedback and confirmation before replacing edits or normally closing the
+standalone player. Editor Stop Play Mode still requires saving first.
+
+Saved data records the current small creator's blueprint IDs, links, starting
+setup and name. Files are local and versioned; failed writes preserve the
+draft, previous saves receive a backup, and deletions retain a recovery file.
+Unknown/incompatible data is explained rather than silently discarded.
+
+This does not lock the final faction schema, balance formulas or interface
+aesthetic. The next proposed design discussion remains multiple customizable
+unit/building blueprints and meaningful production chains, with the user
+choosing roles and capabilities before implementation. Cloud sharing and
+running-match saves remain separate possibilities.

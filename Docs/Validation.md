@@ -188,3 +188,37 @@ warnings. Session-only drafts have no save/load. The sample has one worker,
 one workshop and a fixed starting depot. Design costs and final aesthetic
 remain open. No packages or earlier scene assets were modified. Existing
 obsolete Unity API warnings in older test/editor code remain.
+
+
+## Faction saving and library — September 9, 2026
+
+- Unity 6000.6.0f1 full PlayMode regression run: 39 passed, 0 failed;
+  296,8404493 seconds. Result: TestResults/library-full.xml.
+- After adding active-rename conflict detection and a short-lived exclusive
+  save lock, all nine final persistence tests passed. Result:
+  TestResults/library-final.xml. The final project contains 40 tests; the
+  entire 40-test suite was not rerun because these final changes were isolated
+  to persistence and covered by that focused run.
+- Covered round trips, complete creator choices, independent copies,
+  renaming/deleting, unsaved replacement guards, backup rotation, external
+  changes, cooperative writer conflicts, corrupt/unknown/missing fields,
+  unavailable blueprint IDs, invalid names, failed writes preserving old
+  files and dirty drafts, and loading/playtesting in a fresh creator session.
+- The initial targeted run passed 5/8; invalid-data exceptions were missing
+  from the storage error filter. The filter was corrected, then the full and
+  final runs above passed. No error cases or assertions were disabled.
+- Rendered probe passed and four captures inspected: FactionSaving,
+  FactionLibrary, FactionUnsavedPrompt and FactionQuitPrompt in Docs/Images.
+  The probe also verified that unsaved changes reject a close request and
+  that Cancel clears the quit prompt. Temporary probe removed before build.
+- Windows x64 development build passed (CREATOR_BUILD_OK), at
+  Builds/WindowsFactionCreator/WonderGather.exe.
+
+All automated persistence and visual tests used uniquely named temporary
+directories and cleaned only those directories. Actual player saves were not
+used. The format is local version-1 faction design data, not a running-match
+save. Unsupported formats are refused rather than migrated. Atomic replacement,
+one previous backup and recoverable deletion were exercised on Windows; cloud
+sync and other operating systems were not validated. Editor Stop Play Mode
+bypasses player quit prompts. Physical UI interactions and flow acceptance
+remain user playtests. No package or authored scene changes were required.

@@ -1,4 +1,9 @@
-> Current milestone: **Player-facing faction creator**. Open
+> Current milestone: **Faction saving and library**. Open
+> `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run
+> `Builds/WindowsFactionCreator/WonderGather.exe`.
+> See [Faction library playtest](Docs/FactionLibraryPlaytest.md).
+
+> Previous milestone: **Player-facing faction creator**. Open
 > `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run the local
 > `Builds/WindowsFactionCreator/WonderGather.exe` build.
 > See [Faction creator playtest](Docs/FactionCreatorPlaytest.md).
