@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_WonderGather/Scenes/TheFactionCreator.unity
+    guid: 9337b8a018573ea46bf110a3c23ba316
+  - enabled: 1
+    path: Assets/_WonderGather/Scenes/FactionPlaytest.unity
+    guid: 2a12161e9305fe04e823663a9543951e
+  - enabled: 1
     path: Assets/_WonderGather/Scenes/TheCivilization.unity
     guid: f8741162d9599a24e976f9352a5b81dd
   - enabled: 1

@@ -159,3 +159,32 @@ legality. Supplies remain the only resource; worker prefab contracts and one
 recipe per building are current limits. Physical controls, ease of editing and
 design feel await user playtesting. Existing obsolete API warnings in older
 test/editor sources remain. No packages or older authored scenes were changed.
+
+
+## First player-facing faction creator — September 9, 2026
+
+- Unity 6000.6.0f1 created/imported TheFactionCreator and FactionPlaytest using
+  editor authoring APIs (CREATOR_SETUP_OK).
+- Full PlayMode suite: 31 passed, 0 failed;
+  298,41571 seconds. Local result: TestResults/creator-full.xml.
+- Four creator tests cover cloned draft edits, runtime gather/build/production
+  permissions, unchanged source assets, repeated playtest/return cleanup,
+  updated counts/resources on relaunch, blank-name rejection, permissive
+  challenge warnings and map bounds. Previous gameplay regressions also pass.
+- Separate rendered probe exercised normal and warning UI states, launch and
+  return. Captures inspected: Images/FactionCreator.png,
+  Images/FactionCreatorWarnings.png, Images/FactionCreatorPlaytest.png.
+- The first visual inspection exposed scaled arrow transforms and a clipped
+  starting-panel note. Both were corrected; the rendered probe passed again
+  and the final captures were inspected. Gameplay behavior was unchanged.
+- Temporary capture source/meta removed before the Windows x64 development
+  build. Build passed (CREATOR_BUILD_OK); output:
+  Builds/WindowsFactionCreator/WonderGather.exe.
+
+Runtime tests invoke the same draft and scene-transition methods as the UI;
+physical mouse/keyboard interaction and final layout acceptance remain user
+playtests. Current UI uses a scaled 1280×720 reference and scrolling details/
+warnings. Session-only drafts have no save/load. The sample has one worker,
+one workshop and a fixed starting depot. Design costs and final aesthetic
+remain open. No packages or earlier scene assets were modified. Existing
+obsolete Unity API warnings in older test/editor code remain.

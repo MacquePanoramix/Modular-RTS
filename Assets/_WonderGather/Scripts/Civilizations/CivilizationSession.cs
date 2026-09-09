@@ -6,6 +6,7 @@ namespace WonderGather
     public sealed class CivilizationSession : MonoBehaviour
     {
         [SerializeField] private CivilizationDefinition civilization;
+        [SerializeField] private bool initializeOnStart=true;
         [SerializeField] private SelectionController selection;
         [SerializeField] private ConstructionController construction;
         [SerializeField] private WandererHud hud;
@@ -17,7 +18,9 @@ namespace WonderGather
         public string Summary {get;private set;}="";
         public void Configure(CivilizationDefinition data,SelectionController owner,ConstructionController builder,WandererHud display,ResourceNode node)
         {civilization=data;selection=owner;construction=builder;hud=display;resource=node;}
-        private void Start()=>Initialize();
+        private void Start(){if(initializeOnStart) Initialize();}
+        public bool InitializeFrom(CivilizationDefinition data)
+        {if(Initialized) return false;civilization=data;return Initialize();}
         public bool Initialize()
         {
             if(Initialized) return false;

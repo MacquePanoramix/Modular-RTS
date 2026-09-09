@@ -1,6 +1,6 @@
 # Unity project context
 
-Updated September 9, 2026 for civilization blueprints. See Docs/Validation.md for execution evidence and Docs/CivilizationPlaytest.md for the current playtest.
+Updated September 9, 2026 for civilization blueprints. See Docs/Validation.md for execution evidence and Docs/FactionCreatorPlaytest.md for the current playtest.
 
 ## Confirmed foundation
 
@@ -82,3 +82,32 @@ Unity; it refuses to overwrite existing scenes. BuildWindows builds both
 scenes into Builds/WindowsCivilization with the standard sample first. Existing
 scenes stay enabled for regressions. No changes to older authored scenes or
 the 0.005 zoom preference are required by this milestone.
+
+
+## Player-facing creator
+
+FactionDraft owns cloned CivilizationDefinition, UnitBlueprint and
+BuildingBlueprint instances with remapped links; prefab and cost recipe
+references remain read-only. It constrains the small demo's editable values
+and refreshes CivilizationValidator after edits. It destroys only owned copies.
+
+FactionCreator owns the draft and additive map load/unload state. The creator
+scene remains loaded while FactionPlaytest is added. It locates the explicitly
+authored FactionPlaytestBridge only within that loaded scene, makes that scene
+active before spawning and calls CivilizationSession.InitializeFrom. The new
+map disables automatic session initialization; older scenes retain it. Returning
+unloads the entire map before exposing the draft again. No static singleton or
+cross-session persistence is introduced.
+
+FactionCreatorView draws the fixed-card graph, starting setup and contextual
+details using the existing IMGUI approach, scaled to a 1280×720 reference.
+Details and warnings have scroll areas. RtsInput accepts an explicit pointer
+blocker so the in-game return button does not issue world orders beneath it.
+Keyboard movement is absent in the creator because the map is unloaded.
+
+FactionCreatorSetup authors TheFactionCreator and FactionPlaytest without
+overwriting earlier scenes; BuildWindows builds those two scenes into
+Builds/WindowsFactionCreator. Earlier scenes stay in build settings for tests.
+No package changes or modifications to existing scene assets are required.
+The creator's sample contract is intentionally one worker and one workshop.
+Do not imply arbitrary content editing, save/load or a final visual design.

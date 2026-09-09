@@ -1,4 +1,9 @@
-> Current milestone: **Civilization blueprints**. Open
+> Current milestone: **Player-facing faction creator**. Open
+> `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run the local
+> `Builds/WindowsFactionCreator/WonderGather.exe` build.
+> See [Faction creator playtest](Docs/FactionCreatorPlaytest.md).
+
+> Previous milestone: **Civilization blueprints**. Open
 > `Assets/_WonderGather/Scenes/TheCivilization.unity`.
 > See [Civilization playtest](Docs/CivilizationPlaytest.md) for editable assets,
 > the provisioned sample, and validation limits.

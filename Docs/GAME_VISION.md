@@ -406,3 +406,26 @@ changes. Technical sample assets are provisional. The current written guide
 captures grounded fantasy, quiet awe, expressive bodies and rejection of
 slapstick physics; the location of any more detailed aesthetic source has been
 requested and must be reviewed before visual decisions.
+
+
+## Player-facing faction creator — September 9, 2026
+
+**User clarification:** The final game must let players design their own
+factions through blueprints, supported by a high-quality creation interface.
+Developer-facing Inspector assets are a foundation, not the intended final
+player experience.
+
+The user accepted the civilization foundation and approved a first functional
+creator with a central blueprint graph, adjacent customization panel and
+starting-setup summary. Implemented for review: faction naming, starting
+worker/supply counts, editable gather/build/train permissions, live dependency
+warnings, launch into the existing test map and return to the same draft.
+Runtime draft copies protect authored example assets. Each playtest resets the
+map while preserving the draft for this session.
+
+The visual treatment is provisional and deliberately limited to a layout
+prototype. No final art style, lore, new faction role or balance formula is
+locked by this implementation. The 0–8 workers and 0–120 supplies controls are
+test-map bounds. Save/load, broader blueprint content, full visual graph
+editing and the final HUD design remain future work. Review clarity and feel
+with the user before choosing the next creator refinement.

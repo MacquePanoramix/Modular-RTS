@@ -9,6 +9,8 @@ namespace WonderGather
     {
         private InputActionMap map;
         private WandererHud hud;
+        private System.Func<Vector2,bool> interfaceBlocker;
+        public void SetInterfaceBlocker(System.Func<Vector2,bool> blocksPointer)=>interfaceBlocker=blocksPointer;
         private InputAction pan, rotate, zoom, point, select, move, clear, focus, additive, build, train;
         public Vector2 Pan => Active ? pan.ReadValue<Vector2>() : Vector2.zero;
         public float Rotate => Active ? rotate.ReadValue<float>() : 0;
@@ -27,6 +29,7 @@ namespace WonderGather
         private bool Active => isActiveAndEnabled && Application.isFocused;
         private bool WorldPointer => Active && Pointer.x >= 0 && Pointer.y >= 0
             && Pointer.x < Screen.width && Pointer.y < Screen.height
+            && !(interfaceBlocker!=null && interfaceBlocker(Pointer))
             && !(hud != null && hud.isActiveAndEnabled && hud.ContainsScreenPoint(Pointer))
             && !(EventSystem.current != null && EventSystem.current.IsPointerOverGameObject());
 
