@@ -1,5 +1,5 @@
-Current milestone: multiple editable unit blueprints. Open TheFactionCreator.
-See [Multiple blueprint playtest](Docs/MultipleBlueprintPlaytest.md).
+Current milestone: editable building blueprints and production networks.
+Open TheFactionCreator. See [Building network playtest](Docs/BuildingNetworkPlaytest.md).
 
 > Previous milestone: **Faction saving and library**. Open
 > `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run
@@ -25,13 +25,13 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 1. In Unity Hub, add this folder as an existing project.
 2. Open it using Unity **6000.6.0f1** (installed locally).
 3. Open `Assets/_WonderGather/Scenes/TheFactionCreator.unity` and press Play.
-4. Add or duplicate worker blueprints, edit their starting counts and
-   gather/build capabilities, then select Workshop to choose its trained type.
+4. Add or duplicate unit and building blueprints. Edit starting counts,
+   construction permissions and the unit types each building trains.
 5. Save the faction and launch its playtest. Return to the creator to keep
    editing. Save before stopping Unity Play Mode.
 
-See [Multiple blueprint playtest](Docs/MultipleBlueprintPlaytest.md) for a
-concrete two-role test. Earlier scenes remain available for comparison.
+See [Building network playtest](Docs/BuildingNetworkPlaytest.md) for a
+concrete construction and mixed-production test. Earlier scenes remain available for comparison.
 
 For a playtest without opening Unity, run
 `Builds/WindowsFactionCreator/WonderGather.exe`. Keep the executable together

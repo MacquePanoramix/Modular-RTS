@@ -1,6 +1,6 @@
 # Unity project context
 
-Updated September 9, 2026 for multiple unit blueprints. See Docs/Validation.md for execution evidence and Docs/MultipleBlueprintPlaytest.md for the current playtest.
+Updated September 10, 2026 for building networks. See Docs/Validation.md for execution evidence and Docs/BuildingNetworkPlaytest.md for the current playtest.
 
 ## Confirmed foundation
 
@@ -174,3 +174,38 @@ The final prototype bounds are 1–8 unit blueprints and 0–8 total starting un
 All use the existing worker prefab and recipe, with optional gather/build.
 Multiple production options per building and building roster editing remain
 future work. See MultipleBlueprintPlaytest.md and Validation.md for evidence.
+
+
+## Building roster and mixed production extension
+
+FactionDraft owns up to eight workshop-derived BuildingBlueprint copies plus
+the fixed starting base. Building names live on the blueprint, leaving shared
+BuildingDefinition recipes immutable. Runtime buildings expose DisplayName
+through BuildingSite; placement and selection HUDs use that name.
+AddBuilding duplicates outgoing training options only. SetBuildPermission and
+SetTraining validate roster ownership. Removal cleans all affected links before
+destroying owned copies. Original Worker/Workshop convenience APIs remain for
+earlier one-type tests; template IDs are tracked separately from editable IDs.
+
+BuildingBlueprint retains its serialized produces reference as the first option
+and adds an additionalProduction array, with safe empty defaults for existing
+assets. ConfigureOptions supports multiple types; legacy Configure remains.
+CivilizationValidator and the Inspector follow every production option and
+reject missing/duplicate/out-of-roster options. Existing scenes require no edits.
+
+UnitProducer snapshots each enqueued blueprint, prefab, paid amount and duration.
+Enqueue's optional blueprint argument must belong to the producer options; null
+uses the first option or legacy recipe. Cancel/destroy refunds actual queued
+payments. SelectionController and ProductionCommand carry the requested type.
+The HUD shows separate buttons, queue names, and bounded scrolling, retaining
+world-pointer exclusion through its measured visible rectangle.
+
+FactionRecord writes strict version 3 with unit builds-ID arrays and named
+building records with ordered trains-ID arrays. Version 1 maps to one worker
+and workshop; version 2 maps to multiple workers and one workshop. Both migrate
+only in memory until explicit save/rename, retaining the old file as backup.
+Nested unknown fields and duplicate/dangling links are refused. Workspace dirty
+tracking includes complete rosters, names and links. No package updates needed.
+
+Current playtest: Docs/BuildingNetworkPlaytest.md. Windows build entry remains
+FactionCreatorSetup.BuildWindows and the existing creator/map scenes.

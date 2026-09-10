@@ -261,3 +261,49 @@ read new version-2 files. Prototype scope remains one trained unit type per
 workshop, shared worker visuals/recipe, eight blueprints and eight starting
 units. This is not validation of final graph design, balance, localization,
 controller support, other platforms or multiple recipes per production queue.
+
+
+## Building blueprints and mixed production — September 10, 2026
+
+- Baseline: ec8f64f; prior 46-test suite and Windows build passed. The primary
+  user's modified TheGroup scene, PackageManagerSettings, URPProjectSettings
+  and Recovery assets were preserved. Unity 6000.6.0f1 and the isolated WGGroup
+  copy were used, with unchanged packages and authored scenes/prefabs.
+- Initial existing creator/persistence compatibility run: 15 passed, 0 failed.
+- New tests initially failed compilation because three collection assertions
+  selected a string-only NUnit overload. The assertions were corrected to
+  membership checks without weakening their expected behavior.
+- Focused building-network run: 7 passed, 0 failed, including complete graph
+  round trips, incoming/outgoing link cleanup, copies, limits/invalid data,
+  fixed-point reachability across multiple options and buildings, version-2
+  migration without read-time writes, and backup on explicit upgrade.
+- Final full PlayMode suite: 53 passed, 0 failed, 345,4892977
+  seconds. Local result: Docs/TestResults/buildings-full.xml.
+- Runtime tests construct a named building and train two different blueprints
+  in order. A separate mixed-order test varies test-only recipes and checks
+  original payments/durations, blocked-exit retention, cancellation and
+  destruction refunds. The earlier movement/gathering/construction/production
+  and version-1 migration tests also passed in the full suite.
+- Rendered probe passed. Six captures in Docs/Images show the building roster,
+  construction links, removal confirmation, eight-type/long-name case, and
+  mixed-production HUD at top/bottom scroll positions. Visual state and layout
+  were inspected; physical interaction and design acceptance remain playtests.
+- After the full run, explicit roster/option counts were added to the dirty
+  snapshot and empty-training HUD wording clarified. Final rendered run:
+  16 focused network/persistence tests plus one visual probe passed (17/17),
+  recorded in Docs/TestResults/buildings-final.xml. The first captures exposed
+  a narrow horizontal overflow and clipped footer in the creator. Width/text
+  adjustments were followed by another successful visual-only probe, including
+  long training labels and HUD pointer exclusion, in buildings-visual.xml.
+- Temporary visual probe removed before Windows x64 development build.
+  FactionCreatorSetup.BuildWindows reported CREATOR_BUILD_OK; output:
+  Builds/WindowsFactionCreator/WonderGather.exe.
+
+Save tests use owned temporary directories, never player saves. Version 3
+writes the supported network; versions 1/2 migrate only in memory until an
+explicit save or rename. Earlier game builds cannot read version-3 saves.
+No package, scene or prefab changes were needed. New BuildingBlueprint fields
+preserve the existing serialized first-production reference and default extra
+options to empty; custom labels are explicit, leaving authored recipes intact.
+No final aesthetic, balance rules, controller support, localization, other
+platforms, multiplayer or custom starting-base production was validated.

@@ -40,8 +40,8 @@ namespace WonderGather
         public BuildingSite LastSite { get; private set; }
         private string status="Select a worker and press B to place a workshop.";
         public string Status {get=>status;private set {status=value;if(selection!=null) selection.ReportStatus(value);}}
-        public string BuildHint => definition==null?"Select a builder; B places its first available building.":"B: place " + definition.DisplayName + " (" + definition.Cost + " supplies) / right-click site: resume";
-        public string ProgressText => LastSite==null ? "" : LastSite.Complete ? LastSite.Definition.DisplayName+" complete." : LastSite.Definition.DisplayName+": " + Mathf.RoundToInt(LastSite.Progress*100) + "%" + (LastSite.Worker==null ? " (paused; right-click to resume)" : "");
+        public string BuildHint => definition==null?"Select a builder; B places its first available building.":"B: place " + (blueprint!=null?blueprint.DisplayName:definition.DisplayName) + " (" + definition.Cost + " supplies) / right-click site: resume";
+        public string ProgressText => LastSite==null ? "" : LastSite.Complete ? LastSite.DisplayName+" complete." : LastSite.DisplayName+": " + Mathf.RoundToInt(LastSite.Progress*100) + "%" + (LastSite.Worker==null ? " (paused; right-click to resume)" : "");
         public void Configure(SelectionController selected, ResourceDepot bank, BuildingSite building, BuildingDefinition data, Material good, Material bad)
         {selection=selected;depot=bank;prefab=building;definition=data;validMaterial=good;invalidMaterial=bad;}
         private Builder SelectedBuilder()
@@ -94,7 +94,7 @@ namespace WonderGather
             if(!commands.Dispatch(new BuildCommand(site),worker))
             {site.gameObject.SetActive(false);Destroy(site.gameObject);depot.Deposit(definition.Cost);return false;}
             if(site.TryGetComponent<UnitProducer>(out var producer)) producer.Configure(depot,selection,worker.GetComponent<UnitMotor>().Destination);
-            LastSite=site;CancelPlacement();Status=site.Definition.DisplayName+" placed. Worker assigned.";return true;
+            LastSite=site;CancelPlacement();Status=site.DisplayName+" placed. Worker assigned.";return true;
         }
         public void Resume(BuildingSite site)
         {

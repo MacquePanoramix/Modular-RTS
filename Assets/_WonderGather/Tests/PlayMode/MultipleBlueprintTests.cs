@@ -75,7 +75,7 @@ namespace WonderGather.Tests
             Assert.That(File.ReadAllText(store.FilePath(id)),Is.EqualTo(old));Assert.That(w.Draft.StartingWorkers,Is.EqualTo(3));
             Assert.That(w.Draft.Worker.GathersSupplies,Is.False);Assert.That(w.Draft.Workshop.Produces,Is.Null);
             Assert.That(w.Save(),Is.True);Assert.That(File.ReadAllText(store.FilePath(id)+".bak"),Is.EqualTo(old));
-            StringAssert.Contains("\"version\": 2",File.ReadAllText(store.FilePath(id)));
+            StringAssert.Contains("\"version\": 3",File.ReadAllText(store.FilePath(id)));
             Assert.That(w.Open(id),Is.True);Assert.That(w.Draft.StartingWorkers,Is.EqualTo(3));
         }
         [Test] public void InvalidLinksDuplicateIdsAndUnknownNestedDataAreRejected()
@@ -83,8 +83,8 @@ namespace WonderGather.Tests
             var record=FactionRecord.Capture(creator.Draft,Guid.NewGuid().ToString("N"));string valid=record.Encode();
             foreach(string bad in new[]{valid.Replace("\"start\": 8","\"start\": -1"),valid.Replace("\"start\": 8","\"extra\": 42, \"start\": 8"),valid.Replace("\"start\": 8","\"start\": 1, \"start\": 8"),valid.Replace("\"units\": [","\"units\": null, \"discarded\": [")})
                 Assert.Throws<InvalidDataException>(()=>FactionRecord.Decode(bad));
-            record.TrainedId="missing";Assert.Throws<InvalidDataException>(()=>record.Encode());
-            record.TrainedId=null;record.Units=new[]{record.Units[0],record.Units[0]};Assert.Throws<InvalidDataException>(()=>record.Encode());
+            record.Buildings[0].Trains=new[]{"missing"};Assert.Throws<InvalidDataException>(()=>record.Encode());
+            record.Buildings[0].Trains=Array.Empty<string>();record.Units=new[]{record.Units[0],record.Units[0]};Assert.Throws<InvalidDataException>(()=>record.Encode());
             string legacy=Legacy(record.Id).Replace("\"workers\":3","\"workers\":3,\"future\":42");Assert.Throws<InvalidDataException>(()=>FactionRecord.Decode(legacy));
         }
         [UnityTest] public IEnumerator MixedStartingUnitsAndWorkshopProductionKeepChosenCapabilities()

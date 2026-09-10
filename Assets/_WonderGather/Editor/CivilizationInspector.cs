@@ -1,4 +1,5 @@
 using UnityEditor;
+using System.Linq;
 using UnityEngine;
 namespace WonderGather.Editor
 {
@@ -16,7 +17,7 @@ namespace WonderGather.Editor
             foreach(var warning in report.Warnings) EditorGUILayout.HelpBox(warning,MessageType.Warning);
             if(report.Errors.Count==0 && report.Warnings.Count==0) EditorGUILayout.HelpBox("All listed blueprints are structurally reachable; a supply gatherer is reachable.",MessageType.Info);
             foreach(var building in data.Buildings) if(building!=null)
-                EditorGUILayout.LabelField(building.DisplayName+(building==data.StartingBase?" (starting base)":""),building.Produces!=null?"produces "+building.Produces.DisplayName:"no production");
+                EditorGUILayout.LabelField(building.DisplayName+(building==data.StartingBase?" (starting base)":""),building.ProductionOptions.Any()?"produces "+string.Join(", ",building.ProductionOptions.Select(x=>x!=null?x.DisplayName:"missing")):"no production");
             foreach(var unit in data.Units) if(unit!=null)
             {
                 EditorGUILayout.LabelField(unit.DisplayName,unit.GathersSupplies?"gathers supplies":"cannot gather supplies");

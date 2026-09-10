@@ -11,10 +11,11 @@ namespace WonderGather
         public bool HasVisual=>model!=null;
         public BuildingBlueprint Blueprint {get;private set;}
         public BuildingDefinition Definition => definition;
+        public string DisplayName=>Blueprint!=null?Blueprint.DisplayName:definition.DisplayName;
         public void ApplyBlueprint(BuildingBlueprint data)
         {
             Blueprint=data;definition=data.Construction;gameObject.name=data.DisplayName;
-            if(TryGetComponent<UnitProducer>(out var producer)) producer.SetBlueprint(data.Produces);
+            if(TryGetComponent<UnitProducer>(out var producer)) producer.SetBlueprints(data.ProductionOptions);
         }
         public void CompleteAtStart(){Progress=1;UpdateModel();}
         public float Progress { get; private set; }

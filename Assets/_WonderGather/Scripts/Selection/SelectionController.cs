@@ -34,12 +34,12 @@ namespace WonderGather
         {
             ClearSelection();SelectedBuilding=site!=null && site.isActiveAndEnabled?site:null;
             if(SelectedBuilding!=null) SelectedBuilding.SetSelected(true);
-            SelectionChanged();Status=SelectedBuilding==null?"No selection.":SelectedBuilding.Complete?(SelectedProducer!=null?SelectedBuilding.Definition.DisplayName+" selected. Train units with T or the button.":SelectedBuilding.Definition.DisplayName+" complete."):SelectedBuilding.Definition.DisplayName+" is under construction.";
+            SelectionChanged();Status=SelectedBuilding==null?"No selection.":SelectedBuilding.Complete?(SelectedProducer!=null?SelectedBuilding.DisplayName+" selected. Train units with T or the button.":SelectedBuilding.DisplayName+" complete."):SelectedBuilding.DisplayName+" is under construction.";
         }
-        public bool OrderProduction(bool cancel=false)
+        public bool OrderProduction(bool cancel=false,UnitBlueprint unit=null)
         {
-            bool accepted=commands.Dispatch(new ProductionCommand(cancel),SelectedProducer);
-            Status=accepted?(cancel?"Last worker cancelled and refunded.":"Worker added to production queue."):"Cannot change production: check completion, supplies and queue space.";
+            bool accepted=commands.Dispatch(new ProductionCommand(cancel,unit),SelectedProducer);
+            Status=accepted?(cancel?"Last unit cancelled and refunded.":"Unit added to production queue."):"Cannot change production: check completion, supplies and queue space.";
             return accepted;
         }
         private float markerUntil;

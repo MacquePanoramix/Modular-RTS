@@ -12,9 +12,12 @@ namespace WonderGather
         private ConstructionController construction;
         private CivilizationSession civilization;
         private void Awake(){construction=GetComponent<ConstructionController>();civilization=GetComponent<CivilizationSession>();}
-        private GUIStyle wrappedLabel;
+        private GUIStyle wrappedLabel,wrappedButton;
+        private float panelWidth=520;
+        private Vector2 hudScroll;
         private Rect PanelRect => panelRect;
-        private void Label(string text) => GUILayout.Label(text, wrappedLabel);
+        private void Label(string text) => GUILayout.Label(text, wrappedLabel,GUILayout.Width(Mathf.Max(1,panelWidth-36)));
+        private bool Button(string text)=>GUILayout.Button(text,wrappedButton,GUILayout.Width(Mathf.Max(1,panelWidth-36)));
         public bool ContainsScreenPoint(Vector2 point) => PanelRect.Contains(new Vector2(point.x, Screen.height - point.y));
         public void Configure(SelectionController value) => selection = value;
         private void OnGUI()
@@ -34,14 +37,17 @@ namespace WonderGather
                 GUI.color = color;
             }
             wrappedLabel ??= new GUIStyle(GUI.skin.label) { wordWrap = true };
+            wrappedButton ??= new GUIStyle(GUI.skin.button){wordWrap=true};
             float width = Mathf.Max(1, Mathf.Min(520, Screen.width - 36));
+            panelWidth=width;
             GUILayout.BeginArea(new Rect(18, 18, width, Mathf.Max(1, Screen.height - 36)));
+            hudScroll=GUILayout.BeginScrollView(hudScroll,GUILayout.MaxHeight(Mathf.Max(1,Screen.height-40)));
             GUILayout.BeginVertical(GUI.skin.box);
             Label(civilization!=null && civilization.Definition!=null ? "WONDER GATHER / "+civilization.Definition.DisplayName : construction != null ? "WONDER GATHER  /  THE SETTLEMENT" : depot != null ? "WONDER GATHER  /  THE GATHERER" : "WONDER GATHER  /  THE GROUP");
             Label("WASD / Arrows: pan     Q / E: rotate     Wheel: zoom");
             Label("Click / drag: select     Shift: toggle click / add box");
             Label("Right click: move     Esc: clear     F: focus group");
-            Label(selection.SelectedBuilding!=null?"Selected: "+selection.SelectedBuilding.Definition.DisplayName:"Selected: " + selection.Count);
+            Label(selection.SelectedBuilding!=null?"Selected: "+selection.SelectedBuilding.DisplayName:"Selected: " + selection.Count);
             if(selection.Count==1 && selection.SelectedUnits[0].TryGetComponent<UnitIdentity>(out var identity) && identity.Blueprint!=null)
                 Label("Blueprint: "+identity.Blueprint.DisplayName);
             if (depot != null)
@@ -61,28 +67,38 @@ namespace WonderGather
                 Label(construction.BuildHint);
                 var choices=construction.AvailableBuildings();
                 if(choices.Count>1) foreach(var choice in choices)
-                    if(GUILayout.Button("Build "+choice.DisplayName+" ("+choice.Construction.Cost+" supplies)"))
+                    if(Button("Build "+choice.DisplayName+" ("+choice.Construction.Cost+" supplies)"))
                     {construction.ChooseBuilding(choice);construction.BeginPlacement();}
                 if(!string.IsNullOrEmpty(construction.ProgressText)) Label(construction.ProgressText);
             }
             if(selection.SelectedBuilding!=null)
             {
-                Label(selection.SelectedBuilding.Complete?selection.SelectedBuilding.Definition.DisplayName+" complete":"Construction: "+Mathf.RoundToInt(selection.SelectedBuilding.Progress*100)+"%");
+                Label(selection.SelectedBuilding.Complete?selection.SelectedBuilding.DisplayName+" complete":"Construction: "+Mathf.RoundToInt(selection.SelectedBuilding.Progress*100)+"%");
                 var producer=selection.SelectedProducer;
                 if(producer!=null)
                 {
                     Label(producer.Summary);
-                    GUILayout.BeginHorizontal();
-                    GUI.enabled=producer.CanTrain;
-                    if(GUILayout.Button("Train "+producer.UnitName+" — "+producer.Cost+" supplies (T)")) selection.OrderProduction();
+                    if(producer.QueueCount>0) Label(producer.QueueDescription);
+                    if(producer.Options.Count==0 && producer.Cost==0) Label("This building has no training links.");
+                    else if(producer.Options.Count==0)
+                    {
+                        GUI.enabled=producer.CanTrain;
+                        if(Button("Train "+producer.UnitName+" — "+producer.Cost+" supplies (T)")) selection.OrderProduction();
+                    }
+                    else for(int i=0;i<producer.Options.Count;i++)
+                    {
+                        var unit=producer.Options[i];GUI.enabled=producer.CanTrainUnit(unit);
+                        if(Button("Train "+unit.DisplayName+" — "+unit.Production.Cost+" supplies"+(i==0?" (T)":""))) selection.OrderProduction(false,unit);
+                    }
                     GUI.enabled=producer.QueueCount>0;
-                    if(GUILayout.Button("Cancel last / refund")) selection.OrderProduction(true);
-                    GUI.enabled=true;GUILayout.EndHorizontal();
+                    if(Button("Cancel last / refund")) selection.OrderProduction(true);
+                    GUI.enabled=true;
                 }
             }
             GUILayout.Space(8);
             Label(selection.Status);
             GUILayout.EndVertical();
+            GUILayout.EndScrollView();
             // Use the content's actual height for both the box and world-input exclusion.
             if (Event.current.type == EventType.Repaint)
                 panelRect = new Rect(18, 18, width, GUILayoutUtility.GetLastRect().height);

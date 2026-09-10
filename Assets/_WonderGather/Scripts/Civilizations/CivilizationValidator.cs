@@ -38,8 +38,10 @@ namespace WonderGather
                 var data=building.Construction;
                 if(building.Prefab==null || !building.Prefab.gameObject.activeSelf || !building.Prefab.enabled || !building.Prefab.HasVisual || data==null) report.Errors.Add(building.name+": missing or inactive site prefab, visual or construction definition.");
                 else if(data.Cost<=0 || !float.IsFinite(data.Seconds) || data.Seconds<=0 || !float.IsFinite(data.Size) || data.Size<1) report.Errors.Add(building.name+": invalid construction cost, time or footprint.");
-                if(building.Produces!=null && (!units.Contains(building.Produces) || building.Prefab==null || building.Prefab.GetComponent<UnitProducer>()==null))
-                    report.Errors.Add(building.name+": production must reference a roster unit and a prefab with UnitProducer.");
+                var produced=new HashSet<UnitBlueprint>();
+                foreach(var option in building.ProductionOptions)
+                    if(option==null || !units.Contains(option) || !produced.Add(option) || building.Prefab==null || building.Prefab.GetComponent<UnitProducer>()==null)
+                        report.Errors.Add(building.name+": production options must be distinct roster units and require a prefab with UnitProducer.");
             }
             if(civilization.StartingBase==null || !buildings.Contains(civilization.StartingBase) || civilization.StartingBase.Prefab==null || civilization.StartingBase.Prefab.GetComponent<ResourceDepot>()==null)
                 report.Errors.Add("Starting base must belong to the building roster and have a supply depot.");
@@ -58,7 +60,8 @@ namespace WonderGather
                 changed=false;
                 foreach(var unit in units) if(report.ReachableUnits.Contains(unit))
                     foreach(var building in unit.Builds) if(building!=null && buildings.Contains(building)) changed|=report.ReachableBuildings.Add(building);
-                foreach(var building in buildings) if(report.ReachableBuildings.Contains(building) && building.Produces!=null && units.Contains(building.Produces)) changed|=report.ReachableUnits.Add(building.Produces);
+                foreach(var building in buildings) if(report.ReachableBuildings.Contains(building))
+                    foreach(var option in building.ProductionOptions) if(option!=null && units.Contains(option)) changed|=report.ReachableUnits.Add(option);
             }while(changed);
             bool gatherer=false;int highestCost=0;
             foreach(var unit in units)

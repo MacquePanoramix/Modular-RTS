@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 9, 2026
+**Last updated:** September 10, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -471,3 +471,27 @@ Saved factions now use version 2; version-1 saves open without rewriting and
 upgrade on explicit save with a backup. No aesthetic, lore, stat list, design
 budget or final graph layout is locked. Review the editing experience together
 before expanding buildings, training options or blueprint customization.
+
+
+## Building blueprints and production networks — September 10, 2026
+
+The user accepted the multiple-unit prototype and approved editable building
+blueprints, per-unit construction links and multiple training choices per
+building. The creator now has Units/Buildings rosters, building naming and
+duplication/removal, editable incoming/outgoing links and reachability warnings.
+The playtest names constructed blueprints and exposes each training choice.
+Mixed queues preserve requested types, costs, duration and refund ownership.
+
+This prototype retains the fixed starting depot, shared worker/workshop bodies
+and existing in-match costs. Eight unit and eight building blueprints, eight
+starting units and three queue entries are provisional test bounds. The last
+editable blueprint of each kind is retained; its links may all be disabled.
+Duplicates copy outgoing choices but gain no new incoming links automatically.
+Building and unit examples remain player choices, not locked faction roles.
+
+Save version 3 preserves the whole supported network. Versions 1 and 2 load
+without file changes and upgrade on explicit save with a backup. This does not
+lock a final faction schema, graph layout, building taxonomy or aesthetic.
+After playtesting, the proposed next collaborative design step is to choose
+small, meaningful customization tradeoffs as examples for design-value rules.
+That design work should be agreed with the user before implementation.

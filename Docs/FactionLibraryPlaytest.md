@@ -47,12 +47,12 @@ creator requires reopening it or saving your draft as a new copy.
 
 ## Current limits
 
-Format version 2 records the faction name, template IDs, all editable unit
-blueprint IDs/names/counts/capabilities, starting supplies and the workshop's
-trained blueprint ID. Version-1 files still open without being rewritten;
-explicit Save or Rename upgrades them with a backup. It saves faction designs,
-not running matches. Costs and prefabs come from the supported game templates.
-See MultipleBlueprintPlaytest.md for the current editing controls.
+Format version 3 records names, template IDs, all editable unit and building
+IDs, starting counts/supplies, gather permissions and complete construction/
+training links. Version-1 and version-2 files still open without rewriting;
+explicit Save or Rename upgrades them with a backup. This saves faction designs,
+not running matches. Costs/prefabs still come from supported game templates.
+See BuildingNetworkPlaytest.md for the current editor and production controls.
 
 No cloud sync, sharing, import UI, autosave, save-game progress or faction budgets
 are included. Those remain separate decisions.

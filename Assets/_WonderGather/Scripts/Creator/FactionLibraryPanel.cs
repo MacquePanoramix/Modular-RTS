@@ -65,7 +65,9 @@ namespace WonderGather
                         var record=selected.Record;
                         GUILayout.Label("Starting units: "+record.Workers+"   Supplies: "+record.Supplies,body);
                         foreach(var unit in record.Units)
-                            GUILayout.Label(unit.Name+" — "+unit.Start+" at start; gather "+(unit.Gathers?"yes":"no")+", build "+(unit.Builds?"yes":"no")+(record.TrainedId==unit.Id?"; workshop trains this unit":""),body);
+                            GUILayout.Label(unit.Name+" — "+unit.Start+" at start; gather "+(unit.Gathers?"yes":"no")+"; builds "+unit.BuildIds.Length+" types",body);
+                        foreach(var building in record.Buildings)
+                            GUILayout.Label(building.Name+" — trains "+building.Trains.Length+" unit types",body);
                     }
                     else GUILayout.Label(selected.Problem,body);
                     GUILayout.Space(20);GUI.enabled=selected.CanOpen;
