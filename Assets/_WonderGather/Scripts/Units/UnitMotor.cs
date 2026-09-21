@@ -7,6 +7,15 @@ namespace WonderGather
     public sealed class UnitMotor : MonoBehaviour
     {
         private NavMeshAgent agent;
+        private float baseSpeed;
+        private bool speedCaptured;
+        public void SetMovementRate(float rate)
+        {
+            if(!float.IsFinite(rate)||rate<=0) throw new System.ArgumentOutOfRangeException(nameof(rate));
+            if(agent==null) agent=GetComponent<NavMeshAgent>();
+            if(!speedCaptured){baseSpeed=agent.speed;speedCaptured=true;}
+            agent.speed=baseSpeed*rate;
+        }
         public Vector3 Destination { get; private set; }
         public bool IsMoving => agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh
             && (agent.pathPending || agent.remainingDistance > agent.stoppingDistance + .05f);

@@ -5,6 +5,9 @@ namespace WonderGather
     [RequireComponent(typeof(UnitMotor))]
     public sealed class Builder : MonoBehaviour
     {
+        public float WorkRate {get;private set;}=1;
+        public void SetWorkRate(float rate)
+        {if(!float.IsFinite(rate)||rate<=0) throw new System.ArgumentOutOfRangeException(nameof(rate));WorkRate=rate;}
         private UnitMotor motor;
         private Gatherer gatherer;
         public BuildingSite Site { get; private set; }
@@ -47,7 +50,7 @@ namespace WonderGather
             if(Site==null) return;
             if(!Site.isActiveAndEnabled || Site.Complete) {CancelOrder();return;}
             if((transform.position-motor.Destination).sqrMagnitude>.4f*.4f) return;
-            Site.Work(this,Time.deltaTime);
+            Site.Work(this,Time.deltaTime*WorkRate);
             if(Site.Complete) CancelOrder();
         }
         private void OnDisable() { CancelOrder(); if(motor!=null) motor.Stop(); }

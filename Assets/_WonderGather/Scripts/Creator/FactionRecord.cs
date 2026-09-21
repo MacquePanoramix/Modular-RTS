@@ -10,6 +10,7 @@ namespace WonderGather
     {
         public string Id,Name;
         public int Start;
+        public UnitPerformance Performance=UnitPerformance.Default;
         public bool Gathers;
         public string[] BuildIds;
     }
@@ -20,7 +21,7 @@ namespace WonderGather
     }
     public sealed class FactionRecord
     {
-        public const int Version=3;
+        public const int Version=4;
         public string Id,Name,BaseId,WorkerId,WorkshopId;
         public int Supplies;
         public FactionUnitRecord[] Units;
@@ -32,7 +33,7 @@ namespace WonderGather
         public static FactionRecord Capture(FactionDraft draft,string id)=>new FactionRecord{
             Id=id,Name=draft.Definition.DisplayName,BaseId=draft.Definition.StartingBase.Id,WorkerId=draft.TemplateWorkerId,WorkshopId=draft.TemplateWorkshopId,
             Supplies=draft.Definition.StartingSupplies,
-            Units=draft.Units.Select(x=>new FactionUnitRecord{Id=x.Id,Name=x.DisplayName,Start=draft.StartingCount(x),Gathers=x.GathersSupplies,BuildIds=x.Builds.Select(b=>b.Id).ToArray()}).ToArray(),
+            Units=draft.Units.Select(x=>new FactionUnitRecord{Id=x.Id,Name=x.DisplayName,Start=draft.StartingCount(x),Performance=x.Performance,Gathers=x.GathersSupplies,BuildIds=x.Builds.Select(b=>b.Id).ToArray()}).ToArray(),
             Buildings=draft.Buildings.Select(x=>new FactionBuildingRecord{Id=x.Id,Name=x.DisplayName,Trains=x.ProductionOptions.Select(u=>u.Id).ToArray()}).ToArray()};
         private static void Links(string[] links,HashSet<string> roster)
         {
@@ -49,6 +50,7 @@ namespace WonderGather
             foreach(var unit in Units)
             {
                 if(unit==null || !FactionDraft.ValidName(unit.Id) || !ids.Add(unit.Id) || !FactionDraft.ValidName(unit.Name)) throw new InvalidDataException("Blueprint IDs must be unique and names need 1–64 printable characters.");
+                if(!unit.Performance.IsValid) throw new InvalidDataException("Invalid prototype unit performance values.");
                 if(unit.Start<0 || unit.Start>FactionDraft.MaxStartingUnits) throw new InvalidDataException("Invalid starting unit count.");total+=unit.Start;
             }
             foreach(var building in Buildings)
@@ -70,7 +72,8 @@ namespace WonderGather
                     json.WriteString("id",Id);json.WriteString("name",Name);json.WriteString("base",BaseId);json.WriteString("worker",WorkerId);json.WriteString("workshop",WorkshopId);json.WriteNumber("supplies",Supplies);
                     json.WriteStartArray("units");foreach(var unit in Units)
                     {
-                        json.WriteStartObject();json.WriteString("id",unit.Id);json.WriteString("name",unit.Name);json.WriteNumber("start",unit.Start);json.WriteBoolean("gathers",unit.Gathers);WriteLinks(json,"builds",unit.BuildIds);json.WriteEndObject();
+                        json.WriteStartObject();json.WriteString("id",unit.Id);json.WriteString("name",unit.Name);json.WriteNumber("start",unit.Start);json.WriteBoolean("gathers",unit.Gathers);WriteLinks(json,"builds",unit.BuildIds);
+                        json.WriteStartObject("performance");json.WriteNumber("movement",unit.Performance.movementPercent);json.WriteNumber("capacity",unit.Performance.capacity);json.WriteNumber("gathering",unit.Performance.gatheringPercent);json.WriteNumber("construction",unit.Performance.constructionPercent);json.WriteEndObject();json.WriteEndObject();
                     }
                     json.WriteEndArray();json.WriteStartArray("buildings");foreach(var building in Buildings)
                     {
@@ -93,6 +96,11 @@ namespace WonderGather
             var links=new List<string>();foreach(var entry in value.EnumerateArray())
             {if(links.Count>=8) throw new InvalidDataException("Too many blueprint links.");links.Add(entry.GetString());}return links.ToArray();
         }
+        private static UnitPerformance ReadPerformance(JsonElement value)
+        {
+            CheckFields(value,"movement capacity gathering construction");
+            return new UnitPerformance(value.GetProperty("movement").GetInt32(),value.GetProperty("capacity").GetInt32(),value.GetProperty("gathering").GetInt32(),value.GetProperty("construction").GetInt32());
+        }
         public static FactionRecord Decode(string text)
         {
             try
@@ -113,8 +121,8 @@ namespace WonderGather
                     {
                         var list=new List<FactionUnitRecord>();foreach(var unit in root.GetProperty("units").EnumerateArray())
                         {
-                            if(list.Count>=FactionDraft.MaxUnitBlueprints) throw new InvalidDataException("Too many unit blueprints.");CheckFields(unit,"id name start gathers builds");
-                            list.Add(new FactionUnitRecord{Id=unit.GetProperty("id").GetString(),Name=unit.GetProperty("name").GetString(),Start=unit.GetProperty("start").GetInt32(),Gathers=unit.GetProperty("gathers").GetBoolean(),BuildIds=number==2?(unit.GetProperty("builds").GetBoolean()?new[]{record.WorkshopId}:Array.Empty<string>()):ReadLinks(unit.GetProperty("builds"))});
+                            if(list.Count>=FactionDraft.MaxUnitBlueprints) throw new InvalidDataException("Too many unit blueprints.");CheckFields(unit,number<4?"id name start gathers builds":"id name start gathers builds performance");
+                            list.Add(new FactionUnitRecord{Id=unit.GetProperty("id").GetString(),Name=unit.GetProperty("name").GetString(),Start=unit.GetProperty("start").GetInt32(),Performance=number<4?UnitPerformance.Default:ReadPerformance(unit.GetProperty("performance")),Gathers=unit.GetProperty("gathers").GetBoolean(),BuildIds=number==2?(unit.GetProperty("builds").GetBoolean()?new[]{record.WorkshopId}:Array.Empty<string>()):ReadLinks(unit.GetProperty("builds"))});
                         }
                         record.Units=list.ToArray();
                     }

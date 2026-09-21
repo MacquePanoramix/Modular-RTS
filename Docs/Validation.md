@@ -307,3 +307,41 @@ preserve the existing serialized first-production reference and default extra
 options to empty; custom labels are explicit, leaving authored recipes intact.
 No final aesthetic, balance rules, controller support, localization, other
 platforms, multiplayer or custom starting-base production was validated.
+
+
+## Prototype unit performance — September 20, 2026
+
+- Baseline: c6745fb; previous 53-test regression suite and Windows build passed.
+  User changes to TheGroup, PackageManagerSettings, URPProjectSettings and
+  Recovery assets were preserved. Validation ran in the isolated WGGroup copy
+  using Unity 6000.6.0f1, without package, authored scene or prefab changes.
+- Focused first run: four passed, one failed because the construction test
+  omitted ChooseBuilding before TryPlace. Corrected the test setup; no runtime
+  fix or weakened assertion. Final focused run: five passed, zero failed.
+- September 10 full PlayMode regression: 58 passed, zero failed, 374,639018
+  seconds. Evidence: Docs/TestResults/stats-full.xml (local, ignored).
+- New coverage checks independent duplicate values, defaults, dirty state,
+  save/load and reset, invalid bounds and nested fields, version-3 read-only
+  migration with backup on explicit upgrade, and starting/produced inheritance.
+  Runtime checks verify 6.4 navigation speed at 200%, non-compounding repeated
+  application, two-supply capacity, 0.25-second gathering intervals, delivery
+  conservation, and about four seconds of construction work at 200%.
+- Existing movement, gathering, construction, production, creator, graph,
+  library and version-1/version-2 migration regressions passed in the full run.
+- One rendered visual probe passed. Four inspected captures in Docs/Images
+  show top/middle/bottom creator scroll positions and the selected-unit HUD;
+  pointer exclusion was asserted. Temporary probe removed before full tests
+  and build. Physical UI clicking remains the user's playtest.
+- September 20 Windows x64 development build via FactionCreatorSetup.BuildWindows succeeded
+  (CREATOR_BUILD_OK). Local output: Builds/WindowsFactionCreator/WonderGather.exe.
+  The standalone executable was built but not separately launched in this pass.
+
+Save tests use owned temporary directories, not player saves. Schema version 4
+adds explicit performance values. Versions 1–3 load with original defaults;
+explicit save/rename upgrades with the existing backup. Older executables
+cannot read version-4 files. New authored blueprint fields default to the
+previous behavior; runtime tests exercised existing serialized assets.
+
+No final body/animation model, pricing/balance formula, aesthetic, multiplayer,
+other platform, controller input or localization was implemented or validated.
+Rates are temporary outcome controls, not balanced tradeoffs.

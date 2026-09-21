@@ -61,6 +61,7 @@ namespace WonderGather
             label=label.Substring(0,Mathf.Min(54,label.Length))+(duplicate!=null?" copy":" "+(units.Count+1));
             var unit=CreateUnit("unit-"+Guid.NewGuid().ToString("N"),label,duplicate?.GathersSupplies??true,duplicate!=null?duplicate.CanBuild(Workshop):true,0);
             if(duplicate!=null) unit.Configure(unit.Id,unit.DisplayName,recipe,duplicate.GathersSupplies,duplicate.Builds.ToArray());
+            if(duplicate!=null) unit.SetPerformance(duplicate.Performance);
             Refresh();return unit;
         }
         private UnitBlueprint CreateUnit(string id,string label,bool gathers,bool builds,int count)
@@ -75,6 +76,8 @@ namespace WonderGather
             if(builds!=unit.CanBuild(Workshop)){permissions.Remove(Workshop);if(builds) permissions.Insert(0,Workshop);}
             unit.name=label;unit.Configure(unit.Id,label,unit.Production,gathers,permissions.ToArray());Refresh();
         }
+        public void SetPerformance(UnitBlueprint unit,UnitPerformance value)
+        {Check(unit);unit.SetPerformance(value);Refresh();}
         public bool RemoveUnit(UnitBlueprint unit)
         {
             Check(unit);if(units.Count==1) return false;
@@ -130,6 +133,7 @@ namespace WonderGather
             foreach(var record in records)
             {
                 var unit=CreateUnit(record.Id,record.Name,record.Gathers,false,record.Start);
+                unit.SetPerformance(record.Performance);
                 unit.Configure(unit.Id,unit.DisplayName,recipe,record.Gathers,record.BuildIds.Select(id=>workshops.Single(x=>x.Id==id)).ToArray());
             }
             foreach(var record in buildings)

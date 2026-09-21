@@ -11,6 +11,9 @@ namespace WonderGather
         [SerializeField] private WorkerProductionDefinition production;
         [SerializeField] private bool gathersSupplies=true;
         [SerializeField] private BuildingBlueprint[] builds=Array.Empty<BuildingBlueprint>();
+        [SerializeField] private UnitPerformance performance=UnitPerformance.Default;
+        public UnitPerformance Performance=>performance;
+        public void SetPerformance(UnitPerformance value){value.Validate();performance=value;}
         public string Id=>id;
         public string DisplayName=>displayName;
         public WorkerProductionDefinition Production=>production;

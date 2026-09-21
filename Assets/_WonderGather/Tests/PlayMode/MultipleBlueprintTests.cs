@@ -75,7 +75,7 @@ namespace WonderGather.Tests
             Assert.That(File.ReadAllText(store.FilePath(id)),Is.EqualTo(old));Assert.That(w.Draft.StartingWorkers,Is.EqualTo(3));
             Assert.That(w.Draft.Worker.GathersSupplies,Is.False);Assert.That(w.Draft.Workshop.Produces,Is.Null);
             Assert.That(w.Save(),Is.True);Assert.That(File.ReadAllText(store.FilePath(id)+".bak"),Is.EqualTo(old));
-            StringAssert.Contains("\"version\": 3",File.ReadAllText(store.FilePath(id)));
+            StringAssert.Contains("\"version\": 4",File.ReadAllText(store.FilePath(id)));
             Assert.That(w.Open(id),Is.True);Assert.That(w.Draft.StartingWorkers,Is.EqualTo(3));
         }
         [Test] public void InvalidLinksDuplicateIdsAndUnknownNestedDataAreRejected()

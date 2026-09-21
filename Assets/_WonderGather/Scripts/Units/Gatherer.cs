@@ -9,6 +9,16 @@ namespace WonderGather
         [SerializeField] private Vector3 workOffset;
         [SerializeField, Min(1)] private int capacity = 5;
         [SerializeField, Min(.05f)] private float secondsPerUnit = .5f;
+        public int Capacity=>capacity;
+        public float SecondsPerUnit=>secondsPerUnit;
+        private float baseSeconds;
+        private bool rateCaptured;
+        public void SetPerformance(UnitPerformance value)
+        {
+            value.Validate();
+            if(!rateCaptured){baseSeconds=secondsPerUnit;rateCaptured=true;}
+            capacity=value.capacity;secondsPerUnit=baseSeconds*100f/value.gatheringPercent;
+        }
         private UnitMotor motor;
         private ResourceNode resource;
         private float timer;

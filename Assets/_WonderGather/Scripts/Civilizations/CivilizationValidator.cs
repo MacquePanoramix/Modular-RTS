@@ -25,6 +25,7 @@ namespace WonderGather
                 if(unit==null){report.Errors.Add("The unit roster contains an empty reference.");continue;}
                 if(!units.Add(unit)) report.Errors.Add("Duplicate unit in roster: "+unit.name);
                 CheckId(unit.Id,unit.name,ids,report);
+                if(!unit.Performance.IsValid) report.Errors.Add(unit.name+": invalid prototype performance values.");
                 var recipe=unit.Production;var prefab=recipe!=null?recipe.Prefab:null;
                 if(prefab==null || !prefab.activeSelf || prefab.GetComponent<SelectableUnit>()==null || prefab.GetComponent<UnitMotor>()==null || prefab.GetComponent<NavMeshAgent>()==null || prefab.GetComponent<ProducedWorker>()==null || prefab.GetComponent<Gatherer>()==null || prefab.GetComponent<Builder>()==null)
                     report.Errors.Add(unit.name+": this prototype requires a worker prefab with selection, navigation, gathering, building and roster components.");

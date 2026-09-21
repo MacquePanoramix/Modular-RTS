@@ -209,3 +209,30 @@ tracking includes complete rosters, names and links. No package updates needed.
 
 Current playtest: Docs/BuildingNetworkPlaytest.md. Windows build entry remains
 FactionCreatorSetup.BuildWindows and the existing creator/map scenes.
+
+
+## Prototype unit performance extension
+
+UnitPerformance is a serializable value owned by UnitBlueprint, with validated
+integer rate percentages and carrying capacity. Field initialization preserves
+existing authored blueprint defaults. FactionDraft clones and duplicates these
+values without changing prefab/recipe assets. SetPerformance validates roster
+ownership; CivilizationValidator checks authored values before session spawn.
+
+UnitIdentity.Configure applies performance to existing UnitMotor, Gatherer and
+Builder components for both starting and produced units. UnitMotor captures
+the prefab speed once; Gatherer captures its original interval once. Repeated
+application therefore does not compound multipliers. Builder multiplies work
+time passed to BuildingSite. Permissions and commands retain their ownership.
+Older scenes without identities retain their serialized settings.
+
+FactionRecord writes strict version 4 with a nested performance object for each
+unit. Versions 1–3 default to the original worker values without rewriting;
+explicit saves retain backups. All four values participate in dirty tracking.
+The creator detail panel scrolls to the controls and reset button; the selected
+unit HUD shows the blueprint settings. The blueprint is immutable during a
+playtest; changing live cargo capacity mid-order is not an exposed player flow.
+
+These are temporary outcome controls. No body system, pricing, new packages,
+scene/prefab changes or final customization choices are part of this slice.
+Current guide: Docs/UnitPerformancePlaytest.md.

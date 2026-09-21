@@ -73,7 +73,7 @@ namespace WonderGather.Tests
             Directory.CreateDirectory(root);File.WriteAllText(store.FilePath(id),old);var w=creator.Workspace;
             Assert.That(w.Open(id),Is.True,w.Message);Assert.That(File.ReadAllText(store.FilePath(id)),Is.EqualTo(old));
             Assert.That(w.Draft.TotalStartingUnits,Is.EqualTo(3));Assert.That(w.Draft.Worker.Builds,Is.Empty);Assert.That(w.Draft.Workshop.Produces.Id,Is.EqualTo(second));
-            Assert.That(w.Save(),Is.True);Assert.That(File.ReadAllText(store.FilePath(id)+".bak"),Is.EqualTo(old));StringAssert.Contains("\"version\": 3",File.ReadAllText(store.FilePath(id)));
+            Assert.That(w.Save(),Is.True);Assert.That(File.ReadAllText(store.FilePath(id)+".bak"),Is.EqualTo(old));StringAssert.Contains("\"version\": 4",File.ReadAllText(store.FilePath(id)));
         }
         [UnityTest] public IEnumerator SeparateBuildingsAndMixedQueueProduceTheRequestedBlueprints()
         {

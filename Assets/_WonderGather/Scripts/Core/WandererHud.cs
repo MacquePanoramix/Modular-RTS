@@ -49,7 +49,11 @@ namespace WonderGather
             Label("Right click: move     Esc: clear     F: focus group");
             Label(selection.SelectedBuilding!=null?"Selected: "+selection.SelectedBuilding.DisplayName:"Selected: " + selection.Count);
             if(selection.Count==1 && selection.SelectedUnits[0].TryGetComponent<UnitIdentity>(out var identity) && identity.Blueprint!=null)
+            {
                 Label("Blueprint: "+identity.Blueprint.DisplayName);
+                var stats=identity.Blueprint.Performance;
+                Label("Prototype: movement "+stats.movementPercent+"% / carry "+stats.capacity+" / gathering "+stats.gatheringPercent+"% / construction "+stats.constructionPercent+"%");
+            }
             if (depot != null)
             {
                 int carried = 0, working = 0;

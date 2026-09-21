@@ -151,6 +151,15 @@ namespace WonderGather
                 bool gathers=Toggle("Gather supplies",unit.GathersSupplies);
                 if(label!=unit.DisplayName || gathers!=unit.GathersSupplies) draft.ConfigureUnit(unit,label,gathers,unit.CanBuild(draft.Workshop));
                 if(start!=draft.StartingCount(unit)) draft.SetStartingCount(unit,start);
+                GUILayout.Space(12);GUILayout.Label("Prototype performance",body);
+                var performance=unit.Performance;
+                performance.movementPercent=Stepper("Movement (%)",performance.movementPercent,25,25,200);
+                performance.capacity=Stepper("Carry capacity",performance.capacity,1,1,20);
+                performance.gatheringPercent=Stepper("Gathering (%)",performance.gatheringPercent,25,25,200);
+                performance.constructionPercent=Stepper("Construction (%)",performance.constructionPercent,25,25,200);
+                if(!performance.Equals(unit.Performance)) draft.SetPerformance(unit,performance);
+                GUILayout.Label("100% = current worker rate. Work rates apply only with the matching permission. Temporary controls; costs are unchanged.",small);
+                if(GUILayout.Button("Reset performance",button)) draft.SetPerformance(unit,UnitPerformance.Default);
                 GUILayout.Space(10);GUILayout.Label("Can construct",body);
                 foreach(var building in draft.Buildings)
                 {bool enabled=Toggle(building.DisplayName,unit.CanBuild(building));if(enabled!=unit.CanBuild(building)) draft.SetBuildPermission(unit,building,enabled);}

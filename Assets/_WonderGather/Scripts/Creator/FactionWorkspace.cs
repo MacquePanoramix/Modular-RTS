@@ -19,7 +19,7 @@ namespace WonderGather
             void Part(string value){value=value??"";state.Append(value.Length).Append(':').Append(value);}
             Part(Draft.Definition.DisplayName);Part(Draft.Definition.StartingSupplies.ToString());
             Part(Draft.Units.Count.ToString());
-            foreach(var unit in Draft.Units){Part(unit.Id);Part(unit.DisplayName);Part(Draft.StartingCount(unit).ToString());Part(unit.GathersSupplies.ToString());Part(unit.Builds.Count.ToString());foreach(var building in unit.Builds) Part(building.Id);}
+            foreach(var unit in Draft.Units){Part(unit.Id);Part(unit.DisplayName);Part(Draft.StartingCount(unit).ToString());Part(unit.GathersSupplies.ToString());Part(unit.Performance.movementPercent.ToString());Part(unit.Performance.capacity.ToString());Part(unit.Performance.gatheringPercent.ToString());Part(unit.Performance.constructionPercent.ToString());Part(unit.Builds.Count.ToString());foreach(var building in unit.Builds) Part(building.Id);}
             Part(Draft.Buildings.Count.ToString());
             foreach(var building in Draft.Buildings){Part(building.Id);Part(building.DisplayName);var options=new List<UnitBlueprint>(building.ProductionOptions);Part(options.Count.ToString());foreach(var unit in options) Part(unit.Id);}
             return state.ToString();

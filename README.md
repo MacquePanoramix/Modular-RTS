@@ -1,5 +1,5 @@
-Current milestone: editable building blueprints and production networks.
-Open TheFactionCreator. See [Building network playtest](Docs/BuildingNetworkPlaytest.md).
+Current milestone: prototype unit performance customization.
+Open TheFactionCreator. See [Unit performance playtest](Docs/UnitPerformancePlaytest.md).
 
 > Previous milestone: **Faction saving and library**. Open
 > `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run

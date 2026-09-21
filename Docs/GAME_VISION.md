@@ -495,3 +495,30 @@ lock a final faction schema, graph layout, building taxonomy or aesthetic.
 After playtesting, the proposed next collaborative design step is to choose
 small, meaningful customization tradeoffs as examples for design-value rules.
 That design work should be agreed with the user before implementation.
+
+
+## Prototype unit performance — September 10, 2026
+
+**User clarification:** All current systems are provisional foundations. The
+final versions must be much deeper and more complex. True customization must
+develop alongside procedural unit action and movement; current controls do not
+define the final body, equipment, personality or behavior model. The user
+delegated the temporary choice between stat controls and example modules.
+
+**Implemented for review:** direct per-blueprint movement, carrying capacity,
+gathering and construction controls. Rate percentages compare with the current
+worker: 100% preserves its behavior; 200% doubles its speed or work rate. Carry
+capacity is a count of supplies. Rates of 25–200% and capacity of 1–20 are
+temporary test bounds. Defaults are 100%, five supplies, 100%, 100%.
+
+These controls expose outcomes for testing. Later physical capabilities,
+equipment, personality and circumstances can determine those outcomes. Work
+rates do not grant missing gather/construction permissions. No cost formula is
+introduced: production still costs 10 supplies and six seconds in the example,
+and design value remains distinct from in-match costs. This slice is not a
+balanced tradeoff system, final stat list or final customization interface.
+
+Version 4 saves include performance; versions 1–3 receive the previous worker
+defaults in memory and upgrade only on explicit save/rename with a backup.
+The next design discussion should revisit which small behavioral or physical
+prototype best advances the living-unit vision, using the user's playtest.
