@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_WonderGather/Scenes/TheWanderer.unity
     guid: a07e10d2a317fac47bb0f0d213cd20df
+  - enabled: 1
+    path: Assets/_WonderGather/Scenes/TheLivingBody.unity
+    guid: 5879da6fa2f203041950f4e3703be853
   m_configObjects: {}

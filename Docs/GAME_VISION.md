@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 10, 2026
+**Last updated:** September 22, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -253,11 +253,16 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 **Direction:** Utility scoring is a strong candidate for personality and autonomous decisions after basic states and behavior loops are understood.
 
-**Possible later technical systems:** save/load formats for civilizations, graph validation, cost-calculation tools, procedural locomotion, active-ragdoll experiments, formation and steering systems, multiplayer authority and replication, performance profiling, content versioning, and creator-facing debugging explanations.
+**Prototype foundations and possible later depth:** save/load formats for civilizations, graph validation, cost-calculation tools, procedural locomotion, active-ragdoll experiments, formation and steering systems, multiplayer authority and replication, performance profiling, content versioning, and creator-facing debugging explanations.
 
 **Deferred intentionally:** DOTS/ECS, networking packages, final art assets, deep procedural combat, and a polished civilization graph editor are not foundations for the earliest prototypes. Adopt them only when measurements and milestone needs justify them.
 
 ## Current production state
+
+**Current milestone:** The Living Body, a separate procedural locomotion
+experiment following the accepted faction creator and unit-performance
+prototypes. See `Docs/LivingBodyPlaytest.md`. Historical entries below record
+implementation and feedback; later entries supersede earlier scope limits.
 
 ### Prototype 1.1 — The Wanderer
 
@@ -290,11 +295,13 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 ### Later proof sequence
 
-The order remains adjustable, but the likely progression is:
+The user approved moving the first Living Body experiment before Three
+Temperaments so physical expression can inform later customization and
+personality. The remaining order stays adjustable after playtesting:
 
 1. **Civilization data and graph:** data-driven base, unit, and building definitions; production/build links; reachability validation; two-cost foundation; first editor tooling.
-2. **Three Temperaments:** one basic blueprint expressed through courage and discipline differences, proving readable orders, autonomy, and morale.
-3. **The Living Body:** one creature with procedural locomotion and grounded physical reactions, establishing the non-goofy visual bar before scaling combat.
+2. **The Living Body:** a provisional articulated biped with procedural locomotion, planted feet and terrain adaptation, establishing a grounded movement reference before personality and combat.
+3. **Three Temperaments:** one basic blueprint expressed through courage and discipline differences, proving readable orders, autonomy, and morale.
 4. **Small physical battle:** a few units with readable attacks and reactions, measured against a performance budget and player comprehension.
 5. **Vertical slice:** design one civilization before the match, begin from its starting setup, gather and progress, fight, and reach a main-base victory.
 6. **Multiplayer prototype:** bring saved civilizations into Open Workshop matchmaking after the local vertical slice proves its rules.
@@ -346,6 +353,7 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-09-06 | First slice | Provisionally accepted | The Wanderer proves camera, selection, commands, and one-unit navigation | Hands-on playtest feedback |
 | 2026-09-06 | Repository visibility | Production choice | Publish the source at `MacquePanoramix/Modular-RTS` | A later explicit decision to make it private |
 | 2026-09-07 | Prototype camera tuning | Provisionally accepted | Preserve smooth wheel zoom and increase sensitivity from 0.0015 to 0.0020 | Hands-on retest feedback |
+| 2026-09-21 | Proof sequence and physical expression | Approved prototype direction | Implement a small Living Body locomotion experiment before Three Temperaments; provisional biped and comparison scene | Movement playtest and the user's aesthetic direction |
 
 Add future entries with the decision, its status, the evidence behind it, and what kind of playtest or new requirement would justify revisiting it.
 
@@ -522,3 +530,36 @@ Version 4 saves include performance; versions 1–3 receive the previous worker
 defaults in memory and upgrade only on explicit save/rename with a backup.
 The next design discussion should revisit which small behavioral or physical
 prototype best advances the living-unit vision, using the user's playtest.
+
+
+## The Living Body — September 21, 2026
+
+**User-approved direction:** after the accepted unit-performance prototype,
+begin a small procedural movement experiment. The user approved implementing
+the proposed simple test biped and asked that documentation and GitHub remain
+current. This changes the proof sequence: the first Living Body experiment
+precedes Three Temperaments. The goal remains the deeper civilization design
+vision, with physical capabilities and behavior eventually informing unit
+customization.
+
+**Implemented for review:** a separate `TheLivingBody` comparison scene with
+the same provisional articulated body at measured and brisk pace; procedural
+stepping with world-planted supporting feet, two-bone legs, body response to
+acceleration and turns, and a flat/ramp/plateau test course. Existing selection,
+orders, navigation and RTS camera controls remain the command interface.
+Navigation moves the unit; the articulated body presents that movement.
+
+**Acceptance remains with the user:** does the body feel grounded, readable,
+expressive and enjoyable to watch at both close and strategic distance?
+Specific proportions, pace, posture, movement character, colors and anatomy
+are provisional test choices. No species, culture or final visual style is
+established by this rig. Gather and construction body actions, personalities,
+combat, balance physics, active ragdolls and a player-facing body creator are
+outside this milestone. The final systems remain substantially deeper than
+these proof cases.
+
+The faction creator remains a separate working prototype with version-4
+faction files and its existing temporary performance controls. No final
+cost formula or faction-body serialization is introduced. The next design
+discussion should use the user's movement feedback before choosing whether
+to refine locomotion, connect a body action, or begin personality expression.

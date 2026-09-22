@@ -1,4 +1,9 @@
-# Validation — September 6, 2026
+# Validation history
+
+Current milestone: The Living Body; see the September 22 entry below and
+Docs/LivingBodyPlaytest.md. Earlier sections preserve historical evidence.
+
+## Unity 6.6 foundation — September 6, 2026
 
 The development slice was migrated from Unity 6000.3.12f1 to 6000.6.0f1, compiled, passed its automated runtime tests and produced a fresh Windows build. Final milestone acceptance remains pending user playtesting of camera feel and mouse/keyboard interaction.
 
@@ -345,3 +350,46 @@ previous behavior; runtime tests exercised existing serialized assets.
 No final body/animation model, pricing/balance formula, aesthetic, multiplayer,
 other platform, controller input or localization was implemented or validated.
 Rates are temporary outcome controls, not balanced tradeoffs.
+
+
+## The Living Body — September 22, 2026
+
+- Baseline: 0ebe23b, matching GitHub main at the start of this milestone.
+  Prior 58-test suite and Windows creator build passed. Work used the isolated
+  WGGroup copy and Unity 6000.6.0f1. Existing user edits to TheGroup, package/URP
+  settings and Recovery assets were preserved; no packages changed.
+- Unity authored a new scene, shared rig prefab, seven materials, ramp mesh
+  and NavMesh (LIVING_BODY_SETUP_OK). The build scene is appended to existing
+  entries. Old scenes/prefabs and faction saves remain unchanged.
+- Initial compile exposed a missing raycast direction argument, corrected
+  before runtime checks. Focused six tests passed (43,6833359s).
+- Added a constant-leg-length assertion and inspected six rendered captures.
+  The stronger ramp test exposed a 0.688m leg versus the intended 0.68m; a
+  minimum pelvis-height clamp was overriding reach. The clamp was removed.
+  Visual inspection also showed excessive crouch and feet landing behind the
+  moving root. Rest posture and predictive landing placement were corrected;
+  arm counter-swing is tied to actual steps rather than an independent phase.
+- Final three LivingBodyTests plus the rendered probe passed, 4/4 in
+  49,73184s. Tests check alternating support,
+  fixed world-space planted feet, constant leg lengths, grounded normals on
+  both ramp directions at both paces, arrival, stops/idle drift, redirection,
+  and re-enable/reset without changing the navigation root.
+- The last visual pass corrected horizontal rings cutting into the slope.
+  Rings now follow support normals. One final rendered probe passed, 1/1;
+  its six captures were inspected (Docs/Images/LivingBody*.png). Poses, steps,
+  standing on the slope and the route HUD were reviewed. These are scripted
+  runtime captures, not a claim of final aesthetic acceptance or manual input.
+- Temporary visual probe removed before full tests/build. Full PlayMode suite:
+  61 passed, zero failed, 401,9977968s. Local evidence:
+  Docs/TestResults/living-full.xml. Earlier economy, creator, save migration,
+  production, group selection and movement regressions passed.
+- Windows x64 development build through LivingBodySetup.BuildWindows passed
+  (LIVING_BODY_BUILD_OK), output Builds/WindowsLivingBody/WonderGather.exe.
+  The executable was built; standalone interactive playtesting was not run.
+
+This is a navigation-driven, kinematic presentation experiment. Physical
+balance, ragdolls, falls, combat, work animations, arbitrary creature anatomy,
+stairs/moving terrain, multiplayer and RTS-scale performance are unproven.
+The scene's opt-in terrain-aware camera preserves default behavior elsewhere.
+The user's judgment of weight, pace, expression and aesthetic fit remains the
+next acceptance step. Faction schema remains version 4.

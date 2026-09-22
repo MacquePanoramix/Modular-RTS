@@ -1,6 +1,9 @@
 # Unity project context
 
-Updated September 10, 2026 for building networks. See Docs/Validation.md for execution evidence and Docs/BuildingNetworkPlaytest.md for the current playtest.
+Updated September 22, 2026 for The Living Body. Current playtest:
+Docs/LivingBodyPlaytest.md; validation evidence: Docs/Validation.md.
+The faction creator remains available separately with version-4 saves.
+Sections describe successive extensions; later sections supersede earlier limits.
 
 ## Confirmed foundation
 
@@ -18,7 +21,7 @@ All first-party runtime code is in Assets/_WonderGather/Scripts, namespace Wonde
 
 RtsInput owns actions, including press/release/hold and Shift state. SelectionController owns the selection list and drag state, with an explicitly serialized roster for box selection. GroupMoveCommand plans spaced destinations and validates all paths before applying any. UnitMotor separates path planning from execution. MoveCommand still supports individual orders. RtsCamera focuses the selection center; SelectableUnit owns its ring. WandererHud draws the drag box, selected count, and order feedback.
 
-Editor-only WonderGather.Editor contains scene creation, preview and Windows build entry points. Tests live in their own PlayMode test assembly. Gatherer owns a small work state machine and cargo; ResourceNode owns remaining supplies and ResourceDepot owns stored supplies. GatherCommand and ReturnSuppliesCommand enter through CommandDispatcher. No networking, save system or animation framework exists yet.
+Editor-only WonderGather.Editor contains scene creation, preview and Windows build entry points. Tests live in their own PlayMode test assembly. Gatherer owns a small work state machine and cargo; ResourceNode owns remaining supplies and ResourceDepot owns stored supplies. GatherCommand and ReturnSuppliesCommand enter through CommandDispatcher. Networking is not implemented. Later extensions below document faction persistence and procedural movement presentation.
 
 ## Startup and assets
 
@@ -236,3 +239,42 @@ playtest; changing live cargo capacity mid-order is not an exposed player flow.
 These are temporary outcome controls. No body system, pricing, new packages,
 scene/prefab changes or final customization choices are part of this slice.
 Current guide: Docs/UnitPerformancePlaytest.md.
+
+
+## Living Body procedural locomotion experiment
+
+LivingBodySetup.Create authors TheLivingBody, one reusable LivingBodyBiped
+prefab, provisional materials, ramp mesh and baked navigation via Unity APIs.
+It refuses existing scene/assets and appends its build entry without changing
+earlier entries. BuildWindows builds only this scene into Builds/WindowsLivingBody.
+Existing creator assets, production recipes and faction schema 4 are unchanged.
+
+Two instances share geometry/solver with measured and brisk navigation speed
+(1.8/2.5), acceleration 3, and different step reach/lift/duration. These are
+comparison settings, not a species, finalized proportions or player body editor.
+The course has flat ground, an 11-degree ramp (2m rise over10m) and a plateau.
+
+ProceduralBiped poses only visual transforms in LateUpdate. UnitMotor and
+NavMeshAgent remain authoritative for movement/turning. Foot support state is
+world-space, one foot swings at a time, and ground sampling uses Walkable layer 6
+at initialization/new steps. A two-segment leg solve, body height adaptation,
+acceleration lean and arm swing visualize actual root displacement. Re-enable
+and large root relocations reinitialize nearby support without moving the root.
+This is kinematic presentation, not simulated balance forces or active ragdolls.
+
+LivingBodyDemo owns explicit units/route targets and an input-blocking scrollable
+HUD. Route buttons use existing movement commands; direct selection/box orders
+remain available. The scene opts into RtsCamera.terrainAware for ground-relative
+focus height and camera clearance. The new serialized option defaults off in
+earlier scenes, preserving their camera behavior and authored 0.005 zoom.
+
+The supported test is a simple biped on static flat/gentle terrain. Stairs,
+jumps, moving platforms, arbitrary body topology, physical work/combat and
+RTS-scale animation performance have not been established. Movement feel and
+aesthetic acceptance remain the user's review.
+
+Final presentation refinement: swing endpoints predict where the root will be
+at landing, the rest stance is upright, pelvis lowering obeys leg reach, and
+arm counter-swing follows the actual foot position. The explicitly referenced
+selection ring aligns with support normals to remain visible on the ramp.
+The two-unit checks establish this prototype only, not arbitrary body support.

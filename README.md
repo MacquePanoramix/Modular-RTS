@@ -1,5 +1,15 @@
-Current milestone: prototype unit performance customization.
-Open TheFactionCreator. See [Unit performance playtest](Docs/UnitPerformancePlaytest.md).
+# Wonder Gather
+
+A first playable foundation for a slow, fully 3D RTS about civilizations designed by their players.
+
+Current milestone: **The Living Body**, a procedural movement comparison.
+Open `Assets/_WonderGather/Scenes/TheLivingBody.unity` or run the local
+`Builds/WindowsLivingBody/WonderGather.exe`.
+See [Living Body playtest](Docs/LivingBodyPlaytest.md).
+
+The faction creator remains separately available in `TheFactionCreator.unity`
+and `Builds/WindowsFactionCreator/WonderGather.exe`. See
+[Unit performance playtest](Docs/UnitPerformancePlaytest.md).
 
 > Previous milestone: **Faction saving and library**. Open
 > `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run
@@ -16,29 +26,27 @@ Open TheFactionCreator. See [Unit performance playtest](Docs/UnitPerformancePlay
 > See [Civilization playtest](Docs/CivilizationPlaytest.md) for editable assets,
 > the provisioned sample, and validation limits.
 
-# Wonder Gather
-
-A first playable foundation for a slow, fully 3D RTS about civilizations designed by their players.
-
 ## Open and play
 
 1. In Unity Hub, add this folder as an existing project.
 2. Open it using Unity **6000.6.0f1** (installed locally).
-3. Open `Assets/_WonderGather/Scenes/TheFactionCreator.unity` and press Play.
-4. Add or duplicate unit and building blueprints. Edit starting counts,
-   construction permissions and the unit types each building trains.
-5. Save the faction and launch its playtest. Return to the creator to keep
-   editing. Save before stopping Unity Play Mode.
+3. Open `Assets/_WonderGather/Scenes/TheLivingBody.unity` and press Play.
+4. Use the flat/slope route buttons, or select units and right-click terrain.
+5. Focus with F, zoom close, and compare feet, body weight, starts and stops.
+
+For civilization editing, open `TheFactionCreator.unity`. Edit unit/building
+blueprints and performance, save the faction, and launch its playtest. Save
+before stopping Unity Play Mode.
 
 See [Building network playtest](Docs/BuildingNetworkPlaytest.md) for a
 concrete construction and mixed-production test. Earlier scenes remain available for comparison.
 
-For a playtest without opening Unity, run
-`Builds/WindowsFactionCreator/WonderGather.exe`. Keep the executable together
+For this movement playtest without Unity, run
+`Builds/WindowsLivingBody/WonderGather.exe`. Keep the executable together
 with its data folders. GitHub contains source; generated caches and Windows
 builds remain local. Use a short local folder path when cloning.
 
-If the scene has not yet been generated, use **Wonder Gather â†’ Create Wanderer Scene**. This command creates the scene, unit prefab, materials, baked navigation and build scene entry. It will not overwrite an existing Wanderer scene.
+If the movement scene is missing, use **Wonder Gather → Create Living Body Scene**. It authors the scene, rig, terrain and navigation, and refuses to overwrite existing Living Body assets.
 
 | Control | Action |
 |---|---|
@@ -48,9 +56,9 @@ If the scene has not yet been generated, use **Wonder Gather â†’ Create Wan
 | Left click | Select; empty ground clears selection |
 | Shift + left click | Toggle a unit in the selection |
 | Left drag / Shift + left drag | Box-select / add boxed units |
-| Right click | Move on terrain, gather at green supplies, deliver carried supplies at blue depot |
-| B | Place a workshop; left-click confirms valid ground |
-| Left-click workshop / T | Select workshop / queue a worker |
+| Right click | Move on terrain; gather/deliver in economy scenes |
+| B (economy scenes) | Place a workshop; left-click confirms valid ground |
+| Left-click workshop / T (economy scenes) | Select workshop / queue a worker |
 | Escape | Cancel placement / deselect |
 | F | Center camera on selected group |
 
@@ -66,11 +74,11 @@ If the scene has not yet been generated, use **Wonder Gather â†’ Create Wan
 - Group movement validates every destination before issuing the order; agents use local avoidance and separate arrival slots.
 - Automated PlayMode coverage for obstacle routing, invalid destinations and selection lifecycle.
 
-The Gatherer inherits the preferred 0.005 zoom. Camera tuning is on **RTS Camera â†’ Rts Camera**. Unit movement tuning is on the **Wanderer prefab â†’ Nav Mesh Agent**. Placeholder geometry and colors establish readable testing conditions, not a final art direction.
+The Gatherer inherits the preferred 0.005 zoom. Camera tuning is on **RTS Camera → Rts Camera**. Unit movement tuning is on the **Wanderer prefab → Nav Mesh Agent**. Placeholder geometry and colors establish readable testing conditions, not a final art direction.
 
 ## Technical structure
 
-`RtsInput â†’ SelectionController â†’ CommandDispatcher â†’ GroupMoveCommand â†’ UnitMotor â†’ NavMeshAgent`
+`RtsInput → SelectionController → CommandDispatcher → GroupMoveCommand → UnitMotor → NavMeshAgent`
 
 `RtsCamera` consumes input and selected-unit position independently. `SelectableUnit` owns selection presentation. `WandererSetup` is editor-only scene authoring. Runtime and test assemblies have separate boundaries. There is no static game state or scene-wide lookup in production update loops.
 
