@@ -2,6 +2,12 @@
 
 A first playable foundation for a slow, fully 3D RTS about civilizations designed by their players.
 
+> **Project signpost:** start with [Current State](Docs/CURRENT_STATE.md) for what is happening now.
+> [Game Vision](Docs/GAME_VISION.md) remains the design source of truth;
+> [Design Rationale](Docs/DESIGN_RATIONALE.md) preserves the small set of "whys"
+> that would be dangerous to lose; [Project Culture](Docs/PROJECT_CULTURE.md)
+> explains lightweight collaboration roles and context routing.
+
 Current milestone: **The Living Body**, a procedural movement comparison.
 Open `Assets/_WonderGather/Scenes/TheLivingBody.unity` or run the local
 `Builds/WindowsLivingBody/WonderGather.exe`.
