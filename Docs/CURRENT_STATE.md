@@ -1,26 +1,33 @@
 # Wonder Gather — Current State
 
-**Updated:** 2026-09-23  
-**Repository head when written:** `d9b5f4d4b15769132d781a9dcf3b0ea4e7876109`  
-**Current milestone:** **The Living Body**  
-**Lifecycle:** **Technical Ready — Game Director playtest pending**
+**Updated:** 2026-09-24
+
+**Reviewed repository baseline:** `d03e0456f0399cd2ad9d1faecfce636f54fe6c47`
+
+**Current milestone:** **The Living Body**
+
+**Lifecycle:** **Provisionally accepted — next milestone under discussion**
 
 This file is the project's front-door signpost. Keep it short. It does not replace `GAME_VISION.md`, code, tests, or playtest judgment.
 
 ## The question we are asking now
 
-Can a navigation-driven procedural body make an RTS unit feel grounded, expressive, and worth watching without becoming slapstick or weakening strategic readability?
+How should the accepted locomotion experiment connect to the civilization
+and economy systems so a player-created unit becomes worth watching at work?
+
+## Latest Game Director feedback
+
+On September 24, Luis reported that The Living Body feels okay for the
+prototype and asked for a review of the current state and next development
+step. This is provisional acceptance; it does not finalize anatomy, movement
+style, aesthetic, physical simulation depth, or the eventual customization model.
 
 ## Waiting on
 
-Luis / Game Director needs to play `TheLivingBody` and judge:
-
-- weight versus floatiness;
-- stiffness versus life;
-- starts, stops, turns, and slope transitions;
-- whether close observation is pleasant;
-- whether the movement still reads clearly from RTS distance;
-- most importantly: whether this feels like **Wonder Gather**.
+The next milestone is a design discussion. The recommendation is **The Living
+Worker**, connecting procedural bodies to gathering, carrying and delivery
+inside the faction playtest. Scope and rationale: `Docs/NextMilestonePlan.md`.
+This recommendation is **Proposed**, not an approved implementation task.
 
 ## Technically established
 
@@ -53,14 +60,13 @@ This milestone does **not** prove or implement:
 
 ## Next action
 
-**Human playtest first.**
+Review the Living Worker proposal with Luis. If chosen, implement one
+integrated work loop and return it for experiential playtesting. Keep Three
+Temperaments and later milestones adjustable to what this teaches us.
 
-After that, either:
-
-1. return The Living Body to the workshop for another focused iteration; or
-2. deliberately choose the next milestone.
-
-No later experiment should become "next" merely because an old roadmap once listed it.
+No later experiment should become "next" merely because an old roadmap once
+listed it. Last execution evidence remains September 22; the September 24
+review inspected source, documentation and Git history without rerunning Unity.
 
 ## Context router
 
@@ -72,3 +78,4 @@ Start here, then retrieve only what the task needs:
 - How is the Unity project actually structured? → `Docs/AI/UnityProjectContext.md`
 - What has really been tested, failed, and corrected? → `Docs/Validation.md`
 - What should Luis inspect right now? → `Docs/LivingBodyPlaytest.md`
+- What next step is proposed, and why? → `Docs/NextMilestonePlan.md`

@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 22, 2026
+**Last updated:** September 24, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -259,9 +259,9 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 ## Current production state
 
-**Current milestone:** The Living Body, a separate procedural locomotion
-experiment following the accepted faction creator and unit-performance
-prototypes. See `Docs/LivingBodyPlaytest.md`. Historical entries below record
+**Current milestone:** The Living Body, provisionally accepted in the
+September 24 playtest. The next milestone is under discussion; The Living
+Worker is proposed in `Docs/NextMilestonePlan.md`. See `Docs/LivingBodyPlaytest.md`. Historical entries below record
 implementation and feedback; later entries supersede earlier scope limits.
 
 ### Prototype 1.1 — The Wanderer
@@ -563,3 +563,18 @@ faction files and its existing temporary performance controls. No final
 cost formula or faction-body serialization is introduced. The next design
 discussion should use the user's movement feedback before choosing whether
 to refine locomotion, connect a body action, or begin personality expression.
+
+
+## Living Body playtest acceptance and next-step review — September 24, 2026
+
+The user reported that the movement feels okay for this prototype and asked
+for a review of the project and a plan for the next step. The Living Body is
+therefore provisionally accepted. Its current body, aesthetic, physical
+authority and movement tuning do not become final decisions.
+
+**Proposed, awaiting design choice:** The Living Worker, connecting an
+articulated faction worker to gathering, visibly carrying supplies and
+delivery. This would join the existing civilization/economy and locomotion
+foundations before revisiting Three Temperaments. Scope, integration gaps
+and acceptance checks are in `Docs/NextMilestonePlan.md`. This review does
+not authorize implementation or lock a revised long-term roadmap.
