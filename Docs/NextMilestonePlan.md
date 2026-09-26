@@ -1,8 +1,15 @@
-# Next milestone proposal — The Living Worker
+# Approved milestone plan — The Living Worker
 
 **Reviewed:** September 24, 2026
 
-**Status:** Proposed; awaiting the Game Director's choice.
+**Status:** Approved by Luis on September 26, 2026; implemented and
+technically validated. Experiential acceptance remains pending.
+
+**Approval scope:** the bounded work loop below, including the provisional
+collecting gesture and carried bundle. This does not lock the aesthetic,
+resource fiction, anatomy, final customization model or later roadmap.
+See `Docs/LivingWorkerPlaytest.md` for the integrated playtest. The review
+below records the September 24 rationale and baseline.
 
 **Baseline:** GitHub d03e045; gameplay remains d9b5f4d.
 
@@ -15,7 +22,7 @@ and temporary unit-performance controls. The separately tested Living Body
 adds procedural stepping and terrain adaptation. Luis accepted its current
 feel as adequate for the prototype on September 24.
 
-The latest recorded validation is 61 passing PlayMode tests and a successful
+At the September 24 review, validation was 61 passing PlayMode tests and a successful
 Windows development build on September 22. This planning review did not run
 fresh tests, a build or a performance profile. The newer GitHub continuity
 commit changes documentation only.
@@ -105,6 +112,6 @@ body/equipment customization and the two-cost model. Reassess the order after
 each playtest; full morphology, final art, active ragdolls and multiplayer
 remain separate decisions.
 
-Before implementing this proposal, agree that the neutral collecting gesture
-and visible carried bundle are useful temporary tests of the intended feel.
-No species, culture, permanent resource list or final movement style is chosen.
+The September 26 approval authorizes the neutral collecting gesture and
+visible carried bundle as temporary tests of the intended feel. No species,
+culture, permanent resource list or final movement style is chosen.

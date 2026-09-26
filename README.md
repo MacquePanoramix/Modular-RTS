@@ -8,14 +8,20 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 > that would be dangerous to lose; [Project Culture](Docs/PROJECT_CULTURE.md)
 > explains lightweight collaboration roles and context routing.
 
-Current milestone: **The Living Body**, a procedural movement comparison.
-Open `Assets/_WonderGather/Scenes/TheLivingBody.unity` or run the local
-`Builds/WindowsLivingBody/WonderGather.exe`.
-See [Living Body playtest](Docs/LivingBodyPlaytest.md).
+Current milestone: **The Living Worker**, integrating procedural workers
+with the faction creator's gathering, carrying and delivery loop. Scope
+approved September 26; ready for Game Director playtesting. Open
+`Assets/_WonderGather/Scenes/TheFactionCreator.unity` and launch its playtest.
+See [Living Worker playtest](Docs/LivingWorkerPlaytest.md) and
+[validation evidence](Docs/Validation.md).
 
-The faction creator remains separately available in `TheFactionCreator.unity`
-and `Builds/WindowsFactionCreator/WonderGather.exe`. See
-[Unit performance playtest](Docs/UnitPerformancePlaytest.md).
+Local standalone build: `Builds/WindowsLivingWorker/WonderGather.exe`.
+The full 67-test PlayMode suite, rendered probe and Windows build passed.
+Earlier local builds retain their previously built behavior.
+
+The earlier movement comparison remains in `TheLivingBody.unity`. See
+[Living Body playtest](Docs/LivingBodyPlaytest.md). Creator performance controls
+remain available; see [Unit performance playtest](Docs/UnitPerformancePlaytest.md).
 
 > Previous milestone: **Faction saving and library**. Open
 > `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run
@@ -36,23 +42,24 @@ and `Builds/WindowsFactionCreator/WonderGather.exe`. See
 
 1. In Unity Hub, add this folder as an existing project.
 2. Open it using Unity **6000.6.0f1** (installed locally).
-3. Open `Assets/_WonderGather/Scenes/TheLivingBody.unity` and press Play.
-4. Use the flat/slope route buttons, or select units and right-click terrain.
-5. Focus with F, zoom close, and compare feet, body weight, starts and stops.
+3. Open `Assets/_WonderGather/Scenes/TheFactionCreator.unity` and press Play.
+4. Edit or load a faction with workers allowed to gather, then launch its playtest.
+5. Select a worker and right-click the supply station marked by the green sphere.
+6. Focus with F and zoom close to watch its feet, collecting gesture and carried
+   bundle, then follow its delivery to the blue base.
 
-For civilization editing, open `TheFactionCreator.unity`. Edit unit/building
-blueprints and performance, save the faction, and launch its playtest. Save
-before stopping Unity Play Mode.
+The creator retains unit/building blueprints, production links and performance
+controls. Save before stopping Unity Play Mode. The Living Worker guide covers
+interrupted orders, shared work positions, production and save compatibility.
 
 See [Building network playtest](Docs/BuildingNetworkPlaytest.md) for a
 concrete construction and mixed-production test. Earlier scenes remain available for comparison.
 
-For this movement playtest without Unity, run
-`Builds/WindowsLivingBody/WonderGather.exe`. Keep the executable together
-with its data folders. GitHub contains source; generated caches and Windows
-builds remain local. Use a short local folder path when cloning.
-
-If the movement scene is missing, use **Wonder Gather → Create Living Body Scene**. It authors the scene, rig, terrain and navigation, and refuses to overwrite existing Living Body assets.
+For this integrated playtest without Unity, run
+`Builds/WindowsLivingWorker/WonderGather.exe` with its data folders.
+GitHub contains source; generated caches and Windows builds remain local.
+Use a short local folder path when cloning. The committed assets contain
+the integration; no setup menu command is needed to play.
 
 | Control | Action |
 |---|---|

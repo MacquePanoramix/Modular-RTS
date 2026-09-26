@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 24, 2026
+**Last updated:** September 26, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -259,10 +259,12 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 ## Current production state
 
-**Current milestone:** The Living Body, provisionally accepted in the
-September 24 playtest. The next milestone is under discussion; The Living
-Worker is proposed in `Docs/NextMilestonePlan.md`. See `Docs/LivingBodyPlaytest.md`. Historical entries below record
-implementation and feedback; later entries supersede earlier scope limits.
+**Current milestone:** The Living Worker, approved September 26 and
+implemented for experiential review. The faction playtest now connects
+procedural workers to gathering, carrying and delivery. See
+`Docs/LivingWorkerPlaytest.md`. The Living Body was provisionally accepted
+September 24. Historical entries below preserve earlier scope and feedback;
+later entries supersede earlier limits.
 
 ### Prototype 1.1 — The Wanderer
 
@@ -578,3 +580,25 @@ delivery. This would join the existing civilization/economy and locomotion
 foundations before revisiting Three Temperaments. Scope, integration gaps
 and acceptance checks are in `Docs/NextMilestonePlan.md`. This review does
 not authorize implementation or lock a revised long-term roadmap.
+
+
+## The Living Worker — September 26, 2026
+
+**User-approved scope:** Luis approved the Living Worker plan, including the
+provisional collecting gesture and carried bundle. The existing faction
+playtest now uses articulated workers for both starting and produced units.
+Gathering and delivery use reachable reserved positions; visible cargo and
+arm poses follow actual task state. Interrupted work retains carried supplies.
+The existing creator controls and version-4 faction files retain their meaning.
+
+**Implemented for review:** one restrained reach-and-collect action, carrying
+support, a short delivery gesture, activity/cargo HUD feedback, eight places
+at the supply station and base, and waiting when places are occupied. The
+worker gait adapts to the existing movement range. Construction behavior is
+preserved; a procedural construction gesture is outside this slice.
+
+These are integration proof cases. They do not finalize the resource fiction,
+station design, body, pace, species, equipment, autonomy or aesthetic. No
+load penalty, cost formula, physics balance or save migration is introduced.
+The next decision follows Luis's judgment of the integrated work routine;
+Three Temperaments remains a possible follow-up after that playtest.

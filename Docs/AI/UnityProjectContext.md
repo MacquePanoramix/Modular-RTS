@@ -1,8 +1,8 @@
 # Unity project context
 
-Updated September 22, 2026 for The Living Body. Current playtest:
-Docs/LivingBodyPlaytest.md; validation evidence: Docs/Validation.md.
-The faction creator remains available separately with version-4 saves.
+Updated September 26, 2026 for The Living Worker. Current playtest:
+Docs/LivingWorkerPlaytest.md; validation evidence: Docs/Validation.md.
+The faction creator's playtest integrates working bodies; saves remain version 4.
 Sections describe successive extensions; later sections supersede earlier limits.
 
 ## Confirmed foundation
@@ -278,3 +278,69 @@ at landing, the rest stance is upright, pelvis lowering obeys leg reach, and
 arm counter-swing follows the actual foot position. The explicitly referenced
 selection ring aligns with support normals to remain visible on the ramp.
 The two-unit checks establish this prototype only, not arbitrary body support.
+
+
+## Living Worker integration
+
+September 26, 2026: approved scope, implemented and technically validated;
+Game Director playtest pending. This section supersedes the earlier
+separation between faction
+workers and procedural bodies. Current guide: Docs/LivingWorkerPlaytest.md;
+execution evidence and remaining limits belong in Docs/Validation.md.
+
+LivingWorkerSetup.Create uses Unity authoring APIs to make LivingWorker.prefab
+from the existing biped, add Gatherer/Builder/ProducedWorker, and attach a
+provisional bundle through ProceduralBiped.ConfigureWork. A new
+LivingWorkerProduction recipe copies the old recipe's economic settings and
+becomes the existing Worker blueprint's production reference. Stable blueprint
+IDs, editable rosters, permissions, performance meanings and save schema 4
+remain unchanged. The baseline NavMesh speed stays 3.2, preserving the
+creator's 0.8–6.4 range. Earlier non-civilization production keeps its recipe.
+
+The faction map's ResourceNode and CivilizationBase prefab each receive a
+ResourceWorkplace with eight authored stand/contact pairs. Stand/contact
+transforms are relative to their owner. The component reserves a reachable
+stand for one Gatherer, rejects paths that resolve away from that stand,
+and releases occupancy when the worker leaves, cancels or disables. The map's
+supply station gets a carving obstacle and visual rack; its original command
+collider and ResourceNode identity remain. The base has provisional delivery
+shelves. FactionPlaytest enables terrain-aware camera framing and retains
+the user's authored 0.005 zoom preference.
+
+Gatherer remains authoritative for task state, timing and cargo. It claims
+work positions during travel, waits/retries when none can be reached or are
+free, faces the contact through UnitMotor.Face, and exposes HasWorkContact,
+WorkContact and ActionProgress to presentation. Contextual delivery adds a
+0.4-second Depositing state before committing cargo to the depot. Cancellation
+releases the reservation and retains carried supplies. Nodes/depots without
+ResourceWorkplace keep their existing offset-based interaction and immediate
+delivery, supporting the earlier prototypes.
+
+ProceduralBiped owns all visual limb posing. An explicitly configured
+Gatherer supplies read-only activity and cargo; there is no second resource
+counter or animation-driven transfer. Its right arm reaches toward the work
+contact during gathering/delivery; carried cargo chooses the carrying pose
+and visible bundle, with smoothed arm targets in body space. Arm reach is
+constrained by a two-segment solve. The configured worker uses earlier,
+shorter steps and a duration derived from actual displacement to accommodate
+the existing movement range without changing navigation speed. The separate
+Living Body walkers retain their original step-timing path. Both paths
+constrain the visual pelvis to the intersection of the two leg-reach volumes,
+covering horizontal overreach after navigation corrections as well as slopes.
+Feasible corrections retain planted contacts and never move the root;
+mutually unreachable contacts reset presentation like a teleport.
+
+WandererHud adds the selected worker's activity label and cargo/capacity.
+Starting and produced units continue through the existing CivilizationSession
+and UnitProducer paths. Builder behavior is retained, but construction has
+no new gesture. There is no new input map, package, save migration, body editor,
+physics authority or morale system. Resource visuals and load representation
+are provisional; body feel still requires Game Director playtesting.
+
+The entry remains TheFactionCreator.unity, which opens FactionPlaytest through
+the existing playtest flow. LivingWorkerSetup.BuildWindows builds those two
+scenes to Builds/WindowsLivingWorker/WonderGather.exe. Five focused tests and
+the full 67-test PlayMode suite passed; a rendered probe and Windows build also
+passed. See Validation.md for the evidence and limits. Visible rack/box/marker
+and shelf surfaces have command-raycast colliders, matching what can be clicked.
+The original resource collider is retained for compatibility.

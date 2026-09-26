@@ -63,6 +63,8 @@ namespace WonderGather
                 if(selection.SelectedBuilding==null)
                 {
                     Label("Selected gatherers active: " + working + "   Carrying: " + carried);
+                    if (selection.Count == 1 && selection.SelectedUnits[0].TryGetComponent<Gatherer>(out var selectedWorker))
+                        Label(selectedWorker.ActivityLabel + " | Supplies: " + selectedWorker.Carried + " / " + selectedWorker.Capacity);
                     Label("Right-click green supplies: gather / blue depot: deliver");
                 }
             }

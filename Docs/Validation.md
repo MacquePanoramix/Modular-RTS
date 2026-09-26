@@ -1,7 +1,7 @@
 # Validation history
 
-Current milestone: The Living Body; see the September 22 entry below and
-Docs/LivingBodyPlaytest.md. Earlier sections preserve historical evidence.
+Current milestone: The Living Worker; see the September 26 entry below and
+Docs/LivingWorkerPlaytest.md. Earlier sections preserve historical evidence.
 
 ## Unity 6.6 foundation — September 6, 2026
 
@@ -393,3 +393,67 @@ stairs/moving terrain, multiplayer and RTS-scale performance are unproven.
 The scene's opt-in terrain-aware camera preserves default behavior elsewhere.
 The user's judgment of weight, pace, expression and aesthetic fit remains the
 next acceptance step. Faction schema remains version 4.
+
+
+## The Living Worker — September 26, 2026
+
+- Baseline b9d2902 matched GitHub main. The prior 61-test suite and Living
+  Body Windows build passed. Work used the isolated WGGroup project and
+  Unity 6000.6.0f1. Existing primary edits to TheGroup, package/URP settings
+  and Recovery assets were preserved. No packages, build scene settings,
+  faction file schema, blueprint IDs or economic recipe values changed.
+- Unity compilation and targeted authoring passed (LIVING_WORKER_SETUP_OK).
+  Created the worker prefab variant, production recipe and two materials.
+  Updated the civilization worker's recipe reference, base delivery
+  surfaces/positions and faction playtest resource/camera integration. Unity
+  also serialized the worker's existing default performance values explicitly;
+  their behavior is unchanged.
+- Five focused LivingWorkerTests passed in 105.45 seconds.
+  These cover the actual starting and produced worker paths; complete
+  gather/carry/delivery; constant leg lengths and ground support; real hand
+  contact; partial-cargo interruption/disable/return; eight workers sharing
+  two test stations; depletion and reservation release; and movement/rate/
+  capacity extremes. Test storage is isolated from player faction files.
+- Fresh read-only runtime review found no actionable defects. Focused and
+  visual evidence supplement that static review; it is not runtime proof.
+- The first rendered probe passed. Inspection found that some new visible
+  work surfaces lacked click colliders and the delivery camera was occluded.
+  Unity authored colliders on the rack, supplies, marker and shelves
+  (LIVING_WORKER_INTERACTION_OK). The integration test now also checks that
+  supply boxes and shelves resolve to resource/depot command targets.
+- The first full regression run passed 65/66; the earlier Living Body slope
+  test detected stretched legs. Its focused rerun passed. Inspection found
+  the unchanged solver could lower the pelvis but not recover horizontal
+  overreach. A controlled 1.5 m navigation correction reproduced the same
+  defect before the fix (.740 m segment versus its authored .68 m). The
+  exact timing trigger in the first slope run was not captured.
+- The visual pelvis now stays within both legs' reachable volume while
+  navigation and planted feet retain their authority. Mutually unreachable
+  contacts use the existing presentation-reset policy for discontinuities.
+  Added a deterministic navigation-correction regression; all nine Living
+  Body/Worker tests passed in 144.86 seconds.
+  No assertions were weakened or tests excluded. Initial failed reports
+  were retained separately from the final full-suite report.
+- Final rendered probe passed 1/1 in 17.70 seconds.
+  Seven final captures were inspected: overview/HUD, gathering, carrying,
+  holding after interruption, delivery, empty-handed, and fast movement.
+  The temporary probe was removed before the full suite and build. Captures
+  are in Docs/Images/LivingWorker*.png. These are scripted Editor runtime
+  captures, not a manual mouse/keyboard or final aesthetic acceptance claim.
+- Full PlayMode suite: 67 passed, zero failed, 500.35 seconds.
+  This includes the final click-surface assertions and earlier camera,
+  movement, economy, construction, production, creator, graph, persistence,
+  migration, performance and Living Body checks. Local reports are under
+  Docs/TestResults/worker-*.xml (ignored generated evidence).
+- Windows x64 development build via LivingWorkerSetup.BuildWindows passed
+  (LIVING_WORKER_BUILD_OK): Builds/WindowsLivingWorker/WonderGather.exe.
+  Standalone interactive playtesting was not performed.
+
+Known limits: primitive provisional bodies, one supplies fiction, and a small
+authored work course. Existing saved factions resolve to the worker template
+with the new body; their version-4 data and settings keep their meaning.
+Construction retains its earlier gameplay with no new work gesture. No
+active ragdolls, physical balance, load penalties, personality, combat,
+arbitrary anatomy, network model or RTS-scale performance budget is claimed.
+The user's judgment of weight, contact, carrying support and readability is
+the next milestone acceptance step.

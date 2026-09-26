@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.UnitBlueprint
   id: worker
   displayName: Worker
-  production: {fileID: 11400000, guid: 19c63824cd8db0449abc967fac8895c6, type: 2}
+  production: {fileID: 11400000, guid: a9a62dac56438da49b6067090d3d385c, type: 2}
   gathersSupplies: 1
   builds:
   - {fileID: 11400000, guid: 73f1590f4b6499d46b0d123a03f97885, type: 2}
+  performance:
+    movementPercent: 100
+    capacity: 5
+    gatheringPercent: 100
+    constructionPercent: 100

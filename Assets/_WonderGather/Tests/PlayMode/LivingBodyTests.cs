@@ -144,6 +144,30 @@ namespace WonderGather.Tests
             }
         }
 
+        [UnityTest] public IEnumerator NavigationCorrectionKeepsSupportAndLegReach()
+        {
+            demo.StopWalkers();
+            var body=bodies[0];
+            body.ResetPose();
+            var contacts=new[]{body.FootPosition(0),body.FootPosition(1)};
+            var root=body.transform.position+Vector3.forward*1.5f;
+            // A correction below the teleport-reset threshold can put the root
+            // beyond a planted leg's horizontal reach in a single frame.
+            Assert.That(body.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(root),Is.True);
+            yield return null;yield return null;
+            Grounded(body);
+            Assert.That(Vector3.Distance(body.transform.position,root),Is.LessThan(.01f),"Presentation must not move the corrected navigation root.");
+            int retained=0;
+            for(int foot=0;foot<2;foot++) if(body.FootPlanted(foot))
+            {
+                Assert.That(Vector3.Distance(body.FootPosition(foot),contacts[foot]),Is.LessThan(.001f),"Correction must preserve the planted support point.");
+                retained++;
+            }
+            Assert.That(retained,Is.GreaterThan(0));
+            float end=Time.time+2;
+            while(Time.time<end){yield return null;Grounded(body);}
+        }
+
         [UnityTest] public IEnumerator RedirectAndReenableRestoreNearbySupportWithoutMovingTheRoot()
         {
             Assert.That(demo.WalkRoute(true),Is.True);

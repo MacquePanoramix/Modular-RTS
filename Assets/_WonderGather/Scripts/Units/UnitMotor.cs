@@ -55,6 +55,16 @@ namespace WonderGather
             Destination = transform.position;
         }
         private static bool IsFinite(Vector3 value) => float.IsFinite(value.x) && float.IsFinite(value.y) && float.IsFinite(value.z);
+        // Work orders turn a stopped root; normal navigation owns rotation again on departure.
+        public bool Face(Vector3 point, float deltaTime)
+        {
+            Vector3 direction = point - transform.position;
+            direction.y = 0;
+            if (direction.sqrMagnitude < .0001f) return true;
+            Quaternion target = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, target, agent.angularSpeed * deltaTime);
+            return Quaternion.Angle(transform.rotation, target) < 8;
+        }
         private void OnDisable()
         {
             if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh) { agent.isStopped = true; agent.ResetPath(); agent.velocity = Vector3.zero; }
