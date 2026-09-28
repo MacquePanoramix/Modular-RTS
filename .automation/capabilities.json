@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "project_id": "Modular-RTS",
+  "created_at": "2026-09-28T00:00:00Z",
+  "id": "WG-BOOTSTRAP-CAPABILITIES",
+  "host_os": "Windows (preparation host only)",
+  "tools": [
+    {
+      "name": "Python",
+      "version": "3.12.14",
+      "status": "observed"
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.25.1",
+      "status": "observed"
+    },
+    {
+      "name": "Codex CLI unattended host",
+      "version": null,
+      "status": "unverified"
+    },
+    {
+      "name": "Unity runtime validation in this bootstrap",
+      "version": "6000.6.0f1",
+      "status": "unverified"
+    }
+  ],
+  "auth_mode": "unverified",
+  "models": [],
+  "integrations": [
+    {
+      "name": "GitHub repository read",
+      "status": "observed",
+      "evidence": "Repository main commit 5f613512b5a51f0a77624a2adfc0c8d8d3afe7a5 inspected through GitHub plugin and isolated clone."
+    },
+    {
+      "name": "GitHub branch rules",
+      "status": "unverified",
+      "evidence": "main reported protected=false at preparation; no settings changed."
+    },
+    {
+      "name": "subscription-only billing enforcement",
+      "status": "unverified",
+      "evidence": "No unattended authentication or paid-credit fallback probe performed."
+    },
+    {
+      "name": "controller identity and decision channel",
+      "status": "unverified",
+      "evidence": "No distinct bot/controller identity or authenticated decision transport configured."
+    }
+  ],
+  "quota_observability": "unverified",
+  "probe_time": "2026-09-28T00:00:00Z",
+  "limitations": [
+    "Offline shadow implementation only; no live worker, remote state adapter or effect broker.",
+    "No scheduler, branch protections or automation-state branch installed.",
+    "Host isolation, subscription-only enforcement and decision authentication remain unverified.",
+    "Historical Unity test evidence has not been rerun for this infrastructure-only change."
+  ]
+}

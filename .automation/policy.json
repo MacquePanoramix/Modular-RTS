@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "project_id": "Modular-RTS",
+  "created_at": "2026-09-28T00:00:00Z",
+  "id": "WG-AUTOMATION-POLICY",
+  "policy_version": 1,
+  "mode": "shadow",
+  "repository": "MacquePanoramix/Modular-RTS",
+  "default_branch": "main",
+  "state_branch": "automation-state",
+  "goal": "Prepare a reviewable offline automation foundation; preserve the Living Worker playtest milestone.",
+  "audience": [
+    "Game Director",
+    "project contributors"
+  ],
+  "deliverables": [
+    "strict contracts",
+    "local recovery journal",
+    "shadow CLI",
+    "adversarial tests",
+    "commissioning checklist"
+  ],
+  "criterion_ids": [
+    "BOOT-RECORDS",
+    "BOOT-RECOVERY",
+    "BOOT-CONTEXT",
+    "BOOT-NO-EFFECTS"
+  ],
+  "exclusions": [
+    "unattended model execution",
+    "automatic integration",
+    "recurring scheduling",
+    "gameplay or design changes",
+    "paid usage"
+  ],
+  "assumptions": [
+    "This public draft contains no private planning or credentials.",
+    "The Game Director retains design and playtest authority.",
+    "A repository owner login is not a verified decision-channel identity."
+  ],
+  "accepted_decisions": [],
+  "authority": {
+    "dispatch": false,
+    "integrate": false,
+    "publish": false
+  },
+  "resource_limits": {
+    "max_concurrency": 1,
+    "max_attempts": 2,
+    "timeout_minutes": 30,
+    "paid_usage_allowed": false
+  },
+  "human_principals": [
+    "github:MacquePanoramix"
+  ],
+  "protected_paths": [
+    ".automation/**",
+    ".automation-local/**",
+    ".github/**",
+    ".git/**",
+    "AGENTS.md",
+    "Docs/Decisions/**",
+    "Docs/GAME_VISION.md",
+    "Docs/DESIGN_RATIONALE.md"
+  ]
+}

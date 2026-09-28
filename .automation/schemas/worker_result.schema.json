@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Modular-RTS shadow worker_result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "run_id",
+    "outcome",
+    "summary",
+    "artifact_refs",
+    "checks_reported",
+    "unresolved",
+    "failure_class"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "blocked",
+        "failed"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "repo-path",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "checks_reported": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "failure_class": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "CONTEXT",
+            "REQUIREMENT",
+            "IMPLEMENTATION",
+            "VERIFICATION",
+            "INFRASTRUCTURE",
+            "QUOTA",
+            "AUTH",
+            "PERMISSION",
+            "SECURITY"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

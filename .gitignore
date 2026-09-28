@@ -21,3 +21,9 @@ crashlytics-build.properties
 *.user
 *.pidb
 *.booproj
+
+# Local automation recovery, environments and Python caches contain host state.
+/.automation-local/
+/.venv/
+__pycache__/
+*.py[cod]
