@@ -1,9 +1,12 @@
-# Next implementation recommendation — The Equipped Worker
+# Approved implementation plan — The Equipped Worker
 
 **Reviewed:** September 29, 2026.
-**Baseline:** 5f61351, matching GitHub main during this review; Unity 6000.6.0f1.
-**Status:** Recommended scope following Luis's September 28 direction;
-not yet implemented or approved as a detailed implementation specification.
+**Review baseline:** 5f61351, matching GitHub main during the recommendation review;
+Unity 6000.6.0f1. Implementation begins from the documentation commit 1dce817.
+**Status:** Approved scope implemented and technically validated on September 29.
+The detailed scope below remains its contract. See [Validation.md](Validation.md)
+and [EquippedWorkerPlaytest.md](EquippedWorkerPlaytest.md). Luis's playtest acceptance
+of the result is pending.
 
 Luis accepted The Living Worker as a useful early prototype and described a
 later, highly polished one-worker showcase. The reference is
@@ -16,18 +19,22 @@ Can a worker made through the faction blueprint system equip a real tool,
 hold and use it convincingly, and extract material only when that tool
 actually makes a valid strike?
 
-The proposed next slice is **The Equipped Worker**: one provisional biped,
+The approved slice is **The Equipped Worker**: one provisional biped,
 one pickaxe definition, one mineral/boulder target, and the existing
 approach → work → carry → deliver loop. Its purpose is to establish the
 connection between equipment, embodied action and a gameplay consequence.
 It is a step toward the polished public showcase, not that complete showcase.
 
-## What the repository establishes
+## What the pre-implementation review established
 
-This is a focused source/configuration/history review, not a new runtime or
-performance audit. The September 26 evidence remains 67 passing PlayMode
-tests, reviewed rendered captures and a successful Windows build. No Unity
-tests, scene saves or builds were run for this documentation update.
+The recommendation was based on a focused source/configuration/history
+review, not a new runtime or performance audit. Its baseline evidence was
+the September 26 result: 67 passing PlayMode tests, reviewed rendered captures
+and a successful Windows build. The observations below describe that earlier
+implementation; they are not a current test report for the new equipment code.
+Current candidate ownership is described in [EquipmentArchitecture.md](EquipmentArchitecture.md),
+and the review path is in [EquippedWorkerPlaytest.md](EquippedWorkerPlaytest.md).
+Actual equipment validation results belong in [Validation.md](Validation.md).
 
 | Confirmed observation | Evidence under Assets/_WonderGather | Implication for the next slice |
 |---|---|---|

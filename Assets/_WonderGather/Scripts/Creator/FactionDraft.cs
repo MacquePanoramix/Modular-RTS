@@ -19,6 +19,7 @@ namespace WonderGather
         public string TemplateWorkerId {get;}
         public CivilizationDefinition Definition {get;}
         public IReadOnlyList<UnitBlueprint> Units=>units;
+        public IReadOnlyList<ToolDefinition> Tools=>Definition.Tools;
         public UnitBlueprint Worker=>units[0];
         public BuildingBlueprint Workshop=>workshops[0];
         public int StartingWorkers=>StartingCount(Worker);
@@ -61,7 +62,7 @@ namespace WonderGather
             label=label.Substring(0,Mathf.Min(54,label.Length))+(duplicate!=null?" copy":" "+(units.Count+1));
             var unit=CreateUnit("unit-"+Guid.NewGuid().ToString("N"),label,duplicate?.GathersSupplies??true,duplicate!=null?duplicate.CanBuild(Workshop):true,0);
             if(duplicate!=null) unit.Configure(unit.Id,unit.DisplayName,recipe,duplicate.GathersSupplies,duplicate.Builds.ToArray());
-            if(duplicate!=null) unit.SetPerformance(duplicate.Performance);
+            if(duplicate!=null){unit.SetPerformance(duplicate.Performance);unit.SetTool(duplicate.Tool);}
             Refresh();return unit;
         }
         private UnitBlueprint CreateUnit(string id,string label,bool gathers,bool builds,int count)
@@ -78,6 +79,12 @@ namespace WonderGather
         }
         public void SetPerformance(UnitBlueprint unit,UnitPerformance value)
         {Check(unit);unit.SetPerformance(value);Refresh();}
+        public void SetTool(UnitBlueprint unit,ToolDefinition tool)
+        {
+            Check(unit);
+            if(tool!=null && !Tools.Contains(tool)) throw new ArgumentException("Choose a tool from this faction's catalog.");
+            unit.SetTool(tool);Refresh();
+        }
         public bool RemoveUnit(UnitBlueprint unit)
         {
             Check(unit);if(units.Count==1) return false;
@@ -126,6 +133,14 @@ namespace WonderGather
         }
         internal void RestoreGraph(FactionUnitRecord[] records,FactionBuildingRecord[] buildings)
         {
+            // Resolve before rebuilding. Unknown creative choices must not become None.
+            var equipment=new Dictionary<string,ToolDefinition>();
+            foreach(var record in records)
+            {
+                var tool=record.ToolId.Length==0?null:Tools.SingleOrDefault(x=>x.Id==record.ToolId);
+                if(record.ToolId.Length>0 && tool==null) throw new System.IO.InvalidDataException("The equipped tool '"+record.ToolId+"' is unavailable in this version of the game.");
+                equipment.Add(record.Id,tool);
+            }
             // Validated records are restored into a new, unexposed draft.
             foreach(var unit in units){owned.Remove(unit);UnityEngine.Object.Destroy(unit);}units.Clear();starts.Clear();
             foreach(var building in workshops){owned.Remove(building);UnityEngine.Object.Destroy(building);}workshops.Clear();
@@ -133,7 +148,7 @@ namespace WonderGather
             foreach(var record in records)
             {
                 var unit=CreateUnit(record.Id,record.Name,record.Gathers,false,record.Start);
-                unit.SetPerformance(record.Performance);
+                unit.SetPerformance(record.Performance);unit.SetTool(equipment[record.Id]);
                 unit.Configure(unit.Id,unit.DisplayName,recipe,record.Gathers,record.BuildIds.Select(id=>workshops.Single(x=>x.Id==id)).ToArray());
             }
             foreach(var record in buildings)

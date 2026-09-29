@@ -151,6 +151,11 @@ namespace WonderGather
                 bool gathers=Toggle("Gather supplies",unit.GathersSupplies);
                 if(label!=unit.DisplayName || gathers!=unit.GathersSupplies) draft.ConfigureUnit(unit,label,gathers,unit.CanBuild(draft.Workshop));
                 if(start!=draft.StartingCount(unit)) draft.SetStartingCount(unit,start);
+                GUILayout.Space(12);GUILayout.Label("Equipped tool",body);
+                if(GUILayout.Button((unit.Tool==null?"● ":"")+"None",button,GUILayout.Width(260))) draft.SetTool(unit,null);
+                foreach(var tool in draft.Tools)
+                    if(GUILayout.Button((unit.Tool==tool?"● ":"")+tool.DisplayName,button,GUILayout.Width(260))) draft.SetTool(unit,tool);
+                GUILayout.Label("A pickaxe is needed to mine the boulder. Tools stay with this blueprint's starting and trained units.",small);
                 GUILayout.Space(12);GUILayout.Label("Prototype performance",body);
                 var performance=unit.Performance;
                 performance.movementPercent=Stepper("Movement (%)",performance.movementPercent,25,25,200);
@@ -202,9 +207,10 @@ namespace WonderGather
             foreach(var warning in draft.Report.Warnings) GUILayout.Label(warning,small);
             GUILayout.EndScrollView();GUILayout.EndArea();
             GUI.enabled=!creator.Busy && draft.Report.CanInstantiate;
-            if(GUI.Button(new Rect(934,588,322,52),creator.Busy?"Opening playtest...":"Playtest faction  →",button)){GUI.FocusControl(null);creator.Playtest();}
+            if(GUI.Button(new Rect(934,588,322,40),creator.Busy?"Opening playtest...":"Playtest faction  →",button)){GUI.FocusControl(null);creator.Playtest();}
+            if(GUI.Button(new Rect(934,634,322,40),"Playtest equipment  →",button)){GUI.FocusControl(null);creator.PlaytestEquipment();}
             GUI.enabled=true;
-            Label(new Rect(934,650,322,45),creator.Workspace.SaveState,small);
+            Label(new Rect(934,681,322,26),creator.Workspace.SaveState,small);
             GUI.matrix=oldMatrix;
         }
     }

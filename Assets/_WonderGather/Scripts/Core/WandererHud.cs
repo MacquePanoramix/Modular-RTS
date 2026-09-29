@@ -65,7 +65,11 @@ namespace WonderGather
                     Label("Selected gatherers active: " + working + "   Carrying: " + carried);
                     if (selection.Count == 1 && selection.SelectedUnits[0].TryGetComponent<Gatherer>(out var selectedWorker))
                         Label(selectedWorker.ActivityLabel + " | Supplies: " + selectedWorker.Carried + " / " + selectedWorker.Capacity);
-                    Label("Right-click green supplies: gather / blue depot: deliver");
+                    if(selection.Count==1 && selection.SelectedUnits[0].TryGetComponent<EquippedTool>(out var equipment) && equipment.Definition!=null)
+                        Label("Tool: "+equipment.Definition.DisplayName+" | "+equipment.Status);
+                    Label(resource!=null && resource.GetComponent<MineableResource>()!=null
+                        ? "Right-click mineral: mine with pickaxe / blue depot: deliver"
+                        : "Right-click green supplies: gather / blue depot: deliver");
                 }
             }
             if(construction!=null && selection.SelectedBuilding==null)

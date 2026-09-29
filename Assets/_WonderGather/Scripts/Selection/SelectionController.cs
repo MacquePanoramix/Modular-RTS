@@ -132,6 +132,8 @@ namespace WonderGather
             int accepted = commands.Dispatch(new GatherCommand(resource), selected);
             SelectionChanged();
             Status = accepted > 0 ? accepted + " workers gathering. Deliveries repeat automatically." : "No selected worker can gather there.";
+            if(accepted==0 && selected.Count==1 && selected[0].TryGetComponent<Gatherer>(out var worker)
+                && !string.IsNullOrEmpty(worker.LastOrderFailure)) Status=worker.LastOrderFailure;
             return accepted;
         }
         private void Update()

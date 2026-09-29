@@ -664,3 +664,29 @@ is now captured in the dedicated canonical section above and expanded in
 Docs/WorkerShowcaseVision.md. The September 29 source review recommends
 blueprint equipment and contact-based mining next; it changes documentation
 only. The September 26 technical evidence remains the latest executed validation.
+
+
+## The Equipped Worker — September 29, 2026
+
+**User-approved scope, implemented for review:** Luis approved the next
+equipment/contact slice. Unit blueprints now choose None or an authored
+pickaxe, and starting/produced workers receive that choice. The new equipment
+playtest uses a mineral surface with reserved working positions. Supported,
+reachable tool grips and the actual solved head strike gate one unit of
+extraction per accepted attempt. Misses and interrupted work give no free
+material; real cargo remains conserved through delivery.
+
+**Temporary implementation choices:** one fixed-scale biped and primitive
+pickaxe, a bounded preparation/strike/recovery motion, fixed yield, material
+represented beside the feet during mining, and a short side-to-back stow
+transition for transport. These are proof cases awaiting Luis's judgment,
+not final body proportions, tool shape, animation character, resource fiction,
+hauling rules or aesthetics. Saves extend deliberately to version 5; older
+designs open with None without being rewritten just by opening.
+
+Technical validation passed; Luis's playtest acceptance is pending. The
+deeper character-creator and civilization/building modularity remain the
+target. Strength-dependent tool handling, one-handed carry/dragging, bags,
+carts and material burden remain the recommended following experiments.
+Force/angle-dependent yield and their exact rules remain open.
+Reference: Docs/EquippedWorkerPlaytest.md and Docs/EquipmentArchitecture.md.

@@ -8,22 +8,25 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 > that would be dangerous to lose; [Project Culture](Docs/PROJECT_CULTURE.md)
 > explains lightweight collaboration roles and context routing.
 
-Current milestone: **The Living Worker**, integrating procedural workers
-with the faction creator's gathering, carrying and delivery loop. Luis
-provisionally accepted this early prototype on September 28. Open
-`Assets/_WonderGather/Scenes/TheFactionCreator.unity` and launch its playtest.
-See [Living Worker playtest](Docs/LivingWorkerPlaytest.md) and
-[validation evidence](Docs/Validation.md).
+Current milestone: **The Equipped Worker**, connecting a blueprint-selected
+pickaxe to reachable procedural strikes and real resource extraction. Open
+`Assets/_WonderGather/Scenes/TheFactionCreator.unity`, choose **Pickaxe** under
+the worker's **Equipped tool**, then select **Playtest equipment →**.
+See [Equipped Worker playtest](Docs/EquippedWorkerPlaytest.md),
+[equipment architecture](Docs/EquipmentArchitecture.md) and
+[validation evidence](Docs/Validation.md). Luis's acceptance is pending.
 
-Next recommendation: [The Equipped Worker](Docs/NextMilestonePlan.md), adding
-blueprint equipment and contact-based mining. The longer-term reference is a
-[deep, polished one-worker showcase](Docs/WorkerShowcaseVision.md). Its limited
-scene scale does not limit the intended depth of the character and civilization
-creators. These are documented directions; the new equipment slice is not yet implemented.
+The full 85-test PlayMode suite, 18 focused equipment/persistence tests,
+reviewed rendered probe and Windows build passed. Local standalone:
+`Builds/WindowsEquippedWorker/WonderGather.exe`. The ordinary **Playtest faction →**
+map retains the Living Worker's supply collection. Older faction files open
+with None; explicit saves upgrade to version 5 with the existing backup flow.
 
-Local standalone build: `Builds/WindowsLivingWorker/WonderGather.exe`.
-The full 67-test PlayMode suite, rendered probe and Windows build passed.
-Earlier local builds retain their previously built behavior.
+The longer-term reference is a [deep, polished one-worker showcase](Docs/WorkerShowcaseVision.md).
+Its limited scene scale does not limit the intended depth of character and
+civilization creation. Tool shape, poses, fixed hit yield and back stow are
+provisional. Strength-dependent handling and material transport aids follow
+this contact proof and Luis's feedback.
 
 The earlier movement comparison remains in `TheLivingBody.unity`. See
 [Living Body playtest](Docs/LivingBodyPlaytest.md). Creator performance controls
@@ -49,20 +52,20 @@ remain available; see [Unit performance playtest](Docs/UnitPerformancePlaytest.m
 1. In Unity Hub, add this folder as an existing project.
 2. Open it using Unity **6000.6.0f1** (installed locally).
 3. Open `Assets/_WonderGather/Scenes/TheFactionCreator.unity` and press Play.
-4. Edit or load a faction with workers allowed to gather, then launch its playtest.
-5. Select a worker and right-click the supply station marked by the green sphere.
-6. Focus with F and zoom close to watch its feet, collecting gesture and carried
-   bundle, then follow its delivery to the blue base.
+4. Edit or load a faction, enable gathering, choose Pickaxe and launch **Playtest equipment →**.
+5. Select a worker and right-click the grey mineral boulder.
+6. Focus with F and zoom close to watch preparation, contact and recovery,
+   then follow cargo transport and delivery to the blue base.
 
 The creator retains unit/building blueprints, production links and performance
-controls. Save before stopping Unity Play Mode. The Living Worker guide covers
-interrupted orders, shared work positions, production and save compatibility.
+controls. Save before stopping Unity Play Mode. The Equipped Worker guide covers
+interrupted strikes, shared work positions, production and save compatibility.
 
 See [Building network playtest](Docs/BuildingNetworkPlaytest.md) for a
 concrete construction and mixed-production test. Earlier scenes remain available for comparison.
 
 For this integrated playtest without Unity, run
-`Builds/WindowsLivingWorker/WonderGather.exe` with its data folders.
+`Builds/WindowsEquippedWorker/WonderGather.exe` with its data folders.
 GitHub contains source; generated caches and Windows builds remain local.
 Use a short local folder path when cloning. The committed assets contain
 the integration; no setup menu command is needed to play.

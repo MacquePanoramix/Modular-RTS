@@ -478,3 +478,68 @@ the next milestone acceptance step.
 - Existing human edits in TheGroup, package/URP settings and Recovery assets
   were preserved. No source, asset, package, save data or serialized setting
   changes are part of this documentation update.
+
+
+## The Equipped Worker — September 29, 2026
+
+- Baseline 1dce817, after Luis approved the documented scope. Implementation
+  and Unity validation used the isolated WGGroup project, Unity 6000.6.0f1 / URP.
+  Human edits in TheGroup, package/URP settings and Recovery assets were preserved.
+  No package, blueprint ID, recipe price, navigation authority or final art change.
+- Unity compile/authoring passed (EQUIPPED_WORKER_SETUP_OK). Authored pickaxe
+  prefab/definition/materials, matching mineral render/collision mesh, eight
+  stations and the separate EquipmentPlaytest map. Preserved the original map,
+  prefab variant GUID and session/resource references; added the map to build scenes.
+- Initial persistence run: 6/6 passed, 14.12 seconds. Independent save review
+  found a tool-ID/save boundary mismatch; definitions now share the printable
+  1–64-character constraint, with explicit boundary/serialized-invalid tests.
+- Initial focused run: 13/15 passed, two failed on the unchanged 0.015 m grip
+  assertion during travel. HandPosition cached old world coordinates while the
+  parented tool and rendered limbs already followed the navigation root. Store
+  root-local hand coordinates and report through TransformPoint. Both real
+  starter/produced loops then passed in 34.89 seconds. Assertions were preserved.
+- Independent runtime review found a mid-strike origin-overlap gap in sphere
+  casts and a scale mismatch possibility. Every unspent strike segment now
+  checks origin overlap. Fixed-scale tool definitions and worker/model scale
+  guards prevent displayed and queried paths from diverging. Added regression
+  tests for a blocker entering the swing and initial/mid-work scale rejection.
+  The fresh follow-up source review reported no remaining actionable findings.
+- Final focused equipment/persistence suite: **18 passed, zero failed**,
+  116.30 seconds. Covers valid hit/deduplication, real complete starter/produced
+  loops, grip/support, absent tool, moved surface, nearer blocker and mid-swing
+  overlap, unreachable grip, cancel/disable/re-enable, shared depletion,
+  coarse stationary action frames and supported rate extremes; plus choice,
+  dirty/duplicate/copy/template isolation, strict catalog/fields, unknown-ID
+  safety, v4 None/defaults/read-without-rewrite/backup upgrade and failed writes.
+  Earlier v1–3 migration tests remain in the full suite.
+- Rendered probe: **1/1 passed**, 16.58 seconds. Seven captures inspected:
+  creator, overview/HUD, preparation, contact, recovery, carrying and delivery.
+  Refined the stow pose to clear the torso and route around the side. Captures
+  are Docs/Images/EquippedWorker*.png. Batch mode did not produce screenshots;
+  the successful probe used the rendered Editor workflow. The temporary probe
+  and metadata were removed before final tests/build; source retained locally
+  in the conversation work directory. These are scripted views, not a manual
+  mouse/keyboard or aesthetic acceptance claim.
+- Full PlayMode suite: **85 passed, zero failed**, 626.51 seconds, including all
+  earlier movement, economy, construction, production, graph/creator, save,
+  performance and Living Body/Worker regressions. No tests disabled or weakened.
+  After that run, the equipment grip check gained a minimum arm-reach bound
+  matching the existing IK solver. The unreachable-grip test now also places
+  a grip at the actual shoulder to exercise that boundary. All 18 focused tests
+  passed again on this final candidate, followed by a fresh Windows build.
+  Independent source review confirmed the fixture targets the minimum bound
+  and the authored pickaxe grips remain comfortably within the accepted range.
+  Initial failure and final reports are retained under ignored local
+  Docs/TestResults/equipment-*.xml; execution logs are Logs/equipment-*.log.
+- Windows x64 development build via EquippedWorkerSetup.BuildWindows passed
+  (EQUIPPED_WORKER_BUILD_OK). Output: Builds/WindowsEquippedWorker/WonderGather.exe;
+  scenes: TheFactionCreator, FactionPlaytest, EquipmentPlaytest. Artifacts remain
+  local; source/assets/docs are versioned. Standalone interactive testing was
+  not performed. Existing obsolete-API/editor/native diagnostics remain in logs;
+  this work does not claim warning-free third-party packages or measured performance.
+
+Ready for Luis's prototype playtest with explicit limits: primitive fixed-scale
+body/tool, fixed one-supply hit yield, bounded two-handed action, feet-side cargo
+representation and short back-stow transfer. No strength/mass/burden, container
+loading, loose material physics, detailed mounting gesture, arbitrary body editor,
+final art, networking, public-showcase readiness or RTS-scale performance claimed.

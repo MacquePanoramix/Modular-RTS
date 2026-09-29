@@ -19,6 +19,11 @@ namespace WonderGather
         [SerializeField] private StartingUnit[] startingUnits=Array.Empty<StartingUnit>();
         [SerializeField] private UnitBlueprint[] units=Array.Empty<UnitBlueprint>();
         [SerializeField] private BuildingBlueprint[] buildings=Array.Empty<BuildingBlueprint>();
+        [SerializeField] private ToolDefinition[] tools=Array.Empty<ToolDefinition>();
+        public IReadOnlyList<ToolDefinition> Tools=>tools;
+        // Catalog assets are immutable recipes, shared by drafts and runtime units.
+        public void ConfigureTools(params ToolDefinition[] catalog)
+        {tools=catalog!=null?(ToolDefinition[])catalog.Clone():Array.Empty<ToolDefinition>();}
         public string DisplayName=>displayName;
         public BuildingBlueprint StartingBase=>startingBase;
         public int StartingSupplies=>startingSupplies;

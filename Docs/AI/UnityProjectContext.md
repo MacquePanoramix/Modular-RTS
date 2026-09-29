@@ -1,8 +1,8 @@
 # Unity project context
 
-Updated September 29, 2026 after source review; runtime remains 5f61351. Current playtest:
-Docs/LivingWorkerPlaytest.md; validation evidence: Docs/Validation.md.
-The faction creator's playtest integrates working bodies; saves remain version 4.
+Updated September 29, 2026 after Equipped Worker implementation/validation.
+Current playtest: Docs/EquippedWorkerPlaytest.md; evidence: Docs/Validation.md.
+The creator offers supplies and equipment maps; faction saves are version 5.
 Sections describe successive extensions; later sections supersede earlier limits.
 
 ## Confirmed foundation
@@ -364,3 +364,36 @@ copy/restore, FactionRecord capture/encode/decode, and FactionWorkspace dirty
 tracking. Version-4 capacity/rates must not become physical strength or mass
 implicitly. Retain read-without-rewrite, safe unknown-data handling and the
 FactionStore explicit-save backup/conflict contract when extending the schema.
+
+
+## Equipped Worker integration — September 29
+
+See Docs/EquipmentArchitecture.md for the current ownership/contact/save contracts.
+ToolDefinition owns stable printable IDs (1–64 characters), prefab, rigid grips
+and head point/radius. Blueprint/catalog choices flow through draft editing,
+duplication, dirty tracking, v5 records and UnitIdentity. Unknown definitions
+fail restoration safely; legacy1–4 defaults to None and only explicit save
+upgrades with the existing conflict/backup flow.
+
+EquippedTool owns a monotonic attempt ID and procedural phase. ProceduralBiped
+solves support/torso, explicitly invokes the tool solve, then follows its grips.
+The same bounded reachable trajectory is swept against physical colliders.
+Every unspent segment checks origin overlap and the nearest obstruction; only
+the intended mineral surface can extract. Gatherer revalidates the accepted
+attempt and transfers the actual ResourceNode.Take result into cargo. Scale
+changes, invalid reach, disabled components and replacement commands invalidate
+work without deleting cargo. HandPosition reports rendered coordinates through
+the moving root, matching parented tool/limbs between pose updates.
+
+EquipmentPlaytest is copied/authored separately from the legacy supplies map.
+The worker prefab variant receives the equipment component; the template choice
+remains None. Mineral visuals/collision share one mesh and eight work ports.
+Mining cargo is displayed beside the feet until transport; the tool interpolates
+around the side to the back and leaves hands for the existing carry/delivery pose.
+This is temporary handling, with no mass/strength/loose ore/cart simulation.
+
+Eighteen focused and 85 full PlayMode tests, reviewed rendered frames and
+EquippedWorkerSetup.BuildWindows passed. Output:
+Builds/WindowsEquippedWorker/WonderGather.exe. The build contains TheFactionCreator,
+FactionPlaytest and EquipmentPlaytest. Packages, old maps and user edits were
+preserved. No Unity MCP provider was callable; validation used local Unity.

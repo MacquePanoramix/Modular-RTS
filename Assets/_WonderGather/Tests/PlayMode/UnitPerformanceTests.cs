@@ -55,12 +55,13 @@ namespace WonderGather.Tests
         [Test] public void VersionThreeDefaultsRemainReadOnlyUntilExplicitUpgrade()
         {
             var w=creator.Workspace;string id=Guid.NewGuid().ToString("N");
-            string old=FactionRecord.Capture(w.Draft,id).Encode().Replace("\"version\": 4","\"version\": 3");
+            string old=FactionRecord.Capture(w.Draft,id).Encode().Replace("\"version\": 5","\"version\": 3");
+            old=Regex.Replace(old,",\\s*\"tool\"\\s*:\\s*\"[^\"]*\"","");
             old=Regex.Replace(old,",\\s*\"performance\"\\s*:\\s*\\{[^}]*\\}","");
             Directory.CreateDirectory(root);File.WriteAllText(store.FilePath(id),old);
-            Assert.That(w.Open(id),Is.True,w.Message);Assert.That(w.Draft.Worker.Performance,Is.EqualTo(UnitPerformance.Default));
+            Assert.That(w.Open(id),Is.True,w.Message);Assert.That(w.Draft.Worker.Performance,Is.EqualTo(UnitPerformance.Default));Assert.That(w.Draft.Worker.Tool,Is.Null);
             Assert.That(File.ReadAllText(store.FilePath(id)),Is.EqualTo(old));Assert.That(w.Save(),Is.True,w.Message);
-            Assert.That(File.ReadAllText(store.FilePath(id)+".bak"),Is.EqualTo(old));StringAssert.Contains("\"version\": 4",File.ReadAllText(store.FilePath(id)));
+            Assert.That(File.ReadAllText(store.FilePath(id)+".bak"),Is.EqualTo(old));StringAssert.Contains("\"version\": 5",File.ReadAllText(store.FilePath(id)));
         }
         [UnityTest] public IEnumerator StartingWorkerUsesRatesAndCompletesFasterConstruction()
         {

@@ -36,16 +36,18 @@ namespace WonderGather
             Workspace=new FactionWorkspace(example,new FactionStore(System.IO.Path.Combine(Application.persistentDataPath,"Factions")));
             Application.wantsToQuit+=WantsToQuit;
         }
-        public bool Playtest()
+        public bool Playtest()=>PlaytestMap(playtestScene);
+        public bool PlaytestEquipment()=>PlaytestMap("EquipmentPlaytest");
+        private bool PlaytestMap(string sceneName)
         {
             if(Busy || Playing || Draft==null) return false;
             Draft.Refresh();if(!Draft.Report.CanInstantiate){Status="Resolve the setup messages before playtesting.";return false;}
-            Workspace.ClearMessage();Busy=true;Status="Opening your faction's test map...";StartCoroutine(OpenMap());return true;
+            Workspace.ClearMessage();Busy=true;Status="Opening your faction's test map...";StartCoroutine(OpenMap(sceneName));return true;
         }
-        private IEnumerator OpenMap()
+        private IEnumerator OpenMap(string sceneName)
         {
-            yield return SceneManager.LoadSceneAsync(playtestScene,LoadSceneMode.Additive);
-            map=SceneManager.GetSceneByName(playtestScene);
+            yield return SceneManager.LoadSceneAsync(sceneName,LoadSceneMode.Additive);
+            map=SceneManager.GetSceneByName(sceneName);
             // Inspect only the explicitly loaded scene, once, for its authored bridge.
             foreach(var root in map.GetRootGameObjects())
             {Bridge=root.GetComponentInChildren<FactionPlaytestBridge>();if(Bridge!=null) break;}

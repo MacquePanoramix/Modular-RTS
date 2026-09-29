@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_WonderGather/Scenes/TheLivingBody.unity
     guid: 5879da6fa2f203041950f4e3703be853
+  - enabled: 1
+    path: Assets/_WonderGather/Scenes/EquipmentPlaytest.unity
+    guid: 06cebf1b60f539d4ba5d60fbf6e66e25
   m_configObjects: {}

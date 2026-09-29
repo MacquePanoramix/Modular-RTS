@@ -3,7 +3,8 @@ using UnityEngine.AI;
 
 namespace WonderGather
 {
-    // Presentation only: navigation owns the root. Feet retain world-space support points.
+    // Navigation owns the root. Feet retain world-space support points. Equipment
+    // consumes this supported torso pose before the arms consume its solved grips.
     [RequireComponent(typeof(NavMeshAgent))]
     public sealed class ProceduralBiped : MonoBehaviour
     {
@@ -42,7 +43,9 @@ namespace WonderGather
         public bool FootPlanted(int index)=>!support[index].swinging;
         public Vector3 FootNormal(int index)=>support[index].normal;
         public bool CargoVisible=>carriedBundle!=null&&carriedBundle.gameObject.activeInHierarchy;
-        public Vector3 HandPosition(int index)=>handPositions[index];
+        // Report the currently rendered hand, including navigation displacement
+        // since the last pose, just as the parented tool's TransformPoint does.
+        public Vector3 HandPosition(int index)=>transform.TransformPoint(handPositions[index]);
         public void Configure(Transform hips,Transform chest,Transform skull,Transform[] upperLegs,Transform[] lowerLegs,Transform[] soles,Transform[] arms,Transform[] lowerArms)
         {pelvis=hips;torso=chest;head=skull;thighs=upperLegs;shins=lowerLegs;feet=soles;upperArms=arms;forearms=lowerArms;initialized=false;}
         public void ConfigureWork(Gatherer source,Transform bundle)
@@ -64,7 +67,11 @@ namespace WonderGather
             stepReach=reach;footLift=lift;stepDuration=duration;
         }
         private void OnEnable(){initialized=false;handsInitialized=false;}
-        private void OnDisable(){initialized=false;handsInitialized=false;}
+        private void OnDisable()
+        {
+            initialized=false;handsInitialized=false;
+            if(worker!=null && worker.MiningTarget!=null) worker.InterruptMining("Body cannot support the tool");
+        }
         private static bool Pair(Transform[] values)=>values!=null&&values.Length==2&&values[0]!=null&&values[1]!=null;
         private bool RigValid=>pelvis!=null&&torso!=null&&head!=null&&Pair(thighs)&&Pair(shins)&&Pair(feet)&&Pair(upperArms)&&Pair(forearms);
         private Vector3 Home(int index)=>transform.position+facing*new Vector3(index==0?-.21f:.21f,0,.02f);
@@ -77,6 +84,7 @@ namespace WonderGather
         private Quaternion SoleRotation(Vector3 normal)=>Quaternion.LookRotation(Vector3.ProjectOnPlane(facing*Vector3.forward,normal).normalized,normal);
         public void ResetPose()
         {
+            if(TryGetComponent<EquippedTool>(out var equipment)) equipment.CancelAttempt();
             initialized=false;
             if(!RigValid) return;
             facing=Quaternion.Euler(0,transform.eulerAngles.y,0);
@@ -212,6 +220,8 @@ namespace WonderGather
             pelvisY=Mathf.Min(pelvisY,height);
             Vector3 localAcceleration=Quaternion.Inverse(facing)*acceleration;
             float pitch=Mathf.Clamp(localAcceleration.z*1.8f+speed*1.2f,-7,9),roll=Mathf.Clamp(-localAcceleration.x*1.6f,-6,6);
+            var equipment=GetComponent<EquippedTool>();
+            if(equipment!=null && equipment.Busy) pitch+=Mathf.Sin(equipment.Progress*Mathf.PI)*4;
             Quaternion posture=facing*Quaternion.Euler(pitch,0,roll);
             Vector3 hips=ReachableHips(new Vector3(transform.position.x,pelvisY,transform.position.z));
             pelvisY=hips.y;
@@ -220,10 +230,14 @@ namespace WonderGather
             head.SetPositionAndRotation(hips+posture*new Vector3(0,.64f,0),Quaternion.Slerp(facing,posture,.4f));
             if(carriedBundle!=null)
             {
-                carriedBundle.SetPositionAndRotation(hips+posture*new Vector3(0,-.08f,.37f),posture);
+                bool stockpile=worker!=null && worker.MiningTarget!=null && worker.State==Gatherer.Activity.Gathering;
+                carriedBundle.SetPositionAndRotation(stockpile ? transform.position+facing*new Vector3(.55f,.18f,-.15f)
+                    : hips+posture*new Vector3(0,-.08f,.37f),posture);
                 float fullness=worker!=null?Mathf.Clamp01((float)worker.Carried/Mathf.Max(1,worker.Capacity)):0;
                 carriedBundle.localScale=bundleScale*Mathf.Lerp(.8f,1,fullness);
             }
+            // One explicit update order: supported torso -> tool trajectory/contact -> grip IK.
+            if(equipment!=null) equipment.SolveFrame(dt,hips,posture,!support[0].swinging&&!support[1].swinging);
             for(int i=0;i<2;i++)
             {
                 float side=i==0?-1:1;var foot=support[i];
@@ -241,7 +255,7 @@ namespace WonderGather
                 if(worker!=null)
                 {
                     if(worker.Carried>0) wrist=hips+posture*new Vector3(side*.22f,-.12f,.37f);
-                    if(i==1&&Working)
+                    if(i==1&&Working&&worker.MiningTarget==null)
                     {
                         float progress=Mathf.Clamp01(worker.ActionProgress);
                         float reach=Mathf.Sin(progress*Mathf.PI);
@@ -252,12 +266,17 @@ namespace WonderGather
                     Vector3 local=Quaternion.Inverse(posture)*(wrist-hips);
                     handLocal[i]=handsInitialized&&dt>0?Vector3.Lerp(handLocal[i],local,1-Mathf.Exp(-18*dt)):local;
                     wrist=hips+posture*handLocal[i];
+                    if(equipment!=null && equipment.HandsOnTool)
+                    {
+                        wrist=equipment.GripPosition(i);
+                        handLocal[i]=Quaternion.Inverse(posture)*(wrist-hips);
+                    }
                     SolveArm(i,side,posture,shoulder,wrist);
                 }
                 else
                 {
                     Segment(upperArms[i],shoulder,elbow,.13f);Segment(forearms[i],elbow,wrist,.11f);
-                    handPositions[i]=wrist;
+                    handPositions[i]=transform.InverseTransformPoint(wrist);
                 }
             }
             handsInitialized=true;
@@ -274,7 +293,7 @@ namespace WonderGather
             if(bend.sqrMagnitude<.001f) bend=Vector3.Cross(axis,posture*Vector3.forward).normalized;
             Vector3 elbow=shoulder+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,upper*upper-along*along));
             Segment(upperArms[index],shoulder,elbow,.13f);Segment(forearms[index],elbow,wrist,.11f);
-            handPositions[index]=wrist;
+            handPositions[index]=transform.InverseTransformPoint(wrist);
         }
     }
 }

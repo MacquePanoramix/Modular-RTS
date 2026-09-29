@@ -73,9 +73,9 @@ namespace WonderGather.Tests
             Directory.CreateDirectory(root);string id=Guid.NewGuid().ToString("N"),old=Legacy(id);File.WriteAllText(store.FilePath(id),old);
             var w=creator.Workspace;Assert.That(w.Open(id),Is.True,w.Message);Assert.That(w.IsDirty,Is.False);
             Assert.That(File.ReadAllText(store.FilePath(id)),Is.EqualTo(old));Assert.That(w.Draft.StartingWorkers,Is.EqualTo(3));
-            Assert.That(w.Draft.Worker.GathersSupplies,Is.False);Assert.That(w.Draft.Workshop.Produces,Is.Null);
+            Assert.That(w.Draft.Worker.GathersSupplies,Is.False);Assert.That(w.Draft.Workshop.Produces,Is.Null);Assert.That(w.Draft.Worker.Tool,Is.Null);
             Assert.That(w.Save(),Is.True);Assert.That(File.ReadAllText(store.FilePath(id)+".bak"),Is.EqualTo(old));
-            StringAssert.Contains("\"version\": 4",File.ReadAllText(store.FilePath(id)));
+            StringAssert.Contains("\"version\": 5",File.ReadAllText(store.FilePath(id)));
             Assert.That(w.Open(id),Is.True);Assert.That(w.Draft.StartingWorkers,Is.EqualTo(3));
         }
         [Test] public void InvalidLinksDuplicateIdsAndUnknownNestedDataAreRejected()

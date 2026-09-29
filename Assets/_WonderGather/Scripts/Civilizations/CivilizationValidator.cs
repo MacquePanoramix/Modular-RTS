@@ -20,13 +20,21 @@ namespace WonderGather
             var report=new CivilizationReport();
             if(civilization==null){report.Errors.Add("Choose a civilization asset.");return report;}
             var units=new HashSet<UnitBlueprint>();var buildings=new HashSet<BuildingBlueprint>();var ids=new HashSet<string>();
+            var tools=new HashSet<ToolDefinition>();var toolIds=new HashSet<string>();
+            foreach(var tool in civilization.Tools)
+            {
+                if(tool==null || !tool.IsValid){report.Errors.Add("The tool catalog contains a missing or invalid definition.");continue;}
+                if(!tools.Add(tool) || !toolIds.Add(tool.Id)) report.Errors.Add("Tool definitions must have distinct stable IDs.");
+            }
             foreach(var unit in civilization.Units)
             {
                 if(unit==null){report.Errors.Add("The unit roster contains an empty reference.");continue;}
                 if(!units.Add(unit)) report.Errors.Add("Duplicate unit in roster: "+unit.name);
                 CheckId(unit.Id,unit.name,ids,report);
                 if(!unit.Performance.IsValid) report.Errors.Add(unit.name+": invalid prototype performance values.");
+                if(unit.Tool!=null && !tools.Contains(unit.Tool)) report.Errors.Add(unit.name+": the equipped tool is not in this civilization's catalog.");
                 var recipe=unit.Production;var prefab=recipe!=null?recipe.Prefab:null;
+                if(unit.Tool!=null && (prefab==null || prefab.GetComponent<ProceduralBiped>()==null)) report.Errors.Add(unit.name+": equipment requires a procedural worker body in this prototype.");
                 if(prefab==null || !prefab.activeSelf || prefab.GetComponent<SelectableUnit>()==null || prefab.GetComponent<UnitMotor>()==null || prefab.GetComponent<NavMeshAgent>()==null || prefab.GetComponent<ProducedWorker>()==null || prefab.GetComponent<Gatherer>()==null || prefab.GetComponent<Builder>()==null)
                     report.Errors.Add(unit.name+": this prototype requires a worker prefab with selection, navigation, gathering, building and roster components.");
                 if(recipe!=null && (recipe.Cost<=0 || !float.IsFinite(recipe.Seconds) || recipe.Seconds<=0)) report.Errors.Add(unit.name+": production cost and time must be positive.");

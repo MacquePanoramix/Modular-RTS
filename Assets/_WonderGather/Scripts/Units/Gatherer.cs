@@ -17,6 +17,11 @@ namespace WonderGather
         private bool needsWorkplace;
         private float timer, retryAfter, baseSeconds;
         private bool rateCaptured;
+        private EquippedTool tool;
+        private ulong lastStrike;
+        public MineableResource MiningTarget => resource != null ? resource.GetComponent<MineableResource>() : null;
+        public bool FacingWork { get; private set; }
+        public string LastOrderFailure { get; private set; } = "";
         public int Capacity => capacity;
         public float SecondsPerUnit => secondsPerUnit;
         public int Carried { get; private set; }
@@ -26,7 +31,9 @@ namespace WonderGather
         public Vector3 WorkContact => workplace != null ? workplace.Contact(this) : transform.position;
         public float ActionProgress => State == Activity.Gathering ? Mathf.Clamp01(timer / secondsPerUnit)
             : State == Activity.Depositing ? Mathf.Clamp01(timer / DepositSeconds) : 0;
-        public string ActivityLabel => State switch
+        public string ActivityLabel => State == Activity.Gathering && MiningTarget != null
+            ? (tool != null && tool.Busy ? "Mining: " + tool.Phase : tool != null ? tool.Status : "Missing pickaxe")
+            : State == Activity.Idle && !string.IsNullOrEmpty(LastOrderFailure) ? LastOrderFailure : State switch
         {
             Activity.ToResource => "Walking to supplies",
             Activity.Gathering => "Gathering",
@@ -50,12 +57,25 @@ namespace WonderGather
 
         public bool Gather(ResourceNode node)
         {
+            LastOrderFailure="";
             if (TryGetComponent<UnitIdentity>(out var identity) && (identity.Blueprint == null || !identity.Blueprint.GathersSupplies)) return false;
             if (!isActiveAndEnabled || node == null || !node.isActiveAndEnabled || node.Remaining <= 0 || depot == null || !depot.isActiveAndEnabled) return false;
+            var mine=node.GetComponent<MineableResource>();
+            tool=GetComponent<EquippedTool>();
+            if(mine!=null)
+            {
+                if(!mine.Available) { LastOrderFailure="Mining surface unavailable"; return false; }
+                if(tool==null || !tool.isActiveAndEnabled || !mine.Accepts(tool.Definition))
+                { LastOrderFailure="Equip a pickaxe in the unit blueprint"; return false; }
+                if(!tool.SupportsBodyScale) {LastOrderFailure="Tool/body scale unsupported"; return false;}
+                if(!TryGetComponent<ProceduralBiped>(out var body) || !body.isActiveAndEnabled)
+                { LastOrderFailure="Body cannot support the tool"; return false; }
+            }
             bool full = Carried >= capacity;
             if (!TryTravel(full ? depot.transform : node.transform, full ? Activity.ToDepot : Activity.ToResource,
                 full ? Activity.WaitingForDepot : Activity.WaitingForResource)) return false;
             if (TryGetComponent<Builder>(out var builder)) builder.CancelOrder();
+            if(tool!=null) tool.CancelAttempt();
             resource = node;
             return true;
         }
@@ -65,6 +85,7 @@ namespace WonderGather
             if (!isActiveAndEnabled || home == null || !home.isActiveAndEnabled || Carried == 0
                 || !TryTravel(home.transform, Activity.ToDepot, Activity.WaitingForDepot)) return false;
             if (TryGetComponent<Builder>(out var builder)) builder.CancelOrder();
+            if(tool!=null) tool.CancelAttempt();
             depot = home; resource = null;
             return true;
         }
@@ -77,8 +98,21 @@ namespace WonderGather
 
         public void CancelOrder()
         {
+            if(tool!=null) tool.CancelAttempt();
             ReleaseWorkplace();
-            State = Activity.Idle; resource = null; timer = 0; retryAfter = 0;
+            State = Activity.Idle; resource = null; timer = 0; retryAfter = 0; FacingWork=false;
+        }
+        public void InterruptMining(string reason)
+        { CancelOrder(); LastOrderFailure=reason; if(motor!=null) motor.Stop(); }
+        internal bool AcceptStrike(EquippedTool source, MineableResource mine, ulong id)
+        {
+            if(source!=tool || !source.isActiveAndEnabled || !source.OwnsAcceptedAttempt(mine,id) || id==lastStrike
+                || !isActiveAndEnabled || State!=Activity.Gathering || !HasWorkContact || !FacingWork
+                || mine!=MiningTarget || !mine.Accepts(source.Definition) || resource==null || Carried>=capacity) return false;
+            lastStrike=id;
+            int amount=resource.Take(Mathf.Min(1,capacity-Carried));
+            Carried+=amount;
+            return amount>0;
         }
 
         private bool TryTravel(Transform target, Activity travel, Activity wait)
@@ -128,11 +162,23 @@ namespace WonderGather
 
         private void Update()
         {
+            FacingWork=false;
             if (State == Activity.Idle) return;
             if (depot == null || !depot.isActiveAndEnabled) { CancelOrder(); return; }
             bool returning = State == Activity.ToDepot || State == Activity.WaitingForDepot || State == Activity.Depositing;
+            var mine=MiningTarget;
+            if(!returning && mine!=null)
+            {
+                if(tool==null || !tool.isActiveAndEnabled || !mine.Accepts(tool.Definition))
+                { InterruptMining("Mining interrupted: tool or surface unavailable"); return; }
+                if((Carried>=capacity || resource.Remaining==0) && (tool==null || !tool.Busy))
+                { if(Carried>0) TravelHome(); else {CancelOrder(); motor.Stop();} return; }
+            }
             if (!returning && (resource == null || !resource.isActiveAndEnabled || resource.Remaining == 0))
-            { if (Carried > 0) TravelHome(); else { CancelOrder(); motor.Stop(); } return; }
+            {
+                if(mine==null || tool==null || !tool.Busy || !resource.isActiveAndEnabled)
+                { if (Carried > 0) TravelHome(); else { CancelOrder(); motor.Stop(); } return; }
+            }
             if (needsWorkplace && (workplace == null || !workplace.isActiveAndEnabled || !workplace.Owns(this)))
             { CancelOrder(); motor.Stop(); return; }
             if (State == Activity.WaitingForResource || State == Activity.WaitingForDepot)
@@ -155,6 +201,10 @@ namespace WonderGather
                 return;
             }
             if (HasWorkContact && !motor.Face(WorkContact, Time.deltaTime)) return;
+            FacingWork=HasWorkContact;
+            // Equipment owns attempts. The shared body/tool solve will validate physical
+            // contact before calling AcceptStrike; the legacy timer cannot mine.
+            if(State==Activity.Gathering && mine!=null) return;
             timer += Time.deltaTime;
             if (State == Activity.Depositing)
             { if (timer >= DepositSeconds) Deliver(); return; }

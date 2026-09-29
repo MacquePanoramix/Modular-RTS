@@ -12,6 +12,10 @@ namespace WonderGather
         [SerializeField] private bool gathersSupplies=true;
         [SerializeField] private BuildingBlueprint[] builds=Array.Empty<BuildingBlueprint>();
         [SerializeField] private UnitPerformance performance=UnitPerformance.Default;
+        [SerializeField] private ToolDefinition tool;
+        public ToolDefinition Tool=>tool;
+        public void SetTool(ToolDefinition value)
+        {if(value!=null && !value.IsValid) throw new ArgumentException("Choose a valid tool definition.");tool=value;}
         public UnitPerformance Performance=>performance;
         public void SetPerformance(UnitPerformance value){value.Validate();performance=value;}
         public string Id=>id;
