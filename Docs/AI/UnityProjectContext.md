@@ -5,6 +5,13 @@ Current playtest: Docs/EquippedWorkerPlaytest.md; evidence: Docs/Validation.md.
 The creator offers supplies and equipment maps; faction saves are version 5.
 Sections describe successive extensions; later sections supersede earlier limits.
 
+Automation preparation, September 28, 2026: the offline Python controller in
+`.automation/` is separate from the Unity assemblies and does not launch the
+Editor. Its local tests and limitations are in `Docs/AutomationBootstrap.md`.
+Repository configuration at `5f613512` confirms the Unity/package versions
+below; Unity runtime, Editor connectivity and builds were not revalidated for
+this infrastructure draft. The current gameplay milestone is unchanged.
+
 ## Confirmed foundation
 
 - Unity 6000.6.0f1, installed under Program Files/Unity/Hub/Editor. The project was migrated from its initial Unity 6000.3.12f1 baseline while still at the first prototype stage.

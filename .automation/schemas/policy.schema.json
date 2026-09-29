@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Modular-RTS shadow policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "project_id",
+    "created_at",
+    "policy_version",
+    "mode",
+    "repository",
+    "default_branch",
+    "state_branch",
+    "goal",
+    "audience",
+    "deliverables",
+    "criterion_ids",
+    "exclusions",
+    "assumptions",
+    "accepted_decisions",
+    "authority",
+    "resource_limits",
+    "human_principals",
+    "protected_paths"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "utc-z"
+    },
+    "policy_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mode": {
+      "type": "string",
+      "const": "shadow"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "default_branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state_branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audience": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "criterion_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "uniqueItems": true
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "accepted_decisions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "uniqueItems": true
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dispatch",
+        "integrate",
+        "publish"
+      ],
+      "properties": {
+        "dispatch": {
+          "type": "boolean",
+          "const": false
+        },
+        "integrate": {
+          "type": "boolean",
+          "const": false
+        },
+        "publish": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "resource_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_concurrency",
+        "max_attempts",
+        "timeout_minutes",
+        "paid_usage_allowed"
+      ],
+      "properties": {
+        "max_concurrency": {
+          "type": "integer",
+          "const": 1
+        },
+        "max_attempts": {
+          "type": "integer",
+          "const": 2
+        },
+        "timeout_minutes": {
+          "type": "integer",
+          "const": 30
+        },
+        "paid_usage_allowed": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "human_principals": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "protected_paths": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "repo-pattern",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  }
+}

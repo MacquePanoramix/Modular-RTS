@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "project_id": "Modular-RTS",
+  "created_at": "2026-09-28T00:00:00Z",
+  "id": "WG-SHADOW-STATE",
+  "plan_version": 1,
+  "policy_version": 1,
+  "paused": true,
+  "stopped": false,
+  "tasks": [
+    {
+      "schema_version": 1,
+      "project_id": "Modular-RTS",
+      "created_at": "2026-09-28T00:00:00Z",
+      "id": "WG-DOCS-001",
+      "objective": "Propose a concise, source-grounded map of Living Worker validation and pending human playtest evidence.",
+      "dependencies": [],
+      "base_sha": "5f613512b5a51f0a77624a2adfc0c8d8d3afe7a5",
+      "plan_version": 1,
+      "policy_version": 1,
+      "acceptance_version": "WG-DOCS-EVIDENCE-v1",
+      "allowed_paths": [
+        "Docs/AutomationEvidence.md"
+      ],
+      "source_manifest": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "3b340f9a8d4898b25e934f2ffae10d477701e1ba98190bcb308566e7279a2b69",
+          "revision": "5f613512b5a51f0a77624a2adfc0c8d8d3afe7a5"
+        },
+        {
+          "path": "Docs/CURRENT_STATE.md",
+          "sha256": "0a062ea3d8db9c1e8a15543f716f1831ca04428eb04893eb84b137ad09b575d7",
+          "revision": "5f613512b5a51f0a77624a2adfc0c8d8d3afe7a5"
+        },
+        {
+          "path": "Docs/LivingWorkerPlaytest.md",
+          "sha256": "458d90a2da503bbaefb2cf15a229ca793099ae4947fb53208e2a4e0303fca934",
+          "revision": "5f613512b5a51f0a77624a2adfc0c8d8d3afe7a5"
+        }
+      ],
+      "expected_artifacts": [
+        "Docs/AutomationEvidence.md"
+      ],
+      "checks": [
+        "links-resolve",
+        "historical-evidence-distinguished",
+        "playtest-not-accepted"
+      ],
+      "tier": "worker",
+      "max_attempts": 2,
+      "timeout_minutes": 30,
+      "escalate_on": [
+        "new-design-decision",
+        "human-playtest-acceptance",
+        "private-data"
+      ],
+      "status": "DRAFT",
+      "priority": 1,
+      "critical_path_rank": 1,
+      "generation": 0,
+      "attempts": 0,
+      "lease": null
+    }
+  ]
+}

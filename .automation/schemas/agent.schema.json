@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Modular-RTS shadow agent v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "project_id",
+    "created_at",
+    "role",
+    "session_id",
+    "run_id",
+    "model_id",
+    "surface",
+    "assigned_task",
+    "lease",
+    "capabilities",
+    "heartbeat_at",
+    "checkpoint",
+    "completion_receipt"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "utc-z"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "controller",
+        "worker",
+        "architect",
+        "reviewer"
+      ]
+    },
+    "session_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "run_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "model_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "surface": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assigned_task": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "lease": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "task_id",
+            "run_id",
+            "host_id",
+            "generation",
+            "claimed_at",
+            "heartbeat_at",
+            "expires_at"
+          ],
+          "properties": {
+            "task_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "run_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "host_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "generation": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "claimed_at": {
+              "type": "string",
+              "format": "utc-z"
+            },
+            "heartbeat_at": {
+              "type": "string",
+              "format": "utc-z"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "utc-z"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "heartbeat_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "utc-z"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "checkpoint": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "repo-path",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "completion_receipt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "repo-path",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "task_id": "WG-DOCS-001",
+  "run_id": "EXAMPLE-NOT-A-REAL-RUN",
+  "outcome": "blocked",
+  "summary": "Example only: shadow mode has no worker dispatch.",
+  "artifact_refs": [],
+  "checks_reported": [],
+  "unresolved": [
+    "Runtime and billing commissioning required."
+  ],
+  "failure_class": "INFRASTRUCTURE"
+}
