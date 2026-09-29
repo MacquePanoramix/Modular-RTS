@@ -9,11 +9,17 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 > explains lightweight collaboration roles and context routing.
 
 Current milestone: **The Living Worker**, integrating procedural workers
-with the faction creator's gathering, carrying and delivery loop. Scope
-approved September 26; ready for Game Director playtesting. Open
+with the faction creator's gathering, carrying and delivery loop. Luis
+provisionally accepted this early prototype on September 28. Open
 `Assets/_WonderGather/Scenes/TheFactionCreator.unity` and launch its playtest.
 See [Living Worker playtest](Docs/LivingWorkerPlaytest.md) and
 [validation evidence](Docs/Validation.md).
+
+Next recommendation: [The Equipped Worker](Docs/NextMilestonePlan.md), adding
+blueprint equipment and contact-based mining. The longer-term reference is a
+[deep, polished one-worker showcase](Docs/WorkerShowcaseVision.md). Its limited
+scene scale does not limit the intended depth of the character and civilization
+creators. These are documented directions; the new equipment slice is not yet implemented.
 
 Local standalone build: `Builds/WindowsLivingWorker/WonderGather.exe`.
 The full 67-test PlayMode suite, rendered probe and Windows build passed.

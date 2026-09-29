@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 26, 2026
+**Last updated:** September 29, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -118,6 +118,49 @@ Exact point values and balance formulas are **open**.
 **Possible:** Hidden standardized power bands could help balance very different fictional progressions, while keeping their visible names, requirements, and presentation unique. This was proposed but not chosen.
 
 **Open:** The exact meaning of technologies, unlock conditions, research behavior, and any limits on graph depth or cycles.
+
+## Advanced prototype reference: one worker, deep interaction
+
+**Direction, clarified by Luis on September 28, 2026:** Develop a later
+prototype suitable for outside playtesting that is small in scene scale but
+highly polished and deep in its represented systems. Its reference is one
+worker in a landscape with a mineral-bearing boulder or ore deposit and an
+equipped pickaxe. The current Living Worker is provisionally accepted as an
+early foundation; it does not define the final movement, resource, body,
+equipment, customization depth or aesthetic.
+
+**Direction:** Unit creation should approach the depth and care of a
+video-game character creator, with a strong HUD and meaningful links among
+body, appearance, attributes, equipment and behavior. Dark Souls was Luis's
+example of that level of authorship, not a selection of art style or exact
+editor features. Comparable modular depth extends to buildings and the
+civilization blueprint system. Current percentage sliders are scaffolding.
+
+**Direction:** The worker's motion should be fully procedural in intent,
+credible and restrained. The tool must physically reach and strike the
+mineral. Strength, tool demands and material loads should affect handling,
+locomotion and what work is possible. The ambition is coherent embodied
+behavior, not instability or an implicit commitment to a specific physics
+solver. Tool and cargo handling must be compatible within the same body.
+
+**Illustrative possibilities:** A strong worker carries the pickaxe in one
+hand while walking; another drags it, changing its movement; a less capable
+worker needs assistance such as a small wooden tool cart. Mined material
+also has carrying demands, potentially addressed through a bag or cart.
+These examples express the depth of interaction. The exact strength bands,
+mass/bulk model, carry modes, assistance rules and penalties remain **open**.
+
+**Possible, not decided:** How or how well a strike lands could change
+resource yield. Impact-dependent yield needs experimentation; fixed yield
+per valid strike is only a possible first proof. Loose material, pickup,
+loading and container handling also need design. Neither a timer nor a
+simple bundle linked to cargo settles the intended physical economy.
+
+The expanded reference, experiential criteria and proposed stages are in
+[WorkerShowcaseVision.md](WorkerShowcaseVision.md). The assistant recommends
+The Equipped Worker next, followed by strength/load handling and transport
+aids before showcase polish. This sequence is a recommendation, not a locked
+roadmap or approval of every detailed mechanic.
 
 ## The two-cost model
 
@@ -259,12 +302,13 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 ## Current production state
 
-**Current milestone:** The Living Worker, approved September 26 and
-implemented for experiential review. The faction playtest now connects
-procedural workers to gathering, carrying and delivery. See
-`Docs/LivingWorkerPlaytest.md`. The Living Body was provisionally accepted
-September 24. Historical entries below preserve earlier scope and feedback;
-later entries supersede earlier limits.
+**Current implementation:** The Living Worker, provisionally accepted
+September 28. Its faction playtest connects procedural workers to gathering,
+carrying and delivery. The next recommendation is The Equipped Worker,
+recorded in `Docs/NextMilestonePlan.md`, toward the one-worker showcase above.
+The detailed next scope has not yet been implemented. Historical entries
+below preserve earlier scope and feedback; later entries supersede earlier
+limits and proposed sequencing.
 
 ### Prototype 1.1 — The Wanderer
 
@@ -297,9 +341,11 @@ later entries supersede earlier limits.
 
 ### Later proof sequence
 
-The user approved moving the first Living Body experiment before Three
-Temperaments so physical expression can inform later customization and
-personality. The remaining order stays adjustable after playtesting:
+The list below records the earlier broad proof sequence. The September 28
+clarification now favors equipment/contact, then strength/load and transport
+experiments toward the one-worker showcase before Three Temperaments.
+That proposed order is detailed in NextMilestonePlan.md and remains adjustable;
+the earlier list must not be treated as an automatic implementation queue:
 
 1. **Civilization data and graph:** data-driven base, unit, and building definitions; production/build links; reachability validation; two-cost foundation; first editor tooling.
 2. **The Living Body:** a provisional articulated biped with procedural locomotion, planted feet and terrain adaptation, establishing a grounded movement reference before personality and combat.
@@ -324,6 +370,8 @@ These questions must remain visible rather than being silently answered by imple
 
 - What are the standard match resources, and how can civilizations alter them?
 - What exact attributes and aesthetic modules can players edit?
+- How do strength, tool mass/geometry, hand availability and cargo determine handling, movement and the need for bags/carts?
+- Does strike quality change mineral yield, and how do extraction, pickup and loading relate?
 - How are design value and in-match cost calculated and balanced?
 - What graph structures, dependencies, cycles, and transformations are legal?
 - How much individual variation do instances receive?
@@ -342,7 +390,8 @@ These questions must remain visible rather than being silently answered by imple
 - Do not let procedural physics become comedy at the expense of grounded wonder.
 - Do not make autonomous behavior opaque; agency must be legible to the commander.
 - Do not optimize only for top-down efficiency; close observation is part of the game.
-- Do not build the polished creator interface before the blueprint graph, validation, and cost rules survive small prototypes.
+- Develop creator interaction and previews alongside demonstrated body/equipment consequences; a limited early UI must not become a ceiling on character or building customization. Final editor polish should follow proven choices and Luis's aesthetic direction.
+- A small public prototype may need deep, highly polished interactions. Do not equate few units with permanently shallow systems.
 - Do not add large-scale technology because it sounds future-proof. Add it when a measured prototype needs it.
 
 ## Decision log
@@ -356,6 +405,9 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-09-06 | Repository visibility | Production choice | Publish the source at `MacquePanoramix/Modular-RTS` | A later explicit decision to make it private |
 | 2026-09-07 | Prototype camera tuning | Provisionally accepted | Preserve smooth wheel zoom and increase sensitivity from 0.0015 to 0.0020 | Hands-on retest feedback |
 | 2026-09-21 | Proof sequence and physical expression | Approved prototype direction | Implement a small Living Body locomotion experiment before Three Temperaments; provisional biped and comparison scene | Movement playtest and the user's aesthetic direction |
+| 2026-09-28 | Living Worker feedback | Provisionally accepted | The current implementation is good as an early prototype; its forms and rules remain replaceable | Further playtesting and the final vision |
+| 2026-09-28 | Advanced one-worker showcase | Direction with open mechanics | Small landscape, customized worker, pickaxe/mineral contact, deep creation and physical handling relationships; detailed examples/yield rules remain open | Luis's design refinement and staged experiments |
+| 2026-09-29 | Next implementation review | Recommended, not implemented | The Equipped Worker before strength/load and transport experiments; Three Temperaments remains later | Luis's feedback on scope and results |
 
 Add future entries with the decision, its status, the evidence behind it, and what kind of playtest or new requirement would justify revisiting it.
 
@@ -578,7 +630,7 @@ authority and movement tuning do not become final decisions.
 articulated faction worker to gathering, visibly carrying supplies and
 delivery. This would join the existing civilization/economy and locomotion
 foundations before revisiting Three Temperaments. Scope, integration gaps
-and acceptance checks are in `Docs/NextMilestonePlan.md`. This review does
+and acceptance checks are archived in `Docs/Plans/LivingWorker.md`. This review does
 not authorize implementation or lock a revised long-term roadmap.
 
 
@@ -602,3 +654,13 @@ station design, body, pace, species, equipment, autonomy or aesthetic. No
 load penalty, cost formula, physics balance or save migration is introduced.
 The next decision follows Luis's judgment of the integrated work routine;
 Three Temperaments remains a possible follow-up after that playtest.
+
+
+## Living Worker acceptance and showcase clarification — September 28, 2026
+
+Luis accepted the latest prototype while emphasizing that its implementation
+is a foundation for much deeper systems. His one-worker showcase reference
+is now captured in the dedicated canonical section above and expanded in
+Docs/WorkerShowcaseVision.md. The September 29 source review recommends
+blueprint equipment and contact-based mining next; it changes documentation
+only. The September 26 technical evidence remains the latest executed validation.

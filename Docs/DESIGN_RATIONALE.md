@@ -95,6 +95,12 @@ The fantasy is not "I changed movement from 100% to 135%." It is "I made a long-
 
 Appearance should not be an interchangeable skin laid over a spreadsheet.
 
+The September 28 worker example makes this concrete: strength and a tool's
+demands change how it can be held and used; cargo competes for the same
+physical capabilities, while a bag or cart may enable a different solution.
+The creator should let players author and understand those relationships.
+Adding more sliders alone would miss the intended depth.
+
 **Failure shape**
 
 - raw percentages become the final creative language;
@@ -212,6 +218,12 @@ Implemented is not the same as Locked.
 **Why**
 
 Experimentation is how the project discovers itself. Temporary structures need permission to exist, teach us something, and later disappear.
+
+Prototype scope and polish are separate dimensions. Luis's one-worker
+showcase can contain very few things while making their interaction deep
+and convincing enough for outside playtesters. Calling a system a prototype
+must not become a reason to keep it permanently superficial, or a claim that
+the current primitive rig fulfills that later showcase.
 
 **Failure shape**
 

@@ -337,12 +337,13 @@ Governance should respond to real recurring needs.
 
 # 8. The current expedition
 
-For **The Living Body**:
+The current milestone and lifecycle live in `Docs/CURRENT_STATE.md`.
+This file does not maintain a second roadmap.
 
-- **Keeper of the Horizon:** Luis plays and judges the movement.
-- **Threadkeeper:** high-context design chat helps interpret that reaction against the larger dream.
-- **Worldsmith:** implementation agent receives the next bounded task after the judgment is clear.
-- **Guest Cartographer:** not needed yet; gait/procedural-presentation iteration is exploratory and reversible.
+- **Keeper of the Horizon:** Luis judges feel, aesthetics and the intended depth.
+- **Threadkeeper:** preserve the one-worker reference and distinguish current proof from final vision.
+- **Worldsmith:** turn the chosen question into a bounded, testable implementation.
+- **Guest Cartographer:** consider independent review when equipment changes saved faction meaning or identity; ordinary pose iteration remains lightweight.
 
 The roles should change when the kind of risk changes.
 

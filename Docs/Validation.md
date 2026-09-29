@@ -457,3 +457,24 @@ active ragdolls, physical balance, load penalties, personality, combat,
 arbitrary anatomy, network model or RTS-scale performance budget is claimed.
 The user's judgment of weight, contact, carrying support and readability is
 the next milestone acceptance step.
+
+
+## Source review and design clarification — September 29, 2026
+
+- Baseline 5f61351 was confirmed against GitHub main. Luis accepted the Living
+  Worker as an early prototype on September 28, with deeper showcase direction.
+- Reviewed design/context/history and the relevant gameplay, body, blueprint,
+  creator, persistence, test and configuration sources. A separate read-only
+  review checked the equipment/contact integration and save/dirty-state boundaries.
+- Confirmed timer-based resource extraction, presentation-only tool-free work
+  poses, fixed body dimensions and absence of equipment/strength/load modeling.
+  These are prototype limitations, not newly reproduced runtime failures.
+- Recorded the one-worker showcase reference, an Equipped Worker recommendation,
+  explicit open mechanics and compatibility/acceptance requirements. Archived
+  the completed Living Worker plan and updated current-state/acceptance pointers.
+- Documentation changes only. No Unity tests, Editor scene operations, build
+  or profiler run occurred for this review. The latest executed runtime evidence
+  remains September 26: 67 passing PlayMode tests and the Windows build above.
+- Existing human edits in TheGroup, package/URP settings and Recovery assets
+  were preserved. No source, asset, package, save data or serialized setting
+  changes are part of this documentation update.

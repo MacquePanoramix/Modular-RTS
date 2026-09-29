@@ -1,6 +1,6 @@
 # Unity project context
 
-Updated September 26, 2026 for The Living Worker. Current playtest:
+Updated September 29, 2026 after source review; runtime remains 5f61351. Current playtest:
 Docs/LivingWorkerPlaytest.md; validation evidence: Docs/Validation.md.
 The faction creator's playtest integrates working bodies; saves remain version 4.
 Sections describe successive extensions; later sections supersede earlier limits.
@@ -282,10 +282,9 @@ The two-unit checks establish this prototype only, not arbitrary body support.
 
 ## Living Worker integration
 
-September 26, 2026: approved scope, implemented and technically validated;
-Game Director playtest pending. This section supersedes the earlier
-separation between faction
-workers and procedural bodies. Current guide: Docs/LivingWorkerPlaytest.md;
+September 26, 2026: approved scope, implemented and technically validated.
+Luis provisionally accepted the early prototype on September 28. This section
+supersedes the earlier separation between faction workers and procedural bodies. Current guide: Docs/LivingWorkerPlaytest.md;
 execution evidence and remaining limits belong in Docs/Validation.md.
 
 LivingWorkerSetup.Create uses Unity authoring APIs to make LivingWorker.prefab
@@ -335,7 +334,8 @@ Starting and produced units continue through the existing CivilizationSession
 and UnitProducer paths. Builder behavior is retained, but construction has
 no new gesture. There is no new input map, package, save migration, body editor,
 physics authority or morale system. Resource visuals and load representation
-are provisional; body feel still requires Game Director playtesting.
+are provisional; further body/equipment work still requires Game Director
+playtesting rather than inheriting acceptance from this early slice.
 
 The entry remains TheFactionCreator.unity, which opens FactionPlaytest through
 the existing playtest flow. LivingWorkerSetup.BuildWindows builds those two
@@ -344,3 +344,23 @@ the full 67-test PlayMode suite passed; a rendered probe and Windows build also
 passed. See Validation.md for the evidence and limits. Visible rack/box/marker
 and shelf surfaces have command-raycast colliders, matching what can be clicked.
 The original resource collider is retained for compatibility.
+
+
+## September 29 equipment/contact review
+
+The next recommendation is The Equipped Worker; see Docs/NextMilestonePlan.md
+for the bounded scope and source evidence. Docs/WorkerShowcaseVision.md records
+Luis's deeper target. No new tool, physics, strength or save system was implemented
+by this review, and Unity tests/builds were not rerun.
+
+Critical distinction: Gatherer.HasWorkContact means ownership of an authored
+work position, not a collision. Gathering still grants stock through a timer;
+ProceduralBiped illustrates it in LateUpdate. Mining needs a gameplay-owned
+strike identity and valid contact along the same solved tool path that is
+shown, with one accepted extraction per attempt and explicit cancellation.
+
+Equipment persistence must cover UnitBlueprint, UnitIdentity, FactionDraft
+copy/restore, FactionRecord capture/encode/decode, and FactionWorkspace dirty
+tracking. Version-4 capacity/rates must not become physical strength or mass
+implicitly. Retain read-without-rewrite, safe unknown-data handling and the
+FactionStore explicit-save backup/conflict contract when extending the schema.

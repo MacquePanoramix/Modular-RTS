@@ -1,117 +1,158 @@
-# Approved milestone plan — The Living Worker
+# Next implementation recommendation — The Equipped Worker
 
-**Reviewed:** September 24, 2026
+**Reviewed:** September 29, 2026.
+**Baseline:** 5f61351, matching GitHub main during this review; Unity 6000.6.0f1.
+**Status:** Recommended scope following Luis's September 28 direction;
+not yet implemented or approved as a detailed implementation specification.
 
-**Status:** Approved by Luis on September 26, 2026; implemented and
-technically validated. Experiential acceptance remains pending.
+Luis accepted The Living Worker as a useful early prototype and described a
+later, highly polished one-worker showcase. The reference is
+[WorkerShowcaseVision.md](WorkerShowcaseVision.md); the prior completed plan
+is preserved in [Plans/LivingWorker.md](Plans/LivingWorker.md).
 
-**Approval scope:** the bounded work loop below, including the provisional
-collecting gesture and carried bundle. This does not lock the aesthetic,
-resource fiction, anatomy, final customization model or later roadmap.
-See `Docs/LivingWorkerPlaytest.md` for the integrated playtest. The review
-below records the September 24 rationale and baseline.
+## The next question
 
-**Baseline:** GitHub d03e045; gameplay remains d9b5f4d.
+Can a worker made through the faction blueprint system equip a real tool,
+hold and use it convincingly, and extract material only when that tool
+actually makes a valid strike?
 
-## Where we are
+The proposed next slice is **The Equipped Worker**: one provisional biped,
+one pickaxe definition, one mineral/boulder target, and the existing
+approach → work → carry → deliver loop. Its purpose is to establish the
+connection between equipment, embodied action and a gameplay consequence.
+It is a step toward the polished public showcase, not that complete showcase.
 
-The prototype has RTS camera and group orders, gathering/delivery,
-construction/production, civilization blueprints and reachability checks,
-editable unit/building networks, a local faction library with versioned saves,
-and temporary unit-performance controls. The separately tested Living Body
-adds procedural stepping and terrain adaptation. Luis accepted its current
-feel as adequate for the prototype on September 24.
+## What the repository establishes
 
-At the September 24 review, validation was 61 passing PlayMode tests and a successful
-Windows development build on September 22. This planning review did not run
-fresh tests, a build or a performance profile. The newer GitHub continuity
-commit changes documentation only.
+This is a focused source/configuration/history review, not a new runtime or
+performance audit. The September 26 evidence remains 67 passing PlayMode
+tests, reviewed rendered captures and a successful Windows build. No Unity
+tests, scene saves or builds were run for this documentation update.
 
-## Where we are going
+| Confirmed observation | Evidence under Assets/_WonderGather | Implication for the next slice |
+|---|---|---|
+| Work, cargo, delivery, reservations and production are integrated | Scripts/Units/Gatherer.cs; ResourceWorkplace.cs; Tests/PlayMode/LivingWorkerTests.cs | Extend these contracts rather than making a separate showcase economy |
+| Gathering grants one supply after a timer; HasWorkContact means a reserved workplace | Scripts/Units/Gatherer.cs:24–28,157–164 | Actual tool contact must become an explicit success condition for mining |
+| The body poses in LateUpdate and reaches toward a point; arm reach is clamped | Scripts/Units/ProceduralBiped.cs:93–140,244–277 | A desired contact point or a rendered gesture cannot prove a reachable strike |
+| Starting and produced units receive UnitIdentity from their blueprints | Scripts/Civilizations/UnitIdentity.cs; CivilizationSession.cs; Scripts/Units/UnitProducer.cs | Apply equipment through the same shared path |
+| Blueprints and saves have no equipment choice; v4 uses exact field validation | Scripts/Civilizations/UnitBlueprint.cs; Scripts/Creator/FactionRecord.cs | Persisting equipment needs an explicit schema extension with safe legacy defaults |
+| Dirty tracking is separate from serialization | Scripts/Creator/FactionWorkspace.cs:16–25 | Tool edits must participate in unsaved-change detection as well as save/load |
+| Performance values are temporary outcomes, not physical attributes | Scripts/Civilizations/UnitPerformance.cs | Do not reinterpret capacity as kilograms or movement rate as strength |
 
-Players author a civilization's connected possibilities and watch it become
-alive. Bodies, equipment and eventually personality should give mechanical
-choices visible meaning. The creator needs a strong HUD that explains those
-choices, dependencies and consequences. Current numerical controls, resource,
-body proportions and network bounds remain provisional.
+These are confirmed limits relative to the new target, not defects in the
+accepted earlier prototype. Contact authority and save compatibility are the
+highest-priority implementation risks because a visually plausible result
+could conceal false extraction or lost player choices. Their boundaries can
+be extended locally; this review does not justify a broad engine rewrite.
 
-Still unproven are the connection between physical actions and the economy,
-personality/autonomy, physical combat, meaningful body/equipment tradeoffs,
-design-budget pricing, a complete match and practical simulation scale.
+## Bounded scope
 
-## Why this next
+1. **A tool belongs to a blueprint.** Add a stable, data-backed pickaxe
+   definition and a small None/Pickaxe choice in the existing unit editor.
+   Give the tool a coherent transform, grip points and a striking head.
+   Tool mass and handling properties may be authored as provisional data;
+   this slice does not claim a working strength or burden simulation.
+2. **Use the existing creation paths.** The choice survives duplicate,
+   save/open, return from playtest and production. Starting and trained
+   workers receive the same selected equipment. A small test environment
+   can isolate the mining action, but its worker uses those blueprint paths.
+3. **Approach and prepare.** Reuse navigation, selection and work reservations.
+   Author one compatible surface and working region beside a mineral-bearing
+   boulder. Confirm both navigation access and tool/body reach, then face and
+   settle into a supported stance.
+4. **Perform one restrained procedural strike.** A preparation, striking
+   phase and recovery describe a single attempt. Hands hold authored grip
+   points on the tool, with body participation and planted support. Do not
+   stretch limbs or detach the tool to manufacture contact.
+5. **Make contact matter.** Use the solved tool-head movement against the
+   intended target surface to validate a strike. The first test gives a fixed
+   provisional amount per accepted hit. A miss or cancelled attempt gives
+   none. Impact angle/force-dependent yield remains an experiment for later.
+6. **Complete the work loop.** Show where the pickaxe goes while the worker
+   carries cargo or delivers it; choose one modest temporary carry/stow
+   arrangement for review. Do not put a tool and a bundle in the same hands
+   or make the tool disappear without an explicit transition. Physical loose
+   chunks and a full loading system are later work, clearly marked as such.
+7. **Explain the result.** The existing HUD distinguishes ready/working,
+   interrupted, missing tool and unreachable work. A valid gather permission
+   alone does not supply a missing tool. Keep ordinary RTS commands and make
+   this action readable from close and strategic views.
 
-The clearest current gap is that faction workers and articulated walkers are
-separate implementations. Connect them with one purposeful routine:
+## Authority and contact contract
 
-**player-created worker → approach supplies → gather → carry → deposit → repeat.**
+Keep order intent, navigation, the work action, resource accounting and body
+presentation distinguishable. Navigation continues to own the root; this
+slice does not introduce active ragdolls or body-driven navigation.
 
-This tests the design pillars of enjoyable observation, embodied actions and
-player authorship together. It also supplies a real activity for later
-personality experiments. Three Temperaments remains a useful follow-up;
-this proposal inserts an integration step before it, subject to Luis's choice.
+A small gameplay-owned strike cycle owns attempt identity, phase and target.
+Its tool pose and contact query must use the **same reachable, solved tool
+trajectory** shown to the player. Define update order explicitly so the query
+does not rely on stale LateUpdate transforms or a desired point that the
+arms cannot reach. Do not add a second component that independently moves
+the same arms or grants resources from arbitrary visual collision callbacks.
 
-## Bounded implementation plan
+A hit is accepted only when the worker, target and equipped tool are valid,
+the worker still owns its work position, the attempt is in its striking
+phase, and the intended tool head contacts the intended surface. Test the
+path between solved samples so a fast head cannot skip through the target.
+Accept at most one extraction per attempt even if contact spans frames or
+multiple target colliders. A new command, disable, target loss or release of
+the station invalidates any outstanding attempt. If actual reach fails,
+reposition or explain inability; never silently award the timer's yield.
 
-1. Author a worker variant using the provisional biped and existing worker
-   components. Use the faction spawn/production paths for both starting and
-   newly trained units, retaining blueprint identity and permissions.
-2. Establish reachable work positions beside the resource and depot. Face
-   the interaction and perform one restrained reach-and-collect gesture.
-3. Show a temporary carried bundle and a carrying pose derived from actual
-   cargo. Make delivery and return to an empty-handed pose readable. Final
-   resource fiction, equipment and load penalties are not decided here.
-4. Keep selection and orders responsive through starts, turns, interruptions,
-   depletion and repeated deliveries. Show concise activity/cargo feedback
-   in the existing HUD, useful at strategic distance as well as close up.
-5. Validate a few workers sharing the loop, including production and the
-   existing creator performance settings. Return the result to Luis before
-   adding construction gestures or further behavioral depth.
+Gatherer/ResourceNode remain the resource-accounting authority. Clip accepted
+extraction to remaining stock and cargo space, preserve partial cargo and
+conservation, and handle depletion by another worker safely. The body follows
+the resulting action and cargo state. This is constrained physical contact;
+it does not establish a full force-based simulation or multiplayer determinism.
 
-## Technical boundaries exposed by the review
+## Compatibility boundaries
 
-- `CivilizationValidator` expects Gatherer, Builder and ProducedWorker on
-  faction worker prefabs; the current movement-only biped lacks them.
-- `CivilizationSession` and `UnitProducer` use work offsets 3.4m or more from
-  node/depot centers. Arm motion alone cannot make that contact believable;
-  the slice needs explicit reachable interaction positions and modest
-  coordination of occupied positions.
-- The creator allows movement from 25 to 200 percent of the worker's 3.2
-  base speed (0.8–6.4). The biped was demonstrated at 1.8 and 2.5 only.
-  Adapt and validate stepping for the supported settings instead of silently
-  changing their meaning or imposing unapproved limits.
-- `Gatherer.State` and `Carried` already own activity and cargo. Add only
-  the small read-only action context needed by the body. Gameplay owns
-  resource accounting; presentation must not duplicate it or invent cargo.
-- Keep navigation responsible for root movement. Integrate work/carry poses
-  with the biped's limb ownership so two components do not fight over arms.
-- Existing build permissions and construction behavior must keep working;
-  procedural construction gestures are outside this first work loop.
+- Existing gathering scenes retain their established collection behavior.
+  Mining is an explicit capability/target path, not a silent global conversion
+  of all supplies into ore. The final resource list and cost formulas stay open.
+- Existing rate/capacity controls keep their documented meanings. A mining
+  rate can schedule attempts; it cannot bypass required physical contact.
+  Reach and grip must remain valid across supported test rates.
+- Add equipment to blueprint copying, runtime application, record capture,
+  encoding/decoding, restoration and workspace dirty tracking together.
+  Use stable definition IDs, not scene references or shared mutable instances.
+- Introduce a versioned equipment field deliberately. Versions 1–4 open with
+  explicit legacy defaults that preserve their current behavior. Reading must
+  not rewrite files; explicit save upgrades through the existing atomic write,
+  conflict detection and backup flow. Do not silently replace unknown tool IDs
+  with a different creative choice. Leave unsupported files and drafts safe.
+- Keep blueprint IDs, construction/production links, permissions and economic
+  recipe values intact. Review migration and identity changes independently.
 
-## Acceptance checks
+## Required evidence
 
-- Starting and produced faction workers complete repeated deliveries, with
-  resource totals and visible cargo agreeing through interruption/depletion.
-- Feet remain grounded, work occurs at believable reach, and arm/cargo
-  transitions do not snap or continue after the underlying action ends.
-- Existing speed, gathering-rate and carrying-capacity settings still work;
-  old factions, permissions and ordinary RTS controls retain their behavior.
-- Luis can read the action at strategic distance and enjoys observing it
-  closely. Weight, restraint and tone remain his creative judgment.
+- A valid hit extracts once; a miss, wrong collider, blocked/unreachable
+  surface, absent tool or interrupted attempt cannot produce invisible ore.
+- Repeated contact, coarse time steps, re-enable, depletion and shared targets
+  cannot duplicate extraction or leak an old attempt into a new command.
+- Hands remain on usable grips; tool/head contact corresponds to the visible
+  geometry; limbs retain reach, feet remain supported and orders stay responsive.
+- Starting and produced units agree on equipment. Editing marks the draft
+  dirty; duplicate/copy/template ownership, save/open and playtest return are
+  tested. Legacy files, unknown IDs, malformed data and failed writes are safe.
+- Cargo, stock and storage stay conserved through the loop. Earlier gathering,
+  movement, construction, production and faction-library regressions pass.
+- Review rendered motion and a Windows build, then return the slice to Luis
+  for judgment of grip, weight, restraint, contact and carrying transitions.
 
-Automated integration/regression checks should cover gameplay accounting and
-state transitions; rendered/runtime review should cover body interaction.
-A few-worker playtest does not establish an RTS-scale performance budget.
+## What follows this proof
 
-## What follows, provisionally
+**Strength and burden** is the recommended follow-up: compare the same tool
+on differently capable workers and make handling/movement consequences real.
+Then extend material loads and bags/carts before polishing the small scene
+for outside testers. The exact rules and sequence stay adjustable through
+Luis's feedback; [WorkerShowcaseVision.md](WorkerShowcaseVision.md) preserves
+the examples and open questions.
 
-Revisit Three Temperaments to test readable interpretation of orders, then
-a small physical encounter. Feed established capabilities back into faction
-blueprints and the creator HUD. Use those demonstrated consequences to guide
-body/equipment customization and the two-cost model. Reassess the order after
-each playtest; full morphology, final art, active ragdolls and multiplayer
-remain separate decisions.
-
-The September 26 approval authorizes the neutral collecting gesture and
-visible carried bundle as temporary tests of the intended feel. No species,
-culture, permanent resource list or final movement style is chosen.
+Three Temperaments remains part of the wider direction, but is not the next
+recommended task under this clarification. Personality, combat, arbitrary
+anatomy, full character/building editors, final art, free rigid-body ore,
+advanced hauling, balance formulas and networking are outside this first
+equipment slice. Deferring them here does not reduce the promised depth of
+the eventual showcase or the final game.

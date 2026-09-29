@@ -1,5 +1,9 @@
 # The Living Worker playtest
 
+**Feedback:** Luis provisionally accepted this early prototype on September 28,
+2026. The shapes, gestures and rules remain replaceable. The deeper target is
+recorded in [WorkerShowcaseVision.md](WorkerShowcaseVision.md).
+
 Open `Assets/_WonderGather/Scenes/TheFactionCreator.unity` and press Play.
 The new body is integrated into the creator's faction playtest; there is no
 separate Living Worker scene to open. The local standalone build is
@@ -9,7 +13,8 @@ availability and executed checks are recorded in `Docs/Validation.md`.
 Luis approved this scope on September 26, after accepting The Living Body
 as adequate for the prototype on September 24. This test asks whether a
 player-created worker feels present while approaching, collecting, carrying
-and delivering supplies. Approval of the plan is not acceptance of its feel.
+and delivering supplies. The acceptance above applies to this early slice,
+not to final body/equipment behavior or the later polished showcase.
 
 1. **Make a small faction.** In the creator, give one worker gathering and
    workshop-building permissions, one starting unit, and 40 starting supplies.

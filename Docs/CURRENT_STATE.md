@@ -1,67 +1,71 @@
 # Wonder Gather — Current State
 
-**Updated:** September 26, 2026
+**Updated:** September 29, 2026.
+**Reviewed baseline:** 5f61351, matching GitHub main during this review.
+**Current implementation:** The Living Worker.
+**Lifecycle:** Provisionally accepted by Luis on September 28.
+**Next recommendation:** The Equipped Worker; scope proposed in
+[NextMilestonePlan.md](NextMilestonePlan.md), not yet implemented.
 
-**Reviewed baseline:** b9d2902, matching GitHub at milestone start.
+## Current design question
 
-**Current milestone:** The Living Worker
+How do we turn equipment and physical capability into visible, meaningful
+actions on the path to a highly polished one-worker showcase?
 
-**Lifecycle:** Technical Ready — Game Director playtest pending
+## Latest Game Director direction
 
-## The question we are asking now
+Luis considers The Living Worker good for this prototype. Acceptance does
+not finalize its body, collecting gesture, generic supplies, numerical
+controls or physical model. On September 28 he described a later prototype
+that is small in scale but deep and polished enough to share with testers:
+one customized worker in a landscape, a mineral/boulder target, an equipped
+pickaxe, credible procedural movement, physical strikes and real handling
+of tools and extracted materials.
 
-Does a player-created worker feel grounded and worth watching while it
-approaches supplies, collects them, carries a load and delivers it?
+Character creation should have character-creator-level depth, connected to
+the civilization blueprints and similarly meaningful building customization.
+Strength and equipment/load demands should influence how work is performed.
+One-handed carrying, dragging and carts/bags are examples to explore; their
+thresholds and rules are not final. Strike quality affecting yield remains
+open. Full reference: [WorkerShowcaseVision.md](WorkerShowcaseVision.md).
 
-## Latest Game Director decisions
+## What exists and what it proves
 
-Luis provisionally accepted The Living Body on September 24 and approved
-the Living Worker implementation plan on September 26. This approves the
-bounded experiment, not a final aesthetic, species, body or resource model.
+- Unity 6000.6.0f1, URP, RTS controls, economy/construction/production,
+  editable faction graphs and version-4 faction saves.
+- Starting and trained faction workers have procedural bodies, reserved
+  work positions, work/carry poses, real cargo counts and delivery.
+- The September 26 validation passed 67 PlayMode tests, reviewed seven
+  rendered captures and built Windows x64. Exact evidence: Validation.md.
+- Gathering still awards supplies on a timer. The current work-contact flag
+  means a reserved position; it does not prove a physical strike.
+- Equipment, physical strength/load handling, carts and detailed body creation
+  are not implemented. Capacity is still an integer supply count.
 
-## What is ready to try
+The September 29 review inspected source, configuration, documents and Git
+history. It changed documentation only and did not rerun Unity validation.
+The prototype is not yet the polished showcase or proof of RTS-scale performance.
 
-Open TheFactionCreator and launch a faction playtest. Starting and produced
-workers now have procedural bodies, work/carry poses and visible real cargo.
-The resource and base each have eight reserved interaction positions with
-waiting/retry when occupied. Usual selection, orders, construction and
-creator performance settings remain available. The selected worker HUD
-shows activity and cargo. Guide: Docs/LivingWorkerPlaytest.md.
+## Recommended next action
 
-## Technically established
+Build one blueprint-selected pickaxe and a constrained procedural strike
+whose actual valid contact gates extraction. Include clear grips, tool
+handling during cargo transport, responsive cancellation and safe persistence.
+Then test strength-dependent handling and material transport aids.
 
-- Unity 6000.6.0f1; no package changes or new save format.
-- Five focused integration tests passed; full PlayMode regression: 67/67.
-- Rendered probe passed; seven final captures were visually inspected.
-- Windows x64 development build passed: Builds/WindowsLivingWorker.
-- Resource accounting remains in Gatherer/ResourceNode/ResourceDepot.
-- Body and cargo presentation follow gameplay state; navigation owns movement.
-- Starting/trained workers, interrupted partial loads, depleted supplies,
-  limited shared work positions and current performance bounds were tested.
-
-Exact evidence and limits: Docs/Validation.md. Standalone interactive
-playtesting and an RTS-scale performance profile were not performed.
-
-## Still open
-
-The collecting gesture, bundle, station, shelves and body proportions are
-provisional. Construction has no new body action. Physical balance, active
-ragdolls, morale, combat, arbitrary anatomy, load penalties and multiplayer
-are not established by this milestone. Faction saves remain version 4.
-
-## Next action
-
-Luis plays the integrated loop and judges reach, carrying support, motion,
-transitions and readability from close and strategic views. Refine that
-feedback before choosing the next milestone. Three Temperaments remains a
-candidate follow-up, not an automatic implementation commitment.
+Three Temperaments remains a possible later experiment, not the automatic
+next step. The full showcase is a staged target, not a commitment to implement
+every character system in the next increment. Luis remains the authority on
+aesthetics, feel and acceptance of each concrete slice.
 
 ## Context router
 
-- Design authority and open questions: Docs/GAME_VISION.md
+- Design authority and open decisions: Docs/GAME_VISION.md
+- Detailed small-scene target: Docs/WorkerShowcaseVision.md
+- Proposed implementation and repository evidence: Docs/NextMilestonePlan.md
 - Design meaning: Docs/DESIGN_RATIONALE.md
 - Collaboration: Docs/PROJECT_CULTURE.md
-- Technical architecture: Docs/AI/UnityProjectContext.md
-- Test/build evidence: Docs/Validation.md
-- Current playtest: Docs/LivingWorkerPlaytest.md
-- Approved scope and original rationale: Docs/NextMilestonePlan.md
+- Architecture: Docs/AI/UnityProjectContext.md
+- Validation history: Docs/Validation.md
+- Accepted prototype guide: Docs/LivingWorkerPlaytest.md
+- Archived implementation scope: Docs/Plans/LivingWorker.md
