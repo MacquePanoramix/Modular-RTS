@@ -21,3 +21,6 @@ crashlytics-build.properties
 *.user
 *.pidb
 *.booproj
+
+# Python caches from the Blender scripts
+__pycache__/

@@ -376,6 +376,53 @@ namespace WonderGather.Editor
             throw new InvalidOperationException("The house has no " + name + " anchor; re-export it from house.py.");
         }
 
+        // S1c, second pass: hand-painted textures from Art/Blender/OrdinaryPlace (painting.py) are applied to
+        // the existing materials in place, so asset GUIDs and scene references stay the same. Look E
+        // (painted light + paint filter + ink), Luis's favourite, becomes the scene's starting look.
+        public const string TexturePath = ArtPath + "/Textures";
+        private static readonly Dictionary<string, string> PaintedMaterials = new Dictionary<string, string>
+        {
+            ["Plaster"] = "Plaster", ["Interior"] = "Interior", ["Timber"] = "Timber", ["Roof"] = "Roof", ["Stone"] = "Stone",
+            ["Clay"] = "Clay", ["Foliage"] = "Foliage", ["Cloth"] = "Cloth", ["Firewood"] = "Firewood", ["Iron"] = "Iron",
+            ["Bark"] = "Bark", ["Leaves"] = "Leaves", ["LeavesLight"] = "Leaves light", ["Rock"] = "Rock",
+        };
+
+        [MenuItem("Wonder Gather/Apply Ordinary Place Painted Textures")]
+        public static void ApplyPaintedTextures()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Leave Play mode first.");
+            if (!AssetDatabase.IsValidFolder(TexturePath)) throw new DirectoryNotFoundException("Paint the models first: " + TexturePath);
+            int applied = 0;
+            foreach (var pair in PaintedMaterials)
+            {
+                string texturePath = TexturePath + "/" + pair.Key + ".jpg";
+                var importer = AssetImporter.GetAtPath(texturePath) as TextureImporter;
+                if (importer == null) throw new FileNotFoundException("Missing painted texture.", texturePath);
+                importer.sRGBTexture = true;
+                importer.mipmapEnabled = true;
+                importer.anisoLevel = 4;
+                importer.maxTextureSize = 2048;
+                importer.textureCompression = TextureImporterCompression.CompressedHQ;
+                importer.SaveAndReimport();
+                var material = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath + "/" + pair.Value + ".mat")
+                               ?? throw new FileNotFoundException("Missing material.", pair.Value);
+                material.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath));
+                material.SetColor("_BaseColor", Color.white);
+                // The painting already carries the colour variation; the shader keeps a little, and its brush-broken light.
+                material.SetFloat("_Variation", .25f);
+                EditorUtility.SetDirty(material);
+                applied++;
+            }
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var look = Object.FindAnyObjectByType<LookDevControls>() ?? throw new InvalidOperationException("The scene has no look controls.");
+            var lookData = new SerializedObject(look);
+            lookData.FindProperty("candidate").intValue = 4;
+            lookData.ApplyModifiedPropertiesWithoutUndo();
+            if (!EditorSceneManager.SaveScene(scene)) throw new IOException("Could not save " + ScenePath);
+            AssetDatabase.SaveAssets();
+            Debug.Log("ORDINARY_PLACE_PAINTED_OK " + applied);
+        }
+
         // A release build, so frame times in the benchmark are representative.
         public static void BuildWindows()
         {

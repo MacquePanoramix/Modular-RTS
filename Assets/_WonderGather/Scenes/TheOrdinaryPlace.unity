@@ -2370,7 +2370,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 538175557}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.31049994, y: -0.28432295, z: 0.09790026, w: 0.9017571}
+  m_LocalRotation: {x: 0.1281761, y: -0.39483532, z: 0.055732604, w: 0.9080583}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -10248,7 +10248,7 @@ MonoBehaviour:
   time: {fileID: 2071342759}
   post: {fileID: 2071342758}
   grass: {fileID: 162427600}
-  candidate: 1
+  candidate: 4
   showPanel: 1
 --- !u!114 &2071342758
 MonoBehaviour:
@@ -10263,12 +10263,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.LookPostEffects
   shader: {fileID: 4800000, guid: f408bddcbbc845f3a30a071ed12dee1c, type: 3}
-  Paint: 0
+  Paint: 0.8
   PaintRadius: 4
-  Ink: 0
+  Ink: 0.8
   InkColor: {r: 0.3, g: 0.22, b: 0.2, a: 1}
   InkWidth: 1.2
-  Grain: 0.5
+  Grain: 0.6
 --- !u!114 &2071342759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10303,8 +10303,7 @@ MonoBehaviour:
   - 3
   - 2.5
   maxSunElevation: 52
-  moonElevation: 38
-  moonAzimuth: 145
+  moonOffset: 25
   wind: {x: 0.8, y: 0.55, z: 0.55}
   gustSpeed: 0.8
   palettes:

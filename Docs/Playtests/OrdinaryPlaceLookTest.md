@@ -212,3 +212,34 @@ The full PlayMode suite and the matched captures are recorded in
 The captures are stills. Motion (wind in the grass, smoke, the walking
 worker and changing light) has not been reviewed in recorded footage, so
 please judge it in the build.
+
+## Second pass: hand-painted surfaces (October 1, in progress)
+
+On Luis's feedback (he preferred E, and hand-painted textures were the
+agreed next step), every Ordinary Place model now carries a procedurally
+painted colour texture. `Art/Blender/OrdinaryPlace/painting.py` builds them:
+it unwraps by material, then layers broad warm/cool patches, paint daubs,
+brush strokes and a motif per material, then cool cavities, lit edges, moss
+and stains, and bakes the result in Cycles. `OrdinaryPlaceSetup.ApplyPaintedTextures`
+applies the textures to the existing materials in place (GUIDs kept) and
+starts the scene on look E.
+
+![Before and after, night](../Images/OrdinaryPlace/Painted_BeforeAfter_Night.jpg)
+![Before and after, doorway](../Images/OrdinaryPlace/Painted_BeforeAfter_Door.jpg)
+![Before and after, golden hour](../Images/OrdinaryPlace/Painted_BeforeAfter_Golden.jpg)
+![Reference A and the painted pass](../Images/OrdinaryPlace/Painted_Compare_A.jpg)
+![Reference E and the painted pass](../Images/OrdinaryPlace/Painted_Compare_E.jpg)
+![Reference C and the painted pass](../Images/OrdinaryPlace/Painted_Compare_C.jpg)
+
+**Still to do:**
+
+- record the second full regression run (a first run was in progress at
+  commit time);
+- a new build and benchmark;
+- Luis's judgment.
+
+**Known issues:**
+
+- The timber's daubs read a little spotty under the paint filter.
+- `TimeOfDay` rewrites the sky and glow materials in edit mode, which churns
+  those two assets.
