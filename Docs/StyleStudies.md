@@ -1,7 +1,9 @@
 # S1 style studies — choosing the showcase's art direction
 
 **Rendered:** October 1, 2026, in Blender 4.4 (Cycles, GPU).
-**Status:** Awaiting Luis's choice (decision O1 in [ShowcaseRoadmap.md](ShowcaseRoadmap.md)).
+**Status:** Not chosen. On October 1 Luis judged these "not bad", but they did not
+match what he imagines. He supplied the [Visual Soul](VisualSoul.md) handoff
+instead, and it is now the art direction. This page is kept as a record.
 **Source:** [`Art/Blender/StyleStudies/style_studies.py`](../Art/Blender/StyleStudies/style_studies.py).
 Every image is generated from that script and can be reproduced or adjusted:
 

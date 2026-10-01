@@ -5,10 +5,12 @@
 - **Latest implementation:** the grounded body (roadmap stage S0, formerly
   Strength and Burden checkpoint A), plus the arrival fix. Luis judged the
   walk "much better".
-- **Current step:** S1, the worker model and art direction
-  ([NextMilestonePlan.md](NextMilestonePlan.md)). It was approved on
-  October 1. The style studies are rendered in [StyleStudies.md](StyleStudies.md),
-  and Luis's choice is pending.
+- **Current step:** S1 revised, the Ordinary Place and two cameras
+  ([NextMilestonePlan.md](NextMilestonePlan.md)):
+  - Luis set aside the Blender style studies and supplied the
+    [Visual Soul](VisualSoul.md) art direction.
+  - He asked for a Strategy camera plus a free Explore camera.
+  - S1a (two cameras) is in progress.
 - **Overall plan:** [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
 
 ## What the project is building now
@@ -23,7 +25,25 @@ A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director direction (October 1)
+## Latest Game Director direction (October 1, evening)
+
+Recorded verbatim in
+[Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md):
+
+- **Art direction.** The Visual Soul handoff ([VisualSoul.md](VisualSoul.md)):
+  - "Even an ordinary moment should feel worth pausing for";
+  - lighting leads the emotion, surfaces feel alive, characters have a soul,
+    and the wonder is playful and personal;
+  - images A–F are approved, with no ranking;
+  - proportions, architecture, setting and rendering technique remain open,
+    to be decided after an in-engine test.
+- **Cameras.** Two toggled systems:
+  - a fast "best RTS possible" Strategy camera;
+  - a free Explore camera, editor-like, cozy and soft, that can go very near
+    characters, floors and buildings without passing through, and look at the
+    sky.
+
+## Earlier Game Director direction (October 1)
 
 Recorded verbatim in
 [Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md](Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md):
@@ -79,11 +99,11 @@ Still valid from September 30:
 
 ## Recommended next action
 
-Luis picks a direction from the Blender style studies in
-[StyleStudies.md](StyleStudies.md): A soft stylized, B faceted low-poly or
-C grounded semi-realistic. He can also mix them or give references. S1 then
-builds the worker model in that style, drives its bones with the procedural
-body and takes the body's dimensions from the model.
+1. **S1a, the two cameras.** Finish, test, build, and get Luis's playtest.
+2. **S1b/S1c, the Ordinary Place.** Build it (house, grassland, path, worker;
+   day and night) with live-switchable rendering candidates. Captures and frame
+   times go next to the references. Luis then chooses the rendering approach.
+3. **S1d, the worker model**, in the chosen language.
 
 Luis's other choices on October 1:
 

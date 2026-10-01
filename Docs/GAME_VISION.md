@@ -261,6 +261,13 @@ Paid during play through resources, time, production capacity, prerequisites, or
 
 **Possible:** edge panning, middle-mouse rotation, zoom toward cursor, cinematic focus on selected units, and camera collision with uneven terrain. Current controls use keyboard panning, Q/E rotation, wheel zoom, and F to focus.
 
+**Direction (Luis, October 1, 2026):** two camera systems the player toggles between ([correspondence](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md)):
+
+- **Strategy.** An "Age of Empires-like best RTS possible" camera for playing fast. The earlier slow, smoothed scrolling suited the vision but is inconvenient for strategy.
+- **Explore.** A free POV camera like the Blender/Unity viewport. It can go anywhere, observe characters very closely from every angle and look up at the sky. It is "filled with wonder", "cozy to navigate and soft", and comes very near floors and buildings without passing through them. Buildings without decorated interiors stay solid.
+
+Key bindings, control details and whether orders work in Explore are implementation defaults, listed in NextMilestonePlan.md (C1–C4). They are not Locked.
+
 ## World, tone, and art
 
 **Locked:** The broad setting is fantasy and should allow wide creative freedom among civilizations.
@@ -269,7 +276,14 @@ Paid during play through resources, time, production capacity, prerequisites, or
 
 **Direction:** The world should feel large even if the simulated armies stay relatively intimate. A player should feel creative, clever, tactically engaged, and like a gentle commander or observer.
 
-**Open:** Lore, species, cultures, world history, magic rules, technology range, visual style, environmental biomes, soundtrack, interface language, and whether the final rendering leans painterly, storybook, miniature, low-poly, or soft semi-realism.
+**Direction (Luis, October 1, 2026):** the [Visual Soul](VisualSoul.md) handoff is the art direction.
+
+- **The core.** "Even an ordinary moment should feel worth pausing for." Lighting leads the emotion, surfaces feel alive, characters have a soul, and the wonder is playful and personal.
+- **The aim.** A strongly stylized, individual artistic world. Generic game-render looks were rejected.
+- **References.** Six soul images, A–F, are approved with no ranking, under named influences: Studio Ghibli, Little Nightmares, Ranking of Kings and Mob Psycho 100, and Super Mario Galaxy.
+- **Not chosen.** The earlier Blender style studies (soft, low-poly, grounded) were not chosen.
+
+**Open:** Lore, species, cultures, world history, magic rules, technology range, environmental biomes, soundtrack and interface language. Within the Visual Soul direction, also open: final proportions, architecture, world setting (a literal space setting is still open), the intensity of the Little Nightmares influence, the final cast and costumes, and the rendering technique, which needs an in-engine test.
 
 ## Victory and defeat
 
@@ -400,7 +414,7 @@ These questions must remain visible rather than being silently answered by imple
 - What are the standard match resources, and how can civilizations alter them?
 - What exact attributes and aesthetic modules can players edit?
 - How do strength, tool mass/geometry, hand availability and cargo determine handling, movement and the need for bags/carts?
-- What art direction should the showcase's models, interface and world use?
+- Which rendering technique, proportions, architecture and setting realize the Visual Soul direction (S1c in-engine test)?
 - Does strike quality change mineral yield, and how do extraction, pickup and loading relate?
 - How are design value and in-match cost calculated and balanced?
 - What graph structures, dependencies, cycles, and transformations are legal?
@@ -455,6 +469,10 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-10-01 | Art direction process (O1) | Chosen | Decide the showcase style from rendered Blender style studies | Luis's choice among the studies |
 | 2026-10-01 | Stage order (O4) | Chosen | The worker model (S1) comes before the character creator (S2) | Pipeline findings during S1 |
 | 2026-10-01 | Strength source (O2) | Chosen for the showcase | Body build sets a base strength; a separate training choice adjusts it within limits | S2/S4 playtests |
+| 2026-10-01 | Blender style studies | Not chosen | The soft, low-poly and grounded studies "were not bad" but did not match what Luis imagines | — |
+| 2026-10-01 | Visual Soul (art direction) | Direction | The Visual Soul handoff and its approved images A–F (no ranking). Proportions, architecture, setting and rendering technique remain open | In-engine look test (S1b/S1c) and Luis's judgment of real captures |
+| 2026-10-01 | Two camera systems | Direction | A fast Strategy camera and a free, cozy Explore camera, toggled; Explore approaches surfaces closely without passing through floors or buildings | S1a playtest |
+| 2026-10-01 | S1 sequence | Revised from Luis's handoff | Cameras first (S1a), then the Ordinary Place (house, grassland, path, worker; day and night, S1b), rendering candidates compared in engine (S1c), then the worker model (S1d) | Playtest of each checkpoint |
 
 Add future entries with the decision, its status, the evidence behind it, and what kind of playtest or new requirement would justify revisiting it.
 

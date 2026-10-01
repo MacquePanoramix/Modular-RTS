@@ -3,7 +3,9 @@
 **Created:** October 1, 2026, from Luis's clarification of the showcase's scope.
 **Status:** Living plan. On October 1 Luis chose:
 
-- **O1:** render style studies to pick the art direction.
+- **O1:** render style studies to pick the art direction. Later that day the
+  studies were set aside for Luis's Visual Soul handoff, and S1 was revised
+  (two cameras, the Ordinary Place, rendering candidates, then the model).
 - **O4:** the worker model first.
 - **O2:** strength comes from the body plus training.
 - **GitHub:** each stage merges into `main` after his playtest.
@@ -86,7 +88,7 @@ what a single worker is like when made in Wonder Gather's character creator:
 | Back-stowed pickaxe, two-handed bundle | Replaced by strength- and gear-dependent hauling |
 | Faction creator (IMGUI), faction saves | Not part of the showcase flow. Replaced there by a new character creator and its own character saves |
 | Movement % and other rate sliders | Not in the showcase creator. Base pace is a constant natural walk |
-| RTS camera and orders | Kept, tuned for one worker and close observation |
+| RTS camera and orders | Two toggled modes (October 1): a fast Strategy camera and a free Explore camera for close observation and wonder |
 
 ## Stages
 
@@ -105,14 +107,28 @@ Luis judged it "much better". The arrival shuffle he reported is fixed: the
 body finishes its stride and stands still. See
 [GroundedBodyPlaytest.md](GroundedBodyPlaytest.md).
 
-### S1 — The worker model and art direction (recommended next)
+### S1 — The Ordinary Place, two cameras and the worker model (in progress)
 
-Question: can a high-quality, Blender-made worker be driven by the procedural
-body without losing its grounded motion, and what should it look like?
+Revised on October 1. Luis set aside the three Blender style studies and
+supplied the Visual Soul handoff ([VisualSoul.md](VisualSoul.md)). He also
+asked for two camera systems. The detailed plan is in
+[NextMilestonePlan.md](NextMilestonePlan.md). It has four checkpoints:
 
-- **Style studies.** Render short style studies in Blender with the same small
-  vignette: worker, pickaxe, boulder, ground. Luis chooses a direction or
-  supplies references.
+- **S1a, two cameras.** A fast "best RTS possible" Strategy camera, and a
+  free Explore camera. Explore is cozy and soft, gets very near things without
+  passing through floors or buildings, and can look at the sky. `V` toggles
+  between them.
+- **S1b, the Ordinary Place.** A small house, grassland, path and the worker,
+  by day and by night, in Unity.
+- **S1c, rendering candidates.** Compared live in that scene, with matched
+  captures and measured frame time. Luis chooses the rendering approach.
+- **S1d, the worker model.** Made in the chosen language. This continues the
+  original S1 scope below.
+
+The original S1 scope that continues as S1d:
+
+- **Style studies.** Done on October 1, but not chosen. Superseded by the
+  Visual Soul handoff (see [StyleStudies.md](StyleStudies.md)).
 - **The worker model.** Model a reproducible worker in Blender, with source and
   export scripts kept in the repository. It has a skeleton matching the
   procedural rig (pelvis, spine, chest, neck, head, arms, hands, legs, feet,
@@ -200,7 +216,10 @@ pickaxes) still hold.
 
 | ID | Question | Recommendation |
 |---|---|---|
-| O1 | Art direction for the models (needed for S1) | **Chosen Oct 1:** decide from rendered Blender style studies |
+| O1 | Art direction for the models (needed for S1) | **Set Oct 1:** the Visual Soul handoff (A–F approved), replacing the style studies. Its rendering technique, proportions, architecture and setting stay open (S1c) |
+| O7 | Rendering approach | Open. Luis chooses after comparing in-engine candidates in S1c |
+| C1–C4 | Camera toggle key, orders in Explore, Explore controls, entering buildings | Defaults: `V`; orders allowed; Unity-style fly plus Blender-style orbit; buildings solid while they have no interior |
+| V3 | Is the house the worker's home and delivery point? | Possible. It would connect the Ordinary Place to the worker loop |
 | O2 | Is strength its own creator value, or does it come from the body build (musculature/mass)? | **Chosen Oct 1:** body build sets a base, and a separate training choice adjusts it within limits |
 | O3 | Does mined material fall as loose pieces to pick up, or go straight to hands/gear? | Loose pieces, picked up into hands or gear. More physical, and it makes the hauling choice visible |
 | O4 | Stage order: model first, or creator first? | **Chosen Oct 1:** model first |
