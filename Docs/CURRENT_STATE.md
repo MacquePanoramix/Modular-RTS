@@ -7,7 +7,8 @@
   walk "much better".
 - **Current step:** S1, the worker model and art direction
   ([NextMilestonePlan.md](NextMilestonePlan.md)). It was approved on
-  October 1, and step 1, the Blender style studies, is in progress.
+  October 1. The style studies are rendered in [StyleStudies.md](StyleStudies.md),
+  and Luis's choice is pending.
 - **Overall plan:** [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
 
 ## What the project is building now
@@ -78,9 +79,11 @@ Still valid from September 30:
 
 ## Recommended next action
 
-Luis picks a direction from the Blender style studies. S1 then builds the
-worker model in that style, drives its bones with the procedural body and
-takes the body's dimensions from the model.
+Luis picks a direction from the Blender style studies in
+[StyleStudies.md](StyleStudies.md): A soft stylized, B faceted low-poly or
+C grounded semi-realistic. He can also mix them or give references. S1 then
+builds the worker model in that style, drives its bones with the procedural
+body and takes the body's dimensions from the model.
 
 Luis's other choices on October 1:
 
