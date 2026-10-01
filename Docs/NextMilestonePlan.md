@@ -1,165 +1,315 @@
-# Approved implementation plan — The Equipped Worker
+# Proposed implementation plan — Strength and Burden
 
-**Reviewed:** September 29, 2026.
-**Review baseline:** 5f61351, matching GitHub main during the recommendation review;
-Unity 6000.6.0f1. Implementation begins from the documentation commit 1dce817.
-**Status:** Approved scope implemented and technically validated on September 29.
-The detailed scope below remains its contract. See [Validation.md](Validation.md)
-and [EquippedWorkerPlaytest.md](EquippedWorkerPlaytest.md). Luis's playtest acceptance
-of the result is pending.
+**Proposed:** September 30, 2026.
+**Baseline:** 6131598 (The Equipped Worker), Unity 6000.6.0f1 / URP.
+**Status:** Approved by Luis on September 30, 2026, with decisions D1–D5
+chosen as recommended (see [Decisions](#decisions-for-luis)). D6–D9 proceed
+on their recommendations until Luis says otherwise. **Checkpoint A is implemented
+and technically validated. It awaits Luis's playtest**
+([GroundedBodyPlaytest.md](GroundedBodyPlaytest.md)); B and C follow his review. The completed previous plan is archived in
+[Plans/EquippedWorker.md](Plans/EquippedWorker.md).
 
-Luis accepted The Living Worker as a useful early prototype and described a
-later, highly polished one-worker showcase. The reference is
-[WorkerShowcaseVision.md](WorkerShowcaseVision.md); the prior completed plan
-is preserved in [Plans/LivingWorker.md](Plans/LivingWorker.md).
+## Where this starts
 
-## The next question
+Luis reviewed The Equipped Worker on September 30. He accepted it as the bare
+starting point for the [one-worker showcase](WorkerShowcaseVision.md), with
+three problems:
 
-Can a worker made through the faction blueprint system equip a real tool,
-hold and use it convincingly, and extract material only when that tool
-actually makes a valid strike?
+- the strike "looks just like an animation";
+- the pickaxe clips the worker's body;
+- the feet still look goofy.
 
-The approved slice is **The Equipped Worker**: one provisional biped,
-one pickaxe definition, one mineral/boulder target, and the existing
-approach → work → carry → deliver loop. Its purpose is to establish the
-connection between equipment, embodied action and a gameplay consequence.
-It is a step toward the polished public showcase, not that complete showcase.
+He also restated the direction: movement should be procedurally animated,
+grounded, and without goofiness. His original brief is preserved verbatim in
+[Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md).
 
-## What the pre-implementation review established
+Strength and burden show up almost entirely through motion: how a worker walks
+under a load, holds or drags a tool, lifts it and swings it. Adding handling
+modes on top of the current motion would repeat the three problems Luis named
+in every new mode. This plan therefore first makes the body's motion follow
+from weight and effort. Strength then chooses among handling modes using that
+same model.
 
-The recommendation was based on a focused source/configuration/history
-review, not a new runtime or performance audit. Its baseline evidence was
-the September 26 result: 67 passing PlayMode tests, reviewed rendered captures
-and a successful Windows build. The observations below describe that earlier
-implementation; they are not a current test report for the new equipment code.
-Current candidate ownership is described in [EquipmentArchitecture.md](EquipmentArchitecture.md),
-and the review path is in [EquippedWorkerPlaytest.md](EquippedWorkerPlaytest.md).
-Actual equipment validation results belong in [Validation.md](Validation.md).
+## The question
 
-| Confirmed observation | Evidence under Assets/_WonderGather | Implication for the next slice |
+Can a worker's strength, its tool's weight and its load visibly and credibly
+determine how it walks, holds, drags and swings, with motion generated from
+those physical relationships rather than from fixed curves?
+
+## Why the current motion looks the way it does
+
+These observations come from reading the source. They are not new runtime
+measurements. Where a figure is computed from source constants, it says so.
+
+| Observation | Evidence under Assets/_WonderGather | Consequence |
 |---|---|---|
-| Work, cargo, delivery, reservations and production are integrated | Scripts/Units/Gatherer.cs; ResourceWorkplace.cs; Tests/PlayMode/LivingWorkerTests.cs | Extend these contracts rather than making a separate showcase economy |
-| Gathering grants one supply after a timer; HasWorkContact means a reserved workplace | Scripts/Units/Gatherer.cs:24–28,157–164 | Actual tool contact must become an explicit success condition for mining |
-| The body poses in LateUpdate and reaches toward a point; arm reach is clamped | Scripts/Units/ProceduralBiped.cs:93–140,244–277 | A desired contact point or a rendered gesture cannot prove a reachable strike |
-| Starting and produced units receive UnitIdentity from their blueprints | Scripts/Civilizations/UnitIdentity.cs; CivilizationSession.cs; Scripts/Units/UnitProducer.cs | Apply equipment through the same shared path |
-| Blueprints and saves have no equipment choice; v4 uses exact field validation | Scripts/Civilizations/UnitBlueprint.cs; Scripts/Creator/FactionRecord.cs | Persisting equipment needs an explicit schema extension with safe legacy defaults |
-| Dirty tracking is separate from serialization | Scripts/Creator/FactionWorkspace.cs:16–25 | Tool edits must participate in unsaved-change detection as well as save/load |
-| Performance values are temporary outcomes, not physical attributes | Scripts/Civilizations/UnitPerformance.cs | Do not reinterpret capacity as kilograms or movement rate as strength |
+| The worker moves faster than its legs can walk | The Living Worker agent speed is 3.2 m/s (Editor/LivingWorkerSetup.cs). ProceduralBiped poses the pelvis about 1.43 m high, with 1.33 m leg reach. Computed Froude number v²/(g·L) ≈ 0.73; walking bipeds normally switch to running near 0.5. | The body is asked to walk at running speed. The comparison bodies Luis judged "okay" on September 24 moved at 1.8 and 2.5 m/s. |
+| Steps are reactive, short and very frequent | A step begins when a foot is 0.16 m from its home position. Step lead is capped at 0.55 m. Step duration for a worker is 0.576 / speed, about 0.18 s at 3.2 m/s. Only one foot swings at a time, with no flight phase (ProceduralBiped.BeginStep / CurrentStepDuration). | Computed estimate: roughly five steps per second, about twice a human running cadence. This reads as shuffling. |
+| Feet and hips do not transfer weight | Feet are rigid 0.44 m boxes on a sine arc, kept parallel to the ground. There is no heel strike, roll or toe-off. The pelvis bobs 2.5 cm, with no side sway or shoulder counter-rotation (ProceduralBiped.Pose). | Walking lacks the loading and unloading that makes a body look grounded. |
+| The strike is a stored curve | EquippedTool.SwingAngle interpolates 20° → −52° → 88° with smoothstep. PoseAt rotates the tool about a hand point fixed 24 cm in front of the pelvis. The body adds only a 4° pitch. | Every swing is identical, the hands never rise, and weight plays no part. It is a keyframe animation written as code. |
+| The tool passes through the body | Computed from the authored grips/head: at the −52° windup, the pickaxe head lands at about hips + (0, 0.64, −0.19). The worker's head is posed at hips + (0, 0.64, 0). At rest, the shaft butt sits inside the pelvis/thigh volume. No body volume constrains the tool path. | This is the clipping Luis saw. |
+| Navigation owns speed; the body only presents it | UnitMotor.SetMovementRate multiplies the prefab's agent speed by the creator's Movement %. Nothing about body, tool or cargo can change speed. | Burden cannot change movement without a deliberate authority change, limited to speed limits. |
+| Nothing has mass | ToolDefinition has grips, head and radius, but no mass. Cargo is an integer count. UnitPerformance has no strength. | Every capability in this plan needs new data. |
 
-These are confirmed limits relative to the new target, not defects in the
-accepted earlier prototype. Contact authority and save compatibility are the
-highest-priority implementation risks because a visually plausible result
-could conceal false extraction or lost player choices. Their boundaries can
-be extended locally; this review does not justify a broad engine rewrite.
+The contact contract from The Equipped Worker is sound, and this plan keeps it:
 
-## Bounded scope
+- one gameplay-owned attempt;
+- the displayed trajectory is the one that gets swept;
+- at most one extraction per attempt;
+- misses and interruptions give nothing.
 
-1. **A tool belongs to a blueprint.** Add a stable, data-backed pickaxe
-   definition and a small None/Pickaxe choice in the existing unit editor.
-   Give the tool a coherent transform, grip points and a striking head.
-   Tool mass and handling properties may be authored as provisional data;
-   this slice does not claim a working strength or burden simulation.
-2. **Use the existing creation paths.** The choice survives duplicate,
-   save/open, return from playtest and production. Starting and trained
-   workers receive the same selected equipment. A small test environment
-   can isolate the mining action, but its worker uses those blueprint paths.
-3. **Approach and prepare.** Reuse navigation, selection and work reservations.
-   Author one compatible surface and working region beside a mineral-bearing
-   boulder. Confirm both navigation access and tool/body reach, then face and
-   settle into a supported stance.
-4. **Perform one restrained procedural strike.** A preparation, striking
-   phase and recovery describe a single attempt. Hands hold authored grip
-   points on the tool, with body participation and planted support. Do not
-   stretch limbs or detach the tool to manufacture contact.
-5. **Make contact matter.** Use the solved tool-head movement against the
-   intended target surface to validate a strike. The first test gives a fixed
-   provisional amount per accepted hit. A miss or cancelled attempt gives
-   none. Impact angle/force-dependent yield remains an experiment for later.
-6. **Complete the work loop.** Show where the pickaxe goes while the worker
-   carries cargo or delivers it; choose one modest temporary carry/stow
-   arrangement for review. Do not put a tool and a bundle in the same hands
-   or make the tool disappear without an explicit transition. Physical loose
-   chunks and a full loading system are later work, clearly marked as such.
-7. **Explain the result.** The existing HUD distinguishes ready/working,
-   interrupted, missing tool and unreachable work. A valid gather permission
-   alone does not supply a missing tool. Keep ordinary RTS commands and make
-   this action readable from close and strategic views.
+## Recommended approach: physics-informed, not physics-driven
 
-## Authority and contact contract
+Navigation keeps the root path, and the body stays kinematic and procedural.
+What changes is where its motion comes from. Hand-authored curves are replaced
+by motion computed from a small physical model:
 
-Keep order intent, navigation, the work action, resource accounting and body
-presentation distinguishable. Navigation continues to own the root; this
-slice does not introduce active ragdolls or body-driven navigation.
+- a mass for each body segment, giving a center of mass;
+- support from planted feet;
+- the tool's mass and inertia;
+- strength as a limit on force and torque;
+- ground contact for a dragged tool.
 
-A small gameplay-owned strike cycle owns attempt identity, phase and target.
-Its tool pose and contact query must use the **same reachable, solved tool
-trajectory** shown to the player. Define update order explicitly so the query
-does not rely on stale LateUpdate transforms or a desired point that the
-arms cannot reach. Do not add a second component that independently moves
-the same arms or grants resources from arbitrary visual collision callbacks.
+Heavier tools and weaker bodies then produce different motion by themselves:
+lower windups, slower drives, deeper stances and heavier gaits.
 
-A hit is accepted only when the worker, target and equipped tool are valid,
-the worker still owns its work position, the attempt is in its striking
-phase, and the intended tool head contacts the intended surface. Test the
-path between solved samples so a fast head cannot skip through the target.
-Accept at most one extraction per attempt even if contact spans frames or
-multiple target colliders. A new command, disable, target loss or release of
-the station invalidates any outstanding attempt. If actual reach fails,
-reposition or explain inability; never silently award the timer's yield.
+**Why not an active ragdoll**, meaning physics-driven joints? That is the most
+direct route to the TABS-like wobble Luis wants to avoid. It is hard to keep
+responsive to RTS orders and costly at scale, and AGENTS.md defers active
+ragdolls unless a milestone requests them. A physics-informed body can still
+show emergent weight while staying controllable, readable and testable. If
+Luis wants to try physics-driven joints, that should be a separate labelled
+experiment, not something hidden inside this milestone (decision D1).
 
-Gatherer/ResourceNode remain the resource-accounting authority. Clip accepted
-extraction to remaining stock and cargo space, preserve partial cargo and
-conservation, and handle depletion by another worker safely. The body follows
-the resulting action and cargo state. This is constrained physical contact;
-it does not establish a full force-based simulation or multiplayer determinism.
+No new packages are needed. The existing custom solver in ProceduralBiped is
+extended rather than replaced with a third-party rig.
 
-## Compatibility boundaries
+## Scope: three checkpoints
 
-- Existing gathering scenes retain their established collection behavior.
-  Mining is an explicit capability/target path, not a silent global conversion
-  of all supplies into ore. The final resource list and cost formulas stay open.
-- Existing rate/capacity controls keep their documented meanings. A mining
-  rate can schedule attempts; it cannot bypass required physical contact.
-  Reach and grip must remain valid across supported test rates.
-- Add equipment to blueprint copying, runtime application, record capture,
-  encoding/decoding, restoration and workspace dirty tracking together.
-  Use stable definition IDs, not scene references or shared mutable instances.
-- Introduce a versioned equipment field deliberately. Versions 1–4 open with
-  explicit legacy defaults that preserve their current behavior. Reading must
-  not rewrite files; explicit save upgrades through the existing atomic write,
-  conflict detection and backup flow. Do not silently replace unknown tool IDs
-  with a different creative choice. Leave unsupported files and drafts safe.
-- Keep blueprint IDs, construction/production links, permissions and economic
-  recipe values intact. Review migration and identity changes independently.
+Each checkpoint ends with a build and a playtest by Luis. The next checkpoint
+starts only after his review, so a wrong direction is caught early.
+
+### Checkpoint A — A grounded body
+
+Goal: remove the goofiness from walking, and give the body what it needs to
+show effort.
+
+1. **Gait from the body.** Stride length and cadence come from leg length and
+   speed, on a shared gait cycle with double-support periods. Above the
+   walk–run threshold the body jogs, with a short flight phase, instead of
+   shuffling. How fast the worker moves by default is decision D2.
+2. **Feet that roll.** Each foot gets a heel and a toe, or a toe pivot, so it
+   strikes, rolls and pushes off. Ankles follow the terrain.
+3. **Weight transfer.** The pelvis rises, falls and shifts over the stance foot.
+   The torso and shoulders counter-rotate. Arms swing from the shoulder with
+   natural lag.
+4. **A spine.** A pelvis–chest–neck chain that can bend and twist. The swing
+   and the carrying poses both need it.
+5. **Mass and balance.** Authored segment masses give a center of mass.
+   Posture leans to keep the combined center of mass of body, tool and cargo
+   over the feet. Without a load this effect is subtle.
+6. **Body volume.** Capsules for the head, torso, pelvis and limbs keep tools
+   and cargo outside the body.
+
+Luis judges walking at measured and brisk pace, close up and from RTS height,
+in the Living Body comparison scene and the faction playtest. Orders,
+navigation and planted-foot behavior must not regress.
+
+### Checkpoint B — Effort-driven tool use
+
+Goal: the strike is produced by a body moving a mass, not replayed from a
+stored curve.
+
+1. **A planned swing.** It has lift, windup, drive, impact and recovery phases,
+   planned as targets for the tool head and hands. Arm reach and body volume
+   constrain it. The windup rises over the shoulder instead of pivoting
+   through the head.
+2. **Simple dynamics for the drive.** Tool inertia, gravity and a drive torque
+   limited by strength set the head's speed. A heavier tool or weaker body
+   lifts less high and swings more slowly.
+3. **The whole body takes part.** Weight shifts to the lead foot, knees flex,
+   and the torso bends and twists. At impact the tool stops at the actual
+   obstruction and rebounds according to its speed.
+4. **Variation from state, not noise.** Stance, the previous recovery and how
+   high the tool was lifted change each swing. Nothing is randomized for its
+   own sake.
+5. **The contact contract stays.** The swept path is the displayed path, and
+   there is one extraction per attempt at most.
+6. **Impact is measured.** Head speed and energy at each accepted strike are
+   recorded and shown in the worker HUD. Yield stays fixed at one unit per
+   valid strike (decision D6).
+
+Luis judges whether the strike looks like effort rather than an animation, and
+whether the tool stays out of the body. All Equipped Worker contact tests must
+keep passing.
+
+### Checkpoint C — Strength decides handling
+
+Goal: Luis's examples emerge from comparing capability with demands:
+
+- one-handed carry;
+- dragging, which changes movement;
+- being unable to manage without help.
+
+1. **Strength and tool weight become data.** Each unit blueprint gets a
+   Strength value in the creator (D3). Tool definitions gain mass and a
+   center of mass. Three authored pickaxes (light, standard and heavy) make
+   the differences easy to compare (D4).
+2. **A capability resolver.** It compares strength with each demand and
+   decides how the tool is transported: in one hand, in two hands or on the
+   shoulder, dragged, or not movable without an aid. Separately, it decides
+   whether the worker can swing it fully, only reduced, or not at all (D7).
+3. **Movement consequences.** Carried and dragged loads change top speed,
+   stride, lean and turning. A dragged pickaxe's head touches and slides along
+   the ground, adding resistance and an asymmetric gait.
+4. **Cargo has weight.** Each carried unit of material has mass that affects
+   gait. How the tool and cargo share the hands is decision D5. The capacity
+   count stays a separate limit for now (D8).
+5. **Readable inability.** Impossible orders are refused or stopped with a
+   precise reason, for example "Heavy pick is too heavy to lift — needs a
+   transport aid". The creator's unit panel shows the resolved handling before
+   the playtest, not only after.
+6. **Side-by-side comparison.** An equipment test layout lets three workers
+   with different strength take the same order at once.
+
+Luis judges whether each worker's limits are visible and understandable
+without reading numbers, and whether dragging and heavy carrying look
+credible rather than goofy.
+
+### Deliberately outside this milestone
+
+These wait for Luis's review of this milestone:
+
+- carts and bags (the next proposed milestone, Materials and Transport Aids);
+- loose ore physics;
+- fatigue and injury;
+- an impact-based yield rule;
+- personality;
+- an editor for body proportions or anatomy;
+- final art and sound;
+- networking.
+
+## Authority and contracts
+
+- **Root and path.** Navigation keeps the root and path. New: the body's
+  capability model supplies the top speed, acceleration and turn rate that
+  UnitMotor applies. It has one owner and is recomputed when load or handling
+  mode changes. How Movement % relates to that pace is decision D2.
+- **Action phases.** Gameplay keeps owning action phases, through
+  EquippedTool's attempt identity. The body poses in one explicit order:
+  support → balance → spine → tool → arms. This is the same principle as now,
+  with more stages.
+- **Handling mode.** One component owns it, derived from the blueprint,
+  equipment and cargo. Presentation and HUD read it but never decide it.
+- **Resources.** Gatherer and ResourceNode remain the authority for accounting.
+  Measured impact energy is reported; it does not grant material.
+- **Existing values keep their meaning.** Strength does not silently change
+  them: capacity stays a count, and Gathering % still schedules attempts.
+
+## Compatibility and saves
+
+- **Save version 6.** Faction saves add Strength per unit and may add new tool
+  IDs. Versions 1–5 open with a default strength chosen so the standard
+  pickaxe keeps today's two-handed, usable behavior. Rules unchanged from
+  earlier milestones:
+  - reading never rewrites a file;
+  - an explicit save upgrades it, keeping a backup;
+  - unknown data is refused, never replaced.
+  The existing `pickaxe` ID keeps its meaning as the standard weight.
+- **Shared body.** Checkpoint A changes the shared Living Worker body, so the
+  faction playtest and TheLivingBody scenes change too. If D2 slows the default
+  pace, economy timing in the supplies map also changes. That is a gameplay
+  change to confirm, not a side effect.
+- **Independent review.** Version 6 changes what a saved faction means, so its
+  migration gets an independent review before it is trusted, following
+  PROJECT_CULTURE.md.
 
 ## Required evidence
 
-- A valid hit extracts once; a miss, wrong collider, blocked/unreachable
-  surface, absent tool or interrupted attempt cannot produce invisible ore.
-- Repeated contact, coarse time steps, re-enable, depletion and shared targets
-  cannot duplicate extraction or leak an old attempt into a new command.
-- Hands remain on usable grips; tool/head contact corresponds to the visible
-  geometry; limbs retain reach, feet remain supported and orders stay responsive.
-- Starting and produced units agree on equipment. Editing marks the draft
-  dirty; duplicate/copy/template ownership, save/open and playtest return are
-  tested. Legacy files, unknown IDs, malformed data and failed writes are safe.
-- Cargo, stock and storage stay conserved through the loop. Earlier gathering,
-  movement, construction, production and faction-library regressions pass.
-- Review rendered motion and a Windows build, then return the slice to Luis
-  for judgment of grip, weight, restraint, contact and carrying transitions.
+- **Checkpoint A:**
+  - automated checks that stance feet stay planted;
+  - stride and cadence stay within body-derived bounds across the supported
+    speed range, and walk/jog selection happens at the expected threshold;
+  - no pelvis overreach;
+  - the existing 85-test PlayMode suite still passes;
+  - reviewed rendered frames and a short captured sequence.
+- **Checkpoint B:**
+  - the tool never enters body capsules at sampled points across every
+    swing phase;
+  - all Equipped Worker contact and deduplication tests pass;
+  - peak head speed decreases as tool mass increases or strength decreases;
+  - impact values are reported.
+- **Checkpoint C:**
+  - resolver tables for strength × tool × cargo;
+  - dragging produces ground contact and reduced speed;
+  - inability is explained and never grants work;
+  - starting and produced units agree;
+  - version-6 migration tests: defaults for versions 1–5, unknown data
+    refused, reading without rewriting, and backup on upgrade.
+- **Every checkpoint:** a Windows build. Tests cannot settle feel, so each
+  checkpoint returns to Luis.
 
-## What follows this proof
+## Decisions for Luis
 
-**Strength and burden** is the recommended follow-up: compare the same tool
-on differently capable workers and make handling/movement consequences real.
-Then extend material loads and bags/carts before polishing the small scene
-for outside testers. The exact rules and sequence stay adjustable through
-Luis's feedback; [WorkerShowcaseVision.md](WorkerShowcaseVision.md) preserves
-the examples and open questions.
+**Chosen September 30:**
 
-Three Temperaments remains part of the wider direction, but is not the next
-recommended task under this clarification. Personality, combat, arbitrary
-anatomy, full character/building editors, final art, free rigid-body ore,
-advanced hauling, balance formulas and networking are outside this first
-equipment slice. Deferring them here does not reduce the promised depth of
-the eventual showcase or the final game.
+- **D1:** physics-informed kinematic body.
+- **D2:** natural walk, with a jog at higher Movement %.
+- **D3/D4:** one Strength value with named bands, and authored light,
+  standard and heavy pickaxes.
+- **D5:** carry the tool in the free hand when strong enough; otherwise lean
+  it at the worksite and collect it on return.
+
+D6–D9 are not yet answered and proceed on their recommendations.
+
+**Scope refinement made at the start of Checkpoint A:**
+
+- Load-dependent balance moves to Checkpoint C, because nothing has mass
+  before then.
+- Body collision volumes move to Checkpoint B, where the tool path needs them.
+
+Checkpoint A covers the gait, feet, weight transfer, spine, head and default
+pace.
+
+Recommendations are marked below.
+
+- **D1 — Approach.** Physics-informed kinematic body *(recommended)*, or a
+  separate active-ragdoll experiment first.
+- **D2 — Pace.** For the current proportions, a natural walk is roughly
+  1.8–1.9 m/s (computed); the worker moves at 3.2 m/s today.
+  - (a) Slow the default worker to a natural walk, with higher Movement %
+    becoming a jog *(recommended: it fixes the shuffling at its root and fits
+    "slowness is attention")*.
+  - (b) Keep 3.2 m/s and animate it as a jog everywhere.
+- **D3 — Strength in the creator.** One Strength value with named bands
+  *(recommended for now)*, separate arm/grip/leg strengths, or strength
+  derived later from a body-build editor.
+- **D4 — Tool weight.** Authored light, standard and heavy pickaxes whose
+  shape matches their weight *(recommended)*, or a free weight slider.
+- **D5 — Hands while hauling stones.**
+  - Keep the back strap.
+  - Carry the tool in the free hand when strong enough, otherwise lean it at
+    the worksite and collect it on return *(recommended: the tool stays in
+    the world)*.
+  - Something else.
+- **D6 — Yield.** Measure impact energy only *(recommended)*, or start
+  experimenting with energy-based yield now.
+- **D7 — Moving a tool vs using it.** Recommended: a worker who can only drag
+  a tool may still make reduced, gravity-assisted strikes above a threshold.
+  Below the threshold it can bring the tool but not use it, which is the
+  future cart case.
+- **D8 — Capacity.** Keep the count limit for now *(recommended)*, or let
+  strength and stone mass decide how many stones fit. That is natural, but
+  it overlaps with the bags and carts milestone.
+- **D9 — Body look while judging motion.** Keep primitive segments, adding
+  heel/toe and spine parts *(recommended)*, or switch now to a neutral skinned
+  mannequin.
+
+## After this milestone
+
+The recommended next step is **Materials and Transport Aids**: stones with
+mass and bulk, a bag and a small wooden cart with real loading, hauling and
+unloading, including a cart for a worker who cannot carry its tool. After
+that comes polishing the one-worker showcase for outside testers. The order
+stays adjustable through Luis's feedback. Three Temperaments remains part of
+the wider direction.

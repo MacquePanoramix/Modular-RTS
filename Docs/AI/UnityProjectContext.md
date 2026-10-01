@@ -1,6 +1,6 @@
 # Unity project context
 
-Updated September 29, 2026 after Equipped Worker implementation/validation.
+Updated September 30, 2026 after Luis's Equipped Worker review (source analysis only).
 Current playtest: Docs/EquippedWorkerPlaytest.md; evidence: Docs/Validation.md.
 The creator offers supplies and equipment maps; faction saves are version 5.
 Sections describe successive extensions; later sections supersede earlier limits.
@@ -397,3 +397,77 @@ EquippedWorkerSetup.BuildWindows passed. Output:
 Builds/WindowsEquippedWorker/WonderGather.exe. The build contains TheFactionCreator,
 FactionPlaytest and EquipmentPlaytest. Packages, old maps and user edits were
 preserved. No Unity MCP provider was callable; validation used local Unity.
+
+## September 30 motion review
+
+Luis accepted The Equipped Worker as a foundation. He did not accept its motion:
+the strike looks canned, the tool clips the body and the feet look goofy.
+Source-derived causes, none measured at runtime:
+
+- **Gait speed.** LivingWorker's agent runs at 3.2 m/s with the pelvis posed
+  about 1.43 m high. The computed Froude number of about 0.73 is above the
+  walk–run threshold, yet the body only walks.
+- **Steps.** Worker steps trigger at 0.16 m of foot error, lead at most 0.55 m
+  and last about 0.576/speed s, roughly five steps per second.
+- **Feet and hips.** Feet are rigid boxes with no roll, and the pelvis bobs 2.5 cm.
+- **Swing.** EquippedTool.SwingAngle is a fixed 20° → −52° → 88° curve about a
+  hand point at hips + (0, −0.03, 0.24). The body adds only a 4° pitch.
+- **Clipping.** At the −52° windup the pickaxe head reaches about
+  hips + (0, 0.64, −0.19), coinciding with the posed head at hips + (0, 0.64, 0).
+  No body volumes constrain tool paths.
+- **Speed authority.** UnitMotor multiplies the prefab speed by Movement %.
+  Nothing body- or load-dependent can set speed yet.
+
+Docs/NextMilestonePlan.md proposes Strength and Burden: a physics-informed
+kinematic body, not an active ragdoll, in three checkpoints. Its decisions
+D1–D9 are open. Keep the EquippedTool contact contract (the swept path is the
+displayed path, one extraction per attempt) and the explicit solve order when
+extending the rig. The previous plan is archived at Docs/Plans/EquippedWorker.md.
+
+## Strength and Burden, checkpoint A — grounded body
+
+Implemented September 30. The playtest guide is Docs/GroundedBodyPlaytest.md;
+evidence is in Validation.md.
+
+**Gait.** ProceduralBiped's reactive, threshold-triggered stepping is replaced
+by a phase-based gait.
+
+- The Froude number v²/(g·1.43) selects Walking or Jogging: jog above 0.55,
+  back to walk below 0.45.
+- Stride follows Alexander's relation, shortened: 2.1·h·Fr^0.3, capped at
+  2·stepReach·h. Cadence is speed/stride, clamped to 0.75–1.8 strides/s.
+- Duty factor is 0.64–0.56 for a walk and 0.38 for a jog.
+- Feet alternate on one cycle. Swing feet retarget to land where the hips will
+  pass over them at mid-stance.
+- In a walk a foot can lift only while the other is planted. Only a jog is
+  Airborne; FlightTime reports the continuous flight.
+- Standing adjustment steps (stepDuration) settle the feet after stopping or
+  turning. They start only below the gait start speed, so a moving body hands
+  over to its gait. A regression test covers the earlier settle-chasing bug.
+- Displacement faster than max(8, 2.5·agent speed) is treated as a
+  correction, not locomotion.
+
+**Feet and rig.**
+
+- A planted foot keeps a fixed world-space support frame, so the
+  FootPosition/FootNormal contracts are unchanged. The rendered foot pitches
+  about the heel (toe up) or the ball (heel up); FootPitch reports it.
+- Optional toe segments stay flat while the heel rises.
+- GroundedBodySetup.Apply authored LivingBodyBiped feet at 0.13 × 0.09 × 0.26
+  plus toes, and set the LivingWorker variant to 1.8 m/s speed and 4 m/s²
+  acceleration. It refuses to author twice.
+- SetTuning keeps its signature. stepReach now bounds step length as a fraction
+  of hip height, footLift sets walking swing clearance, and stepDuration sets
+  standing adjustment steps.
+
+**Body frames and shoulders.**
+
+- Pose separates a steady body frame (posture, used by tools and cargo) from
+  the gait-oscillating hip frame and the counter-rotating chest.
+- EquippedTool.SolveFrame now receives the actual shoulder positions from the
+  chest, so its reach checks match the arm IK.
+- The arm IK takes a bend hint: elbows point back for free arms and out/down
+  while the hands carry or grip.
+
+**Build.** GroundedBodySetup.BuildWindows builds the creator and both maps to
+Builds/WindowsGroundedBody.

@@ -1,10 +1,11 @@
 # The Equipped Worker playtest
 
-**Status:** Ready for Luis's review, September 29, 2026. The 18 focused tests,
-85 full PlayMode tests, rendered probe and Windows build passed. This guide
-describes the prototype review path; aesthetic/playtest acceptance is pending.
-Executed results belong in [Validation.md](Validation.md); Luis's playtest
-acceptance is separate from those checks.
+**Status:** Reviewed by Luis on September 30, 2026. He accepted it as the bare
+starting point for the one-worker showcase, not as the intended motion quality.
+See [Luis's feedback](#luiss-feedback--september-30-2026) below. Technical
+evidence from September 29: 18 focused tests, 85 full PlayMode tests, the
+rendered probe and the Windows build passed. Executed results belong in
+[Validation.md](Validation.md).
 
 This slice asks whether a tool chosen in the faction blueprint can visibly
 reach the mineral and cause extraction through valid contact. It advances
@@ -80,6 +81,30 @@ right-click for contextual orders, F to focus, WASD/arrows to pan, Q/E to
 rotate and the wheel to zoom. Review both close up and at strategic height.
 Save the draft before stopping Editor Play Mode; this saves faction design,
 not the running map or the current mined/cargo state.
+
+## Luis's feedback — September 30, 2026
+
+In Luis's words:
+
+> It looks more or less held, the motion of it looks just like an animation
+> still and clips the worker's body. I mean let me say, in general, it looks
+> like the bare starting points of what I want for this hi-fi prototype. …
+> I was planning for the movements to mostly be basically procedurally
+> animated but without looking goofy (which the feet still do).
+
+What this settles and what it leaves open:
+
+- **Provisionally accepted as a foundation.** The blueprint choice, the contact
+  gate and the work loop remain the base to build on.
+- **Not accepted as motion quality.** Three things fall short of the showcase:
+  the strike reads as a canned animation, the tool passes through the body, and
+  the feet still look goofy.
+- **Direction reaffirmed.** Movement should be procedurally generated and grounded,
+  without goofiness.
+- **Next step.** The source analysis of these three problems and the proposed next
+  milestone are in [NextMilestonePlan.md](NextMilestonePlan.md).
+- **Still unjudged.** Luis did not comment on the change from mining to carrying,
+  on interruptions or on persistence, so those remain unjudged rather than accepted.
 
 ## What Luis is judging
 

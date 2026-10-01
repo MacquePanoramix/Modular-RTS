@@ -8,13 +8,24 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 > that would be dangerous to lose; [Project Culture](Docs/PROJECT_CULTURE.md)
 > explains lightweight collaboration roles and context routing.
 
-Current milestone: **The Equipped Worker**, connecting a blueprint-selected
+**Current milestone:** Strength and Burden ([plan](Docs/NextMilestonePlan.md)).
+**Checkpoint A, the grounded body,** is ready for Luis's playtest. It adds:
+
+- gait scaled to the body and a jog;
+- heel/toe feet and weight transfer;
+- a natural 1.8 m/s default walk.
+
+See [the grounded body playtest](Docs/GroundedBodyPlaytest.md). The pickaxe
+swing is unchanged until Checkpoint B.
+
+Latest milestone: **The Equipped Worker**, connecting a blueprint-selected
 pickaxe to reachable procedural strikes and real resource extraction. Open
 `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, choose **Pickaxe** under
 the worker's **Equipped tool**, then select **Playtest equipment →**.
 See [Equipped Worker playtest](Docs/EquippedWorkerPlaytest.md),
 [equipment architecture](Docs/EquipmentArchitecture.md) and
-[validation evidence](Docs/Validation.md). Luis's acceptance is pending.
+[validation evidence](Docs/Validation.md). Luis accepted it on September 30 as
+the bare starting point; its motion quality is the next thing to improve.
 
 The full 85-test PlayMode suite, 18 focused equipment/persistence tests,
 reviewed rendered probe and Windows build passed. Local standalone:

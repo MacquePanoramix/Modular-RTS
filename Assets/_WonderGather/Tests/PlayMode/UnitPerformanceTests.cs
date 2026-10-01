@@ -68,7 +68,7 @@ namespace WonderGather.Tests
             var d=creator.Draft;d.SetStartingSetup("Fast builder",1,120);d.SetPerformance(d.Worker,new UnitPerformance(200,2,200,200));
             Assert.That(creator.Playtest(),Is.True);yield return Transition();
             var unit=UnityEngine.Object.FindAnyObjectByType<SelectableUnit>();var agent=unit.GetComponent<NavMeshAgent>();var worker=unit.GetComponent<Gatherer>();
-            float speed=agent.speed;Assert.That(speed,Is.EqualTo(6.4f).Within(.01f));
+            float speed=agent.speed;Assert.That(speed,Is.EqualTo(3.6f).Within(.01f),"200% of the natural 1.8 m/s walk.");
             UnitIdentity.Apply(unit.gameObject,d.Worker);Assert.That(agent.speed,Is.EqualTo(speed));Assert.That(worker.Capacity,Is.EqualTo(2));Assert.That(worker.SecondsPerUnit,Is.EqualTo(.25f));
             var selection=UnityEngine.Object.FindAnyObjectByType<SelectionController>();selection.Select(unit);
             var construction=UnityEngine.Object.FindAnyObjectByType<ConstructionController>();Assert.That(construction.ChooseBuilding(d.Workshop),Is.True);Assert.That(construction.TryPlace(new Vector3(-18,0,8)),Is.True);

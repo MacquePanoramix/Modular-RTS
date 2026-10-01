@@ -543,3 +543,74 @@ body/tool, fixed one-supply hit yield, bounded two-handed action, feet-side carg
 representation and short back-stow transfer. No strength/mass/burden, container
 loading, loose material physics, detailed mounting gesture, arbitrary body editor,
 final art, networking, public-showcase readiness or RTS-scale performance claimed.
+
+## Equipped Worker review and source analysis — September 30, 2026
+
+- Luis playtested The Equipped Worker in the Editor. Today's Editor log shows
+  Play Mode sessions in TheFactionCreator and EquipmentPlaytest with no runtime
+  exceptions; it contains only existing obsolete-API compiler warnings and
+  offline package-registry errors.
+- Experiential result: accepted as a foundation, not as motion quality. See
+  EquippedWorkerPlaytest.md.
+- Documentation-only change. No Unity tests, builds or rendered probes were run.
+  The gait, cadence, Froude and clipping figures in NextMilestonePlan.md were
+  computed from source constants, not measured in a running scene.
+- Human workspace state was preserved: TheGroup.unity, PackageManagerSettings,
+  URPProjectSettings and Assets/_Recovery.
+
+## Strength and Burden, checkpoint A: the grounded body — September 30, 2026
+
+- **Environment.** Validation ran in an isolated git worktree (branch
+  `claude/grounded-body` from 6131598), seeded with the previous isolated
+  project's Library. The project open in the Editor was not used for runs.
+  Validated files were copied into it afterwards, and byte comparison confirmed
+  they matched. Human edits in TheGroup, package/URP settings and `_Recovery`
+  were preserved.
+- **Baseline.** On the untouched code the full PlayMode suite passed
+  **85/85** in 628.7 s.
+- **Authoring.** `GroundedBodySetup.Apply` passed (GROUNDED_BODY_SETUP_OK):
+  - LivingBodyBiped feet became 0.13 × 0.09 × 0.26 m, with new toe segments;
+  - the LivingWorker variant changed from 3.2 m/s at 10 m/s² to 1.8 m/s at
+    4 m/s² (decision D2);
+  - no other prefab, scene or package changed.
+- **First focused runs.**
+  - Gait and Living Body tests passed 7/7.
+  - Worker, equipment, performance and gait tests passed 24/25. The 25%
+    Movement extreme exceeded its 65 s budget: its first delivery came at
+    65.7 s at 0.45 m/s. Its time budget became 120 s, with elapsed time
+    reported and all other assertions unchanged. At 200% the jog delivered in
+    14.2 s.
+- **Assertions changed for approved decisions:**
+  - expected agent speeds changed from 3.2/6.4 m/s to 1.8/3.6 m/s;
+  - worker support checks now allow only a brief flight phase (under 0.2 s)
+    outside a walk. Walking still requires a planted foot every frame,
+    unchanged in LivingBodyTests and enforced again in the new tests.
+- **Measured in the new tests (TheLivingBody):**
+  - walk: 2.08 steps/s, stride 1.85 m, foot pitch −12° to 30°, never airborne;
+  - jog at 3.6 m/s: 3.13 steps/s, stride 2.29 m, longest flight 0.077 s.
+- **Rendered review.** A temporary probe (not committed) rendered walking,
+  jogging, standing, settling, walking with the pickaxe and carrying cargo home.
+  It exposed two defects the tests had not:
+  1. Living Body walkers' free arms hung with flared elbows. Free arms now use
+     a pendulum target with elbows pointing back.
+  2. A body that turned before departing never entered its gait: standing
+     adjustment steps chained while the root moved, and all 14,156 steady
+     frames were "Standing". Adjustment steps now start only below the gait
+     start speed. The new regression test failed before the fix and records
+     0 standing frames after it.
+- **Final runs.**
+  - Gait and Living Body tests: **8/8**.
+  - Full PlayMode suite: **89/89** in 808.2 s (85 existing plus 4 new
+    GroundedBodyTests). No test was disabled.
+- **Windows build.** The x64 development build via
+  `GroundedBodySetup.BuildWindows` passed (GROUNDED_BODY_BUILD_OK). Output:
+  `Builds/WindowsGroundedBody/WonderGather.exe`, containing TheFactionCreator,
+  FactionPlaytest and EquipmentPlaytest.
+- **Not tested:**
+  - interactive play in the standalone build or in the open Editor;
+  - gait quality on stairs, steep or rough terrain, or among many simultaneous
+    walkers;
+  - performance at RTS scale.
+  Rendered frames were reviewed as stills, not video. Luis's judgment of feel,
+  pace and gait character is pending.
+

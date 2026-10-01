@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 29, 2026
+**Last updated:** September 30, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -157,10 +157,14 @@ loading and container handling also need design. Neither a timer nor a
 simple bundle linked to cargo settles the intended physical economy.
 
 The expanded reference, experiential criteria and proposed stages are in
-[WorkerShowcaseVision.md](WorkerShowcaseVision.md). The assistant recommends
-The Equipped Worker next, followed by strength/load handling and transport
-aids before showcase polish. This sequence is a recommendation, not a locked
-roadmap or approval of every detailed mechanic.
+[WorkerShowcaseVision.md](WorkerShowcaseVision.md). Luis's original wording
+is preserved in [Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md).
+The Equipped Worker now exists as the bare starting point. The assistant's
+current proposal, awaiting Luis's approval, is Strength and Burden: first a
+grounded, weight-aware body, then an effort-driven strike, then
+strength-resolved handling. Transport aids and showcase polish follow.
+This sequence is a recommendation, not a locked roadmap or approval of every
+detailed mechanic.
 
 ## The two-cost model
 
@@ -302,11 +306,11 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 ## Current production state
 
-**Current implementation:** The Living Worker, provisionally accepted
-September 28. Its faction playtest connects procedural workers to gathering,
-carrying and delivery. The next recommendation is The Equipped Worker,
-recorded in `Docs/NextMilestonePlan.md`, toward the one-worker showcase above.
-The detailed next scope has not yet been implemented. Historical entries
+**Current implementation:** Strength and Burden, Checkpoint A (the grounded
+body), awaiting Luis's playtest. The worker's default pace is a natural 1.8 m/s
+walk (D2), with a jog at higher Movement %. The Equipped Worker remains the
+provisionally accepted foundation; its swing is unchanged until Checkpoint B.
+Historical entries
 below preserve earlier scope and feedback; later entries supersede earlier
 limits and proposed sequencing.
 
@@ -344,7 +348,7 @@ limits and proposed sequencing.
 The list below records the earlier broad proof sequence. The September 28
 clarification now favors equipment/contact, then strength/load and transport
 experiments toward the one-worker showcase before Three Temperaments.
-That proposed order is detailed in NextMilestonePlan.md and remains adjustable;
+The current proposal is detailed in NextMilestonePlan.md and remains adjustable;
 the earlier list must not be treated as an automatic implementation queue:
 
 1. **Civilization data and graph:** data-driven base, unit, and building definitions; production/build links; reachability validation; two-cost foundation; first editor tooling.
@@ -377,6 +381,8 @@ These questions must remain visible rather than being silently answered by imple
 - How much individual variation do instances receive?
 - What is the practical unit count and target match duration?
 - How physically simulated can combat become without losing control, readability, or performance?
+- Should the body be physics-informed kinematic, physics-driven (active ragdoll), or a hybrid, and where is the boundary?
+- What is a worker's natural pace relative to RTS movement speed, and does body or load set top speed?
 - How does the game explain hesitation, refusal, fear, protection, and autonomous choices?
 - Which single-player and secondary multiplayer modes support the central vision?
 - Are victory conditions beyond civilization-heart destruction part of the main game?
@@ -407,7 +413,14 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-09-21 | Proof sequence and physical expression | Approved prototype direction | Implement a small Living Body locomotion experiment before Three Temperaments; provisional biped and comparison scene | Movement playtest and the user's aesthetic direction |
 | 2026-09-28 | Living Worker feedback | Provisionally accepted | The current implementation is good as an early prototype; its forms and rules remain replaceable | Further playtesting and the final vision |
 | 2026-09-28 | Advanced one-worker showcase | Direction with open mechanics | Small landscape, customized worker, pickaxe/mineral contact, deep creation and physical handling relationships; detailed examples/yield rules remain open | Luis's design refinement and staged experiments |
-| 2026-09-29 | Next implementation review | Recommended, not implemented | The Equipped Worker before strength/load and transport experiments; Three Temperaments remains later | Luis's feedback on scope and results |
+| 2026-09-29 | Next implementation review | Approved and implemented | The Equipped Worker before strength/load and transport experiments; Three Temperaments remains later | Luis's feedback on scope and results |
+| 2026-09-30 | Equipped Worker feedback | Provisionally accepted as a foundation | Blueprint tool choice, contact gate and work loop are the base to build on. The canned-looking strike, body clipping and goofy feet are not accepted | Improved motion in a later playtest |
+| 2026-09-30 | Motion direction | Reaffirmed by Luis | Movement should be procedurally animated and grounded, without goofiness | Luis's playtest judgment |
+| 2026-09-30 | Next implementation | Approved by Luis | Strength and Burden in three checkpoints: grounded body, effort-driven strike, strength-resolved handling | Checkpoint playtests |
+| 2026-09-30 | Body technique (D1) | Chosen for this milestone | Physics-informed kinematic body; no active ragdoll | Checkpoint playtests; a later explicit physics experiment |
+| 2026-09-30 | Worker pace (D2) | Chosen for this milestone | Default worker walks at a natural pace for its body; higher Movement % becomes a jog. Economy timing slows accordingly | Playtest of pace and economy feel |
+| 2026-09-30 | Strength and tool weight (D3/D4) | Chosen for this milestone | One Strength value with named bands; authored light/standard/heavy pickaxes whose shape matches their weight | Checkpoint C playtest; a later body-build editor |
+| 2026-09-30 | Tool while hauling (D5) | Chosen for this milestone | Carry the tool in a free hand when strong enough; otherwise lean it at the worksite and collect it on return | Checkpoint C playtest |
 
 Add future entries with the decision, its status, the evidence behind it, and what kind of playtest or new requirement would justify revisiting it.
 
@@ -690,3 +703,52 @@ target. Strength-dependent tool handling, one-handed carry/dragging, bags,
 carts and material burden remain the recommended following experiments.
 Force/angle-dependent yield and their exact rules remain open.
 Reference: Docs/EquippedWorkerPlaytest.md and Docs/EquipmentArchitecture.md.
+
+
+## Equipped Worker feedback and next proposal — September 30, 2026
+
+Luis reviewed The Equipped Worker. The pickaxe "looks more or less held". The
+motion, however, "looks just like an animation still", the tool clips the body,
+and the feet still look goofy. Overall it "looks like the bare starting points"
+of the hi-fi prototype. He restated that movement should be procedurally
+animated without looking goofy, and re-supplied his original showcase brief,
+now kept verbatim under `Docs/Correspondence/`.
+
+A source review traced the three problems:
+
+- **Feet.** The worker moves at 3.2 m/s, above the walk–run threshold for its
+  leg length, with short reactive steps at about five per second.
+- **Strike.** The swing is a fixed angle curve around a point in front of the
+  belly, with no body participation.
+- **Clipping.** The windup places the pickaxe head at the worker's own head.
+
+**Proposed, not approved:** Strength and Burden, in three checkpoints each
+returned for playtesting:
+
+1. a grounded body with gait from body dimensions, rolling feet, weight
+   transfer, a spine, balance and body volume;
+2. an effort-driven strike shaped by tool mass and strength, keeping the
+   existing contact contract and measuring impact without changing yield;
+3. strength-resolved tool handling (one-handed, dragged or needing an aid),
+   with load-dependent movement and readable inability.
+
+The recommended technique is a physics-informed kinematic body rather than an
+active ragdoll. Luis decides that choice (D1) and the other open choices
+(D2–D9) in `Docs/NextMilestonePlan.md` before implementation. None of the
+proposal's examples, thresholds or recommendations is locked.
+
+## Strength and Burden, checkpoint A — September 30, 2026
+
+**Implemented for review:**
+
+- **Pace (D2).** The worker walks at 1.8 m/s by default; faster Movement % jogs.
+- **Gait.** Stride and cadence follow hip height and speed through a
+  Froude-number walk/jog threshold and a phase-based gait.
+- **Feet.** Heel-to-ball feet with toes strike, roll and push off.
+- **Body.** The pelvis sways, rotates and dips while the chest counter-rotates.
+  The head stays level. Free arms swing as pendulums.
+
+Navigation still owns the root, and nothing is an active ragdoll (D1).
+Stride, sway and timing values are provisional first choices. Neither the
+pace nor the gait character is locked until Luis judges them. The swing,
+strength, mass and handling follow in Checkpoints B and C.

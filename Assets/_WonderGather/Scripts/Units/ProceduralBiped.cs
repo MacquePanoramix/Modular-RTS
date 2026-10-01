@@ -3,15 +3,23 @@ using UnityEngine.AI;
 
 namespace WonderGather
 {
-    // Navigation owns the root. Feet retain world-space support points. Equipment
-    // consumes this supported torso pose before the arms consume its solved grips.
+    // Navigation owns the root. The body presents it with a phase-based gait whose stride,
+    // cadence and walk/jog choice follow from hip height and actual displacement. Planted
+    // feet keep fixed world-space support frames; heel strike, roll and toe-off only rotate
+    // the rendered foot about those frames. Equipment consumes the supported torso pose
+    // before the arms consume its solved grips.
     [RequireComponent(typeof(NavMeshAgent))]
     public sealed class ProceduralBiped : MonoBehaviour
     {
+        public enum Gait { Standing, Walking, Jogging }
         [SerializeField] private Transform pelvis,torso,head;
         [SerializeField] private Transform selectionRing;
         public void ConfigureRing(Transform ring)=>selectionRing=ring;
         [SerializeField] private Transform[] thighs,shins,feet,upperArms,forearms;
+        // Optional. Without toe segments the whole foot rolls about the ball.
+        [SerializeField] private Transform[] toes;
+        // stepReach: longest step as a fraction of hip height. footLift: swing clearance at
+        // a walk. stepDuration: length of a standing adjustment step.
         [SerializeField,Range(.3f,1.2f)] private float stepReach=.65f;
         [SerializeField,Range(.05f,.3f)] private float footLift=.16f;
         [SerializeField,Range(.16f,.5f)] private float stepDuration=.34f;
@@ -19,24 +27,37 @@ namespace WonderGather
         [SerializeField] private Gatherer worker;
         [SerializeField] private Transform carriedBundle;
         [SerializeField] private Vector3 bundleScale=Vector3.one;
+        private const float HipHeight=1.43f,HipWidth=.21f,LegReach=1.33f,Gravity=9.81f;
+        private const float AnkleHeight=.13f,HeelLength=.07f,BallLength=.19f,ToeLength=.11f;
+        // Froude number v²/(g·h): walking bipeds switch to running near 0.5.
+        private const float JogAbove=.55f,WalkBelow=.45f,StartSpeed=.18f;
+        private const float HeelStrike=-12,WalkToeOff=30,JogToeOff=38;
         private sealed class Foot
         {
-            public Vector3 position,normal=Vector3.up,from,to,fromNormal,toNormal;
+            public Vector3 position,normal=Vector3.up,from,to,fromNormal,toNormal,ankle;
             public Quaternion rotation,fromRotation,toRotation;
-            public float progress;
-            public bool swinging;
+            public float progress,rate,clearance,pitch,liftPitch,toeBend,lastPhase;
+            public bool swinging,gaitSwing,liftedThisCycle;
         }
         private readonly Foot[] support={new Foot(),new Foot()};
-        private readonly float[] armSwing=new float[2];
         private readonly Vector3[] handPositions=new Vector3[2];
         private readonly Vector3[] handLocal=new Vector3[2];
+        private readonly float[] handsBusy=new float[2];
+        private NavMeshAgent agent;
         private Vector3 previousPosition,previousVelocity,velocity,acceleration;
         private Quaternion facing;
-        private float pelvisY;
-        private float measuredSpeed;
+        private float pelvisY,phase,cadence=1,duty=.6f,gaitWeight,jogWeight;
         private bool initialized;
         private bool handsInitialized;
         private int nextFoot;
+        public Gait CurrentGait {get;private set;}
+        // Only a jog has a flight phase; a walk always keeps one foot planted.
+        public bool Airborne=>support[0].swinging&&support[1].swinging;
+        public float Cadence=>CurrentGait==Gait.Standing?0:cadence;
+        // Continuous time with both feet off the ground; only a jog's flight produces it.
+        public float FlightTime {get;private set;}
+        // Rendered sole pitch in degrees: negative toe-up at heel strike, positive heel-up at toe-off.
+        public float FootPitch(int index)=>support[index].pitch;
         public int StepCount {get;private set;}
         public bool Ready=>initialized;
         public Vector3 FootPosition(int index)=>support[index].position;
@@ -48,6 +69,7 @@ namespace WonderGather
         public Vector3 HandPosition(int index)=>transform.TransformPoint(handPositions[index]);
         public void Configure(Transform hips,Transform chest,Transform skull,Transform[] upperLegs,Transform[] lowerLegs,Transform[] soles,Transform[] arms,Transform[] lowerArms)
         {pelvis=hips;torso=chest;head=skull;thighs=upperLegs;shins=lowerLegs;feet=soles;upperArms=arms;forearms=lowerArms;initialized=false;}
+        public void ConfigureToes(Transform[] value){toes=value;initialized=false;}
         public void ConfigureWork(Gatherer source,Transform bundle)
         {
             worker=source;
@@ -66,6 +88,7 @@ namespace WonderGather
                 throw new System.ArgumentOutOfRangeException(nameof(reach));
             stepReach=reach;footLift=lift;stepDuration=duration;
         }
+        private void Awake()=>agent=GetComponent<NavMeshAgent>();
         private void OnEnable(){initialized=false;handsInitialized=false;}
         private void OnDisable()
         {
@@ -74,7 +97,7 @@ namespace WonderGather
         }
         private static bool Pair(Transform[] values)=>values!=null&&values.Length==2&&values[0]!=null&&values[1]!=null;
         private bool RigValid=>pelvis!=null&&torso!=null&&head!=null&&Pair(thighs)&&Pair(shins)&&Pair(feet)&&Pair(upperArms)&&Pair(forearms);
-        private Vector3 Home(int index)=>transform.position+facing*new Vector3(index==0?-.21f:.21f,0,.02f);
+        private Vector3 Home(int index)=>transform.position+facing*new Vector3(index==0?-HipWidth:HipWidth,0,.02f);
         private bool Ground(Vector3 point,out Vector3 position,out Vector3 normal)
         {
             if(Physics.Raycast(point+Vector3.up*3,Vector3.down,out var hit,6,groundMask,QueryTriggerInteraction.Ignore)&&hit.normal.y>.65f)
@@ -91,11 +114,14 @@ namespace WonderGather
             for(int i=0;i<2;i++)
             {
                 if(!Ground(Home(i),out var point,out var normal)) return;
-                var foot=support[i];foot.position=point;foot.normal=normal;foot.rotation=SoleRotation(normal);foot.swinging=false;foot.progress=0;
+                var foot=support[i];foot.position=point;foot.normal=normal;foot.rotation=SoleRotation(normal);
+                foot.swinging=foot.gaitSwing=foot.liftedThisCycle=false;foot.progress=foot.pitch=foot.toeBend=0;
             }
-            previousPosition=transform.position;previousVelocity=velocity=acceleration=Vector3.zero;measuredSpeed=0;
-            pelvisY=transform.position.y+1.43f;armSwing[0]=armSwing[1]=0;nextFoot=0;initialized=true;
+            previousPosition=transform.position;previousVelocity=velocity=acceleration=Vector3.zero;
+            CurrentGait=Gait.Standing;gaitWeight=jogWeight=phase=FlightTime=0;
+            pelvisY=transform.position.y+HipHeight;nextFoot=0;initialized=true;
             handsInitialized=false;
+            UpdateAnkles();
             Pose(0);
         }
         private void LateUpdate()
@@ -106,7 +132,10 @@ namespace WonderGather
             if((transform.position-previousPosition).sqrMagnitude>4){ResetPose();return;}
             // Actual displacement includes avoidance and stopping, rather than the requested destination.
             Vector3 measured=(transform.position-previousPosition)/dt;previousPosition=transform.position;
-            measured.y=0;measuredSpeed=measured.magnitude;velocity=Vector3.Lerp(velocity,measured,1-Mathf.Exp(-14*dt));
+            measured.y=0;
+            // A navigation correction is a discontinuity, not locomotion; it must not start a gait.
+            if(measured.magnitude>Mathf.Max(8,(agent!=null?agent.speed:4)*2.5f)) measured=velocity;
+            velocity=Vector3.Lerp(velocity,measured,1-Mathf.Exp(-12*dt));
             Vector3 change=(velocity-previousVelocity)/dt;previousVelocity=velocity;
             acceleration=Vector3.Lerp(acceleration,Vector3.ClampMagnitude(change,8),1-Mathf.Exp(-7*dt));
             Quaternion desiredFacing=Quaternion.Euler(0,transform.eulerAngles.y,0);
@@ -116,51 +145,168 @@ namespace WonderGather
                 if(direction.sqrMagnitude>.001f) desiredFacing=Quaternion.LookRotation(direction);
             }
             facing=Quaternion.RotateTowards(facing,desiredFacing,220*dt);
-            bool stepping=false;
-            for(int i=0;i<2;i++)
-            {
-                var foot=support[i];if(!foot.swinging) continue;
-                foot.progress=Mathf.Min(1,foot.progress+dt/CurrentStepDuration);
-                float t=foot.progress,smooth=t*t*(3-2*t);
-                foot.position=Vector3.Lerp(foot.from,foot.to,smooth)+Vector3.up*(Mathf.Sin(t*Mathf.PI)*footLift);
-                foot.normal=Vector3.Slerp(foot.fromNormal,foot.toNormal,smooth);
-                foot.rotation=Quaternion.Slerp(foot.fromRotation,foot.toRotation,smooth);
-                if(t>=1){foot.swinging=false;foot.position=foot.to;foot.normal=foot.toNormal;nextFoot=1-i;StepCount++;}
-                else stepping=true;
-            }
-            if(!stepping)
-            {
-                int choice=-1;float largest=0;bool moving=velocity.sqrMagnitude>.015f;
-                for(int order=0;order<2;order++)
-                {
-                    int i=(nextFoot+order)%2;
-                    float error=Vector3.ProjectOnPlane(Home(i)-support[i].position,Vector3.up).magnitude;
-                    float turn=Quaternion.Angle(support[i].rotation,SoleRotation(support[i].normal));
-                    float threshold=moving?(worker!=null?Mathf.Min(.16f,stepReach*.23f):stepReach*.42f):.075f;
-                    float score=Mathf.Max(error/threshold,turn/35);
-                    if(score>1&&score>largest){largest=score;choice=i;}
-                }
-                if(choice>=0) BeginStep(choice,moving);
-            }
+            UpdateGait(dt);
+            UpdateFeet(dt);
             // Mutually unreachable contacts indicate a presentation discontinuity,
             // just like the large root correction handled above.
             if((ReachCenter(0)-ReachCenter(1)).sqrMagnitude>4*LegReach*LegReach){ResetPose();return;}
             Pose(dt);
         }
-        private void BeginStep(int index,bool moving)
+        private float Duty(float froude)=>CurrentGait==Gait.Jogging?.38f:Mathf.Lerp(.64f,.56f,Mathf.Clamp01(froude/.5f));
+        private void UpdateGait(float dt)
         {
-            // Shorter, earlier steps preserve support across the creator's speed range.
-            // They change only presentation; authored movement speed remains authoritative.
-            Vector3 lead=moving?(worker!=null
-                ?Vector3.ClampMagnitude(velocity*CurrentStepDuration*1.1f,Mathf.Min(.55f,stepReach))
-                :Vector3.ClampMagnitude(velocity*stepDuration*1.5f,stepReach*1.5f)):Vector3.zero;
-            if(!Ground(Home(index)+lead,out var point,out var normal)||Mathf.Abs(point.y-transform.position.y)>.8f) return;
-            var foot=support[index];foot.from=foot.position;foot.to=point;foot.fromNormal=foot.normal;foot.toNormal=normal;
-            foot.fromRotation=foot.rotation;foot.toRotation=SoleRotation(normal);foot.progress=0;foot.swinging=true;
+            float speed=velocity.magnitude,froude=speed*speed/(Gravity*HipHeight);
+            bool moving=CurrentGait==Gait.Standing?speed>StartSpeed:speed>.08f;
+            if(!moving) CurrentGait=Gait.Standing;
+            else if(CurrentGait==Gait.Standing)
+            {
+                // Begin from settled feet, stepping first with the foot due next.
+                if(!support[0].swinging&&!support[1].swinging) StartGait(froude>JogAbove?Gait.Jogging:Gait.Walking,froude);
+            }
+            // Never switch to a walk in mid-flight: a walk must always keep a support foot.
+            else if(CurrentGait==Gait.Jogging) {if(froude<WalkBelow&&!Airborne) CurrentGait=Gait.Walking;}
+            else if(froude>JogAbove) CurrentGait=Gait.Jogging;
+            gaitWeight=Mathf.MoveTowards(gaitWeight,CurrentGait==Gait.Standing?0:Mathf.Clamp01(speed/1.2f),dt*3);
+            jogWeight=Mathf.MoveTowards(jogWeight,CurrentGait==Gait.Jogging?1:0,dt*3);
+            if(CurrentGait==Gait.Standing) return;
+            // Alexander's biped relation, stride ≈ 2.3·h·Fr^0.3, slightly shortened for this
+            // long-legged body and bounded by its step reach. Cadence then follows from speed.
+            float stride=Mathf.Min(HipHeight*2.1f*Mathf.Pow(Mathf.Max(froude,.0001f),.3f),2*stepReach*HipHeight);
+            cadence=Mathf.Clamp(speed/Mathf.Max(stride,.05f),.75f,1.8f);
+            duty=Duty(froude);
+            phase=Mathf.Repeat(phase+Mathf.Min(cadence*dt,.24f),1);
         }
-        private float CurrentStepDuration=>worker!=null
-            ?Mathf.Clamp(stepReach*.72f/Mathf.Max(Mathf.Max(measuredSpeed,velocity.magnitude),.1f),.055f,stepDuration)
-            :stepDuration;
+        private void StartGait(Gait gait,float froude)
+        {
+            CurrentGait=gait;duty=Duty(froude);
+            int lead=nextFoot;
+            // The leading foot reaches lift-off on the next frame; the other stays planted.
+            phase=Mathf.Repeat(duty-.5f*lead-.001f,1);
+            for(int i=0;i<2;i++)
+            {
+                var foot=support[i];foot.lastPhase=Mathf.Repeat(phase+.5f*i,1);
+                foot.liftedThisCycle=i!=lead&&foot.lastPhase>=duty;
+            }
+        }
+        private void UpdateFeet(float dt)
+        {
+            bool gaitActive=CurrentGait!=Gait.Standing;
+            for(int i=0;i<2;i++)
+            {
+                var foot=support[i];
+                float footPhase=Mathf.Repeat(phase+.5f*i,1);
+                bool wrapped=gaitActive&&footPhase<foot.lastPhase-.5f;
+                foot.lastPhase=footPhase;
+                if(wrapped) foot.liftedThisCycle=false;
+                if(!foot.swinging) continue;
+                if(foot.gaitSwing&&gaitActive)
+                {
+                    foot.rate=cadence/Mathf.Max(.05f,1-duty);
+                    foot.progress=Mathf.Max(foot.progress,wrapped?1:Mathf.Clamp01((footPhase-duty)/(1-duty)));
+                }
+                // A swing interrupted by stopping finishes on its own clock beneath the hips.
+                else foot.progress=Mathf.Min(1,foot.progress+dt*foot.rate);
+                Retarget(i);
+                SwingPose(foot);
+                if(foot.progress>=1) Land(i);
+            }
+            if(gaitActive)
+            {
+                for(int i=0;i<2;i++)
+                {
+                    var foot=support[i];
+                    if(foot.swinging||foot.liftedThisCycle||foot.lastPhase<duty) continue;
+                    if(CurrentGait==Gait.Walking&&support[1-i].swinging) continue;
+                    Lift(i,true);
+                }
+            }
+            // Adjustment steps are for standing. Once the root moves, let the current step land
+            // and hand over to the gait; chaining new adjustments would chase the body forever.
+            else if(!support[0].swinging&&!support[1].swinging&&velocity.magnitude<=StartSpeed) Settle();
+            float toeOff=Mathf.Lerp(WalkToeOff,JogToeOff,jogWeight),heelOff=Mathf.Lerp(.6f,.45f,jogWeight);
+            float strike=Mathf.Lerp(HeelStrike,-4,jogWeight);
+            for(int i=0;i<2;i++)
+            {
+                var foot=support[i];if(foot.swinging) continue;
+                float target=0;
+                if(gaitActive&&!(foot.liftedThisCycle&&foot.lastPhase>=duty))
+                {
+                    // Heel strike rolls to a flat foot, then the heel rises about the ball.
+                    float p=Mathf.Clamp01(foot.lastPhase/duty);
+                    target=p<.12f?Mathf.Lerp(strike,0,Mathf.SmoothStep(0,1,p/.12f))
+                        :p<heelOff?0:toeOff*Mathf.Pow((p-heelOff)/(1-heelOff),1.6f);
+                }
+                foot.pitch=Mathf.MoveTowards(foot.pitch,target,(gaitActive?400:90)*dt);
+                foot.toeBend=foot.pitch>0?-foot.pitch:0;
+            }
+            FlightTime=Airborne?FlightTime+dt:0;
+            UpdateAnkles();
+        }
+        private void Lift(int index,bool gaitSwing)
+        {
+            var foot=support[index];
+            foot.swinging=true;foot.gaitSwing=gaitSwing;foot.progress=0;foot.liftedThisCycle=true;
+            foot.from=foot.to=foot.position;foot.fromNormal=foot.toNormal=foot.normal;foot.fromRotation=foot.toRotation=foot.rotation;
+            foot.liftPitch=foot.pitch;
+            foot.clearance=gaitSwing?footLift*Mathf.Lerp(.55f,.9f,jogWeight):.05f;
+            foot.rate=gaitSwing?cadence/Mathf.Max(.05f,1-duty):1/stepDuration;
+        }
+        private void Retarget(int index)
+        {
+            var foot=support[index];
+            Vector3 point=Home(index);
+            if(foot.gaitSwing&&CurrentGait!=Gait.Standing)
+            {
+                // Land where the hips will pass over the foot at mid-stance.
+                float remaining=(1-foot.progress)/Mathf.Max(foot.rate,.01f),stance=duty/cadence;
+                point+=velocity*remaining+Vector3.ClampMagnitude(velocity*stance*.5f,stepReach*HipHeight*.55f);
+            }
+            if(!Ground(point,out var ground,out var normal)||Mathf.Abs(ground.y-transform.position.y)>.8f) return;
+            foot.to=ground;foot.toNormal=normal;foot.toRotation=SoleRotation(normal);
+        }
+        private static void SwingPose(Foot foot)
+        {
+            float s=foot.progress,e=s*s*(3-2*s);
+            foot.position=Vector3.Lerp(foot.from,foot.to,e)+Vector3.up*(foot.clearance*Mathf.Sin(Mathf.PI*Mathf.Pow(s,.75f)));
+            foot.normal=Vector3.Slerp(foot.fromNormal,foot.toNormal,e).normalized;
+            foot.rotation=Quaternion.Slerp(foot.fromRotation,foot.toRotation,e);
+            if(foot.gaitSwing)
+            {
+                // Toe-off carries through, the toes relax, then the foot prepares a heel strike.
+                foot.pitch=Mathf.Lerp(foot.liftPitch,HeelStrike,e);
+                foot.toeBend=foot.liftPitch>0?-foot.liftPitch*(1-Mathf.SmoothStep(0,1,s/.3f)):0;
+            }
+            else {foot.pitch=Mathf.Lerp(foot.liftPitch,0,e)+6*Mathf.Sin(Mathf.PI*s);foot.toeBend=0;}
+        }
+        private void Land(int index)
+        {
+            var foot=support[index];
+            foot.swinging=false;foot.progress=0;
+            foot.position=foot.to;foot.normal=foot.toNormal;foot.rotation=foot.toRotation;
+            if(!foot.gaitSwing) foot.pitch=0;
+            foot.gaitSwing=false;nextFoot=1-index;StepCount++;
+        }
+        // Standing adjustments: one foot at a time, preferring the foot due to step next.
+        private void Settle()
+        {
+            for(int order=0;order<2;order++)
+            {
+                int i=(nextFoot+order)%2;var foot=support[i];
+                float error=Vector3.ProjectOnPlane(Home(i)-foot.position,Vector3.up).magnitude;
+                float turn=Quaternion.Angle(foot.rotation,SoleRotation(foot.normal));
+                if(error<.08f&&turn<25) continue;
+                if(!Ground(Home(i),out var point,out var normal)||Mathf.Abs(point.y-transform.position.y)>.8f) return;
+                Lift(i,false);foot.to=point;foot.toNormal=normal;foot.toRotation=SoleRotation(normal);
+                return;
+            }
+        }
+        // The rendered foot pitches about its heel (toe up) or its ball (heel up).
+        private static Vector3 FootPoint(Foot foot,Vector3 local)
+        {
+            var pivot=new Vector3(0,0,foot.pitch>0?BallLength:-HeelLength);
+            return foot.position+foot.rotation*(pivot+Quaternion.Euler(foot.pitch,0,0)*(local-pivot));
+        }
+        private void UpdateAnkles(){for(int i=0;i<2;i++) support[i].ankle=FootPoint(support[i],new Vector3(0,AnkleHeight,0));}
         private bool Working=>worker!=null&&worker.isActiveAndEnabled&&worker.HasWorkContact
             &&(worker.State==Gatherer.Activity.Gathering||worker.State==Gatherer.Activity.Depositing);
         private void RefreshCargo()
@@ -175,9 +321,7 @@ namespace WonderGather
             if(delta.sqrMagnitude>.000001f) part.rotation=Quaternion.FromToRotation(Vector3.up,delta);
             part.localScale=new Vector3(thickness,delta.magnitude*.5f,thickness);
         }
-        private const float LegReach=1.33f;
-        private Vector3 ReachCenter(int index)=>support[index].position+support[index].normal*.13f
-            -facing*new Vector3(index==0?-.21f:.21f,0,0);
+        private Vector3 ReachCenter(int index)=>support[index].ankle-facing*new Vector3(index==0?-HipWidth:HipWidth,0,0);
         private Vector3 ReachableHips(Vector3 desired)
         {
             Vector3 a=ReachCenter(0),b=ReachCenter(1);
@@ -201,13 +345,24 @@ namespace WonderGather
                 selectionRing.position=transform.position+Vector3.up*.14f;
                 selectionRing.rotation=Quaternion.FromToRotation(Vector3.up,(support[0].normal+support[1].normal).normalized);
             }
-            float speed=velocity.magnitude;
-            float bob=0;for(int i=0;i<2;i++) if(support[i].swinging) bob=Mathf.Sin(support[i].progress*Mathf.PI)*.025f;
-            float standingHeight=transform.position.y+1.43f+bob,height=standingHeight;
+            float speed=velocity.magnitude,cycle=2*Mathf.PI*phase,walk=gaitWeight*(1-jogWeight),jog=gaitWeight*jogWeight;
+            var equipment=GetComponent<EquippedTool>();
+            // Carrying with both hands suppresses most of the torso's counter-rotation.
+            bool burdened=(equipment!=null&&equipment.HandsOnTool)||(worker!=null&&worker.Carried>0);
+            // Walking: the pelvis is lowest in double support and highest over the stance foot.
+            // Jogging: it compresses through stance and rises in flight.
+            float bounce=-walk*.018f*Mathf.Cos(2*(cycle-Mathf.PI*(duty-.5f)))
+                -jog*(.035f*Mathf.Cos(2*(cycle-Mathf.PI*duty))+.04f);
+            // The pelvis shifts over the stance foot, rotates with the forward leg and
+            // drops slightly on the swing side.
+            float sway=-gaitWeight*Mathf.Lerp(.025f,.012f,jogWeight)*Mathf.Cos(cycle-Mathf.PI*duty);
+            float yaw=gaitWeight*Mathf.Lerp(5,6,jogWeight)*Mathf.Cos(cycle)*(burdened?.3f:1);
+            float list=walk*2.5f*Mathf.Cos(cycle-Mathf.PI*(1+duty));
+            float standingHeight=transform.position.y+HipHeight+bounce,height=standingHeight;
             bool horizontalOverreach=false;
             for(int i=0;i<2;i++)
             {
-                Vector3 hip=Home(i),ankle=support[i].position+support[i].normal*.13f;
+                Vector3 hip=Home(i),ankle=support[i].ankle;
                 float horizontal=Vector3.ProjectOnPlane(hip-ankle,Vector3.up).sqrMagnitude;
                 horizontalOverreach|=horizontal>LegReach*LegReach;
                 height=Mathf.Min(height,ankle.y+Mathf.Sqrt(Mathf.Max(.01f,LegReach*LegReach-horizontal)));
@@ -219,15 +374,19 @@ namespace WonderGather
             // Reach is a hard constraint on lowering; only the upward recovery is smoothed.
             pelvisY=Mathf.Min(pelvisY,height);
             Vector3 localAcceleration=Quaternion.Inverse(facing)*acceleration;
-            float pitch=Mathf.Clamp(localAcceleration.z*1.8f+speed*1.2f,-7,9),roll=Mathf.Clamp(-localAcceleration.x*1.6f,-6,6);
-            var equipment=GetComponent<EquippedTool>();
+            float pitch=Mathf.Clamp(localAcceleration.z*1.8f+speed*1.2f+jog*3,-7,12),roll=Mathf.Clamp(-localAcceleration.x*1.6f,-6,6);
             if(equipment!=null && equipment.Busy) pitch+=Mathf.Sin(equipment.Progress*Mathf.PI)*4;
+            // posture: the steady body frame used by tools and carried loads.
             Quaternion posture=facing*Quaternion.Euler(pitch,0,roll);
-            Vector3 hips=ReachableHips(new Vector3(transform.position.x,pelvisY,transform.position.z));
+            Quaternion hipFrame=posture*Quaternion.Euler(0,yaw,list);
+            Quaternion chest=posture*Quaternion.Euler(jog*3,-yaw*.8f,0);
+            Vector3 hips=ReachableHips(transform.position+facing*new Vector3(sway,0,0)+Vector3.up*(pelvisY-transform.position.y));
             pelvisY=hips.y;
-            pelvis.SetPositionAndRotation(hips,posture);
-            torso.SetPositionAndRotation(hips+posture*new Vector3(0,.29f,0),posture);
-            head.SetPositionAndRotation(hips+posture*new Vector3(0,.64f,0),Quaternion.Slerp(facing,posture,.4f));
+            Vector3 waist=hips+hipFrame*new Vector3(0,.06f,0);
+            pelvis.SetPositionAndRotation(hips,hipFrame);
+            torso.SetPositionAndRotation(waist+chest*new Vector3(0,.23f,0),chest);
+            // The head stays level and looks along the path while the chest twists beneath it.
+            head.SetPositionAndRotation(waist+chest*new Vector3(0,.58f,0),Quaternion.Slerp(facing,posture,.4f));
             if(carriedBundle!=null)
             {
                 bool stockpile=worker!=null && worker.MiningTarget!=null && worker.State==Gatherer.Activity.Gathering;
@@ -236,24 +395,40 @@ namespace WonderGather
                 float fullness=worker!=null?Mathf.Clamp01((float)worker.Carried/Mathf.Max(1,worker.Capacity)):0;
                 carriedBundle.localScale=bundleScale*Mathf.Lerp(.8f,1,fullness);
             }
+            Vector3 leftShoulder=waist+chest*new Vector3(-.34f,.43f,0),rightShoulder=waist+chest*new Vector3(.34f,.43f,0);
             // One explicit update order: supported torso -> tool trajectory/contact -> grip IK.
-            if(equipment!=null) equipment.SolveFrame(dt,hips,posture,!support[0].swinging&&!support[1].swinging);
+            if(equipment!=null) equipment.SolveFrame(dt,hips,posture,leftShoulder,rightShoulder,!support[0].swinging&&!support[1].swinging);
+            float armAmplitude=Mathf.Lerp(Mathf.Lerp(.05f,.22f,Mathf.Clamp01(speed/2.2f)),.16f,jogWeight)*gaitWeight;
+            bool hasToes=Pair(toes);
             for(int i=0;i<2;i++)
             {
                 float side=i==0?-1:1;var foot=support[i];
-                feet[i].SetPositionAndRotation(foot.position+foot.normal*.07f,foot.rotation);
-                Vector3 hip=hips+facing*new Vector3(side*.21f,0,0),ankle=foot.position+foot.normal*.13f;
+                Quaternion sole=foot.rotation*Quaternion.Euler(foot.pitch,0,0);
+                var size=feet[i].localScale;
+                feet[i].SetPositionAndRotation(FootPoint(foot,new Vector3(0,size.y*.5f,(hasToes?BallLength:BallLength+ToeLength)-size.z*.5f)),sole);
+                if(hasToes)
+                {
+                    Quaternion toe=sole*Quaternion.Euler(foot.toeBend,0,0);
+                    toes[i].SetPositionAndRotation(FootPoint(foot,new Vector3(0,0,BallLength))+toe*new Vector3(0,toes[i].localScale.y*.5f,ToeLength*.5f),toe);
+                }
+                Vector3 hip=hips+hipFrame*new Vector3(side*HipWidth,0,0),ankle=foot.ankle;
                 Vector3 axis=(ankle-hip).normalized;float distance=Mathf.Min(Vector3.Distance(hip,ankle),1.359f);
-                Vector3 bend=Vector3.ProjectOnPlane(facing*Vector3.forward,axis).normalized;
+                Vector3 bend=Vector3.ProjectOnPlane(hipFrame*Vector3.forward,axis).normalized;
                 Vector3 knee=(hip+ankle)*.5f+bend*Mathf.Sqrt(Mathf.Max(0,.68f*.68f-distance*distance*.25f));
                 Segment(thighs[i],hip,knee,.19f);Segment(shins[i],knee,ankle,.15f);
-                float desiredSwing=Mathf.Clamp(-Vector3.Dot(foot.position-Home(i),facing*Vector3.forward)*.32f,-.18f,.18f)*Mathf.Min(speed,1);
-                armSwing[i]=Mathf.Lerp(armSwing[i],desiredSwing,1-Mathf.Exp(-10*dt));float swing=armSwing[i];
-                Vector3 shoulder=hips+posture*new Vector3(side*.34f,.49f,0);
-                Vector3 elbow=shoulder+posture*new Vector3(side*.065f,-.40f,swing);
-                Vector3 wrist=elbow+posture*new Vector3(side*.015f,-.34f,.075f+swing*.4f);
+                // Each arm swings against its own leg: back as that foot reaches forward.
+                float swing=-armAmplitude*Mathf.Cos(cycle+Mathf.PI*i);
+                Vector3 shoulder=i==0?leftShoulder:rightShoulder;
+                // A relaxed arm hangs nearly straight and swings as a pendulum from the shoulder;
+                // a jogging arm bends and pumps.
+                float angle=swing/.83f;
+                Vector3 relaxed=shoulder+chest*new Vector3(side*.06f,-.83f*Mathf.Cos(angle),.05f+.83f*Mathf.Sin(angle));
+                Vector3 pumping=shoulder+chest*new Vector3(side*.02f,-.34f,.24f+swing*.8f);
+                Vector3 wrist=Vector3.Lerp(relaxed,pumping,jogWeight);
+                bool busy=false;
                 if(worker!=null)
                 {
+                    busy=worker.Carried>0||(equipment!=null&&equipment.HandsOnTool)||(i==1&&Working&&worker.MiningTarget==null);
                     if(worker.Carried>0) wrist=hips+posture*new Vector3(side*.22f,-.12f,.37f);
                     if(i==1&&Working&&worker.MiningTarget==null)
                     {
@@ -271,17 +446,14 @@ namespace WonderGather
                         wrist=equipment.GripPosition(i);
                         handLocal[i]=Quaternion.Inverse(posture)*(wrist-hips);
                     }
-                    SolveArm(i,side,posture,shoulder,wrist);
                 }
-                else
-                {
-                    Segment(upperArms[i],shoulder,elbow,.13f);Segment(forearms[i],elbow,wrist,.11f);
-                    handPositions[i]=transform.InverseTransformPoint(wrist);
-                }
+                // Free arms point their elbows back; carrying and gripping turn them out and down.
+                handsBusy[i]=dt>0&&handsInitialized?Mathf.MoveTowards(handsBusy[i],busy?1:0,dt*4):busy?1:0;
+                SolveArm(i,Vector3.Lerp(new Vector3(side*.2f,-.1f,-1),new Vector3(side*.55f,-.6f,-.25f),handsBusy[i]),chest,shoulder,wrist);
             }
             handsInitialized=true;
         }
-        private void SolveArm(int index,float side,Quaternion posture,Vector3 shoulder,Vector3 target)
+        private void SolveArm(int index,Vector3 bendHint,Quaternion posture,Vector3 shoulder,Vector3 target)
         {
             const float upper=.44f,lower=.43f;
             Vector3 delta=target-shoulder;
@@ -289,7 +461,7 @@ namespace WonderGather
             float distance=Mathf.Clamp(delta.magnitude,.02f,upper+lower-.001f);
             Vector3 wrist=shoulder+axis*distance;
             float along=(upper*upper-lower*lower+distance*distance)/(2*distance);
-            Vector3 bend=Vector3.ProjectOnPlane(posture*new Vector3(side*.55f,-.6f,-.25f),axis).normalized;
+            Vector3 bend=Vector3.ProjectOnPlane(posture*bendHint,axis).normalized;
             if(bend.sqrMagnitude<.001f) bend=Vector3.Cross(axis,posture*Vector3.forward).normalized;
             Vector3 elbow=shoulder+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,upper*upper-along*along));
             Segment(upperArms[index],shoulder,elbow,.13f);Segment(forearms[index],elbow,wrist,.11f);

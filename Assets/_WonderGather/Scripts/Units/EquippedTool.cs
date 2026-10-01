@@ -109,13 +109,14 @@ namespace WonderGather
             fraction=Mathf.Clamp01(nearest/distance); return true;
         }
 
-        public void SolveFrame(float dt, Vector3 hips, Quaternion posture, bool supported)
+        // The body supplies its actual shoulders, including torso twist, so reach is judged
+        // against the same joints the arm solve will use.
+        public void SolveFrame(float dt, Vector3 hips, Quaternion posture, Vector3 left, Vector3 right, bool supported)
         {
             HandsOnTool=false;
             if(!isActiveAndEnabled || definition==null || model==null) return;
             if(!SupportsBodyScale)
             { CancelAttempt(); Status="Tool/body scale unsupported"; if(worker!=null && worker.MiningTarget!=null) worker.InterruptMining(Status); return; }
-            Vector3 left=hips+posture*new Vector3(-.34f,.49f,0), right=hips+posture*new Vector3(.34f,.49f,0);
             var requested=worker != null ? worker.MiningTarget : null;
             bool ready=WorkValid(requested) && supported;
             if(Busy && (!ready || target!=requested || Vector3.Distance(lastRoot,transform.position)>.08f)) CancelAttempt();

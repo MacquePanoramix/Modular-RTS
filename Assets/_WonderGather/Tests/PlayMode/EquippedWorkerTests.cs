@@ -77,7 +77,8 @@ namespace WonderGather.Tests
             var body=worker.GetComponent<ProceduralBiped>();
             var tool=worker.GetComponent<EquippedTool>();
             Assert.That(body.Ready,Is.True);
-            Assert.That(body.FootPlanted(0)||body.FootPlanted(1),Is.True,"The worker must retain a supporting foot.");
+            Assert.That(body.FootPlanted(0)||body.FootPlanted(1)||(body.CurrentGait!=ProceduralBiped.Gait.Walking&&body.FlightTime<.2f),
+                Is.True,"The worker must retain a supporting foot outside a brief jogging flight phase.");
             for(int i=0;i<2;i++)
             {
                 Vector3 point=body.FootPosition(i);

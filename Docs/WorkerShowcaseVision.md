@@ -5,6 +5,8 @@
 **Status:** Intended advanced prototype reference; not implemented or an
 approved specification for every example below. GAME_VISION.md remains the
 canonical design source; this document expands its showcase direction.
+Luis's original wording is kept verbatim in
+[Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md).
 
 ## Small in scale, deep in experience
 
@@ -127,12 +129,16 @@ ready for a public demonstration:
 
 ## Proposed route toward it
 
-1. **The Equipped Worker:** blueprint-selected pickaxe, coherent tool/grip
-   poses, and extraction gated by actual valid contact. This is the next
-   implementation recommendation in [NextMilestonePlan.md](NextMilestonePlan.md).
-2. **Strength and burden:** compare the same tool on workers with different
-   physical capabilities; test supported carrying modes, movement changes
-   and readable inability to perform an action.
+1. **The Equipped Worker (done, September 29–30):** blueprint-selected pickaxe
+   and extraction gated by actual valid contact. Luis accepted it as the bare
+   starting point. Its strike reads as a canned animation, the tool clips the
+   body, and the feet still look goofy
+   ([feedback](EquippedWorkerPlaytest.md#luiss-feedback--september-30-2026)).
+2. **Strength and burden (proposed):** compare the same tool on workers with
+   different physical capabilities; test supported carrying modes, movement
+   changes and readable inability to perform an action. Because strength is
+   expressed through motion, the proposal first grounds the body's gait and
+   makes the strike effort-driven. See [NextMilestonePlan.md](NextMilestonePlan.md).
 3. **Materials and transport aids:** give extracted material and containers
    meaningful load/capacity, then prove a bag and/or a cart with actual
    loading, hauling and unloading. Choose that order after the strength test.

@@ -68,7 +68,10 @@ namespace WonderGather.Tests
         {
             Assert.That(body,Is.Not.Null,"Faction workers must use the articulated body.");
             Assert.That(body.Ready,Is.True);
-            Assert.That(body.FootPlanted(0)||body.FootPlanted(1),Is.True,"Retain at least one supporting foot.");
+            // A walk always keeps a supporting foot. Since Strength and Burden checkpoint A, fast
+            // Movement % jogs; only a jog's flight phase may leave the ground, and only briefly.
+            Assert.That(body.FootPlanted(0)||body.FootPlanted(1)||(body.CurrentGait!=ProceduralBiped.Gait.Walking&&body.FlightTime<.2f),
+                Is.True,"Retain at least one supporting foot outside a brief jogging flight phase.");
             foreach(var part in body.GetComponentsInChildren<Transform>())
                 if(part.name.EndsWith("thigh",StringComparison.Ordinal)||part.name.EndsWith("shin",StringComparison.Ordinal))
                     Assert.That(part.localScale.y*2,Is.EqualTo(.68f).Within(.008f),"Walking and working must not stretch a leg segment.");
@@ -177,7 +180,8 @@ namespace WonderGather.Tests
             var worker=unit.GetComponent<Gatherer>();
             var body=unit.GetComponent<ProceduralBiped>();
             Assert.That(unit.GetComponent<UnitIdentity>().Blueprint,Is.SameAs(creator.Draft.Worker));
-            Assert.That(unit.GetComponent<NavMeshAgent>().speed,Is.EqualTo(6.4f).Within(.01f));
+            // 200% of the worker's natural 1.8 m/s walk (decision D2, September 30).
+            Assert.That(unit.GetComponent<NavMeshAgent>().speed,Is.EqualTo(3.6f).Within(.01f));
             Supported(body);
             var node=Object.FindAnyObjectByType<ResourceNode>();
             var depot=creator.Bridge.Session.Depot;
@@ -327,12 +331,14 @@ namespace WonderGather.Tests
                 var node=Object.FindAnyObjectByType<ResourceNode>();
                 var depot=creator.Bridge.Session.Depot;
                 int total=node.Remaining;
-                Assert.That(worker.GetComponent<NavMeshAgent>().speed,Is.EqualTo(3.2f*stats.movementPercent/100f).Within(.01f));
+                Assert.That(worker.GetComponent<NavMeshAgent>().speed,Is.EqualTo(1.8f*stats.movementPercent/100f).Within(.01f));
                 Assert.That(worker.Capacity,Is.EqualTo(stats.capacity));
                 Assert.That(worker.SecondsPerUnit,Is.EqualTo(.5f*100f/stats.gatheringPercent).Within(.001f));
                 Assert.That(worker.Gather(node),Is.True);
                 bool visibleCargo=false;
-                float deadline=Time.time+65;
+                // The 25% extreme walks at 0.45 m/s since the natural-pace decision (D2), so a
+                // round trip of about 26 m needs a larger time budget than the former 0.8 m/s.
+                float started=Time.time,deadline=started+120;
                 while(depot.Stored==0&&Time.time<deadline)
                 {
                     yield return null;
@@ -341,6 +347,7 @@ namespace WonderGather.Tests
                     Conserved(node,depot,new[]{worker},total);
                     visibleCargo|=worker.Carried>0&&body.CargoVisible;
                 }
+                TestContext.WriteLine($"Movement {stats.movementPercent}%: first delivery after {Time.time-started:F1} s");
                 Assert.That(depot.Stored,Is.EqualTo(stats.capacity),"The existing performance settings must still complete a full load.");
                 Assert.That(body.StepCount,Is.GreaterThan(4));
                 Assert.That(visibleCargo,Is.True);
