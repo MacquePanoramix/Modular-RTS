@@ -741,3 +741,63 @@ failed the new test with the write-back already removed: the pelvis was
 - **Not tested:** interactive play in the build or the open Editor; crowds of
   more than eight workers; terrain beyond flat ground and the gentle ramp.
 
+
+## S1a: two camera systems — October 1, 2026
+
+Isolated worktree `D:\Dev\WG`, Unity 6000.6.0f1 batch mode. Luis's Editor and
+his uncommitted files were not touched.
+
+### What changed
+
+- **`RtsCamera` keeps its component and serialized fields.** Every map's
+  preferences survive, for example the 0.005 zoom sensitivity. It gains two
+  modes:
+  - **Strategy:**
+    - faster pan, scaled by height;
+    - edge scrolling (full screen only);
+    - middle-mouse grab pan;
+    - zoom toward the cursor with an exact ground anchor;
+    - Alt + middle-mouse rotation.
+  - **Explore:** the new `ExploreFlight`.
+- **`CameraCollision`.**
+  - A sphere sweep with sliding against static scenery.
+  - A residual-overlap guard.
+  - Ground and ceiling limits.
+  - Soft pushes from living bodies, with personal space instead of blocking.
+- **`RtsInput`.**
+  - New actions: `V` toggle, pointer delta, middle mouse, Alt and Ctrl.
+  - In Explore, a right click orders on release only when the press moved
+    less than 6 px, so a right-drag can look.
+  - Alt + left click orbits instead of selecting.
+  - Cursor capture with a return to the starting point.
+- **`CameraIntent`.** Devices are read only in `RtsInput`. Tests drive the
+  camera with intents.
+
+### Tests: `CameraTests` (9 new)
+
+| Test | Measured |
+|---|---|
+| Toggling into Explore does not move the view | Position change < 1 cm; near plane 0.02 m |
+| Explore approaches the ground but never passes through | Lowest eye height 0.0620 m (radius 0.06) |
+| Explore slides along scenery without entering it | Stopped 0.0635 m from a 16 m wall face; slid 3.28 m along it; no stone entered at full speed |
+| Explore can look straight up | View direction y > 0.99 |
+| Returning to Strategy re-centres on the ground in view | Target within 0.1 m of the viewed point, heading kept, first frame moved < 0.5 m, blend finished within 1 s |
+| Follow keeps a walking worker framed | Worst off-centre 3.5° while the worker walked 15 m; distance 4.2 m |
+| Workers nudge the camera aside | 0.05 m from the body's surface pushed out to 0.280 m |
+| Strategy zoom keeps the ground under the cursor | 0.00 px error (640×480 batch screen) |
+| Middle drag moves the ground with the cursor | 0.00 px error for a 75 px drag |
+
+**Full PlayMode suite: 102/102 in two consecutive runs** (845.8 s and
+862.6 s). These are the 93 earlier tests plus the 9 new ones.
+
+**Windows build.** `GroundedBodySetup.BuildWindows` passed (the faction
+creator, FactionPlaytest and EquipmentPlaytest, now with both camera modes).
+It was copied to `Builds/WindowsTwoCameras/WonderGather.exe`.
+
+**Not tested by automation:**
+
+- the feel of speeds and smoothing;
+- real-mouse right-click/right-drag discrimination and cursor capture;
+- edge scrolling;
+- the platform's mouse-wheel scale. The player log records the first wheel
+  delta.

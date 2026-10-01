@@ -10,7 +10,10 @@
   - Luis set aside the Blender style studies and supplied the
     [Visual Soul](VisualSoul.md) art direction.
   - He asked for a Strategy camera plus a free Explore camera.
-  - S1a (two cameras) is in progress.
+  - S1a (two cameras) is built and tested, and waiting for his playtest
+    ([TwoCamerasPlaytest.md](TwoCamerasPlaytest.md)). The build is
+    `Builds/WindowsTwoCameras`.
+  - S1b (the Ordinary Place) is in progress.
 - **Overall plan:** [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
 
 ## What the project is building now
@@ -99,7 +102,8 @@ Still valid from September 30:
 
 ## Recommended next action
 
-1. **S1a, the two cameras.** Finish, test, build, and get Luis's playtest.
+1. **S1a, the two cameras.** Luis playtests them in any map
+   ([TwoCamerasPlaytest.md](TwoCamerasPlaytest.md)).
 2. **S1b/S1c, the Ordinary Place.** Build it (house, grassland, path, worker;
    day and night) with live-switchable rendering candidates. Captures and frame
    times go next to the references. Luis then chooses the rendering approach.

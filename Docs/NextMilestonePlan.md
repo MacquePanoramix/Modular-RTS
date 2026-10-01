@@ -10,7 +10,8 @@ URP (Forward+, HDR); Blender 4.4/4.5.
 ("start with one ordinary place…", "feasibility needs an in-engine test"). It
 splits the work into checkpoints Luis playtests one at a time:
 
-1. **S1a, the two cameras.** In progress.
+1. **S1a, the two cameras.** Built and tested on October 1, and waiting
+   for Luis's playtest ([TwoCamerasPlaytest.md](TwoCamerasPlaytest.md)).
 2. **S1b, the Ordinary Place.**
 3. **S1c, choosing the rendering approach.**
 4. **S1d, the worker model.**

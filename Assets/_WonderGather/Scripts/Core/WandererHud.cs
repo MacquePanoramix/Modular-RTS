@@ -44,7 +44,7 @@ namespace WonderGather
             hudScroll=GUILayout.BeginScrollView(hudScroll,GUILayout.MaxHeight(Mathf.Max(1,Screen.height-40)));
             GUILayout.BeginVertical(GUI.skin.box);
             Label(civilization!=null && civilization.Definition!=null ? "WONDER GATHER / "+civilization.Definition.DisplayName : construction != null ? "WONDER GATHER  /  THE SETTLEMENT" : depot != null ? "WONDER GATHER  /  THE GATHERER" : "WONDER GATHER  /  THE GROUP");
-            Label("WASD / Arrows: pan     Q / E: rotate     Wheel: zoom");
+            Label("WASD / Arrows: pan     Q / E: rotate     Wheel: zoom     V: explore camera");
             Label("Click / drag: select     Shift: toggle click / add box");
             Label("Right click: move     Esc: clear     F: focus group");
             Label(selection.SelectedBuilding!=null?"Selected: "+selection.SelectedBuilding.DisplayName:"Selected: " + selection.Count);
