@@ -13,7 +13,7 @@ technically validated. Experiential acceptance remains pending.
 **Approval scope:** the bounded work loop below, including the provisional
 collecting gesture and carried bundle. This does not lock the aesthetic,
 resource fiction, anatomy, final customization model or later roadmap.
-See `Docs/LivingWorkerPlaytest.md` for the integrated playtest. The review
+See `Docs/Playtests/LivingWorkerPlaytest.md` for the integrated playtest. The review
 below records the September 24 rationale and baseline.
 
 **Baseline:** GitHub d03e045; gameplay remains d9b5f4d.

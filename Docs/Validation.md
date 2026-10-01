@@ -1,7 +1,7 @@
 # Validation history
 
 Current milestone: The Living Worker; see the September 26 entry below and
-Docs/LivingWorkerPlaytest.md. Earlier sections preserve historical evidence.
+Docs/Playtests/LivingWorkerPlaytest.md. Earlier sections preserve historical evidence.
 
 ## Unity 6.6 foundation — September 6, 2026
 
@@ -41,7 +41,7 @@ The generated XML test report is intentionally excluded from Git because Unity w
 
 The first Unity 6.6 import detected stale 6.3 library metadata and rebuilt version-specific caches. The subsequent clean test and build runs completed successfully. Generated cache and test-result files remain excluded from Git.
 
-This is a development prototype with placeholder art and a temporary HUD. It has no multiplayer, economy, formations, procedural animation or civilization customization yet. Tests validate the movement/selection boundary; they do not prove every physical input, camera angle, display resolution or visual preference. Complete Docs/Playtest.md with the user before accepting the milestone's feel.
+This is a development prototype with placeholder art and a temporary HUD. It has no multiplayer, economy, formations, procedural animation or civilization customization yet. Tests validate the movement/selection boundary; they do not prove every physical input, camera angle, display resolution or visual preference. Complete Docs/Playtests/WandererPlaytest.md with the user before accepting the milestone's feel.
 
 ProjectSettings were created from the bundled template and upgraded to Unity 6.6 serialization. Feature-specific settings are product/company names, text serialization, Walkable layer 6, one enabled build scene and removal of the unused template global input asset. Graphics and quality continue to use the template's URP assets; the new Input System remains enabled.
 
@@ -86,7 +86,7 @@ The user accepted The Group and chose 0.005 zoom. The Gatherer is the first impl
 
 The initial 14-test suite passed. An additional disable-position assertion then exposed residual movement after ResetPath; explicitly stopping the agent and clearing velocity fixed it. The final suite above includes that assertion. Existing Unity 6.6 obsolete object-discovery warnings remain in older editor/test code; new code uses current discovery APIs. Generated reports and logs remain local and excluded from Git.
 
-New scene: Assets/_WonderGather/Scenes/TheGatherer.unity. Local build: Builds/WindowsGatherer/WonderGather.exe. Preview: Docs/Images/TheGatherer.png. Earlier scenes remain available; the standalone build starts only TheGatherer. No packages, render settings or existing prefab GUIDs were changed. User recovery files and unrelated local settings remain untouched.
+New scene: Assets/_WonderGather/Scenes/TheGatherer.unity. Local build: Builds/WindowsGatherer/WonderGather.exe. Preview: Docs/Images/Gatherer/TheGatherer.png. Earlier scenes remain available; the standalone build starts only TheGatherer. No packages, render settings or existing prefab GUIDs were changed. User recovery files and unrelated local settings remain untouched.
 
 Scope limits: fixed interaction offsets, one placeholder resource and depot, no persistence or construction/production. Nearby formation search is bounded and may still reject an order when no suitable space is found. Gathering requires a complete route to its interaction spot. This is a playable prototype, not a final economy or resource balance.
 
@@ -543,3 +543,372 @@ body/tool, fixed one-supply hit yield, bounded two-handed action, feet-side carg
 representation and short back-stow transfer. No strength/mass/burden, container
 loading, loose material physics, detailed mounting gesture, arbitrary body editor,
 final art, networking, public-showcase readiness or RTS-scale performance claimed.
+
+## Equipped Worker review and source analysis — September 30, 2026
+
+- Luis playtested The Equipped Worker in the Editor. Today's Editor log shows
+  Play Mode sessions in TheFactionCreator and EquipmentPlaytest with no runtime
+  exceptions; it contains only existing obsolete-API compiler warnings and
+  offline package-registry errors.
+- Experiential result: accepted as a foundation, not as motion quality. See
+  EquippedWorkerPlaytest.md.
+- Documentation-only change. No Unity tests, builds or rendered probes were run.
+  The gait, cadence, Froude and clipping figures in NextMilestonePlan.md were
+  computed from source constants, not measured in a running scene.
+- Human workspace state was preserved: TheGroup.unity, PackageManagerSettings,
+  URPProjectSettings and Assets/_Recovery.
+
+## Strength and Burden, checkpoint A: the grounded body — September 30, 2026
+
+- **Environment.** Validation ran in an isolated git worktree (branch
+  `claude/grounded-body` from 6131598), seeded with the previous isolated
+  project's Library. The project open in the Editor was not used for runs.
+  Validated files were copied into it afterwards, and byte comparison confirmed
+  they matched. Human edits in TheGroup, package/URP settings and `_Recovery`
+  were preserved.
+- **Baseline.** On the untouched code the full PlayMode suite passed
+  **85/85** in 628.7 s.
+- **Authoring.** `GroundedBodySetup.Apply` passed (GROUNDED_BODY_SETUP_OK):
+  - LivingBodyBiped feet became 0.13 × 0.09 × 0.26 m, with new toe segments;
+  - the LivingWorker variant changed from 3.2 m/s at 10 m/s² to 1.8 m/s at
+    4 m/s² (decision D2);
+  - no other prefab, scene or package changed.
+- **First focused runs.**
+  - Gait and Living Body tests passed 7/7.
+  - Worker, equipment, performance and gait tests passed 24/25. The 25%
+    Movement extreme exceeded its 65 s budget: its first delivery came at
+    65.7 s at 0.45 m/s. Its time budget became 120 s, with elapsed time
+    reported and all other assertions unchanged. At 200% the jog delivered in
+    14.2 s.
+- **Assertions changed for approved decisions:**
+  - expected agent speeds changed from 3.2/6.4 m/s to 1.8/3.6 m/s;
+  - worker support checks now allow only a brief flight phase (under 0.2 s)
+    outside a walk. Walking still requires a planted foot every frame,
+    unchanged in LivingBodyTests and enforced again in the new tests.
+- **Measured in the new tests (TheLivingBody):**
+  - walk: 2.08 steps/s, stride 1.85 m, foot pitch −12° to 30°, never airborne;
+  - jog at 3.6 m/s: 3.13 steps/s, stride 2.29 m, longest flight 0.077 s.
+- **Rendered review.** A temporary probe (not committed) rendered walking,
+  jogging, standing, settling, walking with the pickaxe and carrying cargo home.
+  It exposed two defects the tests had not:
+  1. Living Body walkers' free arms hung with flared elbows. Free arms now use
+     a pendulum target with elbows pointing back.
+  2. A body that turned before departing never entered its gait: standing
+     adjustment steps chained while the root moved, and all 14,156 steady
+     frames were "Standing". Adjustment steps now start only below the gait
+     start speed. The new regression test failed before the fix and records
+     0 standing frames after it.
+- **Final runs.**
+  - Gait and Living Body tests: **8/8**.
+  - Full PlayMode suite: **89/89** in 808.2 s (85 existing plus 4 new
+    GroundedBodyTests). No test was disabled.
+- **Windows build.** The x64 development build via
+  `GroundedBodySetup.BuildWindows` passed (GROUNDED_BODY_BUILD_OK). Output:
+  `Builds/WindowsGroundedBody/WonderGather.exe`, containing TheFactionCreator,
+  FactionPlaytest and EquipmentPlaytest.
+- **Not tested:**
+  - interactive play in the standalone build or in the open Editor;
+  - gait quality on stairs, steep or rough terrain, or among many simultaneous
+    walkers;
+  - performance at RTS scale.
+  Rendered frames were reviewed as stills, not video. Luis's judgment of feel,
+  pace and gait character is pending.
+
+## Arrival fix and a shared-position deadlock — October 1, 2026
+
+All validation ran in the isolated worktree; Luis's open project was not used
+for runs.
+
+### Arrival
+
+- **Diagnosis.** A temporary frame trace (not committed) showed both a Living
+  Body walker and a faction worker making two separate standing adjustment
+  steps, 0.4–0.7 s after the root had already stopped.
+- **After the fix.** One closing step follows immediately, and then the body
+  stands still.
+- **Regression test.** `GroundedBodyTests.ArrivalFinishesTheStrideWithoutShuffling`
+  allows at most one step after the root comes to rest and requires 2 s of
+  stillness. It records exactly 1 step.
+- **Results.** The gait and Living Body tests passed 9/9.
+
+### Erratum for checkpoint A
+
+The first full run including the arrival fix failed one test:
+`LivingWorkerTests.SharedLimitedPositionsQueueAndDrainAResourceWithoutLosingSupplies`
+timed out at 90 s with 16 of 17 supplies delivered. A ten-attempt diagnostic
+probe (not committed) measured the stall rate:
+
+| Code under test | Stalls |
+|---|---|
+| Original 6131598 | 0 of 10 |
+| Checkpoint A, at both its original and its new pace | 1–4 of 10 per run |
+
+So the checkpoint A full run reported as 89/89 on September 30 was a real
+pass, but it hid an intermittent failure of about 30%. That failure was caused
+by the slower pace's timing, not by the arrival fix.
+
+### Cause and fix
+
+- **Cause.** A worker that ran out of work went idle while standing on its
+  station position. Reservations considered that position free, but agents
+  need 0.76 m clearance, so the next claimant could never reach it, or was
+  boxed in by idle bodies near the station.
+- **`Gatherer.StandAside`.** A worker left without work steps 1.2 m clear of
+  the station it was using, if it is within 3 m of it.
+- **`ResourceWorkplace` claims.** Claims skip a position that another worker's
+  body physically occupies, using a non-allocating overlap query on unit
+  colliders.
+- **After the fix.** The probe completed 20 of 20 attempts in 22–28 s.
+
+### New regression tests
+
+- `LivingWorkerTests.AnIdleBodyOnAReleasedPositionIsNotClaimedUnderneathIt`
+  (11.9 s; by construction it fails without the occupancy check). Its first
+  run failed because the test did not wait for a physics step after warping
+  the idle body; it now waits for two fixed updates before claiming.
+- `LivingWorkerTests.WorkersLeftWithoutWorkStepClearOfTheStation`.
+
+The Living Worker suite passed with both tests, apart from that one test-side
+failure, which was fixed and then passed on its own.
+
+### Two further intermittent failures
+
+The next full run (92 tests) failed two more tests intermittently. Each passed
+3 of 3 times in isolation afterwards.
+
+**`CivilizationTests.BlueprintWorkerGathersBuildsAndProducesItsOwnBlueprint`
+(time budget).** One worker must gather 20 supplies within 90 s. At the time
+limit it had 15 stored and 5 in hand, on its last trip home. The whole test
+took 73 s at the original 3.2 m/s and 92–110 s at the approved 1.8 m/s, so the
+budget became 150 s. No assertion changed.
+
+**`LivingBodyTests.NavigationCorrectionKeepsSupportAndLegReach` (a body defect,
+older than checkpoint A).**
+
+- **Symptom.** A leg segment measured 0.445 m instead of 0.68 m, 0.2 s after a
+  1.5 m warp.
+- **Diagnosis.** Temporary instrumentation (not committed) caught 10 occurrences
+  in 40 repeated corrections. The pelvis collapsed to about 0.17 m, ankle
+  height, so the legs lay horizontal and the knee had no bend direction.
+- **Cause.** Each frame, the reach-projected hip height was written back as the
+  next frame's target height. While both feet were out of horizontal reach,
+  every projection landed lower. At test frame rates (about 5000 fps) the
+  pelvis reached the ground within milliseconds, before its time-based
+  recovery could act.
+- **Fix.** The target height stays separate from the projected result.
+- **After the fix.** The instrumented repeat run caught 0 occurrences, and the
+  gait and Living Body tests passed 14/14.
+- **Regression test.** `GroundedBodyTests.NavigationCorrectionsNeverCollapseThePelvis`
+  applies 8 corrections in both directions on both walkers and checks every
+  frame that the pelvis stays more than 0.8 m above the root and the legs keep
+  their length. With the old write-back temporarily restored it failed (pelvis
+  0.778 m); with the fix it passes.
+
+**A second pelvis drop, found by the new regression test.** The next full run
+failed the new test with the write-back already removed: the pelvis was
+0.24 m above the root.
+
+- **Diagnosis.** Instrumentation (not committed) caught 30 frames in 6 × 8
+  corrections. After a 1.5 m correction, one foot had stepped home while the
+  other swung in from 1.34 m away, just inside the 1.33 m leg reach. The height
+  rule counted that swinging foot as support and lowered the pelvis to
+  ankle height to reach it. Just beyond reach, a separate rule kept the body
+  standing, so the old logic was also discontinuous there.
+- **Fix.**
+  - Only planted feet constrain the pelvis height and the reach projection.
+  - A swinging foot that is out of reach is drawn within the leg's reach of
+    the hip, with its rendered foot and toe moved accordingly.
+  - When support passes to a foot that allows a higher pelvis, the solved
+    height rises smoothly. This is an output filter, never fed back into the
+    target; lowering stays immediate.
+- **Results.**
+  - The instrumented repeat run caught 0 drops in 48 corrections, and the
+    gait and Living Body tests passed 16/16.
+  - Gait measurements were unchanged: walk 2.08 steps/s with a 1.85 m stride,
+    jog 3.13 steps/s with flight under 0.08 s, 1 step after arrival, and 0
+    standing frames while travelling.
+  - Re-rendered walk, jog and carry frames were reviewed. Their quality is
+    unchanged, and the playtest images were refreshed from them.
+
+### Final evidence for this step
+
+- **Full PlayMode suite: 93/93 in two consecutive runs** (839.8 s and
+  834.9 s). These are the 89 earlier tests plus four new ones: arrival
+  without shuffling, the pelvis never collapsing, an idle body blocking a
+  claim, and stepping clear of a station.
+- **Windows build.** `GroundedBodySetup.BuildWindows` passed
+  (GROUNDED_BODY_BUILD_OK). Output: `Builds/WindowsGroundedBody/WonderGather.exe`.
+- **Not tested:** interactive play in the build or the open Editor; crowds of
+  more than eight workers; terrain beyond flat ground and the gentle ramp.
+
+
+## S1a: two camera systems — October 1, 2026
+
+Isolated worktree `D:\Dev\WG`, Unity 6000.6.0f1 batch mode. Luis's Editor and
+his uncommitted files were not touched.
+
+### What changed
+
+- **`RtsCamera` keeps its component and serialized fields.** Every map's
+  preferences survive, for example the 0.005 zoom sensitivity. It gains two
+  modes:
+  - **Strategy:**
+    - faster pan, scaled by height;
+    - edge scrolling (full screen only);
+    - middle-mouse grab pan;
+    - zoom toward the cursor with an exact ground anchor;
+    - Alt + middle-mouse rotation.
+  - **Explore:** the new `ExploreFlight`.
+- **`CameraCollision`.**
+  - A sphere sweep with sliding against static scenery.
+  - A residual-overlap guard.
+  - Ground and ceiling limits.
+  - Soft pushes from living bodies, with personal space instead of blocking.
+- **`RtsInput`.**
+  - New actions: `V` toggle, pointer delta, middle mouse, Alt and Ctrl.
+  - In Explore, a right click orders on release only when the press moved
+    less than 6 px, so a right-drag can look.
+  - Alt + left click orbits instead of selecting.
+  - Cursor capture with a return to the starting point.
+- **`CameraIntent`.** Devices are read only in `RtsInput`. Tests drive the
+  camera with intents.
+
+### Tests: `CameraTests` (9 new)
+
+| Test | Measured |
+|---|---|
+| Toggling into Explore does not move the view | Position change < 1 cm; near plane 0.02 m |
+| Explore approaches the ground but never passes through | Lowest eye height 0.0620 m (radius 0.06) |
+| Explore slides along scenery without entering it | Stopped 0.0635 m from a 16 m wall face; slid 3.28 m along it; no stone entered at full speed |
+| Explore can look straight up | View direction y > 0.99 |
+| Returning to Strategy re-centres on the ground in view | Target within 0.1 m of the viewed point, heading kept, first frame moved < 0.5 m, blend finished within 1 s |
+| Follow keeps a walking worker framed | Worst off-centre 3.5° while the worker walked 15 m; distance 4.2 m |
+| Workers nudge the camera aside | 0.05 m from the body's surface pushed out to 0.280 m |
+| Strategy zoom keeps the ground under the cursor | 0.00 px error (640×480 batch screen) |
+| Middle drag moves the ground with the cursor | 0.00 px error for a 75 px drag |
+
+**Full PlayMode suite: 102/102 in two consecutive runs** (845.8 s and
+862.6 s). These are the 93 earlier tests plus the 9 new ones.
+
+**Windows build.** `GroundedBodySetup.BuildWindows` passed (the faction
+creator, FactionPlaytest and EquipmentPlaytest, now with both camera modes).
+It was copied to `Builds/WindowsTwoCameras/WonderGather.exe`.
+
+**Not tested by automation:**
+
+- the feel of speeds and smoothing;
+- real-mouse right-click/right-drag discrimination and cursor capture;
+- edge scrolling;
+- the platform's mouse-wheel scale. The player log records the first wheel
+  delta.
+
+## S1b/S1c: the Ordinary Place look test — October 1, 2026
+
+Authored and validated in the isolated worktree. Sources were staged outside
+the main project and copied in only after they compiled and their tests
+passed.
+
+### Authoring
+
+- `OrdinaryPlaceSetup.Create`, a guarded one-time setup that builds:
+  - the painted materials;
+  - the Blender house and nature, imported with their materials remapped;
+  - the ground definition (regenerated at load, not stored as an asset);
+  - house and nature colliders, plus the doorway blocker;
+  - warm lights at the Blender anchors;
+  - the sun and moon, time of day, grass, smoke, look candidates, the
+    benchmark and the post volume;
+  - the baked NavMesh and both camera modes;
+  - the dressed worker prefab.
+
+  It ran without compile or shader errors and planted 481,213 grass blades.
+- **Blender sources.** `Art/Blender/OrdinaryPlace/house.py` and `nature.py`
+  produce `House.fbx` and `Nature.fbx`. Previews of both were reviewed during
+  modelling.
+
+### Iterations judged from captures
+
+`OrdinaryPlaceCapture.Capture` renders 7 views × 4 times. The path and worker
+views are also rendered in every candidate. Problems found and fixed across
+four passes:
+
+- The ink shader used `line` (a reserved HLSL word) and did not compile, so it
+  was renamed.
+- Clouds were invisible because the noise scale was too large for the visible
+  sky.
+- The ground between the blades read pale. Flat soil takes full sun while
+  the blades don't, so the soil is now shaded under dense grass.
+- The windows overexposed to white; they now glow amber.
+- **Night values.**
+  - The hills were brighter than the sky, so the fog is now darker than the
+    horizon.
+  - The night sky was washed purple by wide bloom from the windows. The bloom
+    is now tighter (intensity 0.35, scatter 0.5).
+- Distant land turned into a pale wall. Fog now falls off with squared
+  distance and is capped.
+- **Brushwork** was hard to see. It is now dab-based, in tone and in the
+  light's edge.
+- **Colour semantics.** `Material.SetColor` treats colours as sRGB in this
+  linear project, so the night sky came out about 3× too dark and was tipped
+  purple by bloom. The night sky palette is now authored in sRGB.
+- The windows saturated to white; their emission is lower.
+- The ground meshes would have been about 18 MB of text assets per
+  regeneration. They are now rebuilt from the height field when the scene
+  loads (`DontSave`), and the scene itself is 309 KB.
+
+### Final evidence
+
+- **`OrdinaryPlaceTests` (5 new)** check that:
+  - the scene is complete (481,213 blades, house lights, smoke);
+  - the worker walks to the doorstep;
+  - Explore cannot enter the house through the door or a wall;
+  - night and day switch the house lights;
+  - every candidate runs.
+
+  They passed together with `CameraTests` (14/14).
+- **Full PlayMode suite: 107/107 in two consecutive runs on the final state**
+  (865.8 s and 878.6 s), plus an earlier 858.4 s run. These are the 102
+  earlier tests plus 5 new ones.
+- **Captures.** The full matched set (141 images) is in the worktree's results
+  folder. The comparison sheets are in `Docs/Images/OrdinaryPlace/`.
+- **Release build.** `OrdinaryPlaceSetup.BuildWindows` passed
+  (ORDINARY_PLACE_BUILD_OK). Output: `Builds/WindowsOrdinaryPlace/WonderGather.exe`.
+  The build enables Unity's frame timing stats in Player Settings.
+- **Benchmark.** `-wgbenchmark` at 1920×1080 on an RTX 4060 Laptop GPU and an
+  i9-14900HX. GPU frame time ranged 3.2–4.1 ms (baseline) to 4.6–5.4 ms (paint
+  filter + ink). The full table is in
+  [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md).
+- **Not tested:**
+  - other GPUs and vendors;
+  - long sessions;
+  - interactive play in the build or the open Editor.
+
+  The captures are edit-mode stills, so the worker stands in its stored pose.
+
+## Moon fix and docs reorganization — October 1, 2026
+
+- **Defect, reported by Luis.** The crescent moon stayed in the sky during
+  the day.
+- **Fix.**
+  - The moon now rides opposite the sun, turned 25°.
+  - The sky shader multiplies it by `_MoonVisibility`, which `TimeOfDay` sets
+    to 0 once the sun is about 6° above the horizon and to 1 at night.
+- **Test.** `NightLightsTheHouseAndDayRestsIt` now asserts that the moon is
+  invisible at 06:30, 09:00, 12:00 and 16:00 and visible at 23:00. The
+  OrdinaryPlaceTests passed 5/5, and a recapture of the night sky was
+  reviewed.
+- **Docs reorganization**, at Luis's request for a very organized structure.
+  - **Moves.** 81 files moved with `git mv`, so their history is kept:
+    - playtest guides to `Docs/Playtests/`;
+    - art direction to `Docs/ArtDirection/`;
+    - design notes to `Docs/Design/`;
+    - technical docs to `Docs/Technical/`;
+    - images into one folder per milestone.
+  - **Links.** Every relative link and path mention was rewritten by script.
+    A link check over all Markdown files found no broken links, after fixing
+    three that already pointed nowhere in an archived plan.
+  - **Agent instructions.** `AGENTS.md` now points to
+    `Docs/Technical/UnityProjectContext.md`.
+  - **Capture paths.** The Wanderer, Group and Gatherer preview scripts now
+    write into their image folders. They compile.
+  - **Index.** `Docs/README.md` describes the layout.

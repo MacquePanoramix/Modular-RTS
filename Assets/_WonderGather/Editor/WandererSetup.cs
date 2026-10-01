@@ -32,7 +32,7 @@ namespace WonderGather.Editor
         }
 
         public static void CapturePreview()
-        { CapturePreview(ScenePath, "Docs/Images/TheWanderer.png"); }
+        { CapturePreview(ScenePath, "Docs/Images/Wanderer/TheWanderer.png"); }
 
         public static void CapturePreview(string scenePath, string imagePath)
         {
@@ -48,7 +48,7 @@ namespace WonderGather.Editor
             var texture = new Texture2D(1280, 720, TextureFormat.RGB24, false);
             texture.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);
             texture.Apply();
-            Directory.CreateDirectory("Docs/Images");
+            Directory.CreateDirectory(Path.GetDirectoryName(imagePath));
             File.WriteAllBytes(imagePath, texture.EncodeToPNG());
             camera.targetTexture = null;
             RenderTexture.active = previous;

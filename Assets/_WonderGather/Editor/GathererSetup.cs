@@ -43,7 +43,7 @@ namespace WonderGather.Editor
         }
         public static void BuildWindows()
         {
-            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Null) WandererSetup.CapturePreview(ScenePath,"Docs/Images/TheGatherer.png");
+            if (SystemInfo.graphicsDeviceType != GraphicsDeviceType.Null) WandererSetup.CapturePreview(ScenePath,"Docs/Images/Gatherer/TheGatherer.png");
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes=new[]{ScenePath}, locationPathName="Builds/WindowsGatherer/WonderGather.exe",target=BuildTarget.StandaloneWindows64,options=BuildOptions.Development });
             if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new System.Exception("Gatherer build failed");
             Debug.Log("GATHERER_BUILD_OK");

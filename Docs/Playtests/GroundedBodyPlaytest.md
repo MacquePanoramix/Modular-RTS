@@ -1,0 +1,134 @@
+# Strength and Burden, checkpoint A — The grounded body playtest
+
+**Status:** Reviewed by Luis on October 1, 2026. He judged the walk "much better"
+and reported one defect, re-shuffling on arrival, which is fixed the same day
+(see below). It is now stage S0 of [ShowcaseRoadmap.md](../ShowcaseRoadmap.md).
+Technical results are in [Validation.md](../Validation.md). The archived plan is
+[Plans/StrengthAndBurden.md](../Plans/StrengthAndBurden.md).
+
+## Luis's feedback — October 1, 2026
+
+> So yes, the walk is much better now, I must say. The only thing, I think, is
+> when the character is going to the landing spot, it always shuffles a bit its
+> feet, I think to, like, try to be on the exact location that we directed. …
+> after it lands near the landing spot, it can just stay still there.
+
+The full message, including the showcase scope it clarified, is in
+[Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md](../Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md).
+
+**The fix.** A frame trace showed the cause. The root stopped mid-stride, and
+after a short pause the body made two separate standing adjustment steps, one
+per foot, to square up beneath the exact spot. Now:
+
+- **The last steps are anticipated.** Near the end of a path, stride steps
+  never land beyond where the body will stop.
+- **The stride is finished, not corrected.** When the root stops, the gait
+  completes its stride with at most one ordinary closing step, immediately and
+  without a pause, and then stands.
+- **A settled stance stays still.** Standing feet only move for:
+  - a turn of more than 40°;
+  - a drift of more than 30 cm from beneath the body;
+  - a crossed or too-narrow stance.
+
+Arriving now takes one closing step instead of two separate adjustments. A
+regression test asserts at most one step after the root comes to rest, then
+two seconds of stillness.
+
+## The question
+
+Does walking now look grounded and deliberate rather than goofy? Specifically:
+
+- a believable stride instead of shuffling;
+- heel strike, roll and push-off;
+- weight moving over each foot;
+- arms swinging against the legs;
+- a jog at higher speeds.
+
+This checkpoint changes locomotion only. **The pickaxe swing is unchanged.** It
+still reads as the old canned animation and can still clip the body. Checkpoint B
+replaces it.
+
+## What changed
+
+- **Pace (decision D2).** The worker's default speed is now a natural walk of
+  1.8 m/s instead of 3.2 m/s. That is the same pace as the Living Body "measured"
+  walker you judged okay on September 24. Movement % still scales it: 25% is
+  0.45 m/s and 200% is 3.6 m/s. The whole economy therefore runs slower, and
+  trips to the supplies and the mineral take longer.
+- **Gait from the body.** Stride length and cadence follow from hip height and
+  actual speed. At the default pace that is about two steps per second with a
+  stride of about 1.85 m; the old code took roughly five short steps per second.
+- **Walk and jog.** Above the walk–run threshold for this body (about 2.8 m/s,
+  so Movement % above roughly 150%) the worker jogs. A jog has a short flight
+  phase (about 0.08 s), bent pumping arms and a slight forward lean. A walk
+  always keeps a foot on the ground.
+- **Feet.** Each foot is now a heel-to-ball block plus a toe. Feet land heel
+  first, roll flat and push off from the ball while the toe stays planted.
+- **Hips, torso and head.**
+  - The pelvis shifts over the stance foot, rotates with the forward leg and
+    dips slightly on the swing side.
+  - The chest counter-rotates.
+  - The head stays level and looks along the path.
+- **Arms.** Free arms hang nearly straight and swing like pendulums from the
+  shoulder. They swing less while the hands hold the pickaxe or a load.
+- **Standing.** When the worker stops, it finishes its step and then makes
+  small adjustment steps until the feet sit beneath the body. It does the same
+  when turning in place.
+
+Navigation still decides where the worker goes. The body only presents that
+movement. Nothing here is an active ragdoll (decision D1).
+
+## How to look at it
+
+1. **Comparison scene.** Open `Assets/_WonderGather/Scenes/TheLivingBody.unity`
+   and press Play. Use its route buttons (or select and right-click) to watch the
+   1.8 m/s and 2.5 m/s walkers on flat ground and on the ramp. Zoom in close with
+   F, then pull out to RTS height.
+2. **The worker in the faction map.** Open `TheFactionCreator.unity`, choose
+   **Playtest equipment →** (with a pickaxe) or **Playtest faction →**. Send a
+   worker to the mineral or supplies and watch it:
+   - leave;
+   - turn around with its load;
+   - walk home carrying the bundle.
+3. **Speed range.** In the creator, set the worker's movement to 25%, 100%,
+   150% and 200% and compare. 200% should be a jog, not a frantic walk.
+4. **Standalone build.** `Builds/WindowsGroundedBody/WonderGather.exe` contains
+   the creator and both maps.
+
+## What Luis is judging
+
+- Do the feet still look goofy anywhere, close up or from RTS height?
+- Is the default walking pace right for the game? Is 1.8 m/s too slow for the
+  economy, or does it help the "slowness is attention" feeling?
+- Does the jog read as a jog, and is 200% the right place for it?
+- Is the torso and arm motion natural or overdone (sway, twist, arm swing)?
+- Do starting, stopping and turning look deliberate?
+
+Useful feedback names the scene, the speed and the moment: starting, turning,
+stopping, walking with the bundle, jogging, or on the ramp.
+
+## Known limits of this checkpoint
+
+- **Swing unchanged.** The swing, its clipping and the pickaxe's rest pose are
+  unchanged until Checkpoint B. The back-stow is still the provisional
+  interpolation.
+- **No mass yet.** Loads do not yet change gait, lean or speed. Checkpoint C
+  adds mass and strength.
+- **Primitive shapes.** The body is still made of primitive segments, and the
+  heel/toe feet are new shapes on the same rig.
+- **Terrain.** Only flat ground and the existing gentle ramp are covered.
+  Stairs, steep slopes, rough terrain and crowds of walkers have not been
+  tested for gait quality.
+- **Tuning is provisional.** Stride, cadence, sway, twist and clearance values
+  are first choices from biomechanics rules of thumb.
+- **Measurements.** The figures above come from automated tests in
+  TheLivingBody. Rendered frames were reviewed as still images, not as video.
+
+## Rendered reference
+
+Captured from the automated probe, side view, one stride each:
+
+![Walking at the natural pace](../Images/GroundedBody/GroundedBodyWalk.png)
+![Jogging at 200%](../Images/GroundedBody/GroundedBodyJog.png)
+![Carrying the bundle home with the tool stowed](../Images/GroundedBody/GroundedBodyCarry.png)
+![Standing, and settled after stopping](../Images/GroundedBody/GroundedBodyStanding.png)

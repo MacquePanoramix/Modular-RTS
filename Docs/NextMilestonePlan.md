@@ -1,165 +1,260 @@
-# Approved implementation plan — The Equipped Worker
+# Implementation plan — S1 (revised): the Ordinary Place and two cameras
 
-**Reviewed:** September 29, 2026.
-**Review baseline:** 5f61351, matching GitHub main during the recommendation review;
-Unity 6000.6.0f1. Implementation begins from the documentation commit 1dce817.
-**Status:** Approved scope implemented and technically validated on September 29.
-The detailed scope below remains its contract. See [Validation.md](Validation.md)
-and [EquippedWorkerPlaytest.md](EquippedWorkerPlaytest.md). Luis's playtest acceptance
-of the result is pending.
+**Revised:** October 1, 2026, from Luis's Visual Soul handoff and his
+two-camera direction
+([correspondence](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md),
+[VisualSoul.md](ArtDirection/VisualSoul.md)).
+**Baseline:** the grounded body (S0) and the arrival fix. Unity 6000.6.0f1 /
+URP (Forward+, HDR); Blender 4.4/4.5.
+**Status:** In progress. The plan follows the handoff's own instructions
+("start with one ordinary place…", "feasibility needs an in-engine test"). It
+splits the work into checkpoints Luis playtests one at a time:
 
-Luis accepted The Living Worker as a useful early prototype and described a
-later, highly polished one-worker showcase. The reference is
-[WorkerShowcaseVision.md](WorkerShowcaseVision.md); the prior completed plan
-is preserved in [Plans/LivingWorker.md](Plans/LivingWorker.md).
+1. **S1a, the two cameras.** Built and tested on October 1, and waiting
+   for Luis's playtest ([TwoCamerasPlaytest.md](Playtests/TwoCamerasPlaytest.md)).
+2. **S1b, the Ordinary Place.** First in-engine pass built on October 1
+   ([OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md)).
+3. **S1c, choosing the rendering approach.** Five candidates can be switched
+   live in the build, with matched captures and measured costs. Luis chose E
+   (painted light + paint filter + ink) as the working base and agreed that
+   hand-painted textures come next. That is **S1c, second pass** (below), and it
+   is in progress.
+4. **S1d, the worker model.**
 
-## The next question
+The previous S1 plan (style studies, then the worker model) is archived in
+[Plans/S1_WorkerModelAndStyleStudies.md](Plans/S1_WorkerModelAndStyleStudies.md).
+Its model work continues as S1d.
 
-Can a worker made through the faction blueprint system equip a real tool,
-hold and use it convincingly, and extract material only when that tool
-actually makes a valid strike?
+## The question
 
-The approved slice is **The Equipped Worker**: one provisional biped,
-one pickaxe definition, one mineral/boulder target, and the existing
-approach → work → carry → deliver loop. Its purpose is to establish the
-connection between equipment, embodied action and a gameplay consequence.
-It is a step toward the polished public showcase, not that complete showcase.
+Can Wonder Gather's visual soul (lighting that leads the emotion, surfaces that
+feel alive, characters with a soul, playful wonder) be rendered in this Unity
+project, in motion, by day and by night, at an acceptable runtime cost? And
+can the player both command the world quickly and wander through it up close?
 
-## What the pre-implementation review established
+## S1a — Two camera systems
 
-The recommendation was based on a focused source/configuration/history
-review, not a new runtime or performance audit. Its baseline evidence was
-the September 26 result: 67 passing PlayMode tests, reviewed rendered captures
-and a successful Windows build. The observations below describe that earlier
-implementation; they are not a current test report for the new equipment code.
-Current candidate ownership is described in [EquipmentArchitecture.md](EquipmentArchitecture.md),
-and the review path is in [EquippedWorkerPlaytest.md](EquippedWorkerPlaytest.md).
-Actual equipment validation results belong in [Validation.md](Validation.md).
+Luis wants an "Age of Empires-like best RTS possible camera" for playing, and
+an Explore camera for wonder: free, like the Blender/Unity viewport, "cozy to
+navigate and soft". It must not go through the floor or buildings, yet can get
+"very near" them and look up at the sky.
 
-| Confirmed observation | Evidence under Assets/_WonderGather | Implication for the next slice |
+The toggle and both modes go into the shared camera rig, so every existing map
+gets them.
+
+### Toggle
+
+- **Key.** `V` switches modes. An on-screen hint shows the current mode and
+  its controls.
+- **Into Explore.** Explore starts exactly where the RTS view is, so nothing
+  jumps.
+- **Back to Strategy.** Strategy re-centers smoothly on the ground the Explore
+  camera was looking at, keeping its heading.
+
+### Strategy mode (RTS)
+
+- **Pan.** WASD/arrow keys pan faster and more crisply than today: speed
+  scales with height, and starts and stops are short.
+- **Edge scrolling.** The screen scrolls at the screen edge, in the focused
+  game window only.
+- **Grab-pan.** Middle-mouse drag grabs the ground and moves it 1:1.
+- **Zoom.** The wheel zooms in toward the cursor and out from the center. The
+  view flattens when close and steepens when high.
+- **Rotation.** Q/E rotate, as today. Alt + middle-mouse drag also rotates.
+- **Focus.** F focuses the selection, as today.
+- **Limits.** Map bounds and terrain-aware height, as today.
+- **Existing preferences.** Per-map preferences such as the 0.005 zoom
+  sensitivity are kept.
+
+### Explore mode (free POV)
+
+| Input | Action |
+|---|---|
+| Hold right mouse + move | Look around, including straight up at the sky. The cursor hides while looking |
+| WASD | Fly along the view |
+| Q / E | Down / up |
+| Shift / Ctrl | Faster / slower |
+| Wheel | Glide forward/back. With right mouse held, it changes the flight speed |
+| Middle-mouse drag (or Alt + left drag) | Orbit around the point being looked at, or around the followed worker |
+| Shift + middle-mouse drag | Slide sideways and up/down |
+| F | Glide to a close, three-quarter view of the selection, then follow it as it walks. Moving or looking ends the follow |
+| Left click / drag | Select, as in Strategy |
+| Right click (without dragging) | Command, as in Strategy. A right-drag only looks |
+
+**Softness:**
+
+- Movement eases in and out.
+- Speed scales with distance to the nearest surface: slow and precise near
+  grass and walls, quick high up.
+- Looking is lightly smoothed.
+
+**Safeties:**
+
+- The camera is a small sphere (about 6 cm) with a very near clipping plane. It
+  can get within a few centimeters of the ground, walls and props, but never
+  passes into them. It slides along them instead of stopping dead.
+- Workers gently push the camera aside when they walk into it.
+- A soft ceiling and the map's bounds keep the player in the world.
+
+Buildings stay solid while they have no interior. A decorated interior may
+later be made enterable (Possible).
+
+**The game keeps running.** Explore is a viewpoint, not a pause, and orders
+still work.
+
+### Evidence for S1a
+
+PlayMode tests:
+
+- the ground, a wall and a building can't be penetrated, but can be
+  approached to within about 15 cm;
+- sliding along a wall;
+- looking at the sky;
+- the toggle has no jump, and the view re-centers on the way back;
+- a followed worker stays framed;
+- zoom keeps the point under the cursor fixed;
+- a right-drag in Explore issues no command, and a right-click does.
+
+Also: the full regression suite twice, a Windows build, and a playtest guide.
+
+## S1b — The Ordinary Place (in-engine look test)
+
+The handoff asks for "a small house, grassland, path and worker" in the
+existing prototype, at night and by day. It's a new scene, *The Ordinary Place*,
+playable with both cameras:
+
+- **Land.** Gently rolling grassland with a worn dirt path, a few stones and
+  layered distant hills for aerial perspective (A, E).
+- **The house.**
+  - Modeled in Blender from a reproducible script: plaster walls, timber
+    frame, shingled roof, chimney, deep-set windows, an open door, a step,
+    flower pots, a bench, firewood and a fence.
+  - Warm window and door lights spill onto the wall, step, path and grass (A).
+  - It has no interior, so it stays solid to the Explore camera.
+- **Grass.**
+  - Dense, wind-moved blades running from a dark blue-green root to warm
+    tips, with taller seed-head grass that catches window light at night
+    (A, D).
+  - It must stay readable from strategic height and lush up close.
+- **Sky and time of day.**
+  - A painted sky: soft-edged clouds, a lilac and apricot dusk (E), and stars
+    and a moon at night (A, F).
+  - A time-of-day control moves through day, golden hour, dusk and night. It
+    drives sun, moon, sky, ambient light, fog and the house lights together.
+- **The worker.**
+  - Today's procedural body walks the path and around the house under player
+    orders, so moving characters and changing light can be judged.
+  - The real character model is S1d. A placeholder scarf or coat may be added
+    to test how cloth reads, without committing to a costume.
+
+## S1c — Rendering candidates, compared in engine
+
+The handoff leaves the rendering technique open and asks for real captures and
+a measured cost. The same scene can switch live, with a key, between
+candidates that share the same models:
+
+1. **Painted light.**
+   - A custom lit shader with a soft, brush-broken light/shadow edge.
+   - Cool colored shadows from the sky instead of black.
+   - Painterly hue and value variation per material.
+   - Warm local lights, rim light, aerial fog, bloom and color grading.
+2. **Painted light + paint filter.** Candidate 1 plus a screen-space paint
+   filter that turns fine detail into brush-like patches.
+3. **Painted light + ink.** Candidate 1 plus loose, varying contour lines,
+   mainly on characters and silhouettes (B, E).
+
+The candidates can be combined. A subtle paper or brush grain is evaluated
+with each.
+
+### Evidence for S1c
+
+- **Matched captures.** Several angles, near and far, by day, at dusk and at
+  night, set side by side with the references.
+- **A short moving sequence** where possible.
+- **Frame time** at 1920×1080, with representative grass and light density.
+- **Luis's choice.** Luis picks or mixes the rendering approach in his
+  playtest. Until then it stays Open.
+
+## S1c, second pass — hand-painted surfaces
+
+Luis's verdict on the first pass: "going really well into the Visual Soul",
+but not there yet. He prefers E, the most illustrated candidate. The biggest
+remaining gap was painterly surface. In the references the brushwork belongs
+to the objects ("Brush marks, uneven plaster and flowing grass belong to the
+objects", A). Screen filters only paint over the whole image.
+
+**The approach.** Each Ordinary Place model gets a painted colour texture,
+made reproducibly by its Blender script:
+
+1. **Unwrap.** Every mesh is UV-unwrapped.
+2. **Bake.** Cycles bakes surface information into the textures:
+   - ambient occlusion for cavities;
+   - edges and curvature;
+   - upward-facing areas.
+3. **Paint.** A painter's language is applied in shader nodes and baked into
+   the colour texture:
+   - broad warm-to-cool value shifts;
+   - lit, worn edges;
+   - cool coloured cavities;
+   - directional brush strokes that follow the material (plaster daubs,
+     wood grain along beams, shingle-by-shingle variation, stone outlines);
+   - moss on upward stone and roof;
+   - stains low on the walls.
+4. **Import.** The models are exported with UVs, and the textures are
+   imported into `Assets/_WonderGather/Art/OrdinaryPlace/Textures`.
+5. **Shade.** The painted shader samples them. The in-shader dabs relax where
+   a real painted texture exists, and the brush-broken light edge stays.
+
+These textures are painted by script, not by hand. A human painter could
+later paint over them in Blender, because the UVs and source files are kept.
+
+**Base look:** E (painted light + paint filter + ink). The candidates stay
+switchable for comparison.
+
+**Evidence:**
+
+- matched captures before and after, beside references A–F;
+- frame cost in the benchmark;
+- the full suite;
+- a build.
+
+## S1d — The worker model (former S1 scope)
+
+This step follows Luis's S1c choice, so the model is made for the chosen look:
+
+- **The model.** A Blender worker in the Visual Soul language: distinctive
+  silhouette and proportions, strong hair and coat shapes, and a simple drawn
+  face. Proportions stay Open, so the body is built to vary in S2.
+- **Rig and dimensions.**
+  - A skeleton matching the procedural rig, with a rig adapter driving its
+    bones.
+  - Body dimensions read from the model, replacing the 2.2 m test biped.
+  - Navigation and camera framing follow the body.
+- **A better pickaxe**, whose grip and head points match its tool data.
+- **Tests** for gait, support and grip on the model rig.
+
+## Contracts to keep
+
+- **The procedural body.** All S0 contracts hold: planted feet, arrival
+  without shuffling, grips at actual grips, navigation owning the root, and no
+  active ragdoll.
+- **Shared camera rig.** Existing maps keep working, and their per-map camera
+  preferences keep their values.
+- **Protected files.** Luis's uncommitted files (TheGroup.unity, two
+  ProjectSettings files, `_Recovery`) are never edited, committed or
+  discarded.
+- **Third-party material.** Anything downloaded or reused needs Luis's
+  approval and a recorded license. Everything in S1 is planned to be made from
+  scratch: Blender scripts, Unity shaders and generated textures.
+
+## Decisions for Luis
+
+These have defaults so the work can proceed. Each can be changed at the
+S1a/S1b playtests.
+
+| ID | Question | Default used |
 |---|---|---|
-| Work, cargo, delivery, reservations and production are integrated | Scripts/Units/Gatherer.cs; ResourceWorkplace.cs; Tests/PlayMode/LivingWorkerTests.cs | Extend these contracts rather than making a separate showcase economy |
-| Gathering grants one supply after a timer; HasWorkContact means a reserved workplace | Scripts/Units/Gatherer.cs:24–28,157–164 | Actual tool contact must become an explicit success condition for mining |
-| The body poses in LateUpdate and reaches toward a point; arm reach is clamped | Scripts/Units/ProceduralBiped.cs:93–140,244–277 | A desired contact point or a rendered gesture cannot prove a reachable strike |
-| Starting and produced units receive UnitIdentity from their blueprints | Scripts/Civilizations/UnitIdentity.cs; CivilizationSession.cs; Scripts/Units/UnitProducer.cs | Apply equipment through the same shared path |
-| Blueprints and saves have no equipment choice; v4 uses exact field validation | Scripts/Civilizations/UnitBlueprint.cs; Scripts/Creator/FactionRecord.cs | Persisting equipment needs an explicit schema extension with safe legacy defaults |
-| Dirty tracking is separate from serialization | Scripts/Creator/FactionWorkspace.cs:16–25 | Tool edits must participate in unsaved-change detection as well as save/load |
-| Performance values are temporary outcomes, not physical attributes | Scripts/Civilizations/UnitPerformance.cs | Do not reinterpret capacity as kilograms or movement rate as strength |
-
-These are confirmed limits relative to the new target, not defects in the
-accepted earlier prototype. Contact authority and save compatibility are the
-highest-priority implementation risks because a visually plausible result
-could conceal false extraction or lost player choices. Their boundaries can
-be extended locally; this review does not justify a broad engine rewrite.
-
-## Bounded scope
-
-1. **A tool belongs to a blueprint.** Add a stable, data-backed pickaxe
-   definition and a small None/Pickaxe choice in the existing unit editor.
-   Give the tool a coherent transform, grip points and a striking head.
-   Tool mass and handling properties may be authored as provisional data;
-   this slice does not claim a working strength or burden simulation.
-2. **Use the existing creation paths.** The choice survives duplicate,
-   save/open, return from playtest and production. Starting and trained
-   workers receive the same selected equipment. A small test environment
-   can isolate the mining action, but its worker uses those blueprint paths.
-3. **Approach and prepare.** Reuse navigation, selection and work reservations.
-   Author one compatible surface and working region beside a mineral-bearing
-   boulder. Confirm both navigation access and tool/body reach, then face and
-   settle into a supported stance.
-4. **Perform one restrained procedural strike.** A preparation, striking
-   phase and recovery describe a single attempt. Hands hold authored grip
-   points on the tool, with body participation and planted support. Do not
-   stretch limbs or detach the tool to manufacture contact.
-5. **Make contact matter.** Use the solved tool-head movement against the
-   intended target surface to validate a strike. The first test gives a fixed
-   provisional amount per accepted hit. A miss or cancelled attempt gives
-   none. Impact angle/force-dependent yield remains an experiment for later.
-6. **Complete the work loop.** Show where the pickaxe goes while the worker
-   carries cargo or delivers it; choose one modest temporary carry/stow
-   arrangement for review. Do not put a tool and a bundle in the same hands
-   or make the tool disappear without an explicit transition. Physical loose
-   chunks and a full loading system are later work, clearly marked as such.
-7. **Explain the result.** The existing HUD distinguishes ready/working,
-   interrupted, missing tool and unreachable work. A valid gather permission
-   alone does not supply a missing tool. Keep ordinary RTS commands and make
-   this action readable from close and strategic views.
-
-## Authority and contact contract
-
-Keep order intent, navigation, the work action, resource accounting and body
-presentation distinguishable. Navigation continues to own the root; this
-slice does not introduce active ragdolls or body-driven navigation.
-
-A small gameplay-owned strike cycle owns attempt identity, phase and target.
-Its tool pose and contact query must use the **same reachable, solved tool
-trajectory** shown to the player. Define update order explicitly so the query
-does not rely on stale LateUpdate transforms or a desired point that the
-arms cannot reach. Do not add a second component that independently moves
-the same arms or grants resources from arbitrary visual collision callbacks.
-
-A hit is accepted only when the worker, target and equipped tool are valid,
-the worker still owns its work position, the attempt is in its striking
-phase, and the intended tool head contacts the intended surface. Test the
-path between solved samples so a fast head cannot skip through the target.
-Accept at most one extraction per attempt even if contact spans frames or
-multiple target colliders. A new command, disable, target loss or release of
-the station invalidates any outstanding attempt. If actual reach fails,
-reposition or explain inability; never silently award the timer's yield.
-
-Gatherer/ResourceNode remain the resource-accounting authority. Clip accepted
-extraction to remaining stock and cargo space, preserve partial cargo and
-conservation, and handle depletion by another worker safely. The body follows
-the resulting action and cargo state. This is constrained physical contact;
-it does not establish a full force-based simulation or multiplayer determinism.
-
-## Compatibility boundaries
-
-- Existing gathering scenes retain their established collection behavior.
-  Mining is an explicit capability/target path, not a silent global conversion
-  of all supplies into ore. The final resource list and cost formulas stay open.
-- Existing rate/capacity controls keep their documented meanings. A mining
-  rate can schedule attempts; it cannot bypass required physical contact.
-  Reach and grip must remain valid across supported test rates.
-- Add equipment to blueprint copying, runtime application, record capture,
-  encoding/decoding, restoration and workspace dirty tracking together.
-  Use stable definition IDs, not scene references or shared mutable instances.
-- Introduce a versioned equipment field deliberately. Versions 1–4 open with
-  explicit legacy defaults that preserve their current behavior. Reading must
-  not rewrite files; explicit save upgrades through the existing atomic write,
-  conflict detection and backup flow. Do not silently replace unknown tool IDs
-  with a different creative choice. Leave unsupported files and drafts safe.
-- Keep blueprint IDs, construction/production links, permissions and economic
-  recipe values intact. Review migration and identity changes independently.
-
-## Required evidence
-
-- A valid hit extracts once; a miss, wrong collider, blocked/unreachable
-  surface, absent tool or interrupted attempt cannot produce invisible ore.
-- Repeated contact, coarse time steps, re-enable, depletion and shared targets
-  cannot duplicate extraction or leak an old attempt into a new command.
-- Hands remain on usable grips; tool/head contact corresponds to the visible
-  geometry; limbs retain reach, feet remain supported and orders stay responsive.
-- Starting and produced units agree on equipment. Editing marks the draft
-  dirty; duplicate/copy/template ownership, save/open and playtest return are
-  tested. Legacy files, unknown IDs, malformed data and failed writes are safe.
-- Cargo, stock and storage stay conserved through the loop. Earlier gathering,
-  movement, construction, production and faction-library regressions pass.
-- Review rendered motion and a Windows build, then return the slice to Luis
-  for judgment of grip, weight, restraint, contact and carrying transitions.
-
-## What follows this proof
-
-**Strength and burden** is the recommended follow-up: compare the same tool
-on differently capable workers and make handling/movement consequences real.
-Then extend material loads and bags/carts before polishing the small scene
-for outside testers. The exact rules and sequence stay adjustable through
-Luis's feedback; [WorkerShowcaseVision.md](WorkerShowcaseVision.md) preserves
-the examples and open questions.
-
-Three Temperaments remains part of the wider direction, but is not the next
-recommended task under this clarification. Personality, combat, arbitrary
-anatomy, full character/building editors, final art, free rigid-body ore,
-advanced hauling, balance formulas and networking are outside this first
-equipment slice. Deferring them here does not reduce the promised depth of
-the eventual showcase or the final game.
+| C1–C4 | Camera toggle key, orders while exploring, controls, entering buildings | **Accepted Oct 1** ("I really liked the camera") |
+| V1 | Rendering approach | **Working base, Oct 1:** E, plus hand-painted textures (second pass). Not Locked |
+| V2 | Proportions, architecture, setting | Open, as the handoff states. S1b uses a modest cottage and grassland |
+| V3 | Is the house the worker's home and delivery point in the showcase? | Possible. It would join the Visual Soul place to the worker loop. Not built until Luis decides |

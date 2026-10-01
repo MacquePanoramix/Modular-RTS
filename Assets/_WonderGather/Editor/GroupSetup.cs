@@ -44,7 +44,7 @@ namespace WonderGather.Editor
             Debug.Log("GROUP_SETUP_OK");
         }
 
-        public static void CapturePreview() => WandererSetup.CapturePreview(ScenePath, "Docs/Images/TheGroup.png");
+        public static void CapturePreview() => WandererSetup.CapturePreview(ScenePath, "Docs/Images/Group/TheGroup.png");
 
         public static void BuildWindows()
         {
