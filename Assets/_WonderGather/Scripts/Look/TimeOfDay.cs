@@ -38,7 +38,8 @@ namespace WonderGather
         [SerializeField] private float glowIntensity = 1.3f;
         [SerializeField] private Light[] houseLights = new Light[0];
         [SerializeField] private float[] houseLightIntensity = new float[0];
-        [SerializeField] private float maxSunElevation = 52, moonElevation = 38, moonAzimuth = 145;
+        [Tooltip("The moon rides opposite the sun, turned by this many degrees so it is not exactly opposite.")]
+        [SerializeField] private float maxSunElevation = 52, moonOffset = 25;
         [SerializeField] private Vector3 wind = new Vector3(.8f, .55f, .55f);
         [SerializeField] private float gustSpeed = .8f;
         [SerializeField] private Palette[] palettes = DefaultPalettes();
@@ -153,13 +154,18 @@ namespace WonderGather
             return Quaternion.Euler(-elevation, azimuth, 0) * Vector3.forward;
         }
 
-        public Vector3 MoonDirection => Quaternion.Euler(-moonElevation, moonAzimuth, 0) * Vector3.forward;
+        // Rises as the sun sets and crosses the night sky.
+        public Vector3 MoonDirection(float h) => Quaternion.Euler(0, moonOffset, 0) * SunDirection(h + 12);
+
+        // Only at night: the moon fades out as the sun rises and below its own horizon.
+        public float MoonVisibility(float h)
+            => Mathf.InverseLerp(.1f, -.1f, SunDirection(h).y) * Mathf.InverseLerp(-.04f, .1f, MoonDirection(h).y);
 
         private void Apply()
         {
             var p = Sample(hour);
             var sun = SunDirection(hour);
-            var moon = MoonDirection;
+            var moon = MoonDirection(hour);
             float sunUp = Mathf.InverseLerp(-.06f, .05f, sun.y);
             // Daylight comes from the sun; once it has set, the moon lights the night.
             var lightDirection = sunUp > 0 ? sun : moon;
@@ -185,6 +191,7 @@ namespace WonderGather
                 sky.SetVector("_SunDirection", sun);
                 sky.SetColor("_SunColor", p.Light * Mathf.Lerp(.2f, 1, sunUp));
                 sky.SetVector("_MoonDirection", moon);
+                sky.SetFloat("_MoonVisibility", MoonVisibility(hour));
                 sky.SetFloat("_Stars", p.Stars);
                 sky.SetFloat("_Galaxy", p.Stars * .45f);
                 sky.SetColor("_CloudLit", p.CloudLit);

@@ -2,7 +2,7 @@
 
 **Feedback:** Luis provisionally accepted this early prototype on September 28,
 2026. The shapes, gestures and rules remain replaceable. The deeper target is
-recorded in [WorkerShowcaseVision.md](WorkerShowcaseVision.md).
+recorded in [WorkerShowcaseVision.md](../Design/WorkerShowcaseVision.md).
 
 Open `Assets/_WonderGather/Scenes/TheFactionCreator.unity` and press Play.
 The new body is integrated into the creator's faction playtest; there is no

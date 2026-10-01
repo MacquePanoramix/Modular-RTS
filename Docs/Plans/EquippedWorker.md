@@ -1,6 +1,6 @@
 > Historical milestone plan, archived September 30, 2026. Luis reviewed The
 > Equipped Worker on September 30 and accepted it as the bare starting point
-> for the one-worker showcase; see [the playtest record](../EquippedWorkerPlaytest.md).
+> for the one-worker showcase; see [the playtest record](../Playtests/EquippedWorkerPlaytest.md).
 > The current proposal is in [NextMilestonePlan.md](../NextMilestonePlan.md).
 
 # Approved implementation plan — The Equipped Worker
@@ -10,12 +10,12 @@
 Unity 6000.6.0f1. Implementation begins from the documentation commit 1dce817.
 **Status:** Approved scope implemented and technically validated on September 29.
 The detailed scope below remains its contract. See [Validation.md](../Validation.md)
-and [EquippedWorkerPlaytest.md](../EquippedWorkerPlaytest.md). Luis's playtest acceptance
+and [EquippedWorkerPlaytest.md](../Playtests/EquippedWorkerPlaytest.md). Luis's playtest acceptance
 of the result is pending.
 
 Luis accepted The Living Worker as a useful early prototype and described a
 later, highly polished one-worker showcase. The reference is
-[WorkerShowcaseVision.md](../WorkerShowcaseVision.md); the prior completed plan
+[WorkerShowcaseVision.md](../Design/WorkerShowcaseVision.md); the prior completed plan
 is preserved in [Plans/LivingWorker.md](LivingWorker.md).
 
 ## The next question
@@ -37,8 +37,8 @@ review, not a new runtime or performance audit. Its baseline evidence was
 the September 26 result: 67 passing PlayMode tests, reviewed rendered captures
 and a successful Windows build. The observations below describe that earlier
 implementation; they are not a current test report for the new equipment code.
-Current candidate ownership is described in [EquipmentArchitecture.md](../EquipmentArchitecture.md),
-and the review path is in [EquippedWorkerPlaytest.md](../EquippedWorkerPlaytest.md).
+Current candidate ownership is described in [EquipmentArchitecture.md](../Technical/EquipmentArchitecture.md),
+and the review path is in [EquippedWorkerPlaytest.md](../Playtests/EquippedWorkerPlaytest.md).
 Actual equipment validation results belong in [Validation.md](../Validation.md).
 
 | Confirmed observation | Evidence under Assets/_WonderGather | Implication for the next slice |
@@ -159,7 +159,7 @@ it does not establish a full force-based simulation or multiplayer determinism.
 on differently capable workers and make handling/movement consequences real.
 Then extend material loads and bags/carts before polishing the small scene
 for outside testers. The exact rules and sequence stay adjustable through
-Luis's feedback; [WorkerShowcaseVision.md](../WorkerShowcaseVision.md) preserves
+Luis's feedback; [WorkerShowcaseVision.md](../Design/WorkerShowcaseVision.md) preserves
 the examples and open questions.
 
 Three Temperaments remains part of the wider direction, but is not the next

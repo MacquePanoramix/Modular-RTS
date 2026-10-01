@@ -1,9 +1,9 @@
 # S1a playtest — two camera systems
 
 **Built:** October 1, 2026, on branch `claude/worker-showcase`.
-**Plan:** [NextMilestonePlan.md](NextMilestonePlan.md), S1a.
+**Plan:** [NextMilestonePlan.md](../NextMilestonePlan.md), S1a.
 **Request:** Luis's October 1 message
-([correspondence](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md)).
+([correspondence](../Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md)).
 
 Every map now has two camera modes. `V` switches between them. A small hint at
 the bottom of the screen names the mode and, for a few seconds after switching,
@@ -81,7 +81,7 @@ the ground you were looking at and keeping your heading.
 ## Evidence and limits
 
 **Tested:** nine PlayMode tests in `CameraTests` (measured values are in
-[Validation.md](Validation.md)):
+[Validation.md](../Validation.md)):
 
 - the floor, a building wall and the stones can't be entered, but can be
   approached to about 6 cm;

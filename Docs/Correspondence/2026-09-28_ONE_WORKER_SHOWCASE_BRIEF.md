@@ -3,7 +3,7 @@
 **Date given:** 2026-09-28, after the Living Worker playtest.
 **Recorded verbatim:** 2026-09-30, supplied again by Luis so the source wording is kept.
 **Status:** source material, not a specification. [GAME_VISION.md](../GAME_VISION.md)
-remains the design authority, and [WorkerShowcaseVision.md](../WorkerShowcaseVision.md)
+remains the design authority, and [WorkerShowcaseVision.md](../Design/WorkerShowcaseVision.md)
 is its structured interpretation. Words such as "maybe" and "perhaps" in this brief
 mark ideas to explore. Keep them as possibilities, not locked rules.
 

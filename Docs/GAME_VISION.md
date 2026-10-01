@@ -157,7 +157,7 @@ loading and container handling also need design. Neither a timer nor a
 simple bundle linked to cargo settles the intended physical economy.
 
 The expanded reference, experiential criteria and proposed stages are in
-[WorkerShowcaseVision.md](WorkerShowcaseVision.md). Luis's original wording
+[WorkerShowcaseVision.md](Design/WorkerShowcaseVision.md). Luis's original wording
 is preserved in [Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md).
 The Equipped Worker now exists as the bare starting point.
 
@@ -276,7 +276,7 @@ Key bindings, control details and whether orders work in Explore are implementat
 
 **Direction:** The world should feel large even if the simulated armies stay relatively intimate. A player should feel creative, clever, tactically engaged, and like a gentle commander or observer.
 
-**Direction (Luis, October 1, 2026):** the [Visual Soul](VisualSoul.md) handoff is the art direction.
+**Direction (Luis, October 1, 2026):** the [Visual Soul](ArtDirection/VisualSoul.md) handoff is the art direction.
 
 - **The core.** "Even an ordinary moment should feel worth pausing for." Lighting leads the emotion, surfaces feel alive, characters have a soul, and the wonder is playful and personal.
 - **The aim.** A strongly stylized, individual artistic world. Generic game-render looks were rejected.
@@ -372,7 +372,7 @@ limits and proposed sequencing.
 
 ### Prototype 1.2 — The Group
 
-**Accepted in first hands-on playtest:** eight selectable units in TheGroup, click and Shift-click selection, drag-box and additive box selection, selection rings/count, group-center camera focus, and group orders with separate arrival slots. NavMesh local avoidance handles nearby agents. The user requested that unreachable clicks move toward the next best available place. Movement now resolves reachable alternatives and adjusts nearby slots while preserving separation. Invalid numerical orders and groups with no available space still preserve existing destinations. See `Docs/GroupPlaytest.md`.
+**Accepted in first hands-on playtest:** eight selectable units in TheGroup, click and Shift-click selection, drag-box and additive box selection, selection rings/count, group-center camera focus, and group orders with separate arrival slots. NavMesh local avoidance handles nearby agents. The user requested that unreachable clicks move toward the next best available place. Movement now resolves reachable alternatives and adjusts nearby slots while preserving separation. Invalid numerical orders and groups with no available space still preserve existing destinations. See `Docs/Playtests/GroupPlaytest.md`.
 
 ### The Gatherer — first step toward The Little Settlement
 
@@ -472,6 +472,10 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-10-01 | Blender style studies | Not chosen | The soft, low-poly and grounded studies "were not bad" but did not match what Luis imagines | — |
 | 2026-10-01 | Visual Soul (art direction) | Direction | The Visual Soul handoff and its approved images A–F (no ranking). Proportions, architecture, setting and rendering technique remain open | In-engine look test (S1b/S1c) and Luis's judgment of real captures |
 | 2026-10-01 | Two camera systems | Direction | A fast Strategy camera and a free, cozy Explore camera, toggled; Explore approaches surfaces closely without passing through floors or buildings | S1a playtest |
+| 2026-10-01 | Ordinary Place, first pass | Provisionally accepted as the direction | "The direction is going really well into the Visual Soul… but I would be lying to say it's already" there | Further passes and Luis's judgment |
+| 2026-10-01 | Rendering approach (V1) | Direction (working base) | Candidate E (painted light + paint filter + ink) is Luis's favourite; hand-painted textures are the next exploration | Comparison after the hand-painted pass |
+| 2026-10-01 | Camera defaults (C1–C4) | Accepted | `V` toggle, orders in Explore, Unity-style fly plus Blender-style orbit, buildings solid without interiors | Later playtests |
+| 2026-10-01 | Project organization | Working agreement, reaffirmed | Everything, including documentation, goes to GitHub, in a very organized structure (see Docs/README.md) | — |
 | 2026-10-01 | S1 sequence | Revised from Luis's handoff | Cameras first (S1a), then the Ordinary Place (house, grassland, path, worker; day and night, S1b), rendering candidates compared in engine (S1c), then the worker model (S1d) | Playtest of each checkpoint |
 
 Add future entries with the decision, its status, the evidence behind it, and what kind of playtest or new requirement would justify revisiting it.
@@ -726,7 +730,7 @@ Three Temperaments remains a possible follow-up after that playtest.
 Luis accepted the latest prototype while emphasizing that its implementation
 is a foundation for much deeper systems. His one-worker showcase reference
 is now captured in the dedicated canonical section above and expanded in
-Docs/WorkerShowcaseVision.md. The September 29 source review recommends
+Docs/Design/WorkerShowcaseVision.md. The September 29 source review recommends
 blueprint equipment and contact-based mining next; it changes documentation
 only. The September 26 technical evidence remains the latest executed validation.
 
@@ -754,7 +758,7 @@ deeper character-creator and civilization/building modularity remain the
 target. Strength-dependent tool handling, one-handed carry/dragging, bags,
 carts and material burden remain the recommended following experiments.
 Force/angle-dependent yield and their exact rules remain open.
-Reference: Docs/EquippedWorkerPlaytest.md and Docs/EquipmentArchitecture.md.
+Reference: Docs/Playtests/EquippedWorkerPlaytest.md and Docs/Technical/EquipmentArchitecture.md.
 
 
 ## Equipped Worker feedback and next proposal — September 30, 2026

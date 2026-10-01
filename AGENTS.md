@@ -6,7 +6,7 @@ For substantial work, retrieve the context the task actually needs:
 - design authority and unresolved questions → `Docs/GAME_VISION.md`
 - high-value design rationale / semantic drift warnings → `Docs/DESIGN_RATIONALE.md`
 - collaboration roles and lightweight project culture → `Docs/PROJECT_CULTURE.md`
-- technical architecture/history → `Docs/AI/UnityProjectContext.md`
+- technical architecture/history → `Docs/Technical/UnityProjectContext.md`
 - execution evidence and prior failures → `Docs/Validation.md`
 - current experiential acceptance → the current milestone playtest document
 

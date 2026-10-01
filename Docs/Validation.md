@@ -1,7 +1,7 @@
 # Validation history
 
 Current milestone: The Living Worker; see the September 26 entry below and
-Docs/LivingWorkerPlaytest.md. Earlier sections preserve historical evidence.
+Docs/Playtests/LivingWorkerPlaytest.md. Earlier sections preserve historical evidence.
 
 ## Unity 6.6 foundation — September 6, 2026
 
@@ -41,7 +41,7 @@ The generated XML test report is intentionally excluded from Git because Unity w
 
 The first Unity 6.6 import detected stale 6.3 library metadata and rebuilt version-specific caches. The subsequent clean test and build runs completed successfully. Generated cache and test-result files remain excluded from Git.
 
-This is a development prototype with placeholder art and a temporary HUD. It has no multiplayer, economy, formations, procedural animation or civilization customization yet. Tests validate the movement/selection boundary; they do not prove every physical input, camera angle, display resolution or visual preference. Complete Docs/Playtest.md with the user before accepting the milestone's feel.
+This is a development prototype with placeholder art and a temporary HUD. It has no multiplayer, economy, formations, procedural animation or civilization customization yet. Tests validate the movement/selection boundary; they do not prove every physical input, camera angle, display resolution or visual preference. Complete Docs/Playtests/WandererPlaytest.md with the user before accepting the milestone's feel.
 
 ProjectSettings were created from the bundled template and upgraded to Unity 6.6 serialization. Feature-specific settings are product/company names, text serialization, Walkable layer 6, one enabled build scene and removal of the unused template global input asset. Graphics and quality continue to use the template's URP assets; the new Input System remains enabled.
 
@@ -86,7 +86,7 @@ The user accepted The Group and chose 0.005 zoom. The Gatherer is the first impl
 
 The initial 14-test suite passed. An additional disable-position assertion then exposed residual movement after ResetPath; explicitly stopping the agent and clearing velocity fixed it. The final suite above includes that assertion. Existing Unity 6.6 obsolete object-discovery warnings remain in older editor/test code; new code uses current discovery APIs. Generated reports and logs remain local and excluded from Git.
 
-New scene: Assets/_WonderGather/Scenes/TheGatherer.unity. Local build: Builds/WindowsGatherer/WonderGather.exe. Preview: Docs/Images/TheGatherer.png. Earlier scenes remain available; the standalone build starts only TheGatherer. No packages, render settings or existing prefab GUIDs were changed. User recovery files and unrelated local settings remain untouched.
+New scene: Assets/_WonderGather/Scenes/TheGatherer.unity. Local build: Builds/WindowsGatherer/WonderGather.exe. Preview: Docs/Images/Gatherer/TheGatherer.png. Earlier scenes remain available; the standalone build starts only TheGatherer. No packages, render settings or existing prefab GUIDs were changed. User recovery files and unrelated local settings remain untouched.
 
 Scope limits: fixed interaction offsets, one placeholder resource and depot, no persistence or construction/production. Nearby formation search is bounded and may still reject an order when no suitable space is found. Gathering requires a complete route to its interaction spot. This is a playable prototype, not a final economy or resource balance.
 
@@ -877,10 +877,38 @@ four passes:
 - **Benchmark.** `-wgbenchmark` at 1920×1080 on an RTX 4060 Laptop GPU and an
   i9-14900HX. GPU frame time ranged 3.2–4.1 ms (baseline) to 4.6–5.4 ms (paint
   filter + ink). The full table is in
-  [OrdinaryPlaceLookTest.md](OrdinaryPlaceLookTest.md).
+  [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md).
 - **Not tested:**
   - other GPUs and vendors;
   - long sessions;
   - interactive play in the build or the open Editor.
 
   The captures are edit-mode stills, so the worker stands in its stored pose.
+
+## Moon fix and docs reorganization — October 1, 2026
+
+- **Defect, reported by Luis.** The crescent moon stayed in the sky during
+  the day.
+- **Fix.**
+  - The moon now rides opposite the sun, turned 25°.
+  - The sky shader multiplies it by `_MoonVisibility`, which `TimeOfDay` sets
+    to 0 once the sun is about 6° above the horizon and to 1 at night.
+- **Test.** `NightLightsTheHouseAndDayRestsIt` now asserts that the moon is
+  invisible at 06:30, 09:00, 12:00 and 16:00 and visible at 23:00. The
+  OrdinaryPlaceTests passed 5/5, and a recapture of the night sky was
+  reviewed.
+- **Docs reorganization**, at Luis's request for a very organized structure.
+  - **Moves.** 81 files moved with `git mv`, so their history is kept:
+    - playtest guides to `Docs/Playtests/`;
+    - art direction to `Docs/ArtDirection/`;
+    - design notes to `Docs/Design/`;
+    - technical docs to `Docs/Technical/`;
+    - images into one folder per milestone.
+  - **Links.** Every relative link and path mention was rewritten by script.
+    A link check over all Markdown files found no broken links, after fixing
+    three that already pointed nowhere in an archived plan.
+  - **Agent instructions.** `AGENTS.md` now points to
+    `Docs/Technical/UnityProjectContext.md`.
+  - **Capture paths.** The Wanderer, Group and Gatherer preview scripts now
+    write into their image folders. They compile.
+  - **Index.** `Docs/README.md` describes the layout.

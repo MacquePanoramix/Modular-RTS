@@ -8,17 +8,17 @@
 - **Current step:** S1 revised, the Ordinary Place and two cameras
   ([NextMilestonePlan.md](NextMilestonePlan.md)):
   - Luis set aside the Blender style studies and supplied the
-    [Visual Soul](VisualSoul.md) art direction.
+    [Visual Soul](ArtDirection/VisualSoul.md) art direction.
   - He asked for a Strategy camera plus a free Explore camera.
   - S1a (two cameras) is built and tested, and waiting for his playtest
-    ([TwoCamerasPlaytest.md](TwoCamerasPlaytest.md)). The build is
+    ([TwoCamerasPlaytest.md](Playtests/TwoCamerasPlaytest.md)). The build is
     `Builds/WindowsTwoCameras`.
   - S1b/S1c (the Ordinary Place) has its first in-engine pass:
     - a lit house, grassland, path, trees, sky and time of day;
     - five rendering candidates that switch live;
     - matched captures beside the references, and measured costs.
 
-    See [OrdinaryPlaceLookTest.md](OrdinaryPlaceLookTest.md); the build is
+    See [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md); the build is
     `Builds/WindowsOrdinaryPlace`. It waits for Luis's judgment of direction
     and candidates.
 - **Overall plan:** [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
@@ -35,12 +35,31 @@ A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director direction (October 1, evening)
+## Latest Game Director feedback (October 1, night)
+
+Recorded verbatim in
+[Correspondence/2026-10-01_ORDINARY_PLACE_FEEDBACK.md](Correspondence/2026-10-01_ORDINARY_PLACE_FEEDBACK.md):
+
+- **The Ordinary Place.** It is going "really well" towards the Visual Soul,
+  but is not there yet.
+- **Rendering.**
+  - Candidate E (painted light + paint filter + ink) is his favourite, and is
+    now the working base look.
+  - Hand-painted textures are the next exploration; Claude recommends them.
+- **Cameras.** Accepted ("I really liked the camera").
+- **Merge.** S0, S1a and the S1b/S1c first pass are merged into `main`.
+- **Organization.** Everything, including docs, goes to GitHub in a very
+  organized structure. The docs were reorganized into topic folders (see
+  [Docs/README.md](README.md)).
+- **Moon.** It was visible in daylight. Fixed: it rises opposite the sun and
+  shows only at night.
+
+## Earlier Game Director direction (October 1, evening)
 
 Recorded verbatim in
 [Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md):
 
-- **Art direction.** The Visual Soul handoff ([VisualSoul.md](VisualSoul.md)):
+- **Art direction.** The Visual Soul handoff ([VisualSoul.md](ArtDirection/VisualSoul.md)):
   - "Even an ordinary moment should feel worth pausing for";
   - lighting leads the emotion, surfaces feel alive, characters have a soul,
     and the wonder is playful and personal;
@@ -109,12 +128,10 @@ Still valid from September 30:
 
 ## Recommended next action
 
-1. **S1a, the two cameras.** Luis playtests them in any map
-   ([TwoCamerasPlaytest.md](TwoCamerasPlaytest.md)).
-2. **S1b/S1c, the Ordinary Place.** Luis walks and flies through it, compares
-   candidates A–E, and says how close it is to the Visual Soul and which
-   approach to pursue ([OrdinaryPlaceLookTest.md](OrdinaryPlaceLookTest.md)).
-3. **S1d, the worker model**, in the chosen language.
+1. **S1c, second pass: hand-painted surfaces.** Paint the Ordinary Place's
+   models with procedurally painted textures from their Blender scripts, on
+   top of look E ([plan](NextMilestonePlan.md)).
+2. **S1d, the worker model**, in that language.
 
 Luis's other choices on October 1:
 
@@ -137,9 +154,9 @@ Luis's other choices on October 1:
 - Showcase plan and open decisions: Docs/ShowcaseRoadmap.md
 - Next concrete milestone: Docs/NextMilestonePlan.md
 - Design authority: Docs/GAME_VISION.md
-- Showcase reference: Docs/WorkerShowcaseVision.md and Docs/Correspondence/
-- Latest playtest guide: Docs/GroundedBodyPlaytest.md
-- Technical contracts: Docs/EquipmentArchitecture.md and Docs/AI/UnityProjectContext.md
+- Showcase reference: Docs/Design/WorkerShowcaseVision.md and Docs/Correspondence/
+- Latest playtest guide: Docs/Playtests/GroundedBodyPlaytest.md
+- Technical contracts: Docs/Technical/EquipmentArchitecture.md and Docs/Technical/UnityProjectContext.md
 - Design meaning and collaboration: Docs/DESIGN_RATIONALE.md and Docs/PROJECT_CULTURE.md
 - Evidence: Docs/Validation.md
 - Completed plans: Docs/Plans/

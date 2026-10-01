@@ -186,7 +186,7 @@ Then retrieve only the district of knowledge the task actually touches:
 
 - design meaning → `Docs/GAME_VISION.md`
 - deeper "why" → `Docs/DESIGN_RATIONALE.md`
-- technical architecture/history → `Docs/AI/UnityProjectContext.md`
+- technical architecture/history → `Docs/Technical/UnityProjectContext.md`
 - evidence and scars → `Docs/Validation.md`
 - current experiential question → current milestone playtest document
 

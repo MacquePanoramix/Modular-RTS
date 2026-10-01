@@ -1,7 +1,7 @@
 # Unity project context
 
 Updated September 30, 2026 after Luis's Equipped Worker review (source analysis only).
-Current playtest: Docs/EquippedWorkerPlaytest.md; evidence: Docs/Validation.md.
+Current playtest: Docs/Playtests/EquippedWorkerPlaytest.md; evidence: Docs/Validation.md.
 The creator offers supplies and equipment maps; faction saves are version 5.
 Sections describe successive extensions; later sections supersede earlier limits.
 
@@ -33,7 +33,7 @@ Use private serialized fields, PascalCase types/methods, explicit dependency wir
 
 ## Validation and limits
 
-Read Docs/Validation.md for final execution results. PlayMode tests cover routing around the obstacle wall, rejection of disconnected/out-of-range/nonfinite destinations, and selection disable lifecycle. Manual checks are in Docs/Playtest.md. Desktop mouse/keyboard and flat terrain are the current scope. Camera feel and art direction require user playtesting.
+Read Docs/Validation.md for final execution results. PlayMode tests cover routing around the obstacle wall, rejection of disconnected/out-of-range/nonfinite destinations, and selection disable lifecycle. Manual checks are in Docs/Playtests/WandererPlaytest.md. Desktop mouse/keyboard and flat terrain are the current scope. Camera feel and art direction require user playtesting.
 
 Source evidence: ProjectSettings/ProjectVersion.txt, GraphicsSettings.asset, QualitySettings.asset, ProjectSettings.asset, Packages/manifest.json, first-party runtime/editor/test sources and recovered conversation text. The referenced PDF dossier was not available as file contents.
 
@@ -210,7 +210,7 @@ only in memory until explicit save/rename, retaining the old file as backup.
 Nested unknown fields and duplicate/dangling links are refused. Workspace dirty
 tracking includes complete rosters, names and links. No package updates needed.
 
-Current playtest: Docs/BuildingNetworkPlaytest.md. Windows build entry remains
+Current playtest: Docs/Playtests/BuildingNetworkPlaytest.md. Windows build entry remains
 FactionCreatorSetup.BuildWindows and the existing creator/map scenes.
 
 
@@ -238,7 +238,7 @@ playtest; changing live cargo capacity mid-order is not an exposed player flow.
 
 These are temporary outcome controls. No body system, pricing, new packages,
 scene/prefab changes or final customization choices are part of this slice.
-Current guide: Docs/UnitPerformancePlaytest.md.
+Current guide: Docs/Playtests/UnitPerformancePlaytest.md.
 
 
 ## Living Body procedural locomotion experiment
@@ -284,7 +284,7 @@ The two-unit checks establish this prototype only, not arbitrary body support.
 
 September 26, 2026: approved scope, implemented and technically validated.
 Luis provisionally accepted the early prototype on September 28. This section
-supersedes the earlier separation between faction workers and procedural bodies. Current guide: Docs/LivingWorkerPlaytest.md;
+supersedes the earlier separation between faction workers and procedural bodies. Current guide: Docs/Playtests/LivingWorkerPlaytest.md;
 execution evidence and remaining limits belong in Docs/Validation.md.
 
 LivingWorkerSetup.Create uses Unity authoring APIs to make LivingWorker.prefab
@@ -349,7 +349,7 @@ The original resource collider is retained for compatibility.
 ## September 29 equipment/contact review
 
 The next recommendation is The Equipped Worker; see Docs/NextMilestonePlan.md
-for the bounded scope and source evidence. Docs/WorkerShowcaseVision.md records
+for the bounded scope and source evidence. Docs/Design/WorkerShowcaseVision.md records
 Luis's deeper target. No new tool, physics, strength or save system was implemented
 by this review, and Unity tests/builds were not rerun.
 
@@ -368,7 +368,7 @@ FactionStore explicit-save backup/conflict contract when extending the schema.
 
 ## Equipped Worker integration — September 29
 
-See Docs/EquipmentArchitecture.md for the current ownership/contact/save contracts.
+See Docs/Technical/EquipmentArchitecture.md for the current ownership/contact/save contracts.
 ToolDefinition owns stable printable IDs (1–64 characters), prefab, rigid grips
 and head point/radius. Blueprint/catalog choices flow through draft editing,
 duplication, dirty tracking, v5 records and UnitIdentity. Unknown definitions
@@ -426,7 +426,7 @@ extending the rig. The previous plan is archived at Docs/Plans/EquippedWorker.md
 
 ## Strength and Burden, checkpoint A — grounded body
 
-Implemented September 30. The playtest guide is Docs/GroundedBodyPlaytest.md;
+Implemented September 30. The playtest guide is Docs/Playtests/GroundedBodyPlaytest.md;
 evidence is in Validation.md.
 
 **Gait.** ProceduralBiped's reactive, threshold-triggered stepping is replaced

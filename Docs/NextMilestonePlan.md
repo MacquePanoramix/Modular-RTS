@@ -3,7 +3,7 @@
 **Revised:** October 1, 2026, from Luis's Visual Soul handoff and his
 two-camera direction
 ([correspondence](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md),
-[VisualSoul.md](VisualSoul.md)).
+[VisualSoul.md](ArtDirection/VisualSoul.md)).
 **Baseline:** the grounded body (S0) and the arrival fix. Unity 6000.6.0f1 /
 URP (Forward+, HDR); Blender 4.4/4.5.
 **Status:** In progress. The plan follows the handoff's own instructions
@@ -11,12 +11,14 @@ URP (Forward+, HDR); Blender 4.4/4.5.
 splits the work into checkpoints Luis playtests one at a time:
 
 1. **S1a, the two cameras.** Built and tested on October 1, and waiting
-   for Luis's playtest ([TwoCamerasPlaytest.md](TwoCamerasPlaytest.md)).
+   for Luis's playtest ([TwoCamerasPlaytest.md](Playtests/TwoCamerasPlaytest.md)).
 2. **S1b, the Ordinary Place.** First in-engine pass built on October 1
-   ([OrdinaryPlaceLookTest.md](OrdinaryPlaceLookTest.md)).
+   ([OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md)).
 3. **S1c, choosing the rendering approach.** Five candidates can be switched
-   live in the build, with matched captures and measured costs. This waits for
-   Luis's judgment.
+   live in the build, with matched captures and measured costs. Luis chose E
+   (painted light + paint filter + ink) as the working base and agreed that
+   hand-painted textures come next. That is **S1c, second pass** (below), and it
+   is in progress.
 4. **S1d, the worker model.**
 
 The previous S1 plan (style studies, then the worker model) is archived in
@@ -173,6 +175,49 @@ with each.
 - **Luis's choice.** Luis picks or mixes the rendering approach in his
   playtest. Until then it stays Open.
 
+## S1c, second pass — hand-painted surfaces
+
+Luis's verdict on the first pass: "going really well into the Visual Soul",
+but not there yet. He prefers E, the most illustrated candidate. The biggest
+remaining gap was painterly surface. In the references the brushwork belongs
+to the objects ("Brush marks, uneven plaster and flowing grass belong to the
+objects", A). Screen filters only paint over the whole image.
+
+**The approach.** Each Ordinary Place model gets a painted colour texture,
+made reproducibly by its Blender script:
+
+1. **Unwrap.** Every mesh is UV-unwrapped.
+2. **Bake.** Cycles bakes surface information into the textures:
+   - ambient occlusion for cavities;
+   - edges and curvature;
+   - upward-facing areas.
+3. **Paint.** A painter's language is applied in shader nodes and baked into
+   the colour texture:
+   - broad warm-to-cool value shifts;
+   - lit, worn edges;
+   - cool coloured cavities;
+   - directional brush strokes that follow the material (plaster daubs,
+     wood grain along beams, shingle-by-shingle variation, stone outlines);
+   - moss on upward stone and roof;
+   - stains low on the walls.
+4. **Import.** The models are exported with UVs, and the textures are
+   imported into `Assets/_WonderGather/Art/OrdinaryPlace/Textures`.
+5. **Shade.** The painted shader samples them. The in-shader dabs relax where
+   a real painted texture exists, and the brush-broken light edge stays.
+
+These textures are painted by script, not by hand. A human painter could
+later paint over them in Blender, because the UVs and source files are kept.
+
+**Base look:** E (painted light + paint filter + ink). The candidates stay
+switchable for comparison.
+
+**Evidence:**
+
+- matched captures before and after, beside references A–F;
+- frame cost in the benchmark;
+- the full suite;
+- a build.
+
 ## S1d — The worker model (former S1 scope)
 
 This step follows Luis's S1c choice, so the model is made for the chosen look:
@@ -209,10 +254,7 @@ S1a/S1b playtests.
 
 | ID | Question | Default used |
 |---|---|---|
-| C1 | Camera toggle key | `V`, plus the on-screen hint |
-| C2 | Can you give orders while in Explore? | Yes. The game keeps running and orders work as in Strategy |
-| C3 | Explore controls | Unity-style fly (right mouse + WASD, Q/E) plus Blender-style orbit (middle mouse) |
-| C4 | Can the Explore camera enter buildings? | No, while buildings have no interior |
-| V1 | Rendering approach | Open until Luis compares the candidates in S1c |
+| C1–C4 | Camera toggle key, orders while exploring, controls, entering buildings | **Accepted Oct 1** ("I really liked the camera") |
+| V1 | Rendering approach | **Working base, Oct 1:** E, plus hand-painted textures (second pass). Not Locked |
 | V2 | Proportions, architecture, setting | Open, as the handoff states. S1b uses a modest cottage and grassland |
 | V3 | Is the house the worker's home and delivery point in the showcase? | Possible. It would join the Visual Soul place to the worker loop. Not built until Luis decides |

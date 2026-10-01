@@ -17,6 +17,7 @@ Shader "Wonder Gather/Sky"
         _MoonColor("Moon colour", Color) = (0.85, 0.88, 1.0, 1)
         _MoonSize("Moon size", Range(0.005, 0.12)) = 0.035
         _MoonPhase("Moon crescent", Range(0, 1)) = 0.65
+        _MoonVisibility("Moon visibility", Range(0, 1)) = 1
         _Stars("Stars", Range(0, 2)) = 0
         _Galaxy("Galactic band", Range(0, 1)) = 0
         _CloudLit("Cloud light", Color) = (1, 0.95, 0.9, 1)
@@ -48,7 +49,7 @@ Shader "Wonder Gather/Sky"
             CBUFFER_START(UnityPerMaterial)
                 float4 _Zenith, _Horizon, _Glow, _Below, _SunDirection, _SunColor, _MoonDirection, _MoonColor;
                 float4 _CloudLit, _CloudShade, _CloudEdge;
-                float _GlowStrength, _SunSize, _MoonSize, _MoonPhase, _Stars, _Galaxy;
+                float _GlowStrength, _SunSize, _MoonSize, _MoonPhase, _MoonVisibility, _Stars, _Galaxy;
                 float _CloudCover, _CloudSoftness, _CloudScale, _CloudSpeed, _CloudOpacity, _Exposure;
             CBUFFER_END
 
@@ -130,7 +131,7 @@ Shader "Wonder Gather/Sky"
                 float3 shadowDir = normalize(moonDir + side * _MoonSize * 0.9 * _MoonPhase + float3(0, _MoonSize * 0.4, 0));
                 float bite = smoothstep(cos(_MoonSize * 1.02), cos(_MoonSize * 0.95), dot(d, shadowDir)) * saturate(_MoonPhase * 1.5);
                 float moon = saturate(disc - bite);
-                sky += _MoonColor.rgb * (moon * 2.2 + pow(saturate(moonDot), 300) * 0.25 + pow(saturate(moonDot), 30) * 0.05) * saturate(moonDir.y * 5 + 0.3);
+                sky += _MoonColor.rgb * (moon * 2.2 + pow(saturate(moonDot), 300) * 0.25 + pow(saturate(moonDot), 30) * 0.05) * saturate(moonDir.y * 5 + 0.3) * _MoonVisibility;
 
                 // Clouds on a curved layer; lit in soft painted bands from the sun (or moon at night).
                 if (up > -0.02 && _CloudOpacity > 0)

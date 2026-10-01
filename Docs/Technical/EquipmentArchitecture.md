@@ -1,8 +1,8 @@
 # Equipment and mining architecture
 
 **Status:** Implemented and technically validated September 29, 2026. This
-document describes the current prototype contracts; Luis's acceptance is pending. See [Validation.md](Validation.md) for actual results
-and [EquippedWorkerPlaytest.md](EquippedWorkerPlaytest.md) for the review path.
+document describes the current prototype contracts; Luis's acceptance is pending. See [Validation.md](../Validation.md) for actual results
+and [EquippedWorkerPlaytest.md](../Playtests/EquippedWorkerPlaytest.md) for the review path.
 
 ## Scope and ownership
 
@@ -180,11 +180,11 @@ capacity counts and raw rate controls remain provisional.
 
 Eighteen focused equipment/persistence tests, 85 full PlayMode tests, seven
 reviewed rendered captures and a Windows x64 development build passed.
-[Validation.md](Validation.md) records exact results, initial failures and
+[Validation.md](../Validation.md) records exact results, initial failures and
 limits. The rendered frames cover the creator, overview, preparation, contact,
 recovery, carrying and delivery; they do not establish final aesthetic acceptance.
 
-Luis's [showcase direction](WorkerShowcaseVision.md) remains the authority
+Luis's [showcase direction](../Design/WorkerShowcaseVision.md) remains the authority
 for the deeper target. Strength-dependent carrying and use, dragging,
 bags/carts, material loads, detailed character and building creation,
 force/angle-sensitive yield and final art remain open or later work.

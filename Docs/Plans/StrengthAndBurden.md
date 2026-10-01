@@ -15,13 +15,13 @@
 chosen as recommended (see [Decisions](#decisions-for-luis)). D6–D9 proceed
 on their recommendations until Luis says otherwise. **Checkpoint A is implemented
 and technically validated. It awaits Luis's playtest**
-([GroundedBodyPlaytest.md](../GroundedBodyPlaytest.md)); B and C follow his review. The completed previous plan is archived in
+([GroundedBodyPlaytest.md](../Playtests/GroundedBodyPlaytest.md)); B and C follow his review. The completed previous plan is archived in
 [Plans/EquippedWorker.md](EquippedWorker.md).
 
 ## Where this starts
 
 Luis reviewed The Equipped Worker on September 30. He accepted it as the bare
-starting point for the [one-worker showcase](../WorkerShowcaseVision.md), with
+starting point for the [one-worker showcase](../Design/WorkerShowcaseVision.md), with
 three problems:
 
 - the strike "looks just like an animation";

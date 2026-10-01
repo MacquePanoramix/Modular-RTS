@@ -4,7 +4,7 @@
 **Attachment:** `Wonder_Gather_Visual_Soul_Handoff.pdf` (9 pages, dated
 October 1, 2026), made with ChatGPT. Its six approved images A–F are stored
 in [`../ArtDirection/References/`](../ArtDirection/References/), and its text is
-transcribed in [`../VisualSoul.md`](../VisualSoul.md). The PDF's
+transcribed in [`../VisualSoul.md`](../ArtDirection/VisualSoul.md). The PDF's
 user-supplied art reference (page 9) is not committed because its provenance
 is unknown. It is described in VisualSoul.md.
 
@@ -16,13 +16,13 @@ is unknown. It is described in VisualSoul.md.
 
 - **Style studies.** The three Blender studies (A soft, B low-poly,
   C grounded) were not chosen. They are superseded by the Visual Soul handoff.
-  See [StyleStudies.md](../StyleStudies.md).
+  See [StyleStudies.md](../ArtDirection/StyleStudies.md).
 - **Visual direction.** The handoff's principles and images A–F are now the
   art-direction reference:
   - A–F are approved, with no ranking.
   - Final proportions, architecture, world setting and rendering technique
     remain open, as the handoff states.
-  - See [VisualSoul.md](../VisualSoul.md).
+  - See [VisualSoul.md](../ArtDirection/VisualSoul.md).
 - **Two camera systems.** Recorded as a Direction in
   [GAME_VISION.md](../GAME_VISION.md), with two modes the player toggles
   between:

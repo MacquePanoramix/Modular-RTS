@@ -11,10 +11,10 @@
 6000.6.0f1 / URP; Blender 4.4/4.5 on Luis's computer.
 **Status:** Approved by Luis on October 1: model first (O4), with the art
 direction to be chosen from rendered style studies (O1). Step 1 is done: three
-directions rendered in [StyleStudies.md](StyleStudies.md). Waiting for Luis's
+directions rendered in [StyleStudies.md](../ArtDirection/StyleStudies.md). Waiting for Luis's
 choice before modeling. The overall plan is in
-[ShowcaseRoadmap.md](ShowcaseRoadmap.md); the previous plan is archived in
-[Plans/StrengthAndBurden.md](Plans/StrengthAndBurden.md).
+[ShowcaseRoadmap.md](../ShowcaseRoadmap.md); the previous plan is archived in
+[Plans/StrengthAndBurden.md](StrengthAndBurden.md).
 
 ## The question
 

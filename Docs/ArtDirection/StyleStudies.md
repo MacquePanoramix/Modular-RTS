@@ -4,7 +4,7 @@
 **Status:** Not chosen. On October 1 Luis judged these "not bad", but they did not
 match what he imagines. He supplied the [Visual Soul](VisualSoul.md) handoff
 instead, and it is now the art direction. This page is kept as a record.
-**Source:** [`Art/Blender/StyleStudies/style_studies.py`](../Art/Blender/StyleStudies/style_studies.py).
+**Source:** [`Art/Blender/StyleStudies/style_studies.py`](../../Art/Blender/StyleStudies/style_studies.py).
 Every image is generated from that script and can be reproduced or adjusted:
 
 ```
@@ -40,8 +40,8 @@ procedural body, and body shapes for the creator.
 
 ## A — Soft stylized
 
-![Soft stylized, scene](Images/StyleStudy_soft_wide.jpg)
-![Soft stylized, portrait](Images/StyleStudy_soft_close.jpg)
+![Soft stylized, scene](../Images/StyleStudies/StyleStudy_soft_wide.jpg)
+![Soft stylized, portrait](../Images/StyleStudies/StyleStudy_soft_close.jpg)
 
 - **Look.** Rounded, slightly enlarged head and hands. Warm, gentle palette
   with soft light and storybook warmth.
@@ -55,8 +55,8 @@ procedural body, and body shapes for the creator.
 
 ## B — Faceted low-poly
 
-![Faceted low-poly, scene](Images/StyleStudy_lowpoly_wide.jpg)
-![Faceted low-poly, portrait](Images/StyleStudy_lowpoly_close.jpg)
+![Faceted low-poly, scene](../Images/StyleStudies/StyleStudy_lowpoly_wide.jpg)
+![Faceted low-poly, portrait](../Images/StyleStudies/StyleStudy_lowpoly_close.jpg)
 
 - **Look.** Flat-shaded facets, crisp silhouettes and a saturated, simple
   palette.
@@ -70,8 +70,8 @@ procedural body, and body shapes for the creator.
 
 ## C — Grounded semi-realistic
 
-![Grounded semi-realistic, scene](Images/StyleStudy_grounded_wide.jpg)
-![Grounded semi-realistic, portrait](Images/StyleStudy_grounded_close.jpg)
+![Grounded semi-realistic, scene](../Images/StyleStudies/StyleStudy_grounded_wide.jpg)
+![Grounded semi-realistic, portrait](../Images/StyleStudies/StyleStudy_grounded_close.jpg)
 
 - **Look.** Realistic human proportions, a muted natural palette, textured
   cloth, wood and stone, and depth of field.

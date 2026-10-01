@@ -12,17 +12,17 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 for outside playtesters: one worker, a video-game style character creator,
 physical mining and real hauling. See the [showcase roadmap](Docs/ShowcaseRoadmap.md).
 
-- **Art direction:** the [Visual Soul](Docs/VisualSoul.md), Luis's October 1
+- **Art direction:** the [Visual Soul](Docs/ArtDirection/VisualSoul.md), Luis's October 1
   handoff (painted light, living surfaces, characters with a soul, playful
   wonder).
 - **Latest:**
   - **Two camera modes** in every map (`V`): a fast Strategy camera and a
-    free Explore camera. See the [two cameras playtest](Docs/TwoCamerasPlaytest.md).
+    free Explore camera. See the [two cameras playtest](Docs/Playtests/TwoCamerasPlaytest.md).
   - **The Ordinary Place,** an in-engine Visual Soul look test with a lit
     house, grassland, path, sky and time of day. It has five rendering
     candidates to compare. Open
     `Assets/_WonderGather/Scenes/TheOrdinaryPlace.unity`, or see the
-    [look test](Docs/OrdinaryPlaceLookTest.md).
+    [look test](Docs/Playtests/OrdinaryPlaceLookTest.md).
 - **Next:** Luis judges the look and picks the rendering approach, then S1d
   builds the worker model ([plan](Docs/NextMilestonePlan.md)).
 
@@ -30,8 +30,8 @@ Latest milestone: **The Equipped Worker**, connecting a blueprint-selected
 pickaxe to reachable procedural strikes and real resource extraction. Open
 `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, choose **Pickaxe** under
 the worker's **Equipped tool**, then select **Playtest equipment →**.
-See [Equipped Worker playtest](Docs/EquippedWorkerPlaytest.md),
-[equipment architecture](Docs/EquipmentArchitecture.md) and
+See [Equipped Worker playtest](Docs/Playtests/EquippedWorkerPlaytest.md),
+[equipment architecture](Docs/Technical/EquipmentArchitecture.md) and
 [validation evidence](Docs/Validation.md). Luis accepted it on September 30 as
 the bare starting point; its motion quality is the next thing to improve.
 
@@ -41,29 +41,29 @@ reviewed rendered probe and Windows build passed. Local standalone:
 map retains the Living Worker's supply collection. Older faction files open
 with None; explicit saves upgrade to version 5 with the existing backup flow.
 
-The longer-term reference is a [deep, polished one-worker showcase](Docs/WorkerShowcaseVision.md).
+The longer-term reference is a [deep, polished one-worker showcase](Docs/Design/WorkerShowcaseVision.md).
 Its limited scene scale does not limit the intended depth of character and
 civilization creation. Tool shape, poses, fixed hit yield and back stow are
 provisional. Strength-dependent handling and material transport aids follow
 this contact proof and Luis's feedback.
 
 The earlier movement comparison remains in `TheLivingBody.unity`. See
-[Living Body playtest](Docs/LivingBodyPlaytest.md). Creator performance controls
-remain available; see [Unit performance playtest](Docs/UnitPerformancePlaytest.md).
+[Living Body playtest](Docs/Playtests/LivingBodyPlaytest.md). Creator performance controls
+remain available; see [Unit performance playtest](Docs/Playtests/UnitPerformancePlaytest.md).
 
 > Previous milestone: **Faction saving and library**. Open
 > `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run
 > `Builds/WindowsFactionCreator/WonderGather.exe`.
-> See [Faction library playtest](Docs/FactionLibraryPlaytest.md).
+> See [Faction library playtest](Docs/Playtests/FactionLibraryPlaytest.md).
 
 > Previous milestone: **Player-facing faction creator**. Open
 > `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, or run the local
 > `Builds/WindowsFactionCreator/WonderGather.exe` build.
-> See [Faction creator playtest](Docs/FactionCreatorPlaytest.md).
+> See [Faction creator playtest](Docs/Playtests/FactionCreatorPlaytest.md).
 
 > Previous milestone: **Civilization blueprints**. Open
 > `Assets/_WonderGather/Scenes/TheCivilization.unity`.
-> See [Civilization playtest](Docs/CivilizationPlaytest.md) for editable assets,
+> See [Civilization playtest](Docs/Playtests/CivilizationPlaytest.md) for editable assets,
 > the provisioned sample, and validation limits.
 
 ## Open and play
@@ -80,7 +80,7 @@ The creator retains unit/building blueprints, production links and performance
 controls. Save before stopping Unity Play Mode. The Equipped Worker guide covers
 interrupted strikes, shared work positions, production and save compatibility.
 
-See [Building network playtest](Docs/BuildingNetworkPlaytest.md) for a
+See [Building network playtest](Docs/Playtests/BuildingNetworkPlaytest.md) for a
 concrete construction and mixed-production test. Earlier scenes remain available for comparison.
 
 For this integrated playtest without Unity, run
@@ -125,4 +125,4 @@ The Gatherer inherits the preferred 0.005 zoom. Camera tuning is on **RTS Camera
 
 The project began with the Universal 3D template bundled with the installed editor. URP settings originate from that template. Unity resolves packages in `Packages/packages-lock.json`; commit this lock and all asset metadata. Do not commit Library, Temp, Logs or local IDE files.
 
-Start with `Docs/GAME_VISION.md`, the living source of truth for locked decisions, current direction, possible ideas, and open questions. `Docs/Playtest.md` contains acceptance checks, and `Docs/Validation.md` records execution evidence and limitations.
+Start with `Docs/GAME_VISION.md`, the living source of truth for locked decisions, current direction, possible ideas, and open questions. `Docs/Playtests/WandererPlaytest.md` contains acceptance checks, and `Docs/Validation.md` records execution evidence and limitations.

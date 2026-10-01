@@ -5,11 +5,11 @@ starting point for the one-worker showcase, not as the intended motion quality.
 See [Luis's feedback](#luiss-feedback--september-30-2026) below. Technical
 evidence from September 29: 18 focused tests, 85 full PlayMode tests, the
 rendered probe and the Windows build passed. Executed results belong in
-[Validation.md](Validation.md).
+[Validation.md](../Validation.md).
 
 This slice asks whether a tool chosen in the faction blueprint can visibly
 reach the mineral and cause extraction through valid contact. It advances
-the [one-worker showcase](WorkerShowcaseVision.md), while its body, pickaxe,
+the [one-worker showcase](../Design/WorkerShowcaseVision.md), while its body, pickaxe,
 boulder, handling and fixed yield remain provisional.
 
 ## Open the test through the creator
@@ -102,7 +102,7 @@ What this settles and what it leaves open:
 - **Direction reaffirmed.** Movement should be procedurally generated and grounded,
   without goofiness.
 - **Next step.** The source analysis of these three problems and the proposed next
-  milestone are in [NextMilestonePlan.md](NextMilestonePlan.md).
+  milestone are in [NextMilestonePlan.md](../NextMilestonePlan.md).
 - **Still unjudged.** Luis did not comment on the change from mining to carrying,
   on interruptions or on persistence, so those remain unjudged rather than accepted.
 
@@ -130,6 +130,6 @@ make the small scene ready for outside testers.
 
 Scripted Editor captures reviewed during validation:
 
-![Equipment choice in the faction creator](Images/EquippedWorkerCreator.png)
-![Reachable pickaxe contact against the mineral](Images/EquippedWorkerContact.png)
-![Cargo transport with the tool back-stowed](Images/EquippedWorkerCarry.png)
+![Equipment choice in the faction creator](../Images/EquippedWorker/EquippedWorkerCreator.png)
+![Reachable pickaxe contact against the mineral](../Images/EquippedWorker/EquippedWorkerContact.png)
+![Cargo transport with the tool back-stowed](../Images/EquippedWorker/EquippedWorkerCarry.png)

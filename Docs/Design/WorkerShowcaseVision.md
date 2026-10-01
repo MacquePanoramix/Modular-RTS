@@ -6,7 +6,7 @@
 approved specification for every example below. GAME_VISION.md remains the
 canonical design source; this document expands its showcase direction.
 Luis's original wording is kept verbatim in
-[Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md).
+[Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md](../Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md).
 
 > **October 1 clarification:** the showcase is one worker with a video-game
 > style character creator for it. In this prototype that creator replaces the
@@ -14,8 +14,8 @@ Luis's original wording is kept verbatim in
 > constant and not a creator option. The worker hauls with one hand each
 > (load and pickaxe), a backpack, a sack or a cart, never a back-stowed
 > pickaxe. Models are made to much higher quality in Blender. The staged plan
-> is [ShowcaseRoadmap.md](ShowcaseRoadmap.md), and the source is
-> [the October 1 feedback](Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md).
+> is [ShowcaseRoadmap.md](../ShowcaseRoadmap.md), and the source is
+> [the October 1 feedback](../Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md).
 
 ## Small in scale, deep in experience
 
@@ -144,12 +144,12 @@ ready for a public demonstration:
    and extraction gated by actual valid contact. Luis accepted it as the bare
    starting point. Its strike reads as a canned animation, the tool clips the
    body, and the feet still look goofy
-   ([feedback](EquippedWorkerPlaytest.md#luiss-feedback--september-30-2026)).
+   ([feedback](../Playtests/EquippedWorkerPlaytest.md#luiss-feedback--september-30-2026)).
 2. **Strength and burden:**
    - checkpoint A, the grounded body, is done; Luis judged it "much better" on
      October 1;
    - on October 1 the remaining route became the stages of
-     [ShowcaseRoadmap.md](ShowcaseRoadmap.md): the worker model, the creator,
+     [ShowcaseRoadmap.md](../ShowcaseRoadmap.md): the worker model, the creator,
      effort-driven work, strength and hauling, and world polish.
 3. **Materials and transport aids:** give extracted material and containers
    meaningful load/capacity, then prove a bag and/or a cart with actual

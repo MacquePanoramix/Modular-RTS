@@ -2,7 +2,7 @@
 
 **Source:** `Wonder_Gather_Visual_Soul_Handoff.pdf`, made by Luis with
 ChatGPT and handed over on October 1, 2026
-([correspondence](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md)).
+([correspondence](../Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md)).
 **Status:** the **Direction** for the showcase and the game.
 
 - Images A–F are approved, with no ranking.
@@ -65,7 +65,7 @@ game-render style sheets were rejected for feeling generic and alike.
 
 ### A — The lit house (night, material presence)
 
-![A — The lit house](ArtDirection/References/A_TheLitHouse.jpg)
+![A — The lit house](References/A_TheLitHouse.jpg)
 
 An ordinary home becomes magical through the relationship between warm light
 and a rich, dark world.
@@ -79,7 +79,7 @@ and a rich, dark world.
 
 ### B — A face in window light (characters)
 
-![B — A face in window light](ArtDirection/References/B_AFaceInWindowLight.jpg)
+![B — A face in window light](References/B_AFaceInWindowLight.jpg)
 
 A person feels present through imperfect drawing, an ordinary gesture and a
 few expressive marks.
@@ -91,7 +91,7 @@ few expressive marks.
 
 ### C — The breathing grove (daylight nature)
 
-![C — The breathing grove](ArtDirection/References/C_TheBreathingGrove.jpg)
+![C — The breathing grove](References/C_TheBreathingGrove.jpg)
 
 Daylight creates wonder through large living shapes, textured shade and an
 inviting opening.
@@ -105,7 +105,7 @@ inviting opening.
 
 ### D — Tactile darkness (night, material presence)
 
-![D — Tactile darkness](ArtDirection/References/D_TactileDarkness.jpg)
+![D — Tactile darkness](References/D_TactileDarkness.jpg)
 
 A small person and a warm dwelling sit inside a world of unfamiliar scale and
 tangible materials.
@@ -117,7 +117,7 @@ tangible materials.
 
 ### E — Expressive drawn life (characters)
 
-![E — Expressive drawn life](ArtDirection/References/E_ExpressiveDrawnLife.jpg)
+![E — Expressive drawn life](References/E_ExpressiveDrawnLife.jpg)
 
 Distinctive people and a quiet exchange bring playful humanity into a
 beautifully painted evening.
@@ -129,7 +129,7 @@ beautifully painted evening.
 
 ### F — Cosmic wonder (wonder and scale)
 
-![F — Cosmic wonder](ArtDirection/References/F_CosmicWonder.jpg)
+![F — Cosmic wonder](References/F_CosmicWonder.jpg)
 
 A tiny cared-for home and an ordinary person make an immense, impossible world
 feel personal.

@@ -2,9 +2,9 @@
 
 **Status:** Reviewed by Luis on October 1, 2026. He judged the walk "much better"
 and reported one defect, re-shuffling on arrival, which is fixed the same day
-(see below). It is now stage S0 of [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
-Technical results are in [Validation.md](Validation.md). The archived plan is
-[Plans/StrengthAndBurden.md](Plans/StrengthAndBurden.md).
+(see below). It is now stage S0 of [ShowcaseRoadmap.md](../ShowcaseRoadmap.md).
+Technical results are in [Validation.md](../Validation.md). The archived plan is
+[Plans/StrengthAndBurden.md](../Plans/StrengthAndBurden.md).
 
 ## Luis's feedback — October 1, 2026
 
@@ -14,7 +14,7 @@ Technical results are in [Validation.md](Validation.md). The archived plan is
 > after it lands near the landing spot, it can just stay still there.
 
 The full message, including the showcase scope it clarified, is in
-[Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md](Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md).
+[Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md](../Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md).
 
 **The fix.** A frame trace showed the cause. The root stopped mid-stride, and
 after a short pause the body made two separate standing adjustment steps, one
@@ -128,7 +128,7 @@ stopping, walking with the bundle, jogging, or on the ramp.
 
 Captured from the automated probe, side view, one stride each:
 
-![Walking at the natural pace](Images/GroundedBodyWalk.png)
-![Jogging at 200%](Images/GroundedBodyJog.png)
-![Carrying the bundle home with the tool stowed](Images/GroundedBodyCarry.png)
-![Standing, and settled after stopping](Images/GroundedBodyStanding.png)
+![Walking at the natural pace](../Images/GroundedBody/GroundedBodyWalk.png)
+![Jogging at 200%](../Images/GroundedBody/GroundedBodyJog.png)
+![Carrying the bundle home with the tool stowed](../Images/GroundedBody/GroundedBodyCarry.png)
+![Standing, and settled after stopping](../Images/GroundedBody/GroundedBodyStanding.png)

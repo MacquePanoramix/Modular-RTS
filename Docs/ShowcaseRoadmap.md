@@ -15,7 +15,7 @@ Each stage still gets its own plan in [NextMilestonePlan.md](NextMilestonePlan.m
 
 - [Original brief (Sept 28)](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md)
 - [Scope clarification (Oct 1)](Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md)
-- [WorkerShowcaseVision.md](WorkerShowcaseVision.md)
+- [WorkerShowcaseVision.md](Design/WorkerShowcaseVision.md)
 - [GAME_VISION.md](GAME_VISION.md), which remains the design authority
 
 ## What the showcase is
@@ -105,12 +105,12 @@ Strength and Burden checkpoint A delivered:
 
 Luis judged it "much better". The arrival shuffle he reported is fixed: the
 body finishes its stride and stands still. See
-[GroundedBodyPlaytest.md](GroundedBodyPlaytest.md).
+[GroundedBodyPlaytest.md](Playtests/GroundedBodyPlaytest.md).
 
 ### S1 — The Ordinary Place, two cameras and the worker model (in progress)
 
 Revised on October 1. Luis set aside the three Blender style studies and
-supplied the Visual Soul handoff ([VisualSoul.md](VisualSoul.md)). He also
+supplied the Visual Soul handoff ([VisualSoul.md](ArtDirection/VisualSoul.md)). He also
 asked for two camera systems. The detailed plan is in
 [NextMilestonePlan.md](NextMilestonePlan.md). It has four checkpoints:
 
@@ -128,7 +128,7 @@ asked for two camera systems. The detailed plan is in
 The original S1 scope that continues as S1d:
 
 - **Style studies.** Done on October 1, but not chosen. Superseded by the
-  Visual Soul handoff (see [StyleStudies.md](StyleStudies.md)).
+  Visual Soul handoff (see [StyleStudies.md](ArtDirection/StyleStudies.md)).
 - **The worker model.** Model a reproducible worker in Blender, with source and
   export scripts kept in the repository. It has a skeleton matching the
   procedural rig (pelvis, spine, chest, neck, head, arms, hands, legs, feet,
@@ -217,8 +217,8 @@ pickaxes) still hold.
 | ID | Question | Recommendation |
 |---|---|---|
 | O1 | Art direction for the models (needed for S1) | **Set Oct 1:** the Visual Soul handoff (A–F approved), replacing the style studies. Its rendering technique, proportions, architecture and setting stay open (S1c) |
-| O7 | Rendering approach | Open. Luis chooses after comparing in-engine candidates in S1c |
-| C1–C4 | Camera toggle key, orders in Explore, Explore controls, entering buildings | Defaults: `V`; orders allowed; Unity-style fly plus Blender-style orbit; buildings solid while they have no interior |
+| O7 | Rendering approach | **Working base, Oct 1:** candidate E (painted light + paint filter + ink), with hand-painted textures explored next. Not Locked |
+| C1–C4 | Camera toggle key, orders in Explore, Explore controls, entering buildings | **Accepted Oct 1:** `V`; orders allowed; Unity-style fly plus Blender-style orbit; buildings solid while they have no interior |
 | V3 | Is the house the worker's home and delivery point? | Possible. It would connect the Ordinary Place to the worker loop |
 | O2 | Is strength its own creator value, or does it come from the body build (musculature/mass)? | **Chosen Oct 1:** body build sets a base, and a separate training choice adjusts it within limits |
 | O3 | Does mined material fall as loose pieces to pick up, or go straight to hands/gear? | Loose pieces, picked up into hands or gear. More physical, and it makes the hauling choice visible |

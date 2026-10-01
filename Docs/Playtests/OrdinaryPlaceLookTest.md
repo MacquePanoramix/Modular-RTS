@@ -1,8 +1,8 @@
 # S1b/S1c — The Ordinary Place: the Visual Soul in engine
 
 **Built:** October 1, 2026, on branch `claude/worker-showcase`.
-**Plan:** [NextMilestonePlan.md](NextMilestonePlan.md), S1b and S1c.
-**Direction:** [VisualSoul.md](VisualSoul.md), Luis's handoff of October 1.
+**Plan:** [NextMilestonePlan.md](../NextMilestonePlan.md), S1b and S1c.
+**Direction:** [VisualSoul.md](../ArtDirection/VisualSoul.md), Luis's handoff of October 1.
 **Build:** `Builds/WindowsOrdinaryPlace/WonderGather.exe`, a release build that
 opens straight into the place.
 
@@ -18,7 +18,7 @@ painted light can carry the references, and where the gaps still are.
 
 - **The lit house.**
   - Built in Blender from a reproducible script
-    ([`Art/Blender/OrdinaryPlace/house.py`](../Art/Blender/OrdinaryPlace/house.py)).
+    ([`Art/Blender/OrdinaryPlace/house.py`](../../Art/Blender/OrdinaryPlace/house.py)).
   - Leaning plaster walls and a timber frame, a hand-laid shingle roof and a
     stone chimney.
   - Deep window reveals, an open door onto a small warm room with a red
@@ -35,7 +35,7 @@ painted light can carry the references, and where the gaps still are.
 - **The land.**
   - A gentle meadow with a worn path to the door.
   - Trees, bushes and boulders
-    ([`nature.py`](../Art/Blender/OrdinaryPlace/nature.py)), and hills that rise
+    ([`nature.py`](../../Art/Blender/OrdinaryPlace/nature.py)), and hills that rise
     into distant ranges for aerial depth.
   - The land is rebuilt from one height field whenever the scene loads, so
     the grass, the path and the ground always agree.
@@ -79,35 +79,35 @@ All five use the same models and light. They differ in how the image is made:
 
 **Night.** Candidates A–E, left to right:
 
-![Candidates at night](Images/OrdinaryPlace/Candidates_Night.jpg)
+![Candidates at night](../Images/OrdinaryPlace/Candidates_Night.jpg)
 
 **Day.** Candidates A–E, left to right:
 
-![Candidates by day](Images/OrdinaryPlace/Candidates_Day.jpg)
+![Candidates by day](../Images/OrdinaryPlace/Candidates_Day.jpg)
 
 **The worker at dusk.** Candidates A–E:
 
-![Candidates on the worker](Images/OrdinaryPlace/Candidates_Worker.jpg)
+![Candidates on the worker](../Images/OrdinaryPlace/Candidates_Worker.jpg)
 
 ## Next to the references
 
 Each reference image is shown beside the matched in-engine capture (candidate
 B unless noted).
 
-![A and the night house](Images/OrdinaryPlace/Compare_A_Night.jpg)
-![D and the grass](Images/OrdinaryPlace/Compare_D_Grass.jpg)
-![E and dusk](Images/OrdinaryPlace/Compare_E_Dusk.jpg)
-![C and daylight](Images/OrdinaryPlace/Compare_C_Day.jpg)
-![F and the night sky](Images/OrdinaryPlace/Compare_F_Sky.jpg)
-![B and warm light on surfaces](Images/OrdinaryPlace/Compare_B_Light.jpg)
+![A and the night house](../Images/OrdinaryPlace/Compare_A_Night.jpg)
+![D and the grass](../Images/OrdinaryPlace/Compare_D_Grass.jpg)
+![E and dusk](../Images/OrdinaryPlace/Compare_E_Dusk.jpg)
+![C and daylight](../Images/OrdinaryPlace/Compare_C_Day.jpg)
+![F and the night sky](../Images/OrdinaryPlace/Compare_F_Sky.jpg)
+![B and warm light on surfaces](../Images/OrdinaryPlace/Compare_B_Light.jpg)
 
 More views:
 
-![Overview by day](Images/OrdinaryPlace/OrdinaryPlace_overview_day_B.jpg)
-![Overview at night](Images/OrdinaryPlace/OrdinaryPlace_overview_night_B.jpg)
-![In the grass at golden hour](Images/OrdinaryPlace/OrdinaryPlace_grass_golden_B.jpg)
-![The doorway at night, with ink](Images/OrdinaryPlace/OrdinaryPlace_door_night_D.jpg)
-![The valley at dusk](Images/OrdinaryPlace/OrdinaryPlace_valley_dusk_B.jpg)
+![Overview by day](../Images/OrdinaryPlace/OrdinaryPlace_overview_day_B.jpg)
+![Overview at night](../Images/OrdinaryPlace/OrdinaryPlace_overview_night_B.jpg)
+![In the grass at golden hour](../Images/OrdinaryPlace/OrdinaryPlace_grass_golden_B.jpg)
+![The doorway at night, with ink](../Images/OrdinaryPlace/OrdinaryPlace_door_night_D.jpg)
+![The valley at dusk](../Images/OrdinaryPlace/OrdinaryPlace_valley_dusk_B.jpg)
 
 ## What already carries over, and what does not yet
 
@@ -200,7 +200,7 @@ Run `WonderGather.exe -wgbenchmark` to repeat the measurement. It writes
 - Every candidate runs without errors.
 
 The full PlayMode suite and the matched captures are recorded in
-[Validation.md](Validation.md).
+[Validation.md](../Validation.md).
 
 **Not tested:**
 
