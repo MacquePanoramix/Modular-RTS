@@ -2,7 +2,7 @@
 
 **Status:** Living document
 
-**Last updated:** September 30, 2026
+**Last updated:** October 1, 2026
 
 **Purpose:** Preserve the current game vision so future design and engineering work can distinguish decisions from possibilities.
 
@@ -159,12 +159,31 @@ simple bundle linked to cargo settles the intended physical economy.
 The expanded reference, experiential criteria and proposed stages are in
 [WorkerShowcaseVision.md](WorkerShowcaseVision.md). Luis's original wording
 is preserved in [Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md).
-The Equipped Worker now exists as the bare starting point. The assistant's
-current proposal, awaiting Luis's approval, is Strength and Burden: first a
-grounded, weight-aware body, then an effort-driven strike, then
-strength-resolved handling. Transport aids and showcase polish follow.
-This sequence is a recommendation, not a locked roadmap or approval of every
-detailed mechanic.
+The Equipped Worker now exists as the bare starting point.
+
+**Direction, clarified by Luis on October 1, 2026:**
+
+- **Scope.** The showcase is one worker (maybe more later) with a video-game
+  style character creator for that worker. In this prototype that creator
+  replaces the civilization/faction creator, and it sets the quality bar for
+  the final unit customization.
+- **Always a worker.** The character always has basic worker abilities. In the
+  full game, "worker" is not a unit type: units are customized into workers.
+- **Speed.** Base movement speed stays constant and is not a creator option
+  for now.
+- **Hauling.** The worker gets material home in one of these ways:
+  - load in one hand and pickaxe in the other, if strong enough;
+  - a backpack;
+  - a sack;
+  - a cart.
+
+  A back-stowed pickaxe "doesn't make sense", and leaving the pickaxe behind
+  is "a bit strange".
+- **Models.** They should be of much higher quality, made with Blender.
+- **Audience.** Outside players will playtest it.
+
+The staged plan is [ShowcaseRoadmap.md](ShowcaseRoadmap.md). Its sequence is a
+recommendation, not a locked roadmap or approval of every detailed mechanic.
 
 ## The two-cost model
 
@@ -306,10 +325,16 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 
 ## Current production state
 
-**Current implementation:** Strength and Burden, Checkpoint A (the grounded
-body), awaiting Luis's playtest. The worker's default pace is a natural 1.8 m/s
-walk (D2), with a jog at higher Movement %. The Equipped Worker remains the
-provisionally accepted foundation; its swing is unchanged until Checkpoint B.
+**Current implementation:** the grounded body (Strength and Burden checkpoint A,
+now roadmap stage S0).
+
+- Luis judged it "much better" on October 1. The arrival shuffle he reported is
+  fixed.
+- The worker walks at a constant natural 1.8 m/s.
+
+**Next:** S1, the worker model and art direction, proposed in
+`Docs/NextMilestonePlan.md` and awaiting Luis's choice of art direction. The
+showcase roadmap is `Docs/ShowcaseRoadmap.md`.
 Historical entries
 below preserve earlier scope and feedback; later entries supersede earlier
 limits and proposed sequencing.
@@ -375,6 +400,8 @@ These questions must remain visible rather than being silently answered by imple
 - What are the standard match resources, and how can civilizations alter them?
 - What exact attributes and aesthetic modules can players edit?
 - How do strength, tool mass/geometry, hand availability and cargo determine handling, movement and the need for bags/carts?
+- Is strength its own creator value, or does it come from the body's build (musculature/mass)?
+- What art direction should the showcase's models, interface and world use?
 - Does strike quality change mineral yield, and how do extraction, pickup and loading relate?
 - How are design value and in-match cost calculated and balanced?
 - What graph structures, dependencies, cycles, and transformations are legal?
@@ -420,7 +447,12 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-09-30 | Body technique (D1) | Chosen for this milestone | Physics-informed kinematic body; no active ragdoll | Checkpoint playtests; a later explicit physics experiment |
 | 2026-09-30 | Worker pace (D2) | Chosen for this milestone | Default worker walks at a natural pace for its body; higher Movement % becomes a jog. Economy timing slows accordingly | Playtest of pace and economy feel |
 | 2026-09-30 | Strength and tool weight (D3/D4) | Chosen for this milestone | One Strength value with named bands; authored light/standard/heavy pickaxes whose shape matches their weight | Checkpoint C playtest; a later body-build editor |
-| 2026-09-30 | Tool while hauling (D5) | Chosen for this milestone | Carry the tool in a free hand when strong enough; otherwise lean it at the worksite and collect it on return | Checkpoint C playtest |
+| 2026-09-30 | Tool while hauling (D5) | Superseded October 1 | Carry the tool in a free hand when strong enough; otherwise lean it at the worksite and collect it on return | Replaced by the October 1 hauling direction |
+| 2026-10-01 | Grounded body (checkpoint A) | Provisionally accepted | The walk is "much better". Arrival must not re-shuffle the feet to the exact spot (fixed the same day) | Further playtesting on the real model |
+| 2026-10-01 | Showcase scope | Direction, clarified by Luis | One worker (maybe more later) and a video-game style character creator for it, in place of the faction creator in this prototype; always a worker; high quality for outside playtesters | Luis's later refinement |
+| 2026-10-01 | Movement speed | Direction, for now | Constant natural pace, not a creator option | Luis's ongoing thinking about speed |
+| 2026-10-01 | Hauling (revises D5) | Direction, clarified by Luis | Load in one hand and pickaxe in the other if strong enough, or a backpack, sack or cart. No back-stow; leaving the pickaxe behind is not the default | S4 playtest |
+| 2026-10-01 | Asset quality | Direction | Showcase models made to a much higher quality, using Blender | The chosen art direction (open) |
 
 Add future entries with the decision, its status, the evidence behind it, and what kind of playtest or new requirement would justify revisiting it.
 
@@ -752,3 +784,41 @@ Navigation still owns the root, and nothing is an active ragdoll (D1).
 Stride, sway and timing values are provisional first choices. Neither the
 pace nor the gait character is locked until Luis judges them. The swing,
 strength, mass and handling follow in Checkpoints B and C.
+
+## Checkpoint A feedback and showcase scope — October 1, 2026
+
+Luis's feedback is kept verbatim in
+`Docs/Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md`.
+
+**Walk and arrival.** The walk is "much better". Arriving bodies used to stop
+and then make separate adjustment steps toward the exact spot. Now the last
+steps land where the body stops, at most one closing step follows without a
+pause, and a settled stance tolerates small drift.
+
+**Scope.** The rest of the feedback clarifies the showcase described in the
+advanced prototype section above:
+
+- one worker and a character creator rather than a civilization creator;
+- a constant pace;
+- real hauling options instead of a back-stowed pickaxe;
+- Blender-quality models;
+- organized documentation and GitHub uploads at every step.
+
+**Roadmap.** `Docs/ShowcaseRoadmap.md` proposes stages S1–S5:
+
+- S1: model and art direction;
+- S2: worker creator;
+- S3: effort-driven work;
+- S4: strength and hauling;
+- S5: world, presentation and playtest readiness.
+
+The Strength and Burden plan is archived. Its checkpoints B and C continue as
+S3 and S4.
+
+**Still open:**
+
+- art direction;
+- whether strength is a separate value or comes from body build;
+- whether mined material falls as loose pieces;
+- the stage order;
+- third-party asset sourcing.

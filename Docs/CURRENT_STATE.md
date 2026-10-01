@@ -1,102 +1,110 @@
 # Wonder Gather — Current State
 
-**Updated:** September 30, 2026.
-**Implementation baseline:** 6131598, The Equipped Worker.
-**Latest implementation:** The Equipped Worker, provisionally accepted by Luis on
-September 30 as the bare starting point for the one-worker showcase.
-**Current step:** Strength and Burden, approved September 30 with decisions
-D1–D5 as recommended. **Checkpoint A (a grounded body) is implemented and
-technically validated; Luis's playtest is pending.**
+**Updated:** October 1, 2026.
 
-## Current design question
+- **Latest implementation:** the grounded body (roadmap stage S0, formerly
+  Strength and Burden checkpoint A), plus the arrival fix. Luis judged the
+  walk "much better".
+- **Current step:** S1, the worker model and art direction. It is proposed in
+  [NextMilestonePlan.md](NextMilestonePlan.md) and awaits Luis's choice of art
+  direction and stage order.
+- **Overall plan:** [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
 
-Can strength, tool weight and load visibly and credibly determine how a worker
-walks, holds, drags and swings, with motion generated from physical
-relationships rather than fixed curves?
+## What the project is building now
 
-## Latest Game Director direction
+A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 
-Luis reviewed The Equipped Worker. In his words, the tool "looks more or less
-held", but the motion "looks just like an animation still", clips the body, and
-the feet still look goofy. He wants movement procedurally animated and grounded,
-without goofiness. He approved drafting the strength-and-burden plan and
-re-supplied his original showcase brief, now kept verbatim in
-[Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md).
+- one worker, made in a video-game style character creator;
+- a small landscape with one mineral boulder and a delivery point;
+- physical mining and real hauling;
+- models made to high quality in Blender.
 
-His target is unchanged:
+The civilization/faction systems remain in the repository for the full game.
+The showcase flow does not use them.
 
-- one deeply customized worker in a small landscape;
-- a pickaxe that really strikes a mineral;
-- strength deciding one-handed carry, dragging or needing an aid such as a cart;
-- stones that must be carried;
-- everything coming from the modular creator.
+## Latest Game Director direction (October 1)
 
-The full reference is [WorkerShowcaseVision.md](WorkerShowcaseVision.md).
+Recorded verbatim in
+[Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md](Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md):
+
+- **Walk.** It is much better. Arrival must not re-shuffle the feet to the
+  exact spot. This is fixed: the last steps land where the body stops, at most
+  one closing step follows, and the body then stands still.
+- **Speed.** Movement speed is constant for now and is not a creator option.
+- **Scope.**
+  - One worker (maybe more later), with a character creator in place of the
+    civilization creator.
+  - Always a worker.
+  - It sets the quality bar for the final unit customization.
+- **Hauling.** Load in one hand and pickaxe in the other if strong enough, or
+  a backpack, sack or cart. No back-stowed pickaxe, and leaving the pickaxe
+  behind is not the default. This revises D5.
+- **Models.** Much better quality, using Blender (4.4 and 4.5 are installed).
+- **Process.** Upload to GitHub, with organized documentation at every step.
+
+Still valid from September 30:
+
+- **D1:** a physics-informed body (no active ragdoll).
+- **D2:** a natural constant pace.
+- **D3/D4:** strength bands and light/standard/heavy pickaxes.
 
 ## What exists and what it proves
 
-- **Foundation.** Unity 6000.6.0f1 / URP; RTS controls, economy, construction,
-  production, editable faction graphs and version-5 faction saves.
-- **Equipment.** Blueprint None/Pickaxe choices persist. Mining requires a
-  pickaxe, a reserved work position, reachable grips and a valid head strike
-  against the mineral surface. Each accepted attempt extracts one supply;
-  misses and interruptions extract nothing.
-- **Technical evidence (September 29).** 18 focused tests and 85 full
-  PlayMode tests passed; seven rendered captures were reviewed; the Windows
-  build succeeded. See [Validation.md](Validation.md).
-- **Known limits of the current motion**, now diagnosed from source in
-  [NextMilestonePlan.md](NextMilestonePlan.md):
-  - the worker walks at running speed with rapid, short steps;
-  - feet do not roll and hips do not transfer weight;
-  - the strike is a fixed angle curve about a point in front of the belly;
-  - the windup passes the pickaxe head through the worker's own head.
-- **Not yet modeled:** strength, mass, burden, dragging, bags/carts, loose
-  ore, impact-dependent yield, final art and networking.
+- **Foundation.** Unity 6000.6.0f1 / URP. RTS controls, economy, construction,
+  production, the faction creator and version-5 faction saves are still
+  present for the full game.
+- **Equipment.** Blueprint pickaxe equipment. Mining requires a valid head
+  strike against the mineral, and material is conserved through delivery.
+- **The grounded body.**
+  - A phase-based gait scaled to hip height: about 2 steps/s and a 1.85 m
+    stride at 1.8 m/s.
+  - A jog above about 2.8 m/s.
+  - Heel/toe feet, weight transfer, counter-rotation, pendulum arms and a
+    level head.
+  - Arrival finishes the stride; a settled stance tolerates small drift.
+- **Shared stations.** Workers that run out of work step clear of their
+  station, and claims skip positions a body still occupies. This fixed an
+  intermittent deadlock that the slower pace had exposed (see the erratum in
+  [Validation.md](Validation.md)).
+- **Evidence.** The full PlayMode suite passes, and Windows builds succeed.
+  See [Validation.md](Validation.md).
+- **Not yet built:**
+  - a real character model (the body is still primitive segments with
+    exaggerated 2.2 m proportions);
+  - the character creator;
+  - an effort-driven swing (the swing is still the canned curve and clips);
+  - strength, mass and hauling gear;
+  - the landscape, sound and final art.
 
 ## Recommended next action
 
-Luis playtests Checkpoint A: [GroundedBodyPlaytest.md](GroundedBodyPlaytest.md).
-It covers:
+Luis chooses:
 
-- gait scaled to the body, about 2 steps/s at the new 1.8 m/s default;
-- a jog above about 150% Movement;
-- heel strike, roll and toe-off;
-- weight transfer and counter-rotation;
-- pendulum arms and a level head.
+- **O1 — art direction.** Pick from rendered Blender style studies, or give
+  references.
+- **O4 — stage order.** Model first is recommended.
 
-The pickaxe swing is deliberately unchanged until Checkpoint B. After his
-review, tune A or begin **Checkpoint B (effort-driven swing, body volumes, no
-clipping)**.
+S1 then builds the worker model in Blender, drives its bones with the
+procedural body and takes the body's dimensions from the model.
 
-Decisions chosen September 30:
+## Housekeeping
 
-- **D1:** physics-informed kinematic body.
-- **D2:** natural walk.
-- **D3/D4:** Strength bands and light/standard/heavy pickaxes.
-- **D5:** free hand, or lean the tool at the worksite.
-
-D6–D9 proceed on their recommendations until Luis says otherwise.
-
-## Housekeeping awaiting Luis
-
-- **Uncommitted local changes to preserve.** Unity 6.6 re-saved TheGroup.unity
-  and two ProjectSettings files, and `Assets/_Recovery/` holds two
-  crash-recovery scenes. Luis decides whether to keep or discard them.
-- **`codex/agent-bootstrap-draft`** is an unmerged, now-stale automation
-  proposal awaiting review.
-- **`docs/wonder-gather-continuity-2026-09-23`** was already squash-merged as
-  d03e045 and can be deleted.
+- **Branch.** Work is pushed to the `claude/worker-showcase` branch. Luis
+  decides whether future work goes there or straight to `main`.
+- **Luis's uncommitted local changes** are never included in commits:
+  TheGroup.unity, two ProjectSettings files and `Assets/_Recovery/`.
+- **`codex/agent-bootstrap-draft`** is an unmerged, stale automation proposal.
+- **`docs/wonder-gather-continuity-2026-09-23`** is already merged as d03e045
+  and can be deleted.
 
 ## Context router
 
-- Design authority and open decisions: Docs/GAME_VISION.md
-- Detailed small-scene target: Docs/WorkerShowcaseVision.md
-- Original showcase brief (verbatim): Docs/Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md
-- Proposed scope and decisions: Docs/NextMilestonePlan.md
-- Current technical contracts: Docs/EquipmentArchitecture.md
-- Latest playtest and feedback: Docs/EquippedWorkerPlaytest.md
-- Design meaning: Docs/DESIGN_RATIONALE.md
-- Collaboration: Docs/PROJECT_CULTURE.md
-- Architecture/history: Docs/AI/UnityProjectContext.md
-- Validation history: Docs/Validation.md
+- Showcase plan and open decisions: Docs/ShowcaseRoadmap.md
+- Next concrete milestone: Docs/NextMilestonePlan.md
+- Design authority: Docs/GAME_VISION.md
+- Showcase reference: Docs/WorkerShowcaseVision.md and Docs/Correspondence/
+- Latest playtest guide: Docs/GroundedBodyPlaytest.md
+- Technical contracts: Docs/EquipmentArchitecture.md and Docs/AI/UnityProjectContext.md
+- Design meaning and collaboration: Docs/DESIGN_RATIONALE.md and Docs/PROJECT_CULTURE.md
+- Evidence: Docs/Validation.md
 - Completed plans: Docs/Plans/

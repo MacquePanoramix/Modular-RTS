@@ -8,6 +8,15 @@ canonical design source; this document expands its showcase direction.
 Luis's original wording is kept verbatim in
 [Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md).
 
+> **October 1 clarification:** the showcase is one worker with a video-game
+> style character creator for it. In this prototype that creator replaces the
+> civilization creator. The character is always a worker. Base speed is
+> constant and not a creator option. The worker hauls with one hand each
+> (load and pickaxe), a backpack, a sack or a cart, never a back-stowed
+> pickaxe. Models are made to much higher quality in Blender. The staged plan
+> is [ShowcaseRoadmap.md](ShowcaseRoadmap.md), and the source is
+> [the October 1 feedback](Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md).
+
 ## Small in scale, deep in experience
 
 Luis wants a later prototype that can be given to other people to try. Its
@@ -79,6 +88,8 @@ or a final exhaustive list of carrying modes:
 | A less capable worker drags the same tool | The ground supports some weight and the burden changes locomotion | When dragging is useful/possible, terrain response, speed and control |
 | A worker cannot handle the tool unaided and uses a small wooden cart or another aid | Equipment can enable a task the body cannot perform alone | How an aid is acquired, attached, loaded and pulled; what happens without it |
 | The mined stones must also be carried, perhaps in a bag or cart | Material has transport demands; tool use and carrying compete for capability and space | Mass, bulk, grip availability, container capacity and unloading |
+| (Oct 1) A strong worker carries the load in one hand and the pickaxe in the other | Strength frees a hand; no tool is left behind or strapped away implausibly | One-handed load limits and how this changes gait |
+| (Oct 1) A backpack or sack carries the material | Gear changes what the hands are free to do | Capacity, how it is loaded, and how a sack is held |
 
 Two-handed carrying, resting, repositioning and alternative grips may be
 useful implementation experiments. They are proposed additions, not separate
@@ -134,11 +145,12 @@ ready for a public demonstration:
    starting point. Its strike reads as a canned animation, the tool clips the
    body, and the feet still look goofy
    ([feedback](EquippedWorkerPlaytest.md#luiss-feedback--september-30-2026)).
-2. **Strength and burden (proposed):** compare the same tool on workers with
-   different physical capabilities; test supported carrying modes, movement
-   changes and readable inability to perform an action. Because strength is
-   expressed through motion, the proposal first grounds the body's gait and
-   makes the strike effort-driven. See [NextMilestonePlan.md](NextMilestonePlan.md).
+2. **Strength and burden:**
+   - checkpoint A, the grounded body, is done; Luis judged it "much better" on
+     October 1;
+   - on October 1 the remaining route became the stages of
+     [ShowcaseRoadmap.md](ShowcaseRoadmap.md): the worker model, the creator,
+     effort-driven work, strength and hauling, and world polish.
 3. **Materials and transport aids:** give extracted material and containers
    meaningful load/capacity, then prove a bag and/or a cart with actual
    loading, hauling and unloading. Choose that order after the strength test.

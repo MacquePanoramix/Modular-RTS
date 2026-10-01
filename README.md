@@ -8,15 +8,15 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 > that would be dangerous to lose; [Project Culture](Docs/PROJECT_CULTURE.md)
 > explains lightweight collaboration roles and context routing.
 
-**Current milestone:** Strength and Burden ([plan](Docs/NextMilestonePlan.md)).
-**Checkpoint A, the grounded body,** is ready for Luis's playtest. It adds:
+**Now building:** the **Worker Showcase**. It is a small, high-fidelity prototype
+for outside playtesters: one worker, a video-game style character creator,
+physical mining and real hauling. See the [showcase roadmap](Docs/ShowcaseRoadmap.md).
 
-- gait scaled to the body and a jog;
-- heel/toe feet and weight transfer;
-- a natural 1.8 m/s default walk.
-
-See [the grounded body playtest](Docs/GroundedBodyPlaytest.md). The pickaxe
-swing is unchanged until Checkpoint B.
+- **Latest:** the grounded body, with a gait scaled to the body, a jog,
+  heel/toe feet and a natural 1.8 m/s pace. Arrival finishes the stride
+  without shuffling. See the [grounded body playtest](Docs/GroundedBodyPlaytest.md).
+- **Next (proposed):** S1, the worker model and art direction
+  ([plan](Docs/NextMilestonePlan.md)). It awaits Luis's choice of art direction.
 
 Latest milestone: **The Equipped Worker**, connecting a blueprint-selected
 pickaxe to reachable procedural strikes and real resource extraction. Open

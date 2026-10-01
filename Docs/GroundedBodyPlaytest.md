@@ -1,9 +1,38 @@
 # Strength and Burden, checkpoint A — The grounded body playtest
 
-**Status:** Ready for Luis's review, September 30, 2026. It is technically validated;
-[Validation.md](Validation.md) has the exact results. Checkpoint B (the
-effort-driven swing) and C (strength-resolved handling) wait for this review.
-Plan: [NextMilestonePlan.md](NextMilestonePlan.md).
+**Status:** Reviewed by Luis on October 1, 2026. He judged the walk "much better"
+and reported one defect, re-shuffling on arrival, which is fixed the same day
+(see below). It is now stage S0 of [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
+Technical results are in [Validation.md](Validation.md). The archived plan is
+[Plans/StrengthAndBurden.md](Plans/StrengthAndBurden.md).
+
+## Luis's feedback — October 1, 2026
+
+> So yes, the walk is much better now, I must say. The only thing, I think, is
+> when the character is going to the landing spot, it always shuffles a bit its
+> feet, I think to, like, try to be on the exact location that we directed. …
+> after it lands near the landing spot, it can just stay still there.
+
+The full message, including the showcase scope it clarified, is in
+[Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md](Correspondence/2026-10-01_CHECKPOINT_A_FEEDBACK_AND_SHOWCASE_SCOPE.md).
+
+**The fix.** A frame trace showed the cause. The root stopped mid-stride, and
+after a short pause the body made two separate standing adjustment steps, one
+per foot, to square up beneath the exact spot. Now:
+
+- **The last steps are anticipated.** Near the end of a path, stride steps
+  never land beyond where the body will stop.
+- **The stride is finished, not corrected.** When the root stops, the gait
+  completes its stride with at most one ordinary closing step, immediately and
+  without a pause, and then stands.
+- **A settled stance stays still.** Standing feet only move for:
+  - a turn of more than 40°;
+  - a drift of more than 30 cm from beneath the body;
+  - a crossed or too-narrow stance.
+
+Arriving now takes one closing step instead of two separate adjustments. A
+regression test asserts at most one step after the root comes to rest, then
+two seconds of stillness.
 
 ## The question
 
