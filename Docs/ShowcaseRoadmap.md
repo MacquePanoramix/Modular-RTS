@@ -1,9 +1,14 @@
 # The Worker Showcase — roadmap to the playtest build
 
 **Created:** October 1, 2026, from Luis's clarification of the showcase's scope.
-**Status:** Living plan. The stage order and the open decisions below await Luis's
-choices. Each stage still gets its own approved plan in
-[NextMilestonePlan.md](NextMilestonePlan.md) before implementation.
+**Status:** Living plan. On October 1 Luis chose:
+
+- **O1:** render style studies to pick the art direction.
+- **O4:** the worker model first.
+- **O2:** strength comes from the body plus training.
+- **GitHub:** each stage merges into `main` after his playtest.
+
+Each stage still gets its own plan in [NextMilestonePlan.md](NextMilestonePlan.md).
 **Sources:**
 
 - [Original brief (Sept 28)](Correspondence/2026-09-28_ONE_WORKER_SHOWCASE_BRIEF.md)
@@ -195,10 +200,10 @@ pickaxes) still hold.
 
 | ID | Question | Recommendation |
 |---|---|---|
-| O1 | Art direction for the models (needed for S1) | Choose from rendered Blender style studies, or from references Luis already has |
-| O2 | Is strength its own creator value, or does it come from the body build (musculature/mass)? | Link it to the body, so appearance and capability agree (DESIGN_RATIONALE §4), shown as a named band |
+| O1 | Art direction for the models (needed for S1) | **Chosen Oct 1:** decide from rendered Blender style studies |
+| O2 | Is strength its own creator value, or does it come from the body build (musculature/mass)? | **Chosen Oct 1:** body build sets a base, and a separate training choice adjusts it within limits |
 | O3 | Does mined material fall as loose pieces to pick up, or go straight to hands/gear? | Loose pieces, picked up into hands or gear. More physical, and it makes the hauling choice visible |
-| O4 | Stage order: model first, or creator first? | Model first. The creator's sliders and every pose depend on the real body |
+| O4 | Stage order: model first, or creator first? | **Chosen Oct 1:** model first |
 | O5 | Character creator categories for the first version | Body, face and hair, clothing and colors, tool, hauling gear, name |
 | O6 | Sources for sound and any third-party assets (for example MakeHuman/MPFB for a realistic body) | Ask before any download; record each license in a third-party list |
 | D6–D9 | From the Strength and Burden plan | Unchanged recommendations: measure impact only, allow reduced swings, keep the capacity count until S4, replace primitives in S1 |
@@ -206,6 +211,8 @@ pickaxes) still hold.
 ## Working agreement for this roadmap
 
 - Every stage begins with a plan in NextMilestonePlan.md and Luis's approval.
+- Work happens on a branch (currently `claude/worker-showcase`). A stage is
+  merged into `main` after Luis playtests it (chosen October 1).
 - Implementation and validation happen in an isolated copy while Luis's Editor
   stays open. His uncommitted work is never included or discarded.
 - Every stage ends with:

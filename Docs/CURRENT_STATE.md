@@ -5,9 +5,9 @@
 - **Latest implementation:** the grounded body (roadmap stage S0, formerly
   Strength and Burden checkpoint A), plus the arrival fix. Luis judged the
   walk "much better".
-- **Current step:** S1, the worker model and art direction. It is proposed in
-  [NextMilestonePlan.md](NextMilestonePlan.md) and awaits Luis's choice of art
-  direction and stage order.
+- **Current step:** S1, the worker model and art direction
+  ([NextMilestonePlan.md](NextMilestonePlan.md)). It was approved on
+  October 1, and step 1, the Blender style studies, is in progress.
 - **Overall plan:** [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
 
 ## What the project is building now
@@ -78,19 +78,20 @@ Still valid from September 30:
 
 ## Recommended next action
 
-Luis chooses:
+Luis picks a direction from the Blender style studies. S1 then builds the
+worker model in that style, drives its bones with the procedural body and
+takes the body's dimensions from the model.
 
-- **O1 — art direction.** Pick from rendered Blender style studies, or give
-  references.
-- **O4 — stage order.** Model first is recommended.
+Luis's other choices on October 1:
 
-S1 then builds the worker model in Blender, drives its bones with the
-procedural body and takes the body's dimensions from the model.
+- **Model first** (O4).
+- **Strength** comes from the body plus training (O2).
+- **Stage merges.** Each stage merges into `main` after his playtest.
 
 ## Housekeeping
 
-- **Branch.** Work is pushed to the `claude/worker-showcase` branch. Luis
-  decides whether future work goes there or straight to `main`.
+- **Branch.** Work is pushed to the `claude/worker-showcase` branch. It merges
+  into `main` after Luis playtests the stage (including the arrival fix).
 - **Luis's uncommitted local changes** are never included in commits:
   TheGroup.unity, two ProjectSettings files and `Assets/_Recovery/`.
 - **`codex/agent-bootstrap-draft`** is an unmerged, stale automation proposal.

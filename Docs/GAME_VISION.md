@@ -400,7 +400,6 @@ These questions must remain visible rather than being silently answered by imple
 - What are the standard match resources, and how can civilizations alter them?
 - What exact attributes and aesthetic modules can players edit?
 - How do strength, tool mass/geometry, hand availability and cargo determine handling, movement and the need for bags/carts?
-- Is strength its own creator value, or does it come from the body's build (musculature/mass)?
 - What art direction should the showcase's models, interface and world use?
 - Does strike quality change mineral yield, and how do extraction, pickup and loading relate?
 - How are design value and in-match cost calculated and balanced?
@@ -453,6 +452,9 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-10-01 | Movement speed | Direction, for now | Constant natural pace, not a creator option | Luis's ongoing thinking about speed |
 | 2026-10-01 | Hauling (revises D5) | Direction, clarified by Luis | Load in one hand and pickaxe in the other if strong enough, or a backpack, sack or cart. No back-stow; leaving the pickaxe behind is not the default | S4 playtest |
 | 2026-10-01 | Asset quality | Direction | Showcase models made to a much higher quality, using Blender | The chosen art direction (open) |
+| 2026-10-01 | Art direction process (O1) | Chosen | Decide the showcase style from rendered Blender style studies | Luis's choice among the studies |
+| 2026-10-01 | Stage order (O4) | Chosen | The worker model (S1) comes before the character creator (S2) | Pipeline findings during S1 |
+| 2026-10-01 | Strength source (O2) | Chosen for the showcase | Body build sets a base strength; a separate training choice adjusts it within limits | S2/S4 playtests |
 
 Add future entries with the decision, its status, the evidence behind it, and what kind of playtest or new requirement would justify revisiting it.
 
