@@ -139,6 +139,52 @@ namespace WonderGather.Tests
             Assert.That(standing,Is.LessThan(moving/10),"A body travelling at its pace must be walking.");
         }
 
+        [UnityTest] public IEnumerator ArrivalFinishesTheStrideWithoutShuffling()
+        {
+            // Luis, October 1: arriving should not shuffle the feet onto the exact spot. The last
+            // stride steps land where the body stops; at most one closing step follows.
+            var body=bodies[0];var agent=body.GetComponent<NavMeshAgent>();
+            var target=body.transform.position+new Vector3(-5,0,-4);
+            Assert.That(body.GetComponent<UnitMotor>().TryMove(target),Is.True);
+            float end=Time.time+12;
+            while(!(Vector3.Distance(body.transform.position,target)<.05f&&agent.velocity.magnitude<.02f)&&Time.time<end) yield return null;
+            Assert.That(Vector3.Distance(body.transform.position,target),Is.LessThan(.05f),"The order must arrive.");
+            int atRest=body.StepCount;
+            yield return new WaitForSeconds(1.5f);
+            int afterArrival=body.StepCount-atRest;
+            TestContext.WriteLine($"Steps after the root came to rest: {afterArrival}");
+            Assert.That(afterArrival,Is.LessThanOrEqualTo(1),"At most one closing step after arriving.");
+            Assert.That(body.CurrentGait,Is.EqualTo(ProceduralBiped.Gait.Standing));
+            Assert.That(body.FootPlanted(0)&&body.FootPlanted(1),Is.True);
+            int settled=body.StepCount;
+            yield return new WaitForSeconds(2);
+            Assert.That(body.StepCount,Is.EqualTo(settled),"A settled stance stays still.");
+        }
+
+        [UnityTest] public IEnumerator NavigationCorrectionsNeverCollapseThePelvis()
+        {
+            // October 1 regression: feeding the reach-projected pelvis height back into the next
+            // frame's target ratcheted the pelvis to the ground after a large correction.
+            for(int correction=0;correction<8;correction++)
+            {
+                var body=bodies[correction%2];
+                var pelvis=body.GetComponentsInChildren<Transform>().Single(x=>x.name=="Pelvis");
+                demo.StopWalkers();
+                body.ResetPose();
+                yield return null;
+                float direction=correction%4<2?1.5f:-1.5f;
+                Assert.That(body.GetComponent<NavMeshAgent>().Warp(body.transform.position+body.transform.forward*direction),Is.True);
+                float end=Time.time+.6f;int frames=0;
+                while(Time.time<end||frames<20)
+                {
+                    yield return null;frames++;
+                    Assert.That(pelvis.position.y-body.transform.position.y,Is.GreaterThan(.8f),"The pelvis must stay above the feet.");
+                    foreach(var part in body.GetComponentsInChildren<Transform>())
+                        if(part.name.EndsWith("thigh")||part.name.EndsWith("shin")) Assert.That(part.localScale.y*2,Is.EqualTo(.68f).Within(.008f));
+                }
+            }
+        }
+
         [UnityTest] public IEnumerator NavigationCorrectionDoesNotStartAGait()
         {
             var body=bodies[0];

@@ -321,6 +321,53 @@ namespace WonderGather.Tests
             }
         }
 
+        [UnityTest] public IEnumerator AnIdleBodyOnAReleasedPositionIsNotClaimedUnderneathIt()
+        {
+            // October 1 regression: workers that ran out of work idled on released stations, so
+            // the next claimant could never fit and the economy deadlocked intermittently.
+            yield return Enter(2,UnitPerformance.Default);
+            var workers=Object.FindObjectsByType<Gatherer>(FindObjectsSortMode.None);
+            var node=Object.FindAnyObjectByType<ResourceNode>();
+            var workplace=node.GetComponent<ResourceWorkplace>();
+            Vector3 point=node.transform.position+Vector3.right*2.05f;
+            Assert.That(Physics.Raycast(point+Vector3.up*5,Vector3.down,out var hit,10,1<<6,QueryTriggerInteraction.Ignore),Is.True);
+            var stand=new GameObject("Single test station").transform;stand.position=hit.point;
+            var contact=new GameObject("Single test contact").transform;contact.position=new Vector3(node.transform.position.x+1.55f,hit.point.y+1.35f,node.transform.position.z);
+            workplace.Configure(new[]{stand},new[]{contact});
+            var idle=workers[0];var claimant=workers[1];
+            Assert.That(idle.GetComponent<NavMeshAgent>().Warp(stand.position),Is.True);
+            // Physics queries see the moved body after the next simulation steps.
+            yield return new WaitForFixedUpdate();yield return new WaitForFixedUpdate();
+            Assert.That(claimant.Gather(node),Is.True);
+            Assert.That(claimant.State,Is.EqualTo(Gatherer.Activity.WaitingForResource),"An occupied place cannot be claimed.");
+            Assert.That(workplace.OccupiedCount,Is.Zero);
+            Assert.That(idle.GetComponent<UnitMotor>().TryMove(stand.position+Vector3.right*2.5f),Is.True);
+            float deadline=Time.time+20;
+            while(claimant.State!=Gatherer.Activity.Gathering&&Time.time<deadline) yield return null;
+            Assert.That(claimant.State,Is.EqualTo(Gatherer.Activity.Gathering),"Once the body leaves, the place becomes available.");
+            claimant.CancelOrder();claimant.GetComponent<UnitMotor>().Stop();
+        }
+
+        [UnityTest] public IEnumerator WorkersLeftWithoutWorkStepClearOfTheStation()
+        {
+            yield return Enter(1,UnitPerformance.Default);
+            var worker=Object.FindAnyObjectByType<Gatherer>();
+            var node=Object.FindAnyObjectByType<ResourceNode>();
+            var depot=creator.Bridge.Session.Depot;
+            node.Take(node.Remaining-1);
+            Assert.That(worker.Gather(node),Is.True);
+            float deadline=Time.time+60;
+            while(depot.Stored==0&&Time.time<deadline) yield return null;
+            Assert.That(depot.Stored,Is.EqualTo(1));
+            yield return new WaitForSeconds(2.5f);
+            Assert.That(worker.State,Is.EqualTo(Gatherer.Activity.Idle));
+            // The worker's last delivery stand is now free for others to use.
+            var stands=depot.GetComponentsInChildren<Transform>().Where(x=>x.name.StartsWith("Stand",StringComparison.Ordinal)).ToArray();
+            Assert.That(stands.Length,Is.EqualTo(8),"The base keeps its eight authored delivery positions.");
+            Assert.That(stands.Min(x=>Vector3.Distance(Vector3.ProjectOnPlane(x.position-worker.transform.position,Vector3.up),Vector3.zero)),Is.GreaterThan(.7f),
+                    "An idle worker must not stand on a delivery position.");
+        }
+
         [UnityTest] public IEnumerator SupportedPerformanceExtremesKeepTheBodyGroundedAndCargoAuthoritative()
         {
             foreach(var stats in new[]{new UnitPerformance(25,1,25,100),new UnitPerformance(200,20,200,100)})

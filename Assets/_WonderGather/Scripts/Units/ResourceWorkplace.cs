@@ -11,6 +11,7 @@ namespace WonderGather
         [SerializeField] private Transform[] positions = Array.Empty<Transform>();
         [SerializeField] private Transform[] contacts = Array.Empty<Transform>();
         private Gatherer[] occupants;
+        private readonly Collider[] nearby = new Collider[16];
         public int Capacity => positions.Length;
         public int OccupiedCount
         {
@@ -60,6 +61,7 @@ namespace WonderGather
                 if (positions[i] == null || contacts[i] == null) continue;
                 var owner = occupants[i];
                 if (owner != null && owner != worker && owner.isActiveAndEnabled) continue;
+                if (Blocked(positions[i].position, worker)) continue;
                 if (!motor.TryPlanMove(positions[i].position, out var route, out var point)) continue;
                 // Generic orders can resolve nearby points; work must reach its actual port.
                 if ((point - positions[i].position).sqrMagnitude > .12f * .12f) continue;
@@ -70,6 +72,18 @@ namespace WonderGather
             if (chosen < 0) return false;
             occupants[chosen] = worker;
             return true;
+        }
+        // A released position can still hold another worker's body; only claim a place
+        // a body can actually reach.
+        private bool Blocked(Vector3 point, Gatherer claimant)
+        {
+            int count = Physics.OverlapSphereNonAlloc(point + Vector3.up * .5f, .3f, nearby, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
+            {
+                var other = nearby[i].GetComponentInParent<Gatherer>();
+                if (other != null && other != claimant && other.isActiveAndEnabled) return true;
+            }
+            return false;
         }
         public void Release(Gatherer worker)
         {

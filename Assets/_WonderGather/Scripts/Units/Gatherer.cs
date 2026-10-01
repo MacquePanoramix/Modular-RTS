@@ -102,6 +102,16 @@ namespace WonderGather
             ReleaseWorkplace();
             State = Activity.Idle; resource = null; timer = 0; retryAfter = 0; FacingWork=false;
         }
+        // A worker left without work steps clear of the station it was using. A released
+        // position must not keep an idle body on it that blocks the next worker who claims it.
+        private void StandAside(Transform station)
+        {
+            if (motor == null) return;
+            if (station == null || (transform.position - station.position).sqrMagnitude > 9f) { motor.Stop(); return; }
+            Vector3 away = Vector3.ProjectOnPlane(transform.position - station.position, Vector3.up);
+            if (away.sqrMagnitude < .0001f) away = -transform.forward;
+            if (!motor.TryMove(transform.position + away.normalized * 1.2f)) motor.Stop();
+        }
         public void InterruptMining(string reason)
         { CancelOrder(); LastOrderFailure=reason; if(motor!=null) motor.Stop(); }
         internal bool AcceptStrike(EquippedTool source, MineableResource mine, ulong id)
@@ -157,7 +167,7 @@ namespace WonderGather
         {
             if (Carried > 0 && depot.Deposit(Carried)) Carried = 0;
             ReleaseWorkplace();
-            if (resource == null || !Gather(resource)) CancelOrder();
+            if (resource == null || !Gather(resource)) { CancelOrder(); StandAside(depot.transform); }
         }
 
         private void Update()
@@ -172,12 +182,12 @@ namespace WonderGather
                 if(tool==null || !tool.isActiveAndEnabled || !mine.Accepts(tool.Definition))
                 { InterruptMining("Mining interrupted: tool or surface unavailable"); return; }
                 if((Carried>=capacity || resource.Remaining==0) && (tool==null || !tool.Busy))
-                { if(Carried>0) TravelHome(); else {CancelOrder(); motor.Stop();} return; }
+                { if(Carried>0) TravelHome(); else {CancelOrder(); StandAside(resource.transform);} return; }
             }
             if (!returning && (resource == null || !resource.isActiveAndEnabled || resource.Remaining == 0))
             {
                 if(mine==null || tool==null || !tool.Busy || !resource.isActiveAndEnabled)
-                { if (Carried > 0) TravelHome(); else { CancelOrder(); motor.Stop(); } return; }
+                { if (Carried > 0) TravelHome(); else { CancelOrder(); StandAside(resource != null ? resource.transform : null); } return; }
             }
             if (needsWorkplace && (workplace == null || !workplace.isActiveAndEnabled || !workplace.Owns(this)))
             { CancelOrder(); motor.Stop(); return; }

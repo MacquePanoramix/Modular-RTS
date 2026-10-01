@@ -471,3 +471,52 @@ by a phase-based gait.
 
 **Build.** GroundedBodySetup.BuildWindows builds the creator and both maps to
 Builds/WindowsGroundedBody.
+
+## Arrival without shuffling — October 1
+
+Luis reported foot re-shuffling on arrival. ProceduralBiped changes:
+
+- **Stopping.** A gait whose root stops enters `stopping`. Its swings finish on
+  their own clock beneath the hips, and at most one closing gait step follows
+  at once. It becomes Standing when both feet are within 0.15 m of home and
+  turned less than 40°.
+- **Resuming.** Moving again during `stopping` resumes the cycle from the
+  swinging foot (`Resume`).
+- **Anticipation.** Phased swing targets read the agent path (read-only). When
+  the path has less than 1.5 m remaining, landings are clamped so they never
+  pass the path end's stance position.
+- **Standing tolerance.** Settle steps only for a home error over 0.3 m, a turn
+  over 40°, or a stance narrower than 0.14 m (crossed feet).
+- **Test.** GroundedBodyTests.ArrivalFinishesTheStrideWithoutShuffling.
+
+## Station occupancy — October 1
+
+Workers that run out of work no longer idle on station positions, which had
+intermittently deadlocked shared stations at the natural pace.
+
+- **`Gatherer.StandAside`.** Applies when delivery finds the resource
+  exhausted, or the resource empties while the worker holds no cargo. If the
+  worker is within 3 m of that station, it moves 1.2 m radially clear;
+  otherwise it stops where it is.
+- **`ResourceWorkplace.TryClaim`.** Now also skips a position whose ground
+  point (plus 0.5 m, radius 0.3) overlaps another active Gatherer's collider.
+  Reservations remain the authority for assignment; this only prevents
+  claiming a place a body cannot reach.
+- **Physics timing.** Physics queries see moved bodies after the next physics
+  step, so tests that warp an agent must wait for fixed updates before
+  claiming.
+
+**Pelvis support (October 1).**
+
+- **Target height.** `pelvisY` is the smoothed target height: lowered at once
+  by the reach of planted legs, raised gradually.
+- **Planted feet only.** ReachableHips projects that target onto the reach
+  spheres of planted feet only; with both feet swinging it is unconstrained.
+  The projected height is never written back, because doing so made the
+  pelvis ratchet to the ground when both feet were beyond horizontal reach.
+- **Output filter.** A rise in the solved height (`hipLift`) is smoothed as an
+  output filter; lowering is immediate.
+- **Swinging feet.** A swinging foot beyond the leg's reach is drawn within
+  reach of the hip (its rendered foot and toe follow) rather than pulling the
+  body down to it.
+

@@ -614,3 +614,130 @@ final art, networking, public-showcase readiness or RTS-scale performance claime
   Rendered frames were reviewed as stills, not video. Luis's judgment of feel,
   pace and gait character is pending.
 
+## Arrival fix and a shared-position deadlock — October 1, 2026
+
+All validation ran in the isolated worktree; Luis's open project was not used
+for runs.
+
+### Arrival
+
+- **Diagnosis.** A temporary frame trace (not committed) showed both a Living
+  Body walker and a faction worker making two separate standing adjustment
+  steps, 0.4–0.7 s after the root had already stopped.
+- **After the fix.** One closing step follows immediately, and then the body
+  stands still.
+- **Regression test.** `GroundedBodyTests.ArrivalFinishesTheStrideWithoutShuffling`
+  allows at most one step after the root comes to rest and requires 2 s of
+  stillness. It records exactly 1 step.
+- **Results.** The gait and Living Body tests passed 9/9.
+
+### Erratum for checkpoint A
+
+The first full run including the arrival fix failed one test:
+`LivingWorkerTests.SharedLimitedPositionsQueueAndDrainAResourceWithoutLosingSupplies`
+timed out at 90 s with 16 of 17 supplies delivered. A ten-attempt diagnostic
+probe (not committed) measured the stall rate:
+
+| Code under test | Stalls |
+|---|---|
+| Original 6131598 | 0 of 10 |
+| Checkpoint A, at both its original and its new pace | 1–4 of 10 per run |
+
+So the checkpoint A full run reported as 89/89 on September 30 was a real
+pass, but it hid an intermittent failure of about 30%. That failure was caused
+by the slower pace's timing, not by the arrival fix.
+
+### Cause and fix
+
+- **Cause.** A worker that ran out of work went idle while standing on its
+  station position. Reservations considered that position free, but agents
+  need 0.76 m clearance, so the next claimant could never reach it, or was
+  boxed in by idle bodies near the station.
+- **`Gatherer.StandAside`.** A worker left without work steps 1.2 m clear of
+  the station it was using, if it is within 3 m of it.
+- **`ResourceWorkplace` claims.** Claims skip a position that another worker's
+  body physically occupies, using a non-allocating overlap query on unit
+  colliders.
+- **After the fix.** The probe completed 20 of 20 attempts in 22–28 s.
+
+### New regression tests
+
+- `LivingWorkerTests.AnIdleBodyOnAReleasedPositionIsNotClaimedUnderneathIt`
+  (11.9 s; by construction it fails without the occupancy check). Its first
+  run failed because the test did not wait for a physics step after warping
+  the idle body; it now waits for two fixed updates before claiming.
+- `LivingWorkerTests.WorkersLeftWithoutWorkStepClearOfTheStation`.
+
+The Living Worker suite passed with both tests, apart from that one test-side
+failure, which was fixed and then passed on its own.
+
+### Two further intermittent failures
+
+The next full run (92 tests) failed two more tests intermittently. Each passed
+3 of 3 times in isolation afterwards.
+
+**`CivilizationTests.BlueprintWorkerGathersBuildsAndProducesItsOwnBlueprint`
+(time budget).** One worker must gather 20 supplies within 90 s. At the time
+limit it had 15 stored and 5 in hand, on its last trip home. The whole test
+took 73 s at the original 3.2 m/s and 92–110 s at the approved 1.8 m/s, so the
+budget became 150 s. No assertion changed.
+
+**`LivingBodyTests.NavigationCorrectionKeepsSupportAndLegReach` (a body defect,
+older than checkpoint A).**
+
+- **Symptom.** A leg segment measured 0.445 m instead of 0.68 m, 0.2 s after a
+  1.5 m warp.
+- **Diagnosis.** Temporary instrumentation (not committed) caught 10 occurrences
+  in 40 repeated corrections. The pelvis collapsed to about 0.17 m, ankle
+  height, so the legs lay horizontal and the knee had no bend direction.
+- **Cause.** Each frame, the reach-projected hip height was written back as the
+  next frame's target height. While both feet were out of horizontal reach,
+  every projection landed lower. At test frame rates (about 5000 fps) the
+  pelvis reached the ground within milliseconds, before its time-based
+  recovery could act.
+- **Fix.** The target height stays separate from the projected result.
+- **After the fix.** The instrumented repeat run caught 0 occurrences, and the
+  gait and Living Body tests passed 14/14.
+- **Regression test.** `GroundedBodyTests.NavigationCorrectionsNeverCollapseThePelvis`
+  applies 8 corrections in both directions on both walkers and checks every
+  frame that the pelvis stays more than 0.8 m above the root and the legs keep
+  their length. With the old write-back temporarily restored it failed (pelvis
+  0.778 m); with the fix it passes.
+
+**A second pelvis drop, found by the new regression test.** The next full run
+failed the new test with the write-back already removed: the pelvis was
+0.24 m above the root.
+
+- **Diagnosis.** Instrumentation (not committed) caught 30 frames in 6 × 8
+  corrections. After a 1.5 m correction, one foot had stepped home while the
+  other swung in from 1.34 m away, just inside the 1.33 m leg reach. The height
+  rule counted that swinging foot as support and lowered the pelvis to
+  ankle height to reach it. Just beyond reach, a separate rule kept the body
+  standing, so the old logic was also discontinuous there.
+- **Fix.**
+  - Only planted feet constrain the pelvis height and the reach projection.
+  - A swinging foot that is out of reach is drawn within the leg's reach of
+    the hip, with its rendered foot and toe moved accordingly.
+  - When support passes to a foot that allows a higher pelvis, the solved
+    height rises smoothly. This is an output filter, never fed back into the
+    target; lowering stays immediate.
+- **Results.**
+  - The instrumented repeat run caught 0 drops in 48 corrections, and the
+    gait and Living Body tests passed 16/16.
+  - Gait measurements were unchanged: walk 2.08 steps/s with a 1.85 m stride,
+    jog 3.13 steps/s with flight under 0.08 s, 1 step after arrival, and 0
+    standing frames while travelling.
+  - Re-rendered walk, jog and carry frames were reviewed. Their quality is
+    unchanged, and the playtest images were refreshed from them.
+
+### Final evidence for this step
+
+- **Full PlayMode suite: 93/93 in two consecutive runs** (839.8 s and
+  834.9 s). These are the 89 earlier tests plus four new ones: arrival
+  without shuffling, the pelvis never collapsing, an idle body blocking a
+  claim, and stepping clear of a station.
+- **Windows build.** `GroundedBodySetup.BuildWindows` passed
+  (GROUNDED_BODY_BUILD_OK). Output: `Builds/WindowsGroundedBody/WonderGather.exe`.
+- **Not tested:** interactive play in the build or the open Editor; crowds of
+  more than eight workers; terrain beyond flat ground and the gentle ramp.
+

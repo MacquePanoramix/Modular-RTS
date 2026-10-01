@@ -31,7 +31,9 @@ namespace WonderGather.Tests
             var selection=Object.FindAnyObjectByType<SelectionController>();var construction=Object.FindAnyObjectByType<ConstructionController>();
             var worker=Object.FindObjectsByType<SelectableUnit>()[0];selection.Select(worker);
             Assert.That(selection.GatherSelection(Object.FindAnyObjectByType<ResourceNode>()),Is.EqualTo(1));
-            float timeout=Time.time+90;while(session.Depot.Stored<20 && Time.time<timeout) yield return null;
+            // The natural 1.8 m/s pace (decision D2, September 30) makes twenty supplies take
+            // about 70-85 s, so the former 90 s budget sat at the edge.
+            float timeout=Time.time+150;while(session.Depot.Stored<20 && Time.time<timeout) yield return null;
             Assert.That(session.Depot.Stored,Is.GreaterThanOrEqualTo(20),"Gathering state: "+worker.GetComponent<Gatherer>().State+"; cargo: "+worker.GetComponent<Gatherer>().Carried+"; position: "+worker.transform.position+"; destination: "+worker.Motor.Destination);
             Assert.That(construction.BeginPlacement(),Is.True);Assert.That(construction.TryPlace(new Vector3(-18,0,8)),Is.True);
             Assert.That(construction.LastSite.Blueprint,Is.SameAs(worker.GetComponent<UnitIdentity>().Blueprint.Builds[0]));
