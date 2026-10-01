@@ -13,7 +13,14 @@
   - S1a (two cameras) is built and tested, and waiting for his playtest
     ([TwoCamerasPlaytest.md](TwoCamerasPlaytest.md)). The build is
     `Builds/WindowsTwoCameras`.
-  - S1b (the Ordinary Place) is in progress.
+  - S1b/S1c (the Ordinary Place) has its first in-engine pass:
+    - a lit house, grassland, path, trees, sky and time of day;
+    - five rendering candidates that switch live;
+    - matched captures beside the references, and measured costs.
+
+    See [OrdinaryPlaceLookTest.md](OrdinaryPlaceLookTest.md); the build is
+    `Builds/WindowsOrdinaryPlace`. It waits for Luis's judgment of direction
+    and candidates.
 - **Overall plan:** [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
 
 ## What the project is building now
@@ -104,9 +111,9 @@ Still valid from September 30:
 
 1. **S1a, the two cameras.** Luis playtests them in any map
    ([TwoCamerasPlaytest.md](TwoCamerasPlaytest.md)).
-2. **S1b/S1c, the Ordinary Place.** Build it (house, grassland, path, worker;
-   day and night) with live-switchable rendering candidates. Captures and frame
-   times go next to the references. Luis then chooses the rendering approach.
+2. **S1b/S1c, the Ordinary Place.** Luis walks and flies through it, compares
+   candidates A–E, and says how close it is to the Visual Soul and which
+   approach to pursue ([OrdinaryPlaceLookTest.md](OrdinaryPlaceLookTest.md)).
 3. **S1d, the worker model**, in the chosen language.
 
 Luis's other choices on October 1:

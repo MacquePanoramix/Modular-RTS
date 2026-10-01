@@ -12,8 +12,11 @@ splits the work into checkpoints Luis playtests one at a time:
 
 1. **S1a, the two cameras.** Built and tested on October 1, and waiting
    for Luis's playtest ([TwoCamerasPlaytest.md](TwoCamerasPlaytest.md)).
-2. **S1b, the Ordinary Place.**
-3. **S1c, choosing the rendering approach.**
+2. **S1b, the Ordinary Place.** First in-engine pass built on October 1
+   ([OrdinaryPlaceLookTest.md](OrdinaryPlaceLookTest.md)).
+3. **S1c, choosing the rendering approach.** Five candidates can be switched
+   live in the build, with matched captures and measured costs. This waits for
+   Luis's judgment.
 4. **S1d, the worker model.**
 
 The previous S1 plan (style studies, then the worker model) is archived in

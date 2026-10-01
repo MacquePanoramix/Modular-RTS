@@ -801,3 +801,86 @@ It was copied to `Builds/WindowsTwoCameras/WonderGather.exe`.
 - edge scrolling;
 - the platform's mouse-wheel scale. The player log records the first wheel
   delta.
+
+## S1b/S1c: the Ordinary Place look test — October 1, 2026
+
+Authored and validated in the isolated worktree. Sources were staged outside
+the main project and copied in only after they compiled and their tests
+passed.
+
+### Authoring
+
+- `OrdinaryPlaceSetup.Create`, a guarded one-time setup that builds:
+  - the painted materials;
+  - the Blender house and nature, imported with their materials remapped;
+  - the ground definition (regenerated at load, not stored as an asset);
+  - house and nature colliders, plus the doorway blocker;
+  - warm lights at the Blender anchors;
+  - the sun and moon, time of day, grass, smoke, look candidates, the
+    benchmark and the post volume;
+  - the baked NavMesh and both camera modes;
+  - the dressed worker prefab.
+
+  It ran without compile or shader errors and planted 481,213 grass blades.
+- **Blender sources.** `Art/Blender/OrdinaryPlace/house.py` and `nature.py`
+  produce `House.fbx` and `Nature.fbx`. Previews of both were reviewed during
+  modelling.
+
+### Iterations judged from captures
+
+`OrdinaryPlaceCapture.Capture` renders 7 views × 4 times. The path and worker
+views are also rendered in every candidate. Problems found and fixed across
+four passes:
+
+- The ink shader used `line` (a reserved HLSL word) and did not compile, so it
+  was renamed.
+- Clouds were invisible because the noise scale was too large for the visible
+  sky.
+- The ground between the blades read pale. Flat soil takes full sun while
+  the blades don't, so the soil is now shaded under dense grass.
+- The windows overexposed to white; they now glow amber.
+- **Night values.**
+  - The hills were brighter than the sky, so the fog is now darker than the
+    horizon.
+  - The night sky was washed purple by wide bloom from the windows. The bloom
+    is now tighter (intensity 0.35, scatter 0.5).
+- Distant land turned into a pale wall. Fog now falls off with squared
+  distance and is capped.
+- **Brushwork** was hard to see. It is now dab-based, in tone and in the
+  light's edge.
+- **Colour semantics.** `Material.SetColor` treats colours as sRGB in this
+  linear project, so the night sky came out about 3× too dark and was tipped
+  purple by bloom. The night sky palette is now authored in sRGB.
+- The windows saturated to white; their emission is lower.
+- The ground meshes would have been about 18 MB of text assets per
+  regeneration. They are now rebuilt from the height field when the scene
+  loads (`DontSave`), and the scene itself is 309 KB.
+
+### Final evidence
+
+- **`OrdinaryPlaceTests` (5 new)** check that:
+  - the scene is complete (481,213 blades, house lights, smoke);
+  - the worker walks to the doorstep;
+  - Explore cannot enter the house through the door or a wall;
+  - night and day switch the house lights;
+  - every candidate runs.
+
+  They passed together with `CameraTests` (14/14).
+- **Full PlayMode suite: 107/107 in two consecutive runs on the final state**
+  (865.8 s and 878.6 s), plus an earlier 858.4 s run. These are the 102
+  earlier tests plus 5 new ones.
+- **Captures.** The full matched set (141 images) is in the worktree's results
+  folder. The comparison sheets are in `Docs/Images/OrdinaryPlace/`.
+- **Release build.** `OrdinaryPlaceSetup.BuildWindows` passed
+  (ORDINARY_PLACE_BUILD_OK). Output: `Builds/WindowsOrdinaryPlace/WonderGather.exe`.
+  The build enables Unity's frame timing stats in Player Settings.
+- **Benchmark.** `-wgbenchmark` at 1920×1080 on an RTX 4060 Laptop GPU and an
+  i9-14900HX. GPU frame time ranged 3.2–4.1 ms (baseline) to 4.6–5.4 ms (paint
+  filter + ink). The full table is in
+  [OrdinaryPlaceLookTest.md](OrdinaryPlaceLookTest.md).
+- **Not tested:**
+  - other GPUs and vendors;
+  - long sessions;
+  - interactive play in the build or the open Editor.
+
+  The captures are edit-mode stills, so the worker stands in its stored pose.

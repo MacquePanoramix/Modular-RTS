@@ -520,3 +520,65 @@ intermittently deadlocked shared stations at the natural pace.
   reach of the hip (its rendered foot and toe follow) rather than pulling the
   body down to it.
 
+
+## Two camera modes (S1a) — October 1
+
+- **`RtsCamera` stays the single camera rig.** It keeps its component, GUID
+  and serialized preferences in every map, and gains `CameraMode.Strategy`
+  and `CameraMode.Explore`. `V` toggles, and `Step(CameraIntent, dt)` is the
+  testable entry point.
+- **Input.** `RtsInput` remains the only owner of devices. `ReadCameraIntent()`
+  fills the intent. In Explore:
+  - `MovePressed` fires on right-button release when the press moved less
+    than 6 px;
+  - Alt + left click orbits instead of selecting;
+  - `CaptureCursor` locks the cursor while looking and returns it to where
+    the look began.
+- **`ExploreFlight`.**
+  - Eased fly and look.
+  - Speed scales with clearance (`baseSpeed × (0.5 + clearance)`).
+  - Orbit about the viewed point or the followed body, slide, and wheel
+    glide; focus with F follows a body.
+- **`CameraCollision`.** It sweeps a 6 cm sphere and slides against
+  everything except living bodies (`SelectableUnit`/`NavMeshAgent`
+  hierarchies), which push the camera softly via personal space. It also
+  provides walkable-ground and residual-overlap guards. Explore stays inside
+  the bounds of the layer-6 (Walkable) colliders.
+
+## The Ordinary Place look test (S1b/S1c) — October 1
+
+- **Scene.** `TheOrdinaryPlace`, authored once by `OrdinaryPlaceSetup.Create`
+  (guarded). Stills come from `OrdinaryPlaceCapture.Capture`; the release
+  player is built by `OrdinaryPlaceSetup.BuildWindows`.
+- **Art sources.** `Art/Blender/OrdinaryPlace/house.py` and `nature.py`
+  export FBX into `Assets/_WonderGather/Art/OrdinaryPlace`. Empties named
+  `Light_*`, `Smoke_*` and `Blocker_*` anchor the lights, smoke and doorway
+  blocker.
+- **Shaders.** They live in `Assets/_WonderGather/Art/Shaders`:
+  - `Wonder Gather/Painted`: surfaces with paint dabs, a brush-broken light
+    edge, cool coloured shade, warm local-light pools, rim, aerial fog and
+    optional wind sway;
+  - `Wonder Gather/Grass`: instanced blades from a structured buffer, with
+    wind and parting around bodies;
+  - `Wonder Gather/Sky`;
+  - `Wonder Gather/Smoke`;
+  - `Hidden/Wonder Gather/Look Post`: paint filter, ink and grain.
+
+  `WGCommon.hlsl` holds the shared noise, dabs, lighting and fog. Scene-wide
+  values are `_WG_*` globals set by `TimeOfDay`. When `_WG_Sky.a` is 0, the
+  surfaces fall back to URP ambient and fog.
+- **Runtime components.** They live in `Scripts/Look`:
+  - `OrdinaryGround`: a deterministic height field whose meshes are
+    regenerated on enable as `DontSave` objects, so there are no large mesh
+    assets;
+  - `GrassField`: chunked `RenderMeshIndirect` in `beginCameraRendering`,
+    with distance thinning by drawing a shuffled prefix;
+  - `TimeOfDay`: one palette. Sky, light and glow colours are sRGB via
+    `SetColor`; the globals are linear;
+  - `SmokePlume`;
+  - `LookPostEffects`: render-graph passes injected from
+    `beginCameraRendering`, so the shared URP renderer asset is untouched;
+  - `LookDevControls`: candidates A–E, time presets and the cost panel;
+  - `LookBenchmark`: `-wgbenchmark`.
+- **Assemblies.** `WonderGather.Runtime` now references URP Core and
+  Universal runtime, for the injected passes.

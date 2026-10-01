@@ -12,11 +12,19 @@ A first playable foundation for a slow, fully 3D RTS about civilizations designe
 for outside playtesters: one worker, a video-game style character creator,
 physical mining and real hauling. See the [showcase roadmap](Docs/ShowcaseRoadmap.md).
 
-- **Latest:** the grounded body, with a gait scaled to the body, a jog,
-  heel/toe feet and a natural 1.8 m/s pace. Arrival finishes the stride
-  without shuffling. See the [grounded body playtest](Docs/GroundedBodyPlaytest.md).
-- **Next (proposed):** S1, the worker model and art direction
-  ([plan](Docs/NextMilestonePlan.md)). It awaits Luis's choice of art direction.
+- **Art direction:** the [Visual Soul](Docs/VisualSoul.md), Luis's October 1
+  handoff (painted light, living surfaces, characters with a soul, playful
+  wonder).
+- **Latest:**
+  - **Two camera modes** in every map (`V`): a fast Strategy camera and a
+    free Explore camera. See the [two cameras playtest](Docs/TwoCamerasPlaytest.md).
+  - **The Ordinary Place,** an in-engine Visual Soul look test with a lit
+    house, grassland, path, sky and time of day. It has five rendering
+    candidates to compare. Open
+    `Assets/_WonderGather/Scenes/TheOrdinaryPlace.unity`, or see the
+    [look test](Docs/OrdinaryPlaceLookTest.md).
+- **Next:** Luis judges the look and picks the rendering approach, then S1d
+  builds the worker model ([plan](Docs/NextMilestonePlan.md)).
 
 Latest milestone: **The Equipped Worker**, connecting a blueprint-selected
 pickaxe to reachable procedural strikes and real resource extraction. Open
