@@ -213,33 +213,93 @@ The captures are stills. Motion (wind in the grass, smoke, the walking
 worker and changing light) has not been reviewed in recorded footage, so
 please judge it in the build.
 
-## Second pass: hand-painted surfaces (October 1, in progress)
+## Second pass: hand-painted surfaces (October 2)
 
-On Luis's feedback (he preferred E, and hand-painted textures were the
-agreed next step), every Ordinary Place model now carries a procedurally
-painted colour texture. `Art/Blender/OrdinaryPlace/painting.py` builds them:
-it unwraps by material, then layers broad warm/cool patches, paint daubs,
-brush strokes and a motif per material, then cool cavities, lit edges, moss
-and stains, and bakes the result in Cycles. `OrdinaryPlaceSetup.ApplyPaintedTextures`
-applies the textures to the existing materials in place (GUIDs kept) and
-starts the scene on look E.
+Luis preferred E, the most illustrated candidate, and agreed that
+hand-painted textures should come next. Now every Ordinary Place model
+carries a painted colour texture, and the scene opens on look E.
+
+### How the textures are made
+
+- **The painting.** `Art/Blender/OrdinaryPlace/painting.py` paints each
+  material the way a background painter would, and bakes it in Cycles into
+  one texture per material:
+  1. broad warm/cool patches;
+  2. soft paint daubs;
+  3. directional brush strokes;
+  4. a motif particular to the material: plaster worn through to stone, wood
+     grain, board-by-board roof variation, stone outlines, leaf dabs or rock
+     cracks;
+  5. cool coloured cavities;
+  6. lit, worn edges;
+  7. moss on upward stone and roof, and grime along the foot of the walls.
+- **Reproducible.** `house.py --paint` and `nature.py --paint` regenerate the
+  textures and the models (now UV-unwrapped).
+- **Not painted by hand.** The textures are painted by script. A human
+  painter can work over them later, because the UVs and scripts are kept.
+- **In Unity.** `OrdinaryPlaceSetup.ApplyPaintedTextures` applies the textures
+  to the existing materials in place, keeping their GUIDs. The painted shader
+  keeps only a little of its own colour variation, plus its brush-broken
+  light edge. Wood takes a calmer brush, so lamplight reads as grain rather
+  than dirt.
+
+### What it looks like
+
+Before and after:
 
 ![Before and after, night](../Images/OrdinaryPlace/Painted_BeforeAfter_Night.jpg)
 ![Before and after, doorway](../Images/OrdinaryPlace/Painted_BeforeAfter_Door.jpg)
 ![Before and after, golden hour](../Images/OrdinaryPlace/Painted_BeforeAfter_Golden.jpg)
+
+Next to the references:
+
 ![Reference A and the painted pass](../Images/OrdinaryPlace/Painted_Compare_A.jpg)
 ![Reference E and the painted pass](../Images/OrdinaryPlace/Painted_Compare_E.jpg)
 ![Reference C and the painted pass](../Images/OrdinaryPlace/Painted_Compare_C.jpg)
 
-**Still to do:**
+More views:
 
-- record the second full regression run (a first run was in progress at
-  commit time);
-- a new build and benchmark;
-- Luis's judgment.
+![Overview by day](../Images/OrdinaryPlace/Painted_overview_day_E.jpg)
+![The doorway at night](../Images/OrdinaryPlace/Painted_door_night_E.jpg)
+![In the grass at golden hour](../Images/OrdinaryPlace/Painted_grass_golden_E.jpg)
 
-**Known issues:**
+### What improved, and what has not yet
 
-- The timber's daubs read a little spotty under the paint filter.
-- `TimeOfDay` rewrites the sky and glow materials in edit mode, which churns
-  those two assets.
+**Improved:**
+
+- **Painted objects.** The house, trees and stones now read as painted
+  objects rather than clean 3D.
+- **Plaster.** It is mottled and worn through to stone in places, warm where
+  the lamps reach it and cool in shade, close to A's walls.
+- **The roof and the trees.** The roof varies board by board with a little
+  moss. Leaf clumps carry light dabs.
+- **Look E.** Its filter and ink now work on painted surfaces, which brings
+  the image closest yet to an illustration.
+
+**Not yet:**
+
+- **Grass and ground.** They are still shader-coloured, not painted.
+- **The far hills.** They are still simple.
+- **The worker.** It is still the placeholder body (S1d).
+- **The window glass.** It glows evenly, without the interior silhouettes of
+  A.
+
+### Cost and evidence
+
+- **Cost.** The painted textures add no measurable cost: look E runs at
+  4.5–5.5 ms of GPU time at 1080p on this computer, as before.
+- **Tests.** The full suite passes 107/107 twice.
+- **Build.** `Builds/WindowsOrdinaryPlace/WonderGather.exe` opens on look E.
+
+See [Validation.md](../Validation.md).
+
+### Engineering fixes in this pass
+
+- **No more asset churn.** The sky's time-of-day values and the window
+  glow's strength are now shader globals, so `TimeOfDay` no longer rewrites
+  the sky and glow material assets.
+- **Colour meaning.** `Shader.SetGlobalColor` does not convert from sRGB the
+  way `Material.SetColor` does. The sky colours are converted explicitly, and
+  captures after the change match the earlier sky pixel for pixel.
+- **Distant leaves.** Painted textures fill the space between UV islands with
+  the material's own colour, so distant mipmaps no longer turn leaves black.

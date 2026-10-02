@@ -91,12 +91,14 @@ namespace WonderGather.Tests
             time.Hour = 23;
             Assert.That(lights.All(x => x.enabled && x.intensity > 0), Is.True, "Night should light every house light.");
             Assert.That(sky.intensity, Is.LessThan(.6f), "Moonlight should be dim.");
-            Assert.That(RenderSettings.skybox.GetFloat("_MoonVisibility"), Is.GreaterThan(.9f), "The moon belongs to the night sky.");
+            Assert.That(Shader.GetGlobalFloat("_WG_MoonVisibility"), Is.GreaterThan(.9f), "The moon belongs to the night sky.");
+            Assert.That(Shader.GetGlobalFloat("_WG_GlowScale"), Is.GreaterThan(.9f), "Night should light the windows fully.");
             foreach (float hour in new[] { 6.5f, 9f, 12f, 16f })
             {
                 time.Hour = hour;
-                Assert.That(RenderSettings.skybox.GetFloat("_MoonVisibility"), Is.EqualTo(0).Within(1e-4), $"The moon showed by day at {hour}.");
+                Assert.That(Shader.GetGlobalFloat("_WG_MoonVisibility"), Is.EqualTo(0).Within(1e-4), $"The moon showed by day at {hour}.");
             }
+            Assert.That(Shader.GetGlobalFloat("_WG_GlowScale"), Is.LessThan(.05f), "Day should leave the windows almost unlit.");
             time.Hour = 12;
             Assert.That(lights.All(x => !x.enabled), Is.True, "Day should rest the house lights.");
             Assert.That(sky.intensity, Is.GreaterThan(1.5f), "Daylight should be strong.");

@@ -170,7 +170,7 @@ Shader "Wonder Gather/Painted"
                 // Ground under dense grass sits in the blades' shade.
                 direct *= lerp(1, input.color.a, _DirectOcclusion);
                 float3 color = WG_Compose(s, direct, WG_Ambient(n));
-                color += _EmissionColor.rgb;
+                color += _EmissionColor.rgb * (WG_LookActive() ? _WG_GlowScale : 1);
                 color = WG_ApplyFog(color, positionWS, input.fogCoord);
                 return half4(color, 1);
             }

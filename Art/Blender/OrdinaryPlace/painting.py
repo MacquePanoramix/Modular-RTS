@@ -34,7 +34,7 @@ recipe("Plaster", base=(0.82, 0.71, 0.55), size=2048, motif="plaster", strokes=(
 recipe("Interior", base=(0.86, 0.60, 0.36), size=1024, motif="plaster", strokes=(1, 5, 1), stroke_scale=3.0,
        warm=(1.06, 1.0, 0.9), cool=(0.92, 0.9, 0.95), cavity=(0.5, 0.36, 0.3), edge=(1.05, 1.02, 0.95))
 recipe("Timber", base=(0.36, 0.26, 0.17), size=2048, motif="wood", strokes=(8, 1, 1), stroke_scale=2.0,
-       warm=(1.1, 1.0, 0.88), cool=(0.88, 0.9, 0.96), cavity=(0.58, 0.5, 0.48), edge=(1.4, 1.28, 1.1))
+       warm=(1.1, 1.0, 0.88), cool=(0.88, 0.9, 0.96), cavity=(0.58, 0.5, 0.48), edge=(1.4, 1.28, 1.1), daub=0.4)
 recipe("Roof", base=(0.27, 0.24, 0.23), size=2048, motif="shingles", strokes=(1, 4, 1), stroke_scale=4.0,
        warm=(1.04, 1.0, 0.95), cool=(0.92, 0.94, 1.02), cavity=(0.32, 0.31, 0.36), edge=(1.45, 1.38, 1.3), moss=0.4)
 recipe("Stone", base=(0.46, 0.43, 0.39), size=2048, motif="stones", strokes=(1, 1, 3), stroke_scale=3.0,
@@ -46,11 +46,11 @@ recipe("Foliage", base=(0.20, 0.33, 0.16), size=1024, motif="leaves", strokes=(1
 recipe("Cloth", base=(0.62, 0.13, 0.09), size=1024, motif="none", strokes=(1, 6, 1), stroke_scale=4.0,
        warm=(1.08, 1.0, 0.9), cool=(0.8, 0.85, 1.0), cavity=(0.45, 0.25, 0.32), edge=(1.2, 1.1, 1.0))
 recipe("Firewood", base=(0.48, 0.35, 0.23), size=1024, motif="wood", strokes=(8, 1, 1), stroke_scale=2.5,
-       warm=(1.1, 1.0, 0.9), cool=(0.85, 0.88, 0.95), cavity=(0.35, 0.3, 0.3), edge=(1.4, 1.3, 1.1))
+       warm=(1.1, 1.0, 0.9), cool=(0.85, 0.88, 0.95), cavity=(0.35, 0.3, 0.3), edge=(1.4, 1.3, 1.1), daub=0.55)
 recipe("Iron", base=(0.16, 0.15, 0.15), size=512, motif="none", strokes=(1, 3, 1), stroke_scale=6.0,
        warm=(1.2, 1.0, 0.85), cool=(0.9, 0.95, 1.05), cavity=(0.6, 0.55, 0.55), edge=(2.2, 1.7, 1.3), stains=0.5)
 recipe("Bark", base=(0.24, 0.20, 0.17), size=1024, motif="wood", strokes=(1, 1, 7), stroke_scale=2.0,
-       warm=(1.1, 1.0, 0.9), cool=(0.85, 0.9, 1.0), cavity=(0.35, 0.33, 0.36), edge=(1.4, 1.3, 1.15), moss=0.35, angle=75)
+       warm=(1.1, 1.0, 0.9), cool=(0.85, 0.9, 1.0), cavity=(0.35, 0.33, 0.36), edge=(1.4, 1.3, 1.15), moss=0.35, angle=75, daub=0.65)
 recipe("Leaves", base=(0.16, 0.28, 0.15), size=2048, motif="leaves", strokes=(1, 1, 1), stroke_scale=3.0,
        warm=(1.2, 1.12, 0.78), cool=(0.78, 0.9, 1.12), cavity=(0.3, 0.42, 0.5), edge=(1.3, 1.25, 0.95), angle=75)
 recipe("LeavesLight", base=(0.29, 0.39, 0.17), size=1024, motif="leaves", strokes=(1, 1, 1), stroke_scale=3.0,
@@ -162,7 +162,10 @@ def build_painting(material, r):
     g.link(offset.outputs["Vector"], daubs.inputs["Vector"])
     daub_tone = g.node("ShaderNodeSeparateColor")
     g.link(daubs.outputs["Color"], daub_tone.inputs["Color"])
-    color = g.mix(g.tint(color, (0.88, 0.88, 0.92)), g.tint(color, (1.1, 1.08, 1.03)), daub_tone.outputs["Red"])
+    # Daub strength per material: wood takes a calmer hand so its grain, not spots, carries it.
+    d = r.get("daub", 1.0)
+    color = g.mix(g.tint(color, (1 - 0.12 * d, 1 - 0.12 * d, 1 - 0.08 * d)), g.tint(color, (1 + 0.1 * d, 1 + 0.08 * d, 1 + 0.03 * d)),
+                  daub_tone.outputs["Red"])
     # 2. Directional brush strokes with grain.
     strokes = g.remap(g.noise(r["stroke_scale"], 4.0, 0.6, g.stretched(r["strokes"]), 0.8), 0.36, 0.64)
     color = g.mix(g.tint(color, (0.86, 0.86, 0.9)), g.tint(color, (1.1, 1.08, 1.04)), strokes)

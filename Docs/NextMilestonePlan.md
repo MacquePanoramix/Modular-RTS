@@ -17,8 +17,8 @@ splits the work into checkpoints Luis playtests one at a time:
 3. **S1c, choosing the rendering approach.** Five candidates can be switched
    live in the build, with matched captures and measured costs. Luis chose E
    (painted light + paint filter + ink) as the working base and agreed that
-   hand-painted textures come next. That is **S1c, second pass** (below), and it
-   is in progress.
+   hand-painted textures come next. That is **S1c, second pass** (below). It was
+   built on October 2 and waits for Luis's judgment.
 4. **S1d, the worker model.**
 
 The previous S1 plan (style studies, then the worker model) is archived in

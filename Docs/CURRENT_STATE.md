@@ -128,9 +128,14 @@ Still valid from September 30:
 
 ## Recommended next action
 
-1. **S1c, second pass: hand-painted surfaces.** Paint the Ordinary Place's
-   models with procedurally painted textures from their Blender scripts, on
-   top of look E ([plan](NextMilestonePlan.md)).
+1. **S1c, second pass: hand-painted surfaces.** Done on October 2, and
+   waiting for Luis's judgment:
+   - every model in the Ordinary Place now has a painted texture;
+   - the scene opens on look E;
+   - before/after views and reference comparisons are in
+     [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md).
+
+   It is on the branch, and merges into `main` after his playtest.
 2. **S1d, the worker model**, in that language.
 
 Luis's other choices on October 1:

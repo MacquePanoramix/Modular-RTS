@@ -410,10 +410,17 @@ namespace WonderGather.Editor
                 material.SetColor("_BaseColor", Color.white);
                 // The painting already carries the colour variation; the shader keeps a little, and its brush-broken light.
                 material.SetFloat("_Variation", .25f);
+                // Wood takes a calmer brush on its light edge, so lamplight reads as grain rather than dirt.
+                if (pair.Key == "Timber" || pair.Key == "Firewood" || pair.Key == "Bark") material.SetFloat("_Brush", .3f);
                 EditorUtility.SetDirty(material);
                 applied++;
             }
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            // The window glow is a fixed emission; TimeOfDay scales it with a global instead of rewriting the asset.
+            var time = Object.FindAnyObjectByType<TimeOfDay>() ?? throw new InvalidOperationException("The scene has no time of day.");
+            var glow = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath + "/Glow.mat");
+            glow.SetColor("_EmissionColor", time.GlowEmission);
+            EditorUtility.SetDirty(glow);
             var look = Object.FindAnyObjectByType<LookDevControls>() ?? throw new InvalidOperationException("The scene has no look controls.");
             var lookData = new SerializedObject(look);
             lookData.FindProperty("candidate").intValue = 4;

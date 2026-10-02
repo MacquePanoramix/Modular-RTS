@@ -912,3 +912,57 @@ four passes:
   - **Capture paths.** The Wanderer, Group and Gatherer preview scripts now
     write into their image folders. They compile.
   - **Index.** `Docs/README.md` describes the layout.
+
+## S1c, second pass: hand-painted surfaces — October 2, 2026
+
+Authored in the isolated worktree. Blender 4.4 runs the painting; Unity
+6000.6.0f1 runs everything else.
+
+- **Painting.** `painting.py` baked 14 material textures (512–2048 px JPEGs,
+  about 6 MB in total) through `house.py --paint` and `nature.py --paint`.
+  The house takes about 6 minutes on GPU (OptiX), and nature about 4.
+- **Iterations judged from renders:**
+  - **Display transform.** The first bakes were saved through the AgX
+    display transform, so colours washed out. They are now saved with
+    Standard.
+  - **Plaster.** It was too timid and too grey, so the daubs, warm/cool swings
+    and worn patches are stronger.
+  - **Roof.** The candy-coloured patchwork was toned down to board-by-board
+    value.
+  - **Daub edges.** The hard polygonal daub edges were softened (smooth F1
+    with warped coordinates).
+  - **Black leaf blotches.** They came from mipmaps sampling the black space
+    between many small UV islands. The texture background is now filled with
+    the material's colour, and round shapes unwrap at 75°.
+  - **Wood.** Timber read spotty under lamplight. The wood daubs are weaker,
+    and wood materials use `_Brush` 0.3.
+- **Asset churn removed.** `TimeOfDay` now drives the sky and window glow
+  through shader globals; no material asset changes with the hour.
+  - **Colour conversion.** `Shader.SetGlobalColor` does not convert from sRGB,
+    so the sky colours are sent as `.linear`.
+  - **Pixel check.** Recaptured night, dusk and day skies match the earlier
+    captures pixel for pixel.
+- **Tests.** `OrdinaryPlaceTests` now checks the moon and glow globals (moon
+  hidden by day and shown at night; windows fully lit at night, almost unlit
+  by day). Together with `CameraTests` they passed 14/14.
+- **Full PlayMode suite: 107/107 in two consecutive runs** (863.1 s and
+  861.5 s).
+- **Release build.** `OrdinaryPlaceSetup.BuildWindows` passed. Output:
+  `Builds/WindowsOrdinaryPlace/WonderGather.exe`.
+- **Benchmark.** At 1920×1080 on the RTX 4060 Laptop, GPU frame time is:
+
+  | Candidate | GPU ms |
+  |---|---|
+  | A | 3.1–3.9 |
+  | B | 3.3–4.3 |
+  | C | 4.4–5.3 |
+  | D | 3.4–4.4 |
+  | E | 4.5–5.5 |
+
+  The slowest 5% of frames are at most 6.3 ms of CPU. The painted textures
+  add no measurable cost.
+- **Not tested:**
+  - interactive play in the new build or the open Editor;
+  - GPUs other than this one;
+  - painted textures on grass, ground and far land (those are not painted
+    yet).

@@ -582,3 +582,26 @@ intermittently deadlocked shared stations at the natural pace.
   - `LookBenchmark`: `-wgbenchmark`.
 - **Assemblies.** `WonderGather.Runtime` now references URP Core and
   Universal runtime, for the injected passes.
+
+## Hand-painted surfaces (S1c, second pass) — October 2
+
+- **Baking.** `Art/Blender/OrdinaryPlace/painting.py` unwraps every face into
+  its material's texture (`unwrap_by_material`). It builds a painter's node
+  graph per material from `RECIPES` and bakes it with Cycles EMIT into one
+  JPEG per material. Each image is pre-filled with the material's base colour
+  so mipmaps never bleed black.
+- **Running it.** `house.py --paint <folder>` and
+  `nature.py --paint <folder>` run the pass before exporting the FBX. The
+  textures live in `Assets/_WonderGather/Art/OrdinaryPlace/Textures`.
+- **Applying.** `OrdinaryPlaceSetup.ApplyPaintedTextures` assigns each
+  texture to its existing material in place (GUIDs unchanged). It lowers
+  `_Variation` to 0.25 (wood also gets `_Brush` 0.3), sets the glow
+  material's fixed emission, and starts the scene on look E.
+- **Time-of-day globals.** `TimeOfDay` drives the sky and window glow
+  through globals only (`_WG_Sky*`, `_WG_Sun*`, `_WG_Moon*`, `_WG_Cloud*`,
+  `_WG_Stars`, `_WG_Galaxy`, `_WG_GlowScale`), so no material asset changes as
+  time passes.
+  - Colours are sent as `.linear`, because `Shader.SetGlobalColor` does not
+    convert from sRGB the way `Material.SetColor` does.
+  - The glow strength is `max(.08, houseLights)^2.2`, which reproduces scaling
+    the colour before its sRGB conversion.
