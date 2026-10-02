@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.36912096, g: 0.3518407, b: 0.5148009, a: 1}
+  m_FogColor: {r: 0.7859189, g: 0.56951517, b: 0.62228566, a: 1.1067994}
   m_FogMode: 2
-  m_FogDensity: 0.004283997
+  m_FogDensity: 0.00032400194
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.19456047, g: 0.22456047, b: 0.3918407, a: 1}
@@ -1868,6 +1868,55 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398187700}
   m_Mesh: {fileID: -5610251602573772179, guid: 4633a267a15a0d4439f504cfd61b7a2d, type: 3}
+--- !u!1 &398682474
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 398682475}
+  - component: {fileID: 398682476}
+  m_Layer: 0
+  m_Name: Water
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &398682475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398682474}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 734997666}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &398682476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398682474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b92a8f712469ca743a8bde2f02c2b0c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.WaterSurface
+  material: {fileID: 2100000, guid: 91fd8fb0a1985ae40861f429fc92a236, type: 2}
+  level: -26
+  extent: 9000
+  reflectionScale: 0.5
+  clipOffset: 0.05
 --- !u!1 &404389728
 GameObject:
   m_ObjectHideFlags: 0
@@ -1985,7 +2034,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 4000
+  far clip plane: 14000
   field of view: 50
   orthographic: 0
   orthographic size: 5
@@ -2060,7 +2109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
+  m_RequiresDepthTextureOption: 1
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
@@ -2957,6 +3006,39 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 700713322}
   m_Mesh: {fileID: 4742280023907674745, guid: 4633a267a15a0d4439f504cfd61b7a2d, type: 3}
+--- !u!1 &734997665
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 734997666}
+  m_Layer: 0
+  m_Name: The beyond
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &734997666
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734997665}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1340518592}
+  - {fileID: 398682475}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &805352575
 GameObject:
   m_ObjectHideFlags: 0
@@ -3524,8 +3606,9 @@ MonoBehaviour:
   seed: 7
   innerHalf: 60
   innerSpacing: 0.5
-  outerHalf: 1500
-  outerSteps: 36
+  outerHalf: 9000
+  outerRings: 170
+  waterLevel: -26
   path:
   - {x: 0.59, y: 4.5}
   - {x: 0.89, y: 3.1}
@@ -3540,9 +3623,14 @@ MonoBehaviour:
   flatCenter: {x: 0, y: 8}
   flatSize: {x: 8.8, y: 8}
   flatYaw: 0
-  meadow: {r: 0.13, g: 0.2, b: 0.11, a: 1}
+  meadow: {r: 0.13, g: 0.19, b: 0.06, a: 1}
   dirt: {r: 0.4, g: 0.31, b: 0.21, a: 1}
-  far: {r: 0.09, g: 0.13, b: 0.11, a: 1}
+  far: {r: 0.1, g: 0.16, b: 0.07, a: 1}
+  forest: {r: 0.05, g: 0.1, b: 0.05, a: 1}
+  rock: {r: 0.27, g: 0.26, b: 0.29, a: 1}
+  snow: {r: 0.86, g: 0.89, b: 0.95, a: 1}
+  shore: {r: 0.4, g: 0.37, b: 0.24, a: 1}
+  lakeBed: {r: 0.1, g: 0.14, b: 0.09, a: 1}
 --- !u!4 &989255014
 Transform:
   m_ObjectHideFlags: 0
@@ -5496,6 +5584,69 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1, y: 2, z: 0.3}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1340518591
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1340518592}
+  - component: {fileID: 1340518593}
+  m_Layer: 0
+  m_Name: Clouds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1340518592
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340518591}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 734997666}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1340518593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340518591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8a5e00afbfb6034f829281a64dec7d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.CloudBank
+  material: {fileID: 2100000, guid: 930414b8b09594445954d61b5a4e06e0, type: 2}
+  towers:
+  - {fileID: 6192790751679768435, guid: 1dd3658892f20b349b9fd45f33f30449, type: 3}
+  - {fileID: -4096196459080213202, guid: 1dd3658892f20b349b9fd45f33f30449, type: 3}
+  - {fileID: -2159736828381335085, guid: 1dd3658892f20b349b9fd45f33f30449, type: 3}
+  heaps:
+  - {fileID: 3272401073852984695, guid: 1dd3658892f20b349b9fd45f33f30449, type: 3}
+  - {fileID: -1748471463107065472, guid: 1dd3658892f20b349b9fd45f33f30449, type: 3}
+  - {fileID: -6508453210365631263, guid: 1dd3658892f20b349b9fd45f33f30449, type: 3}
+  - {fileID: -607111470916269263, guid: 1dd3658892f20b349b9fd45f33f30449, type: 3}
+  banks:
+  - {fileID: -6339344474055558316, guid: 1dd3658892f20b349b9fd45f33f30449, type: 3}
+  - {fileID: -4338509411418353568, guid: 1dd3658892f20b349b9fd45f33f30449, type: 3}
+  seed: 3
+  drift: 5
+  driftDirection: {x: 0.82, y: 0.57}
+  skyRadius: 9400
+  heapCount: 16
+  bankCount: 8
 --- !u!114 &1345650362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10210,6 +10361,7 @@ GameObject:
   - component: {fileID: 2071342758}
   - component: {fileID: 2071342757}
   - component: {fileID: 2071342756}
+  - component: {fileID: 2071342761}
   m_Layer: 0
   m_Name: Look
   m_TagString: Untagged
@@ -10248,8 +10400,11 @@ MonoBehaviour:
   time: {fileID: 2071342759}
   post: {fileID: 2071342758}
   grass: {fileID: 162427600}
-  candidate: 4
+  candidate: 5
   showPanel: 1
+  rig: {fileID: 432358853}
+  ground: {fileID: 989255013}
+  openingView: 0
 --- !u!114 &2071342758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10263,12 +10418,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.LookPostEffects
   shader: {fileID: 4800000, guid: f408bddcbbc845f3a30a071ed12dee1c, type: 3}
-  Paint: 0.8
+  Paint: 0.9
   PaintRadius: 4
   Ink: 0.8
   InkColor: {r: 0.3, g: 0.22, b: 0.2, a: 1}
   InkWidth: 1.2
-  Grain: 0.6
+  Grain: 0.5
+  Painting: 1
+  PaintingRadius: 5
+  PaintingSharpness: 8
+  Grade: 1
+  InkOnlyDrawn: 1
 --- !u!114 &2071342759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10306,6 +10466,9 @@ MonoBehaviour:
   moonOffset: 25
   wind: {x: 0.8, y: 0.55, z: 0.55}
   gustSpeed: 0.8
+  airBase: -26
+  cloudShadowSize: 260
+  cloudShadowDrift: 6
   palettes:
   - Hour: 0
     Zenith: {r: 0.12, g: 0.18, b: 0.4, a: 1}
@@ -10322,9 +10485,16 @@ MonoBehaviour:
     Shade: {r: 0.78, g: 0.88, b: 1.18, a: 1}
     ShadeSaturation: 0.4
     Rim: {r: 0.1, g: 0.15, b: 0.34, a: 1}
-    Fog: {r: 0.022, g: 0.038, b: 0.1, a: 1}
-    FogSun: {r: 0.04, g: 0.05, b: 0.12, a: 1}
-    FogDensity: 0.0045
+    AirDistance: 3200
+    AirMax: 0.45
+    HazeHeight: 300
+    GradeShadow: {r: 0.2, g: 0.26, b: 0.62, a: 1}
+    GradeLight: {r: 1, g: 0.72, b: 0.42, a: 1}
+    GradeShadowAmount: 0.05
+    GradeLightAmount: 0.12
+    GradeLift: 1
+    CloudShadowCover: 0
+    CloudShadowDarkness: 0
     Light: {r: 0.46, g: 0.56, b: 0.95, a: 1}
     LightIntensity: 0.32
     Stars: 1
@@ -10345,9 +10515,16 @@ MonoBehaviour:
     Shade: {r: 0.78, g: 0.88, b: 1.18, a: 1}
     ShadeSaturation: 0.4
     Rim: {r: 0.1, g: 0.15, b: 0.34, a: 1}
-    Fog: {r: 0.3, g: 0.3, b: 0.45, a: 1}
-    FogSun: {r: 0.75, g: 0.52, b: 0.55, a: 1}
-    FogDensity: 0.0045
+    AirDistance: 3000
+    AirMax: 0.76
+    HazeHeight: 300
+    GradeShadow: {r: 0.2, g: 0.26, b: 0.62, a: 1}
+    GradeLight: {r: 1, g: 0.72, b: 0.42, a: 1}
+    GradeShadowAmount: 0.05
+    GradeLightAmount: 0.12
+    GradeLift: 1
+    CloudShadowCover: 0
+    CloudShadowDarkness: 0
     Light: {r: 0.75, g: 0.62, b: 0.78, a: 1}
     LightIntensity: 0.25
     Stars: 0.25
@@ -10362,86 +10539,114 @@ MonoBehaviour:
     CloudLit: {r: 1, g: 0.82, b: 0.68, a: 1}
     CloudShade: {r: 0.52, g: 0.52, b: 0.66, a: 1}
     CloudEdge: {r: 1, g: 0.7, b: 0.55, a: 1}
-    CloudCover: 0.44
+    CloudCover: 0.28
     AmbientSky: {r: 0.4, g: 0.44, b: 0.6, a: 1}
     AmbientGround: {r: 0.15, g: 0.13, b: 0.1, a: 1}
     Shade: {r: 0.86, g: 0.9, b: 1.12, a: 1}
-    ShadeSaturation: 0.35
+    ShadeSaturation: 0.4
     Rim: {r: 0.2, g: 0.22, b: 0.32, a: 1}
-    Fog: {r: 0.78, g: 0.72, b: 0.72, a: 1}
-    FogSun: {r: 1, g: 0.78, b: 0.58, a: 1}
-    FogDensity: 0.0045
+    AirDistance: 3400
+    AirMax: 0.8
+    HazeHeight: 360
+    GradeShadow: {r: 0.42, g: 0.34, b: 0.78, a: 1}
+    GradeLight: {r: 1, g: 0.76, b: 0.52, a: 1}
+    GradeShadowAmount: 0.06
+    GradeLightAmount: 0.12
+    GradeLift: 0.95
+    CloudShadowCover: 0.3
+    CloudShadowDarkness: 0.4
     Light: {r: 1, g: 0.74, b: 0.5, a: 1}
     LightIntensity: 1.9
     Stars: 0
     HouseLights: 0.25
     Exposure: 1
   - Hour: 9
-    Zenith: {r: 0.26, g: 0.48, b: 0.84, a: 1}
-    Horizon: {r: 0.8, g: 0.87, b: 0.9, a: 1}
-    Glow: {r: 1, g: 0.94, b: 0.82, a: 1}
+    Zenith: {r: 0.16, g: 0.57, b: 0.88, a: 1}
+    Horizon: {r: 0.66, g: 0.84, b: 0.9, a: 1}
+    Glow: {r: 1, g: 0.97, b: 0.88, a: 1}
     Below: {r: 0.16, g: 0.19, b: 0.15, a: 1}
-    GlowStrength: 0.12
-    CloudLit: {r: 1, g: 0.98, b: 0.94, a: 1}
-    CloudShade: {r: 0.6, g: 0.67, b: 0.78, a: 1}
-    CloudEdge: {r: 1, g: 0.97, b: 0.9, a: 1}
-    CloudCover: 0.46
-    AmbientSky: {r: 0.44, g: 0.54, b: 0.72, a: 1}
-    AmbientGround: {r: 0.15, g: 0.18, b: 0.13, a: 1}
-    Shade: {r: 0.82, g: 0.93, b: 1.14, a: 1}
-    ShadeSaturation: 0.3
+    GlowStrength: 0.1
+    CloudLit: {r: 1, g: 0.98, b: 0.93, a: 1}
+    CloudShade: {r: 0.5, g: 0.57, b: 0.76, a: 1}
+    CloudEdge: {r: 1, g: 0.98, b: 0.92, a: 1}
+    CloudCover: 0.3
+    AmbientSky: {r: 0.55, g: 0.68, b: 0.85, a: 1}
+    AmbientGround: {r: 0.22, g: 0.24, b: 0.15, a: 1}
+    Shade: {r: 0.84, g: 0.94, b: 1.12, a: 1}
+    ShadeSaturation: 0.45
     Rim: {r: 0.16, g: 0.22, b: 0.3, a: 1}
-    Fog: {r: 0.72, g: 0.81, b: 0.88, a: 1}
-    FogSun: {r: 0.96, g: 0.93, b: 0.84, a: 1}
-    FogDensity: 0.003
-    Light: {r: 1, g: 0.93, b: 0.8, a: 1}
-    LightIntensity: 2.1
+    AirDistance: 4200
+    AirMax: 0.82
+    HazeHeight: 420
+    GradeShadow: {r: 0.3, g: 0.42, b: 0.86, a: 1}
+    GradeLight: {r: 1, g: 0.94, b: 0.76, a: 1}
+    GradeShadowAmount: 0.04
+    GradeLightAmount: 0.06
+    GradeLift: 0.94
+    CloudShadowCover: 0.32
+    CloudShadowDarkness: 0.55
+    Light: {r: 1, g: 0.95, b: 0.84, a: 1}
+    LightIntensity: 2.4
     Stars: 0
     HouseLights: 0
-    Exposure: 1
+    Exposure: 1.05
   - Hour: 13
-    Zenith: {r: 0.26, g: 0.48, b: 0.84, a: 1}
-    Horizon: {r: 0.8, g: 0.87, b: 0.9, a: 1}
-    Glow: {r: 1, g: 0.94, b: 0.82, a: 1}
+    Zenith: {r: 0.16, g: 0.57, b: 0.88, a: 1}
+    Horizon: {r: 0.66, g: 0.84, b: 0.9, a: 1}
+    Glow: {r: 1, g: 0.97, b: 0.88, a: 1}
     Below: {r: 0.16, g: 0.19, b: 0.15, a: 1}
-    GlowStrength: 0.12
-    CloudLit: {r: 1, g: 0.98, b: 0.94, a: 1}
-    CloudShade: {r: 0.6, g: 0.67, b: 0.78, a: 1}
-    CloudEdge: {r: 1, g: 0.97, b: 0.9, a: 1}
-    CloudCover: 0.46
-    AmbientSky: {r: 0.44, g: 0.54, b: 0.72, a: 1}
-    AmbientGround: {r: 0.15, g: 0.18, b: 0.13, a: 1}
-    Shade: {r: 0.82, g: 0.93, b: 1.14, a: 1}
-    ShadeSaturation: 0.3
+    GlowStrength: 0.1
+    CloudLit: {r: 1, g: 0.98, b: 0.93, a: 1}
+    CloudShade: {r: 0.5, g: 0.57, b: 0.76, a: 1}
+    CloudEdge: {r: 1, g: 0.98, b: 0.92, a: 1}
+    CloudCover: 0.3
+    AmbientSky: {r: 0.55, g: 0.68, b: 0.85, a: 1}
+    AmbientGround: {r: 0.22, g: 0.24, b: 0.15, a: 1}
+    Shade: {r: 0.84, g: 0.94, b: 1.12, a: 1}
+    ShadeSaturation: 0.45
     Rim: {r: 0.16, g: 0.22, b: 0.3, a: 1}
-    Fog: {r: 0.72, g: 0.81, b: 0.88, a: 1}
-    FogSun: {r: 0.96, g: 0.93, b: 0.84, a: 1}
-    FogDensity: 0.003
-    Light: {r: 1, g: 0.93, b: 0.8, a: 1}
-    LightIntensity: 2.1
+    AirDistance: 4200
+    AirMax: 0.82
+    HazeHeight: 420
+    GradeShadow: {r: 0.3, g: 0.42, b: 0.86, a: 1}
+    GradeLight: {r: 1, g: 0.94, b: 0.76, a: 1}
+    GradeShadowAmount: 0.04
+    GradeLightAmount: 0.06
+    GradeLift: 0.94
+    CloudShadowCover: 0.32
+    CloudShadowDarkness: 0.55
+    Light: {r: 1, g: 0.95, b: 0.84, a: 1}
+    LightIntensity: 2.4
     Stars: 0
     HouseLights: 0
-    Exposure: 1
+    Exposure: 1.05
   - Hour: 17
-    Zenith: {r: 0.32, g: 0.48, b: 0.78, a: 1}
-    Horizon: {r: 1, g: 0.8, b: 0.58, a: 1}
+    Zenith: {r: 0.18, g: 0.4, b: 0.8, a: 1}
+    Horizon: {r: 1, g: 0.8, b: 0.6, a: 1}
     Glow: {r: 1, g: 0.62, b: 0.42, a: 1}
     Below: {r: 0.12, g: 0.13, b: 0.12, a: 1}
-    GlowStrength: 0.8
-    CloudLit: {r: 1, g: 0.82, b: 0.68, a: 1}
-    CloudShade: {r: 0.52, g: 0.52, b: 0.66, a: 1}
+    GlowStrength: 0.7
+    CloudLit: {r: 1, g: 0.86, b: 0.7, a: 1}
+    CloudShade: {r: 0.56, g: 0.52, b: 0.68, a: 1}
     CloudEdge: {r: 1, g: 0.7, b: 0.55, a: 1}
-    CloudCover: 0.44
-    AmbientSky: {r: 0.4, g: 0.44, b: 0.6, a: 1}
+    CloudCover: 0.28
+    AmbientSky: {r: 0.46, g: 0.52, b: 0.7, a: 1}
     AmbientGround: {r: 0.15, g: 0.13, b: 0.1, a: 1}
     Shade: {r: 0.86, g: 0.9, b: 1.12, a: 1}
-    ShadeSaturation: 0.35
+    ShadeSaturation: 0.4
     Rim: {r: 0.2, g: 0.22, b: 0.32, a: 1}
-    Fog: {r: 0.78, g: 0.72, b: 0.72, a: 1}
-    FogSun: {r: 1, g: 0.78, b: 0.58, a: 1}
-    FogDensity: 0.0045
+    AirDistance: 3800
+    AirMax: 0.8
+    HazeHeight: 360
+    GradeShadow: {r: 0.42, g: 0.34, b: 0.78, a: 1}
+    GradeLight: {r: 1, g: 0.76, b: 0.52, a: 1}
+    GradeShadowAmount: 0.06
+    GradeLightAmount: 0.12
+    GradeLift: 0.95
+    CloudShadowCover: 0.3
+    CloudShadowDarkness: 0.5
     Light: {r: 1, g: 0.78, b: 0.5, a: 1}
-    LightIntensity: 2.2
+    LightIntensity: 2.3
     Stars: 0
     HouseLights: 0.15
     Exposure: 1
@@ -10454,15 +10659,22 @@ MonoBehaviour:
     CloudLit: {r: 0.98, g: 0.62, b: 0.56, a: 1}
     CloudShade: {r: 0.3, g: 0.28, b: 0.52, a: 1}
     CloudEdge: {r: 1, g: 0.56, b: 0.4, a: 1}
-    CloudCover: 0.5
+    CloudCover: 0.32
     AmbientSky: {r: 0.24, g: 0.27, b: 0.46, a: 1}
     AmbientGround: {r: 0.08, g: 0.09, b: 0.1, a: 1}
     Shade: {r: 0.84, g: 0.9, b: 1.14, a: 1}
     ShadeSaturation: 0.4
     Rim: {r: 0.24, g: 0.22, b: 0.4, a: 1}
-    Fog: {r: 0.46, g: 0.42, b: 0.6, a: 1}
-    FogSun: {r: 0.98, g: 0.6, b: 0.44, a: 1}
-    FogDensity: 0.004
+    AirDistance: 3200
+    AirMax: 0.8
+    HazeHeight: 340
+    GradeShadow: {r: 0.3, g: 0.24, b: 0.62, a: 1}
+    GradeLight: {r: 1, g: 0.62, b: 0.48, a: 1}
+    GradeShadowAmount: 0.06
+    GradeLightAmount: 0.1
+    GradeLift: 1
+    CloudShadowCover: 0.2
+    CloudShadowDarkness: 0.25
     Light: {r: 1, g: 0.56, b: 0.36, a: 1}
     LightIntensity: 0.9
     Stars: 0.12
@@ -10483,9 +10695,16 @@ MonoBehaviour:
     Shade: {r: 0.78, g: 0.88, b: 1.18, a: 1}
     ShadeSaturation: 0.4
     Rim: {r: 0.1, g: 0.15, b: 0.34, a: 1}
-    Fog: {r: 0.3, g: 0.3, b: 0.45, a: 1}
-    FogSun: {r: 0.75, g: 0.52, b: 0.55, a: 1}
-    FogDensity: 0.0045
+    AirDistance: 3000
+    AirMax: 0.76
+    HazeHeight: 300
+    GradeShadow: {r: 0.2, g: 0.26, b: 0.62, a: 1}
+    GradeLight: {r: 1, g: 0.72, b: 0.42, a: 1}
+    GradeShadowAmount: 0.05
+    GradeLightAmount: 0.12
+    GradeLift: 1
+    CloudShadowCover: 0
+    CloudShadowDarkness: 0
     Light: {r: 0.75, g: 0.62, b: 0.78, a: 1}
     LightIntensity: 0.25
     Stars: 0.25
@@ -10506,9 +10725,16 @@ MonoBehaviour:
     Shade: {r: 0.78, g: 0.88, b: 1.18, a: 1}
     ShadeSaturation: 0.4
     Rim: {r: 0.1, g: 0.15, b: 0.34, a: 1}
-    Fog: {r: 0.022, g: 0.038, b: 0.1, a: 1}
-    FogSun: {r: 0.04, g: 0.05, b: 0.12, a: 1}
-    FogDensity: 0.0045
+    AirDistance: 3200
+    AirMax: 0.45
+    HazeHeight: 300
+    GradeShadow: {r: 0.2, g: 0.26, b: 0.62, a: 1}
+    GradeLight: {r: 1, g: 0.72, b: 0.42, a: 1}
+    GradeShadowAmount: 0.05
+    GradeLightAmount: 0.12
+    GradeLift: 1
+    CloudShadowCover: 0
+    CloudShadowDarkness: 0
     Light: {r: 0.46, g: 0.56, b: 0.95, a: 1}
     LightIntensity: 0.32
     Stars: 1
@@ -10529,9 +10755,16 @@ MonoBehaviour:
     Shade: {r: 0.78, g: 0.88, b: 1.18, a: 1}
     ShadeSaturation: 0.4
     Rim: {r: 0.1, g: 0.15, b: 0.34, a: 1}
-    Fog: {r: 0.022, g: 0.038, b: 0.1, a: 1}
-    FogSun: {r: 0.04, g: 0.05, b: 0.12, a: 1}
-    FogDensity: 0.0045
+    AirDistance: 3200
+    AirMax: 0.45
+    HazeHeight: 300
+    GradeShadow: {r: 0.2, g: 0.26, b: 0.62, a: 1}
+    GradeLight: {r: 1, g: 0.72, b: 0.42, a: 1}
+    GradeShadowAmount: 0.05
+    GradeLightAmount: 0.12
+    GradeLift: 1
+    CloudShadowCover: 0
+    CloudShadowDarkness: 0
     Light: {r: 0.46, g: 0.56, b: 0.95, a: 1}
     LightIntensity: 0.32
     Stars: 1
@@ -10552,6 +10785,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2071342761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071342755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76a01285ac4cc34b8bd888caa41bbc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.WonderMotes
+  material: {fileID: 2100000, guid: 31289c0312330a045a5d67fd80476be4, type: 2}
+  time: {fileID: 2071342759}
+  count: 2400
+  extent: 22
+  fireflyFloor: 0
 --- !u!1 &2073373217
 GameObject:
   m_ObjectHideFlags: 0
@@ -10796,3 +11046,4 @@ SceneRoots:
   - {fileID: 432358856}
   - {fileID: 1479452663}
   - {fileID: 1412456697}
+  - {fileID: 734997666}

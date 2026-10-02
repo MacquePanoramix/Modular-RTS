@@ -33,6 +33,7 @@ Material:
     - _BrushScale: 3
     - _Cull: 2
     - _DirectOcclusion: 0
+    - _Drawn: 0
     - _Gloss: 0
     - _Softness: 0.45
     - _Sway: 0.5
@@ -40,7 +41,7 @@ Material:
     - _Variation: 0.25
     - _VertexColor: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 0.8, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

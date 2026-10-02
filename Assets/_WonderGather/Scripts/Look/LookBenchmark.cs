@@ -30,11 +30,14 @@ namespace WonderGather
             StartCoroutine(Run());
         }
 
-        private static IEnumerable<(string Name, Vector3 Eye, Vector3 Target)> Views()
+        // Targets are above the ground beneath them unless absolute (the far views of S1e).
+        private static IEnumerable<(string Name, Vector3 Eye, Vector3 Target, bool Absolute)> Views()
         {
-            yield return ("overview", new Vector3(-10, 14, -12), new Vector3(0, 1, 5));
-            yield return ("path", new Vector3(-6.5f, 1.25f, -5.5f), new Vector3(.5f, 2, 5.5f));
-            yield return ("grass", new Vector3(-2.6f, .32f, -1.2f), new Vector3(.4f, 1.3f, 5));
+            yield return ("overview", new Vector3(-10, 14, -12), new Vector3(0, 1, 5), false);
+            yield return ("path", new Vector3(-6.5f, 1.25f, -5.5f), new Vector3(.5f, 2, 5.5f), false);
+            yield return ("grass", new Vector3(-2.6f, .32f, -1.2f), new Vector3(.4f, 1.3f, 5), false);
+            yield return ("vista", new Vector3(-20, 6, 57), new Vector3(-175, 40, 2000), true);
+            yield return ("strategy", new Vector3(-3, 12, -12), new Vector3(1.2f, -5.6f, 11.9f), true);
         }
 
         private IEnumerator Run()
@@ -54,7 +57,7 @@ namespace WonderGather
                 time.Hour = hour;
                 look.Select(candidate);
                 var eye = view.Eye + Vector3.up * (ground != null ? ground.Height(view.Eye.x, view.Eye.z) : 0);
-                var target = view.Target + Vector3.up * (ground != null ? ground.Height(view.Target.x, view.Target.z) : 0);
+                var target = view.Target + Vector3.up * (ground != null && !view.Absolute ? ground.Height(view.Target.x, view.Target.z) : 0);
                 camera.transform.SetPositionAndRotation(eye, Quaternion.LookRotation(target - eye));
                 yield return new WaitForSecondsRealtime(settleSeconds);
                 var cpu = new List<float>();
@@ -71,7 +74,7 @@ namespace WonderGather
                 float p95 = cpu[Mathf.Clamp(Mathf.CeilToInt(cpu.Count * .95f) - 1, 0, cpu.Count - 1)];
                 var invariant = CultureInfo.InvariantCulture;
                 string gpuMean = gpu.Count > 0 ? gpu.Average().ToString("F2", invariant) : "";
-                report.AppendLine(string.Join(",", view.Name, hourName, "ABCDE"[candidate], cpu.Average().ToString("F2", invariant),
+                report.AppendLine(string.Join(",", view.Name, hourName, "ABCDEF"[candidate], cpu.Average().ToString("F2", invariant),
                     p95.ToString("F2", invariant), gpuMean, cpu.Count.ToString(invariant)));
             }
             string path = Path.Combine(Path.GetDirectoryName(Application.consoleLogPath) ?? Application.persistentDataPath, "ordinary-place-benchmark.csv");

@@ -17,6 +17,7 @@ Shader "Wonder Gather/Painted"
         [Toggle] _VertexColor("Use vertex colour", Float) = 0
         _Sway("Wind sway", Range(0, 1)) = 0
         _DirectOcclusion("Vertex alpha also shades direct light", Range(0, 1)) = 0
+        [Toggle] _Drawn("Drawn with ink (characters)", Float) = 0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 2
     }
 
@@ -40,6 +41,7 @@ Shader "Wonder Gather/Painted"
             float _VertexColor;
             float _Sway;
             float _DirectOcclusion;
+            float _Drawn;
             float _Cull;
         CBUFFER_END
         TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -150,6 +152,8 @@ Shader "Wonder Gather/Painted"
                 #endif
 
                 Light mainLight = GetMainLight(inputData.shadowCoord, positionWS, shadowMask);
+                // Shadows of the drifting clouds fall on everything in the open.
+                mainLight.shadowAttenuation *= WG_CloudShadow(positionWS);
                 float3 direct = WG_Direct(s, mainLight, false);
 
                 #if defined(_ADDITIONAL_LIGHTS)
@@ -278,7 +282,8 @@ Shader "Wonder Gather/Painted"
             half4 NormalsFrag(Varyings input, bool frontFace : SV_IsFrontFace) : SV_Target
             {
                 float3 n = normalize(input.normalWS) * (frontFace ? 1 : -1);
-                return half4(NormalizeNormalPerPixel(n), 0);
+                // Alpha tells the ink what this is: 0 drawn (characters), 0.5 the painted world.
+                return half4(NormalizeNormalPerPixel(n), _Drawn > 0.5 ? 0 : 0.5);
             }
             ENDHLSL
         }

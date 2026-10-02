@@ -6,8 +6,9 @@ using UnityEngine.Rendering.Universal;
 namespace WonderGather
 {
     // Screen-space look candidates for the S1c comparison: a paint filter, loose ink contours
-    // and paper grain. Passes are injected only by this component, so maps without it render
-    // exactly as before and the shared URP renderer asset is untouched.
+    // and paper grain; since S1e also the painting pass (strokes that follow the forms) and a
+    // painter's palette grade. Passes are injected only by this component, so maps without it
+    // render exactly as before and the shared URP renderer asset is untouched.
     [ExecuteAlways]
     public sealed class LookPostEffects : MonoBehaviour
     {
@@ -18,10 +19,19 @@ namespace WonderGather
         public Color InkColor = new Color(.30f, .22f, .20f);
         [Range(.5f, 3)] public float InkWidth = 1.2f;
         [Range(0, 1)] public float Grain;
+        [Tooltip("Paint with strokes that follow the forms (the S1e painting pass) instead of the classic filter.")]
+        public bool Painting;
+        [Range(2, 10)] public float PaintingRadius = 5;
+        [Range(2, 16)] public float PaintingSharpness = 8;
+        [Tooltip("How far the painter's palette for the hour (set by TimeOfDay) is applied.")]
+        [Range(0, 1)] public float Grade;
+        [Tooltip("Ink only what is drawn (characters), leaving the painted world without contours.")]
+        public bool InkOnlyDrawn;
 
         private Material material;
         private BlitPass paint, grain;
         private InkPass ink;
+        private PaintingPass painting;
 
         public void Configure(Shader post) => shader = post;
 
@@ -31,6 +41,7 @@ namespace WonderGather
             material = CoreUtils.CreateEngineMaterial(shader);
             paint = new BlitPass("Wonder Gather paint", material, 0, RenderPassEvent.BeforeRenderingPostProcessing);
             ink = new InkPass(material);
+            painting = new PaintingPass(material);
             grain = new BlitPass("Wonder Gather grain", material, 2, RenderPassEvent.AfterRenderingPostProcessing);
             RenderPipelineManager.beginCameraRendering += Inject;
         }
@@ -49,9 +60,10 @@ namespace WonderGather
             if (data == null || data.scriptableRenderer == null) return;
             Shader.SetGlobalVector("_WG_PostParams", new Vector4(Paint, Ink, Grain, PaintRadius));
             Shader.SetGlobalVector("_WG_InkColor", new Vector4(InkColor.r, InkColor.g, InkColor.b, InkWidth));
-            if (Paint > 0) data.scriptableRenderer.EnqueuePass(paint);
+            Shader.SetGlobalVector("_WG_PaintShape", new Vector4(PaintingRadius, PaintingSharpness, Grade, InkOnlyDrawn ? .2f : .7f));
+            if (Paint > 0) data.scriptableRenderer.EnqueuePass(Painting ? painting : paint);
             if (Ink > 0) data.scriptableRenderer.EnqueuePass(ink);
-            if (Grain > 0) data.scriptableRenderer.EnqueuePass(grain);
+            if (Grain > 0 || Grade > 0) data.scriptableRenderer.EnqueuePass(grain);
         }
 
         private sealed class BlitData
@@ -95,6 +107,77 @@ namespace WonderGather
                     builder.SetRenderAttachment(destination, 0);
                     builder.SetRenderFunc((BlitData d, RasterGraphContext context) =>
                         Blitter.BlitTexture(context.cmd, d.Source, new Vector4(1, 1, 0, 0), d.Material, d.Pass));
+                }
+                resources.cameraColor = destination;
+            }
+        }
+
+        // The painting: the image's structure is measured and softened, then each pixel is painted
+        // with strokes laid along it (shader passes 3 to 6).
+        private sealed class PaintingPass : ScriptableRenderPass
+        {
+            private static readonly int Structure = Shader.PropertyToID("_WG_Structure");
+            private readonly Material material;
+
+            private sealed class PaintData
+            {
+                public TextureHandle Source, Structure;
+                public Material Material;
+            }
+
+            public PaintingPass(Material effect)
+            {
+                material = effect;
+                renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
+                requiresIntermediateTexture = true;
+                ConfigureInput(ScriptableRenderPassInput.Depth);
+            }
+
+            private void Step(RenderGraph graph, string name, TextureHandle from, TextureHandle to, int pass)
+            {
+                using var builder = graph.AddRasterRenderPass<BlitData>(name, out var data);
+                data.Source = from;
+                data.Material = material;
+                data.Pass = pass;
+                builder.UseTexture(from);
+                builder.SetRenderAttachment(to, 0);
+                builder.SetRenderFunc((BlitData d, RasterGraphContext context) =>
+                    Blitter.BlitTexture(context.cmd, d.Source, new Vector4(1, 1, 0, 0), d.Material, d.Pass));
+            }
+
+            public override void RecordRenderGraph(RenderGraph graph, ContextContainer frameData)
+            {
+                var resources = frameData.Get<UniversalResourceData>();
+                if (resources.isActiveTargetBackBuffer) return;
+                var source = resources.activeColorTexture;
+                var description = graph.GetTextureDesc(source);
+                description.clearBuffer = false;
+                description.name = "Wonder Gather structure";
+                var structure = graph.CreateTexture(description);
+                var across = graph.CreateTexture(description);
+                var softened = graph.CreateTexture(description);
+                Step(graph, "Wonder Gather structure", source, structure, 3);
+                Step(graph, "Wonder Gather structure across", structure, across, 4);
+                Step(graph, "Wonder Gather structure down", across, softened, 5);
+
+                description.name = "Wonder Gather painting";
+                var destination = graph.CreateTexture(description);
+                using (var builder = graph.AddRasterRenderPass<PaintData>("Wonder Gather painting", out var data))
+                {
+                    data.Source = source;
+                    data.Structure = softened;
+                    data.Material = material;
+                    builder.UseTexture(source);
+                    builder.UseTexture(softened);
+                    if (resources.cameraDepthTexture.IsValid()) builder.UseTexture(resources.cameraDepthTexture);
+                    builder.UseAllGlobalTextures(true);
+                    builder.SetRenderAttachment(destination, 0);
+                    builder.SetRenderFunc((PaintData d, RasterGraphContext context) =>
+                    {
+                        RTHandle structureHandle = d.Structure;
+                        d.Material.SetTexture(Structure, structureHandle);
+                        Blitter.BlitTexture(context.cmd, d.Source, new Vector4(1, 1, 0, 0), d.Material, 6);
+                    });
                 }
                 resources.cameraColor = destination;
             }

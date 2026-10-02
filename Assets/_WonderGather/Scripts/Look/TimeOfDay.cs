@@ -4,15 +4,19 @@ using UnityEngine.Rendering;
 
 namespace WonderGather
 {
-    // Drives the Ordinary Place's light from one palette: sun or moon, the painted sky,
-    // ambient and shade tints, aerial fog, and the warmth of the house's lights.
-    // Keyframes follow the Visual Soul references: C's daylight, golden hour, E's lilac
-    // dusk and A's deep navy night with warm windows.
+    // Drives the Ordinary Place's light from one palette: sun or moon, the painted sky and its
+    // clouds, ambient and shade tints, the air (aerial perspective), the shadows of drifting
+    // clouds, and the warmth of the house's lights. Keyframes follow the Visual Soul references
+    // (golden hour, E's lilac dusk, A's deep navy night with warm windows); since S1e the day
+    // is luminous after the essence study (Docs/ArtDirection/TheEssence.md): cerulean sky,
+    // white clouds and bright, coloured shade.
     [ExecuteAlways]
     public sealed class TimeOfDay : MonoBehaviour
     {
-        // Sky, light and glow colours are given as painters pick them (sRGB). Ambient, shade,
-        // rim and fog colours go straight to the shaders as linear values.
+        // Sky, light and glow colours are given as painters pick them (sRGB). Ambient, shade and
+        // rim colours go straight to the shaders as linear values. The air takes the sky's own
+        // horizon colour: AirDistance is how far (m) low air goes before it is 63% thick,
+        // AirMax caps it, and HazeHeight (m) is how quickly it thins with altitude.
         [Serializable]
         public struct Palette
         {
@@ -23,8 +27,13 @@ namespace WonderGather
             public float CloudCover;
             public Color AmbientSky, AmbientGround, Shade;
             public float ShadeSaturation;
-            public Color Rim, Fog, FogSun;
-            public float FogDensity;
+            public Color Rim;
+            public float AirDistance, AirMax, HazeHeight;
+            // The painter's palette for the hour (look F): the hue shadows and lights lean to, how
+            // far, and a midtone lift (1 = none).
+            public Color GradeShadow, GradeLight;
+            public float GradeShadowAmount, GradeLightAmount, GradeLift;
+            public float CloudShadowCover, CloudShadowDarkness;
             public Color Light;
             public float LightIntensity, Stars, HouseLights, Exposure;
         }
@@ -42,10 +51,13 @@ namespace WonderGather
         [SerializeField] private float maxSunElevation = 52, moonOffset = 25;
         [SerializeField] private Vector3 wind = new Vector3(.8f, .55f, .55f);
         [SerializeField] private float gustSpeed = .8f;
+        [Tooltip("The altitude the air thins from (the water's level), and the size (m) and drift (m/s) of cloud shadows.")]
+        [SerializeField] private float airBase = -26, cloudShadowSize = 140, cloudShadowDrift = 6;
         [SerializeField] private Palette[] palettes = DefaultPalettes();
 
         public float Hour { get => hour; set { hour = Mathf.Repeat(value, 24); Apply(); } }
         public Color GlowEmission => glowColor * glowIntensity;
+        public void ResetPalettes() => palettes = DefaultPalettes();
         public float MinutesPerSecond { get => minutesPerSecond; set => minutesPerSecond = value; }
 
         public void Configure(Light light, Material skyMaterial, Material glowMaterial, Light[] warmLights)
@@ -68,40 +80,50 @@ namespace WonderGather
                 Hour = 0, Zenith = C(.12f, .18f, .40f), Horizon = C(.26f, .32f, .52f), Glow = C(.58f, .36f, .46f), GlowStrength = .3f,
                 Below = C(.03f, .04f, .07f), CloudLit = C(.32f, .38f, .58f), CloudShade = C(.10f, .14f, .30f), CloudEdge = C(.58f, .44f, .58f),
                 CloudCover = .42f, AmbientSky = C(.07f, .10f, .22f), AmbientGround = C(.025f, .03f, .045f), Shade = C(.78f, .88f, 1.18f),
-                ShadeSaturation = .4f, Rim = C(.10f, .15f, .34f), Fog = C(.022f, .038f, .10f), FogSun = C(.04f, .05f, .12f), FogDensity = .0045f,
+                ShadeSaturation = .4f, Rim = C(.10f, .15f, .34f), AirDistance = 3200, AirMax = .45f, HazeHeight = 300,
+                GradeShadow = C(.20f, .26f, .62f), GradeShadowAmount = .05f, GradeLight = C(1f, .72f, .42f), GradeLightAmount = .12f, GradeLift = 1,
                 Light = C(.46f, .56f, .95f), LightIntensity = .32f, Stars = 1, HouseLights = 1, Exposure = 1.15f
             };
             var blueHour = night;
             blueHour.Hour = 5.6f; blueHour.Zenith = C(.18f, .24f, .48f); blueHour.Horizon = C(.52f, .48f, .64f); blueHour.Glow = C(.85f, .50f, .52f);
-            blueHour.GlowStrength = .6f; blueHour.AmbientSky = C(.16f, .19f, .34f); blueHour.Fog = C(.30f, .30f, .45f); blueHour.FogSun = C(.75f, .52f, .55f);
+            blueHour.GlowStrength = .6f; blueHour.AmbientSky = C(.16f, .19f, .34f); blueHour.AirDistance = 3000; blueHour.AirMax = .76f;
             blueHour.CloudLit = C(.70f, .55f, .65f); blueHour.CloudShade = C(.20f, .22f, .38f); blueHour.Stars = .25f; blueHour.HouseLights = .8f;
             blueHour.Light = C(.75f, .62f, .78f); blueHour.LightIntensity = .25f;
             var sunrise = new Palette
             {
                 Hour = 6.6f, Zenith = C(.30f, .45f, .74f), Horizon = C(.98f, .78f, .62f), Glow = C(1f, .62f, .42f), GlowStrength = .8f,
                 Below = C(.12f, .13f, .12f), CloudLit = C(1f, .82f, .68f), CloudShade = C(.52f, .52f, .66f), CloudEdge = C(1f, .70f, .55f),
-                CloudCover = .44f, AmbientSky = C(.40f, .44f, .60f), AmbientGround = C(.15f, .13f, .10f), Shade = C(.86f, .90f, 1.12f),
-                ShadeSaturation = .35f, Rim = C(.20f, .22f, .32f), Fog = C(.78f, .72f, .72f), FogSun = C(1f, .78f, .58f), FogDensity = .0045f,
+                CloudCover = .28f, AmbientSky = C(.40f, .44f, .60f), AmbientGround = C(.15f, .13f, .10f), Shade = C(.86f, .90f, 1.12f),
+                ShadeSaturation = .4f, Rim = C(.20f, .22f, .32f), AirDistance = 3400, AirMax = .8f, HazeHeight = 360,
+                CloudShadowCover = .3f, CloudShadowDarkness = .4f,
+                GradeShadow = C(.42f, .34f, .78f), GradeShadowAmount = .06f, GradeLight = C(1f, .76f, .52f), GradeLightAmount = .12f, GradeLift = .95f,
                 Light = C(1f, .74f, .50f), LightIntensity = 1.9f, Stars = 0, HouseLights = .25f, Exposure = 1
             };
+            // Day: a cerulean sky over a pale cyan horizon, white cumulus with lilac-blue shade,
+            // bright sky light in every shadow, and far ranges dissolving into the horizon's blue.
             var day = new Palette
             {
-                Hour = 9, Zenith = C(.26f, .48f, .84f), Horizon = C(.80f, .87f, .90f), Glow = C(1f, .94f, .82f), GlowStrength = .12f,
-                Below = C(.16f, .19f, .15f), CloudLit = C(1f, .98f, .94f), CloudShade = C(.60f, .67f, .78f), CloudEdge = C(1f, .97f, .90f),
-                CloudCover = .46f, AmbientSky = C(.44f, .54f, .72f), AmbientGround = C(.15f, .18f, .13f), Shade = C(.82f, .93f, 1.14f),
-                ShadeSaturation = .3f, Rim = C(.16f, .22f, .30f), Fog = C(.72f, .81f, .88f), FogSun = C(.96f, .93f, .84f), FogDensity = .003f,
-                Light = C(1f, .93f, .80f), LightIntensity = 2.1f, Stars = 0, HouseLights = 0, Exposure = 1
+                Hour = 9, Zenith = C(.16f, .57f, .88f), Horizon = C(.66f, .84f, .90f), Glow = C(1f, .97f, .88f), GlowStrength = .1f,
+                Below = C(.16f, .19f, .15f), CloudLit = C(1f, .98f, .93f), CloudShade = C(.50f, .57f, .76f), CloudEdge = C(1f, .98f, .92f),
+                CloudCover = .3f, AmbientSky = C(.55f, .68f, .85f), AmbientGround = C(.22f, .24f, .15f), Shade = C(.84f, .94f, 1.12f),
+                ShadeSaturation = .45f, Rim = C(.16f, .22f, .30f), AirDistance = 4200, AirMax = .82f, HazeHeight = 420,
+                CloudShadowCover = .32f, CloudShadowDarkness = .55f,
+                GradeShadow = C(.30f, .42f, .86f), GradeShadowAmount = .04f, GradeLight = C(1f, .94f, .76f), GradeLightAmount = .06f, GradeLift = .94f,
+                Light = C(1f, .95f, .84f), LightIntensity = 2.4f, Stars = 0, HouseLights = 0, Exposure = 1.05f
             };
             var noon = day; noon.Hour = 13;
             var golden = sunrise;
-            golden.Hour = 17; golden.Horizon = C(1f, .80f, .58f); golden.Zenith = C(.32f, .48f, .78f); golden.Light = C(1f, .78f, .50f); golden.LightIntensity = 2.2f;
-            golden.HouseLights = .15f;
+            golden.Hour = 17; golden.Horizon = C(1f, .80f, .60f); golden.Zenith = C(.18f, .40f, .80f); golden.GlowStrength = .7f; golden.Light = C(1f, .78f, .50f); golden.LightIntensity = 2.3f;
+            golden.HouseLights = .15f; golden.CloudLit = C(1f, .86f, .70f); golden.CloudShade = C(.56f, .52f, .68f); golden.AmbientSky = C(.46f, .52f, .70f);
+            golden.AirDistance = 3800; golden.CloudShadowCover = .3f; golden.CloudShadowDarkness = .5f;
             var dusk = new Palette
             {
                 Hour = 18.6f, Zenith = C(.27f, .27f, .58f), Horizon = C(.96f, .56f, .46f), Glow = C(1f, .46f, .30f), GlowStrength = 1f,
                 Below = C(.08f, .08f, .11f), CloudLit = C(.98f, .62f, .56f), CloudShade = C(.30f, .28f, .52f), CloudEdge = C(1f, .56f, .40f),
-                CloudCover = .5f, AmbientSky = C(.24f, .27f, .46f), AmbientGround = C(.08f, .09f, .10f), Shade = C(.84f, .90f, 1.14f),
-                ShadeSaturation = .4f, Rim = C(.24f, .22f, .40f), Fog = C(.46f, .42f, .60f), FogSun = C(.98f, .60f, .44f), FogDensity = .004f,
+                CloudCover = .32f, AmbientSky = C(.24f, .27f, .46f), AmbientGround = C(.08f, .09f, .10f), Shade = C(.84f, .90f, 1.14f),
+                ShadeSaturation = .4f, Rim = C(.24f, .22f, .40f), AirDistance = 3200, AirMax = .8f, HazeHeight = 340,
+                CloudShadowCover = .2f, CloudShadowDarkness = .25f,
+                GradeShadow = C(.30f, .24f, .62f), GradeShadowAmount = .06f, GradeLight = C(1f, .62f, .48f), GradeLightAmount = .1f, GradeLift = 1,
                 Light = C(1f, .56f, .36f), LightIntensity = .9f, Stars = .12f, HouseLights = .8f, Exposure = 1.05f
             };
             var evening = blueHour; evening.Hour = 19.7f; evening.HouseLights = 1;
@@ -142,7 +164,10 @@ namespace WonderGather
                 GlowStrength = F(a.GlowStrength, b.GlowStrength), CloudLit = L(a.CloudLit, b.CloudLit), CloudShade = L(a.CloudShade, b.CloudShade),
                 CloudEdge = L(a.CloudEdge, b.CloudEdge), CloudCover = F(a.CloudCover, b.CloudCover), AmbientSky = L(a.AmbientSky, b.AmbientSky),
                 AmbientGround = L(a.AmbientGround, b.AmbientGround), Shade = L(a.Shade, b.Shade), ShadeSaturation = F(a.ShadeSaturation, b.ShadeSaturation),
-                Rim = L(a.Rim, b.Rim), Fog = L(a.Fog, b.Fog), FogSun = L(a.FogSun, b.FogSun), FogDensity = F(a.FogDensity, b.FogDensity),
+                Rim = L(a.Rim, b.Rim), AirDistance = F(a.AirDistance, b.AirDistance), AirMax = F(a.AirMax, b.AirMax), HazeHeight = F(a.HazeHeight, b.HazeHeight),
+                CloudShadowCover = F(a.CloudShadowCover, b.CloudShadowCover), CloudShadowDarkness = F(a.CloudShadowDarkness, b.CloudShadowDarkness),
+                GradeShadow = L(a.GradeShadow, b.GradeShadow), GradeLight = L(a.GradeLight, b.GradeLight), GradeShadowAmount = F(a.GradeShadowAmount, b.GradeShadowAmount),
+                GradeLightAmount = F(a.GradeLightAmount, b.GradeLightAmount), GradeLift = F(a.GradeLift, b.GradeLift),
                 Light = L(a.Light, b.Light), LightIntensity = F(a.LightIntensity, b.LightIntensity), Stars = F(a.Stars, b.Stars),
                 HouseLights = F(a.HouseLights, b.HouseLights), Exposure = F(a.Exposure, b.Exposure)
             };
@@ -176,9 +201,12 @@ namespace WonderGather
             Shader.SetGlobalVector("_WG_Ground", p.AmbientGround);
             Shader.SetGlobalVector("_WG_Shade", new Vector4(p.Shade.r, p.Shade.g, p.Shade.b, p.ShadeSaturation));
             Shader.SetGlobalVector("_WG_Rim", new Vector4(p.Rim.r, p.Rim.g, p.Rim.b, 3));
-            Shader.SetGlobalVector("_WG_Fog", new Vector4(p.Fog.r, p.Fog.g, p.Fog.b, p.FogDensity));
-            Shader.SetGlobalVector("_WG_FogSun", new Vector4(p.FogSun.r, p.FogSun.g, p.FogSun.b, .045f));
-            Shader.SetGlobalVector("_WG_FogShape", new Vector4(15, .86f, 0, 6));
+            // The air: clear for the first 15 m, then thickening with distance towards the sky's
+            // own horizon colour, thinner with altitude above the water.
+            Shader.SetGlobalVector("_WG_FogShape", new Vector4(15, p.AirMax, 0, 6));
+            Shader.SetGlobalVector("_WG_Air", new Vector4(Mathf.Max(1, p.AirDistance), p.AirMax, Mathf.Max(1, p.HazeHeight), airBase));
+            // Cloud shadows only while the sun is up; the moon's are too faint to paint.
+            Shader.SetGlobalVector("_WG_CloudShadow", new Vector4(p.CloudShadowCover, p.CloudShadowDarkness * sunUp, cloudShadowSize, cloudShadowDrift));
             Shader.SetGlobalVector("_WG_Wind", new Vector4(wind.x, wind.y, wind.z, gustSpeed));
             Shader.SetGlobalVector("_WG_LightPool", new Vector4(.75f, 1, 0, 0));
 
@@ -200,15 +228,20 @@ namespace WonderGather
             Shader.SetGlobalColor("_WG_CloudEdge", (p.CloudEdge).linear);
             Shader.SetGlobalFloat("_WG_CloudCover", p.CloudCover);
             Shader.SetGlobalFloat("_WG_SkyExposure", p.Exposure);
+            // The grade works on the displayed image, so its hues stay as a painter picks them (sRGB).
+            Shader.SetGlobalVector("_WG_GradeShadow", new Vector4(p.GradeShadow.r, p.GradeShadow.g, p.GradeShadow.b, p.GradeShadowAmount));
+            Shader.SetGlobalVector("_WG_GradeLight", new Vector4(p.GradeLight.r, p.GradeLight.g, p.GradeLight.b, p.GradeLightAmount));
+            Shader.SetGlobalFloat("_WG_GradeLift", p.GradeLift > 0 ? p.GradeLift : 1);
             if (sky != null && RenderSettings.skybox != sky) RenderSettings.skybox = sky;
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = p.AmbientSky;
             RenderSettings.ambientEquatorColor = Color.Lerp(p.AmbientSky, p.AmbientGround, .5f);
             RenderSettings.ambientGroundColor = p.AmbientGround;
+            // For any shader outside the look: plain fog towards the horizon colour.
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Exponential;
-            RenderSettings.fogColor = p.Fog;
-            RenderSettings.fogDensity = p.FogDensity;
+            RenderSettings.fogColor = p.Horizon * p.Exposure;
+            RenderSettings.fogDensity = 1 / Mathf.Max(1, p.AirDistance);
 
             if (sunAndMoon != null)
             {

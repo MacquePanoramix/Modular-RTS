@@ -176,6 +176,8 @@ Shader "Wonder Gather/Grass"
                 #endif
 
                 Light mainLight = GetMainLight(inputData.shadowCoord, positionWS, shadowMask);
+                // Shadows of the drifting clouds fall on everything in the open.
+                mainLight.shadowAttenuation *= WG_CloudShadow(positionWS);
                 float3 direct = WG_Direct(s, mainLight, false);
                 // Back light glowing through the blades' tips.
                 float backGlow = pow(saturate(dot(-v, mainLight.direction)), 4) * h * h * _Translucency;

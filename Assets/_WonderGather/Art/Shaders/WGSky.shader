@@ -35,10 +35,7 @@ Shader "Wonder Gather/Sky"
                 float _SunSize, _MoonSize, _MoonPhase;
                 float _CloudSoftness, _CloudScale, _CloudSpeed, _CloudOpacity;
             CBUFFER_END
-            // Set every frame by TimeOfDay as globals, so the sky material asset itself never changes.
-            float4 _WG_SkyZenith, _WG_SkyHorizon, _WG_SkyGlow, _WG_SkyBelow, _WG_SunDirection, _WG_SunColor, _WG_MoonDirection;
-            float4 _WG_CloudLit, _WG_CloudShade, _WG_CloudEdge;
-            float _WG_SkyGlowStrength, _WG_MoonVisibility, _WG_Stars, _WG_Galaxy, _WG_CloudCover, _WG_SkyExposure;
+            // The time-of-day values are globals declared in WGCommon, so the sky material asset itself never changes.
 
             struct Attributes { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct Varyings { float4 positionCS : SV_POSITION; float3 direction : TEXCOORD0; UNITY_VERTEX_OUTPUT_STEREO };
@@ -84,20 +81,14 @@ Shader "Wonder Gather/Sky"
                 float3 moonDir = normalize(_WG_MoonDirection.xyz);
                 float up = d.y;
 
-                // Gradient, with a few broad painted strokes so the sky is not a perfect ramp.
-                float t = saturate(up);
-                float3 sky = lerp(_WG_SkyHorizon.rgb, _WG_SkyZenith.rgb, pow(t, 0.45));
-                float strokes = WG_Fbm(float3(d.x * 2.2, d.y * 7.0, d.z * 2.2)) - 0.47;
-                sky *= 1 + strokes * 0.12;
-                // The dusk band hugs the horizon and gathers towards the sun's side.
+                // Gradient, broad painted strokes, the dusk band and the sun's halo (shared with the air).
+                float3 sky = WG_SkyGradient(d);
                 float2 flatD = normalize(d.xz + 1e-5), flatSun = normalize(sunDir.xz + 1e-5);
                 float sunSide = pow(saturate(dot(flatD, flatSun) * 0.5 + 0.5), 2.2);
-                float band = exp(-abs(up - 0.05) * 6) * (0.35 + 0.65 * sunSide);
-                sky = lerp(sky, _WG_SkyGlow.rgb, saturate(band * _WG_SkyGlowStrength));
-                // Sun: a soft disc and halo.
+                // Sun: a soft disc and a tight glow.
                 float sunDot = dot(d, sunDir);
                 float sunDisc = smoothstep(cos(_SunSize * 1.15), cos(_SunSize), sunDot);
-                sky += _WG_SunColor.rgb * (pow(saturate(sunDot), 600) * 0.6 + pow(saturate(sunDot), 24) * 0.12) * saturate(sunDir.y * 6 + 0.4);
+                sky += _WG_SunColor.rgb * pow(saturate(sunDot), 600) * 0.6 * saturate(sunDir.y * 6 + 0.4);
                 sky += _WG_SunColor.rgb * sunDisc * 4;
 
                 // Night sky: stars and a faint galactic band.

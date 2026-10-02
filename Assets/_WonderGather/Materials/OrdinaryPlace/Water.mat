@@ -7,13 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Worker skin
-  m_Shader: {fileID: 4800000, guid: 3c7cf271fd33454bb335f5bfd4dd1472, type: 3}
+  m_Name: Water
+  m_Shader: {fileID: 4800000, guid: f5b1b3b05d7bb7040b2f4463d85c201c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _DRAWN_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -23,26 +22,17 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs:
-    - _BaseMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+    m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Brush: 0.3
-    - _BrushScale: 3
-    - _Cull: 2
-    - _DirectOcclusion: 0
-    - _Drawn: 1
-    - _Gloss: 0
-    - _Softness: 0.4
-    - _Sway: 0
-    - _Translucency: 0.2
-    - _Variation: 0.3
-    - _VertexColor: 0
+    - _DepthScale: 7
+    - _Glitter: 1.5
+    - _Mirror: 0.9
+    - _Ripple: 0.03
+    - _Shore: 0.7
+    - _Streaks: 0.55
     m_Colors:
-    - _BaseColor: {r: 0.88, g: 0.67, b: 0.54, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Deep: {r: 0.049999982, g: 0.23999995, b: 0.31999996, a: 1}
+    - _Shallow: {r: 0.29999998, g: 0.65999997, b: 0.62, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

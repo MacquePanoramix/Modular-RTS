@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -430,14 +431,161 @@ namespace WonderGather.Editor
             Debug.Log("ORDINARY_PLACE_PAINTED_OK " + applied);
         }
 
-        // A release build, so frame times in the benchmark are representative.
+        // S1e: the world beyond the Ordinary Place, after the essence study
+        // (Docs/ArtDirection/TheEssence.md): monumental clouds, still water that mirrors them, the
+        // land falling to a lake and rising into ranges with a snow peak, and a luminous daylight
+        // palette. It updates the existing scene in place, keeping every GUID, and can run again.
+        public const string CloudsPath = ArtPath + "/Clouds.fbx";
+
+        [MenuItem("Wonder Gather/Add The Beyond To The Ordinary Place")]
+        public static void AddTheBeyond()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Leave Play mode first.");
+            if (!File.Exists(CloudsPath)) throw new FileNotFoundException("Export the clouds from Art/Blender/OrdinaryPlace/clouds.py first.", CloudsPath);
+            var importer = (ModelImporter)AssetImporter.GetAtPath(CloudsPath);
+            importer.materialImportMode = ModelImporterMaterialImportMode.None;
+            importer.importNormals = ModelImporterNormals.Import;
+            importer.importAnimation = false;
+            importer.animationType = ModelImporterAnimationType.None;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.bakeAxisConversion = true;
+            importer.SaveAndReimport();
+            var meshes = AssetDatabase.LoadAllAssetsAtPath(CloudsPath).OfType<Mesh>().ToList();
+            Mesh[] Named(string prefix) => meshes.Where(m => m.name.StartsWith(prefix)).OrderBy(m => m.name).ToArray();
+            if (Named("Cloud_Tower").Length == 0) throw new InvalidOperationException("The clouds did not import.");
+
+            var cloud = MaterialFor("Cloud", "Wonder Gather/Cloud");
+            // Painted bands with crisp borders, folds kept in shadow, edges only a little soft.
+            cloud.SetFloat("_Brightness", 1.25f);
+            cloud.SetFloat("_Softness", .07f);
+            cloud.SetFloat("_Fold", .45f);
+            cloud.SetFloat("_Silver", 1.4f);
+            cloud.SetFloat("_EdgeFade", .35f);
+            cloud.SetFloat("_Boil", .015f);
+            EditorUtility.SetDirty(cloud);
+            var water = MaterialFor("Water", "Wonder Gather/Water");
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var ground = Object.FindAnyObjectByType<OrdinaryGround>() ?? throw new InvalidOperationException("The scene has no ground.");
+            var time = Object.FindAnyObjectByType<TimeOfDay>() ?? throw new InvalidOperationException("The scene has no time of day.");
+
+            // The land: the far world, and meadow colours after the references' sunlit yellow-greens.
+            var land = new SerializedObject(ground);
+            land.FindProperty("outerHalf").floatValue = 9000;
+            land.FindProperty("outerRings").intValue = 170;
+            land.FindProperty("waterLevel").floatValue = -26;
+            land.FindProperty("meadow").colorValue = new Color(.13f, .19f, .06f);
+            land.FindProperty("far").colorValue = new Color(.10f, .16f, .07f);
+            land.FindProperty("forest").colorValue = new Color(.05f, .10f, .05f);
+            land.FindProperty("rock").colorValue = new Color(.27f, .26f, .29f);
+            land.FindProperty("snow").colorValue = new Color(.86f, .89f, .95f);
+            land.FindProperty("shore").colorValue = new Color(.40f, .37f, .24f);
+            land.FindProperty("lakeBed").colorValue = new Color(.10f, .14f, .09f);
+            land.ApplyModifiedPropertiesWithoutUndo();
+            ground.Regenerate();
+
+            var beyond = GameObject.Find("The beyond") ?? new GameObject("The beyond");
+            var bank = beyond.GetComponentInChildren<CloudBank>() ?? Child(beyond, "Clouds").AddComponent<CloudBank>();
+            bank.Configure(cloud, Named("Cloud_Tower"), Named("Cloud_Heap"), Named("Cloud_Bank"));
+            var surface = beyond.GetComponentInChildren<WaterSurface>() ?? Child(beyond, "Water").AddComponent<WaterSurface>();
+            surface.Configure(water, ground.WaterLevel);
+
+            // The air is alive: seeds catching the sun, fireflies at dusk and night.
+            var motes = time.GetComponent<WonderMotes>() ?? time.gameObject.AddComponent<WonderMotes>();
+            motes.Configure(MaterialFor("Motes", "Wonder Gather/Motes"), time);
+            EditorUtility.SetDirty(motes);
+
+            // The luminous palettes; the air thins upwards from the water's level.
+            time.ResetPalettes();
+            var air = new SerializedObject(time);
+            air.FindProperty("airBase").floatValue = ground.WaterLevel;
+            air.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(time);
+
+            // Grass and leaves move from cool lawn greens to the references' warm yellow-greens.
+            var blades = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath + "/Grass blades.mat");
+            blades.SetColor("_Root", new Color(.08f, .15f, .07f));
+            blades.SetColor("_Mid", new Color(.22f, .33f, .12f));
+            blades.SetColor("_Tip", new Color(.52f, .60f, .26f));
+            blades.SetColor("_Dry", new Color(.74f, .64f, .36f));
+            EditorUtility.SetDirty(blades);
+            foreach (var name in new[] { "Leaves", "Leaves light", "Foliage" })
+            {
+                var leaves = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath + "/" + name + ".mat");
+                leaves.SetColor("_BaseColor", new Color(1f, 1f, .8f));
+                EditorUtility.SetDirty(leaves);
+            }
+
+            // Painted world, drawn people: the worker's materials take ink in look F.
+            foreach (var name in new[] { "Worker coat", "Worker trousers", "Worker boots", "Worker skin", "Worker hair", "Worker scarf" })
+            {
+                var drawn = AssetDatabase.LoadAssetAtPath<Material>(MaterialPath + "/" + name + ".mat");
+                if (drawn == null) continue;
+                drawn.SetFloat("_Drawn", 1);
+                EditorUtility.SetDirty(drawn);
+            }
+
+            // The camera sees out to the far ranges and the clouds; the water reads the scene's depth.
+            // The scene opens on the lake below the meadow; V returns to the Strategy camera.
+            var camera = Camera.main ?? throw new InvalidOperationException("The scene has no main camera.");
+            var lookControls = Object.FindAnyObjectByType<LookDevControls>() ?? throw new InvalidOperationException("The scene has no look controls.");
+            lookControls.ConfigureViews(camera.GetComponent<RtsCamera>(), ground, 0);
+            var lookData = new SerializedObject(lookControls);
+            lookData.FindProperty("candidate").intValue = 5;
+            lookData.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(lookControls);
+            camera.farClipPlane = 14000;
+            camera.GetUniversalAdditionalCameraData().requiresDepthOption = CameraOverrideOption.On;
+            EditorUtility.SetDirty(camera);
+
+            // Painted frames have no dark corners; the vignette stays only as a hint.
+            var profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(VolumePath);
+            if (profile != null && profile.TryGet(out Vignette vignette))
+            {
+                vignette.intensity.Override(.08f);
+                EditorUtility.SetDirty(vignette);
+                EditorUtility.SetDirty(profile);
+            }
+
+            if (!EditorSceneManager.SaveScene(scene)) throw new IOException("Could not save " + ScenePath);
+            AssetDatabase.SaveAssets();
+            Debug.Log("ORDINARY_PLACE_BEYOND_OK clouds " + bank.Count);
+        }
+
+        private static Material MaterialFor(string name, string shaderName)
+        {
+            string path = MaterialPath + "/" + name + ".mat";
+            var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (existing != null) return existing;
+            var shader = Shader.Find(shaderName) ?? throw new InvalidOperationException(shaderName + " did not compile.");
+            var material = new Material(shader) { name = name };
+            AssetDatabase.CreateAsset(material, path);
+            return material;
+        }
+
+        private static GameObject Child(GameObject parent, string name)
+        {
+            var child = new GameObject(name);
+            child.transform.SetParent(parent.transform, false);
+            return child;
+        }
+
+        private static string Argument(string name)
+        {
+            var args = Environment.GetCommandLineArgs();
+            for (int i = 0; i + 1 < args.Length; i++) if (args[i] == name) return args[i + 1];
+            return null;
+        }
+
+        // A release build, so frame times in the benchmark are representative. -buildOut names
+        // the folder under Builds/ (default WindowsOrdinaryPlace), so earlier builds can stay.
         public static void BuildWindows()
         {
             PlayerSettings.enableFrameTimingStats = true;
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = new[] { ScenePath },
-                locationPathName = "Builds/WindowsOrdinaryPlace/WonderGather.exe",
+                locationPathName = "Builds/" + (Argument("-buildOut") ?? "WindowsOrdinaryPlace") + "/WonderGather.exe",
                 target = BuildTarget.StandaloneWindows64,
                 options = BuildOptions.None
             });

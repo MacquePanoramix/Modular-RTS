@@ -10,13 +10,19 @@ float4 _WG_Sky;         // rgb: ambient from above; a: 1 when the look is active
 float4 _WG_Ground;      // rgb: ambient from below
 float4 _WG_Shade;       // rgb: tint where direct light is missing (cool); a: saturation kept in shade
 float4 _WG_Rim;         // rgb: cool edge light; a: edge power
-float4 _WG_Fog;         // rgb: horizon colour; a: density per metre
-float4 _WG_FogSun;      // rgb: fog colour towards the sun; a: height falloff per metre
-float4 _WG_FogShape;    // x: start distance, y: maximum opacity, z: base height, w: sun glow power
+float4 _WG_FogShape;    // x: distance (m) the air stays clear, y: thickest air
 float4 _WG_Paint;       // x: colour variation, y: brush break of light edges, z: brush scale, w: baseline (1 = plain Lambert)
 float4 _WG_Wind;        // xy: direction, z: strength, w: gust speed
 float4 _WG_LightPool;   // x: pool softness of local lights, y: warm boost of local lights
 float _WG_GlowScale;    // how lit the house's windows are (0..1), set by TimeOfDay
+float4 _WG_Air;         // x: distance (m) over which low air reaches 63% thickness, y: thickest air, z: haze height (m), w: haze base height
+float4 _WG_CloudShadow; // x: cover (0..1), y: darkness, z: size (m), w: drift (m/s)
+
+// The sky's colours, set every frame by TimeOfDay (linear). The sky, the clouds, the water and
+// the aerial perspective all read them, so the air in every distance is the sky's own colour.
+float4 _WG_SkyZenith, _WG_SkyHorizon, _WG_SkyGlow, _WG_SkyBelow, _WG_SunDirection, _WG_SunColor, _WG_MoonDirection;
+float4 _WG_CloudLit, _WG_CloudShade, _WG_CloudEdge;
+float _WG_SkyGlowStrength, _WG_MoonVisibility, _WG_Stars, _WG_Galaxy, _WG_CloudCover, _WG_SkyExposure;
 
 // ---------------------------------------------------------------------------
 // Noise
@@ -182,20 +188,81 @@ float3 WG_Compose(WGSurface s, float3 direct, float3 ambient)
     return color;
 }
 
-// Aerial perspective: distance and low air take on the horizon's colour, warmer towards the sun.
+// ---------------------------------------------------------------------------
+// Sky and air
+// ---------------------------------------------------------------------------
+
+// The painted sky's gradient in a direction: zenith to horizon, a few broad strokes, the dusk
+// band gathering on the sun's side, and the sun's halo. No clouds, stars or discs.
+float3 WG_SkyGradient(float3 d)
+{
+    float up = d.y;
+    float g = pow(saturate(up), 0.6);
+    float3 sky = lerp(_WG_SkyHorizon.rgb, _WG_SkyZenith.rgb, g);
+    // A painter does not let warm horizon and blue zenith average to grey: the middle keeps its colour.
+    float keep = 4 * g * (1 - g);
+    float luma = dot(sky, float3(0.299, 0.587, 0.114));
+    sky = max(0, lerp(luma.xxx, sky, 1 + 0.6 * keep));
+    float strokes = WG_Fbm(float3(d.x * 2.2, d.y * 7.0, d.z * 2.2)) - 0.47;
+    sky *= 1 + strokes * 0.12;
+    float3 sunDir = normalize(_WG_SunDirection.xyz);
+    float2 flatD = normalize(d.xz + 1e-5), flatSun = normalize(sunDir.xz + 1e-5);
+    float sunSide = pow(saturate(dot(flatD, flatSun) * 0.5 + 0.5), 2.2);
+    float band = exp(-abs(up - 0.05) * 6) * (0.35 + 0.65 * sunSide);
+    sky = lerp(sky, _WG_SkyGlow.rgb, saturate(band * _WG_SkyGlowStrength));
+    sky += _WG_SunColor.rgb * pow(saturate(dot(d, sunDir)), 24) * 0.12 * saturate(sunDir.y * 6 + 0.4);
+    return sky;
+}
+
+// The colour of the air looking along a direction: the sky a little above the horizon there,
+// so far ranges turn blue and read as shapes against the paler sky right behind them.
+float3 WG_AirColor(float3 dir)
+{
+    return WG_SkyGradient(normalize(float3(dir.x, max(dir.y, 0.0) * 0.5 + 0.12, dir.z))) * _WG_SkyExposure;
+}
+
+// Aerial perspective. Each farther layer takes more of the sky's own colour, until far ranges
+// nearly dissolve into it. The air is thickest low down: haze gathers over the lake and in the
+// valleys while the peaks stay clear.
+float WG_AirAmount(float3 positionWS)
+{
+    float3 toPoint = positionWS - _WorldSpaceCameraPos;
+    float dist = length(toPoint);
+    float k = 1.0 / max(_WG_Air.z, 1);
+    float h0 = max(_WorldSpaceCameraPos.y - _WG_Air.w, 0) * k;
+    float h1 = max(positionWS.y - _WG_Air.w, 0) * k;
+    float a = exp(-h0), b = exp(-h1);
+    // The ray's mean density between the two heights.
+    float density = abs(h1 - h0) > 1e-3 ? (a - b) / (h1 - h0) : a;
+    float optical = max(0, dist - _WG_FogShape.x) / max(_WG_Air.x, 1) * density;
+    return min(1 - exp(-optical), _WG_Air.y);
+}
+
 float3 WG_ApplyFog(float3 color, float3 positionWS, float urpFogCoord)
 {
     if (!WG_LookActive()) return MixFog(color, urpFogCoord);
-    float3 toPoint = positionWS - _WorldSpaceCameraPos;
-    float dist = length(toPoint);
-    float3 dir = toPoint / max(dist, 1e-4);
-    float d = max(0, dist - _WG_FogShape.x);
-    float height = exp(-max(0, positionWS.y - _WG_FogShape.z) * _WG_FogSun.a);
-    // Squared falloff: the meadow stays clear, distance thickens quickly into layered silhouettes.
-    float x = d * _WG_Fog.a * height;
-    float f = min(1 - exp(-x * x), _WG_FogShape.y);
-    float sun = pow(saturate(dot(dir, _MainLightPosition.xyz)), max(_WG_FogShape.w, 1));
-    return lerp(color, lerp(_WG_Fog.rgb, _WG_FogSun.rgb, sun), f);
+    float3 dir = normalize(positionWS - _WorldSpaceCameraPos);
+    return lerp(color, WG_AirColor(dir), WG_AirAmount(positionWS));
+}
+
+// Shadows of clouds drifting over the land: soft-edged patches that bring the sky's movement to
+// the ground, seen even from the Strategy camera. 1 in the open, lower under a cloud.
+float WG_CloudShadow(float3 positionWS)
+{
+    if (!WG_LookActive() || _WG_CloudShadow.y <= 0) return 1;
+    float3 l = _MainLightPosition.xyz;
+    // Follow the light up to the cloud layer.
+    float lift = (900 - positionWS.y) / max(l.y, 0.12);
+    float2 q = positionWS.xz + l.xz * lift;
+    float2 wind = normalize(_WG_Wind.xy + float2(1e-4, 0));
+    q -= wind * _Time.y * _WG_CloudShadow.w;
+    float2 uv = q / max(_WG_CloudShadow.z, 1);
+    float2 warp = float2(WG_Noise(float3(uv * 0.6, 3.1)), WG_Noise(float3(uv * 0.6, 7.9))) - 0.5;
+    float field = WG_Fbm(float3(uv + warp * 0.8, 1.3));
+    // The field sits around 0.47; cover 0.3 leaves roughly a third of the land in shadow.
+    float threshold = 0.66 - _WG_CloudShadow.x * 0.42;
+    float shadow = smoothstep(threshold - 0.03, threshold + 0.05, field);
+    return 1 - shadow * _WG_CloudShadow.y;
 }
 
 // ---------------------------------------------------------------------------
