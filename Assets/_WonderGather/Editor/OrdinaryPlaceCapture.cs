@@ -31,7 +31,9 @@ namespace WonderGather.Editor
         public static void Capture()
         {
             string folder = Argument("-captureOut") ?? "Captures/OrdinaryPlace";
-            bool full = Argument("-captureSet") == "full";
+            string set = Argument("-captureSet") ?? "quick";
+            bool full = set == "full";
+            if (set == "dusk") { Directory.CreateDirectory(folder); CaptureDusk(folder); return; }
             Directory.CreateDirectory(folder);
             bool previous = ShaderUtil.allowAsyncCompilation;
             ShaderUtil.allowAsyncCompilation = false;
@@ -75,6 +77,51 @@ namespace WonderGather.Editor
                     }
                 }
                 File.WriteAllText(Path.Combine(folder, "captures.csv"), report.ToString());
+                Debug.Log("ORDINARY_PLACE_CAPTURE_OK " + folder);
+            }
+            finally
+            {
+                ShaderUtil.allowAsyncCompilation = previous;
+            }
+        }
+
+        // Luis's favourite frame (October 2): look E at 19:12, low on the path in front of the lit
+        // house, at his screenshot's wide aspect; and the doorway at night. Each dusk detail is
+        // rendered off and on, so every step can be judged on exactly that frame.
+        private static void CaptureDusk(string folder)
+        {
+            bool previous = ShaderUtil.allowAsyncCompilation;
+            ShaderUtil.allowAsyncCompilation = false;
+            try
+            {
+                EditorSceneManager.OpenScene(OrdinaryPlaceSetup.ScenePath);
+                var camera = Camera.main ?? throw new InvalidOperationException("The Ordinary Place has no main camera.");
+                var time = Object.FindAnyObjectByType<TimeOfDay>();
+                var look = Object.FindAnyObjectByType<LookDevControls>();
+                var ground = Object.FindAnyObjectByType<OrdinaryGround>();
+                var step = ground.Path[0];
+                float Height(float x, float z) => ground.Height(x, z);
+                var views = new List<(string Name, float Hour, Vector3 Eye, Vector3 Target, int Width, int Height)>
+                {
+                    ("favourite", 19.2f, new Vector3(step.x + .4f, Height(step.x + .4f, step.y - 7.2f) + .55f, step.y - 7.2f),
+                        new Vector3(step.x - .1f, Height(step.x, step.y) + 3.4f, step.y + 4), 1600, 670),
+                    ("doorway", 23, new Vector3(step.x + 2.4f, Height(step.x + 2.4f, step.y - 3.2f) + 1.5f, step.y - 3.2f),
+                        new Vector3(step.x - .3f, Height(step.x, step.y) + 1.6f, step.y + 2.5f), 1600, 900),
+                };
+                // Luis's frame has no one in it; the worker steps out of the shot.
+                var worker = Object.FindAnyObjectByType<SelectableUnit>();
+                if (worker != null) worker.gameObject.SetActive(false);
+                var details = new (string Name, bool Flies, bool Glow)[] { ("before", false, false), ("fireflies", true, false), ("glow", false, true), ("both", true, true) };
+                foreach (var view in views)
+                foreach (var detail in details)
+                {
+                    time.Hour = view.Hour;
+                    look.Select(4);
+                    look.SetDusk(detail.Flies, false, detail.Glow);
+                    camera.transform.SetPositionAndRotation(view.Eye, Quaternion.LookRotation(view.Target - view.Eye));
+                    Render(camera, Path.Combine(folder, $"{view.Name}_{detail.Name}.png"), view.Width, view.Height);
+                }
+                look.SetDusk(true, false, false);
                 Debug.Log("ORDINARY_PLACE_CAPTURE_OK " + folder);
             }
             finally

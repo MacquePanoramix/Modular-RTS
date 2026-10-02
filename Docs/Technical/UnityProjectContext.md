@@ -680,3 +680,27 @@ described here so it can be revived piece by piece.
   - `-captureOnly`, `-captureHours` and `-captureMap` narrow a run.
   - The top-down map is only for checking the layout; its depth precision is
     too coarse for the water.
+
+## Dusk details (S1c, third pass) — October 2
+
+- **`Fireflies`.** About 1,100 GPU quads in a box that follows each camera
+  (`WGFireflies.shader`).
+  - **Presence** follows the sun's height: none by day, all after sunset.
+  - **Near the camera** they fade and shrink.
+- **The hearth.** `TimeOfDay.Hearth` flickers every house light with one
+  shared fire noise (the lantern with its own candle noise).
+  - It also scales `_WG_GlowScale` by part of that flicker, so the windows'
+    emission breathes with it.
+  - It is off by default.
+- **`WindowGlow`.** It draws a soft additive halo just outside the door and
+  window lights (`WGWindowGlow.shader`).
+  - The halos are pushed out along each light's horizontal direction.
+  - Each halo is faded by scene depth where it meets geometry, and as the
+    camera comes close.
+  - It follows `_WG_GlowScale`, and is disabled by default.
+- **Switches.** `LookDevControls.SetDusk` and keys 7, 8 and 9 switch the
+  three. `OrdinaryPlaceSetup.AddDuskDetails` adds them to the scene in place
+  and can run again.
+- **Captures.** `OrdinaryPlaceCapture -captureSet dusk` recreates Luis's
+  favourite frame (look E, 19:12, low on the path, 1600×670) and the doorway
+  at night, with each detail off and on.

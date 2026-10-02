@@ -3,8 +3,15 @@
 **Updated:** October 2, 2026.
 
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
-  build `Builds/WindowsOrdinaryPlace`. Luis's favourite frame is from it: the
-  lit house at dusk, seen from low on the path.
+  merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
+  it: the lit house at dusk, seen from low on the path.
+- **Latest implementation:** the dusk details over that look (third pass):
+  - fireflies, on by default as Luis asked;
+  - the hearth's flicker and a window glow, off until he has judged them;
+  - keys 7, 8 and 9 switch each one.
+
+  See [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md#third-pass-dusk-details-october-2);
+  build `Builds/WindowsOrdinaryPlace`.
 - **Latest experiment, not adopted:** S1e, the essence beyond the surface,
   first iteration ([TheEssencePlaytest.md](Playtests/TheEssencePlaytest.md)).
   After seeing its captures, Luis preferred the hand-painted pass. Its code is
@@ -64,6 +71,11 @@ Recorded verbatim in
   I like the before better", with his favourite frame from the hand-painted
   pass. The hand-painted pass stays the base. S1e's first iteration is
   archived, not adopted.
+- **His answers.**
+  - **Merge:** the hand-painted pass, into `main`. Done.
+  - **Fireflies:** back in this scene.
+  - **Next:** deepen the dusk mood in small steps, then move to the worker
+    model.
 
 ## Earlier Game Director feedback (October 1, night)
 
@@ -158,14 +170,12 @@ Still valid from September 30:
 
 ## Recommended next action
 
-1. **Luis chooses the next step from the hand-painted pass:**
-   - whether to merge it into `main`;
-   - whether any S1e piece should come back as an option over it (fireflies at
-     dusk, composed viewpoints, look F as an extra look);
-   - or whether to move on to S1d.
-2. **Further explorations are additive and switchable**, and shown early as
+1. **Luis judges the dusk details** in the build: are 8 (the hearth) and 9
+   (the window glow) worth keeping on?
+2. **S1d, the worker model**, in the hand-painted language. It starts with a
+   few quick concept frames, shown early.
+3. **Further explorations are additive and switchable**, and shown early as
    frames before being built out.
-3. **S1d, the worker model**, in the hand-painted language.
 
 Luis's other choices on October 1:
 

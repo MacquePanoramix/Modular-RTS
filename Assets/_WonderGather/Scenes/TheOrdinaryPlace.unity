@@ -10210,6 +10210,8 @@ GameObject:
   - component: {fileID: 2071342758}
   - component: {fileID: 2071342757}
   - component: {fileID: 2071342756}
+  - component: {fileID: 2071342762}
+  - component: {fileID: 2071342761}
   m_Layer: 0
   m_Name: Look
   m_TagString: Untagged
@@ -10250,6 +10252,8 @@ MonoBehaviour:
   grass: {fileID: 162427600}
   candidate: 4
   showPanel: 1
+  fireflies: {fileID: 2071342762}
+  windowGlow: {fileID: 2071342761}
 --- !u!114 &2071342758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10537,6 +10541,8 @@ MonoBehaviour:
     Stars: 1
     HouseLights: 1
     Exposure: 1.15
+  hearth: 0
+  hearthFlicker: 0.3
 --- !u!4 &2071342760
 Transform:
   m_ObjectHideFlags: 0
@@ -10552,6 +10558,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2071342761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071342755}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c661c70c691e0e43b3c3d1e446881a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.WindowGlow
+  material: {fileID: 2100000, guid: 227995e0534610140b3890a6ba5a0c75, type: 2}
+  lights:
+  - {fileID: 1613873289}
+  - {fileID: 2061983673}
+  - {fileID: 1949162546}
+  - {fileID: 197446131}
+  windowRadius: 1.1
+  doorRadius: 1.5
+  outward: 0.35
+--- !u!114 &2071342762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071342755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 784650176bc02f04a997daff4985f277, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.Fireflies
+  material: {fileID: 2100000, guid: ddd2f6039f4016041871c65d0a6fcc62, type: 2}
+  time: {fileID: 2071342759}
+  count: 1100
+  extent: 22
+  floor: 0
 --- !u!1 &2073373217
 GameObject:
   m_ObjectHideFlags: 0

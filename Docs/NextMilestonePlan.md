@@ -25,7 +25,12 @@ splits the work into checkpoints Luis playtests one at a time:
    Wonder Gather. The first iteration was built on October 2. Luis preferred
    the hand-painted pass, so it was archived on `claude/essence-exploration`
    and not adopted ([TheEssencePlaytest.md](Playtests/TheEssencePlaytest.md)).
-5. **S1d, the worker model**, after S1e, in the language it settles.
+5. **S1c, third pass: dusk details.** These are small switchable steps over
+   the hand-painted look, judged on Luis's favourite frame: fireflies (on),
+   the hearth's flicker and the window glow. Built on October 2. The
+   hand-painted pass itself was merged into `main` (7f7fcc0).
+6. **S1d, the worker model**, next, in the hand-painted language, starting
+   with concept frames shown early.
 
 The previous S1 plan (style studies, then the worker model) is archived in
 [Plans/S1_WorkerModelAndStyleStudies.md](Plans/S1_WorkerModelAndStyleStudies.md).

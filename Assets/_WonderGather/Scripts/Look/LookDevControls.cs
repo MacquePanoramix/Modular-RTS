@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 namespace WonderGather
 {
     // The Ordinary Place's look-test controls: switch rendering candidates live, move through
-    // the day, and read the frame cost. Owns its own small action map, like RtsInput.
+    // the day, switch the dusk details (fireflies, the hearth, the window glow), and read the
+    // frame cost. Owns its own small action map, like RtsInput.
     [ExecuteAlways]
     public sealed class LookDevControls : MonoBehaviour
     {
@@ -34,9 +35,12 @@ namespace WonderGather
         [SerializeField] private GrassField grass;
         [SerializeField] private int candidate = 1;
         [SerializeField] private bool showPanel = true;
+        [SerializeField] private Fireflies fireflies;
+        [SerializeField] private WindowGlow windowGlow;
         private InputActionMap map;
         private InputAction next, scrub, lapse, hide;
         private readonly InputAction[] presets = new InputAction[6];
+        private InputAction toggleFireflies, toggleHearth, toggleGlow;
         private float smoothedFrame = 16, timeLapse;
         private readonly FrameTiming[] timings = new FrameTiming[1];
         private double gpuMilliseconds;
@@ -49,6 +53,24 @@ namespace WonderGather
             post = effects;
             grass = field;
             Apply();
+        }
+
+        public void ConfigureDusk(Fireflies flies, WindowGlow glow)
+        {
+            fireflies = flies;
+            windowGlow = glow;
+        }
+
+        public bool FirefliesOn => fireflies != null && fireflies.enabled;
+        public bool HearthOn => time != null && time.Hearth;
+        public bool WindowGlowOn => windowGlow != null && windowGlow.enabled;
+
+        // The dusk details, each a small switchable step over the hand-painted look.
+        public void SetDusk(bool flies, bool hearth, bool glow)
+        {
+            if (fireflies != null) fireflies.enabled = flies;
+            if (time != null) time.Hearth = hearth;
+            if (windowGlow != null) windowGlow.enabled = glow;
         }
 
         public void Select(int index)
@@ -79,6 +101,9 @@ namespace WonderGather
             hide = map.AddAction("Hide panel", InputActionType.Button, "<Keyboard>/h");
             string[] keys = { "1", "2", "3", "4", "5", "6" };
             for (int i = 0; i < presets.Length; i++) presets[i] = map.AddAction("Time " + keys[i], InputActionType.Button, "<Keyboard>/" + keys[i]);
+            toggleFireflies = map.AddAction("Fireflies", InputActionType.Button, "<Keyboard>/7");
+            toggleHearth = map.AddAction("Hearth", InputActionType.Button, "<Keyboard>/8");
+            toggleGlow = map.AddAction("Window glow", InputActionType.Button, "<Keyboard>/9");
             map.Enable();
         }
 
@@ -96,6 +121,9 @@ namespace WonderGather
             if (!Application.isPlaying || map == null || !Application.isFocused) return;
             if (next.WasPressedThisFrame()) Select(candidate + 1);
             if (hide.WasPressedThisFrame()) showPanel = !showPanel;
+            if (toggleFireflies.WasPressedThisFrame()) SetDusk(!FirefliesOn, HearthOn, WindowGlowOn);
+            if (toggleHearth.WasPressedThisFrame()) SetDusk(FirefliesOn, !HearthOn, WindowGlowOn);
+            if (toggleGlow.WasPressedThisFrame()) SetDusk(FirefliesOn, HearthOn, !WindowGlowOn);
             if (time != null)
             {
                 for (int i = 0; i < presets.Length; i++)
@@ -128,6 +156,7 @@ namespace WonderGather
                           $"Time: {hour}   (1–6: morning, midday, golden, dusk, blue hour, night;  [ ]: scrub;  L: time-lapse{(timeLapse > 0 ? " on" : "")})\n" +
                           $"Frame {smoothedFrame:F1} ms ({1000 / Mathf.Max(smoothedFrame, .01f):F0} fps){gpu}" +
                           (grass != null ? $"   grass drawn {grass.DrawnLastFrame / 1000}k of {grass.BladeCount / 1000}k" : "") +
+                          $"\nDusk: 7 fireflies {(FirefliesOn ? "on" : "off")}, 8 hearth {(HearthOn ? "on" : "off")}, 9 window glow {(WindowGlowOn ? "on" : "off")}" +
                           "\nH: hide this panel";
             var style = new GUIStyle(GUI.skin.box) { alignment = TextAnchor.UpperLeft, wordWrap = true, fontSize = 13, padding = new RectOffset(10, 10, 8, 8) };
             float width = Mathf.Min(560, Screen.width - 36);

@@ -64,6 +64,9 @@ which is the best way to judge the look up close.
 | [ / ] | Scrub the time of day |
 | L | Time-lapse: the day passes at 30 in-game minutes per second |
 | H | Hide or show the look-test panel (it shows the frame time) |
+| 7 | Fireflies at dusk and night (on; third pass) |
+| 8 | The hearth: house lights flicker gently like a fire (off until judged; third pass) |
+| 9 | Window glow: a soft warm halo at the windows and door (off until judged; third pass) |
 
 ## The rendering candidates (S1c)
 
@@ -303,3 +306,35 @@ See [Validation.md](../Validation.md).
   captures after the change match the earlier sky pixel for pixel.
 - **Distant leaves.** Painted textures fill the space between UV islands with
   the material's own colour, so distant mipmaps no longer turn leaves black.
+
+## Third pass: dusk details (October 2)
+
+Luis preferred this hand-painted pass to the S1e experiment. His favourite
+frame came from it: look E at 19:12, low on the path in front of the lit
+house. He asked for:
+- the fireflies from the experiment, in this scene;
+- the dusk mood deepened in small steps, before moving to the worker model.
+
+So each detail is a small step that switches on and off over the
+hand-painted look, judged on his own frame:
+
+| Key | Detail | Default |
+|---|---|---|
+| 7 | **Fireflies.** About 1,100 blinking green-gold lights drift low over the meadow, out only once the sun has set. Near the camera they fade and shrink, so none blots the view. | On (Luis asked for them) |
+| 8 | **The hearth.** The door and window lights flicker gently, like one fire inside, and the lantern like a candle; the windows' glow breathes with them. | Off until Luis has judged it |
+| 9 | **Window glow.** A soft warm halo just outside each lit window and the door, softened where it meets the wall or grass. | Off until Luis has judged it |
+
+The house's own light, sky and look are unchanged.
+
+![The dusk steps on Luis's favourite frame](../Images/OrdinaryPlace/Dusk_Steps_Favourite.jpg)
+![The doorway at night, before and with the details](../Images/OrdinaryPlace/Dusk_Steps_Doorway.jpg)
+
+The hearth's flicker moves in time, so a still cannot show it; try 8 in the
+build.
+
+**Captures.** `OrdinaryPlaceCapture.Capture -captureSet dusk` recreates
+Luis's frame (and the doorway at night) with each detail off and on. The
+worker steps out of the shot, as in his frame.
+
+See [Validation.md](../Validation.md) for tests, build and cost.
+

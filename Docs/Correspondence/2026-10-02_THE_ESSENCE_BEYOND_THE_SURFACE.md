@@ -76,6 +76,19 @@ Sent after seeing the first iteration's captures. He had not played its build.
 - **The sky.** Lilac-violet, with thin, wispy, brushed clouds and the
   chimney smoke rising.
 
+## Luis's answers (verbatim)
+
+Claude asked three things:
+1. whether to merge the hand-painted pass into `main`;
+2. whether any piece of the experiment should come back as an option, for
+   example the fireflies;
+3. whether to deepen the dusk mood in small steps or move on to the worker
+   model.
+
+> 1. Yes please.
+> 2. Can be for this scene I actually do like that.
+> 3. Yes please deepend it in small steps and then you can move to the worker model. Thanks for helping me and your patience.
+
 ## How it was recorded
 
 - **The verdict.** The hand-painted pass is "already quite beautiful" and
@@ -106,5 +119,10 @@ Sent after seeing the first iteration's captures. He had not played its build.
     its record in [TheEssencePlaytest.md](../Playtests/TheEssencePlaytest.md).
   - What his favourite frame says about his taste is read in
     [TheEssence.md](../ArtDirection/TheEssence.md#luiss-verdict-and-what-his-favourite-frame-teaches).
-- **The merge.** He did not ask for the hand-painted pass to be merged, so it
-  stays on the branch.
+- **The merge.** Approved in his answers. The hand-painted pass was merged
+  into `main` (7f7fcc0).
+- **The fireflies.** They come back for this scene, on by default.
+- **The dusk mood.** It is deepened in small switchable steps over the
+  hand-painted look (the third pass in
+  [OrdinaryPlaceLookTest.md](../Playtests/OrdinaryPlaceLookTest.md#third-pass-dusk-details-october-2)),
+  then work moves to the worker model (S1d).

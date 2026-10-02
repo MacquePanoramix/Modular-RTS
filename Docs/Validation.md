@@ -1023,3 +1023,63 @@ is not on `claude/worker-showcase`. Record:
   references' surface, not his taste.
 - **Not tested:** interactive play of this build by hand, other GPUs, and
   scenes with many units.
+
+## S1c, third pass — dusk details (October 2)
+
+After Luis's answers (merge the hand-painted pass, bring back the fireflies,
+deepen the dusk in small steps), these details were built over the
+hand-painted look, each switchable:
+- fireflies (key 7, on);
+- the hearth's flicker (key 8, off until judged);
+- window glow (key 9, off until judged).
+
+[OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md#third-pass-dusk-details-october-2)
+has the details.
+
+- **Environment.** The isolated worktree was reset to the merged base
+  (fcaa654). The validated files were then copied into the main project.
+- **Judged on Luis's own frame.** `-captureSet dusk` recreates his favourite
+  frame: look E at 19:12, low on the path, 1600×670.
+  - The first fireflies near the camera swelled into large blots, so near
+    ones now fade and shrink.
+  - Lowering them into the grass then hid them behind the blades, so their
+    height was restored.
+- **Tests.** `DuskDetailsTests` (4 new) check that:
+  - fireflies appear only after sunset and are on by default;
+  - the hearth moves the lights only when on, and never puts them out;
+  - the window glow has four halos (three windows and the door) and is off by
+    default;
+  - each detail switches on its own.
+- **Full PlayMode suite (111 tests):** three runs.
+  - Run 1 passed 111/111 (875.5 s).
+  - Run 2 failed 1 test (898.2 s):
+    `EquippedWorkerTests.ProducedWorkerReceivesTheBlueprintPickaxeAndMinesThroughTheSameAction`
+    ("The worker must retain a supporting foot outside a brief jogging flight
+    phase").
+  - Run 3 passed 111/111 (881.1 s).
+- **Investigating that failure.** That test checks the S0 gait in the
+  equipment scene, where none of the dusk code runs. In isolated runs:
+
+  | Code | Isolated runs |
+  |---|---|
+  | The base (fcaa654) | 18 of 18 passed |
+  | With the dusk details | 14 of 15 passed (the failure was in the first run; the last 10 all passed) |
+
+  It is a rare, existing intermittent failure in the gait support, roughly 1
+  in 15–30 runs. It is not caused by this pass. It is flagged for its own fix.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Benchmark.** Look E, GPU ms at 1920×1080 on the RTX 4060 Laptop, with
+  fireflies on, the hearth and glow off:
+
+  | | Day | Night |
+  |---|---|---|
+  | Look E | 4.9–5.6 | 5.7–5.8 |
+
+  The night views carry the fireflies, about 0.3–0.5 ms more than the
+  hand-painted pass's 4.5–5.5. The window glow is four quads and was not
+  benchmarked separately.
+- **Not tested:**
+  - **The hearth's flicker.** It moves in time; it was checked by test, not
+    watched by eye.
+  - **Play by hand.** Interactive play in the build was not tried.
+  - **Hardware.** Other GPUs were not tried.
