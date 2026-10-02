@@ -123,8 +123,10 @@ asked for two camera systems. The detailed plan is in
 - **S1c, rendering candidates.** Compared live in that scene, with matched
   captures and measured frame time. Luis chooses the rendering approach.
 - **S1d, the worker model.** Made in the chosen language. This continues the
-  original S1 scope below. First concepts made on October 2: three directions
-  for Luis to choose from ([WorkerConcepts.md](ArtDirection/WorkerConcepts.md)).
+  original S1 scope below. October 2: three concepts
+  ([WorkerConcepts.md](ArtDirection/WorkerConcepts.md)), then, after Luis's
+  ranking, the miners remade at higher quality from modules
+  ([TheMiners.md](ArtDirection/TheMiners.md)).
 
 The original S1 scope that continues as S1d:
 

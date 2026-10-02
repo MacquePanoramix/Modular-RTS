@@ -720,35 +720,90 @@ described here so it can be revived piece by piece.
     tips.
   - Together they keep the warm pool the same near and far.
 
-## Worker concepts (S1d) — October 2
+## The miners (S1d) — October 2
 
-- **Source.** `Art/Blender/Worker/worker_concepts.py` builds three concept
-  figures (Round, Long, Small) and paints their faces.
-  - **Writes:** `Assets/_WonderGather/Art/Worker/Concepts/Workers.fbx`, and
-    `Face_<Concept>.png` beside it.
-  - **Bodies.** Joint skeletons with the skin modifier. The torso and each
-    arm are separate chains, fused by a voxel remesh into one closed surface:
-    a single skin-modifier branch at the collar produced inside-out faces when
-    the shoulders sat below it.
-  - **Heads, hands and hair.** Metaballs, with oriented ellipsoids.
-  - **Faces.** Brush strokes painted with numpy into a 1024² texture, projected
-    from the front in the head's own frame. Vertices facing backwards map to
-    a plain corner, so no mark shows on the back of the head.
-  - **Materials.** Named per concept (`Skin_Round`…) and per cloth.
-- **`WorkerConceptCapture`** (Editor).
-  - **Import.** It imports the FBX, remapping its materials onto painted
-    materials in `Materials/WorkerConcepts`. Each skin material carries its
-    painted face as `_BaseMap`, with a white base colour.
-  - **Setup.** It adds `Outline.mat` as an extra material on every part, then
-    opens the Ordinary Place in look E with the worker hidden, and stands the
-    three on the path.
-  - **Output.** It renders the line-up at dusk, by day and at night, the
-    Strategy height, and portraits.
+The first concepts (`worker_concepts.py`, `WorkerConceptCapture`,
+`Art/Worker/Concepts`) were replaced by the miners; they remain in the history
+at 3066921.
+
+- **Source:** `Art/Blender/Worker/`, one module per kind of part. Every module
+  fits any `Body`, so a character is a preset of modules.
+  - **`shapes.py`.** Shared helpers:
+    - materials;
+    - flesh on joint chains (the skin modifier);
+    - metaball clusters, negative balls carving;
+    - `fuse` (join, voxel remesh, smooth, simplify);
+    - `tube` (an elliptical cross-section along a path, closing to a point);
+    - `lathe`, `panel` (cloth wrapped around the trunk), `spline`;
+    - `two_bone` (a limb reaching a target, bending towards a pole).
+
+    Every part's origin is the being's origin, as for rigging.
+  - **`body.py`.** `Body` builds a posed skeleton from proportions: weight leg,
+    hip shift and tilt, shoulder tilt, stoop, head turn, nod and tilt. Hands
+    and feet reach targets by two-bone solving. It also builds:
+    - **The head:** metaballs with the face projected in the head's frame.
+    - **The neck and bare forearms.**
+    - **Hands:** palm metaballs, plus finger and thumb tubes curled by a grip,
+      fused. A hand can be told the direction of the handle it holds.
+    - **Boots:** shaft and foot fused, a sole tube, a heel slab and laces.
+  - **`faces.py`.** The painted faces (laughing, sleepy, curious) and soot.
+  - **`hair.py`.** Locks are combed in skull space (a unit sphere) with
+    gravity, bend and twist. Each is a flat tapered tube, joined over a cap
+    thickened outwards above a hairline.
+    - **Styles:** `bob`, `swept`, `curls` (with `top` to stop under a cap).
+  - **`outfits.py`.** Garments and accessories fitted to the trunk's measured
+    levels (`trunk_at`, `axis_at`):
+    - **Tops.** Torso and sleeve chains fused, creased at the elbows. A
+      `skirted` top stops at the waist.
+    - **Skirts.** Rings with vertical folds and ragged hems.
+    - **Trousers.** Tucked and bunched.
+    - **Collar, lapels, shirt front, apron (bib, straps, ties).**
+    - **Buttons and patches.**
+    - **Accessories:** a satchel, lantern, pickaxe (`hold` places the hand
+      along it), mug, lamp cap and hammer.
+  - **`workers.py`.** The three presets (Small, Long, Round), the material
+    table, painting, export and manifest.
+    - **Writes:** `Assets/_WonderGather/Art/Worker/Miners/`: `Workers.fbx`,
+      `Face_<Character>.png`, one painted JPEG per painted material, and
+      `workers.json`.
+- **Painting.** It uses `../OrdinaryPlace/painting.py`, with new optional
+  recipe keys (the house's defaults are unchanged):
+  - `scale` multiplies the broad, middle and drip noise, for small objects;
+  - `stain_top` is the height dust reaches;
+  - `ao` and `bevel` are the cavity and edge radii;
+  - `fill` is the colour between islands.
+
+  Two rules for the bake:
+  - **Linear bases.** Character bases go in as linear colours, because the
+    emission bake saves sRGB; otherwise the texture comes out about twice as
+    light.
+  - **Apart.** The three miners are moved apart while baking. Built on one
+    spot, each one's cavities were shaded by the others' bodies.
+- **`MinerCapture`** (Editor).
+  - **Materials.** It reads `workers.json` and makes `Materials/Miners/*.mat`
+    on `WGPainted`:
+    - painted textures and faces on a white base;
+    - variation 0.1–0.12;
+    - `_BrushScale` 14 (a person is smaller than a house; at the world's 3
+      per metre, the shader's own marks blotched the cloth);
+    - glow as emission;
+    - `_Drawn` on everything.
+  - **Outline.** It adds the outline, except on glass.
+  - **Lamps.** It puts a small warm point light (no shadows) at each lamp's
+    glass.
+  - **Shots.** It stands the miners on the path and renders:
+    - the line-up at dusk, by day and at night;
+    - the Strategy height;
+    - portraits at three hours;
+    - a four-view turnaround of each, alone.
   - **In the Editor** it asks before leaving a modified scene, and keeps the
-    figures out of the saved scene (`DontSaveInEditor`). It restores the worker,
-    hour and look afterwards, and leaves the figures standing to look at.
+    miners out of the saved scene (`DontSaveInEditor`). It restores the worker,
+    hour and look afterwards, and leaves the miners standing to look at.
 - **`WGOutline.shader`.** A drawn contour as an inverted hull (back faces
   pushed out along the normals).
+  - **Pushed back.** The hull is also pushed `_Behind` (3.5 cm) away from the
+    eye. Without it, a smock's line showed through an apron lying a few
+    millimetres over it, as dark blotches seen from a few metres away.
   - **Width.** About 1.6 pixels at 1080p near or far, capped at 1.2 cm.
   - **Wobble.** It varies with object-space noise, so it does not swim as a
     being moves.

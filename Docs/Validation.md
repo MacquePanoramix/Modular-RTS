@@ -1089,7 +1089,7 @@ has the details.
 Luis tested the dusk details and asked for:
 - all three on by default;
 - fewer fireflies, with some sign of them even when very zoomed out;
-- the lamplight close up matching the far look he liked.
+- the lamplight close up matching the far look Luis liked.
 
 [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md#after-luiss-test-october-2)
 has the details.
@@ -1127,14 +1127,14 @@ has the details.
   more than pay for the hearth and the glow.
 - **Not tested:**
   - **Play by hand.** Interactive play in the build was not tried.
-  - **Luis's frame and his screenshot views.** Judged by capture only, not by
-    his eye.
+  - **Luis's frame and screenshot views.** Judged by capture only, not by
+    Luis's eye.
   - **Hardware.** Other GPUs were not tried.
 
 ## S1d, worker concepts — first frames (October 2)
 
 Luis asked to move to the worker's redesign "with heart and soul", from the
-Visual Soul and its principles for people. Three concepts were made for him to
+Visual Soul and its principles for people. Three concepts were made for Luis to
 choose a direction
 ([WorkerConcepts.md](ArtDirection/WorkerConcepts.md)).
 
@@ -1170,3 +1170,57 @@ choose a direction
     steps (asking to save, `DontSaveInEditor`, restoring the scene) were not
     exercised by hand.
   - **Luis's eye.** These are proposals; nothing is accepted.
+
+## S1d, the miners — second pass (October 2)
+
+After Luis's ranking (Small, Long, Round) and the request for much higher model
+quality with miner's hints, the three were rebuilt from modules
+([TheMiners.md](ArtDirection/TheMiners.md)).
+
+- **Environment.** The isolated worktree was reset to 3066921. The validated
+  files were then copied into the main project.
+- **Judged pass by pass,** in Blender previews (full figures, faces and
+  hands) and in the engine (the line-up at three hours, Strategy height,
+  portraits, four-view turnarounds). Fixes along the way:
+  - **Boots.** They came out as balloons (their width was a radius); now about
+    half as wide.
+  - **Long's pickaxe.**
+    - **Over the shoulder,** it crossed Long's face. A hand can now be told the
+      direction of the handle it grips.
+    - **Now a walking stick.** The pickaxe is leant on like one, its length
+      reaching the ground from the hand.
+  - **A ledge at the waist** of coats and smocks. A skirted top now stops at
+    the waist, and the skirt widens gently.
+  - **Floating parts in the Blender three-quarter view** were a preview
+    artifact: copies turned about their own origins. Every part's origin is
+    now the being's origin, and the preview turns each copy about the
+    character's.
+  - **Painted textures about twice too light.** The emission bake saves sRGB,
+    so bases now go in as linear colours, with the gap fill in sRGB.
+  - **Blotches in the painting.** The house's brush scale is too broad for a
+    person, so a `scale` key was added, and dust kept low.
+  - **Blotches from the bake.** The three were baked overlapping on one spot,
+    so each one's cavities were shaded by the others' bodies. They are now
+    baked apart.
+  - **The engine's own brush marks** at the world's 3 per metre blotched the
+    cloth; beings now use 14.
+  - **Dark blotches from a few metres away** came from the smock's outline
+    showing through the apron lying just over it. Found by switching the
+    outline, ink, paint and shadows off in turn. The hull is now pushed 3.5 cm
+    away from the eye.
+  - **The back of Long's head** showed bare when nodding. The hair caps were
+    thickened outwards and lifted, and the back hairline lowered to the nape.
+  - **Soot on faces** read as bruises from afar. Only a small smudge on
+    Small's cheek, and a touch on Round's, remain.
+- **Compilation and capture.** Every engine pass ran
+  `MinerCapture.Capture` in batch, and all succeeded.
+- **Not tested:**
+  - **The PlayMode suite** was not re-run. No runtime code changed: only an
+    Editor capture, the outline shader (used by the miners alone), the
+    painting script and assets. The last full run, 111/111, was on 3066921.
+  - **The Editor menu path** was not exercised by hand.
+  - **Motion.** The miners are posed, not rigged.
+  - **Cost.** About 95,000–105,000 faces per miner, plus an outline draw;
+    this was not benchmarked. They are hero models, not yet RTS units.
+  - **Luis's eye.** Nothing here is accepted until Luis has seen it.
+

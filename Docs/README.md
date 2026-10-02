@@ -19,7 +19,7 @@ and routes to everything else.
 
 | Folder | Contents |
 |---|---|
-| [ArtDirection/](ArtDirection/) | **The art direction.** [VisualSoul.md](ArtDirection/VisualSoul.md) (Luis's handoff, and the direction now) and its approved reference images. [TheEssence.md](ArtDirection/TheEssence.md) (the study of what lies under the soul, what Luis's favourite frame teaches, and a proposed language). [StyleStudies.md](ArtDirection/StyleStudies.md) (the earlier Blender studies, not chosen). [WorkerConcepts.md](ArtDirection/WorkerConcepts.md) (the worker's redesign: first concepts, S1d) |
+| [ArtDirection/](ArtDirection/) | **The art direction.** [VisualSoul.md](ArtDirection/VisualSoul.md) (Luis's handoff, and the direction now) and its approved reference images. [TheEssence.md](ArtDirection/TheEssence.md) (the study of what lies under the soul, what Luis's favourite frame teaches, and a proposed language). [StyleStudies.md](ArtDirection/StyleStudies.md) (the earlier Blender studies, not chosen). [TheMiners.md](ArtDirection/TheMiners.md) (the worker's redesign: Small, Long and Round, built from modules, S1d). [WorkerConcepts.md](ArtDirection/WorkerConcepts.md) (their first concepts, superseded) |
 | [Correspondence/](Correspondence/) | Luis's messages, verbatim and dated, with how each was recorded |
 | [Design/](Design/) | Design notes that feed GAME_VISION: the early design brief and the one-worker showcase vision |
 | [Plans/](Plans/) | Completed or superseded milestone plans, archived when replaced |

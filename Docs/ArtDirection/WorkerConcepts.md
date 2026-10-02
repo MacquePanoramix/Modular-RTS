@@ -1,8 +1,13 @@
 # The worker's redesign — first concepts (S1d)
 
 **Made:** October 2, 2026.
-**Status:** Concept frames for Luis to choose a direction. They are not the
-rigged worker.
+**Status:** Superseded by [TheMiners.md](TheMiners.md). Luis ranked these
+Small, then Long, then Round, loved every face, and asked for much higher
+model quality and hints that they are miners
+([correspondence](../Correspondence/2026-10-02_WORKER_CONCEPTS_FEEDBACK.md)).
+- **Kept:** the frames below, as a record.
+- **Removed from the project:** the script, model and capture. They are in
+  the history at commit 3066921.
 **Asked by Luis:** "let's finally move to the player remodel/redesign… Please
 use them to implement this remodelling/redesign with heart and soul" (see
 [the correspondence](../Correspondence/2026-10-02_DUSK_DETAILS_AND_THE_WORKER.md)).

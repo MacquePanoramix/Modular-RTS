@@ -340,7 +340,7 @@ See [Validation.md](../Validation.md) for tests, build and cost.
 
 ### After Luis's test (October 2)
 
-Luis played the build: "Honestly I loved it." His notes and what changed
+Luis played the build: "Honestly I loved it." Luis's notes and what changed
 (verbatim in
 [the correspondence](../Correspondence/2026-10-02_DUSK_DETAILS_AND_THE_WORKER.md)):
 

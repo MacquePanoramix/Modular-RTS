@@ -8,10 +8,10 @@
 - **Latest implementation:** the dusk details over that look (third pass).
   Luis tested them and "loved it", so all three are on by default: fireflies,
   the hearth's flicker and a window glow. Keys 7, 8 and 9 switch each one.
-  After his notes:
+  After Luis's notes:
   - **Fewer fireflies**, with a small painted dot still marking them when the
     camera is far out.
-  - **The lamplight close up** now matches the zoomed-out look he liked.
+  - **The lamplight close up** now matches the zoomed-out look Luis liked.
 
   See [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md#after-luiss-test-october-2);
   build `Builds/WindowsOrdinaryPlace`.
@@ -19,11 +19,18 @@
   are the base art style for every being and thing in the world, not one
   character's costume
   ([VisualSoul.md](ArtDirection/VisualSoul.md#the-language-for-every-being-and-thing)).
-  - **First concepts, for Luis to choose a direction:** three workers, Round,
-    Long and Small. Each has a painted face, a gesture of its own, and a drawn
-    outline. They stand in the Ordinary Place at dusk, by day, at night and
-    from the Strategy camera
-    ([WorkerConcepts.md](ArtDirection/WorkerConcepts.md)).
+  - **The miners (second pass), for Luis's judgment:** Small, Long and Round
+    remade at much higher quality, each with miner's hints
+    ([TheMiners.md](ArtDirection/TheMiners.md)):
+    - **The models.** Real hands, hair in locks, sculpted boots, fitted and
+      painted clothes.
+    - **Miner's hints.** Small carries a lantern, Long leans on a pickaxe,
+      Round wears a lamp cap.
+    - **Built from modules** (body, face, hair, garments, accessories) that
+      fit any body, towards the character creator.
+  - **First concepts:** superseded
+    ([WorkerConcepts.md](ArtDirection/WorkerConcepts.md)). Luis ranked them
+    Small, Long, Round and loved every face.
   - **Beings stay drawn.** A material switch keeps them clear of the paint
     filter. It is off for everything else, so the world's look is unchanged.
 - **Latest experiment, not adopted:** S1e, the essence beyond the surface,
@@ -63,7 +70,24 @@ A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director direction (October 2, evening)
+## Latest Game Director direction (October 2, late evening)
+
+Recorded verbatim in
+[Correspondence/2026-10-02_WORKER_CONCEPTS_FEEDBACK.md](Correspondence/2026-10-02_WORKER_CONCEPTS_FEEDBACK.md):
+
+- **Ranking of the concepts:** Small, then Long, then Round. Luis loved the
+  face of each one, and the idea of every character: distinct, unique, not
+  generic, with soul.
+- **Quality.** All three can be much prettier and more pleasing to look at,
+  with much higher model quality. Keep the stylization.
+- **They are all the miner.** Give each some hints, even small ones.
+- **Maybe a choice of characters** in the final prototype. A possibility, not
+  a decision.
+- **Modular, all the way down.** The final game lets players customize
+  everything, units included, down to appearance, like detailed character
+  creators.
+
+## Game Director direction (October 2, evening)
 
 Recorded verbatim in
 [Correspondence/2026-10-02_DUSK_DETAILS_AND_THE_WORKER.md](Correspondence/2026-10-02_DUSK_DETAILS_AND_THE_WORKER.md):
@@ -76,7 +100,7 @@ Recorded verbatim in
   - Even when very zoomed out, there should still be some sign of them,
     stylized and cheap to render.
 - **The lamplight.** Far away it looked strong and spread onto the terrain;
-  closer in that brightness disappeared. He liked the far look, so the closer
+  closer in that brightness disappeared. Luis liked the far look, so the closer
   view should be adjusted to match it.
 - **Then the worker.** "Let's finally move to the player remodel/redesign",
   using the Visual Soul and the principles for people, "with heart and soul".
@@ -208,11 +232,13 @@ Still valid from September 30:
 1. **Luis checks the dusk fixes** in the build:
    - fewer fireflies, still marked when far out;
    - the lamplight close up.
-2. **Luis chooses a worker direction** from the three concepts (or a mix),
-   and answers the questions in
-   [WorkerConcepts.md](ArtDirection/WorkerConcepts.md#questions-for-luis).
-   Then the chosen direction is refined, rigged on the procedural biped, and
-   proven in motion.
+2. **Luis judges the miners** ([TheMiners.md](ArtDirection/TheMiners.md)):
+   - are they pretty enough now;
+   - what to refine;
+   - whether to offer the choice of three.
+
+   Then the chosen miners are rigged on the procedural biped, given lighter
+   levels of detail, and proven in motion.
 3. **Further explorations are additive and switchable**, and shown early as
    frames before being built out.
 

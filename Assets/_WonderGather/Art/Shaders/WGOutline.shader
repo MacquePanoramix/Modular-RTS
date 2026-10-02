@@ -10,6 +10,7 @@ Shader "Wonder Gather/Outline"
         _Width("Width (pixels at 1080p)", Range(0, 6)) = 1.6
         _Wobble("Wobble", Range(0, 1)) = 0.5
         _MaxWidth("Widest (metres)", Float) = 0.012
+        _Behind("Pushed back (metres), so it shows at silhouettes, not through cloth lying close on top", Float) = 0.035
     }
     SubShader
     {
@@ -31,6 +32,7 @@ Shader "Wonder Gather/Outline"
             float _Width;
             float _Wobble;
             float _MaxWidth;
+            float _Behind;
             CBUFFER_END
 
             struct Attributes { float4 positionOS : POSITION; float3 normalOS : NORMAL; };
@@ -62,6 +64,8 @@ Shader "Wonder Gather/Outline"
                 // The wobble follows the form (object space), so it does not swim as a being moves.
                 float wobble = lerp(1, 0.3 + 1.4 * Noise(input.positionOS.xyz * 14), _Wobble);
                 ws += n * min(_Width * (_ScreenParams.y / 1080.0) * pixel * wobble, _MaxWidth);
+                // Away from the eye: a garment lying a few centimetres over another hides the one beneath's line.
+                ws += normalize(ws - GetCameraPositionWS()) * _Behind;
                 o.positionCS = TransformWorldToHClip(ws);
                 o.fog = ComputeFogFactor(o.positionCS.z);
                 return o;

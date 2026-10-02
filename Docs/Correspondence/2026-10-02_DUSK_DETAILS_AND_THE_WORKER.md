@@ -31,7 +31,7 @@ On the principles for people:
   where the camera looks, which widens as the camera pulls back. Each keeps at
   least a tiny painted dot, so from high above they read as a sparse scatter of
   lights instead of vanishing.
-- **Lamplight close up.** It now matches the zoomed-out look he liked.
+- **Lamplight close up.** It now matches the zoomed-out look Luis liked.
   - **The cause.** From far away the eye sees mostly grass tips, which local
     light lit about twice as strongly as the lower blade. Close up, the darker
     blade bodies, and soil shaded under the grass, hid the warm pool.
