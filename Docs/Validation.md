@@ -1130,3 +1130,43 @@ has the details.
   - **Luis's frame and his screenshot views.** Judged by capture only, not by
     his eye.
   - **Hardware.** Other GPUs were not tried.
+
+## S1d, worker concepts — first frames (October 2)
+
+Luis asked to move to the worker's redesign "with heart and soul", from the
+Visual Soul and its principles for people. Three concepts were made for him to
+choose a direction
+([WorkerConcepts.md](ArtDirection/WorkerConcepts.md)).
+
+- **Environment.** The isolated worktree was reset to 38a51d2. The validated
+  files were then copied into the main project.
+- **Judged in the engine, not only in Blender.** Each pass was rendered in
+  the Ordinary Place (look E) by `WorkerConceptCapture`, and looked at before
+  the next. Fixes along the way:
+  - **First frames.** They read as stiff clay dolls: tube arms, blob hands,
+    tiny dot faces, symmetrical stances. Postures, structured heads, painted
+    faces, shaped hands and hair locks were added.
+  - **Orientation.** The figures came in facing away; a pivot turns them.
+  - **Hair.** It covered the eyes; the hairlines were raised. Locks first
+    stood up like spikes, then read as a hat; they now flow over the skull,
+    and Long's cut is swept to one side.
+  - **Faces vanished in wide frames.** The paint filter wiped out the marks,
+    so the `_Drawn` switch now keeps beings clear of it.
+  - **A dark block on Round's chest.** The skin modifier's branch at the
+    collar turned faces inside-out. A voxel remesh of that mesh then dropped
+    the torso entirely, which confirmed the cause. The torso and arms are now
+    separate chains fused into one closed surface.
+  - **Faces too white by day.** The skin is now a warmer, deeper tone.
+- **Tests.** Full PlayMode suite (111 tests), with `_Drawn`, the paint filter's
+  normals read and the outline in place: passed 111/111 (882.9 s).
+- **The capture after its Editor safety steps.** It was re-run in batch and
+  succeeded. The frames match the earlier ones, apart from the moving
+  fireflies and grass.
+- **Not tested:**
+  - **Motion.** The concepts are posed, not rigged.
+  - **Cost.** The outline's cost was not benchmarked; it is an extra draw of
+    each being's mesh.
+  - **The Editor menu path.** It was run only in batch mode; its scene-safety
+    steps (asking to save, `DontSaveInEditor`, restoring the scene) were not
+    exercised by hand.
+  - **Luis's eye.** These are proposals; nothing is accepted.

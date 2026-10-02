@@ -92,6 +92,8 @@ namespace WonderGather
                     data.Material = material;
                     data.Pass = pass;
                     builder.UseTexture(source);
+                    // The paint filter reads the normals' alpha to leave drawn beings clear.
+                    if (resources.cameraNormalsTexture.IsValid()) builder.UseTexture(resources.cameraNormalsTexture);
                     builder.SetRenderAttachment(destination, 0);
                     builder.SetRenderFunc((BlitData d, RasterGraphContext context) =>
                         Blitter.BlitTexture(context.cmd, d.Source, new Vector4(1, 1, 0, 0), d.Material, d.Pass));

@@ -18,6 +18,7 @@ Shader "Wonder Gather/Painted"
         _Sway("Wind sway", Range(0, 1)) = 0
         _DirectOcclusion("Vertex alpha also shades direct light", Range(0, 1)) = 0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 2
+        [Toggle] _Drawn("Drawn being (kept clear of the paint filter)", Float) = 0
     }
 
     SubShader
@@ -41,6 +42,7 @@ Shader "Wonder Gather/Painted"
             float _Sway;
             float _DirectOcclusion;
             float _Cull;
+            float _Drawn;
         CBUFFER_END
         TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
         ENDHLSL
@@ -281,7 +283,8 @@ Shader "Wonder Gather/Painted"
             half4 NormalsFrag(Varyings input, bool frontFace : SV_IsFrontFace) : SV_Target
             {
                 float3 n = normalize(input.normalWS) * (frontFace ? 1 : -1);
-                return half4(NormalizeNormalPerPixel(n), 0);
+                // The normals' alpha says what a pixel is: 0 the painted world, 1 grass, -1 a drawn being.
+                return half4(NormalizeNormalPerPixel(n), _Drawn > 0.5 ? -1 : 0);
             }
             ENDHLSL
         }

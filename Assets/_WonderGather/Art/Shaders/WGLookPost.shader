@@ -73,7 +73,9 @@ Shader "Hidden/Wonder Gather/Look Post"
                 }
                 result = result / max(1e-4, 1 - result);
                 float3 original = SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_LinearClamp, uv, 0).rgb;
-                return half4(lerp(original, result, saturate(_WG_PostParams.x)), 1);
+                // Drawn beings (normals alpha -1) keep their few marks: only a touch of paint.
+                float drawn = step(SAMPLE_TEXTURE2D_X_LOD(_CameraNormalsTexture, sampler_CameraNormalsTexture, uv, 0).a, -0.5);
+                return half4(lerp(original, result, saturate(_WG_PostParams.x) * (1 - drawn * 0.85)), 1);
             }
             ENDHLSL
         }

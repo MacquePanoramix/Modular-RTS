@@ -719,3 +719,46 @@ described here so it can be revived piece by piece.
     `0.5 + 1.6·h`), so the blade bodies take nearly as much warm light as the
     tips.
   - Together they keep the warm pool the same near and far.
+
+## Worker concepts (S1d) — October 2
+
+- **Source.** `Art/Blender/Worker/worker_concepts.py` builds three concept
+  figures (Round, Long, Small) and paints their faces.
+  - **Writes:** `Assets/_WonderGather/Art/Worker/Concepts/Workers.fbx`, and
+    `Face_<Concept>.png` beside it.
+  - **Bodies.** Joint skeletons with the skin modifier. The torso and each
+    arm are separate chains, fused by a voxel remesh into one closed surface:
+    a single skin-modifier branch at the collar produced inside-out faces when
+    the shoulders sat below it.
+  - **Heads, hands and hair.** Metaballs, with oriented ellipsoids.
+  - **Faces.** Brush strokes painted with numpy into a 1024² texture, projected
+    from the front in the head's own frame. Vertices facing backwards map to
+    a plain corner, so no mark shows on the back of the head.
+  - **Materials.** Named per concept (`Skin_Round`…) and per cloth.
+- **`WorkerConceptCapture`** (Editor).
+  - **Import.** It imports the FBX, remapping its materials onto painted
+    materials in `Materials/WorkerConcepts`. Each skin material carries its
+    painted face as `_BaseMap`, with a white base colour.
+  - **Setup.** It adds `Outline.mat` as an extra material on every part, then
+    opens the Ordinary Place in look E with the worker hidden, and stands the
+    three on the path.
+  - **Output.** It renders the line-up at dusk, by day and at night, the
+    Strategy height, and portraits.
+  - **In the Editor** it asks before leaving a modified scene, and keeps the
+    figures out of the saved scene (`DontSaveInEditor`). It restores the worker,
+    hour and look afterwards, and leaves the figures standing to look at.
+- **`WGOutline.shader`.** A drawn contour as an inverted hull (back faces
+  pushed out along the normals).
+  - **Width.** About 1.6 pixels at 1080p near or far, capped at 1.2 cm.
+  - **Wobble.** It varies with object-space noise, so it does not swim as a
+    being moves.
+  - **Pass.** It renders in URP's `SRPDefaultUnlit` pass (depth priming is off
+    in this project's renderer).
+- **`_Drawn` on `WGPainted`.** A toggle, off by default.
+  - **When on.** The DepthNormals pass writes −1 into the normals' alpha:
+    0 is the painted world, 1 is grass.
+  - **Paint filter.** It reads that alpha and applies only 15% of its strength
+    to drawn beings, so painted faces keep their marks.
+  - **Ink.** It still draws on beings, since `1 - saturate(-1)` is 1.
+  - **`LookPostEffects`.** The paint pass now declares the normals texture
+    when it is valid.

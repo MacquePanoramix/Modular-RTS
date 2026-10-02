@@ -15,10 +15,17 @@
 
   See [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md#after-luiss-test-october-2);
   build `Builds/WindowsOrdinaryPlace`.
-- **Now starting:** S1d, the worker's redesign, from the Visual Soul. Its
-  principles are the base art style for every being and thing in the world,
-  not one character's costume. See
-  [VisualSoul.md](ArtDirection/VisualSoul.md#the-language-for-every-being-and-thing).
+- **Now:** S1d, the worker's redesign, from the Visual Soul. Its principles
+  are the base art style for every being and thing in the world, not one
+  character's costume
+  ([VisualSoul.md](ArtDirection/VisualSoul.md#the-language-for-every-being-and-thing)).
+  - **First concepts, for Luis to choose a direction:** three workers, Round,
+    Long and Small. Each has a painted face, a gesture of its own, and a drawn
+    outline. They stand in the Ordinary Place at dusk, by day, at night and
+    from the Strategy camera
+    ([WorkerConcepts.md](ArtDirection/WorkerConcepts.md)).
+  - **Beings stay drawn.** A material switch keeps them clear of the paint
+    filter. It is off for everything else, so the world's look is unchanged.
 - **Latest experiment, not adopted:** S1e, the essence beyond the surface,
   first iteration ([TheEssencePlaytest.md](Playtests/TheEssencePlaytest.md)).
   After seeing its captures, Luis preferred the hand-painted pass. Its code is
@@ -201,8 +208,11 @@ Still valid from September 30:
 1. **Luis checks the dusk fixes** in the build:
    - fewer fireflies, still marked when far out;
    - the lamplight close up.
-2. **S1d, the worker model**, in the hand-painted language. It starts with a
-   few quick concept frames, shown early, for Luis to choose a direction.
+2. **Luis chooses a worker direction** from the three concepts (or a mix),
+   and answers the questions in
+   [WorkerConcepts.md](ArtDirection/WorkerConcepts.md#questions-for-luis).
+   Then the chosen direction is refined, rigged on the procedural biped, and
+   proven in motion.
 3. **Further explorations are additive and switchable**, and shown early as
    frames before being built out.
 
