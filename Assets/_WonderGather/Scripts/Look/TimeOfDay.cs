@@ -45,6 +45,7 @@ namespace WonderGather
         [SerializeField] private Palette[] palettes = DefaultPalettes();
 
         public float Hour { get => hour; set { hour = Mathf.Repeat(value, 24); Apply(); } }
+        public Color GlowEmission => glowColor * glowIntensity;
         public float MinutesPerSecond { get => minutesPerSecond; set => minutesPerSecond = value; }
 
         public void Configure(Light light, Material skyMaterial, Material glowMaterial, Light[] warmLights)
@@ -181,26 +182,25 @@ namespace WonderGather
             Shader.SetGlobalVector("_WG_Wind", new Vector4(wind.x, wind.y, wind.z, gustSpeed));
             Shader.SetGlobalVector("_WG_LightPool", new Vector4(.75f, 1, 0, 0));
 
-            if (sky != null)
-            {
-                sky.SetColor("_Zenith", p.Zenith);
-                sky.SetColor("_Horizon", p.Horizon);
-                sky.SetColor("_Glow", p.Glow);
-                sky.SetFloat("_GlowStrength", p.GlowStrength);
-                sky.SetColor("_Below", p.Below);
-                sky.SetVector("_SunDirection", sun);
-                sky.SetColor("_SunColor", p.Light * Mathf.Lerp(.2f, 1, sunUp));
-                sky.SetVector("_MoonDirection", moon);
-                sky.SetFloat("_MoonVisibility", MoonVisibility(hour));
-                sky.SetFloat("_Stars", p.Stars);
-                sky.SetFloat("_Galaxy", p.Stars * .45f);
-                sky.SetColor("_CloudLit", p.CloudLit);
-                sky.SetColor("_CloudShade", p.CloudShade);
-                sky.SetColor("_CloudEdge", p.CloudEdge);
-                sky.SetFloat("_CloudCover", p.CloudCover);
-                sky.SetFloat("_Exposure", p.Exposure);
-                RenderSettings.skybox = sky;
-            }
+            // Sky values go out as globals. Colours are converted from sRGB here, as Material.SetColor would,
+            // so neither the sky nor the glow material asset changes as time passes.
+            Shader.SetGlobalColor("_WG_SkyZenith", (p.Zenith).linear);
+            Shader.SetGlobalColor("_WG_SkyHorizon", (p.Horizon).linear);
+            Shader.SetGlobalColor("_WG_SkyGlow", (p.Glow).linear);
+            Shader.SetGlobalFloat("_WG_SkyGlowStrength", p.GlowStrength);
+            Shader.SetGlobalColor("_WG_SkyBelow", (p.Below).linear);
+            Shader.SetGlobalVector("_WG_SunDirection", sun);
+            Shader.SetGlobalColor("_WG_SunColor", (p.Light * Mathf.Lerp(.2f, 1, sunUp)).linear);
+            Shader.SetGlobalVector("_WG_MoonDirection", moon);
+            Shader.SetGlobalFloat("_WG_MoonVisibility", MoonVisibility(hour));
+            Shader.SetGlobalFloat("_WG_Stars", p.Stars);
+            Shader.SetGlobalFloat("_WG_Galaxy", p.Stars * .45f);
+            Shader.SetGlobalColor("_WG_CloudLit", (p.CloudLit).linear);
+            Shader.SetGlobalColor("_WG_CloudShade", (p.CloudShade).linear);
+            Shader.SetGlobalColor("_WG_CloudEdge", (p.CloudEdge).linear);
+            Shader.SetGlobalFloat("_WG_CloudCover", p.CloudCover);
+            Shader.SetGlobalFloat("_WG_SkyExposure", p.Exposure);
+            if (sky != null && RenderSettings.skybox != sky) RenderSettings.skybox = sky;
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = p.AmbientSky;
             RenderSettings.ambientEquatorColor = Color.Lerp(p.AmbientSky, p.AmbientGround, .5f);
@@ -224,7 +224,9 @@ namespace WonderGather
                 houseLights[i].intensity = baseIntensity * p.HouseLights;
                 houseLights[i].enabled = p.HouseLights > .01f;
             }
-            if (glow != null) glow.SetColor("_EmissionColor", glowColor * (glowIntensity * Mathf.Max(.08f, p.HouseLights)));
+            // The glow material keeps a fixed emission (GlowEmission); the time of day only scales it.
+            // The 2.2 power matches what scaling the colour before its sRGB conversion used to do.
+            Shader.SetGlobalFloat("_WG_GlowScale", Mathf.Pow(Mathf.Max(.08f, p.HouseLights), 2.2f));
         }
 
         private void OnDisable() => Shader.SetGlobalVector("_WG_Sky", Vector4.zero);

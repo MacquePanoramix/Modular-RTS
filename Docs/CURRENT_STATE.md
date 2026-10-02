@@ -1,26 +1,33 @@
 # Wonder Gather — Current State
 
-**Updated:** October 1, 2026.
+**Updated:** October 2, 2026.
 
-- **Latest implementation:** the grounded body (roadmap stage S0, formerly
-  Strength and Burden checkpoint A), plus the arrival fix. Luis judged the
-  walk "much better".
-- **Current step:** S1 revised, the Ordinary Place and two cameras
-  ([NextMilestonePlan.md](NextMilestonePlan.md)):
-  - Luis set aside the Blender style studies and supplied the
-    [Visual Soul](ArtDirection/VisualSoul.md) art direction.
-  - He asked for a Strategy camera plus a free Explore camera.
-  - S1a (two cameras) is built and tested, and waiting for his playtest
-    ([TwoCamerasPlaytest.md](Playtests/TwoCamerasPlaytest.md)). The build is
-    `Builds/WindowsTwoCameras`.
-  - S1b/S1c (the Ordinary Place) has its first in-engine pass:
-    - a lit house, grassland, path, trees, sky and time of day;
-    - five rendering candidates that switch live;
-    - matched captures beside the references, and measured costs.
-
-    See [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md); the build is
-    `Builds/WindowsOrdinaryPlace`. It waits for Luis's judgment of direction
-    and candidates.
+- **The base look:** the hand-painted pass (S1c, second pass) in look E,
+  build `Builds/WindowsOrdinaryPlace`. Luis's favourite frame is from it: the
+  lit house at dusk, seen from low on the path.
+- **Latest experiment, not adopted:** S1e, the essence beyond the surface,
+  first iteration ([TheEssencePlaytest.md](Playtests/TheEssencePlaytest.md)).
+  After seeing its captures, Luis preferred the hand-painted pass. Its code is
+  kept on the branch `claude/essence-exploration`. It contained:
+  - **The world beyond the meadow:**
+    - a bluff over a still lake that mirrors monumental clouds and mountains;
+    - a water horizon, layered ranges and a snow peak;
+    - aerial perspective, cloud shadows and a luminous daylight palette.
+  - **Look F:**
+    - a painting pass whose strokes follow the forms;
+    - ink on characters only;
+    - the hour's palette;
+    - seeds and fireflies in the air.
+  - **The research.** [TheEssence.md](ArtDirection/TheEssence.md) holds the
+    study of Luis's references and the proposed language unique to Wonder
+    Gather. It also reads what Luis's favourite frame teaches about his taste:
+    intimacy, the lit house at dusk, a soft brushed sky, enclosure and a tonal
+    palette, rather than vastness and brightness.
+- **Earlier steps:**
+  - **S0 (the grounded body), S1a (two cameras) and S1b/S1c (the Ordinary
+    Place, first pass)** are in `main`.
+  - **The S1c second pass (hand-painted surfaces)** is on the branch. Luis
+    found it "already quite beautiful", but not yet the emotion he seeks.
 - **Overall plan:** [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
 
 ## What the project is building now
@@ -35,7 +42,30 @@ A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director feedback (October 1, night)
+## Latest Game Director direction (October 2)
+
+Recorded verbatim in
+[Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md](Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md):
+
+- **The hand-painted pass.** It is "already quite beautiful" and matches much
+  of his taste, but is not perfect yet. He would rather explore further than
+  stop.
+- **The aim.** "The breath-taking out of this world emotion": the stylistic and
+  artistic essence, not the surface; "the image from my mind's eye straight out
+  of a dream". He sent seven Ghibli film references, which are described but
+  not committed.
+- **Every frame a painting.** The rendering style, not only the environment,
+  should make any frame beautiful and driven by light, while the game still
+  runs well as a modular RTS.
+- **Unique.** The Visual Soul PDF is the artistic soul. The result must go
+  above and beyond it, unique to Wonder Gather: "My soul game and style."
+- **Time.** A long checkpoint with research is welcome.
+- **The verdict.** After seeing the first iteration, Luis said "honestly I think
+  I like the before better", with his favourite frame from the hand-painted
+  pass. The hand-painted pass stays the base. S1e's first iteration is
+  archived, not adopted.
+
+## Earlier Game Director feedback (October 1, night)
 
 Recorded verbatim in
 [Correspondence/2026-10-01_ORDINARY_PLACE_FEEDBACK.md](Correspondence/2026-10-01_ORDINARY_PLACE_FEEDBACK.md):
@@ -128,10 +158,14 @@ Still valid from September 30:
 
 ## Recommended next action
 
-1. **S1c, second pass: hand-painted surfaces.** Paint the Ordinary Place's
-   models with procedurally painted textures from their Blender scripts, on
-   top of look E ([plan](NextMilestonePlan.md)).
-2. **S1d, the worker model**, in that language.
+1. **Luis chooses the next step from the hand-painted pass:**
+   - whether to merge it into `main`;
+   - whether any S1e piece should come back as an option over it (fireflies at
+     dusk, composed viewpoints, look F as an extra look);
+   - or whether to move on to S1d.
+2. **Further explorations are additive and switchable**, and shown early as
+   frames before being built out.
+3. **S1d, the worker model**, in the hand-painted language.
 
 Luis's other choices on October 1:
 

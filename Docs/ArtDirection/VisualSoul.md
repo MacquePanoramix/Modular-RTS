@@ -12,7 +12,11 @@ ChatGPT and handed over on October 1, 2026
   none of which was chosen.
 
 The handoff's text is transcribed in the first three sections below (only its
-headings were shortened). "How we translate it" is the engineering reading
+headings were shortened).
+
+On October 2 Luis asked to go "above and beyond" this soul, to a style unique
+to Wonder Gather. The study that followed, and the language it proposes, are
+in [TheEssence.md](TheEssence.md). "How we translate it" is the engineering reading
 of it: hypotheses to test in the engine, not decisions.
 
 ## The confirmed core

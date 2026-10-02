@@ -477,6 +477,11 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-10-01 | Camera defaults (C1–C4) | Accepted | `V` toggle, orders in Explore, Unity-style fly plus Blender-style orbit, buildings solid without interiors | Later playtests |
 | 2026-10-01 | Project organization | Working agreement, reaffirmed | Everything, including documentation, goes to GitHub, in a very organized structure (see Docs/README.md) | — |
 | 2026-10-01 | S1 sequence | Revised from Luis's handoff | Cameras first (S1a), then the Ordinary Place (house, grassland, path, worker; day and night, S1b), rendering candidates compared in engine (S1c), then the worker model (S1d) | Playtest of each checkpoint |
+| 2026-10-02 | Hand-painted pass | Judged by Luis | "Already quite beautiful… I can't exactly call it perfect yet"; explore further rather than stop | S1e |
+| 2026-10-02 | The essence (S1e) | Direction, asked by Luis | Seek the breathtaking, out-of-this-world emotion and the stylistic essence, not the surface. Every frame a painting driven by light, while the RTS still runs well. A style above and beyond the Visual Soul, unique to Wonder Gather. A long checkpoint with research is welcome | Luis's playtests of each S1e iteration |
+| 2026-10-02 | S1e first iteration (the beyond, look F) | Not adopted | Luis: "honestly I think I like the before better". His favourite frame: the lit house at dusk from low on the path, in look E. The hand-painted pass stays the base; the experiment is archived on `claude/essence-exploration` | — |
+| 2026-10-02 | Exploration process | Working agreement (Claude's lesson) | Explorations are added as switchable options beside what Luis loves, never replacing it, and shown early as frames | — |
+| 2026-10-02 | Wonder Gather's own language | Proposed, not Locked | Thesis "warm lives, drawn by hand, in a breathing painted world that is always bigger than the frame", seven signature devices and a frame test ([TheEssence.md](ArtDirection/TheEssence.md)) | Luis's choice of devices |
 
 Add future entries with the decision, its status, the evidence behind it, and what kind of playtest or new requirement would justify revisiting it.
 

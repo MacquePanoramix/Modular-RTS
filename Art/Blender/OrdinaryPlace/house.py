@@ -524,13 +524,25 @@ def preview(path):
     bpy.ops.render.render(write_still=True)
 
 
+def paint_scene(folder):
+    """Paints every material in the scene into textures in the given folder (see painting.py)."""
+    import os
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import painting
+    os.makedirs(folder, exist_ok=True)
+    return painting.paint([o for o in bpy.context.scene.objects if o.type == 'MESH'], folder)
+
+
 if __name__ == "__main__":
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     parser = argparse.ArgumentParser()
     parser.add_argument("--fbx")
     parser.add_argument("--preview")
+    parser.add_argument("--paint", help="folder for painted textures (one JPEG per material)")
     args = parser.parse_args(argv)
     build()
+    if args.paint:
+        paint_scene(args.paint)
     if args.fbx:
         export_fbx(args.fbx)
     if args.preview:

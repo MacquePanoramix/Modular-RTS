@@ -16,6 +16,7 @@ float4 _WG_FogShape;    // x: start distance, y: maximum opacity, z: base height
 float4 _WG_Paint;       // x: colour variation, y: brush break of light edges, z: brush scale, w: baseline (1 = plain Lambert)
 float4 _WG_Wind;        // xy: direction, z: strength, w: gust speed
 float4 _WG_LightPool;   // x: pool softness of local lights, y: warm boost of local lights
+float _WG_GlowScale;    // how lit the house's windows are (0..1), set by TimeOfDay
 
 // ---------------------------------------------------------------------------
 // Noise

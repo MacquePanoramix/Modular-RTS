@@ -25,29 +25,30 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _CloudCover: 0.45456046
+    - _CloudCover: 0.46
     - _CloudOpacity: 0.9
     - _CloudScale: 2.2
     - _CloudSoftness: 0.12
     - _CloudSpeed: 0.004
-    - _Exposure: 1.1067994
-    - _Galaxy: 0.08722766
-    - _GlowStrength: 0.77280235
+    - _Exposure: 1
+    - _Galaxy: 0
+    - _GlowStrength: 0.12
     - _MoonPhase: 0.65
     - _MoonSize: 0.035
-    - _Stars: 0.19383924
+    - _MoonVisibility: 0
+    - _Stars: 0
     - _SunSize: 0.02
     m_Colors:
-    - _Below: {r: 0.05160029, g: 0.05728023, b: 0.087280236, a: 1}
-    - _CloudEdge: {r: 0.7614424, g: 0.4918407, b: 0.5022389, a: 1}
-    - _CloudLit: {r: 0.82096165, g: 0.5802404, b: 0.61111945, a: 1}
-    - _CloudShade: {r: 0.24320059, g: 0.24592035, b: 0.4404808, a: 1}
-    - _Glow: {r: 0.9148009, g: 0.48271978, b: 0.4249587, a: 1}
-    - _Horizon: {r: 0.71008253, g: 0.51456046, b: 0.56223893, a: 1}
+    - _Below: {r: 0.16, g: 0.19, b: 0.15, a: 1}
+    - _CloudEdge: {r: 1, g: 0.97, b: 0.9, a: 1}
+    - _CloudLit: {r: 1, g: 0.98, b: 0.94, a: 1}
+    - _CloudShade: {r: 0.6, g: 0.67, b: 0.78, a: 1}
+    - _Glow: {r: 1, g: 0.94, b: 0.82, a: 1}
+    - _Horizon: {r: 0.8, g: 0.87, b: 0.9, a: 1}
     - _MoonColor: {r: 0.85, g: 0.88, b: 1, a: 1}
-    - _MoonDirection: {r: 0.45198435, g: 0.61566144, b: -0.6455005, a: 0}
-    - _SunColor: {r: 0.1716003, g: 0.118815936, b: 0.11971151, a: 0.2}
-    - _SunDirection: {r: -0.91389817, g: -0.27679303, b: 0.29694378, a: 0}
-    - _Zenith: {r: 0.21888053, g: 0.25296018, b: 0.5232006, a: 1}
+    - _MoonDirection: {r: -0.061592717, g: -0.707518, b: 0.7040062, a: 0}
+    - _SunColor: {r: 1, g: 0.93, b: 0.8, a: 1}
+    - _SunDirection: {r: 0.35334772, g: 0.707518, b: -0.6120161, a: 0}
+    - _Zenith: {r: 0.26, g: 0.48, b: 0.84, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
