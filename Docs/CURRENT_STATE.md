@@ -5,13 +5,20 @@
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.
-- **Latest implementation:** the dusk details over that look (third pass):
-  - fireflies, on by default as Luis asked;
-  - the hearth's flicker and a window glow, off until he has judged them;
-  - keys 7, 8 and 9 switch each one.
+- **Latest implementation:** the dusk details over that look (third pass).
+  Luis tested them and "loved it", so all three are on by default: fireflies,
+  the hearth's flicker and a window glow. Keys 7, 8 and 9 switch each one.
+  After his notes:
+  - **Fewer fireflies**, with a small painted dot still marking them when the
+    camera is far out.
+  - **The lamplight close up** now matches the zoomed-out look he liked.
 
-  See [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md#third-pass-dusk-details-october-2);
+  See [OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md#after-luiss-test-october-2);
   build `Builds/WindowsOrdinaryPlace`.
+- **Now starting:** S1d, the worker's redesign, from the Visual Soul. Its
+  principles are the base art style for every being and thing in the world,
+  not one character's costume. See
+  [VisualSoul.md](ArtDirection/VisualSoul.md#the-language-for-every-being-and-thing).
 - **Latest experiment, not adopted:** S1e, the essence beyond the surface,
   first iteration ([TheEssencePlaytest.md](Playtests/TheEssencePlaytest.md)).
   After seeing its captures, Luis preferred the hand-painted pass. Its code is
@@ -49,7 +56,28 @@ A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director direction (October 2)
+## Latest Game Director direction (October 2, evening)
+
+Recorded verbatim in
+[Correspondence/2026-10-02_DUSK_DETAILS_AND_THE_WORKER.md](Correspondence/2026-10-02_DUSK_DETAILS_AND_THE_WORKER.md):
+
+- **The dusk details.** "Honestly I loved it." Leave all of them on by
+  default.
+- **Fireflies.**
+  - Fewer of them. Near the ground they went "from gentle wonder inducing to a
+    bit overwhelming".
+  - Even when very zoomed out, there should still be some sign of them,
+    stylized and cheap to render.
+- **The lamplight.** Far away it looked strong and spread onto the terrain;
+  closer in that brightness disappeared. He liked the far look, so the closer
+  view should be adjusted to match it.
+- **Then the worker.** "Let's finally move to the player remodel/redesign",
+  using the Visual Soul and the principles for people, "with heart and soul".
+- **For every being and thing.** The scarf was only one of the examples. The
+  Visual Soul's principles are the base art style for all beings and things in
+  the world, across every kind of unit.
+
+## Game Director direction (October 2, afternoon)
 
 Recorded verbatim in
 [Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md](Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md):
@@ -170,10 +198,11 @@ Still valid from September 30:
 
 ## Recommended next action
 
-1. **Luis judges the dusk details** in the build: are 8 (the hearth) and 9
-   (the window glow) worth keeping on?
+1. **Luis checks the dusk fixes** in the build:
+   - fewer fireflies, still marked when far out;
+   - the lamplight close up.
 2. **S1d, the worker model**, in the hand-painted language. It starts with a
-   few quick concept frames, shown early.
+   few quick concept frames, shown early, for Luis to choose a direction.
 3. **Further explorations are additive and switchable**, and shown early as
    frames before being built out.
 

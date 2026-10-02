@@ -46,6 +46,7 @@ namespace WonderGather.Tests
         [UnityTest] public IEnumerator TheHearthFlickersOnlyWhenSwitchedOn()
         {
             var interior = Object.FindObjectsByType<Light>().First(x => x.name == "Interior light");
+            Assert.That(time.Hearth, Is.True, "Luis keeps the hearth on.");
             time.Hour = 23;
             time.Hearth = false;
             var calm = new List<float>();
@@ -56,7 +57,7 @@ namespace WonderGather.Tests
             for (int i = 0; i < 40; i++) { yield return new WaitForSeconds(.05f); fire.Add(interior.intensity); }
             Assert.That(fire.Max() - fire.Min(), Is.GreaterThan(.05f * calm[0]), "With the hearth the light should breathe.");
             Assert.That(fire.Min(), Is.GreaterThan(.5f * calm[0]), "The fire should flicker gently, never go out.");
-            time.Hearth = false;
+            time.Hearth = true;
         }
 
         [Test] public void TheWindowGlowHasAHaloForEachWindowAndTheDoor()
@@ -64,7 +65,7 @@ namespace WonderGather.Tests
             var glow = Object.FindAnyObjectByType<WindowGlow>(FindObjectsInactive.Include);
             Assert.That(glow, Is.Not.Null);
             Assert.That(glow.Count, Is.EqualTo(4), "Three windows and the door.");
-            Assert.That(look.WindowGlowOn, Is.False, "The glow waits for Luis's judgment, off by default.");
+            Assert.That(look.WindowGlowOn, Is.True, "Luis keeps the window glow on.");
         }
 
         [Test] public void EachDuskDetailSwitchesIndependently()

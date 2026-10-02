@@ -683,24 +683,39 @@ described here so it can be revived piece by piece.
 
 ## Dusk details (S1c, third pass) — October 2
 
-- **`Fireflies`.** About 1,100 GPU quads in a box that follows each camera
-  (`WGFireflies.shader`).
+- **`Fireflies`.** 600 GPU quads (`WGFireflies.shader`), on a patch of meadow
+  around where each camera looks.
+  - **The patch** is centred where the view ray meets the ground (at most
+    200 m out). Its radius is 22 m close up and widens with the camera's
+    distance, up to 75 m. `_WG_FireflyVolume.w` carries it to the shader,
+    which fades the patch's rim.
   - **Presence** follows the sun's height: none by day, all after sunset.
   - **Near the camera** they fade and shrink.
+  - **Far away** each keeps a minimum size of about 1.6 pixels, made a little
+    brighter while it is held there, so they read as a sparse scatter instead
+    of vanishing.
 - **The hearth.** `TimeOfDay.Hearth` flickers every house light with one
   shared fire noise (the lantern with its own candle noise).
   - It also scales `_WG_GlowScale` by part of that flicker, so the windows'
     emission breathes with it.
-  - It is off by default.
+  - It is on by default.
 - **`WindowGlow`.** It draws a soft additive halo just outside the door and
   window lights (`WGWindowGlow.shader`).
   - The halos are pushed out along each light's horizontal direction.
   - Each halo is faded by scene depth where it meets geometry, and as the
     camera comes close.
-  - It follows `_WG_GlowScale`, and is disabled by default.
+  - It follows `_WG_GlowScale`, and is on by default.
 - **Switches.** `LookDevControls.SetDusk` and keys 7, 8 and 9 switch the
   three. `OrdinaryPlaceSetup.AddDuskDetails` adds them to the scene in place
   and can run again.
 - **Captures.** `OrdinaryPlaceCapture -captureSet dusk` recreates Luis's
   favourite frame (look E, 19:12, low on the path, 1600×670) and the doorway
   at night, with each detail off and on.
+- **Lamplight in the grass.** Local lights (house, lantern) are applied
+  separately from the main light.
+  - **`WGPainted`.** Local lights apply only 35% of the vertex-colour occlusion
+    that the sun and moon get, so lamplight reaches the soil under the grass.
+  - **`WGGrass`.** Local light on a blade scales with `1.05 + 1.05·h` (it was
+    `0.5 + 1.6·h`), so the blade bodies take nearly as much warm light as the
+    tips.
+  - Together they keep the warm pool the same near and far.

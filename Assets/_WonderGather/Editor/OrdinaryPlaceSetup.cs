@@ -432,8 +432,8 @@ namespace WonderGather.Editor
         }
 
         // The dusk details over the hand-painted look, each switchable in Play (keys 7, 8, 9):
-        // fireflies (on, as Luis asked), the hearth's flicker and the window glow (off until he
-        // has seen them). Updates the existing scene in place and can run again.
+        // fireflies, the hearth's flicker and the window glow, all on since Luis tried them.
+        // Updates the existing scene in place and can run again.
         [MenuItem("Wonder Gather/Add The Dusk Details To The Ordinary Place")]
         public static void AddDuskDetails()
         {
@@ -446,16 +446,20 @@ namespace WonderGather.Editor
             var flies = time.GetComponent<Fireflies>() ?? time.gameObject.AddComponent<Fireflies>();
             flies.Configure(MaterialFor("Fireflies", "Wonder Gather/Fireflies"), time);
             flies.enabled = true;
+            // Gentler than at first: Luis found them a little many near the ground.
+            var swarm = new SerializedObject(flies);
+            swarm.FindProperty("count").intValue = 600;
+            swarm.ApplyModifiedPropertiesWithoutUndo();
 
             var windows = house.GetComponentsInChildren<Light>(true)
                 .Where(x => x.name.StartsWith("Door") || x.name.Contains("Window")).ToList();
             if (windows.Count < 3) throw new InvalidOperationException("The house's window and door lights were not found.");
             var glow = time.GetComponent<WindowGlow>() ?? time.gameObject.AddComponent<WindowGlow>();
             glow.Configure(MaterialFor("Window glow", "Wonder Gather/Window Glow"), windows);
-            glow.enabled = false;
+            glow.enabled = true;
 
             var hearth = new SerializedObject(time);
-            hearth.FindProperty("hearth").boolValue = false;
+            hearth.FindProperty("hearth").boolValue = true;
             hearth.ApplyModifiedPropertiesWithoutUndo();
             look.ConfigureDusk(flies, glow);
             foreach (var item in new Object[] { flies, glow, time, look }) EditorUtility.SetDirty(item);

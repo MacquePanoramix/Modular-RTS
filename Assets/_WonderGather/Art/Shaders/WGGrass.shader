@@ -192,8 +192,9 @@ Shader "Wonder Gather/Grass"
                     #endif
                     LIGHT_LOOP_BEGIN(lightCount)
                         Light light = GetAdditionalLight(lightIndex, positionWS, shadowMask);
-                        // Local warm light catches the tips most of all.
-                        direct += WG_Direct(s, light, true) * (0.5 + h * 1.6);
+                        // Local warm light catches the tips most of all, and reaches well down the blades,
+                        // so the lamp's pool reads the same up close as from far away (where tips dominate).
+                        direct += WG_Direct(s, light, true) * (1.05 + h * 1.05);
                     LIGHT_LOOP_END
                 #endif
 

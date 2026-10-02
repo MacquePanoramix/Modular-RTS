@@ -150,7 +150,9 @@ Shader "Wonder Gather/Painted"
                 #endif
 
                 Light mainLight = GetMainLight(inputData.shadowCoord, positionWS, shadowMask);
-                float3 direct = WG_Direct(s, mainLight, false);
+                // Ground under dense grass sits in the blades' shade from the sun and moon...
+                float3 direct = WG_Direct(s, mainLight, false) * lerp(1, input.color.a, _DirectOcclusion);
+                float3 local = 0;
 
                 #if defined(_ADDITIONAL_LIGHTS)
                     uint lightCount = GetAdditionalLightsCount();
@@ -163,12 +165,13 @@ Shader "Wonder Gather/Painted"
                     #endif
                     LIGHT_LOOP_BEGIN(lightCount)
                         Light light = GetAdditionalLight(lightIndex, positionWS, shadowMask);
-                        direct += WG_Direct(s, light, true);
+                        local += WG_Direct(s, light, true);
                     LIGHT_LOOP_END
                 #endif
 
-                // Ground under dense grass sits in the blades' shade.
-                direct *= lerp(1, input.color.a, _DirectOcclusion);
+                // ...but lamplight from the house falls low between the blades and reaches the soil, so
+                // its warm pool reads the same up close as from far away.
+                direct += local * lerp(1, input.color.a, _DirectOcclusion * 0.35);
                 float3 color = WG_Compose(s, direct, WG_Ambient(n));
                 color += _EmissionColor.rgb * (WG_LookActive() ? _WG_GlowScale : 1);
                 color = WG_ApplyFog(color, positionWS, input.fogCoord);

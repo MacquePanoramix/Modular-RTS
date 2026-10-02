@@ -1083,3 +1083,50 @@ has the details.
     watched by eye.
   - **Play by hand.** Interactive play in the build was not tried.
   - **Hardware.** Other GPUs were not tried.
+
+## S1c, third pass — after Luis's test (October 2)
+
+Luis tested the dusk details and asked for:
+- all three on by default;
+- fewer fireflies, with some sign of them even when very zoomed out;
+- the lamplight close up matching the far look he liked.
+
+[OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md#after-luiss-test-october-2)
+has the details.
+
+- **Environment.** The isolated worktree was reset to 8b79de9. The validated
+  files were then copied into the main project.
+- **Finding the cause of the lamplight.** The scene was captured near, at
+  middle distance and far at 23:00. Each was captured three ways: as it is,
+  with bloom off, and with the grass at full density.
+  - Bloom was not the cause.
+  - Far away the eye sees mostly grass tips, which local light lit at
+    `0.5 + 1.6·h` (twice the lower blade).
+  - Close up, the darker blade bodies, and the soil under them (occluded by
+    the grass's vertex colour, like the sun), hid the warm pool.
+  - After the fix, the near capture shows the warm pool the far one does. The
+    far capture is unchanged.
+- **Fireflies far out.** Captured at three zooms at night: a sparse scatter
+  of dots stays visible when zoomed out.
+- **Tests.**
+  - `DuskDetailsTests` now checks that the hearth and window glow are on by
+    default.
+  - **Full PlayMode suite (111 tests):** two runs, both passed 111/111
+    (902.4 s and 877.5 s).
+  - The gait test that failed once in the previous entry passed in both runs.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Benchmark.** GPU ms at 1920×1080 on the RTX 4060 Laptop, now with all
+  three details on:
+
+  | | Day | Night |
+  |---|---|---|
+  | Look E | 4.5–5.1 | 5.3–5.7 |
+
+  This is slightly lower than the previous entry (4.9–5.6 by day, 5.7–5.8 at
+  night, with fireflies on and the hearth and glow off). The fewer fireflies
+  more than pay for the hearth and the glow.
+- **Not tested:**
+  - **Play by hand.** Interactive play in the build was not tried.
+  - **Luis's frame and his screenshot views.** Judged by capture only, not by
+    his eye.
+  - **Hardware.** Other GPUs were not tried.

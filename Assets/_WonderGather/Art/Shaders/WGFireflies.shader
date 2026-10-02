@@ -1,6 +1,7 @@
 // Wonder Gather fireflies: at dusk and night they drift and blink low over the meadow, warm
 // green-gold. Drawn by Fireflies as camera-facing quads; all motion is computed on the GPU in a
-// box that follows the camera, so the meadow is equally alive wherever the eye goes.
+// patch of meadow around where the camera looks, so it is alive wherever the eye goes. From far
+// above each keeps at least a tiny painted dot, so they never simply vanish.
 Shader "Wonder Gather/Fireflies"
 {
     Properties
@@ -34,7 +35,7 @@ Shader "Wonder Gather/Fireflies"
                 float4 _Colour;
             CBUFFER_END
 
-            float4 _WG_FireflyVolume;   // xyz: centre of the box around the camera, w: half-size (m)
+            float4 _WG_FireflyVolume;   // xyz: centre of the patch where the camera looks, w: half-size (m)
             float4 _WG_FireflyShape;    // x: how many are out (0..1, by the hour), y: height of the meadow floor
 
             struct Varyings
@@ -70,13 +71,20 @@ Shader "Wonder Gather/Fireflies"
                 float3 view = p - _WorldSpaceCameraPos;
                 float dist = length(view);
                 // A slow blink; only some are lit at any moment.
-                float blink = smoothstep(0.55, 1, sin(t * lerp(0.6, 1.4, seed.x) + fid * 7.1) * 0.5 + 0.5);
-                // Close to the eye they fade and shrink, so none swells into a blot across the view.
-                float fade = smoothstep(extent, extent * 0.6, dist) * smoothstep(1.0, 3.0, dist);
+                float blink = smoothstep(0.62, 1, sin(t * lerp(0.6, 1.4, seed.x) + fid * 7.1) * 0.5 + 0.5);
+                // They thin out towards the patch's edge (so wrapping never pops), and close to the eye
+                // they fade and shrink, so none swells into a blot across the view.
+                float edge = length(p.xz - _WG_FireflyVolume.xz) / extent;
+                float fade = smoothstep(1.0, 0.7, edge) * smoothstep(1.0, 3.0, dist);
                 float out_ = step(seed.x * 0.999, _WG_FireflyShape.x);
                 o.glow = _Colour.rgb * blink * fade * out_ * _Brightness;
 
                 float size = _Size * lerp(0.8, 1.5, seed.z) * clamp(dist / 4, 0.5, 1.6);
+                // Never smaller than a dot about two pixels across, however far the camera; such far dots
+                // glow a little brighter, so the meadow still reads as alive from high above.
+                float pixel = dist * 2.0 / (_ScreenParams.y * UNITY_MATRIX_P[1][1]);
+                o.glow *= 1 + saturate(pixel * 1.6 / max(size, 1e-4) - 1) * 0.8;
+                size = max(size, pixel * 1.6);
                 float3 right = UNITY_MATRIX_V[0].xyz, up = UNITY_MATRIX_V[1].xyz;
                 o.positionCS = TransformWorldToHClip(p + (right * corner.x + up * corner.y) * size);
                 o.corner = corner;
