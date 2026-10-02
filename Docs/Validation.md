@@ -999,9 +999,9 @@ is not on `claude/worker-showcase`. Record:
   200 points: heights stay within ±3 m, and the baked navigation still lies on
   the ground.
 - **Full PlayMode suite: 112/112** (107 earlier plus 5 new `BeyondTests`) in
-  two runs:
+  three runs:
   - 913.2 s, before the last small change (the O key);
-  - 894.7 s, on the archived code.
+  - 894.7 s and 888.9 s, on the archived code (two consecutive runs).
 - **Release build.** It passed (`-buildOut WindowsTheEssence`).
 - **Benchmark.** GPU ms at 1920×1080 on the RTX 4060 Laptop:
 
