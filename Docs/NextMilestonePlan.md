@@ -18,8 +18,14 @@ splits the work into checkpoints Luis playtests one at a time:
    live in the build, with matched captures and measured costs. Luis chose E
    (painted light + paint filter + ink) as the working base and agreed that
    hand-painted textures come next. That is **S1c, second pass** (below). It was
-   built on October 2 and waits for Luis's judgment.
-4. **S1d, the worker model.**
+   built on October 2. Luis found it "already quite beautiful" but not yet the
+   emotion he seeks.
+4. **S1e, the essence beyond the surface.** Luis asked for the breathtaking,
+   out-of-this-world emotion, every frame a painting, and a style unique to
+   Wonder Gather. The first iteration was built on October 2. Luis preferred
+   the hand-painted pass, so it was archived on `claude/essence-exploration`
+   and not adopted ([TheEssencePlaytest.md](Playtests/TheEssencePlaytest.md)).
+5. **S1d, the worker model**, after S1e, in the language it settles.
 
 The previous S1 plan (style studies, then the worker model) is archived in
 [Plans/S1_WorkerModelAndStyleStudies.md](Plans/S1_WorkerModelAndStyleStudies.md).
@@ -218,6 +224,59 @@ switchable for comparison.
 - the full suite;
 - a build.
 
+## S1e — The essence beyond the surface
+
+Luis on October 2: the hand-painted pass is "already quite beautiful", but he
+wants "the breath-taking out of this world emotion", the stylistic essence
+rather than the surface. He welcomes a long checkpoint and research. Two
+follow-ups the same day raised the bar:
+- every frame the camera lands on should be a painting, driven by light, while
+  the RTS still runs well;
+- the Visual Soul is the soul, and the result must go above and beyond it, to
+  something unique to Wonder Gather
+  ([correspondence](Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md)).
+
+**The study.** [TheEssence.md](ArtDirection/TheEssence.md) reads why Luis's
+references move him and measures them against our captures. It then proposes
+Wonder Gather's own language: a thesis, seven signature devices and a frame
+test.
+
+**Outcome of the first iteration:** not adopted. Luis likes "the before"
+better, and his favourite frame shows why: the lit house at dusk, intimate,
+enclosed and tonal. Any further iteration starts from the hand-painted pass,
+adds options beside it instead of replacing it, and is shown early as frames.
+The iterations below were the plan before the verdict.
+
+**Iterations:**
+
+1. **The beyond and the painting.** Built October 2 (archived):
+   - **The beyond:**
+     - the far world on a bluff above a valley lake;
+     - monumental Blender-modelled clouds;
+     - planar water reflections;
+     - aerial perspective in the sky's colour;
+     - cloud shadows;
+     - the luminous palette.
+   - **Look F:**
+     - the painting pass (strokes along the forms);
+     - ink on characters only;
+     - the hour's palette;
+     - seeds and fireflies.
+   - **Viewpoint keys.**
+2. **Forms that read as paint.** Painted tree clumps, painted far land and
+   mountains, brushed cloud edges, and strokes that breathe with the wind.
+3. **The meadow and the warm light.** Gusts, flowers, a stream, and the glow
+   and motes of lamplight.
+4. **The signature decisions** that need Luis: the curving world and cosmic
+   night, and giant flowers and reeds.
+
+**Constraints:**
+- **The playable meadow and its navigation are untouched.** The far world is
+  only scenery.
+- **Frame cost** is measured in a release build at every iteration. The RTS
+  must keep headroom for units.
+- **References.** Luis's film references are described but never committed.
+
 ## S1d — The worker model (former S1 scope)
 
 This step follows Luis's S1c choice, so the model is made for the chosen look:
@@ -255,6 +314,6 @@ S1a/S1b playtests.
 | ID | Question | Default used |
 |---|---|---|
 | C1–C4 | Camera toggle key, orders while exploring, controls, entering buildings | **Accepted Oct 1** ("I really liked the camera") |
-| V1 | Rendering approach | **Working base, Oct 1:** E, plus hand-painted textures (second pass). Not Locked |
+| V1 | Rendering approach | **Working base, Oct 1:** E, plus hand-painted textures (second pass). **Oct 2:** look F (the painting pass, ink on characters only, the hour's palette) tried in S1e; Luis preferred the hand-painted pass in E. Not Locked |
 | V2 | Proportions, architecture, setting | Open, as the handoff states. S1b uses a modest cottage and grassland |
 | V3 | Is the house the worker's home and delivery point in the showcase? | Possible. It would join the Visual Soul place to the worker loop. Not built until Luis decides |

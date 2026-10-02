@@ -966,3 +966,60 @@ Authored in the isolated worktree. Blender 4.4 runs the painting; Unity
   - GPUs other than this one;
   - painted textures on grass, ground and far land (those are not painted
     yet).
+
+## S1e — the essence beyond the surface, first iteration (October 2) — not adopted
+
+**Outcome.** Luis preferred the hand-painted pass ("the before"). The code
+was archived on the branch `claude/essence-exploration` (commit 66f9ea2) and
+is not on `claude/worker-showcase`. Record:
+[TheEssencePlaytest.md](Playtests/TheEssencePlaytest.md),
+[TheEssence.md](ArtDirection/TheEssence.md).
+
+- **Environment.** The isolated worktree, never Luis's open project. Nothing
+  from this iteration was copied into the main project's Assets.
+- **Iterating on the far world.** These problems were found and fixed in
+  captures:
+  - **Mountains.** They first stood as a pale wall close around the meadow.
+    They were rebuilt as layers: low ridges, far ranges and one peak.
+  - **The lake.** It was invisible from ground level because of two things:
+    - the eye cannot see water below a level meadow past its edge;
+    - an old 3 m ring of hills at the meadow's edge sat above eye level.
+
+    It was solved with a bluff, a valley lake 26 m below and no rim towards
+    the water. A height probe confirmed the profile.
+  - **The top-down map.** It showed no water at all. The cause was depth
+    precision 7 km from the camera, not the water. Far water now ignores
+    scene depth.
+  - **Shores.** A flat lowland at water level read as a mudflat. The valley
+    floor now stays above the water.
+  - **The cloud shader.** It had a vector-constructor compile error, fixed.
+  - **The painting pass.** It first cost about 5 ms. Sampling wide strokes
+    every other pixel brought it to 0.5–1.4 ms over look E.
+- **The meadow's ground and navigation are unchanged.** `BeyondTests` samples
+  200 points: heights stay within ±3 m, and the baked navigation still lies on
+  the ground.
+- **Full PlayMode suite: 112/112** (107 earlier plus 5 new `BeyondTests`) in
+  two runs:
+  - 913.2 s, before the last small change (the O key);
+  - 894.7 s, on the archived code.
+- **Release build.** It passed (`-buildOut WindowsTheEssence`).
+- **Benchmark.** GPU ms at 1920×1080 on the RTX 4060 Laptop:
+
+  | View | E | F |
+  |---|---|---|
+  | Overview | 7.4–7.5 | 7.7–7.8 |
+  | Path | 6.5–6.8 | 7.5–7.8 |
+  | Grass | 5.8–6.6 | 6.7–7.0 |
+  | The lake below the meadow | 4.6–4.7 | 5.9–6.2 |
+  | Strategy | 7.2–7.5 | 7.7–7.9 |
+
+  The beyond added about 1.5–2 ms to E.
+- **Colour against Luis's references.** The daylight captures moved:
+  - **Green:** from about 100° to 83–87°, brightness 0.52–0.54;
+  - **Sky and water:** to 194–195° and saturation 0.43–0.50;
+  - **Median luminance:** to 0.58–0.65.
+
+  Luis's verdict was that the before is better: the measurements matched the
+  references' surface, not his taste.
+- **Not tested:** interactive play of this build by hand, other GPUs, and
+  scenes with many units.

@@ -605,3 +605,78 @@ intermittently deadlocked shared stations at the natural pace.
     convert from sRGB the way `Material.SetColor` does.
   - The glow strength is `max(.08, houseLights)^2.2`, which reproduces scaling
     the colour before its sRGB conversion.
+
+## The beyond and look F (S1e) — October 2, archived
+
+This code lives only on the branch `claude/essence-exploration`. Luis preferred
+the hand-painted pass, so none of it is on `claude/worker-showcase`. It is
+described here so it can be revived piece by piece.
+
+- **The far land.** `OrdinaryGround` keeps the meadow grid as it was.
+  - It appends far rings from the grid's own edge. They round into circles and
+    widen geometrically to 9 km (`AppendFarLand`).
+  - The height field adds a lake basin (`ShoreDistance`, a union of
+    ellipses), ranges (ridged noise) and one peak.
+  - Nothing reaches inside the meadow's square, so the collider and the baked
+    navigation are unchanged; `BeyondTests` checks this.
+  - The water level is −26 m, below the meadow's bluff.
+- **Clouds.** `Art/Blender/OrdinaryPlace/clouds.py` builds cumulus from
+  metaball domes (towers, heaps and banks) into `Clouds.fbx`.
+  - Vertex colours carry occlusion (R) and height through the cloud (G).
+  - `CloudBank` places about 30 clouds deterministically (DontSave) and drifts
+    them along the wind. A cloud re-forms on the far side after leaving the sky
+    disc.
+  - `WGCloud.shader` paints them: banded light from `_MainLightPosition`,
+    shaded folds, a silver lining, a silhouette blended to the sky, and the air.
+- **Water.** `WaterSurface` draws one plane and renders a planar reflection
+  before each game or scene camera with
+  `RenderPipeline.SubmitRenderRequest` (`SingleCameraRequest`).
+  - The mirror camera sits below the water, upside down, so its rotation stays
+    proper and no culling inversion is needed.
+  - An oblique near plane clips everything under the water.
+  - The reflection camera has `CameraType.Reflection`, so grass, smoke and the
+    look passes skip it.
+  - `WGWater.shader` flips the image back (`1 - v`). It also adds the depth
+    tint, painted ripple streaks, wind-ruffled patches, sun glitter and a
+    shoreline.
+  - Far water (beyond about 700 m) ignores scene depth, whose precision is too
+    coarse there.
+- **The air and cloud shadows.** These live in `WGCommon.hlsl`.
+  - `WG_SkyGradient` is shared by the sky, clouds, water and air.
+  - `WG_AirColor` samples the sky a little above the horizon, so far shapes
+    read blue.
+  - `WG_AirAmount` integrates an exponential height density: `_WG_Air` holds
+    the distance, maximum, haze height and base.
+  - `WG_CloudShadow` projects a drifting noise field along the main light to
+    900 m; the painted and grass shaders multiply it into the main light's
+    shadow.
+  - The `_WG_Fog*` globals other than `_WG_FogShape` (clear distance) are
+    retired.
+- **Look F.** `LookPostEffects.PaintingPass`:
+  - structure tensor (pass 3) → soften across and down (4, 5) → anisotropic
+    Kuwahara with polynomial weights (6);
+  - the radius grows with depth and towards the frame's edges;
+  - wide strokes sample every other pixel at half-pixel offsets, for a quarter
+    of the cost.
+
+  The grain pass also applies the hour's palette grade (`_WG_GradeShadow`,
+  `_WG_GradeLight`, `_WG_GradeLift`, from `TimeOfDay`).
+- **Ink only on characters.** Painted surfaces now write a kind into the
+  normals texture's alpha: 0 drawn (`_Drawn`, the worker's materials), 0.5 the
+  painted world, 1 grass.
+  - `_WG_PaintShape.w` is the highest kind that takes ink: 0.7 for E (as
+    before), 0.2 for F.
+  - Shaders without a DepthNormals pass leave alpha 0, which only matters
+    within the ink's 45 m reach.
+- **Motes.** `WonderMotes` draws about 2,400 GPU quads in a box that follows
+  the camera (`WGMotes.shader`): seeds lit when backlit by the sun, and
+  fireflies at dusk and night.
+- **Setup.** `OrdinaryPlaceSetup.AddTheBeyond` applies all of this to the
+  existing scene in place (GUIDs kept) and can run again.
+  `BuildWindows -buildOut <folder>` builds to `Builds/<folder>`.
+- **Capture.**
+  - `-captureSet essence` renders the vista, house, lake, sky, strategy, path,
+    overview and grass views in E and F.
+  - `-captureOnly`, `-captureHours` and `-captureMap` narrow a run.
+  - The top-down map is only for checking the layout; its depth precision is
+    too coarse for the water.
