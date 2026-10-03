@@ -34,6 +34,7 @@ import body  # noqa: E402
 import faces  # noqa: E402
 import hair  # noqa: E402
 import outfits  # noqa: E402
+import rigging  # noqa: E402
 import shapes  # noqa: E402
 
 # ---------------------------------------------------------------- materials
@@ -186,6 +187,71 @@ PRESETS = {
 }
 
 
+# ---------------------------------------------------------------- the rest pose, for rigging
+
+# What changes when the game moves them: things held in the hands go to the belt or the back, so the hands
+# are free for work; the arms hang a little out from the body; the feet stand under the hips; the head looks ahead.
+REST = {
+    "Small": dict(swap={"lantern": ("lantern", dict(belt=1))}),
+    "Long": dict(swap={"pickaxe": ("pickaxe", dict(back=True)), "mug": ("mug", dict(belt=0))}),
+    "Round": dict(),
+}
+
+
+def rest_preset(name, preset):
+    p = dict(preset)
+    b = dict(preset["body"])
+    pose = dict(b.get("pose", {}))
+    pose.update(neutral=True, weight=1, hip_shift=0.0, hip_tilt=0.0, shoulder_tilt=0.0, turn=0.0, nod=0.0, tilt=0.0)
+    b["pose"] = pose
+
+    def hang(body_, s):
+        shoulder = body_.shoulders[(s + 1) // 2]
+        length = body_.upper + body_.fore
+        return shoulder + Vector((s * 0.42 * length, 0.03, -0.9 * length))
+    b["arms"] = [dict(wrist=hang, pole=(0.3, 1, 0)), dict(wrist=hang, pole=(0.3, 1, 0))]
+    p["body"] = b
+    p["hands"] = [dict(grip="relaxed", palm=(1, 0, 0)), dict(grip="relaxed", palm=(-1, 0, 0))]
+    rest = REST.get(name, {})
+    outfit = []
+    for piece, opts in preset["outfit"]:
+        if piece in rest.get("drop", ()):
+            continue
+        outfit.append(rest.get("swap", {}).get(piece, (piece, opts)))
+    p["outfit"] = outfit
+    return p
+
+
+def build_rigged(out_dir, only=None, dims_only=False):
+    """The miners for the game: rest pose, skeleton, skin, levels of detail, one atlas each, and their dimensions.
+    dims_only: only the dimensions (miners.json), without remaking the models."""
+    dims = {}
+    for name, preset in PRESETS.items():
+        if only and name not in only:
+            continue
+        bpy.ops.wm.read_factory_settings(use_empty=True)
+        rp = rest_preset(name, preset)
+        b, objs = build_character(name, rp, out_dir)
+        face_images = {rp["face"]["skin"]: bpy.data.images[f"Face_{name}"]}
+        recipes = {n: recipe_for(n) for n, m in MATERIALS.items() if m["kind"] == "painted"}
+        for n, r in recipes.items():
+            import painting
+            painting.recipe(n, **r)
+        if dims_only:
+            dims[name] = rigging.dimensions(b, rigging.joints(b))
+            continue
+        dims[name], _ = rigging.build(name, b, objs, MATERIALS, recipes, face_images, out_dir)
+    path = os.path.join(out_dir, "miners.json")
+    previous = {}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            previous = {m["name"]: m for m in json.load(f).get("miners", [])}
+    for name, d in dims.items():
+        previous[name] = dict(name=name, **d)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(dict(miners=[previous[n] for n in PRESETS if n in previous]), f, indent=2)
+
+
 # ---------------------------------------------------------------- building
 
 def build_character(name, preset, out_dir):
@@ -205,6 +271,8 @@ def build_character(name, preset, out_dir):
     objs.append(hair.grow(b, hstyle["style"], hstyle["mat"], preset["seed"], **{k: v for k, v in hstyle.items() if k not in ("style", "mat")}))
     for piece, opts in preset["outfit"]:
         objs.extend(dress(b, piece, dict(opts), held, skin))
+    for probe in [x for x in bpy.data.objects if x.name.endswith("Probe")]:
+        bpy.data.objects.remove(probe)
     return b, objs
 
 
@@ -212,7 +280,7 @@ def dress(b, piece, o, held, skin):
     if piece == "top":
         return outfits.top(b, o.pop("mat"), **o)
     if piece == "skirt":
-        top = next((x for x in bpy.data.objects if x.name == f"{b.name}_Top"), None)
+        top = next((x for x in bpy.data.objects if x.name == f"{b.name}_TopProbe"), None)
         under = [x for x in bpy.data.objects if x.name == f"{b.name}_Trousers"]
         return outfits.skirt(b, o.pop("mat"), fit=top, under=under, **o)
     if piece == "trousers":
@@ -232,7 +300,7 @@ def dress(b, piece, o, held, skin):
         onto = next((x for x in bpy.data.objects if x.name == f"{b.name}_{o['onto']}"), None) if "onto" in o else None
         return outfits.patch(b, o["mat"], o["where"](b), o["size"], o.get("angle", 0.0), o.get("name", f"Patch{id(o) % 997}"), onto)
     if piece == "apron":
-        under = [x for x in bpy.data.objects if x.name in (f"{b.name}_Top", f"{b.name}_Skirt")]
+        under = [x for x in bpy.data.objects if x.name in (f"{b.name}_TopProbe", f"{b.name}_Skirt")]
         return outfits.apron(b, o["mat"], o["tie"], hem=o.get("hem", 0.33), flare=o.get("flare", 1.2), over=under)
     if piece == "boots":
         return body.boot(b, 0, "Boots", "Sole", **o) + body.boot(b, 1, "Boots", "Sole", **o)
@@ -241,14 +309,26 @@ def dress(b, piece, o, held, skin):
     if piece == "satchel":
         return outfits.satchel(b, "Leather", "Accent", "Brass")
     if piece == "lantern":
+        if "belt" in o:
+            # Hung from a loop at the hip, clear of the coat.
+            s = (-1, 1)[o["belt"]]
+            hook = b.pelvis + Vector((s * (b.width("pelvis") + 0.09), -0.01, 0.04))
+            return outfits.lantern(b, hook, "Brass", "Glass")
         return outfits.lantern(b, held[o["hand"]][0], "Brass", "Glass")
+    if piece == "pickaxe" and o.get("back"):
+        # Slung across the back, its head over one shoulder.
+        centre = b.chest + Vector((0.0, b.depth("chest") + 0.05, -0.06))
+        return outfits.pickaxe(b, centre, Vector((0.5, 0.12, 1.0)), "Wood", "Iron", length=0.8, hold=0.5)
     if piece == "pickaxe":
-        # The handle runs through the fist, along its grip; he leans on it like a walking stick.
+        # The handle runs through the fist, along its grip; Long leans on it like a walking stick.
         grasp, (a, t, n) = held[o["hand"]]
         d = t if t.z > 0 else -t
         hold = o.get("hold", 0.9)
         return outfits.pickaxe(b, grasp, d, "Wood", "Iron", length=(grasp.z - 0.01) / max(d.z, 0.3) / hold, hold=hold)
     if piece == "mug":
+        if "belt" in o:
+            s = (-1, 1)[o["belt"]]
+            return outfits.mug(b, b.pelvis + Vector((s * (b.width("pelvis") + 0.075), 0.0, -0.03)), "Mug")
         grasp, (a, t, n) = held[o["hand"]]
         return outfits.mug(b, grasp + n * 0.03 + Vector((0, 0, 0.01)), "Mug")
     if piece == "hammer":
@@ -387,8 +467,13 @@ if __name__ == "__main__":
     parser.add_argument("--paint", action="store_true")
     parser.add_argument("--preview")
     parser.add_argument("--only", nargs="*")
+    parser.add_argument("--rigged", action="store_true", help="the game-ready miners: rest pose, rig, LODs, atlas")
+    parser.add_argument("--dims", action="store_true", help="with --rigged: only rewrite miners.json")
     args = parser.parse_args(argv)
     os.makedirs(args.out, exist_ok=True)
+    if args.rigged:
+        build_rigged(args.out, args.only, args.dims)
+        sys.exit(0)
     built = build(args.out, args.only)
     painted = paint(built, args.out) if args.paint else {}
     if args.fbx:

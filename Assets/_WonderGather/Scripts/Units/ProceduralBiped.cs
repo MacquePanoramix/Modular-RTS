@@ -12,6 +12,33 @@ namespace WonderGather
     public sealed class ProceduralBiped : MonoBehaviour
     {
         public enum Gait { Standing, Walking, Jogging }
+        // A body's measurements. The defaults are the 2.2 m test body; a modelled being (S1d) brings its own,
+        // taken from its skeleton, so the solved joints land where its bones are.
+        [System.Serializable]
+        public struct Proportions
+        {
+            // Standing hip height, half the distance between the hip joints, and each leg segment's length.
+            public float hipHeight, hipWidth, legSegment;
+            // The ankle above the sole, and the foot's heel, ball and toe lengths from the ankle.
+            public float ankleHeight, heelLength, ballLength, toeLength;
+            // The waist above the hips, and the torso's and head's centres above the waist.
+            public float waistRise, torsoRise, headRise;
+            // The left shoulder from the waist in the chest's frame (x outwards), and the arm's two segments.
+            public Vector3 shoulder;
+            public float upperArm, forearm;
+            // Where a relaxed hand hangs from its shoulder: outwards, down, forwards.
+            public Vector3 armHang;
+            // Carried loads, pumping arms, stance tolerances and rendered thickness scale with this.
+            public float scale;
+            public static Proportions Default => new Proportions
+            {
+                hipHeight = 1.43f, hipWidth = .21f, legSegment = .68f, ankleHeight = .13f, heelLength = .07f, ballLength = .19f, toeLength = .11f,
+                waistRise = .06f, torsoRise = .23f, headRise = .58f, shoulder = new Vector3(.34f, .43f, 0), upperArm = .44f, forearm = .43f,
+                armHang = new Vector3(.06f, .83f, .05f), scale = 1
+            };
+        }
+        [SerializeField] private bool customProportions;
+        [SerializeField] private Proportions proportions = Proportions.Default;
         [SerializeField] private Transform pelvis,torso,head;
         [SerializeField] private Transform selectionRing;
         public void ConfigureRing(Transform ring)=>selectionRing=ring;
@@ -27,8 +54,27 @@ namespace WonderGather
         [SerializeField] private Gatherer worker;
         [SerializeField] private Transform carriedBundle;
         [SerializeField] private Vector3 bundleScale=Vector3.one;
-        private const float HipHeight=1.43f,HipWidth=.21f,LegReach=1.33f,Gravity=9.81f;
-        private const float AnkleHeight=.13f,HeelLength=.07f,BallLength=.19f,ToeLength=.11f;
+        private const float Gravity=9.81f;
+        // The active proportions, and lengths derived from them (exactly the original constants by default).
+        private Proportions P=Proportions.Default;
+        private float HipHeight=1.43f,HipWidth=.21f,LegReach=1.33f,LegLimit=1.359f,NarrowStance=.14f,ClosedTolerance=.15f,SettleTolerance=.3f;
+        private float AnkleHeight=.13f,HeelLength=.07f,BallLength=.19f,ToeLength=.11f;
+        public Proportions BodyProportions=>P;
+        public void SetProportions(Proportions value)
+        {
+            if(!(value.hipHeight>.2f&&value.hipWidth>.01f&&value.legSegment>.1f&&value.upperArm>.05f&&value.forearm>.05f&&value.scale>.1f&&value.armHang.y>.05f))
+                throw new System.ArgumentOutOfRangeException(nameof(value));
+            customProportions=true;proportions=value;ApplyProportions();initialized=false;
+        }
+        private void ApplyProportions()
+        {
+            P=customProportions?proportions:Proportions.Default;
+            HipHeight=P.hipHeight;HipWidth=P.hipWidth;AnkleHeight=P.ankleHeight;HeelLength=P.heelLength;BallLength=P.ballLength;ToeLength=P.toeLength;
+            if(!customProportions){LegReach=1.33f;LegLimit=1.359f;NarrowStance=.14f;ClosedTolerance=.15f;SettleTolerance=.3f;return;}
+            // The same ratios as the original body: reach just short of a straight leg, a narrow stance at two thirds of the hips.
+            LegReach=P.legSegment*2*(1.33f/1.36f);LegLimit=P.legSegment*2-.001f;NarrowStance=P.hipWidth*(2f/3f);
+            ClosedTolerance=.15f*P.scale;SettleTolerance=.3f*P.scale;
+        }
         // Froude number v²/(g·h): walking bipeds switch to running near 0.5.
         private const float JogAbove=.55f,WalkBelow=.45f,StartSpeed=.18f;
         private const float HeelStrike=-12,WalkToeOff=30,JogToeOff=38;
@@ -90,7 +136,7 @@ namespace WonderGather
                 throw new System.ArgumentOutOfRangeException(nameof(reach));
             stepReach=reach;footLift=lift;stepDuration=duration;
         }
-        private void Awake()=>agent=GetComponent<NavMeshAgent>();
+        private void Awake(){agent=GetComponent<NavMeshAgent>();ApplyProportions();}
         private void OnEnable(){initialized=false;handsInitialized=false;}
         private void OnDisable()
         {
@@ -217,9 +263,9 @@ namespace WonderGather
         }
         private float HomeError(int index)=>Vector3.ProjectOnPlane(Home(index)-support[index].position,Vector3.up).magnitude;
         private float Turn(int index)=>Quaternion.Angle(support[index].rotation,SoleRotation(support[index].normal));
-        private bool StanceClosed()=>HomeError(0)<.15f&&HomeError(1)<.15f&&Turn(0)<40&&Turn(1)<40;
+        private bool StanceClosed()=>HomeError(0)<ClosedTolerance&&HomeError(1)<ClosedTolerance&&Turn(0)<40&&Turn(1)<40;
         // Crossed or nearly touching feet cannot be held as a stance.
-        private bool StanceNarrow()=>(Quaternion.Inverse(facing)*(support[1].position-support[0].position)).x<.14f;
+        private bool StanceNarrow()=>(Quaternion.Inverse(facing)*(support[1].position-support[0].position)).x<NarrowStance;
         private void UpdateFeet(float dt)
         {
             bool gaitActive=CurrentGait!=Gait.Standing&&!stopping;
@@ -341,14 +387,14 @@ namespace WonderGather
             for(int order=0;order<2;order++)
             {
                 int i=(nextFoot+order)%2;var foot=support[i];
-                if(HomeError(i)<.3f&&Turn(i)<40&&!narrow) continue;
+                if(HomeError(i)<SettleTolerance&&Turn(i)<40&&!narrow) continue;
                 if(!Ground(Home(i),out var point,out var normal)||Mathf.Abs(point.y-transform.position.y)>.8f) return;
                 Lift(i,false);foot.to=point;foot.toNormal=normal;foot.toRotation=SoleRotation(normal);
                 return;
             }
         }
         // The rendered foot pitches about its heel (toe up) or its ball (heel up).
-        private static Vector3 FootPoint(Foot foot,Vector3 local)
+        private Vector3 FootPoint(Foot foot,Vector3 local)
         {
             var pivot=new Vector3(0,0,foot.pitch>0?BallLength:-HeelLength);
             return foot.position+foot.rotation*(pivot+Quaternion.Euler(foot.pitch,0,0)*(local-pivot));
@@ -445,23 +491,23 @@ namespace WonderGather
             float lift=hips.y-transform.position.y;
             if(dt>0&&lift>hipLift) {lift=Mathf.Lerp(hipLift,lift,1-Mathf.Exp(-12*dt));hips.y=transform.position.y+lift;}
             hipLift=lift;
-            Vector3 waist=hips+hipFrame*new Vector3(0,.06f,0);
+            Vector3 waist=hips+hipFrame*new Vector3(0,P.waistRise,0);
             pelvis.SetPositionAndRotation(hips,hipFrame);
-            torso.SetPositionAndRotation(waist+chest*new Vector3(0,.23f,0),chest);
+            torso.SetPositionAndRotation(waist+chest*new Vector3(0,P.torsoRise,0),chest);
             // The head stays level and looks along the path while the chest twists beneath it.
-            head.SetPositionAndRotation(waist+chest*new Vector3(0,.58f,0),Quaternion.Slerp(facing,posture,.4f));
+            head.SetPositionAndRotation(waist+chest*new Vector3(0,P.headRise,0),Quaternion.Slerp(facing,posture,.4f));
             if(carriedBundle!=null)
             {
                 bool stockpile=worker!=null && worker.MiningTarget!=null && worker.State==Gatherer.Activity.Gathering;
-                carriedBundle.SetPositionAndRotation(stockpile ? transform.position+facing*new Vector3(.55f,.18f,-.15f)
-                    : hips+posture*new Vector3(0,-.08f,.37f),posture);
+                carriedBundle.SetPositionAndRotation(stockpile ? transform.position+facing*(new Vector3(.55f,.18f,-.15f)*P.scale)
+                    : hips+posture*(new Vector3(0,-.08f,.37f)*P.scale),posture);
                 float fullness=worker!=null?Mathf.Clamp01((float)worker.Carried/Mathf.Max(1,worker.Capacity)):0;
                 carriedBundle.localScale=bundleScale*Mathf.Lerp(.8f,1,fullness);
             }
-            Vector3 leftShoulder=waist+chest*new Vector3(-.34f,.43f,0),rightShoulder=waist+chest*new Vector3(.34f,.43f,0);
+            Vector3 leftShoulder=waist+chest*new Vector3(-P.shoulder.x,P.shoulder.y,P.shoulder.z),rightShoulder=waist+chest*new Vector3(P.shoulder.x,P.shoulder.y,P.shoulder.z);
             // One explicit update order: supported torso -> tool trajectory/contact -> grip IK.
             if(equipment!=null) equipment.SolveFrame(dt,hips,posture,leftShoulder,rightShoulder,!support[0].swinging&&!support[1].swinging);
-            float armAmplitude=Mathf.Lerp(Mathf.Lerp(.05f,.22f,Mathf.Clamp01(speed/2.2f)),.16f,jogWeight)*gaitWeight;
+            float armAmplitude=Mathf.Lerp(Mathf.Lerp(.05f,.22f,Mathf.Clamp01(speed/2.2f)),.16f,jogWeight)*gaitWeight*(P.armHang.y/.83f);
             bool hasToes=Pair(toes);
             for(int i=0;i<2;i++)
             {
@@ -477,24 +523,24 @@ namespace WonderGather
                     Quaternion toe=sole*Quaternion.Euler(foot.toeBend,0,0);
                     toes[i].SetPositionAndRotation(FootPoint(foot,new Vector3(0,0,BallLength))+carry+toe*new Vector3(0,toes[i].localScale.y*.5f,ToeLength*.5f),toe);
                 }
-                Vector3 axis=(ankle-hip).normalized;float distance=Mathf.Min(Vector3.Distance(hip,ankle),1.359f);
+                Vector3 axis=(ankle-hip).normalized;float distance=Mathf.Min(Vector3.Distance(hip,ankle),LegLimit);
                 Vector3 bend=Vector3.ProjectOnPlane(hipFrame*Vector3.forward,axis).normalized;
-                Vector3 knee=(hip+ankle)*.5f+bend*Mathf.Sqrt(Mathf.Max(0,.68f*.68f-distance*distance*.25f));
-                Segment(thighs[i],hip,knee,.19f);Segment(shins[i],knee,ankle,.15f);
+                Vector3 knee=(hip+ankle)*.5f+bend*Mathf.Sqrt(Mathf.Max(0,P.legSegment*P.legSegment-distance*distance*.25f));
+                Segment(thighs[i],hip,knee,.19f*P.scale);Segment(shins[i],knee,ankle,.15f*P.scale);
                 // Each arm swings against its own leg: back as that foot reaches forward.
                 float swing=-armAmplitude*Mathf.Cos(cycle+Mathf.PI*i);
                 Vector3 shoulder=i==0?leftShoulder:rightShoulder;
                 // A relaxed arm hangs nearly straight and swings as a pendulum from the shoulder;
                 // a jogging arm bends and pumps.
-                float angle=swing/.83f;
-                Vector3 relaxed=shoulder+chest*new Vector3(side*.06f,-.83f*Mathf.Cos(angle),.05f+.83f*Mathf.Sin(angle));
-                Vector3 pumping=shoulder+chest*new Vector3(side*.02f,-.34f,.24f+swing*.8f);
+                float drop=P.armHang.y,angle=swing/drop;
+                Vector3 relaxed=shoulder+chest*new Vector3(side*P.armHang.x,-drop*Mathf.Cos(angle),P.armHang.z+drop*Mathf.Sin(angle));
+                Vector3 pumping=shoulder+chest*(new Vector3(side*.02f,-.34f,.24f)*P.scale+new Vector3(0,0,swing*.8f));
                 Vector3 wrist=Vector3.Lerp(relaxed,pumping,jogWeight);
                 bool busy=false;
                 if(worker!=null)
                 {
                     busy=worker.Carried>0||(equipment!=null&&equipment.HandsOnTool)||(i==1&&Working&&worker.MiningTarget==null);
-                    if(worker.Carried>0) wrist=hips+posture*new Vector3(side*.22f,-.12f,.37f);
+                    if(worker.Carried>0) wrist=hips+posture*(new Vector3(side*.22f,-.12f,.37f)*P.scale);
                     if(i==1&&Working&&worker.MiningTarget==null)
                     {
                         float progress=Mathf.Clamp01(worker.ActionProgress);
@@ -520,7 +566,7 @@ namespace WonderGather
         }
         private void SolveArm(int index,Vector3 bendHint,Quaternion posture,Vector3 shoulder,Vector3 target)
         {
-            const float upper=.44f,lower=.43f;
+            float upper=P.upperArm,lower=P.forearm;
             Vector3 delta=target-shoulder;
             Vector3 axis=delta.sqrMagnitude>.000001f?delta.normalized:posture*Vector3.down;
             float distance=Mathf.Clamp(delta.magnitude,.02f,upper+lower-.001f);
@@ -529,7 +575,7 @@ namespace WonderGather
             Vector3 bend=Vector3.ProjectOnPlane(posture*bendHint,axis).normalized;
             if(bend.sqrMagnitude<.001f) bend=Vector3.Cross(axis,posture*Vector3.forward).normalized;
             Vector3 elbow=shoulder+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,upper*upper-along*along));
-            Segment(upperArms[index],shoulder,elbow,.13f);Segment(forearms[index],elbow,wrist,.11f);
+            Segment(upperArms[index],shoulder,elbow,.13f*P.scale);Segment(forearms[index],elbow,wrist,.11f*P.scale);
             handPositions[index]=transform.InverseTransformPoint(wrist);
         }
     }

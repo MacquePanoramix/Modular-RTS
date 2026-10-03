@@ -57,8 +57,11 @@ class Body:
         self.hips = [self.pelvis + Vector((s * hw, 0, -0.05 + s * self.sw * pose.get("hip_tilt", 0.012))) for s in (-1, 1)]
         self.knees, self.ankles = [], []
         ankle_z = 0.085
+        neutral = pose.get("neutral", False)  # the rest pose for rigging: feet under the hips, toes a little out
         for s, hip in zip((-1, 1), self.hips):
-            if s == self.sw:
+            if neutral:
+                target = Vector((s * hw * 1.1, 0.0, ankle_z))
+            elif s == self.sw:
                 target = Vector((self.head.x + s * 0.035, 0.0, ankle_z))
             else:
                 free = pose.get("free_foot", (1.7, -0.08))
@@ -67,7 +70,7 @@ class Body:
             knee, ankle = two_bone(hip, target, length, length, Vector((0, -1, 0.0)))
             self.knees.append(knee)
             self.ankles.append(ankle)
-        self.foot_yaw = [s * 0.25 + (0.12 * s if s != self.sw else 0) for s in (-1, 1)]
+        self.foot_yaw = [s * 0.1 if neutral else s * 0.25 + (0.12 * s if s != self.sw else 0) for s in (-1, 1)]
 
     # Measurements garments fit to.
     def width(self, level):

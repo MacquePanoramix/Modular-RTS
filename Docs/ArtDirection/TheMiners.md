@@ -6,8 +6,10 @@
   pass.
 - **Polished** on the points Luis raised
   ([below](#polish-after-luiss-word-october-3)).
-- **Next:** rigging and lighter versions for the RTS. All three will be
-  offered as choices in this prototype.
+- **Rigged and in the game** (October 3): the three walk in the Ordinary
+  Place on the procedural body, with the choice of miner
+  ([below](#rigged-and-in-the-game-october-3);
+  [MinersPlaytest.md](../Playtests/MinersPlaytest.md)).
 **Asked by Luis.** After the [first concepts](WorkerConcepts.md), Luis ranked
 them Small, then Long, then Round, and loved every face, then asked for:
 - much higher model quality, prettier and more pleasing to look at;
@@ -74,6 +76,47 @@ Luis asked for a careful look at every distance
     unchanged.
   - **Small's lantern.** Its light sits a little below the glass, so the hand
     that carries it is not burnt white.
+
+## Rigged and in the game (October 3)
+
+![Walking to the door at dusk](../Images/Miners/Rigged_Together_Dusk.jpg)
+
+- **A rest pose for the rig.** Each miner is built a second time standing
+  neutrally: feet under the hips, arms a little out, the head straight.
+  Things held in the hands move elsewhere, so the hands are free for work:
+  - Small's lantern goes to the belt;
+  - Long's pickaxe goes across the back, the mug to the belt.
+- **A skeleton** on the procedural body's own joints. It has 19 bones: pelvis,
+  spine, chest, neck and head; upper arms, forearms and hands; thighs, shins,
+  feet and toes.
+- **Skinning by the kind of part:**
+  - boots follow the feet and shins;
+  - hair and the cap follow the head;
+  - a coat's skirt or an apron hangs from the pelvis, with the thighs carrying
+    more of it towards the hem;
+  - a satchel or lantern rides on the hips;
+  - the slung pickaxe rides on the chest.
+
+  Within those, each vertex follows its nearest bones.
+- **Light for the RTS.**
+  - **Three levels of detail:** about 18,000, 5,000 and 1,600 triangles. The
+    farthest also drops laces, buttons and ties.
+  - **One texture.** The painting, the painted face and the plain colours are
+    all baked into a single 2048² atlas per miner. The face's islands get
+    three times the room, so its strokes stay sharp.
+  - **Draw calls.** One material, plus one for a lamp's glass, and the
+    outline on the nearer two levels.
+- **Moved by the procedural body.** The body's proportions now come from each
+  model's skeleton: hip height and width, leg, foot, shoulders, arms and how
+  the arms hang. It solves its joints onto invisible segments, and a rig
+  adapter (`MinerBody`) turns the model's bones to match:
+  - the pelvis, chest, head and feet follow their solved frames;
+  - limbs aim at the solved joints, with knees bending forward and elbows
+    back.
+- **The choice.** All three stand ready in the Ordinary Place; one walks at a
+  time, and `M` swaps them in place.
+
+![Walking, frame by frame](../Images/Miners/Rigged_Walking.jpg)
 
 ## What changed from the first concepts
 
@@ -160,9 +203,11 @@ look at in the Scene view. They are never saved into the scene.
 
 ## Limits
 
-- **Posed, not rigged.** Nothing moves yet. Rigging is the next step.
-- **Heavy.** About 95,000–105,000 faces per miner: hero models for close
-  views, not yet RTS units. Lighter levels of detail come with the rig.
+- **Rigged in the game,** but only walking and standing. Mining still uses
+  the test body (see [MinersPlaytest.md](../Playtests/MinersPlaytest.md#not-yet)).
+- **The posed models are heavy.** About 95,000–105,000 faces each, for
+  portraits. The game uses the rigged versions: 18,000, 5,000 and 1,600
+  triangles.
 - **Fixed expressions.** Each face is painted with one expression.
 - **Coarse fingers.** Finger shapes are good from a step away, but coarse up
   close.
@@ -170,11 +215,9 @@ look at in the Scene view. They are never saved into the scene.
 
 ## Next
 
-- **Rig all three** on the procedural biped's skeleton; the body module
-  already places its joints. Then a rig adapter, and gait and grip tests on
-  the new bodies.
-- **Light enough for the RTS:**
-  - levels of detail;
-  - one mesh and a texture atlas per miner, for few draw calls.
-- **The choice of three** in this prototype (Luis's decision, October 3): a
-  simple picker before play, the first step towards the creator (S2).
+- **Luis plays the build:** the choice of miner and walking in the meadow
+  ([MinersPlaytest.md](../Playtests/MinersPlaytest.md)).
+- **Mining with the miners.** Size the pickaxe and its grips to each body, and
+  move the equipment scene onto the miners.
+- **Hands and faces in motion.** Hands that close on what they hold, and a
+  blink or a change of expression.

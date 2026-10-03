@@ -93,6 +93,9 @@ def top(b, mat, loose=0.012, sleeve=1.0, cuff=1.25, rolled=False, folds=0.0035, 
         # Its lower end tucks inside the skirt, which hangs from just under the top's real surface.
         radii[0] = (radii[0][0] * 0.82, radii[0][1] * 0.82)
     parts = [chain(f"{b.name}_{name}Torso", joints, radii, mat)]
+    # A probe: the torso alone, fused and smoothed like the garment, for what hangs from it or lies over it to
+    # measure (arms hanging beside the waist must not count as the body). Removed before export.
+    fuse(f"{b.name}_{name}Probe", [chain(f"{b.name}_{name}ProbeTorso", joints, radii, mat)], mat, voxel=0.0055, smooth=6)
     r = b.p["arm"]
     out = []
     for i in (0, 1):

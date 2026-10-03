@@ -840,3 +840,92 @@ at 3066921.
   - **Ink.** It still draws on beings, since `1 - saturate(-1)` is 1.
   - **`LookPostEffects`.** The paint pass now declares the normals texture
     when it is valid.
+
+## The rigged miners (S1d) — October 3
+
+- **Export.** `workers.py --rigged` rebuilds each miner in a rest pose
+  (`rest_preset`: neutral stance, arms 25° out, head straight, held things
+  moved to the belt or back). `rigging.py` then:
+  - **Skeleton.** It builds the armature: 19 deform bones under `Root`, named
+    `.L`/`.R` for the being's own sides.
+  - **Skinning.** It skins by kind of part (`candidates`), then by distance to
+    each bone's capsule (3 influences). Skirts, aprons and pockets are blended
+    pelvis to thighs by height.
+  - **Simplification.** It simplifies to 16,000 triangles and joins into one
+    mesh. A `wg_detail` face attribute marks small details.
+  - **Atlas.** It unwraps once (Smart UV), triples the face's islands, and
+    bakes painting, face and colours into `Miner_<Name>_Atlas.png` (2048²).
+  - **Materials.** It reduces them to `Miner_<Name>` plus `Glow`. The glow
+    faces are sorted first: Unity orders submeshes by first use, and the
+    outline (an extra material) draws the last submesh, which must be the
+    body.
+  - **Levels of detail.** It makes LOD1 (5,000 triangles) and LOD2 (1,600,
+    details dropped).
+  - **Export.** One FBX per miner, armature plus three meshes.
+  - **Writes:** `miners.json`, the body's dimensions in the game's terms:
+    - hip height and width, leg segment;
+    - ankle, heel, ball and toe;
+    - waist and head rise, the shoulder offset;
+    - arm segments;
+    - the game's arm hang (`hang`: close to the body, the elbow just clear of
+      the trunk).
+
+    `--rigged --dims` rewrites only this file.
+- **`ProceduralBiped.Proportions`.** The body's measurements as data:
+  - **Defaults.** Exactly the old constants: the 2.2 m test body. With
+    `customProportions` false, every derived value equals the original
+    literal.
+  - **Derived from the proportions:** leg reach, the leg limit, the narrow
+    stance (two thirds of the hip width), and the stance tolerances (scaled).
+  - **Scaled by `scale`:** carried loads and pumping arms.
+  - **API.** `SetProportions` validates and applies them;
+    `BodyProportions` reports them.
+- **`MinerBody`** (runtime, execution order 50, after the biped). The rig
+  adapter.
+  - **Rest.** It captures the rest pose at `Awake`: each bone's rotation
+    relative to the root, and limb aims.
+  - **Every `LateUpdate`:**
+    - **Pelvis.** It is placed at the solved hips and turned by the hip frame.
+    - **Spine and neck.** They take half the turn between hips and chest, and
+      between chest and head.
+    - **Chest, head and feet.** Each turns by its solved frame's turn from
+      rest; toes follow the solved toes.
+    - **Limbs.** Each aims at its solved joints, rolled so knees bend forward
+      and elbows back (a fallback steadies nearly straight limbs). Hands
+      follow forearms.
+  - **Segment ends.** These are read from the biped's segments (position
+    ± up × half length).
+- **`MinerSetup`** (Editor).
+  - **`CreatePrefabs`.** It imports each FBX (generic, no avatar, objects not
+    optimised) with materials remapped:
+    - `Miner <Name>.mat`: the atlas on `WGPainted`, `_BrushScale` 14,
+      `_Drawn`;
+    - `Lamp glow.mat`.
+  - **Each unit:**
+    - a capsule, agent (1.3 m/s, radius 0.3), motor, selection and ring;
+    - invisible solution segments under `Body solution`;
+    - the biped with the model's proportions and tuning;
+    - the model, turned to face forward and checked for height;
+    - the LOD group (screen heights 0.18, 0.035, 0.004);
+    - the outline on LOD0 and LOD1;
+    - a lamp's point light on the bone carrying the glass;
+    - `MinerBody`.
+
+    Prefabs go in `Prefabs/Miners/`.
+  - **`AddToOrdinaryPlace`.** It replaces the scene's worker with the three,
+    under `The miners`, with `MinerChoice` and `MinerCrowdBenchmark`. It can
+    run again.
+- **`MinerChoice`** (runtime).
+  - **One active at a time.** `Choose` swaps the miner in place (warping its
+    agent) and hands over the selection.
+  - **Opening.** IMGUI picker at the bottom, open on load and with `M`.
+  - **Memory.** `PlayerPrefs` remembers the choice (wrapped in try/catch).
+- **`MinerCrowdBenchmark`** (`-wgcrowd`). It runs crowds of 0, 25, 50 and 100
+  wandering miners, in the Strategy and close views, and writes
+  `miner-crowd-benchmark.csv`.
+- **`MinerWalkCapture`** (PlayMode, `[Explicit]`). It renders frames of each
+  miner walking, by day and at dusk, and the three together.
+  - **Format.** PPM files, because the image conversion module is not in this
+    project.
+  - **Running it:** `-testFilter WonderGather.Tests.MinerWalkCapture -captureOut <folder>`.
+

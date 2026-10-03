@@ -23,7 +23,7 @@ and routes to everything else.
 | [Correspondence/](Correspondence/) | Luis's messages, verbatim and dated, with how each was recorded |
 | [Design/](Design/) | Design notes that feed GAME_VISION: the early design brief and the one-worker showcase vision |
 | [Plans/](Plans/) | Completed or superseded milestone plans, archived when replaced |
-| [Playtests/](Playtests/) | One guide per playable milestone: how to run it, what to judge, and its evidence and limits |
+| [Playtests/](Playtests/) | One guide per playable milestone: how to run it, what to judge, and its evidence and limits. The latest: [MinersPlaytest.md](Playtests/MinersPlaytest.md) (choose a miner, walk the meadow) |
 | [Technical/](Technical/) | Architecture and history for engineers and agents ([UnityProjectContext.md](Technical/UnityProjectContext.md)) and the equipment/mining contracts |
 | [Images/](Images/) | Screenshots and renders, in one folder per milestone, named like its playtest guide |
 

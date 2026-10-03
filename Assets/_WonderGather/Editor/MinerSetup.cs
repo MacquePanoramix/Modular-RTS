@@ -1,0 +1,359 @@
+using System;
+using System.IO;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.AI;
+using Object = UnityEngine.Object;
+
+namespace WonderGather.Editor
+{
+    // S1d: the three miners as units for the RTS. Each rigged model from Art/Blender/Worker/workers.py --rigged
+    // (Miner_<Name>.fbx, its atlas and miners.json) becomes a prefab: a navigating unit whose procedural body
+    // solves onto invisible segments sized from the model's skeleton, and whose bones MinerBody turns to match.
+    // Three levels of detail, one painted material and the drawn outline; a lamp's light where it has one.
+    // AddToOrdinaryPlace puts all three in the Ordinary Place, one standing at a time, with the choice (M).
+    public static class MinerSetup
+    {
+        public const string Folder = "Assets/_WonderGather/Art/Worker/Miners";
+        private const string MaterialFolder = "Assets/_WonderGather/Materials/Miners";
+        public const string PrefabFolder = "Assets/_WonderGather/Prefabs/Miners";
+        private const string BodyPrefab = "Assets/_WonderGather/Prefabs/LivingBodyBiped.prefab";
+        public static readonly string[] Names = { "Small", "Long", "Round" };
+        private static readonly string[] Notes =
+        {
+            "young and curious, a lantern at the belt",
+            "tall and unhurried, a pickaxe on the back",
+            "sturdy and laughing, a lamp on the cap",
+        };
+
+        [Serializable] private class Manifest { public Entry[] miners; }
+
+        [Serializable]
+        private class Entry
+        {
+            public string name;
+            public float height, hipHeight, hipWidth, leg, ankleHeight, heelLength, ballLength, toeLength, waistRise, headRise;
+            public float upperArm, forearm, armOut, armDrop, armForward;
+            public float[] shoulder;
+        }
+
+        private static string Argument(string name)
+        {
+            var args = Environment.GetCommandLineArgs();
+            for (int i = 0; i + 1 < args.Length; i++) if (args[i] == name) return args[i + 1];
+            return null;
+        }
+
+        [MenuItem("Wonder Gather/Create The Miners")]
+        public static void CreatePrefabs()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Leave Play mode first.");
+            var manifest = JsonUtility.FromJson<Manifest>(File.ReadAllText(Folder + "/miners.json"));
+            Directory.CreateDirectory(MaterialFolder);
+            Directory.CreateDirectory(PrefabFolder);
+            AssetDatabase.Refresh();
+            foreach (string name in Names)
+            {
+                var entry = manifest.miners.FirstOrDefault(x => x.name == name) ?? throw new InvalidOperationException("miners.json has no " + name);
+                Create(name, entry);
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("MINERS_PREFABS_OK");
+        }
+
+        public static string PrefabPath(string name) => PrefabFolder + "/Miner_" + name + ".prefab";
+
+        private static void Create(string name, Entry e)
+        {
+            var body = Material(name);
+            var glow = MaterialAt(MaterialFolder + "/Lamp glow.mat", Painted());
+            glow.SetColor("_BaseColor", new Color(.35f, .22f, .1f));
+            glow.SetColor("_EmissionColor", new Color(1f, .72f, .38f) * 3f);
+            glow.SetFloat("_Drawn", 1);
+            var outline = MaterialAt(MaterialFolder + "/Outline.mat", Shader.Find("Wonder Gather/Outline") ?? throw new InvalidOperationException("The outline shader did not compile."));
+            outline.SetFloat("_MaxWidth", .012f);
+            outline.SetFloat("_Behind", .035f);
+            EditorUtility.SetDirty(glow);
+            EditorUtility.SetDirty(outline);
+
+            string modelPath = Folder + "/Miner_" + name + ".fbx";
+            var importer = (ModelImporter)AssetImporter.GetAtPath(modelPath) ?? throw new FileNotFoundException("Export the rigged miners first.", modelPath);
+            importer.animationType = ModelImporterAnimationType.Generic;
+            importer.avatarSetup = ModelImporterAvatarSetup.NoAvatar;
+            importer.importAnimation = false;
+            importer.optimizeGameObjects = false;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.importBlendShapes = false;
+            importer.bakeAxisConversion = true;
+            importer.importNormals = ModelImporterNormals.Import;
+            importer.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
+            importer.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), "Miner_" + name), body);
+            importer.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), "Glow"), glow);
+            importer.SaveAndReimport();
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(modelPath) ?? throw new InvalidOperationException("The miner did not import: " + name);
+
+            float scale = e.hipHeight / 1.43f;
+            var root = new GameObject("Miner " + name);
+            var collider = root.AddComponent<CapsuleCollider>();
+            collider.height = e.height;
+            collider.center = new Vector3(0, e.height * .5f, 0);
+            collider.radius = Mathf.Clamp(e.height * .15f, .2f, .3f);
+            var agent = root.AddComponent<NavMeshAgent>();
+            // One walking pace for all three, an easy walk for each body (Froude number about .2 to .3).
+            agent.speed = 1.3f;
+            agent.acceleration = 4;
+            agent.angularSpeed = 180;
+            agent.radius = .3f;
+            agent.height = e.height;
+            agent.stoppingDistance = .12f;
+            agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            agent.avoidancePriority = 40;
+            root.AddComponent<UnitMotor>();
+            var selectable = root.AddComponent<SelectableUnit>();
+            var ring = Ring(root.transform, Mathf.Clamp(e.height * .32f, .4f, .6f));
+            selectable.Configure(ring);
+
+            // The procedural body's solution: invisible segments it places every frame.
+            var solution = new GameObject("Body solution").transform;
+            solution.SetParent(root.transform, false);
+            Transform Part(string label, Vector3 size)
+            {
+                var part = new GameObject(label).transform;
+                part.SetParent(solution, false);
+                part.localScale = size;
+                return part;
+            }
+            var pelvis = Part("Pelvis", Vector3.one);
+            var torso = Part("Torso", Vector3.one);
+            var head = Part("Head", Vector3.one);
+            var thighs = new Transform[2]; var shins = new Transform[2]; var feet = new Transform[2]; var toes = new Transform[2];
+            var upperArms = new Transform[2]; var forearms = new Transform[2];
+            for (int i = 0; i < 2; i++)
+            {
+                string side = i == 0 ? "Left " : "Right ";
+                thighs[i] = Part(side + "thigh", Vector3.one);
+                shins[i] = Part(side + "shin", Vector3.one);
+                feet[i] = Part(side + "foot", new Vector3(.1f, .06f, e.heelLength + e.ballLength));
+                toes[i] = Part(side + "toe", new Vector3(.1f, .05f, e.toeLength));
+                upperArms[i] = Part(side + "upper arm", Vector3.one);
+                forearms[i] = Part(side + "forearm", Vector3.one);
+            }
+            var biped = root.AddComponent<ProceduralBiped>();
+            biped.Configure(pelvis, torso, head, thighs, shins, feet, upperArms, forearms);
+            biped.ConfigureToes(toes);
+            biped.ConfigureRing(ring.transform);
+            biped.SetProportions(new ProceduralBiped.Proportions
+            {
+                // Standing, the knees keep the same slight bend as the original body's (hip to ankle 95.6% of the leg).
+                hipHeight = e.ankleHeight + .956f * 2 * e.leg,
+                hipWidth = e.hipWidth, legSegment = e.leg,
+                ankleHeight = e.ankleHeight, heelLength = e.heelLength, ballLength = e.ballLength, toeLength = e.toeLength,
+                waistRise = e.waistRise, torsoRise = (e.shoulder[1] * .5f), headRise = e.headRise,
+                shoulder = new Vector3(e.shoulder[0], e.shoulder[1], e.shoulder[2]),
+                upperArm = e.upperArm, forearm = e.forearm,
+                armHang = new Vector3(e.armOut, e.armDrop, e.armForward),
+                scale = scale,
+            });
+            biped.SetTuning(.65f, Mathf.Clamp(.16f * scale, .05f, .3f), .34f);
+
+            // The model, turned to face the unit's forward, with its levels of detail and outline.
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(model);
+            instance.name = "Model";
+            instance.transform.SetParent(root.transform, false);
+            var bones = instance.GetComponentsInChildren<Transform>(true);
+            Transform Bone(string bone) => bones.FirstOrDefault(x => x.name == bone) ?? throw new InvalidOperationException($"{name} has no bone {bone}.");
+            Vector3 up = Bone("Head").position - Bone("Pelvis").position;
+            Vector3 forward = Vector3.ProjectOnPlane(Bone("Toe.L").position - Bone("Foot.L").position + Bone("Toe.R").position - Bone("Foot.R").position, up);
+            instance.transform.localRotation = Quaternion.Inverse(Quaternion.LookRotation(forward, up)) * instance.transform.localRotation;
+            float height = instance.GetComponentsInChildren<Renderer>().Select(r => r.bounds.max.y).Max();
+            if (Mathf.Abs(height - e.height) > e.height * .15f)
+                throw new InvalidOperationException($"{name} imported {height:F2} m tall, expected {e.height:F2} m: check the export's units.");
+
+            var renderers = instance.GetComponentsInChildren<SkinnedMeshRenderer>(true).OrderBy(r => r.name).ToArray();
+            if (renderers.Length != 3) throw new InvalidOperationException($"{name} should have three levels of detail, has {renderers.Length}.");
+            var lods = instance.GetComponent<LODGroup>() ?? instance.AddComponent<LODGroup>();
+            // Close views: the full model. The Strategy camera's usual height: the middle one. Far: the lightest.
+            lods.SetLODs(new[]
+            {
+                new LOD(.18f, new Renderer[] { renderers[0] }),
+                new LOD(.035f, new Renderer[] { renderers[1] }),
+                new LOD(.004f, new Renderer[] { renderers[2] }),
+            });
+            lods.RecalculateBounds();
+            for (int i = 0; i < 3; i++)
+            {
+                var smr = renderers[i];
+                smr.updateWhenOffscreen = false;
+                smr.skinnedMotionVectors = false;
+                // The drawn outline on the nearer two (it follows the mesh's last part, the body).
+                if (i < 2) smr.sharedMaterials = smr.sharedMaterials.Append(outline).ToArray();
+            }
+            Lamp(renderers[0], name);
+
+            var miner = root.AddComponent<MinerBody>();
+            miner.Configure(new MinerBody.Bones
+            {
+                pelvis = Bone("Pelvis"), spine = Bone("Spine"), chest = Bone("Chest"), neck = Bone("Neck"), head = Bone("Head"),
+                upperArms = new[] { Bone("UpperArm.L"), Bone("UpperArm.R") }, forearms = new[] { Bone("Forearm.L"), Bone("Forearm.R") },
+                hands = new[] { Bone("Hand.L"), Bone("Hand.R") }, thighs = new[] { Bone("Thigh.L"), Bone("Thigh.R") },
+                shins = new[] { Bone("Shin.L"), Bone("Shin.R") }, feet = new[] { Bone("Foot.L"), Bone("Foot.R") }, toes = new[] { Bone("Toe.L"), Bone("Toe.R") },
+            }, new MinerBody.Solution
+            {
+                pelvis = pelvis, torso = torso, head = head, upperArms = upperArms, forearms = forearms, thighs = thighs, shins = shins, feet = feet, toes = toes,
+            });
+            PrefabUtility.SaveAsPrefabAsset(root, PrefabPath(name));
+            Object.DestroyImmediate(root);
+        }
+
+        // A lamp's warm light where the model has glowing glass: on the bone that carries the glass.
+        private static void Lamp(SkinnedMeshRenderer renderer, string name)
+        {
+            var mesh = renderer.sharedMesh;
+            if (mesh.subMeshCount < 2) return;
+            var indices = mesh.GetIndices(0);
+            if (indices.Length == 0) return;
+            var vertices = mesh.vertices;
+            var weights = mesh.boneWeights;
+            Vector3 centre = Vector3.zero;
+            var votes = new float[renderer.bones.Length];
+            foreach (int index in indices.Distinct())
+            {
+                centre += vertices[index];
+                var w = weights[index];
+                votes[w.boneIndex0] += w.weight0;
+                votes[w.boneIndex1] += w.weight1;
+            }
+            centre /= indices.Distinct().Count();
+            int bone = Array.IndexOf(votes, votes.Max());
+            Debug.Log($"MINER_LAMP_VOTES {name} submeshes {mesh.subMeshCount} glass vertices {indices.Distinct().Count()} centre {renderer.transform.TransformPoint(centre)} " +
+                      string.Join(" ", votes.Select((v, k) => v > 0 ? $"{renderer.bones[k].name}:{v:F0}" : null).Where(x => x != null)));
+            var light = new GameObject("Lamp light").AddComponent<Light>();
+            light.transform.SetParent(renderer.bones[bone], false);
+            light.transform.position = renderer.transform.TransformPoint(centre) + Vector3.down * .04f;
+            light.type = LightType.Point;
+            light.color = new Color(1f, .72f, .42f);
+            light.intensity = .7f;
+            light.range = 2.4f;
+            light.shadows = LightShadows.None;
+            Debug.Log($"MINER_LAMP {name} on {renderer.bones[bone].name}");
+        }
+
+        private static Shader Painted() => Shader.Find("Wonder Gather/Painted") ?? throw new InvalidOperationException("The painted shader did not compile.");
+
+        private static Material Material(string name)
+        {
+            string atlasPath = Folder + "/Miner_" + name + "_Atlas.png";
+            var importer = (TextureImporter)AssetImporter.GetAtPath(atlasPath) ?? throw new FileNotFoundException("The miner's atlas is missing.", atlasPath);
+            importer.sRGBTexture = true;
+            importer.mipmapEnabled = true;
+            importer.wrapMode = TextureWrapMode.Clamp;
+            importer.anisoLevel = 4;
+            importer.maxTextureSize = 2048;
+            importer.textureCompression = TextureImporterCompression.CompressedHQ;
+            // The face's thin strokes live in this atlas: a sharper mip keeps them at a distance.
+            importer.mipMapBias = -.6f;
+            importer.SaveAndReimport();
+            var material = MaterialAt(MaterialFolder + "/Miner " + name + ".mat", Painted());
+            material.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(atlasPath));
+            material.SetColor("_BaseColor", Color.white);
+            material.SetFloat("_Variation", .12f);
+            material.SetFloat("_Brush", .3f);
+            material.SetFloat("_BrushScale", 14);
+            material.SetFloat("_Softness", .38f);
+            material.SetFloat("_Translucency", .12f);
+            material.SetFloat("_Gloss", .08f);
+            material.SetFloat("_VertexColor", 0);
+            material.SetColor("_EmissionColor", Color.black);
+            // Drawn, not only modelled: kept clear of the paint filter, so the face's few marks hold.
+            material.SetFloat("_Drawn", 1);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        private static Material MaterialAt(string path, Shader shader)
+        {
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                material = new Material(shader) { name = Path.GetFileNameWithoutExtension(path) };
+                AssetDatabase.CreateAsset(material, path);
+            }
+            else if (material.shader != shader) material.shader = shader;
+            return material;
+        }
+
+        // The selection ring, as the other units have it (the living body's ring, resized).
+        private static GameObject Ring(Transform parent, float radius)
+        {
+            var template = AssetDatabase.LoadAssetAtPath<GameObject>(BodyPrefab) ?? throw new FileNotFoundException(BodyPrefab);
+            var source = template.transform.Find("Selection ring") ?? throw new InvalidOperationException("The living body has no selection ring.");
+            var ring = Object.Instantiate(source.gameObject, parent, false);
+            ring.name = "Selection ring";
+            var line = ring.GetComponent<LineRenderer>();
+            for (int i = 0; i < line.positionCount; i++)
+            {
+                float angle = i * Mathf.PI * 2 / line.positionCount;
+                line.SetPosition(i, new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * radius);
+            }
+            return ring;
+        }
+
+        // All three in the Ordinary Place where its worker stood; the remembered or first choice stands, the others wait.
+        [MenuItem("Wonder Gather/Add The Miners To The Ordinary Place")]
+        public static void AddToOrdinaryPlace()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Leave Play mode first.");
+            var scene = EditorSceneManager.OpenScene(OrdinaryPlaceSetup.ScenePath, OpenSceneMode.Single);
+            var selection = Object.FindAnyObjectByType<SelectionController>() ?? throw new InvalidOperationException("The scene has no selection.");
+            // The worker the place was built with: its one unit that is not a miner.
+            var old = Object.FindObjectsByType<SelectableUnit>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .FirstOrDefault(x => x.GetComponent<MinerBody>() == null)?.gameObject;
+            var choice = Object.FindAnyObjectByType<MinerChoice>(FindObjectsInactive.Include);
+            Vector3 position;
+            Quaternion rotation;
+            if (old != null)
+            {
+                position = old.transform.position;
+                rotation = old.transform.rotation;
+                Object.DestroyImmediate(old);
+            }
+            else if (choice != null && choice.Current != null)
+            {
+                position = choice.Current.transform.position;
+                rotation = choice.Current.transform.rotation;
+            }
+            else throw new InvalidOperationException("Neither the worker nor the miners were found in the Ordinary Place.");
+            if (choice != null) Object.DestroyImmediate(choice.gameObject);
+            foreach (var stale in Object.FindObjectsByType<MinerBody>(FindObjectsInactive.Include, FindObjectsSortMode.None)) Object.DestroyImmediate(stale.gameObject);
+
+            var group = new GameObject("The miners");
+            var units = new SelectableUnit[Names.Length];
+            var prefabs = new GameObject[Names.Length];
+            for (int i = 0; i < Names.Length; i++)
+            {
+                var prefab = prefabs[i] = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(Names[i])) ?? throw new FileNotFoundException(PrefabPath(Names[i]));
+                var unit = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
+                unit.transform.SetParent(group.transform, false);
+                unit.transform.SetPositionAndRotation(position, rotation);
+                units[i] = unit.GetComponent<SelectableUnit>();
+            }
+            choice = group.AddComponent<MinerChoice>();
+            choice.Configure(units, Names, Notes, selection, 0);
+            // A crowd of miners for the benchmark (-wgcrowd); idle otherwise.
+            group.AddComponent<MinerCrowdBenchmark>().Configure(prefabs);
+            EditorUtility.SetDirty(selection);
+            if (!EditorSceneManager.SaveScene(scene)) throw new IOException("Could not save " + OrdinaryPlaceSetup.ScenePath);
+            Debug.Log("ORDINARY_PLACE_MINERS_OK");
+        }
+
+        // Batch: prefabs, then the Ordinary Place.
+        public static void CreateAll()
+        {
+            CreatePrefabs();
+            AddToOrdinaryPlace();
+        }
+    }
+}

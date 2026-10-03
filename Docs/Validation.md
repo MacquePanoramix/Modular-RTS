@@ -1275,3 +1275,65 @@ look at every distance
   - **Motion.** The miners are still posed.
   - **Luis's eye.**
 
+## S1d, the miners — rigged, light, and the choice (October 3)
+
+Luis asked to start rigging, make the miners light enough for the RTS, and
+offer all three in this prototype
+([MinersPlaytest.md](Playtests/MinersPlaytest.md)).
+
+- **Environment.** The isolated worktree was reset to 9930e35. The validated
+  files were then copied into the main project.
+- **The export, checked in Blender before the engine.** Each rigged FBX was
+  re-imported, posed mid-stride bone by bone and rendered at each level of
+  detail:
+  - coats and the apron followed the thighs;
+  - boots followed the feet;
+  - arms swung.
+
+  Fixed along the way:
+  - **One white material.** Clearing a mesh's material slots reset every
+    face's material index, so all faces got the lamp glass. The faces are now
+    read first and assigned after.
+  - **Small's lantern rode on the head.** Its own cap matched the rule for
+    caps; things carried at the belt are now checked first.
+  - **The outline drew the lamp glass instead of the body.** Unity orders a
+    mesh's parts by first use, and an extra material draws the last part. The
+    glass's faces are now sorted first.
+  - **The rest pose's wide arms** (kept for clean skinning) made a scarecrow
+    walk in the game. The game's hang is now computed per miner: close to the
+    body, the elbow just clear of the trunk.
+- **Tests** (`MinerTests`, 5 new, all passed on their first run):
+  - three miners are offered and one stands;
+  - choosing another puts it where the last stood, with the selection;
+  - each is within budget: three levels of at most 20,000, 6,000 and 2,000
+    triangles, 3 materials at most, 24 bones at most;
+  - each walks to the door, its modelled ankles staying within 9 cm of the
+    body's planted feet, step by step;
+  - each stands upright.
+- **Full PlayMode suite (117 tests, the capture skipped as explicit):** two
+  runs, both 116/116 passed (927.9 s and 926.2 s). The proportions' defaults
+  reproduce the original constants exactly; the earlier tests did not
+  change.
+- **Watched by eye.** `MinerWalkCapture` renders each miner walking, by day
+  and at dusk, from the side, the front and the Strategy height, and the
+  three together.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Crowd benchmark** (`-wgcrowd`). GPU and frame time at 1920×1080 on the
+  RTX 4060 Laptop:
+
+  | Miners walking | Strategy view, frame ms (p95) | Close view, frame ms (p95) |
+  |---|---|---|
+  | 0 | 4.9 (5.9) | 4.7 (5.1) |
+  | 25 | 5.7 (7.1) | 5.2 (5.4) |
+  | 50 | 6.0 (8.4) | 5.6 (5.9) |
+  | 100 | 7.0 (9.2) | 6.2 (7.3) |
+
+- **Not tested:**
+  - **Mining and hauling with the miners.** The equipment scene still uses
+    the 2.2 m test body.
+  - **Turning on the spot and jogging,** by eye.
+  - **The Editor menus** (`Create The Miners`, `Add The Miners To The
+    Ordinary Place`). They ran only in batch.
+  - **The picker by hand.** It was driven by tests only.
+  - **Other hardware.** Other GPUs were not tried.
+  - **Luis's eye.**

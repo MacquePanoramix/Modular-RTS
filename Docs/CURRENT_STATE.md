@@ -19,6 +19,15 @@
   are the base art style for every being and thing in the world, not one
   character's costume
   ([VisualSoul.md](ArtDirection/VisualSoul.md#the-language-for-every-being-and-thing)).
+  - **Rigged and in the game (October 3).**
+    - **Walking.** Small, Long and Round walk the Ordinary Place on the
+      procedural body, whose proportions now come from each model.
+    - **The choice.** The player chooses one when the place loads (`M` to
+      change).
+    - **Light.** Three levels of detail and one texture each; 100 miners
+      walking add about 2 ms a frame.
+
+    See [MinersPlaytest.md](Playtests/MinersPlaytest.md).
   - **The miners: "almost perfect… already adorable"** (Luis, October 3).
     Polished on Luis's notes: the necks grow out of the clothes, the boots
     are single boots, Round's hands rest on the hips. Smaller flaws found on
@@ -254,13 +263,14 @@ Still valid from September 30:
 1. **Luis checks the dusk fixes** in the build:
    - fewer fireflies, still marked when far out;
    - the lamplight close up.
-2. **Rig the three miners** on the procedural biped and make them light
-   enough for the RTS:
-   - levels of detail;
-   - one mesh and atlas each.
+2. **Luis plays the miners** in the build
+   ([MinersPlaytest.md](Playtests/MinersPlaytest.md)):
+   - the choice;
+   - walking;
+   - the pace.
 
-   Then offer the choice of three in this prototype, and prove them in
-   motion.
+   Then mining and hauling move onto the miners (the pickaxe sized to each
+   body).
 3. **Further explorations are additive and switchable**, and shown early as
    frames before being built out.
 

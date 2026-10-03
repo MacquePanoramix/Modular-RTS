@@ -126,7 +126,10 @@ asked for two camera systems. The detailed plan is in
   original S1 scope below. October 2: three concepts
   ([WorkerConcepts.md](ArtDirection/WorkerConcepts.md)), then, after Luis's
   ranking, the miners remade at higher quality from modules
-  ([TheMiners.md](ArtDirection/TheMiners.md)).
+  ([TheMiners.md](ArtDirection/TheMiners.md)). October 3: polished, rigged,
+  lightened (three levels of detail, one atlas) and walking in the Ordinary
+  Place with the choice of three ([MinersPlaytest.md](Playtests/MinersPlaytest.md));
+  mining with them is next.
 
 The original S1 scope that continues as S1d:
 
