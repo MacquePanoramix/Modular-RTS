@@ -35,7 +35,7 @@ import shapes
 LOD_BUDGETS = (16000, 5000, 1600)
 ATLAS = 2048
 # Parts dropped from the farthest level of detail.
-DETAILS = ("_Lace", "_Button", "_LanternBar", "_ApronTie", "_ApronStrap", "_Buckle", "_MugHandle", "_CapLampMount", "_Spring")
+DETAILS = ("_Lace", "_Button", "_LanternBar", "_ApronTie", "_Buckle", "_MugHandle", "_CapLampMount", "_Spring", "_StrapTab")
 
 
 def side_of(i):
@@ -72,6 +72,9 @@ def joints(b):
         bones[f"Shin.{s}"] = (b.knees[i], b.ankles[i], p["leg"] * 1.15, f"Thigh.{s}")
         bones[f"Foot.{s}"] = (b.ankles[i], ball, F * 0.22, f"Shin.{s}")
         bones[f"Toe.{s}"] = (ball, ground + f * F * 0.58, F * 0.2, f"Foot.{s}")
+    # Carried things with bones of their own (a lantern that swings, a mug in a hand).
+    for name, head, tail, parent in getattr(b, "props", []):
+        bones[name] = (head, tail, 0.05, parent)
     return bones
 
 
@@ -120,14 +123,27 @@ def capsule_weights(co, names, bones, power=5.0, keep=3):
     return [(n, w / total) for w, n in ws if w / total > 0.02]
 
 
+TRUNK = ["Pelvis", "Spine", "Chest", "Neck"]
+ARMS = ["UpperArm.L", "UpperArm.R", "Forearm.L", "Forearm.R", "Hand.L", "Hand.R"]
+LEGS = ["Thigh.L", "Thigh.R", "Shin.L", "Shin.R", "Foot.L", "Foot.R"]
+
+
 def candidates(name):
-    """The bones a part may follow, chosen by the kind of part (from its name)."""
+    """The bones a part may follow, chosen by the kind of part (from its name). Garments lying on one another
+    take the same bones from the same field (as weights transferred from the body would be), so the layers move
+    together and do not cut through each other; carried things are rigid on one bone."""
     import re
     m = re.search(r"_(Boot|Sole|Heel|Lace|BootCuff|Hand|Forearm|Roll|Finger|Thumb|Palm)(\d)", name)
     side = side_of(int(m.group(2))) if m else None
-    # Things carried at the belt first: a lantern's own cap is not a cap on the head.
-    if any(k in name for k in ("_Bag", "_Buckle", "_Lantern", "_Mug")):
-        return ["Pelvis"]
+    # Carried things first (a lantern's own cap is not a cap on the head).
+    if "_Lantern" in name:
+        return "rigid:Lantern"
+    if "_Mug" in name:
+        return "rigid:Mug"
+    if any(k in name for k in ("_Bag", "_Buckle", "_StrapTab")):
+        return "rigid:Pelvis"
+    if "_PickStrap" in name or name.endswith("_Strap"):
+        return TRUNK
     if "_Hair" in name or "_Cap" in name:
         return ["Head"]
     if name.endswith("_Skin"):
@@ -139,17 +155,14 @@ def candidates(name):
     if m and m.group(1) in ("Forearm", "Roll"):
         return [f"UpperArm.{side}", f"Forearm.{side}", f"Hand.{side}"]
     if name.endswith("_Top"):
-        return ["Pelvis", "Spine", "Chest", "Neck", "UpperArm.L", "UpperArm.R", "Forearm.L", "Forearm.R", "Hand.L", "Hand.R"]
+        return TRUNK + ARMS
     if name.endswith("_Trousers"):
-        return ["Pelvis", "Thigh.L", "Thigh.R", "Shin.L", "Shin.R"]
-    if any(k in name for k in ("_Collar", "_Lapel", "_ShirtFront", "_Button", "_Neckband", "_ApronStrap", "_Patch0")):
-        return ["Spine", "Chest", "Neck"]
-    if "_ApronTie" in name:
-        return ["Pelvis", "Spine"]
-    if name.endswith("_Strap"):
-        return ["Pelvis", "Spine", "Chest"]
+        return ["Pelvis", "Spine"] + LEGS
+    if any(k in name for k in ("_Collar", "_Lapel", "_ShirtFront", "_Button", "_Neckband", "_ApronStrap", "_Patch0", "_ApronTie")):
+        # On the torso: the same bones, by the same rule, as the top beneath them.
+        return TRUNK + ARMS
     if "_Pick" in name:
-        return ["Chest"]
+        return "rigid:Chest"
     if any(k in name for k in ("_Skirt", "_Apron", "_Patch1", "_ApronPocket", "_Hammer")):
         return "skirt"
     return None
@@ -161,8 +174,16 @@ def skin(obj, b, bones):
     groups = {}
     mesh = obj.data
     mesh.update()
+    if isinstance(names, str) and names.startswith("rigid:"):
+        bone = names.split(":", 1)[1]
+        if bone not in bones:
+            bone = "Pelvis"
+        g = obj.vertex_groups.new(name=bone)
+        g.add([v.index for v in mesh.vertices], 1.0, 'REPLACE')
+        return
     if names == "skirt":
-        # Coats, smocks and aprons hang from the pelvis; towards the hem the thighs carry more of them, each its own side.
+        # Coats, smocks and aprons: above the waist they follow the torso exactly as the top beneath them does;
+        # below, they hang from the pelvis, and towards the hem the thighs carry more of them, each its own side.
         top = b.pelvis.z
         hem = min(v.co.z for v in mesh.vertices)
         width = b.trunk["pelvis"][0]
@@ -170,7 +191,12 @@ def skin(obj, b, bones):
             t = max(0.0, min(1.0, (top - v.co.z) / max(top - hem, 1e-3)))
             thigh = 0.62 * t
             left = max(0.0, min(1.0, 0.5 + (v.co.x - b.pelvis.x) / (1.2 * width)))
-            for n, w in (("Pelvis", 1 - thigh), ("Thigh.L", thigh * left), ("Thigh.R", thigh * (1 - left))):
+            hang = {"Pelvis": 1 - thigh, "Thigh.L": thigh * left, "Thigh.R": thigh * (1 - left)}
+            above = max(0.0, min(1.0, (v.co.z - b.pelvis.z) / max(b.waist.z - b.pelvis.z, 1e-3)))
+            if above > 0:
+                body_w = dict(capsule_weights(v.co, ["Pelvis", "Spine", "Chest"], bones))
+                hang = {n: hang.get(n, 0.0) * (1 - above) + body_w.get(n, 0.0) * above for n in set(hang) | set(body_w)}
+            for n, w in hang.items():
                 if w > 0.01:
                     groups.setdefault(n, []).append((v.index, w))
     else:
@@ -429,4 +455,6 @@ def hang(b, upper, fore):
     out = max(0.0, clear - abs(b.shoulders[1].x - b.chest.x))
     tilt = max(0.12, min(0.6, out / upper * 1.05))
     side = length * tilt
-    return dict(armOut=side, armDrop=math.sqrt(max(length * length - side * side, 0.0)) * 0.97, armForward=length * 0.05)
+    # Relaxed arms bend a little at the elbow, the hands coming slightly forward; the rounder the body, the more.
+    forward = length * (0.05 + 0.35 * max(0.0, tilt - 0.2))
+    return dict(armOut=side, armDrop=math.sqrt(max(length * length - side * side - forward * forward, 0.0)) * 0.95, armForward=forward)

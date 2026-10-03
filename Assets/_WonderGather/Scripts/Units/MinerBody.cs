@@ -27,6 +27,11 @@ namespace WonderGather
 
         [SerializeField] private Bones bones;
         [SerializeField] private Solution solved;
+        // Optional: a carried thing on a bone of its own under a hand (a lantern), left to swing like a pendulum.
+        [SerializeField] private Transform swinging;
+        [SerializeField] private float swingLength = .12f;
+        private Vector3 swingAim, swingTip, swingPrevious;
+        private bool swingReady;
         private bool ready;
         // Rest: each bone's rotation relative to the being's root, and for limbs the rest aim of the bone, in root space.
         private Quaternion pelvisRest, spineRest, chestRest, neckRest, headRest;
@@ -38,13 +43,17 @@ namespace WonderGather
         public bool Ready => ready;
         public Bones Rig => bones;
 
-        public void Configure(Bones rig, Solution solution)
+        public void Configure(Bones rig, Solution solution, Transform swingingProp = null, float swingingLength = .12f)
         {
             bones = rig;
             solved = solution;
+            swinging = swingingProp;
+            swingLength = swingingLength;
             ready = false;
             CaptureRest();
         }
+
+        public Transform Swinging => swinging;
 
         private void Awake() => CaptureRest();
 
@@ -84,6 +93,9 @@ namespace WonderGather
             // The pelvis bone relative to the middle of the hip joints, which is where the body solves the hips.
             Vector3 hips = (bones.thighs[0].position + bones.thighs[1].position) * .5f;
             pelvisOffset = toRoot * (bones.pelvis.position - hips);
+            // A swinging thing hangs straight down at rest; remember that direction in its bone's own frame.
+            if (swinging != null) swingAim = Quaternion.Inverse(swinging.rotation) * Vector3.down;
+            swingReady = false;
             ready = true;
         }
 
@@ -155,6 +167,30 @@ namespace WonderGather
                 // The hand carries on from the forearm.
                 bones.hands[i].rotation = fore * root * handRest[i];
             }
+            Swing();
+        }
+
+        // A carried lantern swings under its hand: a damped pendulum, pulled by gravity and left behind as the hand
+        // moves, never more than 55 degrees from hanging straight.
+        private void Swing()
+        {
+            if (swinging == null) return;
+            float dt = Mathf.Clamp(Time.deltaTime, 0, 1 / 20f);
+            Vector3 pivot = swinging.position;
+            if (!swingReady || (swingTip - pivot).sqrMagnitude > 1)
+            {
+                swingTip = swingPrevious = pivot + Vector3.down * swingLength;
+                swingReady = true;
+            }
+            Vector3 velocity = (swingTip - swingPrevious) * .9f;
+            swingPrevious = swingTip;
+            swingTip += velocity + Physics.gravity * (dt * dt);
+            Vector3 hang = swingTip - pivot;
+            if (hang.sqrMagnitude < 1e-8f) hang = Vector3.down;
+            hang = Vector3.RotateTowards(Vector3.down, hang.normalized, 55 * Mathf.Deg2Rad, 0);
+            swingTip = pivot + hang * swingLength;
+            Vector3 aim = swinging.rotation * swingAim;
+            swinging.rotation = Quaternion.FromToRotation(aim, hang) * swinging.rotation;
         }
     }
 }

@@ -929,3 +929,59 @@ at 3066921.
     project.
   - **Running it:** `-testFilter WonderGather.Tests.MinerWalkCapture -captureOut <folder>`.
 
+## The miners' polish and natural walks — October 3, evening
+
+- **Blender sources.**
+  - **`body.head`.** The neck rises from behind the jaw (`on(0, 0.3, -0.62)`)
+    and widens into the collar, and a negative ball hollows under the chin.
+    `body.shaft_radius` is the boot shaft (leg × 1.12).
+  - **`outfits.top`.** It closes the neckline round the neck.
+  - **`outfits.collar`.** One strip from inside the coat (stand, then fall);
+    `open_front=False` buttons it up.
+  - **`outfits.trousers`.** They fall over the boots' shafts;
+    `hidden_above` deletes faces no one can see under a closed skirt.
+  - **`outfits.lay_on`.** It lays points on garments: cast towards the
+    trunk's axis below the chest, or down over the shoulders. Points that miss
+    are placed between neighbours that hit.
+  - **Laid with it:**
+    - the satchel's strap (to the bag's top, with tabs);
+    - Long's new `bandolier`;
+    - the apron's straps;
+    - the buttons.
+  - **The satchel** rests on the measured skirt at the right hip.
+  - **The apron** hangs 8 mm to 2 cm clear of the measured clothes.
+- **Rest pose.** `workers.REST` declares, per miner:
+  - **`hold`:** a hand that carries something curls round it with the grip
+    `hold`;
+  - **`swap`:** a carried thing changes how it is carried;
+  - **`add`:** extra pieces, such as Long's bandolier.
+
+  `b.props` records carried things that get bones of their own: `Lantern` and
+  `Mug`, under the hand's bone. The skeleton is 20 bones for Small and Long.
+- **Skinning (`rigging.candidates`).**
+  - **Rigid.** `rigid:<bone>` makes a part rigid: the lantern, the mug, the
+    satchel and tabs on the pelvis, the slung pickaxe on the chest.
+  - **Same weights.** Pieces on the torso take the same candidate bones as
+    the top.
+  - **Skirts and aprons** blend from the torso's own weights above the waist
+    to the pelvis and thighs below.
+- **`ProceduralBiped.Proportions`.** It gains `bounce`, `sway` and
+  `armSwing`, multipliers of the pelvis' rise and fall, its sway and roll, and
+  the arm swing. They are 1 by default; zero, from older data, reads as 1. The
+  selection ring's height scales with `scale`.
+- **`MinerBody`.** It takes an optional swinging prop (the lantern's bone) and
+  swings it as a damped verlet pendulum under the hand, at most 55° from
+  hanging.
+- **`MinerSetup`.**
+  - **Pace.** Each agent's speed is √(Froude · g · hip height), the walk's
+    Froude number coming from `miners.json`: Small 1.27, Long 1.38, Round
+    1.28 m/s. The walk's character goes to the proportions.
+  - **Lamps.** A carried lantern is a downward spot (150°, 2.2 m); a cap lamp
+    is a forward-down spot (75°, 5 m).
+- **`MinerChoice`.** Choosing a miner calls `ProceduralBiped.ResetPose`, so
+  its body stands where it now is. Before this, the feet stayed where that
+  miner was last shown, and the body walked away from the unit.
+- **`MinerCloseCapture`** (PlayMode, `[Explicit]`). It produces the close
+  audit's frames (see
+  [CharacterPractices.md](../ArtDirection/CharacterPractices.md#3-the-close-audit-before-luis-sees-anything)).
+

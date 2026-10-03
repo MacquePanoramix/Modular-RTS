@@ -37,6 +37,8 @@ namespace WonderGather.Editor
             public float height, hipHeight, hipWidth, leg, ankleHeight, heelLength, ballLength, toeLength, waistRise, headRise;
             public float upperArm, forearm, armOut, armDrop, armForward;
             public float[] shoulder;
+            // The walk natural to this body: the Froude number of its comfortable walk, and the walk's character.
+            public float froude, bounce, sway, arm_swing;
         }
 
         private static string Argument(string name)
@@ -102,8 +104,11 @@ namespace WonderGather.Editor
             collider.center = new Vector3(0, e.height * .5f, 0);
             collider.radius = Mathf.Clamp(e.height * .15f, .2f, .3f);
             var agent = root.AddComponent<NavMeshAgent>();
-            // One walking pace for all three, an easy walk for each body (Froude number about .2 to .3).
-            agent.speed = 1.3f;
+            // Each walks at its own comfortable pace: the speed at which its legs give its walk's Froude number
+            // (v² / g·h; about .25 is a comfortable walk for any size). Small steps quickly, Long strides slowly.
+            float standing = e.ankleHeight + .956f * 2 * e.leg;
+            agent.speed = Mathf.Sqrt(Mathf.Clamp(e.froude > 0 ? e.froude : .25f, .15f, .35f) * 9.81f * standing);
+            Debug.Log($"MINER_PACE {name} {agent.speed:F2} m/s");
             agent.acceleration = 4;
             agent.angularSpeed = 180;
             agent.radius = .3f;
@@ -113,7 +118,7 @@ namespace WonderGather.Editor
             agent.avoidancePriority = 40;
             root.AddComponent<UnitMotor>();
             var selectable = root.AddComponent<SelectableUnit>();
-            var ring = Ring(root.transform, Mathf.Clamp(e.height * .32f, .4f, .6f));
+            var ring = Ring(root.transform, Mathf.Clamp(e.height * .3f, .38f, .55f));
             selectable.Configure(ring);
 
             // The procedural body's solution: invisible segments it places every frame.
@@ -148,7 +153,7 @@ namespace WonderGather.Editor
             biped.SetProportions(new ProceduralBiped.Proportions
             {
                 // Standing, the knees keep the same slight bend as the original body's (hip to ankle 95.6% of the leg).
-                hipHeight = e.ankleHeight + .956f * 2 * e.leg,
+                hipHeight = standing,
                 hipWidth = e.hipWidth, legSegment = e.leg,
                 ankleHeight = e.ankleHeight, heelLength = e.heelLength, ballLength = e.ballLength, toeLength = e.toeLength,
                 waistRise = e.waistRise, torsoRise = (e.shoulder[1] * .5f), headRise = e.headRise,
@@ -156,6 +161,7 @@ namespace WonderGather.Editor
                 upperArm = e.upperArm, forearm = e.forearm,
                 armHang = new Vector3(e.armOut, e.armDrop, e.armForward),
                 scale = scale,
+                bounce = e.bounce > 0 ? e.bounce : 1, sway = e.sway > 0 ? e.sway : 1, armSwing = e.arm_swing > 0 ? e.arm_swing : 1,
             });
             biped.SetTuning(.65f, Mathf.Clamp(.16f * scale, .05f, .3f), .34f);
 
@@ -194,6 +200,7 @@ namespace WonderGather.Editor
             Lamp(renderers[0], name);
 
             var miner = root.AddComponent<MinerBody>();
+            var swingingProp = bones.FirstOrDefault(x => x.name == "Lantern");
             miner.Configure(new MinerBody.Bones
             {
                 pelvis = Bone("Pelvis"), spine = Bone("Spine"), chest = Bone("Chest"), neck = Bone("Neck"), head = Bone("Head"),
@@ -203,7 +210,7 @@ namespace WonderGather.Editor
             }, new MinerBody.Solution
             {
                 pelvis = pelvis, torso = torso, head = head, upperArms = upperArms, forearms = forearms, thighs = thighs, shins = shins, feet = feet, toes = toes,
-            });
+            }, swingingProp, .12f);
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath(name));
             Object.DestroyImmediate(root);
         }
@@ -230,14 +237,32 @@ namespace WonderGather.Editor
             int bone = Array.IndexOf(votes, votes.Max());
             Debug.Log($"MINER_LAMP_VOTES {name} submeshes {mesh.subMeshCount} glass vertices {indices.Distinct().Count()} centre {renderer.transform.TransformPoint(centre)} " +
                       string.Join(" ", votes.Select((v, k) => v > 0 ? $"{renderer.bones[k].name}:{v:F0}" : null).Where(x => x != null)));
+            var carrier = renderer.bones[bone];
             var light = new GameObject("Lamp light").AddComponent<Light>();
-            light.transform.SetParent(renderer.bones[bone], false);
-            light.transform.position = renderer.transform.TransformPoint(centre) + Vector3.down * .04f;
-            light.type = LightType.Point;
+            light.transform.SetParent(carrier, false);
+            light.transform.position = renderer.transform.TransformPoint(centre);
+            light.type = LightType.Spot;
             light.color = new Color(1f, .72f, .42f);
-            light.intensity = .7f;
-            light.range = 2.4f;
             light.shadows = LightShadows.None;
+            var forward = renderer.transform.root.forward;
+            if (carrier.name == "Head")
+            {
+                // A cap lamp: a beam ahead and down onto the path.
+                light.transform.rotation = Quaternion.LookRotation(Vector3.Lerp(forward, Vector3.down, .45f).normalized);
+                light.spotAngle = 75;
+                light.innerSpotAngle = 30;
+                light.range = 5f;
+                light.intensity = 1.6f;
+            }
+            else
+            {
+                // A carried lantern: a warm pool on the ground and the legs, never lighting the face from below.
+                light.transform.rotation = Quaternion.LookRotation(Vector3.down, forward);
+                light.spotAngle = 150;
+                light.innerSpotAngle = 60;
+                light.range = 2.2f;
+                light.intensity = 1.1f;
+            }
             Debug.Log($"MINER_LAMP {name} on {renderer.bones[bone].name}");
         }
 

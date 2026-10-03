@@ -1337,3 +1337,79 @@ offer all three in this prototype
   - **The picker by hand.** It was driven by tests only.
   - **Other hardware.** Other GPUs were not tried.
   - **Luis's eye.**
+
+## S1d, the miners — polish after Luis's play, natural walks (October 3, evening)
+
+Luis's notes on Small, his request for proactive polish on all three and
+natural walks
+([correspondence](Correspondence/2026-10-03_SMALL_POLISH_AND_NATURAL_GAITS.md);
+[TheMiners.md](ArtDirection/TheMiners.md#polish-after-luiss-play-october-3-evening);
+the practices in [CharacterPractices.md](ArtDirection/CharacterPractices.md)).
+
+- **Environment.** The isolated worktree was at c733d4f. The validated files
+  were then copied into the main project.
+- **Research first.** Good practice for game characters was researched and
+  recorded, with sources, in CharacterPractices.md:
+  - remove hidden geometry;
+  - give clothes the weights of what they lie on;
+  - attach straps and carried things;
+  - neck anatomy;
+  - walk character;
+  - walking speed by Froude number.
+- **The close audit, before fixing anything.** A new capture
+  (`MinerCloseCapture`) renders each rigged miner in the game at dusk, as
+  close as the Explore camera goes:
+  - from every side, standing;
+  - the face, the neck from behind and from the front, hands, feet;
+  - mid-stride.
+
+  Findings beyond Luis's notes:
+  - **Small's body walked away from the unit.** After choosing a miner, its
+    feet were still where that miner was last shown. This is a real bug, also
+    in the build Luis played.
+  - **A hole at the back of every neck.**
+  - **Long's chest strap floated** where the coat opens.
+  - **Round's apron stood off the smock.**
+  - **Buttons stood off the cloth.**
+  - **Long's boot shafts were wide** around thin legs.
+- **Fixed, and checked by audit again** (Blender previews of the rest poses,
+  then the engine, three rounds):
+  - Small's lantern, satchel and strap, legs and boots, neck and collar;
+  - the swap's body (`ResetPose`);
+  - necklines and collars on all three;
+  - Long's strap, pickaxe and mug;
+  - Round's apron and straps;
+  - buttons;
+  - trousers hidden under skirts;
+  - layered weights;
+  - ring sizes;
+  - lamps lighting the ground.
+
+  Before and after: `Images/Miners/Polish3_BeforeAfter.jpg`.
+- **Natural walks:**
+  - Small: 1.27 m/s, brisk and bouncy;
+  - Long: 1.38 m/s, long smooth strides;
+  - Round: 1.28 m/s, rolling.
+
+  Each pace comes from the body's own legs at its walk's Froude number.
+- **Tests.**
+  - `MinerTests` now also checks that a newly chosen miner's feet are under
+    it.
+  - **Full PlayMode suite (118 tests, the two review captures skipped as
+    explicit):** two runs, both 116/116 passed (914.0 s and 909.7 s).
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Crowd benchmark** (`-wgcrowd`, 1920×1080, RTX 4060 Laptop). The cost
+  is unchanged by the polish:
+
+  | Miners walking | Strategy view, frame ms (p95) | Close view, frame ms (p95) |
+  |---|---|---|
+  | 0 | 5.2 (5.3) | 5.1 (5.5) |
+  | 25 | 5.6 (5.9) | 5.5 (7.0) |
+  | 50 | 5.9 (6.7) | 5.9 (6.9) |
+  | 100 | 6.9 (8.5) | 6.4 (7.9) |
+- **Not tested:**
+  - **The lantern's swing** was judged in frames, not watched moving by eye.
+  - **Jogging and turning on the spot,** by eye.
+  - **Mining with the miners.** It still uses the test body.
+  - **Other hardware.** Other GPUs were not tried.
+  - **Luis's eye.** Luis's notes on Long and Round are still to come.

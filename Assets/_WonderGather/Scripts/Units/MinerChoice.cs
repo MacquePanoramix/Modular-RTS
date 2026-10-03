@@ -72,6 +72,8 @@ namespace WonderGather
                 to.transform.SetPositionAndRotation(position, rotation);
                 to.gameObject.SetActive(true);
                 if (to.TryGetComponent<NavMeshAgent>(out var agent) && agent.isOnNavMesh) agent.Warp(position);
+                // A short move is not a step: the body stands up afresh where it now is, feet and all.
+                if (to.TryGetComponent<ProceduralBiped>(out var body)) body.ResetPose();
             }
             else if (to != null) to.gameObject.SetActive(true);
             chosen = index;

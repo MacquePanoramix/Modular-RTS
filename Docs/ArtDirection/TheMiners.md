@@ -77,6 +77,62 @@ Luis asked for a careful look at every distance
   - **Small's lantern.** Its light sits a little below the glass, so the hand
     that carries it is not burnt white.
 
+## Polish after Luis's play (October 3, evening)
+
+Luis played the build and pointed at Small:
+- the lantern floating beside the hip, through the hand;
+- legs not lining up with the boots;
+- the neck still odd;
+- the satchel clipping, and not hanging properly from its strap.
+
+Luis asked for proactive polish on all three, for research into good Blender
+practice, and for natural walks
+([correspondence](../Correspondence/2026-10-03_SMALL_POLISH_AND_NATURAL_GAITS.md)).
+The practices and the close audit now live in
+[CharacterPractices.md](CharacterPractices.md).
+
+![Before and after: Small (from Luis's screenshots), Long and Round](../Images/Miners/Polish3_BeforeAfter.jpg)
+
+- **Small:**
+  - **The lantern** is held by its bail in the left hand, on a bone of its
+    own, and swings as Small walks. It lights the ground and the legs (a
+    downward spot), not the face from below.
+  - **The satchel** rests against the coat at the right hip, turned to its
+    surface. Its strap lies on the coat from the left shoulder, rides over the
+    buttons and ends at the bag's top in two tabs.
+  - **The legs and boots** line up: the shafts hug the legs, and the trousers
+    fall over them.
+  - **The neck** rises from behind the jaw, slender at the top, into a collar
+    that closes round it. The coat is buttoned up to the collar.
+- **Found on the close audit:**
+  - **The body walked away from Small.** After choosing a miner, its body was
+    still standing where that miner was last shown. Choosing now stands the
+    body up where the miner is, and a test checks it.
+  - **A hole at the back of every neck.** The garments' necklines now close
+    round the neck; collars grow out of the coat.
+  - **Long's chest strap** (for the pickaxe on the back) floated where the
+    coat opens. It now lies over the lapels and shirt, and the pickaxe sits
+    lower and closer.
+  - **Long's mug** now sits in the left hand instead of hanging at the belt.
+  - **Round's apron** stood off the smock like a board. It now hangs just
+    clear of it, and its straps lie over the shoulders.
+  - **Buttons** are sewn onto the cloth, turned to its surface.
+  - **Trousers under the coats and smock** are cut away where no one can see
+    them, so they can never poke through.
+  - **Clothes moving apart.** Layers lying on one another now take the same
+    weights from the same field, so they move together.
+  - **Selection rings** match each miner's size.
+- **Natural walks.** Each body walks at its own comfortable pace, with a walk
+  of its own (see
+  [CharacterPractices.md](CharacterPractices.md#2-walks-natural-to-each-body)):
+  - Small is brisk and bouncy;
+  - Long takes long, smooth strides;
+  - Round has a rolling walk.
+
+![Small from every side after the polish](../Images/Miners/Polish3_Small_Sides.jpg)
+![Long from every side after the polish](../Images/Miners/Polish3_Long_Sides.jpg)
+![Round from every side after the polish](../Images/Miners/Polish3_Round_Sides.jpg)
+
 ## Rigged and in the game (October 3)
 
 ![Walking to the door at dusk](../Images/Miners/Rigged_Together_Dusk.jpg)

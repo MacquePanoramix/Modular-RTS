@@ -19,13 +19,27 @@ and routes to everything else.
 
 | Folder | Contents |
 |---|---|
-| [ArtDirection/](ArtDirection/) | **The art direction.** [VisualSoul.md](ArtDirection/VisualSoul.md) (Luis's handoff, and the direction now) and its approved reference images. [TheEssence.md](ArtDirection/TheEssence.md) (the study of what lies under the soul, what Luis's favourite frame teaches, and a proposed language). [StyleStudies.md](ArtDirection/StyleStudies.md) (the earlier Blender studies, not chosen). [TheMiners.md](ArtDirection/TheMiners.md) (the worker's redesign: Small, Long and Round, built from modules, S1d). [WorkerConcepts.md](ArtDirection/WorkerConcepts.md) (their first concepts, superseded) |
+| [ArtDirection/](ArtDirection/) | **The art direction.** [VisualSoul.md](ArtDirection/VisualSoul.md) (Luis's handoff, and the direction now) and its approved reference images. [TheEssence.md](ArtDirection/TheEssence.md) (the study of what lies under the soul, what Luis's favourite frame teaches, and a proposed language). [StyleStudies.md](ArtDirection/StyleStudies.md) (the earlier Blender studies, not chosen). [TheMiners.md](ArtDirection/TheMiners.md) (the worker's redesign: Small, Long and Round, built from modules, S1d). [CharacterPractices.md](ArtDirection/CharacterPractices.md) (how beings are built and audited: practices, natural walks, the close audit). [WorkerConcepts.md](ArtDirection/WorkerConcepts.md) (their first concepts, superseded) |
 | [Correspondence/](Correspondence/) | Luis's messages, verbatim and dated, with how each was recorded |
 | [Design/](Design/) | Design notes that feed GAME_VISION: the early design brief and the one-worker showcase vision |
 | [Plans/](Plans/) | Completed or superseded milestone plans, archived when replaced |
 | [Playtests/](Playtests/) | One guide per playable milestone: how to run it, what to judge, and its evidence and limits. The latest: [MinersPlaytest.md](Playtests/MinersPlaytest.md) (choose a miner, walk the meadow) |
 | [Technical/](Technical/) | Architecture and history for engineers and agents ([UnityProjectContext.md](Technical/UnityProjectContext.md)) and the equipment/mining contracts |
 | [Images/](Images/) | Screenshots and renders, in one folder per milestone, named like its playtest guide |
+
+## Where each kind of record goes
+
+When something happens, it is written down in these places:
+
+| What happened | Where it is recorded |
+|---|---|
+| **Luis sends a message** | Verbatim in `Correspondence/<date>_<TOPIC>.md`, with how it was recorded. A summary goes in CURRENT_STATE ("Latest Game Director direction"), and a row per decision in GAME_VISION's decision log |
+| **A look or a character changes** | Its art direction page (for example [TheMiners.md](ArtDirection/TheMiners.md)), with before-and-after images in `Images/<Milestone>/` |
+| **Something becomes playable** | Its playtest guide (how to run it, what to judge, its limits) |
+| **Code or assets change** | [UnityProjectContext.md](Technical/UnityProjectContext.md): how it works and why |
+| **Tests, builds, benchmarks or captures run** | [Validation.md](Validation.md): results, what failed and how it was fixed, and what was not tested |
+| **A practice is learned** | The practices page for its area (for example [CharacterPractices.md](ArtDirection/CharacterPractices.md)) |
+| **Every step** | Committed and pushed to GitHub with a message saying what changed and why |
 
 ## Conventions
 

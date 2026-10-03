@@ -28,13 +28,16 @@ namespace WonderGather
             public float upperArm, forearm;
             // Where a relaxed hand hangs from its shoulder: outwards, down, forwards.
             public Vector3 armHang;
-            // Carried loads, pumping arms, stance tolerances and rendered thickness scale with this.
+            // Carried loads, pumping arms, stance tolerances, rendered thickness and the ring's height scale with this.
             public float scale;
+            // The walk's character, as multipliers of the original walk: how much the pelvis rises and falls, how
+            // much it sways and rolls from side to side, and how far the arms swing.
+            public float bounce, sway, armSwing;
             public static Proportions Default => new Proportions
             {
                 hipHeight = 1.43f, hipWidth = .21f, legSegment = .68f, ankleHeight = .13f, heelLength = .07f, ballLength = .19f, toeLength = .11f,
                 waistRise = .06f, torsoRise = .23f, headRise = .58f, shoulder = new Vector3(.34f, .43f, 0), upperArm = .44f, forearm = .43f,
-                armHang = new Vector3(.06f, .83f, .05f), scale = 1
+                armHang = new Vector3(.06f, .83f, .05f), scale = 1, bounce = 1, sway = 1, armSwing = 1
             };
         }
         [SerializeField] private bool customProportions;
@@ -69,6 +72,10 @@ namespace WonderGather
         private void ApplyProportions()
         {
             P=customProportions?proportions:Proportions.Default;
+            // A body saved before the walk had a character walks as the original did.
+            if(P.bounce<=0) P.bounce=1;
+            if(P.sway<=0) P.sway=1;
+            if(P.armSwing<=0) P.armSwing=1;
             HipHeight=P.hipHeight;HipWidth=P.hipWidth;AnkleHeight=P.ankleHeight;HeelLength=P.heelLength;BallLength=P.ballLength;ToeLength=P.toeLength;
             if(!customProportions){LegReach=1.33f;LegLimit=1.359f;NarrowStance=.14f;ClosedTolerance=.15f;SettleTolerance=.3f;return;}
             // The same ratios as the original body: reach just short of a straight leg, a narrow stance at two thirds of the hips.
@@ -443,7 +450,7 @@ namespace WonderGather
         {
             if(selectionRing!=null)
             {
-                selectionRing.position=transform.position+Vector3.up*.14f;
+                selectionRing.position=transform.position+Vector3.up*(.14f*P.scale);
                 selectionRing.rotation=Quaternion.FromToRotation(Vector3.up,(support[0].normal+support[1].normal).normalized);
             }
             float speed=velocity.magnitude,cycle=2*Mathf.PI*phase,walk=gaitWeight*(1-jogWeight),jog=gaitWeight*jogWeight;
@@ -452,13 +459,13 @@ namespace WonderGather
             bool burdened=(equipment!=null&&equipment.HandsOnTool)||(worker!=null&&worker.Carried>0);
             // Walking: the pelvis is lowest in double support and highest over the stance foot.
             // Jogging: it compresses through stance and rises in flight.
-            float bounce=-walk*.018f*Mathf.Cos(2*(cycle-Mathf.PI*(duty-.5f)))
-                -jog*(.035f*Mathf.Cos(2*(cycle-Mathf.PI*duty))+.04f);
+            float bounce=(-walk*.018f*Mathf.Cos(2*(cycle-Mathf.PI*(duty-.5f)))
+                -jog*(.035f*Mathf.Cos(2*(cycle-Mathf.PI*duty))+.04f))*P.bounce;
             // The pelvis shifts over the stance foot, rotates with the forward leg and
             // drops slightly on the swing side.
-            float sway=-gaitWeight*Mathf.Lerp(.025f,.012f,jogWeight)*Mathf.Cos(cycle-Mathf.PI*duty);
+            float sway=-gaitWeight*Mathf.Lerp(.025f,.012f,jogWeight)*Mathf.Cos(cycle-Mathf.PI*duty)*P.sway;
             float yaw=gaitWeight*Mathf.Lerp(5,6,jogWeight)*Mathf.Cos(cycle)*(burdened?.3f:1);
-            float list=walk*2.5f*Mathf.Cos(cycle-Mathf.PI*(1+duty));
+            float list=walk*2.5f*Mathf.Cos(cycle-Mathf.PI*(1+duty))*P.sway;
             float standingHeight=transform.position.y+HipHeight+bounce,height=standingHeight;
             bool horizontalOverreach=false;
             for(int i=0;i<2;i++)
@@ -507,7 +514,7 @@ namespace WonderGather
             Vector3 leftShoulder=waist+chest*new Vector3(-P.shoulder.x,P.shoulder.y,P.shoulder.z),rightShoulder=waist+chest*new Vector3(P.shoulder.x,P.shoulder.y,P.shoulder.z);
             // One explicit update order: supported torso -> tool trajectory/contact -> grip IK.
             if(equipment!=null) equipment.SolveFrame(dt,hips,posture,leftShoulder,rightShoulder,!support[0].swinging&&!support[1].swinging);
-            float armAmplitude=Mathf.Lerp(Mathf.Lerp(.05f,.22f,Mathf.Clamp01(speed/2.2f)),.16f,jogWeight)*gaitWeight*(P.armHang.y/.83f);
+            float armAmplitude=Mathf.Lerp(Mathf.Lerp(.05f,.22f,Mathf.Clamp01(speed/2.2f)),.16f,jogWeight)*gaitWeight*(P.armHang.y/.83f)*P.armSwing;
             bool hasToes=Pair(toes);
             for(int i=0;i<2;i++)
             {

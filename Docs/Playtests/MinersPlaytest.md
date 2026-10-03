@@ -41,16 +41,33 @@ Ordinary Place with the choice of miner.
 
 ![From the Strategy camera's height](../Images/Miners/Rigged_Together_Strategy.jpg)
 
+## After Luis's play (October 3, evening)
+
+- **Small.** The lantern is carried in the left hand and swings. The satchel
+  sits on the right hip, properly hung from its strap. Legs line up with the
+  boots, and the neck rises cleanly into a closed collar.
+- **All three.** These were polished on a close audit; see
+  [TheMiners.md](../ArtDirection/TheMiners.md#polish-after-luiss-play-october-3-evening)
+  and the practices in
+  [CharacterPractices.md](../ArtDirection/CharacterPractices.md).
+- **Natural walks** replace the one shared pace:
+
+  | Miner | Pace | The walk |
+  |---|---|---|
+  | Small | 1.27 m/s | brisk, quick, bouncy |
+  | Long | 1.38 m/s | long, smooth, unhurried strides |
+  | Round | 1.28 m/s | rolling, side to side |
+
 ## What changed for the game
 
-- **Free hands.** Things held in the hands for the portraits go elsewhere,
-  so the hands are free for work:
-  - Small's lantern hangs from the belt;
-  - Long's pickaxe is slung on the back and the mug hangs at the belt;
-  - Round's hands are free (the apron's hammer stays in its pocket).
-- **One walking pace for all three** (1.3 m/s), an easy walk for each body.
-  - **Small** has the quickest steps, **Long** the longest.
-  - Any difference in speed would be a design choice, so none was made.
+- **Carried things are carried.**
+  - Small carries the lantern in the left hand (until October 3 evening, it
+    hung at the hip with nothing holding it).
+  - Long carries the mug in the left hand, with the pickaxe slung on the back
+    on a strap across the chest.
+  - Round's hands are free; the apron's hammer stays in its pocket.
+- **Each walks at its own pace** (see above). Until October 3 evening, all
+  three walked at 1.3 m/s.
 - **Arms** hang close to the body and slightly bent, just clearing each
   one's clothes. Round's are a little wider, around a round body.
 
@@ -85,8 +102,8 @@ The benchmark is in the build: run it with `-wgcrowd`. It writes
   creator?
 - **Up close in motion.** Look at shoulders, hips and knees: skinning stretches
   the cloth at the joints.
-- **The pace.** Should the three walk at one pace, or should their bodies
-  show, with Small quicker and Long slower?
+- **The walks.** Do they feel natural to each body? (Luis asked for that on
+  October 3.)
 
 ## Not yet
 

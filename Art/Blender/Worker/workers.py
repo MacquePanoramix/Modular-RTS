@@ -111,20 +111,23 @@ PRESETS = {
         body=dict(height=1.42, head=0.13, head_shape=(1.04, 1.0, 1.0), hip=0.45, waist=0.57, chest=0.68, collar=0.075,
                   shoulder_w=0.145, hip_w=0.068, shoulder_h=0.035, upper_arm=0.165, forearm=0.14, hand=0.105, foot=0.17,
                   trunk=dict(pelvis=(0.115, 0.085), waist=(0.105, 0.078), chest=(0.12, 0.085), collar=(0.072, 0.058)),
-                  arm=0.033, leg=0.041, neck_r=0.45,
+                  arm=0.033, leg=0.041, neck_r=0.4,
                   nose=[((0, -1.0, -0.3), 0.085, (1.0, 1.0, 0.9))], cheeks=0.3, jaw=0.62, chin=0.24,
                   pose=dict(weight=-1, hip_shift=0.02, hip_tilt=0.012, shoulder_tilt=0.015, turn=0.22, nod=-0.2, tilt=0.16, free_foot=(1.7, -0.07)),
                   arms=[dict(wrist=at_hip(0.07, -0.1, -0.04), pole=(1, 0.6, -0.1)),
                         dict(wrist=lambda b, s: b.chest + Vector((s * 0.045, -b.depth("chest") - 0.075, 0.0)), pole=(1, 0.2, -1.0))]),
+        # Light and young: brisk, bouncy steps, arms swinging freely.
+        gait=dict(froude=0.27, bounce=1.35, sway=0.9, arm_swing=1.15),
         hands=[dict(grip="grip"), dict(grip="grip", palm=(0, 1, 0), along=(-0.3, 0.1, 1))],
         face=dict(style="curious", skin="Skin_Small", soot=[((0.52, -0.28), 0.1, 0.3, 0.6)]),
         hair=dict(style="bob", mat="Hair"),
         outfit=[("top", dict(mat="CoatBlue", loose=0.024, sleeve=1.07, cuff=1.45, skirted=True)),
-                ("trousers", dict(mat="TrousersGrey", boot=0.13)),
+                ("trousers", dict(mat="TrousersGrey", boot=0.13, hidden_above=0.30 * 1.42 + 0.06)),
                 ("skirt", dict(mat="CoatBlue", hem=0.31, flare=1.38, loose=0.026, folds=0.07, fold_count=7, ragged=0.012)),
-                ("collar", dict(mat="CoatBlue", height=0.085, wide=2.5)),
+                # Buttoned up to the collar: it closes at the front too.
+                ("collar", dict(mat="CoatBlue", height=0.085, wide=2.5, open_front=False)),
                 ("buttons", dict(mat="Button", count=3, loose=0.026)),
-                ("boots", dict(shaft=0.13, cuff=1)),
+                ("boots", dict(shaft=0.13)),
                 ("satchel", dict()),
                 ("lantern", dict(hand=0))],
     ),
@@ -141,6 +144,8 @@ PRESETS = {
                   pose=dict(weight=1, hip_shift=0.035, hip_tilt=0.014, shoulder_tilt=0.03, stoop=0.7, tilt=-0.16, turn=-0.18, nod=0.22, free_foot=(1.6, -0.08)),
                   arms=[dict(wrist=lambda b, s: b.pelvis + Vector((s * (b.width("pelvis") + 0.16), -0.1, -0.12)), pole=(1, 0.5, -0.3)),
                         dict(wrist=lambda b, s: b.waist + Vector((s * 0.05, -b.depth("waist") - 0.2, 0.1)), pole=(1, 0.5, -0.6))]),
+        # Tall and unhurried: long, smooth strides, little bounce, long arms swinging loosely.
+        gait=dict(froude=0.21, bounce=0.75, sway=0.8, arm_swing=1.25),
         hands=[dict(grip="grip", along=(0.2, -1, 0.0), ring=lambda b, i: b.wrists[i] - Vector((b.wrists[i].x * 1.25, b.wrists[i].y * 1.4, 0))),
                dict(grip="hold", palm=(-1, 0, 0), along=(-0.6, -0.6, 0.3))],
         face=dict(style="sleepy", skin="Skin_Long"),
@@ -169,17 +174,19 @@ PRESETS = {
                   cheeks=0.34, jaw=0.74, chin=0.3,
                   pose=dict(weight=-1, hip_shift=0.03, hip_tilt=0.014, shoulder_tilt=0.025, back=1.0, tilt=0.14, turn=0.12, nod=-0.08, free_foot=(1.8, -0.06)),
                   arms=[dict(wrist=on_hip(0.018), pole=(1, 0.8, 0.3)), dict(wrist=on_hip(0.018), pole=(1, 0.8, 0.3))]),
+        # Sturdy and heavy-set: a rolling side-to-side walk, arms swinging less round the body.
+        gait=dict(froude=0.24, bounce=1.1, sway=1.7, arm_swing=0.75),
         # Hands on hips: palms against the hips, fingers down and back, thumbs forward.
         hands=[dict(grip="open", palm=(1, 0, 0), along=(0, 0.5, -1)), dict(grip="open", palm=(-1, 0, 0), along=(0, 0.5, -1))],
         face=dict(style="laughing", skin="Skin_Round", soot=[((-0.55, -0.18), 0.09, 0.25, 0.6)]),
         hair=dict(style="curls", mat="HairBrown", top=0.45),
         outfit=[("top", dict(mat="Smock", loose=0.018, rolled=True, skirted=True)),  # the roll stays clear of the hands
-                ("trousers", dict(mat="Trousers", boot=0.13)),
+                ("trousers", dict(mat="Trousers", boot=0.13, hidden_above=0.37 * 1.56 + 0.06)),
                 ("skirt", dict(mat="Smock", hem=0.37, flare=1.15, loose=0.02, folds=0.05, fold_count=8)),
                 ("forearms", dict()),
                 ("neckband", dict(mat="Smock")),
                 ("boots", dict(shaft=0.13)),
-                ("apron", dict(mat="ApronLeather", tie="Leather", hem=0.33, flare=1.22)),
+                ("apron", dict(mat="ApronLeather", tie="Leather", hem=0.33, flare=1.1)),
                 ("patch", dict(mat="Leather", onto="Apron", where=lambda b: (b.pelvis + Vector((-0.07, 0, 0.0))), size=(0.055, 0.006, 0.05), name="ApronPocket")),
                 ("hammer", dict(pocket="ApronPocket", where=lambda b: b.pelvis + Vector((-0.08, -b.depth("pelvis") - 0.085, 0.08)), tilt=(0.25, -0.15, 1))),
                 ("lamp_cap", dict())],
@@ -192,8 +199,10 @@ PRESETS = {
 # What changes when the game moves them: things held in the hands go to the belt or the back, so the hands
 # are free for work; the arms hang a little out from the body; the feet stand under the hips; the head looks ahead.
 REST = {
-    "Small": dict(swap={"lantern": ("lantern", dict(belt=1))}),
-    "Long": dict(swap={"pickaxe": ("pickaxe", dict(back=True)), "mug": ("mug", dict(belt=0))}),
+    # Small carries the lantern in the left hand, away from the satchel at the right hip.
+    "Small": dict(swap={"lantern": ("lantern", dict(hand=1))}, hold={1: "lantern"}),
+    # Long carries the mug in the left hand; the pickaxe rides on the back on a strap across the chest.
+    "Long": dict(swap={"pickaxe": ("pickaxe", dict(back=True)), "mug": ("mug", dict(hand=1))}, add=[("bandolier", dict())], hold={1: "mug"}),
     "Round": dict(),
 }
 
@@ -211,13 +220,19 @@ def rest_preset(name, preset):
         return shoulder + Vector((s * 0.42 * length, 0.03, -0.9 * length))
     b["arms"] = [dict(wrist=hang, pole=(0.3, 1, 0)), dict(wrist=hang, pole=(0.3, 1, 0))]
     p["body"] = b
-    p["hands"] = [dict(grip="relaxed", palm=(1, 0, 0)), dict(grip="relaxed", palm=(-1, 0, 0))]
     rest = REST.get(name, {})
+    hands = [dict(grip="relaxed", palm=(1, 0, 0)), dict(grip="relaxed", palm=(-1, 0, 0))]
+    for i, what in rest.get("hold", {}).items():
+        # A hand that carries something curls round it, palm towards the body, fingers forward.
+        s = (-1, 1)[i]
+        hands[i] = dict(grip="hold", palm=(-s, 0, 0), along=(s * 0.15, -0.35, -1))
+    p["hands"] = hands
     outfit = []
     for piece, opts in preset["outfit"]:
         if piece in rest.get("drop", ()):
             continue
         outfit.append(rest.get("swap", {}).get(piece, (piece, opts)))
+    outfit += rest.get("add", [])
     p["outfit"] = outfit
     return p
 
@@ -237,10 +252,12 @@ def build_rigged(out_dir, only=None, dims_only=False):
         for n, r in recipes.items():
             import painting
             painting.recipe(n, **r)
+        gait = rp.get("gait", {})
         if dims_only:
-            dims[name] = rigging.dimensions(b, rigging.joints(b))
+            dims[name] = dict(rigging.dimensions(b, rigging.joints(b)), **gait)
             continue
         dims[name], _ = rigging.build(name, b, objs, MATERIALS, recipes, face_images, out_dir)
+        dims[name].update(gait)
     path = os.path.join(out_dir, "miners.json")
     previous = {}
     if os.path.exists(path):
@@ -255,7 +272,9 @@ def build_rigged(out_dir, only=None, dims_only=False):
 # ---------------------------------------------------------------- building
 
 def build_character(name, preset, out_dir):
+    outfits._TREES.clear()
     b = body.Body(f"Worker_{name}", preset["body"])
+    b.props = []  # rigid things with bones of their own: (bone, head, tail, parent bone)
     face = preset["face"]
     skin_name = face["skin"]
     image = faces.paint(face["style"], MATERIALS[skin_name]["colour"], preset["seed"], os.path.join(out_dir, f"Face_{name}.png"),
@@ -285,6 +304,13 @@ def dress(b, piece, o, held, skin):
         return outfits.skirt(b, o.pop("mat"), fit=top, under=under, **o)
     if piece == "trousers":
         return outfits.trousers(b, o.pop("mat"), **o)
+    if piece == "bandolier":
+        # It lies over everything on the chest: the coat, its lapels and the shirt between them.
+        torso = [x for x in bpy.data.objects if x.name == f"{b.name}_TopProbe" or x.name.startswith(f"{b.name}_Lapel") or x.name == f"{b.name}_ShirtFront"]
+        below = [x for x in bpy.data.objects if x.name == f"{b.name}_Skirt"]
+        start = b.chest + Vector((b.width("chest") * 0.3, b.depth("chest") + 0.03, 0.06))
+        end = b.waist + Vector((-b.width("waist") * 0.35, b.depth("waist") + 0.03, -0.04))
+        return outfits.bandolier(b, "Leather", torso, below, start, end)
     if piece == "neckband":
         garment = next(x for x in bpy.data.objects if x.name == f"{b.name}_Top")
         return outfits.neckband(b, o.pop("mat"), garment, **o)
@@ -295,7 +321,8 @@ def dress(b, piece, o, held, skin):
     if piece == "shirt_front":
         return outfits.shirt_front(b, o.pop("mat"), **o)
     if piece == "buttons":
-        return outfits.buttons(b, o.pop("mat"), **o)
+        onto = [x for x in bpy.data.objects if x.name in (f"{b.name}_Top", f"{b.name}_Skirt")]
+        return outfits.buttons(b, o.pop("mat"), onto=onto, **o)
     if piece == "patch":
         onto = next((x for x in bpy.data.objects if x.name == f"{b.name}_{o['onto']}"), None) if "onto" in o else None
         return outfits.patch(b, o["mat"], o["where"](b), o["size"], o.get("angle", 0.0), o.get("name", f"Patch{id(o) % 997}"), onto)
@@ -307,18 +334,19 @@ def dress(b, piece, o, held, skin):
     if piece == "forearms":
         return [body.forearm(b, i, skin) for i in (0, 1)]
     if piece == "satchel":
-        return outfits.satchel(b, "Leather", "Accent", "Brass")
+        torso = [x for x in bpy.data.objects if x.name == f"{b.name}_TopProbe"]
+        below = [x for x in bpy.data.objects if x.name == f"{b.name}_Skirt"]
+        return outfits.satchel(b, "Leather", "Accent", "Brass", torso, below)
     if piece == "lantern":
-        if "belt" in o:
-            # Hung from a loop at the hip, clear of the coat.
-            s = (-1, 1)[o["belt"]]
-            hook = b.pelvis + Vector((s * (b.width("pelvis") + 0.09), -0.01, 0.04))
-            return outfits.lantern(b, hook, "Brass", "Glass")
-        return outfits.lantern(b, held[o["hand"]][0], "Brass", "Glass")
+        grasp = held[o["hand"]][0]
+        # Carried by its bail through the curled fingers; it has a bone of its own, so it can swing.
+        hand_bone = f"Hand.{rigging.side_of(o['hand'])}"
+        b.props.append(("Lantern", grasp.copy(), grasp - Vector((0, 0, 0.12)), hand_bone))
+        return outfits.lantern(b, grasp, "Brass", "Glass")
     if piece == "pickaxe" and o.get("back"):
         # Slung across the back, its head over one shoulder.
-        centre = b.chest + Vector((0.0, b.depth("chest") + 0.05, -0.06))
-        return outfits.pickaxe(b, centre, Vector((0.5, 0.12, 1.0)), "Wood", "Iron", length=0.8, hold=0.5)
+        centre = b.chest + Vector((0.0, b.depth("chest") + 0.05, -0.02))
+        return outfits.pickaxe(b, centre, Vector((0.38, 0.1, 1.0)), "Wood", "Iron", length=0.74, hold=0.52)
     if piece == "pickaxe":
         # The handle runs through the fist, along its grip; Long leans on it like a walking stick.
         grasp, (a, t, n) = held[o["hand"]]
@@ -326,10 +354,9 @@ def dress(b, piece, o, held, skin):
         hold = o.get("hold", 0.9)
         return outfits.pickaxe(b, grasp, d, "Wood", "Iron", length=(grasp.z - 0.01) / max(d.z, 0.3) / hold, hold=hold)
     if piece == "mug":
-        if "belt" in o:
-            s = (-1, 1)[o["belt"]]
-            return outfits.mug(b, b.pelvis + Vector((s * (b.width("pelvis") + 0.075), 0.0, -0.03)), "Mug")
         grasp, (a, t, n) = held[o["hand"]]
+        # Held by its body in the curled fingers, upright.
+        b.props.append(("Mug", grasp.copy(), grasp + Vector((0, 0, 0.08)), f"Hand.{rigging.side_of(o['hand'])}"))
         return outfits.mug(b, grasp + n * 0.03 + Vector((0, 0, 0.01)), "Mug")
     if piece == "hammer":
         # In the apron's pocket when there is one, its head showing above.

@@ -57,6 +57,11 @@ namespace WonderGather.Tests
                 Assert.That(All().Count(x => x.gameObject.activeInHierarchy), Is.EqualTo(1));
                 Assert.That(Vector3.Distance(choice.Current.transform.position, at), Is.LessThan(.05f), "The new miner should stand where the last one stood.");
                 Assert.That(selection.Selected, Is.SameAs(choice.Current), "The new miner should take over the selection.");
+                // Its body stands where it now is at once, not dragging its feet from wherever it last stood.
+                yield return null;
+                var rig = choice.Current.GetComponent<MinerBody>().Rig;
+                var feet = (rig.feet[0].position + rig.feet[1].position) * .5f;
+                Assert.That(Vector3.ProjectOnPlane(feet - at, Vector3.up).magnitude, Is.LessThan(.25f), "The new miner's feet should be under it.");
             }
         }
 

@@ -195,13 +195,18 @@ def head(b, skin):
         items.append((on(s * 1.02, 0.02, -0.08), -hr * 0.07, (0.4, 0.6, 0.9), hm))  # the ear's hollow
     for at, r, size in p["nose"]:
         items.append((on(*at), hr * r, size, hm))
-    # The neck: a column from behind the jaw into the collar, widening into the shoulders under the clothes.
+    # The neck: slender at the top, rising from behind the jaw and under the ears (where the neck's muscles
+    # start), widening as it goes down into the collar and the shoulders under the clothes. Starting behind
+    # the jaw, not under the chin, keeps the jawline and chin readable.
     nk = hr * p.get("neck_r", 0.5)
-    top = on(0, 0.12, -0.62)
-    base = b.collar + Vector((0, 0.008, -0.02))
-    for f, r in ((0.0, 0.92), (0.35, 0.95), (0.7, 1.0), (1.0, 1.06)):
-        items.append((top.lerp(base, f), nk * r, (1.0, 0.95, 1.0)))
-    items.append((base + Vector((0, 0.006, -0.02)), nk * 1.12, (1.15, 0.95, 0.6)))
+    top = on(0, 0.3, -0.62)
+    base = b.collar + Vector((0, 0.012, -0.015))
+    for f, r in ((0.0, 0.8), (0.3, 0.86), (0.65, 0.97), (1.0, 1.1)):
+        items.append((top.lerp(base, f), nk * r, (1.0, 0.92, 1.0)))
+    # Where it widens into the shoulders it stays inside the clothes (a little forward of the coat's back).
+    items.append((base + Vector((0, -0.004, -0.025)), nk * 1.05, (1.15, 0.8, 0.5)))
+    # Under the chin, a soft hollow: the jaw's underside turns back into the neck instead of melting into it.
+    items.append((on(0, -0.42, -1.02), -hr * 0.3, (1.5, 1.0, 0.7), hm))
     obj = blobs(f"{b.name}_Skin", items, skin, resolution=hr * 0.032)
     span = p.get("face_span", 1.25)
     uv = obj.data.uv_layers[0]
@@ -220,13 +225,18 @@ def head(b, skin):
 
 # ---------------------------------------------------------------- boots
 
+def shaft_radius(b):
+    """A boot shaft's radius: just around the leg."""
+    return b.p["leg"] * 1.12
+
+
 def boot(b, i, leather, sole, shaft=0.16, cuff=0.0, laces="Lace"):
     """A sturdy boot: a shoe-last foot with a low rounded toe and a shaft wide enough for the trousers to
     tuck into, fused into one form and flattened to stand; a thick sole and heel; laces crossing up the front."""
     f, an = b.foot_frame(i)
     side = Vector((0, 0, 1)).cross(f).normalized()
     L = b.p.get("foot", 0.165) * b.H  # the boot's length
-    W = L * 0.19  # half its width at the ball
+    W = L * 0.17  # half its width at the ball
     ground = Vector((an.x, an.y, 0))
 
     def at(along, up, out=0.0):
@@ -236,8 +246,10 @@ def boot(b, i, leather, sole, shaft=0.16, cuff=0.0, laces="Lace"):
     top = Vector((an.x, an.y, an.z + shaft))
     # The last: one long rounded form from heel to toe, the toe a little narrower and lower.
     heel, toe = -L * 0.3, L * 0.58
+    # The shaft hugs the leg, so the leg and the boot read as one line; the trousers fall over its top.
+    shaft_r = shaft_radius(b)
     parts = [chain(f"{b.name}_BootShaft{i}", [at(-L * 0.04, 0.05), Vector((an.x, an.y, an.z + 0.02)), top + Vector((0, 0, -0.01)), top],
-                   [(leg_r * 1.25, leg_r * 1.35), (leg_r * 1.2, leg_r * 1.25), (leg_r * 1.38, leg_r * 1.38), (leg_r * 1.45, leg_r * 1.45)], leather),
+                   [(leg_r * 1.22, leg_r * 1.3), (shaft_r * 0.95, shaft_r), (shaft_r, shaft_r), (shaft_r, shaft_r)], leather),
              blobs(f"{b.name}_BootLast{i}", [(at((heel + toe) * 0.5, 0.05), W, ((toe - heel) * 0.5 / W, 1.0, 1.05), rot),
                                              (at(L * 0.4, 0.045), W * 0.92, (1.25, 0.98, 0.78), rot),
                                              (at(-L * 0.16, 0.06), W * 0.9, (1.15, 0.95, 1.1), rot)], leather, resolution=W * 0.07)]
@@ -264,7 +276,7 @@ def boot(b, i, leather, sole, shaft=0.16, cuff=0.0, laces="Lace"):
         # Crossing laces up the front of the shaft and over the instep.
         for k in range(4):
             z = 0.075 + k * (shaft + an.z - 0.11) / 4
-            reach = leg_r * (1.3 if z > an.z else 1.45)
+            reach = shaft_radius(b) * (1.02 if z > an.z else 1.15)
             c = Vector((an.x, an.y, z)) + f * (reach + 0.002 + (0.012 if z < an.z else 0))
             for sgn in (-1, 1):
                 lift = Vector((0, 0, 0.008 * sgn))
