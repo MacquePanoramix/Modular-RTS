@@ -92,6 +92,16 @@ def at_hip(out, forward, up):
     return lambda b, s: b.pelvis + Vector((s * (b.width("pelvis") + out), forward, up))
 
 
+def on_hip(loose, up=-0.03, back=0.015, palm=0.024):
+    """A wrist resting a palm's thickness outside the garment at the hips (whose looseness is loose)."""
+    def at(b, s):
+        z = b.waist.z + up
+        w, d = outfits.trunk_at(b, z, loose)
+        x, y = outfits.axis_at(b, z)
+        return Vector((x + s * (w + palm), y + back, z))
+    return at
+
+
 PRESETS = {
     # Small: young and small, curious, ready to set out. A dark bob, big glancing eyes, an oversized coat,
     # a satchel, and a miner's lantern in hand.
@@ -109,10 +119,10 @@ PRESETS = {
         face=dict(style="curious", skin="Skin_Small", soot=[((0.52, -0.28), 0.1, 0.3, 0.6)]),
         hair=dict(style="bob", mat="Hair"),
         outfit=[("top", dict(mat="CoatBlue", loose=0.024, sleeve=1.07, cuff=1.45, skirted=True)),
+                ("trousers", dict(mat="TrousersGrey", boot=0.13)),
                 ("skirt", dict(mat="CoatBlue", hem=0.31, flare=1.38, loose=0.026, folds=0.07, fold_count=7, ragged=0.012)),
                 ("collar", dict(mat="CoatBlue", height=0.085, wide=2.5)),
                 ("buttons", dict(mat="Button", count=3, loose=0.026)),
-                ("trousers", dict(mat="TrousersGrey", tuck=0.13)),
                 ("boots", dict(shaft=0.13, cuff=1)),
                 ("satchel", dict()),
                 ("lantern", dict(hand=0))],
@@ -126,7 +136,7 @@ PRESETS = {
                   trunk=dict(pelvis=(0.125, 0.09), waist=(0.115, 0.08), chest=(0.14, 0.095), collar=(0.085, 0.065)),
                   arm=0.036, leg=0.046, neck_r=0.48,
                   nose=[((0, -0.92, -0.08), 0.11, (0.75, 1.0, 1.6)), ((0, -1.12, -0.25), 0.11, (0.8, 2.0, 0.9)), ((0, -1.3, -0.36), 0.1, (0.9, 1.0, 1.0))],
-                  cheeks=0.2, jaw=0.62, chin=0.27, chin_drop=1.1,
+                  cheeks=0.14, jaw=0.62, chin=0.27, chin_drop=1.1,
                   pose=dict(weight=1, hip_shift=0.035, hip_tilt=0.014, shoulder_tilt=0.03, stoop=0.7, tilt=-0.16, turn=-0.18, nod=0.22, free_foot=(1.6, -0.08)),
                   arms=[dict(wrist=lambda b, s: b.pelvis + Vector((s * (b.width("pelvis") + 0.16), -0.1, -0.12)), pole=(1, 0.5, -0.3)),
                         dict(wrist=lambda b, s: b.waist + Vector((s * 0.05, -b.depth("waist") - 0.2, 0.1)), pole=(1, 0.5, -0.6))]),
@@ -135,13 +145,13 @@ PRESETS = {
         face=dict(style="sleepy", skin="Skin_Long"),
         hair=dict(style="swept", mat="Hair"),
         outfit=[("top", dict(mat="Coat", loose=0.016, sleeve=1.0, cuff=1.3, skirted=True)),
+                ("trousers", dict(mat="Trousers", boot=0.19)),
                 ("skirt", dict(mat="Coat", hem=0.26, flare=1.3, loose=0.018, open_front=True, folds=0.06, fold_count=6, ragged=0.03)),
                 ("shirt_front", dict(mat="Shirt", loose=0.016)),
                 ("lapels", dict(mat="Coat", loose=0.016)),
                 ("collar", dict(mat="Coat", height=0.07, wide=2.0)),
-                ("patch", dict(mat="Patch", where=lambda b: (b.chest + Vector((0.075, -b.depth("chest") - 0.02, -0.12))), size=(0.05, 0.006, 0.045), angle=0.2)),
-                ("patch", dict(mat="Patch", where=lambda b: (b.pelvis + Vector((-0.12, -b.depth("pelvis") - 0.04, -0.3))), size=(0.045, 0.006, 0.055), angle=-0.12)),
-                ("trousers", dict(mat="Trousers", tuck=0.19)),
+                ("patch", dict(mat="Patch", onto="Top", where=lambda b: (b.chest + Vector((0.075, 0, -0.12))), size=(0.05, 0.005, 0.045), angle=0.2, name="Patch0")),
+                ("patch", dict(mat="Patch", onto="Skirt", where=lambda b: (b.pelvis + Vector((-0.14, 0, -0.22))), size=(0.045, 0.005, 0.055), angle=-0.12, name="Patch1")),
                 ("boots", dict(shaft=0.19)),
                 ("pickaxe", dict(hand=0)),
                 ("mug", dict(hand=1))],
@@ -150,25 +160,27 @@ PRESETS = {
     # a smock with rolled sleeves, a leather apron with a hammer, and a miner's lamp cap.
     "Round": dict(
         seed=3,
-        body=dict(height=1.56, head=0.128, head_shape=(1.08, 1.0, 0.98), hip=0.47, waist=0.59, chest=0.72, collar=0.075,
-                  shoulder_w=0.19, hip_w=0.095, shoulder_h=0.03, upper_arm=0.16, forearm=0.14, hand=0.115, foot=0.17,
+        body=dict(height=1.56, head=0.128, head_shape=(1.08, 1.0, 0.98), hip=0.47, waist=0.59, chest=0.72, collar=0.092,
+                  shoulder_w=0.19, hip_w=0.095, shoulder_h=0.055, neck_drop=0.03, upper_arm=0.16, forearm=0.14, hand=0.115, foot=0.17,
                   trunk=dict(pelvis=(0.17, 0.13), waist=(0.185, 0.15), chest=(0.175, 0.13), collar=(0.1, 0.08)),
                   arm=0.045, leg=0.058, neck_r=0.6,
                   nose=[((0, -0.95, -0.12), 0.12, (0.8, 1.0, 1.4)), ((0, -1.1, -0.3), 0.22, (1.05, 0.95, 0.95))],
                   cheeks=0.34, jaw=0.74, chin=0.3,
                   pose=dict(weight=-1, hip_shift=0.03, hip_tilt=0.014, shoulder_tilt=0.025, back=1.0, tilt=0.14, turn=0.12, nod=-0.08, free_foot=(1.8, -0.06)),
-                  arms=[dict(wrist=at_hip(0.035, 0.01, 0.07), pole=(1, 0.7, 0.3)), dict(wrist=at_hip(0.035, 0.01, 0.07), pole=(1, 0.7, 0.3))]),
-        hands=[dict(grip="fist"), dict(grip="fist")],
+                  arms=[dict(wrist=on_hip(0.018), pole=(1, 0.8, 0.3)), dict(wrist=on_hip(0.018), pole=(1, 0.8, 0.3))]),
+        # Hands on hips: palms against the hips, fingers down and back, thumbs forward.
+        hands=[dict(grip="open", palm=(1, 0, 0), along=(0, 0.5, -1)), dict(grip="open", palm=(-1, 0, 0), along=(0, 0.5, -1))],
         face=dict(style="laughing", skin="Skin_Round", soot=[((-0.55, -0.18), 0.09, 0.25, 0.6)]),
         hair=dict(style="curls", mat="HairBrown", top=0.45),
-        outfit=[("top", dict(mat="Smock", loose=0.018, rolled=True, skirted=True)),
+        outfit=[("top", dict(mat="Smock", loose=0.018, rolled=True, skirted=True)),  # the roll stays clear of the hands
+                ("trousers", dict(mat="Trousers", boot=0.13)),
                 ("skirt", dict(mat="Smock", hem=0.37, flare=1.15, loose=0.02, folds=0.05, fold_count=8)),
                 ("forearms", dict()),
-                ("trousers", dict(mat="Trousers", tuck=0.12)),
-                ("boots", dict(shaft=0.12)),
+                ("neckband", dict(mat="Smock")),
+                ("boots", dict(shaft=0.13)),
                 ("apron", dict(mat="ApronLeather", tie="Leather", hem=0.33, flare=1.22)),
-                ("patch", dict(mat="Leather", where=lambda b: (b.pelvis + Vector((-0.07, -b.depth("pelvis") - 0.07, 0.02))), size=(0.055, 0.007, 0.05), name="ApronPocket")),
-                ("hammer", dict(where=lambda b: b.pelvis + Vector((-0.08, -b.depth("pelvis") - 0.085, 0.08)), tilt=(0.25, -0.1, 1))),
+                ("patch", dict(mat="Leather", onto="Apron", where=lambda b: (b.pelvis + Vector((-0.07, 0, 0.0))), size=(0.055, 0.006, 0.05), name="ApronPocket")),
+                ("hammer", dict(pocket="ApronPocket", where=lambda b: b.pelvis + Vector((-0.08, -b.depth("pelvis") - 0.085, 0.08)), tilt=(0.25, -0.15, 1))),
                 ("lamp_cap", dict())],
     ),
 }
@@ -183,7 +195,7 @@ def build_character(name, preset, out_dir):
     image = faces.paint(face["style"], MATERIALS[skin_name]["colour"], preset["seed"], os.path.join(out_dir, f"Face_{name}.png"),
                         f"Face_{name}", face.get("soot", ()))
     skin = shapes.material(skin_name, image=image)
-    objs = [body.head(b, skin), body.neck(b, skin)]
+    objs = [body.head(b, skin)]
     held = []
     for i, h in enumerate(preset["hands"]):
         obj, grasp, axes = body.hand(b, i, skin, h["grip"], h.get("palm"), h.get("along"), h.get("ring"))
@@ -200,9 +212,14 @@ def dress(b, piece, o, held, skin):
     if piece == "top":
         return outfits.top(b, o.pop("mat"), **o)
     if piece == "skirt":
-        return outfits.skirt(b, o.pop("mat"), **o)
+        top = next((x for x in bpy.data.objects if x.name == f"{b.name}_Top"), None)
+        under = [x for x in bpy.data.objects if x.name == f"{b.name}_Trousers"]
+        return outfits.skirt(b, o.pop("mat"), fit=top, under=under, **o)
     if piece == "trousers":
         return outfits.trousers(b, o.pop("mat"), **o)
+    if piece == "neckband":
+        garment = next(x for x in bpy.data.objects if x.name == f"{b.name}_Top")
+        return outfits.neckband(b, o.pop("mat"), garment, **o)
     if piece == "collar":
         return outfits.collar(b, o.pop("mat"), **o)
     if piece == "lapels":
@@ -212,9 +229,11 @@ def dress(b, piece, o, held, skin):
     if piece == "buttons":
         return outfits.buttons(b, o.pop("mat"), **o)
     if piece == "patch":
-        return outfits.patch(b, o["mat"], o["where"](b), o["size"], o.get("angle", 0.0), o.get("name", f"Patch{id(o) % 997}"))
+        onto = next((x for x in bpy.data.objects if x.name == f"{b.name}_{o['onto']}"), None) if "onto" in o else None
+        return outfits.patch(b, o["mat"], o["where"](b), o["size"], o.get("angle", 0.0), o.get("name", f"Patch{id(o) % 997}"), onto)
     if piece == "apron":
-        return outfits.apron(b, o["mat"], o["tie"], hem=o.get("hem", 0.33), flare=o.get("flare", 1.2))
+        under = [x for x in bpy.data.objects if x.name in (f"{b.name}_Top", f"{b.name}_Skirt")]
+        return outfits.apron(b, o["mat"], o["tie"], hem=o.get("hem", 0.33), flare=o.get("flare", 1.2), over=under)
     if piece == "boots":
         return body.boot(b, 0, "Boots", "Sole", **o) + body.boot(b, 1, "Boots", "Sole", **o)
     if piece == "forearms":
@@ -233,7 +252,10 @@ def dress(b, piece, o, held, skin):
         grasp, (a, t, n) = held[o["hand"]]
         return outfits.mug(b, grasp + n * 0.03 + Vector((0, 0, 0.01)), "Mug")
     if piece == "hammer":
-        return outfits.hammer(b, o["where"](b), o["tilt"], "Wood", "Iron")
+        # In the apron's pocket when there is one, its head showing above.
+        at = getattr(b, "marks", {}).get(o.get("pocket"))
+        at = at + Vector((0.0, -0.012, 0.05)) if at is not None else o["where"](b)
+        return outfits.hammer(b, at, o["tilt"], "Wood", "Iron")
     if piece == "lamp_cap":
         return outfits.lamp_cap(b, "Leather", "Brass", "Glass")
     raise ValueError(piece)

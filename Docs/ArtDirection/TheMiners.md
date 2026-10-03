@@ -1,7 +1,13 @@
 # The miners — Small, Long and Round (S1d, second pass)
 
-**Made:** October 2, 2026.
-**Status:** For Luis's judgment. These are posed models, not yet rigged.
+**Made:** October 2, 2026; polished October 3.
+**Status:**
+- **Luis's verdict.** "Almost perfect… already adorable", after the second
+  pass.
+- **Polished** on the points Luis raised
+  ([below](#polish-after-luiss-word-october-3)).
+- **Next:** rigging and lighter versions for the RTS. All three will be
+  offered as choices in this prototype.
 **Asked by Luis.** After the [first concepts](WorkerConcepts.md), Luis ranked
 them Small, then Long, then Round, and loved every face, then asked for:
 - much higher model quality, prettier and more pleasing to look at;
@@ -13,6 +19,61 @@ everything, units included, like detailed character creators
 ([correspondence](../Correspondence/2026-10-02_WORKER_CONCEPTS_FEEDBACK.md)).
 
 ![The three miners at dusk](../Images/Miners/Miners_Dusk.jpg)
+
+## Polish after Luis's word (October 3)
+
+Luis: "almost perfect now! Honestly they are already adorable!" Luis also
+noted:
+- the necks looked glued on up close;
+- the separated feet looked strange;
+- Round's hands looked a little strange.
+
+Luis asked for a careful look at every distance
+([correspondence](../Correspondence/2026-10-03_THE_MINERS_FEEDBACK.md)).
+
+![Necks, boots and Round's hands, before and after](../Images/Miners/Miners_Polish_Closeups.jpg)
+
+- **Necks.** The neck is now part of the head's own form: a column growing
+  from behind the jaw, down into the collar, widening into the shoulders
+  under the clothes. No seam, no stalk.
+  - **Round:** a short, sturdy neck. The head sits lower on the shoulders,
+    which rise a little.
+  - **The smock's neckline:** a rolled neckband laid on the smock's surface,
+    where the neck leaves the clothes.
+- **Feet.** The two-ball boots became one boot: a shoe last with a low,
+  rounded toe. The shaft is wide enough for the trousers to tuck into. Laces
+  cross up the front, and the sole and heel follow the boot's outline. The
+  trousers tuck in, bloused softly above the boots.
+- **Round's hands.** The fists sank into the smock. They are now hands on
+  hips: palms resting against the hips, fingers down and back, thumbs
+  forward. Their place is measured from the real surface of the clothes.
+- **Hands, all three.** A fuller palm and chunkier fingers. The thumb now
+  wraps what the hand holds: across the curled fingers in a fist, round the
+  handle in a grip.
+- **Found on the careful look:**
+  - **Round's smock rim.** The skirt started in a hard rim, like a bucket's,
+    at the waist: smoothing makes a garment a little smaller than its
+    measurements. Skirts now measure the top's real surface and hang from
+    just inside it, so the smock flows from chest to hem.
+  - **Round's apron.** It now lies over the measured clothes beneath, never
+    through them. Its ties run on the smock's surface.
+  - **Long's hips.** Two bumps were the trousers' thighs showing through the
+    coat. The thighs now sit within the hips, and the coat clears them.
+  - **Round's hair.** From behind, the curls read as a dark, spiky nest. They
+    are now soft round clumps blended into one cloud, with a fringe of curls
+    and a few curls springing off the back.
+  - **Long's cheeks.** Gentler, so they read as cheekbones, not swellings.
+  - **Creases.** Only inside the bent elbows and knees, a few soft ones, not
+    rings all round.
+  - **Rolled sleeves** hug the arm instead of floating like hoops.
+  - **Patches and the apron pocket** are cast onto the garment's surface and
+    lie along it. Round's hammer sits in the pocket.
+  - **Faces fading at a distance.** The thin strokes averaged away into the
+    skin as the texture shrank. Faces now use a sharper mipmap, so Long's
+    eyes and smile read at conversation distance; up close they are
+    unchanged.
+  - **Small's lantern.** Its light sits a little below the glass, so the hand
+    that carries it is not burnt white.
 
 ## What changed from the first concepts
 
@@ -99,7 +160,7 @@ look at in the Scene view. They are never saved into the scene.
 
 ## Limits
 
-- **Posed, not rigged.** Nothing moves yet.
+- **Posed, not rigged.** Nothing moves yet. Rigging is the next step.
 - **Heavy.** About 95,000–105,000 faces per miner: hero models for close
   views, not yet RTS units. Lighter levels of detail come with the rig.
 - **Fixed expressions.** Each face is painted with one expression.
@@ -107,11 +168,13 @@ look at in the Scene view. They are never saved into the scene.
   close.
 - **Not judged by Luis.** Passing captures are not acceptance of the look.
 
-## Next, after Luis's word
+## Next
 
-- **Refine** what Luis points at.
-- **Rig the chosen miners** on the procedural biped's skeleton; the body
-  module already places its joints. Then a rig adapter, lighter levels of
-  detail, and gait and grip tests on the new bodies.
-- **If the choice of three is wanted:** a simple picker before play, as the
-  first step towards the creator (S2).
+- **Rig all three** on the procedural biped's skeleton; the body module
+  already places its joints. Then a rig adapter, and gait and grip tests on
+  the new bodies.
+- **Light enough for the RTS:**
+  - levels of detail;
+  - one mesh and a texture atlas per miner, for few draw calls.
+- **The choice of three** in this prototype (Luis's decision, October 3): a
+  simple picker before play, the first step towards the creator (S2).

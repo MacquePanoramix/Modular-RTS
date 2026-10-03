@@ -20,6 +20,35 @@ import shapes
 from shapes import chain, cylinder, displace, ellipsoid, frame, fuse, lathe, panel, simplify, slab, spline, torus, tube
 
 
+def bend_creases(joints, amplitude, reach, seed=0):
+    """Folds where cloth bunches: on the inside of each bent joint (elbow, knee) only, a few soft
+    crescents that fade away from the bend. joints: (from, bend, to) triples."""
+    from mathutils import noise
+    bends = []
+    for a, j, c in joints:
+        u, v = (a - j).normalized(), (c - j).normalized()
+        inside = u + v  # points into the bend
+        if inside.length < 0.15:
+            continue  # nearly straight: no bunching
+        bends.append((j, inside.normalized(), (c - a).normalized(), min(1.0, inside.length)))
+
+    def fold(co, nm):
+        m = 0.0
+        for j, inside, axis, depth in bends:
+            rel = co - j
+            dist = rel.length
+            if dist >= reach:
+                continue
+            across = rel - axis * rel.dot(axis)
+            facing = across.normalized().dot(inside) if across.length > 1e-5 else 0.0
+            if facing <= 0.1:
+                continue
+            wobble = noise.noise(co * 40 + Vector((seed, 0, 0))) * 1.5
+            m += amplitude * depth * (facing ** 1.5) * (1 - dist / reach) ** 1.2 * math.sin(rel.dot(axis) * math.tau / 0.034 + wobble)
+        return m
+    return fold
+
+
 def trunk_at(b, z, loose=0.0):
     """The trunk's (half-width, half-depth) at a height, between its measured levels."""
     levels = [("pelvis", b.pelvis.z), ("waist", b.waist.z), ("chest", b.chest.z), ("collar", b.collar.z)]
@@ -60,6 +89,9 @@ def top(b, mat, loose=0.012, sleeve=1.0, cuff=1.25, rolled=False, folds=0.0035, 
     levels = ("waist", "chest", "collar") if skirted else ("pelvis", "waist", "chest", "collar")
     joints = ([b.waist + Vector((0, 0, -0.02))] if skirted else [b.pelvis + Vector((0, 0, -0.03)), b.waist]) + [b.chest, b.collar]
     radii = [(t[k][0] + loose, t[k][1] + loose) for k in levels]
+    if skirted:
+        # Its lower end tucks inside the skirt, which hangs from just under the top's real surface.
+        radii[0] = (radii[0][0] * 0.82, radii[0][1] * 0.82)
     parts = [chain(f"{b.name}_{name}Torso", joints, radii, mat)]
     r = b.p["arm"]
     out = []
@@ -71,7 +103,7 @@ def top(b, mat, loose=0.012, sleeve=1.0, cuff=1.25, rolled=False, folds=0.0035, 
             js = js[:4] + [el.lerp(wr, 0.1)]
             rad = rad[:4] + [r * 1.0]
             roll = (wr - el).normalized()
-            out.append(shapes.torus(f"{b.name}_Roll{i}", el.lerp(wr, 0.1), r * 0.95 + loose, r * 0.3, mat,
+            out.append(shapes.torus(f"{b.name}_Roll{i}", el.lerp(wr, 0.12), r * 0.78 + loose * 0.5, r * 0.42, mat,
                                     rotation=frame(roll, Vector((0, 0, 1))) @ Matrix.Rotation(math.pi / 2, 3, 'Y')))
         else:
             end = el.lerp(wr, 0.45 + 0.55 * sleeve) if sleeve <= 1 else wr + (wr - el).normalized() * (sleeve - 1) * b.fore
@@ -80,28 +112,41 @@ def top(b, mat, loose=0.012, sleeve=1.0, cuff=1.25, rolled=False, folds=0.0035, 
         parts.append(chain(f"{b.name}_{name}Arm{i}", js, [(x + loose, x + loose) for x in rad], mat))
     obj = fuse(f"{b.name}_{name}", parts, mat, voxel=0.0055, smooth=6)
     if folds:
-        elbows = [(b.elbows[i], (b.wrists[i] - b.shoulders[i]).normalized()) for i in (0, 1)]
-
-        def crease(co, nm):
-            m = 0.0
-            for el, axis in elbows:
-                dist = (co - el).length
-                if dist < 0.1:
-                    along = (co - el).dot(axis)
-                    m += folds * (1 - dist / 0.1) * math.sin(along * math.tau / 0.03)
-            return m
-        displace(obj, crease)
+        displace(obj, bend_creases([(b.shoulders[i], b.elbows[i], b.wrists[i]) for i in (0, 1)], folds, 0.09))
     simplify(obj, 10000)
     return [obj] + out
 
 
-def skirt(b, mat, hem, flare=1.25, loose=0.014, open_front=False, folds=0.07, fold_count=7, ragged=0.0, seed=0, name="Skirt"):
+_TREES = {}
+
+
+def surface_hit(garment, centre, z, angle, reach=0.6):
+    """How far from centre (x, y) the garment's surface is at a height and angle (cast inwards), or None."""
+    from mathutils.bvhtree import BVHTree
+    import bpy
+    tree = _TREES.get(garment.name)
+    if tree is None:
+        tree = _TREES[garment.name] = BVHTree.FromObject(garment, bpy.context.evaluated_depsgraph_get())
+    direction = Vector((math.cos(angle), math.sin(angle), 0))
+    hit = tree.ray_cast(Vector((centre[0], centre[1], z)) + direction * reach, -direction, reach)[0]
+    return Vector((hit.x - centre[0], hit.y - centre[1], 0)).length if hit is not None else None
+
+
+def surface_radius(garment, centre, z, angle, guess):
+    r = surface_hit(garment, centre, z, angle)
+    return (r if r is not None else guess), None
+
+
+def skirt(b, mat, hem, flare=1.25, loose=0.014, open_front=False, folds=0.07, fold_count=7, ragged=0.0, seed=0, name="Skirt", fit=None, under=()):
     """A coat's or smock's lower part: a flared tube from the waist to the hem (a fraction of the height),
-    hanging in soft vertical folds, open at the front for a coat."""
+    hanging in soft vertical folds, open at the front for a coat. fit: the top it hangs from; the skirt
+    starts just inside that top's real surface (smoothing makes a garment a little smaller than its
+    measurements), so the top's hem always hides the skirt's edge."""
     rng = random.Random(seed)
+    fit_tree = None
     import bmesh
     import bpy
-    top_z = b.waist.z + 0.03
+    top_z = b.waist.z + 0.07
     hem_z = hem * b.H
     rings, around = 9, 48
     bm = bmesh.new()
@@ -111,6 +156,31 @@ def skirt(b, mat, hem, flare=1.25, loose=0.014, open_front=False, folds=0.07, fo
         z = top_z + (hem_z - top_z) * t
         w, d = trunk_at(b, max(z, b.pelvis.z - 0.02), loose)
         cx, cy = axis_at(b, z)
+        if fit is not None:
+            # Shrink the upper rings to the top's real size, easing back to the measurements towards the hem.
+            if fit_tree is None:
+                zf = b.waist.z
+                (rw, fit_tree), (rd, _) = surface_radius(fit, axis_at(b, zf), zf, 0.0, w), surface_radius(fit, axis_at(b, zf), zf, -math.pi / 2, d)
+                fx, fy = (rw - 0.007) / w, (rd - 0.007) / d
+            ease = min(1.0, t * 1.6)
+            w *= fx + (1 - fx) * ease
+            d *= fy + (1 - fy) * ease
+        # Never inside what it covers: all round at the seat, at the sides down the thighs; below, the legs
+        # part and the skirt hangs free.
+        angles = ((0.0, math.pi, -math.pi / 2, math.pi / 2, -math.pi / 4, -3 * math.pi / 4, math.pi / 4, 3 * math.pi / 4)
+                  if z > b.pelvis.z - 0.1 else (0.0, math.pi) if z > b.pelvis.z - 0.28 else ())
+        for g in under:
+            for angle in angles:
+                h = surface_hit(g, (cx, cy), z, angle)
+                if h is None:
+                    continue
+                c, s_ = abs(math.cos(angle)), abs(math.sin(angle))
+                need = h + 0.01
+                # Grow the ellipse just enough to pass outside this point.
+                r = 1 / math.sqrt((c / w) ** 2 + (s_ / d) ** 2) if w > 0 and d > 0 else 0
+                if r < need:
+                    k = need / r
+                    w, d = w * k, d * k
         widen = 1 + (flare - 1) * (t ** 1.5)
         ring = []
         for a in range(around):
@@ -142,39 +212,45 @@ def skirt(b, mat, hem, flare=1.25, loose=0.014, open_front=False, folds=0.07, fo
     return [shapes.finish(obj, mat)]
 
 
-def trousers(b, mat, loose=0.01, tuck=0.15, folds=0.004):
-    """Trousers tucked into the boots, bunching a little above them."""
+def trousers(b, mat, loose=0.01, boot=0.15, folds=0.004):
+    """Trousers tucked inside the boots (whose tops are boot above the ankle), bloused softly just above
+    them, with a few creases behind the knees."""
     leg = b.p["leg"]
     parts = [chain(f"{b.name}_Seat", [b.pelvis + Vector((0, 0, 0.03)), b.pelvis + Vector((0, 0.005, -0.07))],
                    [(b.trunk["pelvis"][0] + loose, b.trunk["pelvis"][1] + loose), (b.trunk["pelvis"][0] * 0.95 + loose, b.trunk["pelvis"][1] + loose)], mat)]
-    tops = []
     for i in (0, 1):
         hp, mid, kn, calf, an = b.leg_joints(i)
-        end_z = an.z + tuck
-        tt = (kn.z - end_z) / max(kn.z - an.z, 1e-4)
-        end = kn.lerp(an, min(max(tt, 0.0), 1.0))
-        js = [hp + Vector((0, 0, 0.03)), mid, kn, end]
-        rad = [leg * 1.45, leg * 1.25, leg * 1.02, leg * 1.0]
+
+        def at_height(z):
+            tt = (kn.z - z) / max(kn.z - an.z, 1e-4)
+            return kn.lerp(an, min(max(tt, 0.0), 1.0))
+        top = an.z + boot
+        # The thigh starts a little inside the hip joint, so the trousers stay within the hips' width.
+        js = [hp + Vector(((1, -1)[i] * 0.012, 0, 0.03)), mid, kn, at_height(top + 0.045), at_height(top + 0.012), at_height(top - 0.03)]
+        rad = [leg * 1.3, leg * 1.2, leg * 1.02, leg * 1.12, leg * 1.08, leg * 0.92]
         parts.append(chain(f"{b.name}_TrouserLeg{i}", js, [(x + loose, x + loose) for x in rad], mat))
-        tops.append((end, (kn - an).normalized()))
     obj = fuse(f"{b.name}_Trousers", parts, mat, voxel=0.0055, smooth=6)
     if folds:
-        knees = [(b.knees[i], (b.hips[i] - b.ankles[i]).normalized()) for i in (0, 1)]
-
-        def bunch(co, nm):
-            m = 0.0
-            for end, axis in tops:
-                along = (co - end).dot(axis)
-                if 0 < along < 0.09 and (co - end).length < 0.12:
-                    m += folds * (1 - along / 0.09) * math.sin(along * math.tau / 0.025)
-            for kn, axis in knees:
-                dist = (co - kn).length
-                if dist < 0.07:
-                    m += folds * 0.7 * (1 - dist / 0.07) * math.sin((co - kn).dot(axis) * math.tau / 0.03)
-            return m
-        displace(obj, bunch)
+        displace(obj, bend_creases([(b.hips[i], b.knees[i], b.ankles[i]) for i in (0, 1)], folds, 0.08, seed=3))
     simplify(obj, 7000)
     return [obj]
+
+
+def neckband(b, mat, garment, loose=0.006):
+    """A smock's rolled neckline, hugging the neck where it leaves the garment: each point of the ring
+    sits on the garment's own surface (found by casting down onto it)."""
+    from mathutils.bvhtree import BVHTree
+    import bpy
+    nk = b.hr * b.p.get("neck_r", 0.5)
+    c = b.collar + Vector((0, 0.008, 0.0))
+    surface = BVHTree.FromObject(garment, bpy.context.evaluated_depsgraph_get())
+    pts = []
+    for k in range(25):
+        a = k / 24 * math.tau
+        x, y = c.x + math.cos(a) * (nk * 1.1 + loose), c.y + math.sin(a) * (nk * 1.05 + loose)
+        hit = surface.ray_cast(Vector((x, y, c.z + 0.3)), Vector((0, 0, -1)), 0.6)[0]
+        pts.append(Vector((x, y, (hit.z if hit is not None else c.z) + 0.004)))
+    return [tube(f"{b.name}_Neckband", pts, [0.012] * 25, [0.009] * 25, mat, sides=8, cap=False)]
 
 
 def collar(b, mat, height=0.08, wide=2.2, open_front=True):
@@ -232,9 +308,9 @@ def shirt_front(b, mat, loose=0.012):
                   lambda z: (trunk_at(b, z, loose + 0.003)), mat, thickness=0.003, rows=8, columns=8)]
 
 
-def apron(b, mat, tie, bib=True, loose=0.03, hem=0.33, flare=1.2):
+def apron(b, mat, tie, bib=True, loose=0.03, hem=0.33, flare=1.2, over=()):
     """A leather work apron: a bib on the chest, a skirt to the knee, a neck strap and ties.
-    flare: the garment underneath widens this much at the hem; the apron stays over it."""
+    over: the garments beneath; the apron hangs a little outside their real surface at every height."""
     x, y = axis_at(b, b.waist.z)
     top_z = b.chest.z + 0.03 if bib else b.waist.z + 0.03
     hem_z = hem * b.H
@@ -243,7 +319,20 @@ def apron(b, mat, tie, bib=True, loose=0.03, hem=0.33, flare=1.2):
         w, d = trunk_at(b, max(z, b.pelvis.z - 0.02), loose)
         t = min(1.0, max(0.0, (b.waist.z - z) / max(b.waist.z - hem_z, 1e-3)))
         k = 1 + (flare - 1) * t ** 1.5 + 0.08 * t
-        return w * k, d * k
+        w, d = w * k, d * k
+        if over:
+            centre = axis_at(b, z)
+            gap = 0.01 + 0.03 * t
+            for angle, is_front in ((-math.pi / 2, True), (-math.pi / 2 + 0.6, True), (-math.pi / 2 - 0.6, True)):
+                hits = [h for h in (surface_hit(g, centre, z, angle) for g in over) if h is not None]
+                if hits:
+                    # The ellipse's front is what the apron lies on; keep it just outside the deepest garment.
+                    need = max(hits) + gap
+                    if angle == -math.pi / 2:
+                        d = max(d, need)
+                    else:
+                        w = max(w, need * 0.95)
+        return w, d
     out = [panel(f"{b.name}_Apron", (x, y), top_z, hem_z, span, radius, mat, thickness=0.007, rows=14, columns=14, folds=0.05, fold_count=3, seed=3)]
     if bib:
         for s in (-1, 1):
@@ -251,16 +340,40 @@ def apron(b, mat, tie, bib=True, loose=0.03, hem=0.33, flare=1.2):
             p1 = b.collar + Vector((s * 0.05, 0.02, 0.03))
             p2 = b.collar + Vector((0, 0.07, 0.0))
             out.append(tube(f"{b.name}_ApronStrap{s}", spline([p0, p1, p2], 4), [0.009] * 9, [0.003] * 9, mat, sides=6))
+    # The ties run round the waist on the garment's real surface, from the apron's sides to a knot at the back.
     w, d = trunk_at(b, b.waist.z, loose)
     for s in (-1, 1):
-        pts = [Vector((x + s * w * 0.95, y - d * 0.4, b.waist.z)), Vector((x + s * w * 1.0, y + d * 0.3, b.waist.z - 0.005)),
-               Vector((x + s * w * 0.5, y + d * 1.02, b.waist.z - 0.01))]
-        out.append(tube(f"{b.name}_ApronTie{s}", spline(pts, 4), [0.008] * 9, [0.003] * 9, tie, sides=6))
+        pts = []
+        for k in range(9):
+            angle = -math.pi / 2 + s * (0.75 + k / 8 * (math.pi / 2 + 0.6))
+            r = max([h for h in (surface_hit(g, (x, y), b.waist.z, angle) for g in over) if h is not None] or [None]) if over else None
+            if r is None:
+                r = math.hypot(w * math.cos(angle), d * math.sin(angle))
+            pts.append(Vector((x + math.cos(angle) * (r + 0.005), y + math.sin(angle) * (r + 0.005), b.waist.z - 0.004 * k / 8)))
+        out.append(tube(f"{b.name}_ApronTie{s}", pts, [0.008] * 9, [0.003] * 9, tie, sides=6))
     return out
 
 
-def patch(b, mat, at, size, angle=0.0, name="Patch"):
-    return [slab(f"{b.name}_{name}", at, size, mat, rotation=(0, angle, 0), soft=0.6)]
+def patch(b, mat, at, size, angle=0.0, name="Patch", onto=None):
+    """A patch or pocket sewn flat onto a garment: cast from in front onto its surface at (x, z) of at,
+    and turned to lie along it. Its centre is kept on b.marks[name], for things tucked into it."""
+    rotation = Matrix.Rotation(angle, 3, 'Y')
+    at = Vector(at)
+    if onto is not None:
+        from mathutils.bvhtree import BVHTree
+        import bpy
+        tree = BVHTree.FromObject(onto, bpy.context.evaluated_depsgraph_get())
+        hit, normal, _, _ = tree.ray_cast(Vector((at.x, at.y - 0.5, at.z)), Vector((0, 1, 0)), 1.0)
+        if hit is not None:
+            if normal.y > 0:
+                normal = -normal
+            along = Vector((0, 0, 1)).cross(normal).normalized()
+            rotation = Matrix.Rotation(angle, 3, normal) @ Matrix((along, -normal, along.cross(-normal))).transposed()
+            at = hit + normal * (size[1] + 0.002)
+    if not hasattr(b, "marks"):
+        b.marks = {}
+    b.marks[name] = at
+    return [slab(f"{b.name}_{name}", at, size, mat, rotation=rotation, soft=0.6)]
 
 
 def buttons(b, mat, count=3, loose=0.022, size=0.014):

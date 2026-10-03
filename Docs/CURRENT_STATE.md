@@ -1,6 +1,6 @@
 # Wonder Gather — Current State
 
-**Updated:** October 2, 2026.
+**Updated:** October 3, 2026.
 
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
@@ -19,9 +19,13 @@
   are the base art style for every being and thing in the world, not one
   character's costume
   ([VisualSoul.md](ArtDirection/VisualSoul.md#the-language-for-every-being-and-thing)).
-  - **The miners (second pass), for Luis's judgment:** Small, Long and Round
-    remade at much higher quality, each with miner's hints
-    ([TheMiners.md](ArtDirection/TheMiners.md)):
+  - **The miners: "almost perfect… already adorable"** (Luis, October 3).
+    Polished on Luis's notes: the necks grow out of the clothes, the boots
+    are single boots, Round's hands rest on the hips. Smaller flaws found on
+    a careful look at every distance were also fixed
+    ([TheMiners.md](ArtDirection/TheMiners.md#polish-after-luiss-word-october-3)).
+    All three will be offered as choices in this prototype. They are Small,
+    Long and Round, remade at much higher quality with miner's hints:
     - **The models.** Real hands, hair in locks, sculpted boots, fitted and
       painted clothes.
     - **Miner's hints.** Small carries a lantern, Long leans on a pickaxe,
@@ -70,7 +74,25 @@ A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director direction (October 2, late evening)
+## Latest Game Director direction (October 3)
+
+Recorded verbatim in
+[Correspondence/2026-10-03_THE_MINERS_FEEDBACK.md](Correspondence/2026-10-03_THE_MINERS_FEEDBACK.md):
+
+- **The miners.** "Almost perfect now! Honestly they are already adorable!"
+  Luis loves their designs.
+- **To polish:**
+  - necks that looked glued on up close;
+  - the separated feet;
+  - Round's hands;
+  - anything else found on a careful look at every distance.
+- **Then:**
+  - rigging;
+  - making them light enough to run well in the RTS.
+- **All three in this prototype.** Luis decided to offer Small, Long and Round
+  as choices.
+
+## Game Director direction (October 2, late evening)
 
 Recorded verbatim in
 [Correspondence/2026-10-02_WORKER_CONCEPTS_FEEDBACK.md](Correspondence/2026-10-02_WORKER_CONCEPTS_FEEDBACK.md):
@@ -232,13 +254,13 @@ Still valid from September 30:
 1. **Luis checks the dusk fixes** in the build:
    - fewer fireflies, still marked when far out;
    - the lamplight close up.
-2. **Luis judges the miners** ([TheMiners.md](ArtDirection/TheMiners.md)):
-   - are they pretty enough now;
-   - what to refine;
-   - whether to offer the choice of three.
+2. **Rig the three miners** on the procedural biped and make them light
+   enough for the RTS:
+   - levels of detail;
+   - one mesh and atlas each.
 
-   Then the chosen miners are rigged on the procedural biped, given lighter
-   levels of detail, and proven in motion.
+   Then offer the choice of three in this prototype, and prove them in
+   motion.
 3. **Further explorations are additive and switchable**, and shown early as
    frames before being built out.
 

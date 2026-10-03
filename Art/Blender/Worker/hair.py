@@ -168,32 +168,39 @@ def swept(skull, name, mat, seed, sweep=(-0.6, -0.8, 0.0)):
     return objs
 
 
-def curls(skull, name, mat, seed, top=1.0):
-    """A mop of short curls, each curling back towards the head, and a fringe of curls over the brow.
-    top: the highest root (under a cap, only the curls below its rim are grown)."""
+def curls(skull, name, mat, seed, top=1.0, lift=1.1):
+    """A mop of curls: soft round clumps blended into one cloud over the skull, a curl or two lifting
+    off it, and a fringe of curls over the brow. top: the highest root (under a cap, only what shows
+    below its rim is grown)."""
     rng = random.Random(seed)
     objs = [cap(skull, f"{name}_Cap", mat, front=0.5, side=-0.15, back=-0.85, lift=1.12)]
-    locks = []
-    count = 0
-    while count < 70:
+    s = skull.scale()
+    items = []
+    tries = 0
+    while len(items) < 46 and tries < 2000:
+        tries += 1
         az = rng.uniform(0, math.tau)
-        z = rng.uniform(-0.25, 0.98)
-        if z < hairline(az, 0.5, -0.05, -0.45) + 0.02 or z > top:
-            continue
-        count += 1
+        z = rng.uniform(-0.75, top)
+        if z < hairline(az, 0.5, -0.15, -0.85) or (abs(math.remainder(az, math.tau)) < 0.9 and z < 0.55):
+            continue  # above the hairline, and clear of the face
+        root = on_sphere(az, z)
+        size = rng.uniform(0.2, 0.28)
+        items.append((skull.world(root * (lift + size * 0.4)), s * size))
+    for k in range(5):  # a fringe of curls over the brow, below a cap's rim
+        x = -0.5 + 0.25 * k
+        root = Vector((x * 0.75, -0.7, min(top, 0.62))).normalized()
+        items.append((skull.world(root * (lift + 0.06)), s * rng.uniform(0.17, 0.21)))
+    objs.append(shapes.blobs(f"{name}_Cloud", items, mat, resolution=s * 0.045))
+    # A few curls spring off the cloud, so its edge is alive rather than a smooth pudding.
+    for k in range(7):
+        az = rng.uniform(0, math.tau)
+        if abs(math.remainder(az, math.tau)) < 2.1:
+            continue  # only at the back, never beside the face
+        z = rng.uniform(-0.4, min(top, 0.4))
         root = on_sphere(az, z)
         out = Vector((math.sin(az), -math.cos(az), 0))
-        flow = out * 0.6 + Vector((0, 0, -0.6)) + Vector((rng.uniform(-0.4, 0.4), rng.uniform(-0.4, 0.4), 0))
-        path = comb(root, flow, rng.uniform(0.42, 0.6), steps=10, lift=(0.12, 0.2), gravity=0.1,
-                    bend=rng.uniform(2.2, 3.0), twist=rng.uniform(-0.8, 0.8))
-        locks.append((path, rng.uniform(0.26, 0.34)))
-    for k in range(6):
-        x = -0.6 + 1.2 * k / 5
-        root = Vector((x * 0.7, -0.6, 0.72)).normalized()
-        path = comb(root, Vector((x * 0.3, -1, -0.5)), 0.45, steps=10, lift=(0.08, 0.14), bend=2.4, twist=rng.uniform(-0.5, 0.5))
-        locks.append((path, 0.26))
-    for k, (path, width) in enumerate(locks):
-        objs.append(lock_mesh(skull, f"{name}_Lock{k}", path, width, mat))
+        path = comb(root * 1.25, out * 0.7 + Vector((0, 0, -0.5)), 0.32, steps=8, lift=(0.25, 0.32), bend=2.6, twist=rng.uniform(-0.6, 0.6))
+        objs.append(lock_mesh(skull, f"{name}_Spring{k}", path, 0.2, mat, flat=0.7))
     return objs
 
 

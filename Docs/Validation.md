@@ -1224,3 +1224,54 @@ quality with miner's hints, the three were rebuilt from modules
     this was not benchmarked. They are hero models, not yet RTS units.
   - **Luis's eye.** Nothing here is accepted until Luis has seen it.
 
+## S1d, the miners — polish (October 3)
+
+After Luis's notes (necks, feet, Round's hands) and the request for a careful
+look at every distance
+([TheMiners.md](ArtDirection/TheMiners.md#polish-after-luiss-word-october-3)).
+
+- **Environment.** The isolated worktree was reset to 2bd6613. The Blender
+  sources are edited in the main project; the exported assets are validated
+  in the worktree and then copied in.
+- **How it was judged:**
+  - **Blender close-ups** of each neck from the front and side, each hand on
+    its own, and the boots.
+  - **Four-side full figures and three-angle portraits** of each miner.
+  - **The engine captures** (line-ups at three hours, Strategy height,
+    portraits, turnarounds), compared before and after.
+- **Fixes found along the way** (beyond Luis's three notes):
+  - **Round's rim.** Round's smock skirt stood out in a hard rim at the waist.
+    The cause: voxel remesh and smoothing make a fused garment 1–2 cm smaller
+    than its measurements. The skirt now measures the top's real surface by
+    ray casts.
+  - **The apron** showed the fuller skirt through it. It now hangs outside
+    the measured top and skirt at every height.
+  - **Long's hip bumps** were the trouser thighs (wider than the hips) showing
+    through the coat.
+    - **A first fix** (clearing all round) turned the coat into a bell. The
+      clearance is now all round at the seat and at the sides down the
+      thighs.
+    - **A sign error** pushed the thighs outward on the first try.
+  - **Round's hands.**
+    - **On the first try,** they hung beside the hips: their place used the
+      measurements, not the real surface.
+    - **Now** they rest on the measured waist.
+  - **Round's curls.** Stray curl springs poked out beside the face like
+    horns; they now spring only from the back.
+  - **Faces at a distance** faded as the face texture's mipmaps averaged the
+    thin strokes into the skin. A mipmap bias of −1.2 on faces fixes it.
+  - **Small's lantern light** burnt the hand above it white.
+- **A layout mistake in 2bd6613, fixed here.** When the first concepts were
+  removed, the empty `Art/Worker` folder went with them. The miners' assets
+  were then copied in as `Art/Worker/*` instead of `Art/Worker/Miners/*`, so
+  `MinerCapture` would not have found them in the main project. They are now
+  in `Art/Worker/Miners/`, and the stray copies are removed. The asset IDs
+  never collided.
+- **Compilation and capture.** `MinerCapture.Capture` ran in batch and
+  succeeded.
+- **Not tested:**
+  - **The PlayMode suite.** No runtime code changed (Blender sources, an
+    Editor capture and assets only).
+  - **Motion.** The miners are still posed.
+  - **Luis's eye.**
+

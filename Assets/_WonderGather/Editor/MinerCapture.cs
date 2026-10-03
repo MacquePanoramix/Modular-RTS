@@ -154,10 +154,11 @@ namespace WonderGather.Editor
                     // A lamp: a small warm light, so light finds the miner who carries it.
                     var light = new GameObject(part.name + " light") { hideFlags = HideFlags.DontSaveInEditor }.AddComponent<Light>();
                     light.transform.SetParent(part.transform, false);
-                    light.transform.position = renderer.bounds.center;
+                    // A little below the glass, so the hand that carries it is not burnt white.
+                    light.transform.position = renderer.bounds.center + Vector3.down * .06f;
                     light.type = LightType.Point;
                     light.color = new Color(1f, .72f, .42f);
-                    light.intensity = .9f;
+                    light.intensity = .7f;
                     light.range = 2.4f;
                     light.shadows = LightShadows.None;
                 }
@@ -234,6 +235,9 @@ namespace WonderGather.Editor
             importer.anisoLevel = 4;
             importer.maxTextureSize = 1024;
             importer.textureCompression = TextureImporterCompression.CompressedHQ;
+            // Faces are a few thin strokes: a sharper mip keeps them from fading into the skin at a distance,
+            // without changing them up close.
+            importer.mipMapBias = file.StartsWith("Face_") ? -1.2f : -0.3f;
             importer.SaveAndReimport();
             return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
         }

@@ -779,6 +779,29 @@ at 3066921.
     light.
   - **Apart.** The three miners are moved apart while baking. Built on one
     spot, each one's cavities were shaded by the others' bodies.
+- **Fitting to real surfaces (October 3).** A fused garment comes out 1–2 cm
+  smaller than its measurements after the voxel remesh and smoothing. So
+  pieces laid over others measure them by ray casts (`outfits.surface_hit`):
+  - **Skirts** hang from just inside the top's measured surface, and clear the
+    trousers at the seat and down the sides of the thighs.
+  - **The apron and its ties** lie outside the measured top and skirt.
+  - **Patches and pockets** are cast onto their garment and turned to its
+    surface (`b.marks` keeps a pocket's place, for the hammer).
+  - **The neckband** rides on the smock's surface.
+  - **Round's hands** rest at the measured waist (`workers.on_hip`).
+  - **Build order.** Trousers are built before the skirts that cover them.
+- **Polished body parts (October 3):**
+  - **Neck.** The head's metaballs include the neck, a column from behind the
+    jaw into the collar that widens into the shoulders. `neck_drop` lowers the
+    head for a short neck.
+  - **Boots.** One shoe-last form and a shaft, fused, flattened underneath;
+    the sole follows the outline; crossed laces.
+  - **Hands.** `THUMBS` paths per grip.
+  - **Creases.** `bend_creases` puts folds only inside bent joints.
+  - **Curls.** A metaball cloud.
+- **Faces at a distance.** `MinerCapture` imports faces with a mipmap bias of
+  −1.2 (other painted textures −0.3), so their thin strokes do not average
+  into the skin when small on screen.
 - **`MinerCapture`** (Editor).
   - **Materials.** It reads `workers.json` and makes `Materials/Miners/*.mat`
     on `WGPainted`:
