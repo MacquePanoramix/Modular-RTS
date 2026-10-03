@@ -7,8 +7,9 @@ out every strange little detail
 **Applies to:** every being built from the modules in `Art/Blender/Worker/`
 (today the three miners), and every future unit.
 
-This page records the practices we follow, where each comes from, and the
-close audit every character passes before Luis sees it.
+This page records the practices we follow and where each comes from. How
+every model is checked and improved, before Luis sees it, is the
+[model quality method](ModelQualityMethod.md).
 
 ## 1. Build practices (Blender)
 
@@ -49,6 +50,11 @@ So each miner walks at the speed its own legs give at its walk's Froude number:
   `sway` and `armSwing`. All three are 1 for the original test body.
 
 ## 3. The close audit (before Luis sees anything)
+
+**Superseded on October 3, evening,** by the
+[model quality method](ModelQualityMethod.md): seven passes, automatic
+geometry checks at rest and in the game's own movement, and an exhaustive
+capture matrix. The first close audit is kept below as it was run.
 
 Every character passes this in the engine, rigged, in the game's own look,
 not only in Blender. Blender previews and static portraits hid flaws that

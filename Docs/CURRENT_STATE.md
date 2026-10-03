@@ -19,6 +19,19 @@
   are the base art style for every being and thing in the world, not one
   character's costume
   ([VisualSoul.md](ArtDirection/VisualSoul.md#the-language-for-every-being-and-thing)).
+  - **A method for model quality (October 3, evening).** Luis asked for a
+    strategy, to refer to from now on, for making every model as polished as
+    possible. It is [ModelQualityMethod.md](ArtDirection/ModelQualityMethod.md):
+    - the standard (nothing floats, nothing clips, objects obey gravity);
+    - four questions for every object;
+    - seven passes, including automatic checks at rest and in the game's own
+      movement;
+    - a capture matrix of every angle and distance;
+    - a ledger of every miss.
+
+    It is being applied to Luis's notes on Small (the leg and boot, laces,
+    the strap joining the bag, the lantern's grip, a bag that hangs with
+    gravity) and to all three miners.
   - **Polished after Luis's play (October 3, evening).**
     - **Small:** the lantern is carried in the hand and swings; the satchel
       hangs from its strap at the hip; legs line up with the boots; the neck
@@ -27,7 +40,7 @@
     - **Walks:** each body walks naturally at its own pace.
     - **Practices:** the character practices and the audit are in
       [CharacterPractices.md](ArtDirection/CharacterPractices.md).
-  - **Rigged and in the game (October 3).
+  - **Rigged and in the game (October 3).**
     - **Walking.** Small, Long and Round walk the Ordinary Place on the
       procedural body, whose proportions now come from each model.
     - **The choice.** The player chooses one when the place loads (`M` to
@@ -91,7 +104,30 @@ A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director direction (October 3, evening)
+## Latest Game Director direction (October 3, late evening)
+
+Recorded verbatim in
+[Correspondence/2026-10-03_PHYSICAL_OBJECTS_AND_A_QUALITY_METHOD.md](Correspondence/2026-10-03_PHYSICAL_OBJECTS_AND_A_QUALITY_METHOD.md):
+
+- **Small, still to fix:**
+  - the leg still not lined up with the boot;
+  - the laces' crosses floating off the boot;
+  - the satchel's strap not joined to the bag;
+  - the lantern floating up close;
+  - the bag should hang with gravity.
+- **The principle.** Physicality and the reality of all movement are among
+  the game's main focuses. Anything that reads as an object behaves as a
+  proper object that responds to its environment, never floating.
+- **Liked:** how the coat's skirt, the lantern and the bag move with the
+  walk.
+- **First, a method.** A strategy document, to refer to from now on:
+  - look at every object and place from all angles, exhaustively;
+  - research how to reach the highest polish;
+  - develop a method to raise model quality.
+
+  Written as [ModelQualityMethod.md](ArtDirection/ModelQualityMethod.md).
+
+## Game Director direction (October 3, evening)
 
 Recorded verbatim in
 [Correspondence/2026-10-03_SMALL_POLISH_AND_NATURAL_GAITS.md](Correspondence/2026-10-03_SMALL_POLISH_AND_NATURAL_GAITS.md):
