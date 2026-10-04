@@ -745,7 +745,7 @@ failed the new test with the write-back already removed: the pelvis was
 ## S1a: two camera systems — October 1, 2026
 
 Isolated worktree `D:\Dev\WG`, Unity 6000.6.0f1 batch mode. Luis's Editor and
-his uncommitted files were not touched.
+uncommitted files were not touched.
 
 ### What changed
 
@@ -1020,7 +1020,7 @@ is not on `claude/worker-showcase`. Record:
   - **Median luminance:** to 0.58–0.65.
 
   Luis's verdict was that the before is better: the measurements matched the
-  references' surface, not his taste.
+  references' surface, not Luis's taste.
 - **Not tested:** interactive play of this build by hand, other GPUs, and
   scenes with many units.
 
@@ -1038,7 +1038,7 @@ has the details.
 
 - **Environment.** The isolated worktree was reset to the merged base
   (fcaa654). The validated files were then copied into the main project.
-- **Judged on Luis's own frame.** `-captureSet dusk` recreates his favourite
+- **Judged on Luis's own frame.** `-captureSet dusk` recreates Luis's favourite
   frame: look E at 19:12, low on the path, 1600×670.
   - The first fireflies near the camera swelled into large blots, so near
     ones now fade and shrink.
@@ -1340,7 +1340,7 @@ offer all three in this prototype
 
 ## S1d, the miners — polish after Luis's play, natural walks (October 3, evening)
 
-Luis's notes on Small, his request for proactive polish on all three and
+Luis's notes on Small, the request for proactive polish on all three and
 natural walks
 ([correspondence](Correspondence/2026-10-03_SMALL_POLISH_AND_NATURAL_GAITS.md);
 [TheMiners.md](ArtDirection/TheMiners.md#polish-after-luiss-play-october-3-evening);
@@ -1413,3 +1413,106 @@ the practices in [CharacterPractices.md](ArtDirection/CharacterPractices.md)).
   - **Mining with the miners.** It still uses the test body.
   - **Other hardware.** Other GPUs were not tried.
   - **Luis's eye.** Luis's notes on Long and Round are still to come.
+
+## S1d, the miners — the model quality method's first round (October 3 and 4)
+
+Luis's five notes on Small, the principle that every object is a proper
+object, and the request for a method
+([correspondence](Correspondence/2026-10-03_PHYSICAL_OBJECTS_AND_A_QUALITY_METHOD.md);
+[ModelQualityMethod.md](ArtDirection/ModelQualityMethod.md);
+the round's log in
+[TheMiners.md](ArtDirection/TheMiners.md#the-methods-first-round-october-3-and-4)).
+
+- **Environment.** The isolated worktree was at e5372c4. The validated files
+  were then copied into the main project. Luis's own uncommitted files were
+  not touched.
+- **The method first.** It was written and pushed (d1dbe00) before any fix,
+  as Luis asked, with its research and sources.
+- **Tools built for it:**
+  - `audit.py`: the automatic audit, at rest and on recorded frames;
+  - `MinerPoseRecord`: the game records its own movement (235 frames a
+    miner: standing, starting, walking, a sharp turn, stopping);
+  - `MinerCloseCapture`: the capture matrix (about 240 frames a miner);
+  - `Art/Review/sheets.py`: 92 contact sheets a round.
+- **Rounds.** Eighteen rounds of the whole pipeline: build the three models,
+  set them up in the game, record their movement and run the miner tests,
+  audit in motion, capture, make the sheets.
+- **The audit.**
+  - **On the build Luis played:** 45 failing checks on Small, 41 on Long,
+    42 on Round. Some were the audit's own mistakes, read and corrected
+    (TheMiners.md lists them).
+  - **At the end, at rest:** 0 of 386, 0 of 268, 0 of 202.
+  - **At the end, on the recorded movement:** 4 of 856 remain, each with its
+    reason:
+
+    | Model | Check | Worst | Frames | Reason it is left |
+    |---|---|---|---|---|
+    | Small | Trousers under the skirt | 29.2 mm | 1 (the sharpest turn) | The knee comes out under the lifted hem, not through the cloth; the walk's high step |
+    | Small | Boot into its trouser leg | 8.6 mm | 1 (the same step) | The same high step |
+    | Long | Free hand into the coat | 7.3 mm | 2 (the sharpest turn) | The knee lifts the coat into a hand swinging forward |
+    | Round | Hammer's handle into the apron | 3.9 mm (limit 3.5) | 6 of 118 (walking) | The leg lifts the apron against the handle |
+
+    The reports are in `Art/Review/Miners`.
+- **Findings.** Luis's five on Small, and eighteen more found by the method
+  on all three. Each has its cause and fix in TheMiners.md. Two of the
+  eighteen were made by this round's own fixes (Long's coat became a bell;
+  Round's bib became a narrow strip) and were caught by reading the sheets
+  against those of the build Luis played.
+- **The exhaustive look.** The last round's sheets were read: every junction
+  zone, the carried things, the orbit and the main walk views at full size;
+  the remaining walk, motion, distance and fresh-eyes sheets at half size.
+  Before and after pairs: `Images/Miners/Method1_BeforeAfter_Small.jpg` and
+  `Method1_BeforeAfter_LongRound.jpg`.
+- **Tests.**
+  - **Miner tests:** 8 of 8 passed, in each of the last seven rounds. Two are
+    new:
+    - what a miner carries hangs from its hand, stays out of the body, keeps
+      its handle in the closed fingers, and hangs straight when carried
+      steadily;
+    - in a sharp turn the boots never overlap.
+  - **Full PlayMode suite (121 tests, 3 skipped as explicit):** two
+    runs on the final state, both 118/118 passed
+    (935.9 s and 932.1 s).
+- **Failures on the way, and what they were:**
+  - **One earlier suite run failed one test**
+    (`LivingWorkerTests.SharedLimitedPositionsQueueAndDrainAResourceWithoutLosingSupplies`:
+    15 of 17 supplies delivered in its 90 seconds). Blender was rendering
+    previews on the same machine during that run. Alone, the seven living
+    worker tests passed, and so did both final runs, made with nothing else
+    running. The test is sensitive to the machine's load; the code it tests
+    was not changed.
+  - **The test of carried things failed in turn for four reasons,** each a
+    real finding: the lantern trailing; the wrist's give fed back to the
+    pendulum (it leaned 16° backward standing still); gravity lost at about
+    3,800 frames a second, the rate these tests run at; and the test itself
+    reading the bones after the miner had walked on.
+  - **The turn test failed** while boots were kept apart as points; it
+    passes with boots measured from heel to toe.
+  - **A setup step failed once with "compiler errors"** after a validation
+    run had been stopped part-way: the editor's compiler helper did not
+    start. It was not a code error; the next launch compiled and ran.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Crowd benchmark** (`-wgcrowd`, 1920×1080, RTX 4060 Laptop), with the
+  hanging things and the skirts' flaps:
+
+  | Miners walking | Strategy view, frame ms (p95) | Close view, frame ms (p95) |
+  |---|---|---|
+  | 0 | 4.8 (5.2) | 4.7 (5.1) |
+  | 25 | 5.5 (5.8) | 5.2 (5.4) |
+  | 50 | 5.9 (6.7) | 5.5 (6.0) |
+  | 100 | 6.9 (7.8) | 6.4 (7.1) |
+
+  A hundred miners add about 2.1 ms.
+- **Not tested:**
+  - **Extreme poses** (a deep knee bend, raised arms): the sweep is not built
+    yet. The models were checked on the game's own movement only.
+  - **Moving, by eye.** Everything in motion was judged on frames and
+    measurements, not watched.
+  - **Jogging,** and turning on the spot.
+  - **Ordinary frame rates in the tests.** The tests run at thousands of
+    frames a second and the recordings at 30; 60 to 144 was not measured
+    directly.
+  - **Mining with the miners.** It still uses the test body.
+  - **Other hardware.**
+  - **Luis's eye.** Passing checks are not acceptance of the look or the
+    feel.

@@ -118,7 +118,7 @@ PRESETS = {
                         dict(wrist=lambda b, s: b.chest + Vector((s * 0.045, -b.depth("chest") - 0.075, 0.0)), pole=(1, 0.2, -1.0))]),
         # Light and young: brisk, bouncy steps, arms swinging freely.
         gait=dict(froude=0.27, bounce=1.35, sway=0.9, arm_swing=1.15),
-        hands=[dict(grip="grip"), dict(grip="grip", palm=(0, 1, 0), along=(-0.3, 0.1, 1))],
+        hands=[dict(grip="carry", ring=(0, -1, 0), bar=0.007), dict(grip="grip", palm=(0, 1, 0), along=(-0.3, 0.1, 1))],
         face=dict(style="curious", skin="Skin_Small", soot=[((0.52, -0.28), 0.1, 0.3, 0.6)]),
         hair=dict(style="bob", mat="Hair"),
         outfit=[("top", dict(mat="CoatBlue", loose=0.024, sleeve=1.07, cuff=1.45, skirted=True)),
@@ -147,7 +147,7 @@ PRESETS = {
         # Tall and unhurried: long, smooth strides, little bounce, long arms swinging loosely.
         gait=dict(froude=0.21, bounce=0.75, sway=0.8, arm_swing=1.25),
         hands=[dict(grip="grip", along=(0.2, -1, 0.0), ring=lambda b, i: b.wrists[i] - Vector((b.wrists[i].x * 1.25, b.wrists[i].y * 1.4, 0))),
-               dict(grip="hold", palm=(-1, 0, 0), along=(-0.6, -0.6, 0.3))],
+               dict(grip="carry", ring=(-1, 0, 0), bar=0.0055)],
         face=dict(style="sleepy", skin="Skin_Long"),
         hair=dict(style="swept", mat="Hair"),
         outfit=[("top", dict(mat="Coat", loose=0.016, sleeve=1.0, cuff=1.3, skirted=True)),
@@ -156,8 +156,8 @@ PRESETS = {
                 ("shirt_front", dict(mat="Shirt", loose=0.016)),
                 ("lapels", dict(mat="Coat", loose=0.016)),
                 ("collar", dict(mat="Coat", height=0.07, wide=2.0)),
-                ("patch", dict(mat="Patch", onto="Top", where=lambda b: (b.chest + Vector((0.075, 0, -0.12))), size=(0.05, 0.005, 0.045), angle=0.2, name="Patch0")),
-                ("patch", dict(mat="Patch", onto="Skirt", where=lambda b: (b.pelvis + Vector((-0.14, 0, -0.22))), size=(0.045, 0.005, 0.055), angle=-0.12, name="Patch1")),
+                ("patch", dict(mat="Patch", onto="Top", where=lambda b: (b.chest + Vector((0.075, 0, -0.12))), size=(0.05, 0.002, 0.045), angle=0.2, name="Patch0")),
+                ("patch", dict(mat="Patch", onto="Skirt", where=lambda b: (b.pelvis + Vector((-0.14, 0, -0.22))), size=(0.045, 0.002, 0.055), angle=-0.12, name="Patch1")),
                 ("boots", dict(shaft=0.19)),
                 ("pickaxe", dict(hand=0)),
                 ("mug", dict(hand=1))],
@@ -179,20 +179,25 @@ PRESETS = {
         # Hands on hips: palms against the hips, fingers down and back, thumbs forward.
         hands=[dict(grip="open", palm=(1, 0, 0), along=(0, 0.5, -1)), dict(grip="open", palm=(-1, 0, 0), along=(0, 0.5, -1))],
         face=dict(style="laughing", skin="Skin_Round", soot=[((-0.55, -0.18), 0.09, 0.25, 0.6)]),
-        hair=dict(style="curls", mat="HairBrown", top=0.45),
+        # The curls stop above the smock's neck (the head sits low on the shoulders).
+        hair=dict(style="curls", mat="HairBrown", top=0.45, nape=-0.5),
         outfit=[("top", dict(mat="Smock", loose=0.018, rolled=True, skirted=True)),  # the roll stays clear of the hands
                 ("trousers", dict(mat="Trousers", boot=0.13, hidden_above=0.37 * 1.56 + 0.06)),
                 ("skirt", dict(mat="Smock", hem=0.37, flare=1.15, loose=0.02, folds=0.05, fold_count=8)),
                 ("forearms", dict()),
                 ("neckband", dict(mat="Smock")),
                 ("boots", dict(shaft=0.13)),
-                ("apron", dict(mat="ApronLeather", tie="Leather", hem=0.33, flare=1.1)),
-                ("patch", dict(mat="Leather", onto="Apron", where=lambda b: (b.pelvis + Vector((-0.07, 0, 0.0))), size=(0.055, 0.006, 0.05), name="ApronPocket")),
-                ("hammer", dict(pocket="ApronPocket", where=lambda b: b.pelvis + Vector((-0.08, -b.depth("pelvis") - 0.085, 0.08)), tilt=(0.25, -0.15, 1))),
+                ("apron", dict(mat="ApronLeather", tie="Leather", hem=0.33)),
+                ("patch", dict(mat="Leather", onto="Apron", where=lambda b: (b.pelvis + Vector((0.055, 0, -0.01))), size=(0.055, 0.003, 0.05), name="ApronPocket")),
+                # The hammer hangs in a leather loop at the right hip, its head resting on the loop.
+                ("hammer", dict(where=lambda b: b.pelvis + Vector((-0.085, 0, 0.055)))),
                 ("lamp_cap", dict())],
     ),
 }
 
+
+# The radius of each carried thing's handle: the hand that carries it is closed round a bar of that radius.
+HANDLES = {"lantern": 0.007, "mug": 0.0055}
 
 # ---------------------------------------------------------------- the rest pose, for rigging
 
@@ -202,7 +207,7 @@ REST = {
     # Small carries the lantern in the left hand, away from the satchel at the right hip.
     "Small": dict(swap={"lantern": ("lantern", dict(hand=1))}, hold={1: "lantern"}),
     # Long carries the mug in the left hand; the pickaxe rides on the back on a strap across the chest.
-    "Long": dict(swap={"pickaxe": ("pickaxe", dict(back=True)), "mug": ("mug", dict(hand=1))}, add=[("bandolier", dict())], hold={1: "mug"}),
+    "Long": dict(swap={"pickaxe": ("sling", dict(length=0.62, head=0.7)), "mug": ("mug", dict(hand=1))}, hold={1: "mug"}),
     "Round": dict(),
 }
 
@@ -223,9 +228,10 @@ def rest_preset(name, preset):
     rest = REST.get(name, {})
     hands = [dict(grip="relaxed", palm=(1, 0, 0)), dict(grip="relaxed", palm=(-1, 0, 0))]
     for i, what in rest.get("hold", {}).items():
-        # A hand that carries something curls round it, palm towards the body, fingers forward.
+        # A hand that carries something by its handle: the arm hangs, the palm towards the body, and the fingers
+        # close round the handle, which lies level from back to front.
         s = (-1, 1)[i]
-        hands[i] = dict(grip="hold", palm=(-s, 0, 0), along=(s * 0.15, -0.35, -1))
+        hands[i] = dict(grip="carry", ring=(0, -1, 0), bar=HANDLES[what])
     p["hands"] = hands
     outfit = []
     for piece, opts in preset["outfit"]:
@@ -237,9 +243,105 @@ def rest_preset(name, preset):
     return p
 
 
-def build_rigged(out_dir, only=None, dims_only=False):
+def carriage(b, objs, hang):
+    """For the game: what hangs and swings (a lantern or mug in a hand, a satchel on its strap), where the body
+    stops each, and how each arm carries itself (a carrying arm hangs far enough out that its load clears the
+    clothes, and swings less). Directions are in the being's space as the game has it: x to its right, y up,
+    z forward. hang: the relaxed arm's place (rigging.hang)."""
+    def game(v):
+        return [round(-v[0], 5), round(v[2], 5), round(-v[1], 5)]
+    clothes = [o for o in objs if o.name.endswith(("_Skirt", "_Top", "_Trousers", "_Apron")) or "_Boot" in o.name]
+    surface = shapes.Surface(*clothes)
+    hips = (b.hips[0] + b.hips[1]) * 0.5
+    hand_length = b.p.get("hand", 0.11) * b.H
+    shoulder_out = abs(b.shoulders[1].x - b.chest.x)
+    heads = {n: head for n, head, tail, parent in b.props}
+    carry, keep, hanging = [0.0, 0.0], [1.0, 1.0], []
+    for s in b.swings:
+        entry = dict(bone=s["bone"], hand=s["hand"] or "", length=round(s["length"], 4), damping=s["damping"], limit=s["limit"])
+        if s["hand"]:
+            side = s["side"]  # +1: the being's left
+            arm = 0 if side > 0 else 1
+            # The body's reach to that side, where the thing hangs: from the hanging hand down to its lowest point.
+            top = b.shoulders[1].z - hang["armDrop"] - hand_length * 0.45
+            reach, far = 0.0, None
+            for k in range(7):
+                z = top + 0.03 - (s["length"] + s["radius"] + 0.03) * k / 6
+                for y in (-0.14, -0.09, -0.04, 0.0, 0.04, 0.09):
+                    hit, _ = surface.cast(Vector((side * 0.8, hips.y + y, z)), Vector((-side, 0, 0)), 0.8)
+                    if hit is not None and abs(hit.x - hips.x) > reach:
+                        reach, far = abs(hit.x - hips.x), hit
+            clear = reach + s["radius"] + 0.012
+            entry.update(aim=game((0, 0, -1)), stopNormal=game((side, 0, 0)), stopDistance=round(clear, 4), handle=game(s["ring"]))
+            # The hand continues the forearm, so the grip hangs about where the wrist does: the arm hangs far
+            # enough out that the thing hangs straight, a finger's width clear of where the body would stop it.
+            # A carrying arm swings less (a lantern's flame, a mug's drink), and hangs far enough out that the
+            # thing hangs straight all through a stride: the hand comes in towards the hips by about a tenth of
+            # the arm's drop as it swings (measured on the recorded walks), and the thing stays outside the stop.
+            keep[arm] = 0.45 if s["bone"] == "Lantern" else 0.5
+            grip = shoulder_out + hang["armOut"]  # the hand continues the forearm: the grip hangs about where the wrist does
+            sway = 0.1 * hang["armDrop"] * keep[arm] + 0.008
+            carry[arm] = round(max(0.0, clear + 0.004 + sway - grip), 4)
+            print(f"CARRY {b.name} {s['bone']}: the body stops it at {clear:.4f}, the relaxed grip hangs at {grip:.4f}, the stride brings it in {sway:.4f}")
+            # Where the body reaches furthest is the skirt: when a leg pushes its flaps out (in a turn, a
+            # sidestep), the cloth there moves out, and the thing with it.
+            hem = getattr(b, "skirt_hem", None)
+            if hem is not None and far is not None and hem - 0.02 < far.z < b.pelvis.z:
+                whole = min(0.45, max(1e-3, (b.pelvis.z - (hem + 0.09)) / max(b.pelvis.z - hem, 1e-3)))
+                share = max(0.0, min(1.0, (b.pelvis.z - far.z) / max(b.pelvis.z - hem, 1e-3) / whole))
+                share = share * share * (3 - 2 * share)
+                entry.update(pusher=f"SkirtFront.{'L' if side > 0 else 'R'}", pushShare=round(share, 3), pushPoint=game(far))
+        else:
+            stop, rest, pivot = Vector(s["stop"]), Vector(s["rest"]), heads[s["bone"]]
+            entry.update(aim=game((rest - pivot).normalized()), stopNormal=game(stop), stopDistance=round((rest - hips).dot(stop), 4), handle=game(s["ring"]))
+            if s.get("rides"):
+                # Its loop is sewn to cloth: the game hangs it from where that cloth is (MinerSetup.Riders).
+                entry["rides"] = True
+            if s.get("hinged"):
+                # Its head lies across the loop: it swings out from the body and back, not from side to side.
+                entry["hinged"] = True
+            side = 1 if rest.x > hips.x else -1
+            arm = 0 if side > 0 else 1
+            bag = [o for o in objs if any(k in o.name for k in ("_Bag", "_Buckle", "_StrapTab"))] if s["bone"] == "Satchel" else []
+            if bag:
+                # The arm on the bag's side hangs clear of the bag.
+                out = max((side * (v.co.x - hips.x) for o in bag for v in o.data.vertices), default=0.0)
+                cuff = b.p["arm"] * 1.2 + 0.02
+                carry[arm] = max(carry[arm], round(max(0.0, out + cuff + 0.008 - (shoulder_out + hang["armOut"])), 4))
+            # It rests on the skirt, and the thigh under the skirt pushes the skirt out as it swings: the skirt's
+            # share of the thigh's movement at the bag's lower part (as the skirt is weighted, rigging.skin).
+            hem = getattr(b, "skirt_hem", None)
+            if hem is not None:
+                # Where the bag's lower part rests on the skirt, and how much of that flap's movement the cloth
+                # there takes (as the skirt is weighted, rigging.skin).
+                low = rest - stop * 0.02 - Vector((0, 0, 0.03))
+                whole = min(0.45, max(1e-3, (b.pelvis.z - (hem + 0.09)) / max(b.pelvis.z - hem, 1e-3)))
+                share = max(0.0, min(1.0, (b.pelvis.z - low.z) / max(b.pelvis.z - hem, 1e-3) / whole))
+                share = share * share * (3 - 2 * share)
+                front = low.y < b.pelvis.y
+                entry.update(pusher=f"Skirt{'Front' if front else 'Back'}.{'L' if side > 0 else 'R'}", pushShare=round(share, 3),
+                             pushPoint=game(low))
+        hanging.append(entry)
+    print(f"CARRIAGE {b.name}: arms further out {carry}, swing kept {keep}, hanging {[(h['bone'], h['stopDistance']) for h in hanging]}")
+    # How far a thigh swings before it reaches the skirt's front and back flaps, in degrees (outfits.skirt_slack,
+    # less a margin). A long coat hangs well clear of the legs, and only the end of each stride moves it. A short
+    # closed skirt moves with the legs from the first: that is the movement Luis liked, kept as it is.
+    measured = getattr(b, "skirt_slack", [0.0, 0.0])
+    slack = [round(max(0.0, s - 3.0) * 0.8, 2) for s in measured] if getattr(b, "skirt_open", False) else [0.0, 0.0]
+    print(f"SKIRT {b.name}: the legs swing {measured} degrees before they reach the cloth; the flaps wait {slack}")
+    return dict(armCarry=carry, armSwingSide=keep, hanging=hanging, skirtSlack=slack)
+
+
+def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=False, report=None):
     """The miners for the game: rest pose, skeleton, skin, levels of detail, one atlas each, and their dimensions.
-    dims_only: only the dimensions (miners.json), without remaking the models."""
+    dims_only: only the dimensions (miners.json), without remaking the models.
+    Every build is audited (audit.py): at rest, and on the game's recorded frames when poses (a folder of
+    Miner_<Name>_poses.json) is given. audit_only: the audit alone, without baking or exporting.
+    report: where the audit's reports go. A build's go to Art/Review/Miners, never among the game's assets."""
+    import audit
+    if report is None:
+        report = out_dir if audit_only else os.path.normpath(os.path.join(HERE, "..", "..", "Review", "Miners"))
+    os.makedirs(report, exist_ok=True)
     dims = {}
     for name, preset in PRESETS.items():
         if only and name not in only:
@@ -252,14 +354,28 @@ def build_rigged(out_dir, only=None, dims_only=False):
         for n, r in recipes.items():
             import painting
             painting.recipe(n, **r)
-        gait = rp.get("gait", {})
+        gait = dict(rp.get("gait", {}))
+        if not audit_only:
+            gait.update(carriage(b, objs, rigging.hang(b, b.upper, b.fore)))
         if dims_only:
             dims[name] = dict(rigging.dimensions(b, rigging.joints(b)), **gait)
             continue
-        dims[name], _ = rigging.build(name, b, objs, MATERIALS, recipes, face_images, out_dir)
+        recorded = os.path.join(poses, f"Miner_{name}_poses.json") if poses else None
+        if recorded and not os.path.exists(recorded):
+            recorded = None
+
+        def check(b_, meshes, bones):
+            audit.run(b_, meshes, bones, report, recorded)
+        if audit_only:
+            _, bones, meshes = rigging.prepare(name, b, objs)
+            check(b, meshes, bones)
+            continue
+        dims[name], _ = rigging.build(name, b, objs, MATERIALS, recipes, face_images, out_dir, audit=check)
         dims[name].update(gait)
     path = os.path.join(out_dir, "miners.json")
     previous = {}
+    if audit_only:
+        return
     if os.path.exists(path):
         with open(path, encoding="utf-8") as f:
             previous = {m["name"]: m for m in json.load(f).get("miners", [])}
@@ -275,6 +391,8 @@ def build_character(name, preset, out_dir):
     outfits._TREES.clear()
     b = body.Body(f"Worker_{name}", preset["body"])
     b.props = []  # rigid things with bones of their own: (bone, head, tail, parent bone)
+    b.contacts = []  # points that must stay on what they rest on, for the audit (audit.py)
+    b.swings = []  # carried things that swing in the game: (bone, the hand that carries it, length, ...)
     face = preset["face"]
     skin_name = face["skin"]
     image = faces.paint(face["style"], MATERIALS[skin_name]["colour"], preset["seed"], os.path.join(out_dir, f"Face_{name}.png"),
@@ -283,7 +401,7 @@ def build_character(name, preset, out_dir):
     objs = [body.head(b, skin)]
     held = []
     for i, h in enumerate(preset["hands"]):
-        obj, grasp, axes = body.hand(b, i, skin, h["grip"], h.get("palm"), h.get("along"), h.get("ring"))
+        obj, grasp, axes = body.hand(b, i, skin, h["grip"], h.get("palm"), h.get("along"), h.get("ring"), h.get("bar"))
         objs.append(obj)
         held.append((grasp, axes))
     hstyle = preset["hair"]
@@ -304,13 +422,13 @@ def dress(b, piece, o, held, skin):
         return outfits.skirt(b, o.pop("mat"), fit=top, under=under, **o)
     if piece == "trousers":
         return outfits.trousers(b, o.pop("mat"), **o)
-    if piece == "bandolier":
-        # It lies over everything on the chest: the coat, its lapels and the shirt between them.
-        torso = [x for x in bpy.data.objects if x.name == f"{b.name}_TopProbe" or x.name.startswith(f"{b.name}_Lapel") or x.name == f"{b.name}_ShirtFront"]
+    if piece == "sling":
+        # The pick on the back, on a strap that lies over everything on the chest: the coat, its lapels, the shirt.
+        front = [x for x in bpy.data.objects if x.name.startswith(f"{b.name}_Lapel") or x.name == f"{b.name}_ShirtFront"]
+        torso = [x for x in bpy.data.objects if x.name == f"{b.name}_TopProbe"] + front
         below = [x for x in bpy.data.objects if x.name == f"{b.name}_Skirt"]
-        start = b.chest + Vector((b.width("chest") * 0.3, b.depth("chest") + 0.03, 0.06))
-        end = b.waist + Vector((-b.width("waist") * 0.35, b.depth("waist") + 0.03, -0.04))
-        return outfits.bandolier(b, "Leather", torso, below, start, end)
+        clothes = [x for x in bpy.data.objects if x.name in (f"{b.name}_Top", f"{b.name}_Collar")] + front
+        return outfits.sling(b, "Leather", "Wood", "Iron", torso, below, clothes, **o)
     if piece == "neckband":
         garment = next(x for x in bpy.data.objects if x.name == f"{b.name}_Top")
         return outfits.neckband(b, o.pop("mat"), garment, **o)
@@ -328,7 +446,9 @@ def dress(b, piece, o, held, skin):
         return outfits.patch(b, o["mat"], o["where"](b), o["size"], o.get("angle", 0.0), o.get("name", f"Patch{id(o) % 997}"), onto)
     if piece == "apron":
         under = [x for x in bpy.data.objects if x.name in (f"{b.name}_TopProbe", f"{b.name}_Skirt")]
-        return outfits.apron(b, o["mat"], o["tie"], hem=o.get("hem", 0.33), flare=o.get("flare", 1.2), over=under)
+        # The neck strap lies on the smock's shoulders and on the back of the neck itself.
+        neck = [x for x in bpy.data.objects if x.name in (f"{b.name}_Top", f"{b.name}_Neckband", f"{b.name}_Collar", f"{b.name}_Skin")]
+        return outfits.apron(b, o["mat"], o["tie"], hem=o.get("hem", 0.33), over=under, neck=neck)
     if piece == "boots":
         return body.boot(b, 0, "Boots", "Sole", **o) + body.boot(b, 1, "Boots", "Sole", **o)
     if piece == "forearms":
@@ -336,17 +456,15 @@ def dress(b, piece, o, held, skin):
     if piece == "satchel":
         torso = [x for x in bpy.data.objects if x.name == f"{b.name}_TopProbe"]
         below = [x for x in bpy.data.objects if x.name == f"{b.name}_Skirt"]
-        return outfits.satchel(b, "Leather", "Accent", "Brass", torso, below)
+        clothes = [x for x in bpy.data.objects if x.name in (f"{b.name}_Top", f"{b.name}_Collar")]
+        return outfits.satchel(b, "Leather", "Accent", "Brass", torso, below, clothes, **o)
     if piece == "lantern":
-        grasp = held[o["hand"]][0]
-        # Carried by its bail through the curled fingers; it has a bone of its own, so it can swing.
+        grasp, (a, t, n) = held[o["hand"]]
+        # Carried by its handle inside the closed fingers; it has a bone of its own at the handle, so it can swing.
         hand_bone = f"Hand.{rigging.side_of(o['hand'])}"
         b.props.append(("Lantern", grasp.copy(), grasp - Vector((0, 0, 0.12)), hand_bone))
-        return outfits.lantern(b, grasp, "Brass", "Glass")
-    if piece == "pickaxe" and o.get("back"):
-        # Slung across the back, its head over one shoulder.
-        centre = b.chest + Vector((0.0, b.depth("chest") + 0.05, -0.02))
-        return outfits.pickaxe(b, centre, Vector((0.38, 0.1, 1.0)), "Wood", "Iron", length=0.74, hold=0.52)
+        b.swings.append(dict(bone="Lantern", hand=hand_bone, length=0.12, radius=0.04, damping=0.9, limit=55, side=(-1, 1)[o["hand"]], ring=tuple(t)))
+        return outfits.lantern(b, grasp, t, "Brass", "Glass", "Wood", grip=HANDLES["lantern"], span=min(0.095, b.p.get("hand", 0.11) * b.H * 0.62))
     if piece == "pickaxe":
         # The handle runs through the fist, along its grip; Long leans on it like a walking stick.
         grasp, (a, t, n) = held[o["hand"]]
@@ -355,14 +473,23 @@ def dress(b, piece, o, held, skin):
         return outfits.pickaxe(b, grasp, d, "Wood", "Iron", length=(grasp.z - 0.01) / max(d.z, 0.3) / hold, hold=hold)
     if piece == "mug":
         grasp, (a, t, n) = held[o["hand"]]
-        # Held by its body in the curled fingers, upright.
-        b.props.append(("Mug", grasp.copy(), grasp + Vector((0, 0, 0.08)), f"Hand.{rigging.side_of(o['hand'])}"))
-        return outfits.mug(b, grasp + n * 0.03 + Vector((0, 0, 0.01)), "Mug")
+        # Carried by its handle inside the closed fingers, hanging on its side below the hand; a bone of its own.
+        hand_bone = f"Hand.{rigging.side_of(o['hand'])}"
+        b.props.append(("Mug", grasp.copy(), grasp - Vector((0, 0, 0.08)), hand_bone))
+        b.swings.append(dict(bone="Mug", hand=hand_bone, length=0.075, radius=0.05, damping=0.88, limit=50, side=(-1, 1)[o["hand"]], ring=tuple(t)))
+        hand_length = b.p.get("hand", 0.11) * b.H
+        # Room between the handle and the mug's wall for the fingers that pass through.
+        return outfits.mug(b, grasp, t, "Mug", grip=HANDLES["mug"], span=hand_length * 0.5, clear=HANDLES["mug"] + hand_length * 0.155)
     if piece == "hammer":
-        # In the apron's pocket when there is one, its head showing above.
-        at = getattr(b, "marks", {}).get(o.get("pocket"))
-        at = at + Vector((0.0, -0.012, 0.05)) if at is not None else o["where"](b)
-        return outfits.hammer(b, at, o["tilt"], "Wood", "Iron")
+        onto = [x for x in bpy.data.objects if x.name == f"{b.name}_Apron"] or [x for x in bpy.data.objects if x.name == f"{b.name}_Skirt"]
+        parts, pivot, tip, normal, across = outfits.hammer(b, onto, o["where"](b), "Wood", "Iron", "Leather")
+        # It hangs in its loop from a bone of its own, and swings a little; the apron under it stops it.
+        b.props.append(("Hammer", pivot.copy(), tip.copy(), "Pelvis"))
+        # The stop is a flat place on a round body: a little further out than modelled, so the handle's whole
+        # length stays clear of the cloth as the leg under it moves.
+        b.swings.append(dict(bone="Hammer", hand=None, length=(tip - pivot).length, radius=0.0, damping=0.84, limit=30,
+                             side=-1, ring=tuple(across), stop=tuple(normal), rest=tuple(tip + normal * 0.008), rides=True, hinged=True))
+        return parts
     if piece == "lamp_cap":
         return outfits.lamp_cap(b, "Leather", "Brass", "Glass")
     raise ValueError(piece)
@@ -496,10 +623,13 @@ if __name__ == "__main__":
     parser.add_argument("--only", nargs="*")
     parser.add_argument("--rigged", action="store_true", help="the game-ready miners: rest pose, rig, LODs, atlas")
     parser.add_argument("--dims", action="store_true", help="with --rigged: only rewrite miners.json")
+    parser.add_argument("--poses", help="with --rigged or --audit: a folder of the game's recorded frames (MinerPoseRecord)")
+    parser.add_argument("--audit", action="store_true", help="only the model audit (rest pose, skinned and simplified), no export")
+    parser.add_argument("--report", help="where the audit's reports go (default: --out for --audit; Art/Review/Miners for a build)")
     args = parser.parse_args(argv)
     os.makedirs(args.out, exist_ok=True)
-    if args.rigged:
-        build_rigged(args.out, args.only, args.dims)
+    if args.rigged or args.audit:
+        build_rigged(args.out, args.only, args.dims, args.poses, audit_only=args.audit, report=args.report)
         sys.exit(0)
     built = build(args.out, args.only)
     painted = paint(built, args.out) if args.paint else {}

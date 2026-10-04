@@ -342,7 +342,7 @@ Warnings should explain causes precisely, such as: “No reachable unit can gath
 **Current implementation:** the grounded body (Strength and Burden checkpoint A,
 now roadmap stage S0).
 
-- Luis judged it "much better" on October 1. The arrival shuffle he reported is
+- Luis judged it "much better" on October 1. The arrival shuffle Luis reported is
   fixed.
 - The worker walks at a constant natural 1.8 m/s.
 
@@ -497,9 +497,12 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-10-03 | A choice of three miners | Chosen by Luis for this prototype | Small, Long and Round are offered as choices | — |
 | 2026-10-03 | Rigging the miners | Built, awaiting Luis's playtest | One skeleton on the procedural body's joints. The body's proportions come from each model, and a rig adapter turns the bones to the solved joints. Three levels of detail and one atlas each. Hands are freed for work: Small's lantern goes to the belt, Long's pickaxe to the back ([MinersPlaytest.md](Playtests/MinersPlaytest.md)) | Luis's playtest |
 | 2026-10-03 | Walking pace | Superseded the same day | One pace for all three miners (1.3 m/s) | — |
-| 2026-10-03 | Natural walks | Direction from Luis | "Their bodies should walk in a way that feels natural to their appearance." Each walks at its own comfortable pace (Froude about 0.21–0.27) with its own bounce, sway and arm swing ([CharacterPractices.md](ArtDirection/CharacterPractices.md#2-walks-natural-to-each-body)) | Luis's playtest |
+| 2026-10-03 | Natural walks | Direction from Luis | "Their bodies should walk in a way that feels natural to their appearance." Each walks at its own comfortable pace (Froude about 0.21–0.27) with its own bounce, sway and arm swing ([CharacterPractices.md](ArtDirection/CharacterPractices.md#3-walks-natural-to-each-body)) | Luis's playtest |
 | 2026-10-03 | Proactive polish | Working agreement, from Luis | Every character passes a close audit in the engine before Luis sees it; the practices are recorded in [CharacterPractices.md](ArtDirection/CharacterPractices.md) | — |
 | 2026-10-03 | Physical objects | Direction from Luis | Physicality and the reality of all movement are among the game's main focuses: anything that reads as an object behaves as a proper object that responds to its environment (held, hung, swinging with gravity), never floating | — |
+| 2026-10-04 | The method's first round on the miners | Built, awaiting Luis's playtest | Luis's five notes on Small are answered (leg and boot, laces, the strap through rings on the bag, the hand round the lantern's handle, the bag hanging). All three were taken through the method; it found eighteen more ([TheMiners.md](ArtDirection/TheMiners.md#the-methods-first-round-october-3-and-4)) | Luis's playtest |
+| 2026-10-04 | Keep what Luis liked | Working agreement (Claude's lesson) | A fix that would change a movement or shape Luis has praised is made beside it, not through it. Small's and Round's skirts keep the movement Luis liked; only Long's long coat waits for the leg to reach it | — |
+| 2026-10-04 | The walk's high step in the sharpest turn | Open | For a frame, the knee shows under the coat's lifted hem. Calming it means changing the walk (less lift on a short step), which is Luis's to decide | Luis |
 | 2026-10-03 | Model quality method | Working agreement, from Luis | Every model is checked and improved by [ModelQualityMethod.md](ArtDirection/ModelQualityMethod.md) (seven passes, automatic checks at rest and in motion, a capture matrix, a misses ledger) before Luis sees it | — |
 | 2026-10-02 | Exploration process | Working agreement (Claude's lesson) | Explorations are added as switchable options beside what Luis loves, never replacing it, and shown early as frames | — |
 | 2026-10-02 | Wonder Gather's own language | Proposed, not Locked | Thesis "warm lives, drawn by hand, in a breathing painted world that is always bigger than the frame", seven signature devices and a frame test ([TheEssence.md](ArtDirection/TheEssence.md)) | Luis's choice of devices |
@@ -792,8 +795,8 @@ Reference: Docs/Playtests/EquippedWorkerPlaytest.md and Docs/Technical/Equipment
 Luis reviewed The Equipped Worker. The pickaxe "looks more or less held". The
 motion, however, "looks just like an animation still", the tool clips the body,
 and the feet still look goofy. Overall it "looks like the bare starting points"
-of the hi-fi prototype. He restated that movement should be procedurally
-animated without looking goofy, and re-supplied his original showcase brief,
+of the hi-fi prototype. Luis restated that movement should be procedurally
+animated without looking goofy, and re-supplied the original showcase brief,
 now kept verbatim under `Docs/Correspondence/`.
 
 A source review traced the three problems:

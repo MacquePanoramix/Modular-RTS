@@ -43,6 +43,6 @@ Material:
     - _VertexColor: 0
     m_Colors:
     - _BaseColor: {r: 0.35, g: 0.22, b: 0.1, a: 1}
-    - _EmissionColor: {r: 3, g: 2.16, b: 1.14, a: 3}
+    - _EmissionColor: {r: 1.9, g: 1.14, b: 0.45599997, a: 1.9}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

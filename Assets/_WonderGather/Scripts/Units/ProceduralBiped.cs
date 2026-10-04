@@ -33,6 +33,10 @@ namespace WonderGather
             // The walk's character, as multipliers of the original walk: how much the pelvis rises and falls, how
             // much it sways and rolls from side to side, and how far the arms swing.
             public float bounce, sway, armSwing;
+            // Each arm's own carriage (x the left arm, y the right): how much further out than armHang it hangs (an
+            // arm that carries a lantern holds it clear of the coat), and how much of the walk's swing it keeps
+            // (a carrying arm swings less). Zero swing reads as 1, so a body saved before this walks as it did.
+            public Vector2 armCarry, armSwingSide;
             public static Proportions Default => new Proportions
             {
                 hipHeight = 1.43f, hipWidth = .21f, legSegment = .68f, ankleHeight = .13f, heelLength = .07f, ballLength = .19f, toeLength = .11f,
@@ -76,6 +80,8 @@ namespace WonderGather
             if(P.bounce<=0) P.bounce=1;
             if(P.sway<=0) P.sway=1;
             if(P.armSwing<=0) P.armSwing=1;
+            if(P.armSwingSide.x<=0) P.armSwingSide.x=1;
+            if(P.armSwingSide.y<=0) P.armSwingSide.y=1;
             HipHeight=P.hipHeight;HipWidth=P.hipWidth;AnkleHeight=P.ankleHeight;HeelLength=P.heelLength;BallLength=P.ballLength;ToeLength=P.toeLength;
             if(!customProportions){LegReach=1.33f;LegLimit=1.359f;NarrowStance=.14f;ClosedTolerance=.15f;SettleTolerance=.3f;return;}
             // The same ratios as the original body: reach just short of a straight leg, a narrow stance at two thirds of the hips.
@@ -91,6 +97,8 @@ namespace WonderGather
             public Quaternion rotation,fromRotation,toRotation;
             public float progress,rate,clearance,pitch,liftPitch,toeBend,lastPhase;
             public bool swinging,gaitSwing,liftedThisCycle;
+            // Which side of the standing boot this swing bows round (0 until it needs to).
+            public float bow;
         }
         private readonly Foot[] support={new Foot(),new Foot()};
         private readonly Vector3[] handPositions=new Vector3[2];
@@ -117,6 +125,8 @@ namespace WonderGather
         public bool Ready=>initialized;
         public Vector3 FootPosition(int index)=>support[index].position;
         public bool FootPlanted(int index)=>!support[index].swinging;
+        // How far through its swing a foot is (0 lifting, 1 landing), or -1 when it is planted.
+        public float SwingProgress(int index)=>support[index].swinging?support[index].progress:-1;
         public Vector3 FootNormal(int index)=>support[index].normal;
         public bool CargoVisible=>carriedBundle!=null&&carriedBundle.gameObject.activeInHierarchy;
         // Report the currently rendered hand, including navigation displacement
@@ -292,7 +302,7 @@ namespace WonderGather
                 // A swing interrupted by stopping finishes on its own clock beneath the hips.
                 else foot.progress=Mathf.Min(1,foot.progress+dt*foot.rate);
                 Retarget(i);
-                SwingPose(foot);
+                SwingPose(foot,support[1-i],facing*new Vector3(i==0?-1:1,0,0));
                 if(foot.progress>=1) Land(i);
             }
             if(gaitActive)
@@ -336,7 +346,7 @@ namespace WonderGather
         private void Lift(int index,bool gaitSwing)
         {
             var foot=support[index];
-            foot.swinging=true;foot.gaitSwing=gaitSwing;foot.progress=0;foot.liftedThisCycle=true;
+            foot.swinging=true;foot.gaitSwing=gaitSwing;foot.progress=0;foot.liftedThisCycle=true;foot.bow=0;
             foot.from=foot.to=foot.position;foot.fromNormal=foot.toNormal=foot.normal;foot.fromRotation=foot.toRotation=foot.rotation;
             foot.liftPitch=foot.pitch;
             foot.clearance=gaitSwing?footLift*Mathf.Lerp(.55f,.9f,jogWeight):.05f;
@@ -360,13 +370,115 @@ namespace WonderGather
                     point-=travel*Mathf.Max(0,Vector3.Dot(point-end,travel));
                 }
             }
+            // A foot never lands on the standing one: where its boot would overlap that boot (in a turn the two
+            // point different ways), it lands beside it.
+            var other=support[1-index];
+            if(!other.swinging)
+            {
+                Quaternion landing=SoleRotation(Vector3.up);
+                if(BootGap(point,landing,other.position,other.rotation,out var away)<BootRoom)
+                {
+                    // The shorter way clear: straight away from the other boot, or out to its own side.
+                    Vector3 side=facing*new Vector3(index==0?-1:1,0,0);
+                    float straight=away!=Vector3.zero?StepClear(point,landing,other,away,BootRoom):-1,aside=StepClear(point,landing,other,side,BootRoom);
+                    if(straight>=0&&(aside<0||straight<=aside)) point+=away*straight;
+                    else if(aside>=0) point+=side*aside;
+                }
+            }
             if(!Ground(point,out var ground,out var normal)||Mathf.Abs(ground.y-transform.position.y)>.8f) return;
             foot.to=ground;foot.toNormal=normal;foot.toRotation=SoleRotation(normal);
         }
-        private static void SwingPose(Foot foot)
+        // A boot on the ground, seen from above: a line from heel to toe with half a boot's width round it.
+        private float BootHalfWidth=>(HeelLength+BallLength+ToeLength)*.2f;
+        // The room two boots need between their lines so that they do not touch.
+        private float BootRoom=>BootHalfWidth*2+.012f;
+        // How far apart two boots' lines are, and the way from the second to the first (zero where they cross).
+        private float BootGap(Vector3 a,Quaternion ra,Vector3 b,Quaternion rb,out Vector3 away)
+        {
+            Vector3 fa=Vector3.ProjectOnPlane(ra*Vector3.forward,Vector3.up).normalized,fb=Vector3.ProjectOnPlane(rb*Vector3.forward,Vector3.up).normalized;
+            float toe=BallLength+ToeLength;
+            Vector3 a0=a-fa*HeelLength,a1=a+fa*toe,b0=b-fb*HeelLength,b1=b+fb*toe;
+            a0.y=a1.y=b0.y=b1.y=0;
+            Closest(a0,a1,b0,b1,out var onA,out var onB);
+            away=onA-onB;
+            float gap=away.magnitude;
+            away=gap>.0005f?away/gap:Vector3.zero;
+            return gap;
+        }
+        // The least step along a way that leaves a boot clear of the other by the room asked (0 when it already
+        // is; -1 when no step within reach does). The room left grows steadily once the boot is past the other,
+        // so the first clear step is found by walking out, then halving back.
+        private float StepClear(Vector3 at,Quaternion turned,Foot other,Vector3 way,float room,float reach=.45f)
+        {
+            if(BootGap(at,turned,other.position,other.rotation,out _)>=room) return 0;
+            const float stride=.02f;
+            for(float d=stride;d<=reach;d+=stride)
+            {
+                if(BootGap(at+way*d,turned,other.position,other.rotation,out _)<room) continue;
+                float low=d-stride,high=d;
+                for(int k=0;k<5;k++)
+                {
+                    float mid=(low+high)*.5f;
+                    if(BootGap(at+way*mid,turned,other.position,other.rotation,out _)>=room) high=mid;else low=mid;
+                }
+                return high;
+            }
+            return -1;
+        }
+        // The closest points of two segments.
+        private static void Closest(Vector3 p1,Vector3 q1,Vector3 p2,Vector3 q2,out Vector3 c1,out Vector3 c2)
+        {
+            Vector3 d1=q1-p1,d2=q2-p2,r=p1-p2;
+            float a=Vector3.Dot(d1,d1),e=Vector3.Dot(d2,d2),f=Vector3.Dot(d2,r),s,t;
+            if(a<=1e-8f&&e<=1e-8f){c1=p1;c2=p2;return;}
+            if(a<=1e-8f){s=0;t=Mathf.Clamp01(f/e);}
+            else
+            {
+                float c=Vector3.Dot(d1,r);
+                if(e<=1e-8f){t=0;s=Mathf.Clamp01(-c/a);}
+                else
+                {
+                    float b=Vector3.Dot(d1,d2),denom=a*e-b*b;
+                    s=denom>1e-8f?Mathf.Clamp01((b*f-c*e)/denom):0;
+                    t=(b*s+f)/e;
+                    if(t<0){t=0;s=Mathf.Clamp01(-c/a);}
+                    else if(t>1){t=1;s=Mathf.Clamp01((b-c)/a);}
+                }
+            }
+            c1=p1+d1*s;c2=p2+d2*t;
+        }
+        // How far apart the two boots are now, less the room they need: negative when they overlap.
+        public float BootClearance=>BootGap(support[0].position,support[0].rotation,support[1].position,support[1].rotation,out _)-BootHalfWidth*2;
+        private void SwingPose(Foot foot,Foot other,Vector3 ownSide)
         {
             float s=foot.progress,e=s*s*(3-2*s);
-            foot.position=Vector3.Lerp(foot.from,foot.to,e)+Vector3.up*(foot.clearance*Mathf.Sin(Mathf.PI*Mathf.Pow(s,.75f)));
+            Vector3 along=Vector3.Lerp(foot.from,foot.to,e);
+            if(!other.swinging)
+            {
+                // The swinging boot goes round the standing one, never through it. Both its ends are clear of that
+                // boot (a foot never lands on the other); where the straight path between them would pass too
+                // close (in a sharp turn the feet's paths cross), it bows out sideways, round the nearer side (its
+                // own side when there is little between the two), and stays on that side.
+                Vector3 path=foot.to-foot.from;path.y=0;
+                Vector3 aside=path.sqrMagnitude>1e-6f?Vector3.Cross(Vector3.up,path.normalized):ownSide;
+                Quaternion turned=Quaternion.Slerp(foot.fromRotation,foot.toRotation,e);
+                // Never more room than its own ends have: it leaves and lands exactly where its feet are.
+                float room=Mathf.Min(BootRoom,Mathf.Min(BootGap(foot.from,foot.fromRotation,other.position,other.rotation,out _),
+                    BootGap(foot.to,foot.toRotation,other.position,other.rotation,out _)));
+                if(BootGap(along,turned,other.position,other.rotation,out _)<room)
+                {
+                    if(foot.bow==0)
+                    {
+                        // The nearer way round; its own side when there is little between them.
+                        float one=StepClear(along,turned,other,aside,room),two=StepClear(along,turned,other,-aside,room);
+                        float own=Vector3.Dot(aside,ownSide)>=0?1:-1;
+                        foot.bow=one<0&&two<0?own:two<0?1:one<0?-1:Mathf.Abs(one-two)<.02f?own:one<two?1:-1;
+                    }
+                    float round=StepClear(along,turned,other,aside*foot.bow,room);
+                    if(round>0) along+=aside*(foot.bow*round);
+                }
+            }
+            foot.position=along+Vector3.up*(foot.clearance*Mathf.Sin(Mathf.PI*Mathf.Pow(s,.75f)));
             foot.normal=Vector3.Slerp(foot.fromNormal,foot.toNormal,e).normalized;
             foot.rotation=Quaternion.Slerp(foot.fromRotation,foot.toRotation,e);
             if(foot.gaitSwing)
@@ -535,12 +647,13 @@ namespace WonderGather
                 Vector3 knee=(hip+ankle)*.5f+bend*Mathf.Sqrt(Mathf.Max(0,P.legSegment*P.legSegment-distance*distance*.25f));
                 Segment(thighs[i],hip,knee,.19f*P.scale);Segment(shins[i],knee,ankle,.15f*P.scale);
                 // Each arm swings against its own leg: back as that foot reaches forward.
-                float swing=-armAmplitude*Mathf.Cos(cycle+Mathf.PI*i);
+                float carryOut=i==0?P.armCarry.x:P.armCarry.y,swingSide=i==0?P.armSwingSide.x:P.armSwingSide.y;
+                float swing=-armAmplitude*swingSide*Mathf.Cos(cycle+Mathf.PI*i);
                 Vector3 shoulder=i==0?leftShoulder:rightShoulder;
                 // A relaxed arm hangs nearly straight and swings as a pendulum from the shoulder;
                 // a jogging arm bends and pumps.
                 float drop=P.armHang.y,angle=swing/drop;
-                Vector3 relaxed=shoulder+chest*new Vector3(side*P.armHang.x,-drop*Mathf.Cos(angle),P.armHang.z+drop*Mathf.Sin(angle));
+                Vector3 relaxed=shoulder+chest*new Vector3(side*(P.armHang.x+carryOut),-drop*Mathf.Cos(angle),P.armHang.z+drop*Mathf.Sin(angle));
                 Vector3 pumping=shoulder+chest*(new Vector3(side*.02f,-.34f,.24f)*P.scale+new Vector3(0,0,swing*.8f));
                 Vector3 wrist=Vector3.Lerp(relaxed,pumping,jogWeight);
                 bool busy=false;

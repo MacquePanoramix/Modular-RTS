@@ -116,6 +116,9 @@ GRIPS = {
     "fist": [(1.55, 1.7, 1.2), (1.6, 1.7, 1.2), (1.6, 1.7, 1.2), (1.65, 1.7, 1.2)],
     "hold": [(1.0, 1.2, 0.9), (1.1, 1.25, 0.95), (1.15, 1.3, 0.95), (1.25, 1.35, 1.0)],
     "grip": [(1.3, 1.45, 1.05), (1.35, 1.5, 1.05), (1.4, 1.5, 1.05), (1.45, 1.5, 1.1)],
+    # Carrying a handle that hangs from the hand (a lantern, a pail), when no handle's size is given
+    # (given one, the fingers are wrapped round it exactly: see hand's bar).
+    "carry": [(1.25, 1.35, 0.85), (1.3, 1.4, 0.9), (1.35, 1.4, 0.9), (1.4, 1.45, 0.95)],
     "open": [(0.1, 0.15, 0.1), (0.12, 0.18, 0.12), (0.15, 0.2, 0.12), (0.2, 0.25, 0.15)],
 }
 # The thumb's path by grip, in hand lengths along (the fingers' direction, towards the thumb, the palm's side).
@@ -126,13 +129,36 @@ THUMBS = {
     "fist": [(0.12, 0.17, 0.04), (0.3, 0.26, 0.17), (0.44, 0.18, 0.3), (0.55, 0.05, 0.36)],
     "grip": [(0.12, 0.17, 0.04), (0.29, 0.27, 0.15), (0.42, 0.22, 0.28), (0.51, 0.1, 0.35)],
     "hold": [(0.12, 0.17, 0.04), (0.29, 0.28, 0.12), (0.42, 0.3, 0.23), (0.52, 0.26, 0.29)],
+    "carry": [(0.12, 0.17, 0.04), (0.29, 0.27, 0.14), (0.43, 0.24, 0.27), (0.53, 0.14, 0.34)],
 }
 
 
-def hand(b, i, skin, grip="relaxed", palm=None, along=None, ring=None):
+def wrap(knuckle, segments, centre, radius):
+    """The turns at a finger's three joints that wrap it round a bar: in the plane the finger curls in
+    (x along the hand, y towards the palm side), each segment leaves its joint along the tangent to the circle
+    (centre, radius) that keeps the bar on the curling side. Returns the three turns, in radians."""
+    x, y = knuckle
+    heading, turns = 0.0, []
+    for length in segments:
+        vx, vy = centre[0] - x, centre[1] - y
+        dist = math.hypot(vx, vy)
+        aim = math.atan2(vy, vx) - math.asin(min(1.0, radius / max(dist, 1e-6)))
+        turn = (aim - heading + math.pi) % math.tau - math.pi
+        turn = max(0.0, min(1.75, turn))
+        heading += turn
+        turns.append(turn)
+        x, y = x + length * math.cos(heading), y + length * math.sin(heading)
+    return turns
+
+
+def hand(b, i, skin, grip="relaxed", palm=None, along=None, ring=None, bar=None):
     """A stylized working hand: a full palm, four chunky fingers of three joints curled by the grip, and a
     thumb that wraps what the hand holds. palm: the direction the palm faces; along: the direction the
-    fingers leave the wrist; ring: the direction a held handle runs through the curled fingers."""
+    fingers leave the wrist; ring: the direction a held handle runs through the curled fingers.
+    bar: the radius of a handle the hand carries (a lantern's, a mug's). The fingers are then wrapped round a
+    bar of that radius lying in their hook along the ring direction, the thumb closes the hook, and the hand is
+    cut to fit the bar exactly: the handle touches the fingers all round and never passes through them.
+    Returns the hand, where it holds things (the bar's centre), and its axes (along, ring, palm side)."""
     s = (-1, 1)[i]
     L = b.p.get("hand", 0.11) * b.H
     wr = b.wrists[i]
@@ -157,22 +183,48 @@ def hand(b, i, skin, grip="relaxed", palm=None, along=None, ring=None):
                                          (local(-0.03, 0.0, 0.0), L * 0.11, (1.0, 1.0, 0.8), rot)], skin, resolution=L * 0.035)]
     lengths = [0.4, 0.44, 0.41, 0.33]
     curls = GRIPS[grip]
+    thumb = THUMBS[grip]
+    finger_r = L * 0.07
+    centre = None
+    if bar:
+        # The bar lies just past the knuckles, clear of the palm, in the hook of the fingers (in hand lengths).
+        around = bar + finger_r * 0.9
+        centre = (0.5 + 0.35 * 0.44 * 0.45, 0.085 + (bar + 0.001) / L)
+        curls = [wrap((0.5 - (0.04 if k == 3 else 0), 0.0), [lengths[k] * f_ for f_ in (0.45, 0.3, 0.25)], centre, around / L)
+                 for k in range(4)]
+        # The thumb closes the hook on the wrist's side of the bar, its tip towards the first finger's.
+        reach = (bar + L * 0.066) / L
+        thumb = [(0.12, 0.17, 0.04), (0.29, 0.28, 0.12),
+                 (centre[0] - reach * 0.98, 0.25, centre[1] + reach * 0.2),
+                 (centre[0] - reach * 0.72, 0.11, centre[1] + reach * 0.7)]
     for k in range(4):
         base = local(0.5 - (0.04 if k == 3 else 0), (1.5 - k) * 0.105, 0.0)
-        d = (a + t * (1.5 - k) * 0.035).normalized()
-        pts, r0 = [base], L * 0.07
+        d = a.copy() if bar else (a + t * (1.5 - k) * 0.035).normalized()
+        pts, r0 = [base], finger_r
         for seg, frac in enumerate((0.45, 0.3, 0.25)):
             # Each joint turns the finger towards the palm.
             d = (Matrix.Rotation(curls[k][seg], 3, d.cross(n).normalized()) @ d).normalized()
             pts.append(pts[-1] + d * L * lengths[k] * frac)
         radii = [r0, r0 * 0.95, r0 * 0.88, r0 * 0.82]
         parts.append(tube(f"{b.name}_Finger{i}{k}", pts, radii, radii, skin, sides=10, levels=0))
-    pts = [local(*q) for q in THUMBS[grip]]
+    pts = [local(*q) for q in thumb]
     radii = [L * 0.09, L * 0.082, L * 0.072, L * 0.064]
     parts.append(tube(f"{b.name}_Thumb{i}", pts, radii, radii, skin, sides=10, levels=0))
-    obj = fuse(f"{b.name}_Hand{i}", parts, skin, voxel=L * 0.013, smooth=6, keep=3500)
+    obj = fuse(f"{b.name}_Hand{i}", parts, skin, voxel=L * 0.013, smooth=6, keep=None if bar else 3500)
     # Where it holds things: in the middle of the curled fingers.
     grasp = wr + a * L * 0.62 + n * L * 0.2
+    if bar:
+        grasp = local(centre[0], 0.0, centre[1])
+        # Cut the bar's place out of the hand, so the fingers close on it exactly.
+        import bpy
+        cutter = shapes.cylinder(f"{b.name}_BarCut{i}", grasp, bar + 0.0003, L * 1.4, skin,
+                                 rotation=frame(t, a) @ Matrix.Rotation(math.pi / 2, 3, 'Y'), vertices=20, bevel=0)
+        cut = obj.modifiers.new("Bar", 'BOOLEAN')
+        cut.operation, cut.object, cut.solver = 'DIFFERENCE', cutter, 'EXACT'
+        shapes.apply_all(obj)
+        bpy.data.objects.remove(cutter)
+        shapes.simplify(obj, 3500)
+        shapes.finish(obj, skin)
     return obj, grasp, (a, t, n)
 
 
@@ -201,13 +253,16 @@ def head(b, skin):
     nk = hr * p.get("neck_r", 0.5)
     top = on(0, 0.3, -0.62)
     base = b.collar + Vector((0, 0.012, -0.015))
-    for f, r in ((0.0, 0.8), (0.3, 0.86), (0.65, 0.97), (1.0, 1.1)):
+    for f, r in ((0.0, 0.8), (0.3, 0.86), (0.65, 0.95), (1.0, 1.0)):
         items.append((top.lerp(base, f), nk * r, (1.0, 0.92, 1.0)))
-    # Where it widens into the shoulders it stays inside the clothes (a little forward of the coat's back).
-    items.append((base + Vector((0, -0.004, -0.025)), nk * 1.05, (1.15, 0.8, 0.5)))
+    # Where it widens into the shoulders it is well inside the clothes: at the neckline itself the neck is no
+    # wider than the garment's opening, so skin never shows through a neckband.
+    items.append((base + Vector((0, -0.004, -0.045)), nk * 1.05, (1.1, 0.8, 0.5)))
     # Under the chin, a soft hollow: the jaw's underside turns back into the neck instead of melting into it.
     items.append((on(0, -0.42, -1.02), -hr * 0.3, (1.5, 1.0, 0.7), hm))
     obj = blobs(f"{b.name}_Skin", items, skin, resolution=hr * 0.032)
+    # One piece only: a hollow can leave a small bubble sealed inside the head, which no one can ever see.
+    shapes.keep_largest(obj)
     span = p.get("face_span", 1.25)
     uv = obj.data.uv_layers[0]
     inverse = hm.transposed()
@@ -230,25 +285,30 @@ def shaft_radius(b):
     return b.p["leg"] * 1.12
 
 
-def boot(b, i, leather, sole, shaft=0.16, cuff=0.0, laces="Lace"):
-    """A sturdy boot: a shoe-last foot with a low rounded toe and a shaft wide enough for the trousers to
-    tuck into, fused into one form and flattened to stand; a thick sole and heel; laces crossing up the front."""
+def boot(b, i, leather, sole, shaft=0.16, cuff=0.0, laces="Lace", eyelets="Brass"):
+    """A sturdy boot: a shoe-last foot with a low rounded toe and a shaft that follows the shin, so that leg and
+    boot read as one line; fused into one form and flattened to stand; a thick sole and heel. The laces run
+    through eyelets up the instep and the shaft's front, lying on the leather, and end in a bow."""
     f, an = b.foot_frame(i)
     side = Vector((0, 0, 1)).cross(f).normalized()
     L = b.p.get("foot", 0.165) * b.H  # the boot's length
     W = L * 0.17  # half its width at the ball
     ground = Vector((an.x, an.y, 0))
 
-    def at(along, up, out=0.0):
-        return ground + f * along + Vector((0, 0, up)) + side * out
+    def at(along, height, out=0.0):
+        return ground + f * along + Vector((0, 0, height)) + side * out
     rot = frame(f, side)
     leg_r = b.p["leg"]
-    top = Vector((an.x, an.y, an.z + shaft))
+    # The shaft follows the shin (the knee is a little forward of the ankle, even standing): its top is on the
+    # leg's own line, `shaft` above the ankle. A shaft standing straight up leaves the leg beside it.
+    up = (b.knees[i] - an).normalized()
+    length = shaft / max(up.z, 0.5)
+    top = an + up * length
     # The last: one long rounded form from heel to toe, the toe a little narrower and lower.
     heel, toe = -L * 0.3, L * 0.58
     # The shaft hugs the leg, so the leg and the boot read as one line; the trousers fall over its top.
     shaft_r = shaft_radius(b)
-    parts = [chain(f"{b.name}_BootShaft{i}", [at(-L * 0.04, 0.05), Vector((an.x, an.y, an.z + 0.02)), top + Vector((0, 0, -0.01)), top],
+    parts = [chain(f"{b.name}_BootShaft{i}", [at(-L * 0.04, 0.05), Vector((an.x, an.y, an.z + 0.02)), top - up * 0.01, top],
                    [(leg_r * 1.22, leg_r * 1.3), (shaft_r * 0.95, shaft_r), (shaft_r, shaft_r), (shaft_r, shaft_r)], leather),
              blobs(f"{b.name}_BootLast{i}", [(at((heel + toe) * 0.5, 0.05), W, ((toe - heel) * 0.5 / W, 1.0, 1.05), rot),
                                              (at(L * 0.4, 0.045), W * 0.92, (1.25, 0.98, 0.78), rot),
@@ -270,16 +330,72 @@ def boot(b, i, leather, sole, shaft=0.16, cuff=0.0, laces="Lace"):
                     normals=[Vector((0, 0, 1))] * len(xs), sides=12, levels=1))
     out.append(shapes.slab(f"{b.name}_Heel{i}", at(heel + L * 0.11, 0.011), (L * 0.1, W * 0.85, 0.011), sole, rotation=rot))
     if cuff:
-        out.append(chain(f"{b.name}_BootCuff{i}", [top + Vector((0, 0, -0.025)), top + Vector((0, 0, 0.008))],
+        out.append(chain(f"{b.name}_BootCuff{i}", [top - up * 0.025, top + up * 0.008],
                          [(leg_r * 1.6, leg_r * 1.6), (leg_r * 1.55, leg_r * 1.55)], leather, levels=2))
     if laces:
-        # Crossing laces up the front of the shaft and over the instep.
-        for k in range(4):
-            z = 0.075 + k * (shaft + an.z - 0.11) / 4
-            reach = shaft_radius(b) * (1.02 if z > an.z else 1.15)
-            c = Vector((an.x, an.y, z)) + f * (reach + 0.002 + (0.012 if z < an.z else 0))
-            for sgn in (-1, 1):
-                lift = Vector((0, 0, 0.008 * sgn))
-                out.append(tube(f"{b.name}_Lace{i}{k}{sgn}", [c - side * reach * 0.5 - lift, c, c + side * reach * 0.5 + lift],
-                                [0.0028] * 3, [0.0028] * 3, laces, sides=6, levels=0))
+        out.extend(lacing(b, i, body, an, up, length, f, side, ground, shaft_r, laces, eyelets))
     return out
+
+
+def lacing(b, i, boot_obj, an, up, length, f, side, ground, shaft_r, lace, brass):
+    """Laces as a cobbler threads them: pairs of eyelets up the instep and the shaft's front, the lace crossing
+    between them and lying on the leather (every point is laid on the boot's real surface), tied in a bow at the
+    top whose ends hang down the front. Returns the laces (one part) and the eyelets (one part)."""
+    surface = shapes.Surface(boot_obj)
+    r = 0.0024
+    fwd = (f - up * f.dot(up)).normalized()
+    lat = up.cross(fwd).normalized()
+    half = 0.36  # the eyelets' half angle round the shaft
+
+    def hole(t, sgn):
+        c = an + up * (length * t)
+        d = Matrix.Rotation(sgn * half, 3, up) @ fwd
+        return surface.cast(c + d * 0.25, -d, 0.3)
+
+    rows = max(3, round(length / 0.034))
+    levels = [0.14 + 0.5 * k / (rows - 1) for k in range(rows)]
+    holes = [(hole(t, -1), hole(t, 1)) for t in levels]
+    # One pair on the instep, in front of the shaft (cast down onto the foot).
+    reach = shaft_r + 0.024
+    instep = [surface.cast(ground + f * reach + side * (sgn * 0.016) + Vector((0, 0, 0.4)), Vector((0, 0, -1)), 0.5) for sgn in (-1, 1)]
+    holes.insert(0, tuple(instep))
+    holes = [pair for pair in holes if pair[0][0] is not None and pair[1][0] is not None]
+
+    def strand(a, c, over=False, n=7):
+        pts = []
+        for k in range(n):
+            u = k / (n - 1)
+            hump = max(0.0, 1 - abs(u - 0.5) / 0.3) if over else 0.0
+            pts.append(surface.lay(a.lerp(c, u), r * (0.9 + 1.1 * hump))[0])
+        return pts
+
+    paths = [strand(holes[0][0][0], holes[0][1][0])]  # the bar across the lowest pair
+    for (a0, a1), (c0, c1) in zip(holes, holes[1:]):
+        paths.append(strand(a0[0], c1[0]))
+        paths.append(strand(a1[0], c0[0], over=True))
+    # The bow, just above the top pair: two loops lying on the leather and two ends hanging down the front.
+    top_t = levels[-1] + min(0.12, 0.016 / length)
+    knot, knot_n = surface.cast(an + up * (length * top_t) + fwd * 0.25, -fwd, 0.3)
+    parts = []
+    if knot is not None:
+        paths.append(strand(holes[-1][0][0], knot, n=3))
+        paths.append(strand(holes[-1][1][0], knot, n=3))
+        for sgn in (-1, 1):
+            loop = [knot, knot + lat * sgn * 0.011 + up * 0.007, knot + lat * sgn * 0.024 + up * 0.002,
+                    knot + lat * sgn * 0.015 - up * 0.007, knot]
+            paths.append([surface.lay(q, r * 0.9)[0] for q in loop])
+            end = [knot, knot + lat * sgn * 0.007 - up * 0.014, knot + lat * sgn * 0.012 - up * 0.03]
+            paths.append([surface.lay(q, r * 0.9)[0] for q in end])
+        parts.append(shapes.ellipsoid(f"{b.name}_LaceKnot{i}", knot + knot_n * r, (0.0052, 0.0052, 0.0042), lace,
+                                      rotation=frame(lat, up), segments=8))
+    for k, pts in enumerate(paths):
+        parts.append(tube(f"{b.name}_LaceStrand{i}_{k}", pts, [r] * len(pts), [r] * len(pts), lace, sides=4, levels=0))
+    laces = shapes.exact(shapes.join(f"{b.name}_Lace{i}", parts), fine=True)
+    rings = []
+    for k, pair in enumerate(holes):
+        for j, (at_, nm) in enumerate(pair):
+            turn = frame(nm, up) @ Matrix.Rotation(math.pi / 2, 3, 'Y')
+            rings.append(shapes.cylinder(f"{b.name}_EyeletRing{i}_{k}{j}", at_ + nm * 0.0006, 0.0048, 0.0018, brass,
+                                         rotation=turn, vertices=8, bevel=0))
+    eyes = shapes.exact(shapes.join(f"{b.name}_Eyelet{i}", rings), fine=True)
+    return [laces, eyes]

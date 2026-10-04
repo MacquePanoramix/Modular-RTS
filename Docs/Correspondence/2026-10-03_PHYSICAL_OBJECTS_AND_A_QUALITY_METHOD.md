@@ -38,3 +38,11 @@
   - develop a method for raising model quality from now on.
 
   The method is [ModelQualityMethod.md](../ArtDirection/ModelQualityMethod.md).
+
+## Follow-up (October 4, verbatim)
+
+> I hit my usage limit while you were working, but it has reset now. Please continue from where you left off.
+
+The work continued from where it had stopped: the method's first round on
+the three miners
+([TheMiners.md](../ArtDirection/TheMiners.md#the-methods-first-round-october-3-and-4)).

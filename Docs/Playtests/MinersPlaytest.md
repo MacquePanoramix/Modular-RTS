@@ -13,7 +13,7 @@ Ordinary Place with the choice of miner.
 ## What to try
 
 1. **Choose your miner.** The choice opens when the place loads:
-   - **Small:** young and curious, a lantern at the belt.
+   - **Small:** young and curious, a lantern in hand.
    - **Long:** tall and unhurried, a pickaxe on the back.
    - **Round:** sturdy and laughing, a lamp on the cap.
 
@@ -58,6 +58,47 @@ Ordinary Place with the choice of miner.
   | Long | 1.38 m/s | long, smooth, unhurried strides |
   | Round | 1.28 m/s | rolling, side to side |
 
+## After the method's first round (October 4)
+
+Luis's five notes on Small, the principle that every object is a proper
+object, and the [model quality method](../ArtDirection/ModelQualityMethod.md)
+Luis asked for. The round's log, with before and after images, is in
+[TheMiners.md](../ArtDirection/TheMiners.md#the-methods-first-round-october-3-and-4).
+
+**Where to look, on Small** (`V` for Explore, then close in):
+
+1. **The boots, from the side, at ground level.** The leg goes down into the
+   boot. The laces lie on the leather, through eyelets, with a bow.
+2. **The lantern, from behind and from below.** The hand is closed round a
+   wooden handle; the lantern hangs from it and swings as Small walks, starts
+   and stops. It never goes into the coat.
+3. **The satchel.** Each end of the strap passes through a ring on the bag.
+   The bag hangs from the strap, rests against the hip, and moves with the
+   stride.
+4. **The strap,** over the shoulder and across the buttons: pulled straight
+   by the bag's weight.
+
+**On Long and Round:**
+
+- **Long's pickaxe** hangs in a sling on the back: a strap, two leather
+  loops, the pick resting by its head.
+- **Long's mug** hangs from the fingers by its handle, and swings.
+- **Long's coat** hangs slim; its front goes with the knee, its back hangs
+  until a leg reaches it.
+- **Round's apron** hangs from a strap round the neck, is drawn in by ties
+  knotted at the back, and carries a hammer in a leather loop.
+
+**What to judge:**
+
+- **Do the things read as objects now?** Held, hanging, swinging, stopped by
+  the body.
+- **Is the movement Luis liked still there** on Small: the coat's skirt, the
+  lantern, the bag?
+- **Long's coat in the walk:** calm enough, or too calm?
+- **Sharp turns.** The boots now step round each other. For a frame, in the
+  sharpest turn, a knee shows under the lifted hem: the walk's high step,
+  left for Luis's word.
+
 ## What changed for the game
 
 - **Carried things are carried.**
@@ -78,17 +119,18 @@ miner walking between random places in the meadow:
 
 | Miners walking | Strategy view, frame ms (p95) | Close view, frame ms (p95) |
 |---|---|---|
-| 0 | 4.9 (5.9) | 4.7 (5.1) |
-| 25 | 5.7 (7.1) | 5.2 (5.4) |
-| 50 | 6.0 (8.4) | 5.6 (5.9) |
-| 100 | 7.0 (9.2) | 6.2 (7.3) |
+| 0 | 4.8 (5.2) | 4.7 (5.1) |
+| 25 | 5.5 (5.8) | 5.2 (5.4) |
+| 50 | 5.9 (6.7) | 5.5 (6.0) |
+| 100 | 6.9 (7.8) | 6.4 (7.1) |
 
-A hundred miners add about 2 ms: about 0.02 ms each.
+A hundred miners add about 2.1 ms: about 0.02 ms each. (Measured again on October 4, with the hanging things and the skirts' flaps.)
 
-- **Levels of detail:** about 18,000, 5,000 and 1,600 triangles per miner.
+- **Levels of detail:** about 17,400, 5,000 and 1,600 triangles per miner.
 - **Materials:** one painted material and one texture (2048²) each, plus
   the outline on the nearer two levels.
-- **Bones:** 19.
+- **Bones:** 25 for Small, 24 for Long and Round: the body's 19, one for each
+  hanging thing, and four for the skirt's flaps.
 
 The benchmark is in the build: run it with `-wgcrowd`. It writes
 `miner-crowd-benchmark.csv` beside the player log.
@@ -115,5 +157,8 @@ The benchmark is in the build: run it with `-wgcrowd`. It writes
 - **Not watched by eye.** Turning on the spot and jogging were not checked
   this way.
 - **Other hardware.** Only the RTX 4060 Laptop was tried.
+- **Extreme poses.** The models were checked on the game's own movement
+  (standing, walking, a sharp turn, stopping), not yet on a deep knee bend or
+  raised arms.
 
 See [Validation.md](../Validation.md) for the tests and evidence.

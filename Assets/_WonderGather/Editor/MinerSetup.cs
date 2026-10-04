@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -23,7 +24,7 @@ namespace WonderGather.Editor
         public static readonly string[] Names = { "Small", "Long", "Round" };
         private static readonly string[] Notes =
         {
-            "young and curious, a lantern at the belt",
+            "young and curious, a lantern in hand",
             "tall and unhurried, a pickaxe on the back",
             "sturdy and laughing, a lamp on the cap",
         };
@@ -39,6 +40,30 @@ namespace WonderGather.Editor
             public float[] shoulder;
             // The walk natural to this body: the Froude number of its comfortable walk, and the walk's character.
             public float froude, bounce, sway, arm_swing;
+            // Each arm's own carriage (left, right): further out, and how much of the swing it keeps.
+            public float[] armCarry, armSwingSide;
+            // What hangs and swings: a lantern or mug in a hand, a satchel on its strap.
+            public Hung[] hanging;
+            // How far a thigh swings, in degrees, before it reaches the skirt's front and back flaps.
+            public float[] skirtSlack;
+        }
+
+        [Serializable]
+        private class Hung
+        {
+            public string bone, hand;
+            public float length, damping, limit, stopDistance;
+            // In the being's own space (x to its right, y up, z forward).
+            public float[] aim, stopNormal, handle;
+            // The limb under the cloth it rests on: its bone, how far down that bone, and the cloth's share of its movement.
+            public string pusher;
+            public float pushShare;
+            // Where it rests on that cloth, in the being's space, from the ground under its middle.
+            public float[] pushPoint;
+            // It hangs from something sewn to cloth (a loop on an apron): the place it hangs from moves with that cloth.
+            public bool rides;
+            // It hangs in a loop with its head across the loop, and swings only square to that head (its handle).
+            public bool hinged;
         }
 
         private static string Argument(string name)
@@ -72,7 +97,8 @@ namespace WonderGather.Editor
             var body = Material(name);
             var glow = MaterialAt(MaterialFolder + "/Lamp glow.mat", Painted());
             glow.SetColor("_BaseColor", new Color(.35f, .22f, .1f));
-            glow.SetColor("_EmissionColor", new Color(1f, .72f, .38f) * 3f);
+            // A flame's warm amber, not white: bright enough to glow, not so bright that it bleaches.
+            glow.SetColor("_EmissionColor", new Color(1f, .6f, .24f) * 1.9f);
             glow.SetFloat("_Drawn", 1);
             var outline = MaterialAt(MaterialFolder + "/Outline.mat", Shader.Find("Wonder Gather/Outline") ?? throw new InvalidOperationException("The outline shader did not compile."));
             outline.SetFloat("_MaxWidth", .012f);
@@ -162,6 +188,8 @@ namespace WonderGather.Editor
                 armHang = new Vector3(e.armOut, e.armDrop, e.armForward),
                 scale = scale,
                 bounce = e.bounce > 0 ? e.bounce : 1, sway = e.sway > 0 ? e.sway : 1, armSwing = e.arm_swing > 0 ? e.arm_swing : 1,
+                armCarry = e.armCarry != null && e.armCarry.Length == 2 ? new Vector2(e.armCarry[0], e.armCarry[1]) : Vector2.zero,
+                armSwingSide = e.armSwingSide != null && e.armSwingSide.Length == 2 ? new Vector2(e.armSwingSide[0], e.armSwingSide[1]) : Vector2.one,
             });
             biped.SetTuning(.65f, Mathf.Clamp(.16f * scale, .05f, .3f), .34f);
 
@@ -200,7 +228,35 @@ namespace WonderGather.Editor
             Lamp(renderers[0], name);
 
             var miner = root.AddComponent<MinerBody>();
-            var swingingProp = bones.FirstOrDefault(x => x.name == "Lantern");
+            // What hangs and swings, from the model's data: each on its own bone.
+            var hanging = (e.hanging ?? new Hung[0]).Select(h =>
+            {
+                Vector3 In(float[] v) => v != null && v.Length == 3 ? new Vector3(v[0], v[1], v[2]) : Vector3.zero;
+                var hand = string.IsNullOrEmpty(h.hand) ? null : Bone(h.hand);
+                var bone = Bone(h.bone);
+                // Directions come in the being's space; each goes into the frame it turns with.
+                Vector3 Into(Transform frame, float[] v) => Quaternion.Inverse(frame.rotation) * (root.transform.rotation * In(v).normalized);
+                var pusher = string.IsNullOrEmpty(h.pusher) ? null : bones.FirstOrDefault(x => x.name == h.pusher);
+                // Where the thing rests on the cloth that bone carries.
+                Vector3 pushed = pusher != null ? root.transform.TransformPoint(In(h.pushPoint)) : Vector3.zero;
+                var riders = new List<Transform>();
+                var shares = new List<float>();
+                if (h.rides) Riders(renderers[0], bone, riders, shares);
+                return new MinerBody.Hanging
+                {
+                    riders = riders.ToArray(), rideShares = shares.ToArray(),
+                    ridePoints = riders.Select(r => r.InverseTransformPoint(bone.position)).ToArray(),
+                    pusher = pusher, pushShare = h.pushShare,
+                    pushPoint = pusher != null ? pusher.InverseTransformPoint(pushed) : Vector3.zero,
+                    pushRest = pusher != null ? Bone("Pelvis").InverseTransformPoint(pushed) : Vector3.zero,
+                    bone = bone, length = h.length, damping = h.damping, limit = h.limit,
+                    aim = Into(bone, h.aim),
+                    stopNormal = h.stopDistance > 0 ? Into(Bone("Pelvis"), h.stopNormal) : Vector3.zero, stopDistance = h.stopDistance,
+                    hand = hand,
+                    handle = hand != null ? Into(hand, h.handle) : h.hinged && bone.parent != null ? Into(bone.parent, h.handle) : Vector3.zero,
+                    hinged = h.hinged,
+                };
+            }).ToArray();
             miner.Configure(new MinerBody.Bones
             {
                 pelvis = Bone("Pelvis"), spine = Bone("Spine"), chest = Bone("Chest"), neck = Bone("Neck"), head = Bone("Head"),
@@ -210,12 +266,44 @@ namespace WonderGather.Editor
             }, new MinerBody.Solution
             {
                 pelvis = pelvis, torso = torso, head = head, upperArms = upperArms, forearms = forearms, thighs = thighs, shins = shins, feet = feet, toes = toes,
-            }, swingingProp, .12f);
+            }, hanging, new[] { ("SkirtFront.L", 0, true), ("SkirtBack.L", 0, false), ("SkirtFront.R", 1, true), ("SkirtBack.R", 1, false) }
+                .Select(f => new MinerBody.Flap { bone = bones.FirstOrDefault(x => x.name == f.Item1), leg = f.Item2, front = f.Item3 })
+                .Where(f => f.bone != null).ToArray(),
+                e.skirtSlack != null && e.skirtSlack.Length == 2 ? new Vector2(e.skirtSlack[0], e.skirtSlack[1]) : Vector2.zero);
+            Debug.Log($"MINER_HANGING {name} " + string.Join(", ", hanging.Select(h => $"{h.bone.name} {h.length:F3} m stop {h.stopDistance:F3}")));
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath(name));
             Object.DestroyImmediate(root);
         }
 
         // A lamp's warm light where the model has glowing glass: on the bone that carries the glass.
+        // The cloth a hanging thing is sewn to: the bones of the nearest skin that is not the thing's own, and
+        // their shares. (Its loop is skinned like the cloth it is sewn on; the thing itself is wholly its bone's.)
+        private static void Riders(SkinnedMeshRenderer renderer, Transform thing, List<Transform> riders, List<float> shares)
+        {
+            var mesh = renderer.sharedMesh;
+            var vertices = mesh.vertices;
+            var weights = mesh.boneWeights;
+            int own = Array.IndexOf(renderer.bones, thing);
+            Vector3 place = renderer.transform.InverseTransformPoint(thing.position);
+            int nearest = -1;
+            float best = float.MaxValue;
+            for (int v = 0; v < vertices.Length; v++)
+            {
+                var w = weights[v];
+                if ((w.boneIndex0 == own && w.weight0 > 0) || (w.boneIndex1 == own && w.weight1 > 0)
+                    || (w.boneIndex2 == own && w.weight2 > 0) || (w.boneIndex3 == own && w.weight3 > 0)) continue;
+                float d = (vertices[v] - place).sqrMagnitude;
+                if (d < best) { best = d; nearest = v; }
+            }
+            if (nearest < 0) return;
+            var found = weights[nearest];
+            void Add(int index, float share) { if (share > .01f) { riders.Add(renderer.bones[index]); shares.Add(share); } }
+            Add(found.boneIndex0, found.weight0); Add(found.boneIndex1, found.weight1);
+            Add(found.boneIndex2, found.weight2); Add(found.boneIndex3, found.weight3);
+            Debug.Log($"MINER_RIDES {thing.name} rides " + string.Join(", ", riders.Select((r, i) => $"{r.name} {shares[i]:F2}"))
+                      + $" ({Mathf.Sqrt(best) * renderer.transform.lossyScale.x * 1000:F0} mm from its cloth)");
+        }
+
         private static void Lamp(SkinnedMeshRenderer renderer, string name)
         {
             var mesh = renderer.sharedMesh;

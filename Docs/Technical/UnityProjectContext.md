@@ -981,7 +981,82 @@ at 3066921.
 - **`MinerChoice`.** Choosing a miner calls `ProceduralBiped.ResetPose`, so
   its body stands where it now is. Before this, the feet stayed where that
   miner was last shown, and the body walked away from the unit.
-- **`MinerCloseCapture`** (PlayMode, `[Explicit]`). It produces the close
-  audit's frames (see
-  [CharacterPractices.md](../ArtDirection/CharacterPractices.md#3-the-close-audit-before-luis-sees-anything)).
+- **`MinerCloseCapture`** (PlayMode, `[Explicit]`). It produces the frames of
+  the model quality method's capture matrix (see
+  [ModelQualityMethod.md](../ArtDirection/ModelQualityMethod.md#4-the-capture-matrix)).
 
+
+## Physical objects and the model quality method — October 3 and 4
+
+Luis asked that anything that reads as an object behave as one, and for a
+method to raise model quality
+([ModelQualityMethod.md](../ArtDirection/ModelQualityMethod.md);
+the round's log is in
+[TheMiners.md](../ArtDirection/TheMiners.md#the-methods-first-round-october-3-and-4)).
+
+- **Blender sources** (`Art/Blender/Worker/`).
+  - **`audit.py`** (new). The automatic audit of the parts as exported,
+    before they are joined: floating, lies on, meets, sinks, covered, beneath
+    and technical checks, at rest and on the game's recorded frames. The rules
+    are tables at its top (`LIES`, `MEETS`, `APART`, `COVERED`, `BENEATH`).
+    It writes `audit_<Name>.txt` and `.json`, and renders each failure.
+  - **`shapes.py`.** `Surface` (cast, nearest, lay on real surfaces);
+    `exact` (thin parts that are not simplified); `keep_largest`; `sheet`;
+    `ring`.
+  - **`body.py`.** `boot` builds the shaft along the shin; `lacing` threads
+    laces through eyelets on the boot's surface; `wrap` and `hand(bar=…)`
+    close a hand round a handle and cut it to fit.
+  - **`outfits.py`.**
+    - `taut`: a strap laid on cloth and pulled taut, pinned where it bears.
+    - `satchel`, `sling`, `lantern`, `mug`, `apron`, `patch`, `hammer`: each
+      built as it is made and fastened.
+    - `skirt`: records its hem; lies over the knees point by point;
+      `skirt_slack` measures how far a thigh swings before it reaches the
+      cloth.
+  - **`rigging.py`.** Four flap bones per skirt (`SkirtFront.L` and so on, at
+    the hips); `LIKE` and `weights_like` give what lies on something its
+    weights; carried things get bones (`Lantern`, `Mug`, `Satchel`,
+    `Hammer`). Bones: Small 25, Long 24, Round 24.
+  - **`workers.py`.** `carriage` writes, per miner, into `miners.json`:
+    - `armCarry`, `armSwingSide`: how far out each arm hangs, and how much
+      of its swing it keeps;
+    - `hanging[]`: each hanging thing's bone, hand, length, damping, limit,
+      aim, stop (normal and distance), handle, pusher (the skirt flap under
+      it), and whether it `rides` cloth or is `hinged`;
+    - `skirtSlack`: how far a thigh swings, front and back, before the flaps
+      move.
+
+    New flags: `--audit`, `--poses <folder>`, `--report <folder>`.
+- **`MinerBody`** (runtime).
+  - **`Hanging`.** A pendulum per hanging thing. Its state is the weight's
+    offset under the place it hangs from, and its speed. Its own swing fades;
+    the movement it shares with that place does not. The body stops it at a
+    plane in the pelvis' space (pushed out by the flap under it), and it
+    rests there. With a hand, the wrist gives up to 32° so the handle stays
+    square to the load; the give is shown, not fed back. `hinged` things swing
+    only square to their handle's direction. `riders` place the bone on the
+    cloth it is sewn to.
+  - **`Flap`.** Skirt flaps turn with the thigh that moves into them, after
+    the measured slack, and fall back when it leaves.
+  - **For tests:** `HangingWay`, `HangingIntoBody`, `HangingAskew` report what
+    was last posed, as one moment.
+- **`ProceduralBiped`.**
+  - `Proportions.armCarry` and `armSwingSide`, per arm.
+  - **Boots keep clear of each other.** `BootGap` measures two boots as
+    lines from heel to toe with a width. A swinging boot's path bows round
+    the standing one (`StepClear` finds the least step aside), and a boot
+    never lands on the other. `BootClearance` reports the room left.
+
+  The walk itself (timing, lift, stride) is unchanged.
+- **`MinerSetup`.** Reads the new fields, finds the cloth a riding thing is
+  sewn to (`Riders`: the nearest skin that is not the thing's own), and
+  lowers the lamp glass's glow.
+- **Tests and tools** (`Tests/PlayMode`).
+  - `MinerTests`: two new tests. What a miner carries hangs from its hand,
+    stays out of the body, and hangs straight when carried steadily; in a
+    sharp turn the boots never overlap.
+  - `MinerPoseRecord` (`[Explicit]`): records each miner's bones through
+    standing, walking, a sharp turn and a stop, for the audit in motion.
+  - `MinerCloseCapture` (`[Explicit]`): the capture matrix. `CaptureTools`
+    holds what the two share.
+  - `Art/Review/sheets.py`: contact sheets from the frames.

@@ -1,6 +1,6 @@
 # Wonder Gather — Current State
 
-**Updated:** October 3, 2026.
+**Updated:** October 4, 2026.
 
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
@@ -19,9 +19,10 @@
   are the base art style for every being and thing in the world, not one
   character's costume
   ([VisualSoul.md](ArtDirection/VisualSoul.md#the-language-for-every-being-and-thing)).
-  - **A method for model quality (October 3, evening).** Luis asked for a
-    strategy, to refer to from now on, for making every model as polished as
-    possible. It is [ModelQualityMethod.md](ArtDirection/ModelQualityMethod.md):
+  - **A method for model quality, and its first round (October 3 and 4).**
+    Luis asked for a strategy, to refer to from now on, for making every
+    model as polished as possible. It is
+    [ModelQualityMethod.md](ArtDirection/ModelQualityMethod.md):
     - the standard (nothing floats, nothing clips, objects obey gravity);
     - four questions for every object;
     - seven passes, including automatic checks at rest and in the game's own
@@ -29,9 +30,22 @@
     - a capture matrix of every angle and distance;
     - a ledger of every miss.
 
-    It is being applied to Luis's notes on Small (the leg and boot, laces,
-    the strap joining the bag, the lantern's grip, a bag that hangs with
-    gravity) and to all three miners.
+    **Its first round is done and waits for Luis's play**
+    ([TheMiners.md](ArtDirection/TheMiners.md#the-methods-first-round-october-3-and-4);
+    [MinersPlaytest.md](Playtests/MinersPlaytest.md#after-the-methods-first-round-october-4)):
+    - **Luis's five notes on Small** are answered: the leg goes into the
+      boot; laces lie on the leather; the strap's ends pass through rings on
+      the bag; the hand closes round the lantern's handle; the bag hangs from
+      its strap and rests on the hip.
+    - **Every object is a proper object** on all three: held, hanging,
+      swinging, stopped by the body. Long's pickaxe hangs in a sling; Round's
+      hammer hangs in a loop on an apron that is tied on.
+    - **Found by the method beyond the notes:** eighteen more, among them
+      knees through the coats mid-stride, boots through each other in sharp
+      turns, and a lantern that leaned even standing still.
+    - **Left open, each with its reason:** four small audit checks (three of
+      them single moments of the sharpest turn), and the sweep of extreme
+      poses, not built yet.
   - **Polished after Luis's play (October 3, evening).**
     - **Small:** the lantern is carried in the hand and swings; the satchel
       hangs from its strap at the hip; legs line up with the boots; the neck
@@ -82,14 +96,14 @@
     - seeds and fireflies in the air.
   - **The research.** [TheEssence.md](ArtDirection/TheEssence.md) holds the
     study of Luis's references and the proposed language unique to Wonder
-    Gather. It also reads what Luis's favourite frame teaches about his taste:
+    Gather. It also reads what Luis's favourite frame teaches about Luis's taste:
     intimacy, the lit house at dusk, a soft brushed sky, enclosure and a tonal
     palette, rather than vastness and brightness.
 - **Earlier steps:**
   - **S0 (the grounded body), S1a (two cameras) and S1b/S1c (the Ordinary
     Place, first pass)** are in `main`.
   - **The S1c second pass (hand-painted surfaces)** is on the branch. Luis
-    found it "already quite beautiful", but not yet the emotion he seeks.
+    found it "already quite beautiful", but not yet the emotion Luis seeks.
 - **Overall plan:** [ShowcaseRoadmap.md](ShowcaseRoadmap.md).
 
 ## What the project is building now
@@ -207,8 +221,8 @@ Recorded verbatim in
 [Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md](Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md):
 
 - **The hand-painted pass.** It is "already quite beautiful" and matches much
-  of his taste, but is not perfect yet. He would rather explore further than
-  stop.
+  of Luis's taste, but is not perfect yet. Luis would rather explore further
+  than stop.
 - **The aim.** "The breath-taking out of this world emotion": the stylistic and
   artistic essence, not the surface; "the image from my mind's eye straight out
   of a dream". He sent seven Ghibli film references, which are described but
@@ -220,10 +234,10 @@ Recorded verbatim in
   above and beyond it, unique to Wonder Gather: "My soul game and style."
 - **Time.** A long checkpoint with research is welcome.
 - **The verdict.** After seeing the first iteration, Luis said "honestly I think
-  I like the before better", with his favourite frame from the hand-painted
+  I like the before better", with Luis's favourite frame from the hand-painted
   pass. The hand-painted pass stays the base. S1e's first iteration is
   archived, not adopted.
-- **His answers.**
+- **Luis's answers.**
   - **Merge:** the hand-painted pass, into `main`. Done.
   - **Fireflies:** back in this scene.
   - **Next:** deepen the dusk mood in small steps, then move to the worker
@@ -237,7 +251,7 @@ Recorded verbatim in
 - **The Ordinary Place.** It is going "really well" towards the Visual Soul,
   but is not there yet.
 - **Rendering.**
-  - Candidate E (painted light + paint filter + ink) is his favourite, and is
+  - Candidate E (painted light + paint filter + ink) is Luis's favourite, and is
     now the working base look.
   - Hand-painted textures are the next exploration; Claude recommends them.
 - **Cameras.** Accepted ("I really liked the camera").
@@ -340,7 +354,7 @@ Luis's other choices on October 1:
 
 - **Model first** (O4).
 - **Strength** comes from the body plus training (O2).
-- **Stage merges.** Each stage merges into `main` after his playtest.
+- **Stage merges.** Each stage merges into `main` after Luis's playtest.
 
 ## Housekeeping
 

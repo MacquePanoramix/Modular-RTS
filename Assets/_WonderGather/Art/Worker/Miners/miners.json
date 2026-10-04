@@ -25,7 +25,81 @@
       "froude": 0.27,
       "bounce": 1.35,
       "sway": 0.9,
-      "arm_swing": 1.15
+      "arm_swing": 1.15,
+      "armCarry": [
+        0.0374,
+        0.0335
+      ],
+      "armSwingSide": [
+        0.45,
+        1.0
+      ],
+      "hanging": [
+        {
+          "bone": "Satchel",
+          "hand": "",
+          "length": 0.089,
+          "damping": 0.8,
+          "limit": 28,
+          "aim": [
+            0.40582,
+            -0.88665,
+            0.2217
+          ],
+          "stopNormal": [
+            0.77811,
+            0.46244,
+            0.42508
+          ],
+          "stopDistance": 0.1548,
+          "handle": [
+            0.47943,
+            0.0,
+            -0.87758
+          ],
+          "pusher": "SkirtFront.R",
+          "pushShare": 0.59,
+          "pushPoint": [
+            0.12323,
+            0.61131,
+            0.06732
+          ]
+        },
+        {
+          "bone": "Lantern",
+          "hand": "Hand.L",
+          "length": 0.12,
+          "damping": 0.9,
+          "limit": 55,
+          "aim": [
+            0,
+            -1,
+            0
+          ],
+          "stopNormal": [
+            -1,
+            0,
+            0
+          ],
+          "stopDistance": 0.2454,
+          "handle": [
+            -0.0,
+            0.0,
+            1.0
+          ],
+          "pusher": "SkirtFront.L",
+          "pushShare": 1.0,
+          "pushPoint": [
+            -0.19336,
+            0.45033,
+            -0.04
+          ]
+        }
+      ],
+      "skirtSlack": [
+        0.0,
+        0.0
+      ]
     },
     {
       "name": "Long",
@@ -52,7 +126,51 @@
       "froude": 0.21,
       "bounce": 0.75,
       "sway": 0.8,
-      "arm_swing": 1.25
+      "arm_swing": 1.25,
+      "armCarry": [
+        0.0199,
+        0.0
+      ],
+      "armSwingSide": [
+        0.5,
+        1.0
+      ],
+      "hanging": [
+        {
+          "bone": "Mug",
+          "hand": "Hand.L",
+          "length": 0.075,
+          "damping": 0.88,
+          "limit": 50,
+          "aim": [
+            0,
+            -1,
+            0
+          ],
+          "stopNormal": [
+            -1,
+            0,
+            0
+          ],
+          "stopDistance": 0.2456,
+          "handle": [
+            -0.0,
+            0.0,
+            1.0
+          ],
+          "pusher": "SkirtFront.L",
+          "pushShare": 1.0,
+          "pushPoint": [
+            -0.18363,
+            0.65803,
+            -0.0
+          ]
+        }
+      ],
+      "skirtSlack": [
+        0.0,
+        12.32
+      ]
     },
     {
       "name": "Round",
@@ -79,7 +197,53 @@
       "froude": 0.24,
       "bounce": 1.1,
       "sway": 1.7,
-      "arm_swing": 0.75
+      "arm_swing": 0.75,
+      "armCarry": [
+        0.0,
+        0.0
+      ],
+      "armSwingSide": [
+        1.0,
+        1.0
+      ],
+      "hanging": [
+        {
+          "bone": "Hammer",
+          "hand": "",
+          "length": 0.2,
+          "damping": 0.84,
+          "limit": 30,
+          "aim": [
+            -0.03624,
+            -0.85902,
+            0.51065
+          ],
+          "stopNormal": [
+            0.52595,
+            0.56464,
+            0.63605
+          ],
+          "stopDistance": 0.1541,
+          "handle": [
+            0.84846,
+            -0.29644,
+            -0.43844
+          ],
+          "rides": true,
+          "hinged": true,
+          "pusher": "SkirtFront.R",
+          "pushShare": 1.0,
+          "pushPoint": [
+            0.07807,
+            0.61804,
+            0.20412
+          ]
+        }
+      ],
+      "skirtSlack": [
+        0.0,
+        0.0
+      ]
     }
   ]
 }

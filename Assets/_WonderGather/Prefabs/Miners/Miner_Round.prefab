@@ -954,6 +954,8 @@ MonoBehaviour:
     bounce: 1.1
     sway: 1.7
     armSwing: 0.75
+    armCarry: {x: 0, y: 0}
+    armSwingSide: {x: 1, y: 1}
   pelvis: {fileID: 17744901318798166}
   torso: {fileID: 8169361104545011901}
   head: {fileID: 1284309104310220616}
@@ -1046,8 +1048,44 @@ MonoBehaviour:
     toes:
     - {fileID: 7908434119346633778}
     - {fileID: 8014367237800671650}
-  swinging: {fileID: 0}
-  swingLength: 0.12
+  hanging:
+  - bone: {fileID: 1649402744829888872}
+    length: 0.2
+    aim: {x: -0.0132046975, y: 0.996898, z: 0.07758929}
+    damping: 0.84
+    limit: 30
+    stopNormal: {x: -0.52594966, y: 0.5912224, z: -0.6114188}
+    stopDistance: 0.1541
+    hand: {fileID: 0}
+    handle: {x: -0.84846395, y: -0.31484967, z: 0.42541575}
+    hinged: 1
+    pusher: {fileID: 3177804937684414060}
+    pushPoint: {x: 0.016929984, y: 0.087025605, z: 0.17760658}
+    pushRest: {x: -0.07807, y: -0.08702562, z: -0.17760658}
+    pushShare: 1
+    riders:
+    - {fileID: 7289641312445791387}
+    - {fileID: 6387719662441830524}
+    ridePoints:
+    - {x: -0.09578201, y: 0.11657506, z: -0.115522005}
+    - {x: -0.09578201, y: -0.10407804, z: -0.103566326}
+    rideShares:
+    - 0.9155357
+    - 0.08446433
+  flaps:
+  - bone: {fileID: 3454867160072140588}
+    leg: 0
+    front: 1
+  - bone: {fileID: 5139165980410820076}
+    leg: 0
+    front: 0
+  - bone: {fileID: 3177804937684414060}
+    leg: 1
+    front: 1
+  - bone: {fileID: 651494838424735349}
+    leg: 1
+    front: 0
+  flapSlack: {x: 0, y: 0}
 --- !u!1001 &7289641312445791386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1118,7 +1156,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 32c91615e118cc54d9e27d92b0fe0781, type: 2}
     - target: {fileID: 4742473837712756890, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
       propertyPath: m_LocalReferencePoint.z
-      value: -0.028532818
+      value: -0.00396128
       objectReference: {fileID: 0}
     - target: {fileID: 4742473837712756890, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
       propertyPath: m_LODs.Array.data[0].screenRelativeHeight
@@ -1157,14 +1195,34 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7886579316947234342, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
   m_PrefabInstance: {fileID: 7289641312445791386}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &651494838424735349 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -1431984993124912401, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
+  m_PrefabInstance: {fileID: 7289641312445791386}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &911823982322421696 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7605859807346914138, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
   m_PrefabInstance: {fileID: 7289641312445791386}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1649402744829888872 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8343438552405915122, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
+  m_PrefabInstance: {fileID: 7289641312445791386}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3177716764852363775 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5274707651094371685, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
+  m_PrefabInstance: {fileID: 7289641312445791386}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3177804937684414060 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5274795879503401718, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
+  m_PrefabInstance: {fileID: 7289641312445791386}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3454867160072140588 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3830270499056464970, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
   m_PrefabInstance: {fileID: 7289641312445791386}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &4150752223795920527 stripped
@@ -1180,6 +1238,11 @@ Transform:
 --- !u!4 &4322304900914797532 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -2390871202930153658, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
+  m_PrefabInstance: {fileID: 7289641312445791386}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5139165980410820076 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6738513013290088074, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
   m_PrefabInstance: {fileID: 7289641312445791386}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5209353482311914577 stripped

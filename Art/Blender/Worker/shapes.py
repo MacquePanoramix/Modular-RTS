@@ -163,6 +163,78 @@ def blobs(name, items, mat, resolution=0.008):
     return finish(link(bpy.data.objects.new(name, mesh)), mat)
 
 
+class Surface:
+    """The real surface of one or more objects, for laying things on it (a lace on a boot, a strap on a coat):
+    ray casts and nearest points, with the surface's normal turned outwards."""
+
+    def __init__(self, *objs):
+        from mathutils.bvhtree import BVHTree
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+        self.trees = [BVHTree.FromObject(o, depsgraph) for o in objs]
+
+    def cast(self, origin, direction, reach=0.6):
+        """The first surface met from origin along direction: (point, normal facing the origin), or (None, None)."""
+        best = None
+        for t in self.trees:
+            hit, nm, _, dist = t.ray_cast(origin, direction, reach)
+            if hit is not None and (best is None or dist < best[2]):
+                best = (hit, nm if nm.dot(direction) < 0 else -nm, dist)
+        return (best[0], best[1].normalized()) if best else (None, None)
+
+    def nearest(self, point, reach=0.3):
+        """The nearest surface point and its outward normal, or (None, None)."""
+        best = None
+        for t in self.trees:
+            hit, nm, _, dist = t.find_nearest(point, reach)
+            if hit is not None and (best is None or dist < best[2]):
+                best = (hit, nm, dist)
+        return (best[0], best[1].normalized()) if best else (None, None)
+
+    def lay(self, point, lift=0.0):
+        """A point laid on the surface, lifted along its normal: (point, normal)."""
+        hit, nm = self.nearest(point)
+        if hit is None:
+            return Vector(point), Vector((0, 0, 1))
+        return hit + nm * lift, nm
+
+
+def keep_largest(obj):
+    """Removes every connected piece of a mesh but the largest (hidden bubbles, stray crumbs)."""
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    seen, islands = set(), []
+    for v in bm.verts:
+        if v in seen:
+            continue
+        island, stack = [], [v]
+        seen.add(v)
+        while stack:
+            u = stack.pop()
+            island.append(u)
+            for e in u.link_edges:
+                w = e.other_vert(u)
+                if w not in seen:
+                    seen.add(w)
+                    stack.append(w)
+        islands.append(island)
+    islands.sort(key=len, reverse=True)
+    extra = [v for island in islands[1:] for v in island]
+    if extra:
+        bmesh.ops.delete(bm, geom=extra, context='VERTS')
+        bm.to_mesh(obj.data)
+    bm.free()
+    return obj
+
+
+def exact(obj, fine=False):
+    """Marks a part that must keep its exact shape when the being is made lighter (thin laces, rings, wire).
+    fine: so small that it is dropped from the middle level of detail on."""
+    obj["wg_exact"] = 1
+    if fine:
+        obj["wg_fine"] = 1
+    return obj
+
+
 def join(name, parts):
     with bpy.context.temp_override(active_object=parts[0], selected_editable_objects=parts, selected_objects=parts):
         bpy.ops.object.join()
@@ -236,8 +308,8 @@ def cylinder(name, at, radius, depth, mat, rotation=(0, 0, 0), vertices=24, beve
     return finish(obj, mat)
 
 
-def torus(name, at, major, minor, mat, rotation=(0, 0, 0)):
-    bpy.ops.mesh.primitive_torus_add(major_radius=major, minor_radius=minor, major_segments=24, minor_segments=8, location=at)
+def torus(name, at, major, minor, mat, rotation=(0, 0, 0), segments=24, around=8):
+    bpy.ops.mesh.primitive_torus_add(major_radius=major, minor_radius=minor, major_segments=segments, minor_segments=around, location=at)
     obj = bpy.context.active_object
     obj.name = obj.data.name = name
     clear_uvs(obj)
@@ -366,6 +438,36 @@ def panel(name, centre, top, bottom, span, radius, mat, thickness=0.006, columns
     sub.levels = sub.render_levels = 1
     apply_all(obj)
     return finish(obj, mat)
+
+
+def sheet(name, grid, mat, thickness=0.004, levels=1):
+    """A sheet of leather or cloth through a grid of points (rows of equal length), given a thickness and softened:
+    a bag's flap, a strap's folded end."""
+    bm = bmesh.new()
+    rows = [[bm.verts.new(Vector(q)) for q in row] for row in grid]
+    for r0, r1 in zip(rows, rows[1:]):
+        for k in range(len(r0) - 1):
+            bm.faces.new((r0[k], r1[k], r1[k + 1], r0[k + 1]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    mesh = bpy.data.meshes.new(name)
+    bm.to_mesh(mesh)
+    bm.free()
+    obj = link(bpy.data.objects.new(name, mesh))
+    solid = obj.modifiers.new("Thickness", 'SOLIDIFY')
+    solid.thickness, solid.offset = thickness, 0.0
+    if levels:
+        sub = obj.modifiers.new("Smooth", 'SUBSURF')
+        sub.levels = sub.render_levels = levels
+    apply_all(obj)
+    return finish(obj, mat)
+
+
+def ring(name, centre, across, up, half_width, half_height, wire, mat, steps=16, sides=6):
+    """A closed oval ring of wire (a bag's ring, a buckle's frame) in the plane of across and up."""
+    across, up = Vector(across).normalized(), Vector(up).normalized()
+    pts = [Vector(centre) + across * (math.cos(k / steps * math.tau) * half_width) + up * (math.sin(k / steps * math.tau) * half_height)
+           for k in range(steps + 1)]
+    return exact(tube(name, pts, [wire] * len(pts), [wire] * len(pts), mat, sides=sides, levels=0, cap=False))
 
 
 def spline(points, per=6):

@@ -1,7 +1,12 @@
 # The miners — Small, Long and Round (S1d, second pass)
 
-**Made:** October 2, 2026; polished October 3.
+**Made:** October 2, 2026; polished October 3 and 4.
 **Status:**
+- **The method's first round** (October 3 and 4): Luis's five notes on Small
+  are answered, and all three were taken through the
+  [model quality method](ModelQualityMethod.md)
+  ([below](#the-methods-first-round-october-3-and-4)). It waits for Luis's
+  play.
 - **Luis's verdict.** "Almost perfect… already adorable", after the second
   pass.
 - **Polished** on the points Luis raised
@@ -21,6 +26,139 @@ everything, units included, like detailed character creators
 ([correspondence](../Correspondence/2026-10-02_WORKER_CONCEPTS_FEEDBACK.md)).
 
 ![The three miners at dusk](../Images/Miners/Miners_Dusk.jpg)
+
+## The method's first round (October 3 and 4)
+
+Luis played the polished build and sent four close screenshots of Small with
+five notes, a principle, and a request: write a method for model quality
+first, then fix
+([correspondence](../Correspondence/2026-10-03_PHYSICAL_OBJECTS_AND_A_QUALITY_METHOD.md)).
+
+- **The principle.** Physicality and the reality of all movement are among
+  the game's main focuses. Anything that reads as an object is a proper
+  object: held, hanging, swinging, stopped by the body. Nothing floats.
+- **Liked, and kept:** how the coat's skirt, the lantern and the bag move as
+  Small walks.
+- **The method** is [ModelQualityMethod.md](ModelQualityMethod.md). This was
+  its first round, on all three miners.
+
+![Small before and after: the leg and boot, the laces, the lantern, the satchel and its strap, the strap on the shoulder](../Images/Miners/Method1_BeforeAfter_Small.jpg)
+
+### Luis's five notes on Small
+
+| Note | Cause | Now |
+|---|---|---|
+| **The leg does not line up with the boot** | The boot's shaft was modelled standing straight up. The shin leans about 11° forward from the ankle, even at rest, so the shaft's top sat 2.6 cm behind the shin. It only showed from the side, at ground level | The shaft follows the shin. The trousers fall over it all round, and the audit checks that on every recorded frame |
+| **The laces' crosses float** | The shaft had been slimmed in the last polish, but the laces kept the old measurements. They stood 15 to 18 mm off the leather | Laces are laid on the boot's real surface. They run through eyelets and end in a bow |
+| **The strap does not join the bag** | Tabs had been added to the bag, but the strap only passed near them | The bag has two rings, held by leather loops. Each end of the strap passes through its ring and is folded back and stitched. The strap is pulled straight by the bag's weight, and lies on the coat over the shoulder |
+| **The lantern floats up close** | The grip was a guessed point: the bail hung 9 mm below the curled fingers | The lantern has a wooden handle. The hand is wrapped round it, finger by finger, with the thumb closing over, and the palm is cut to fit it. The wrist gives as the lantern swings |
+| **The bag should hang with gravity** | The bag was rigid on the hips, its flap a board 7 mm off it | The satchel hangs from its rings on a bone of its own. It rests against the hip, swings as Small walks, and the coat pushes it out as the leg under it moves. The flap is folded over the top, with a tongue and a buckle |
+
+![The boot zone of Small, from every side](../Images/Miners/Method1_Sheet_Small_Boot.jpg)
+
+![The lantern in the hand](../Images/Miners/Method1_Sheet_Small_Lantern.jpg)
+
+![The satchel and its strap](../Images/Miners/Method1_Sheet_Small_Bag.jpg)
+
+### What the method found
+
+The first automatic audit, on the build Luis played, failed 45 checks on
+Small, 41 on Long and 42 on Round. Some were the audit's own mistakes, and
+were corrected ([below](#what-the-round-taught-the-method)). The real ones,
+beyond Luis's five:
+
+![Long and Round before and after](../Images/Miners/Method1_BeforeAfter_LongRound.jpg)
+
+| ID | Model | Zone | Found by | Sev. | Finding | Cause | Fix |
+|---|---|---|---|---|---|---|---|
+| M1 | Long, Round | Boots | Audit at rest | A | Laces 16 to 26 mm off the boots, as on Small | Same as Small's | Same fix, in the boot module |
+| M2 | All | Hips and hem | Pose sweep | A | The knee came through the coat mid-stride, by up to 15 cm (Small) and 18 cm (Long) | The skirt followed the hips and a share of each thigh, so a leg swinging forward outran it | The skirt hangs in four flaps, front and back of each leg, each on a bone at its hip. A thigh pushes its flap; a flap that is left falls back a little late |
+| M3 | Small | Carried things | Pose sweep | A | The lantern swung up to 25 mm into the coat; the hand went 6 mm into it | Nothing stopped it | The body stops what hangs beside it. The carrying arm hangs far enough out for the lantern to hang straight through a whole stride |
+| M4 | Small | Bag | Pose sweep | A | The bag went up to 33 mm into the arm, and 5 mm into the coat | The arm hung where the bag was | The arm on the bag's side hangs clear of it; the bag rests on the coat |
+| M5 | Small, Long | Carried things | Capture, walking | B | The lantern and the bag trailed about 40° behind the walk, as if in a wind | Their swing was damped against the world, not against the hand that carries them | Only their own swing fades. Carried steadily, they hang straight |
+| M6 | Small, Long | Carried things | Tests, then the recorded poses | A | The lantern leaned 16° backward and the mug 25°, even standing still | The wrist's give moved the handle, and that movement was fed back to the pendulum as if the arm had moved | The pendulum hangs from where the arm carries it; the give is shown, never fed back |
+| M7 | All | Carried things | Tests | B | At very high frame rates the things stopped feeling gravity | Gravity's pull in one frame became smaller than a position far from the world's middle can hold | The weight is kept as a small offset and a speed |
+| M8 | Long | Shoulders and back | Audit at rest | A | The pickaxe hung behind the back with nothing under it: 20 mm from its strap. The strap cut up to 37 mm into the coat | The strap was a guessed curve | A sling: the strap is laid on the cloth, pulled taut, and carries two leather loops that hold the handle. The pickaxe hangs by its head |
+| M9 | Long | Carried things | Audit, capture | A | The mug went 10 to 16 mm into the coat and trousers; the knuckles cut its wall | It was placed by measurements | The handle stands off the wall with room for the fingers; the mug hangs from the hand and swings |
+| M10 | Long | Chest, hem | Audit at rest | A | Two patches stood 6 mm off the cloth | Flat slabs on curved cloth | Every point of a patch is laid on the cloth |
+| M11 | All | Boots | Pose sweep | A | In a sharp turn one boot passed up to 39 mm through the other | The swinging foot went straight to its place; in a turn the feet's paths cross | The swinging boot goes round the standing one, and never lands on it. Both are measured as boots (heel to toe), not as points |
+| M12 | Round | Chest and waist | Audit at rest | A | The apron's straps ended 45 mm above the bib. The smock showed 22 to 30 mm through the apron. The ties stood 10 mm off; the pocket and the hammer's head floated | The apron was a board with separate straps | The apron is laid on the smock down to its ties and hangs free below. A strap goes round the neck; the ties are knotted at the back. The pocket is sewn on |
+| M13 | Round | Hips and hem | Construction, pose sweep | B | The hammer stuck in a pocket; later, hung in a loop, it leaned 17° outward and its top sank 6 mm into the smock | First nothing held it. Then its stop was a flat place on a round body, and it slid along it | It hangs in a leather loop sewn to the apron, its head across the loop. It swings out from the body and back, not sideways, and the loop moves with the cloth it is sewn to |
+| M14 | Round | Head | Audit at rest | A | Curls 19 mm inside the smock's neck | The hair grew as low as on a longer neck | The curls end above the collar |
+| M15 | All | Head, neck | Audit at rest | C | A sealed bubble inside each head; the neck's base wider than the neckline | Left by joining the head's parts | Removed; the neck's base fits the neckline |
+| M16 | All | Light | Capture | B | The lamp's flame burnt white up close | Too bright for the bloom | Glow lowered |
+| M17 | Long | Hips and hem | Capture, against the "before" sheets | B | The long coat had become a bell, even standing | My own fix for M2 earlier in the round: making the coat clear the knees asked the whole ring for more depth, without end where a knee is as far out as the coat is wide | The cloth goes out only where a leg is, and only as far as the leg asks. The coat is slim again, and its back hangs still until a leg reaches it |
+| M18 | Round | Chest | Before and after pairs | B | The apron's bib had become a narrow strip, like a tie | Also my own, from M12: laid on the real cloth, the bib's width was measured as an angle round a round belly | The bib is cut to the chest's measured width; from the waist down the apron hangs as fitted |
+
+![Long's back: the sling, its loops, the pickaxe](../Images/Miners/Method1_Sheet_Long_Back.jpg)
+
+![Long walking: the coat's front goes with the knee, its back hangs](../Images/Miners/Method1_Sheet_Long_Walk.jpg)
+
+![Round's apron](../Images/Miners/Method1_Sheet_Round_Apron.jpg)
+
+![Round's hem: the apron's ties and pocket, the hammer in its loop](../Images/Miners/Method1_Sheet_Round_Hem.jpg)
+
+![Small walking: the lantern in the hand, phase by phase](../Images/Miners/Method1_Sheet_Small_LanternWalk.jpg)
+
+### Where the round ended
+
+- **The automatic audit, at rest:** nothing fails on any of the three (386
+  checks on Small, 268 on Long, 202 on Round).
+- **The audit on the game's own movement** (235 recorded frames each:
+  standing, starting, walking, a sharp turn, stopping): four checks remain of
+  856. Each was read and is left with its reason:
+
+  | Model | Where | What remains | Why it is left |
+  |---|---|---|---|
+  | Small | The sharpest turn, one frame | The knee shows 29 mm past the coat's lifted hem | It comes out under the hem, not through the cloth. The step in that turn is a high one; that is the walk's matter, and the walk is not changed without Luis's word |
+  | Small | The same step, one frame | The trouser's cuff goes 9 mm into the boot's shaft | The same high step bends the knee further than any stride does |
+  | Long | The sharpest turn, two frames | The free hand brushes 7 mm into the coat's front | The knee lifts the coat into a hand that is swinging forward. Cloth would give |
+  | Round | Walking, 6 frames of 118 | The hammer's handle presses 3.9 mm into the apron (the limit is 3.5) | The leg lifts the apron against the handle. Leather would give |
+
+- **Tests.** Eight miner tests pass, two of them new: what a miner carries
+  hangs from its hand, stays out of the body and hangs straight when carried
+  steadily; in a sharp turn the boots never overlap.
+- **The exhaustive look.** Every round captured about 240 frames a miner into
+  92 contact sheets. The last round's were read: every junction zone, the
+  walk's views, the carried things and the orbit at full size; the remaining
+  walk, motion, distance and fresh-eyes sheets at half size.
+- **Open, smaller than a note** (severity C):
+  - a patch on Long's coat lifts a few millimetres at one corner in the
+    sharpest turn (five bones share the cloth there, and the engine keeps
+    four for each point);
+  - a small tooth in the rim of Round's neckband, at the back;
+  - from the side, Long's pickaxe lies flat on the back and adds little to
+    the silhouette.
+- **Not built yet:** the sweep of extreme poses (a deep knee bend, arms
+  raised). It joins the method when the miners mine and haul.
+
+The reports are kept in `Art/Review/Miners`. See
+[Validation.md](../Validation.md) for the full evidence.
+
+### What the round taught the method
+
+- **Read every failure before fixing.** A check that reads wrong is itself a
+  finding. The audit's own mistakes in this round:
+  - hands "inside" their own cuffs (the top is now measured as body and
+    arms);
+  - surfaces that only graze counted as crossing (depth is measured now);
+  - thin shells judged by their faces' directions (crossings are counted
+    instead);
+  - "floating" pieces that were sealed inside a solid;
+  - a boot's hidden end counted as coming out of the trousers;
+  - the open front of a coat counted as legs coming through.
+- **Compare with the "before" sheets, not only with the last round.** M17
+  crept in over several rounds, each a little wider than the last, and M18
+  came with a fix that passed every check. Both showed at once beside the
+  first capture.
+- **Measure in the game, then decide.** Two wrong guesses about the leaning
+  lantern were replaced by one measurement on the recorded frames: it leaned
+  backward, standing still, by exactly what a wrist can give.
+- **A test must read one moment.** A test that read the bones after the miner
+  had walked on measured the walk, not the lantern. `MinerBody` now reports
+  what it last posed.
+- **Tools must not write into the game's assets.** The audit's reports now go
+  to `Art/Review/Miners`.
 
 ## Polish after Luis's word (October 3)
 
@@ -88,8 +226,9 @@ Luis played the build and pointed at Small:
 Luis asked for proactive polish on all three, for research into good Blender
 practice, and for natural walks
 ([correspondence](../Correspondence/2026-10-03_SMALL_POLISH_AND_NATURAL_GAITS.md)).
-The practices and the close audit now live in
-[CharacterPractices.md](CharacterPractices.md).
+The practices now live in [CharacterPractices.md](CharacterPractices.md). The
+close audit has since grown into the
+[model quality method](ModelQualityMethod.md).
 
 ![Before and after: Small (from Luis's screenshots), Long and Round](../Images/Miners/Polish3_BeforeAfter.jpg)
 
@@ -124,7 +263,7 @@ The practices and the close audit now live in
   - **Selection rings** match each miner's size.
 - **Natural walks.** Each body walks at its own comfortable pace, with a walk
   of its own (see
-  [CharacterPractices.md](CharacterPractices.md#2-walks-natural-to-each-body)):
+  [CharacterPractices.md](CharacterPractices.md#3-walks-natural-to-each-body)):
   - Small is brisk and bouncy;
   - Long takes long, smooth strides;
   - Round has a rolling walk.
@@ -144,7 +283,8 @@ The practices and the close audit now live in
   - Long's pickaxe goes across the back, the mug to the belt.
 - **A skeleton** on the procedural body's own joints. It has 19 bones: pelvis,
   spine, chest, neck and head; upper arms, forearms and hands; thighs, shins,
-  feet and toes.
+  feet and toes. (Since October 4, carried things and the skirt's four flaps
+  have bones of their own: 25 for Small, 24 for Long and Round.)
 - **Skinning by the kind of part:**
   - boots follow the feet and shins;
   - hair and the cap follow the head;
@@ -267,12 +407,18 @@ look at in the Scene view. They are never saved into the scene.
 - **Fixed expressions.** Each face is painted with one expression.
 - **Coarse fingers.** Finger shapes are good from a step away, but coarse up
   close.
+- **The walk's high step in the sharpest turn.** For a frame, the knee shows
+  under the coat's lifted hem. The walk itself is not changed without Luis's
+  word.
 - **Not judged by Luis.** Passing captures are not acceptance of the look.
 
 ## Next
 
-- **Luis plays the build:** the choice of miner and walking in the meadow
-  ([MinersPlaytest.md](../Playtests/MinersPlaytest.md)).
+- **Luis plays the build:** the five notes on Small, and Long and Round up
+  close ([MinersPlaytest.md](../Playtests/MinersPlaytest.md#after-the-methods-first-round-october-4)).
+- **The method's next round** starts from Luis's notes. Whatever Luis finds
+  that it missed goes into its
+  [misses ledger](ModelQualityMethod.md#9-the-misses-ledger).
 - **Mining with the miners.** Size the pickaxe and its grips to each body, and
   move the equipment scene onto the miners.
 - **Hands and faces in motion.** Hands that close on what they hold, and a

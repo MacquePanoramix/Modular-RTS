@@ -16,6 +16,13 @@ physical mining and real hauling. See the [showcase roadmap](Docs/ShowcaseRoadma
   handoff (painted light, living surfaces, characters with a soul, playful
   wonder).
 - **Latest:**
+  - **The miners** (S1d): Small, Long and Round walk the Ordinary Place on
+    the procedural body; choose one with `M`. Everything they carry is a
+    proper object: held, hanging, swinging, stopped by the body. They were
+    brought there by the
+    [model quality method](Docs/ArtDirection/ModelQualityMethod.md) Luis asked
+    for. See the [miners playtest](Docs/Playtests/MinersPlaytest.md) and
+    [the miners](Docs/ArtDirection/TheMiners.md).
   - **Two camera modes** in every map (`V`): a fast Strategy camera and a
     free Explore camera. See the [two cameras playtest](Docs/Playtests/TwoCamerasPlaytest.md).
   - **The Ordinary Place,** an in-engine Visual Soul look test with a lit
@@ -23,8 +30,9 @@ physical mining and real hauling. See the [showcase roadmap](Docs/ShowcaseRoadma
     candidates to compare. Open
     `Assets/_WonderGather/Scenes/TheOrdinaryPlace.unity`, or see the
     [look test](Docs/Playtests/OrdinaryPlaceLookTest.md).
-- **Next:** Luis judges the look and picks the rendering approach, then S1d
-  builds the worker model ([plan](Docs/NextMilestonePlan.md)).
+- **Next:** Luis plays the miners' build; then mining with the miners
+  ([plan](Docs/NextMilestonePlan.md); the up-to-date state is in
+  [CURRENT_STATE.md](Docs/CURRENT_STATE.md)).
 
 Latest milestone: **The Equipped Worker**, connecting a blueprint-selected
 pickaxe to reachable procedural strikes and real resource extraction. Open
@@ -122,6 +130,11 @@ The Gatherer inherits the preferred 0.005 zoom. Camera tuning is on **RTS Camera
 `RtsInput → SelectionController → CommandDispatcher → GroupMoveCommand → UnitMotor → NavMeshAgent`
 
 `RtsCamera` consumes input and selected-unit position independently. `SelectableUnit` owns selection presentation. `WandererSetup` is editor-only scene authoring. Runtime and test assemblies have separate boundaries. There is no static game state or scene-wide lookup in production update loops.
+
+Models are made by scripts, not by hand: `Art/Blender/Worker/` builds the
+miners from modules (body, face, hair, outfits, rigging) and audits them
+(`audit.py`). `Art/Review/` holds the model quality method's contact-sheet
+tool and its latest audit reports.
 
 The project began with the Universal 3D template bundled with the installed editor. URP settings originate from that template. Unity resolves packages in `Packages/packages-lock.json`; commit this lock and all asset metadata. Do not commit Library, Temp, Logs or local IDE files.
 

@@ -1,6 +1,7 @@
 # Model quality method — how every model is brought to its best
 
-**Started:** October 3, 2026.
+**Started:** October 3, 2026. **First round:** October 3 and 4, on the three
+miners.
 
 **Why:** Luis asked for "a proper strategy in a document" to keep and refer
 to, so that the models are as polished as possible
@@ -19,6 +20,8 @@ miners); buildings, tools and props follow.
 - This page: how a model is checked and improved until nothing is left to
   find.
 - [VisualSoul.md](VisualSoul.md): what polish must never take away.
+- [TheMiners.md](TheMiners.md#the-methods-first-round-october-3-and-4): the
+  method's first round, with its findings log.
 
 Luis judges taste, feel and soul. The method exists so that Luis never has
 to hunt for defects.
@@ -43,7 +46,7 @@ distance the game allows:
 4. **Everything is made the way a maker would make it.**
    - A bag has a flap and rings for its strap.
    - A lace runs through eyelets.
-   - A lantern has a bail that a hand closes round.
+   - A lantern has a handle that a hand closes round.
 5. **It reads at every distance.**
    - From the Strategy camera, the silhouette and colours say who it is.
    - From the closest Explore view, every junction holds up.
@@ -56,15 +59,15 @@ Ask these of every object, and of every place where two things meet:
 
 | Question | How to answer it | What it catches |
 |---|---|---|
-| **What holds it?** | Follow the chain of support from the object to the body or the ground. Every link must touch | Laces off the boot; a lantern below the fingers; a strap ending in the air |
-| **How is it attached?** | Sewn, riveted, buckled, tied, looped, gripped: the attachment is modelled where it would show | A strap that meets no ring; a flap standing off its bag; a collar sitting on a coat |
-| **What does gravity do to it?** | Where does it sag, hang, drape, or pull taut? | A bag standing stiff like a board; a slack strap carrying weight |
-| **How does it move?** | Rigid with a bone, bending with the body, swinging, colliding | A bag sinking into the hip mid-stride; a boot shaft bending away from the leg |
+| **What holds it?** | Follow the chain of support from the object to the body or the ground. Every link must touch | Laces off the boot; a lantern below the fingers; a pickaxe behind a back with nothing under it |
+| **How is it attached?** | Sewn, riveted, buckled, tied, looped, gripped: the attachment is modelled where it would show | A strap that meets no ring; a flap standing off its bag; apron straps that end above the bib |
+| **What does gravity do to it?** | Where does it sag, hang, drape, or pull taut? | A bag standing stiff like a board; a strap in kinks; an apron hovering off a belly |
+| **How does it move?** | Rigid with a bone, bending with the body, swinging, colliding | A lantern trailing behind as if in a wind; a knee through a coat; a boot through the other boot in a turn |
 
 ## 3. The method, in seven passes
 
 Each pass feeds the next. Every finding goes into the round's findings log
-(section 7). Passes 3 to 6 repeat until a full round finds nothing.
+(section 8). Passes 3 to 6 repeat until a full round finds nothing.
 
 ### Pass 1 — Inventory
 
@@ -83,7 +86,7 @@ Each pass feeds the next. Every finding goes into the round's findings log
    - **moving**: rigid, bending, or swinging.
 
 The miners' junction map is in [appendix A](#appendix-a--the-miners-junction-map).
-The audit's relations (pass 3) are the same list, written in code.
+The audit's rules (pass 3) are the same list, written in code.
 
 ### Pass 2 — Construction
 
@@ -94,44 +97,52 @@ For each object:
    construction. It must not remove the parts that explain how the object
    holds together.
 
-For example, a satchel has a body, a flap folded over from the back, a
-closure, and rings sewn to its sides. The strap's ends loop through the rings
-and are stitched back on themselves.
+For example, a satchel has a body, a flap sewn along the top's back edge, a
+closure, and rings held by tabs. The strap's ends pass through the rings and
+are stitched back on themselves.
 
 ### Pass 3 — Geometry audit at rest (automatic, in Blender)
 
-After every build, the audit measures the separate parts before they are
-joined:
+Every build runs the audit (`audit.py`) on the separate parts, as they will
+be exported, before they are joined:
 
 | Check | What it measures | Fails when |
 |---|---|---|
-| **Floating** | Every connected piece of every part against all the other parts | A piece is more than 3 mm from everything else. This is the catch-all for anything left in the air |
-| **Contacts** (`touch`) | Places that must touch: laces on the boot, strap ends in their rings, a bag resting on the coat, a handle inside a closed hand | The largest gap exceeds its tolerance |
-| **Layers** (`outside`) | Every point of an outer part near an inner part must lie on the inner part's outer side | Any point is deeper than its tolerance. The deepest point is reported |
-| **Technical** | Triangle budgets; inside-out faces; carried things rigid on one bone; at most four bones per vertex | Any rule is broken |
+| **Floating** | Every connected piece of every part against all the other parts and pieces | A piece touches nothing (further than 3 mm from everything, and no surface crossing). A piece sealed inside a solid is hidden, not floating |
+| **Lies on** | Every point of a part that lies on another: laces on their boot, ties on the smock, a patch on the cloth | Any point is further than its tolerance |
+| **Meets** | Parts that must touch somewhere: a handle and the hand, a strap and each ring, a loop and the handle it holds, a bag and the hip | Their nearest points are further apart than the tolerance |
+| **Sinks** | No point of a part inside another, solid part: a hand in a coat, a lantern in a leg, a strap in a collar. "Inside" is confirmed by counting the surfaces a ray crosses | Any point is deeper than its tolerance. The deepest point is reported |
+| **Covered** | What is well inside another part at rest stays inside: a boot's shaft in the trouser leg | A covered point comes out |
+| **Beneath** | What a skirt covers never comes out through it, seen along rays from the trunk's axis: trousers under a coat | A point is outside the skirt |
+| **Technical** | At most four bones per vertex; solids not inside out; soles on the ground | Any rule is broken |
 
-Each failure prints the parts, the worst value and where it is. Failures are
-fixed before anything is captured.
+Each failure prints the parts, the worst value, where it is, and renders a
+close view of the place. Failures are fixed before anything is captured.
+
+**Read each failure before fixing it.** A check that reads wrong is itself a
+finding: correct the check, and say so in the round's log.
 
 ### Pass 4 — Pose sweep (automatic)
 
 This is the same audit, in motion.
 
-1. **The game records its own movement.** Every miner walks from standing,
-   along a straight path and round a turn, and stops. Every bone is recorded
-   30 times a second.
-2. **Blender replays the recording.** It poses the parts with each recorded
-   frame, runs the pass 3 checks on every frame, and lists the worst frames.
-3. **Extreme poses** are added too (range-of-motion testing, as riggers do):
-   - the longest stride;
-   - arms swung fully;
-   - a deep knee bend;
-   - the head turned.
+1. **The game records its own movement** (`MinerPoseRecord`). Every miner
+   stands, starts walking, walks straight, turns sharply and stops. For
+   every frame (30 a second, 235 frames) it writes, for each bone, the
+   matrix that skinning applies.
+2. **Blender replays the recording.** It poses each part exactly as the game
+   skins it, runs the pass 3 checks on every second frame, and reports the
+   worst value for standing, walking, turning and stopping separately.
 
 Problems like these show here before anyone looks:
-- clothes bending away from what they cover;
-- legs leaving their boots;
-- a swinging lantern passing through a leg.
+- a knee coming through a coat;
+- a carried thing swinging into the body;
+- a handle turning in the closed fingers;
+- one boot passing through the other in a turn.
+
+**Not built yet:** extreme poses beyond the game's own movement (a deep knee
+bend, arms raised), as riggers use to test a rig's whole range. They join the
+sweep when the miners mine and haul.
 
 ### Pass 5 — The exhaustive look (in the engine)
 
@@ -154,6 +165,9 @@ with every angle in the capture matrix (section 4).
    - flicker where two surfaces fight.
 5. **Fresh eyes.** Read the same images again mirrored, in grey values, and
    as flat clay. Mirroring shows errors that familiarity hides.
+6. **Against the before.** Read the orbit and the walk beside the same sheets
+   of the build Luis last saw. A change that crept in over several rounds
+   shows at once there, and nowhere else.
 
 **Rules:**
 - Write every finding down at once, with the image it came from, however
@@ -171,12 +185,17 @@ with every angle in the capture matrix (section 4).
    go stale.
 3. **Re-run passes 3 to 5.** Capture the same views again, and keep before
    and after pairs.
+4. **Measure before explaining.** When something moves wrongly, read it from
+   the recorded frames (which way, how much, in which phase) before choosing
+   a cause.
+5. **Keep what Luis liked.** A fix that would change a movement or a shape
+   Luis has praised is made beside it, not through it.
 
 ### Pass 7 — Record and learn
 
-- **Close the findings log** (section 7).
+- **Close the findings log** (section 8).
 - **Send before and after images** to Luis.
-- **Update the misses ledger** (section 8). Whenever Luis finds something the
+- **Update the misses ledger** (section 9). Whenever Luis finds something the
   method missed:
   - record why it was missed;
   - add a check, a view or a question so that this kind of flaw is caught
@@ -186,36 +205,62 @@ with every angle in the capture matrix (section 4).
 
 ## 4. The capture matrix
 
+`MinerCloseCapture` renders about 240 frames per miner:
+
 | Set | What | Views |
 |---|---|---|
-| **Distances** | The Strategy camera's height, the Explore default, Explore's closest, and macro (30 to 50 cm) | Front three-quarters, at dusk and at midday |
-| **Orbit** | The whole figure, at Explore's closest | 8 directions × 3 heights: ground level, eye level, and from above at 45° |
-| **Zones** | Each junction zone, in macro ([appendix A](#appendix-a--the-miners-junction-map)) | At least 6 directions, including from below and from behind |
-| **Walk** | 8 phases of one stride, walking steadily | Side, front and back, plus macro on the feet, hands and carried things |
-| **Start, stop, turn** | Follow-through as the miner starts, stops and turns | Side and three-quarters |
-| **Fresh eyes** | Silhouette (black on white), clay (no paint), mirrored, grey | From the orbit set |
+| **Distances** | The Strategy camera's height (far and near), the Explore default, close, and macro | Front three-quarters, at dusk and at midday (10 frames) |
+| **Orbit** | The whole figure, close | 8 directions × 3 heights: ground level, eye level, and from above at 45° (24) |
+| **Zones** | Each junction zone in macro, 36 to 70 cm away ([appendix A](#appendix-a--the-miners-junction-map)) | 7 to 10 directions each, including from below and above. Zones at one side of the body are seen from that side (about 95) |
+| **Walk** | 8 phases of one stride, walking steadily on the path | Both sides, front, back, each boot at ground level, the coat's hem, the carried thing from two sides, the bag (up to 88) |
+| **Start, turn, stop** | Six moments of each | Side and three-quarters (36) |
+| **Fresh eyes** | Silhouette (black on white) and clay (no paint) | 8 directions each, plus clay close-ups of boots, neck, the carried thing and the bag. The sheets add mirrored and grey copies of the orbit |
 
-Images are assembled into contact sheets per set. Every sheet is kept with
-the round's findings log.
+`Art/Review/sheets.py` assembles the frames into contact sheets: one per
+zone, one per walk view across the eight phases, and so on. Every sheet is
+read, and kept with the round's findings log.
 
-## 5. What to look for (the defect catalogue)
+The meadow's grass is put away for the close sets, because it stands between
+a low camera and the boots. It stays for the distance set.
+
+## 5. The tools
+
+All commands run from the repository's root. `<Unity>` is the Unity 6000.6
+editor, and `<project>` the Unity project.
+
+| Step | Command | Output |
+|---|---|---|
+| **Audit at rest** | `blender -b --factory-startup --python Art/Blender/Worker/workers.py -- --out <folder> --audit [--only Small]` | `audit_<Name>.txt`, `.json`, and `snap_*.png` of each failure, in `<folder>` |
+| **Record the game's movement** | `<Unity> -batchmode -projectPath <project> -runTests -testPlatform PlayMode -testFilter WonderGather.Tests.MinerPoseRecord -poseOut <poses>` | `Miner_<Name>_poses.json` |
+| **Audit in motion** | The audit command, plus `--poses <poses>` | The same report, with the worst value per phase |
+| **Build for the game** | `blender … workers.py -- --out Assets/_WonderGather/Art/Worker/Miners --rigged [--poses <poses>] [--report <folder>]` | The models, atlases and `miners.json`. The audit runs as part of every build. Its reports go to `Art/Review/Miners` (or `<folder>`), never among the game's assets |
+| **Set up in the game** | `<Unity> -batchmode -projectPath <project> -executeMethod WonderGather.Editor.MinerSetup.CreateAll -quit` | The miners' prefabs and the scene, from the new models |
+| **Capture** | `<Unity> … -testFilter WonderGather.Tests.MinerCloseCapture -captureOut <frames> [-captureMiner Small] [-captureSets zones,walk]` | PPM frames |
+| **Sheets** | `python Art/Review/sheets.py <frames> <sheets>` | JPG frames and contact sheets |
+
+A recording belongs to the build it was recorded from. After the models or
+the walk change, record again before auditing in motion.
+
+The last round's reports are kept in `Art/Review/Miners` (`audit_<Name>.txt`).
+
+## 6. What to look for (the defect catalogue)
 
 | Kind | Examples |
 |---|---|
 | **Floating** | Laces off the boot; a carried thing below the fingers; a strap ending in the air; a button off the cloth |
-| **Clipping** | A hand through the coat; a bag into the hip; a lantern through a leg; hair through a cap |
+| **Clipping** | A hand through the coat; a bag into the hip; a lantern through a leg; a knee through a skirt |
 | **Gaps** | Skin or void between collar and neck, sleeve and wrist, or boot and trousers |
 | **Out of line** | A leg beside its boot; a strap off the shoulder; a sleeve twisted |
 | **Missing construction** | A strap with no ring; a flap with no hinge; laces with no eyelets |
-| **Against gravity** | A bag standing stiff; a strap slack under weight; an apron like a board |
-| **Wrong motion** | Something rigid that should swing; something bending like rubber; popping; jitter |
+| **Against gravity** | A bag standing stiff; a strap slack or kinked under weight; an apron like a board |
+| **Wrong motion** | Something rigid that should swing; a thing trailing as if in a wind; something bending like rubber; popping; jitter |
 | **Deformation** | Elbows and knees collapsing; wrists twisting; cloth stretching at the shoulders |
 | **Surface** | Blurry or stretched paint; seams; a face fading; values too close together |
 | **Readability** | Tangents; clutter; a silhouette that no longer says who it is |
-| **Light** | Lamps lighting the wrong places; broken outlines; flicker |
+| **Light** | Lamps lighting the wrong places; a flame bleached white; broken outlines; flicker |
 | **Distance** | Details popping between levels of detail; attachments lost far away |
 
-## 6. Severity and done
+## 7. Severity and done
 
 **Severity:**
 - **A — breaks reality.** Floating, clipping, gaps, things out of line, an
@@ -226,39 +271,51 @@ the round's findings log.
 - **C — refinement.** Surface, proportion, finer construction.
 
 **Done means all of these:**
-- The automatic audit passes at rest and on every recorded frame.
+- The automatic audit passes at rest and on every recorded frame, or each
+  remaining failure is written in the findings log with its reason.
 - Every junction has been seen in macro from at least six directions,
   standing and walking, with nothing open at severity A or B.
 - The orbit, distance and fresh-eyes sets have been read.
 - Luis's notes are answered with before and after images.
 - The findings log and the misses ledger are written and pushed.
 
-## 7. The findings log
+## 8. The findings log
 
 Every round writes one log, in its section of the model's page (for the
 miners, [TheMiners.md](TheMiners.md)):
 
-| ID | Model | Zone | Seen in | Severity | Finding | Cause | Fix | Checked |
+| ID | Model | Zone | Found by | Severity | Finding | Cause | Fix | Checked |
 |---|---|---|---|---|---|---|---|---|
 
-## 8. The misses ledger
+## 9. The misses ledger
 
 Things Luis found that the method missed, why they were missed, and what
 catches them now.
 
 | Date | What Luis saw | Why it was missed | What catches it now |
 |---|---|---|---|
-| Oct 3 | Small's lantern floating by the hip | Nobody asked "what holds it?". The rest pose moved it to "the belt", with nothing modelled there | The four questions; the floating check |
-| Oct 3 | Small's satchel strap not meeting the bag; the bag clipping | The bag was placed by measurements and the strap by guesses | Laying on surfaces; the contact check from strap end to ring |
-| Oct 3 | Small's neck still odd | The neck was only seen from the front | The neck zone, from six directions |
-| Oct 3 | Small's legs not lining up with the boots | The feet were seen from 90 cm, in one walking frame | The boot zone at ground level; the walk phases; the pose sweep |
-| Oct 3, evening | The laces' crosses floating | The boot shaft was slimmed, but the laces kept the old measurements, and nothing checked them again | Laces laid on the boot's surface; the floating check; re-checking everything placed against a changed piece |
-| Oct 3, evening | The leg still beside the boot | The boots were never seen at ground level while walking | The pose sweep (trousers outside the shaft on every frame); boot views from ground level during the walk |
-| Oct 3, evening | The strap still not joined to the bag | Tabs were added, but the strap was never made to pass through them | The construction pass; the contact check |
-| Oct 3, evening | The lantern floating up close | The grip was a guessed point that was never measured, or seen closer than a metre | The contact "handle inside a closed hand"; the hand zone in macro |
-| Oct 3, evening | The bag not hanging with gravity | The bag was rigid on the pelvis; nobody asked what gravity does to it | Question 3; the bag hangs and swings from its strap |
+| Oct 3 | Small's lantern floating by the hip | Nobody asked "what holds it?". The rest pose moved it to "the belt", with nothing modelled there | The four questions; the floating and meets checks |
+| Oct 3 | Small's satchel strap not meeting the bag; the bag clipping | The bag was placed by measurements and the strap by guesses | Laying on surfaces; "strap meets each ring"; "bag sinks into the coat" |
+| Oct 3 | Small's neck still odd | The neck was only seen from the front | The neck zone, from eight directions |
+| Oct 3 | Small's legs not lining up with the boots | The feet were seen from 90 cm, in one walking frame | The boot zone at ground level; the walk's eight phases |
+| Oct 3, evening | The laces' crosses floating | The boot's shaft was slimmed, but the laces kept the old measurements, and nothing checked them again. From the front they looked right; from the side they hovered | "Laces lie on the boot"; laces laid on the boot's real surface; the boot zone from every side |
+| Oct 3, evening | The leg still beside the boot | The shaft was modelled standing straight up, while the shin leans forward from the ankle even at rest. It only showed from the side, at ground level | The shaft follows the shin; the boot zone from every side at ground level; "shaft covered by the trouser leg" on every frame |
+| Oct 3, evening | The strap still not joined to the bag | Tabs were added, but the strap was never made to pass through them | The construction pass; "strap meets each ring" |
+| Oct 3, evening | The lantern floating up close | The grip was a guessed point, never measured; the closed fist left 2 to 4 mm for a handle; the hand was never seen closer than a metre | "Handle meets hand"; the hand wrapped round the handle and cut to fit it; the hand zone in macro |
+| Oct 3, evening | The bag not hanging with gravity | The bag was rigid on the pelvis; nobody asked what gravity does to it | Question 3; the bag hangs from its rings on a bone of its own and swings |
 
-## 9. Research behind the method
+### What the method's own rounds taught it
+
+| Round | What went wrong | The rule since |
+|---|---|---|
+| First (October 3 and 4) | The audit called hands "inside" their own cuffs, grazing surfaces "crossing", and hidden bubbles "floating" | Read each failure before fixing it (pass 3) |
+| First | Two guesses at why the lantern leaned were wrong; the recorded frames showed it leaning backward, standing still | Measure before explaining (pass 6) |
+| First | A fix for knees through a long coat made the coat a bell, a little more each round | Read against the before (pass 5) |
+| First | A test read the bones after the miner had walked on, and measured the walk | A check reads one moment: the body reports what it last posed |
+| First | A change to Small's skirt would have calmed a movement Luis had praised | Keep what Luis liked (pass 6) |
+| First | The audit's reports were written among the game's assets | Tools write to `Art/Review`, never into `Assets` |
+
+## 10. Research behind the method
 
 - **Silhouette.** Fill the character with black and check that it still
   reads ([Hitem3D](https://blog.hitem3d.ai/blog/Game-Character-Design-Principles-Process-and-Tips-for-2026)).
@@ -314,11 +371,11 @@ walking. The expected state follows each junction.
 | Zone | Junctions | Small | Long | Round |
 |---|---|---|---|---|
 | **Head** | Hair on the scalp, covering the nape (touching); cap on the head (touching, no hair through it); ears; the painted face | Bob | Swept hair | Curls under the lamp cap; the lamp's mount on the cap |
-| **Neck** | Neck rising from behind the jaw; collar or neckband round the neck (no gap, no void, from every side) | Closed collar | Open collar, lapels, shirt front | Neckband |
-| **Shoulders and back** | Straps lying on the cloth over the shoulder; things slung on the back | Satchel strap | Bandolier; the pickaxe on the back (held by the strap) | Apron straps crossing at the back |
-| **Chest and waist** | Buttons sewn on; patches flat on the cloth; apron bib and ties | Three buttons; strap over the buttons | Patch on the chest; bandolier over the lapels | Bib; ties knotted at the back |
+| **Neck** | Neck rising from behind the jaw; collar or neckband round the neck (no gap, no void, no skin through the cloth, from every side) | Closed collar | Open collar, lapels, shirt front | Neckband; the apron's strap round the back of the neck |
+| **Shoulders and back** | Straps lying taut on the cloth over the shoulder; things slung on the back held by loops | Satchel strap | The pick's strap; two loops; the pickaxe hanging by its head | — |
+| **Chest and waist** | Buttons sewn on; patches flat on the cloth; apron bib and ties | Three buttons; strap over the buttons | Patch on the chest; strap over the lapels | Bib; ties knotted at the back |
 | **Arms and hands** | Sleeve or cuff round the wrist (no gap); fingers; hands clear of the coat | Cuffs | Cuffs | Rolled sleeves; bare forearms |
-| **Carried things** | The hand closes round the handle (touching all round); the object hangs below with gravity and swings | Lantern in the left hand | Mug in the left hand | — |
+| **Carried things** | The hand closes round the handle (touching all round); the object hangs below with gravity and swings; the body stops it | Lantern in the left hand | Mug in the left hand | — |
 | **Bag** | Strap ends through rings on the bag (touching); flap folded over the top (touching); bag resting against the hip, hanging with gravity, never inside the coat | Satchel at the right hip | — | — |
-| **Hips and hem** | Skirt over the trousers (covered); hem clear of the legs; apron over the smock (clear 8–20 mm); pocket with hammer | Coat skirt | Open coat skirt; patch | Smock skirt; apron; hammer in the pocket |
-| **Legs and boots** | Trousers falling over the boot's shaft (covered, all round, every frame); laces on the boot through eyelets (touching); soles on the ground | Boots, laces | Tall boots, laces | Boots, laces |
+| **Hips and hem** | Skirt over the trousers (covered, in every stride); apron on the smock, drawn in by its ties; things hung at the hip | Coat skirt | Long coat skirt; patch | Smock skirt; apron; pocket; hammer in its loop |
+| **Legs and boots** | Trousers falling over the boot's shaft (covered, all round, every frame); laces on the boot through eyelets (touching); soles on the ground; one boot never in the other | Boots, laces | Tall boots, laces | Boots, laces |

@@ -1,0 +1,31 @@
+# Art/Review — the model quality method's tools and reports
+
+This folder belongs to the
+[model quality method](../../Docs/ArtDirection/ModelQualityMethod.md).
+
+| Item | What it is |
+|---|---|
+| `sheets.py` | Turns the frames of `MinerCloseCapture` into labelled contact sheets: one per zone, one per walk view across the eight phases, and so on. `python Art/Review/sheets.py <frames> <sheets>` (needs Pillow) |
+| `Miners/audit_<Name>.txt` | The automatic audit's last report for each miner, on the game's recorded movement: every check, its limit, its value at rest, its worst value, and where |
+
+**How to read a report line:**
+
+```
+FAIL sinks  HammerHandle into Apron  limit 3.5  rest 0.0  worst 3.9 at walk122  (6/118 frames)  stand 0.0 walk 3.9 turn 3.7 stop 3.3  [x, y, z]
+```
+
+- **The check** (`sinks`) and its parts.
+- **`limit`:** the tolerance, in millimetres.
+- **`rest`:** the value in the modelled rest pose.
+- **`worst`:** the worst value on the recorded frames, and the frame.
+- **`(6/118 frames)`:** how many audited frames fail.
+- **`stand … stop`:** the worst value in each phase of the recording.
+- **`[x, y, z]`:** where, in the model's space, in metres.
+
+The audit also renders a close view of each failure (`snap_*.png`) beside the
+report it writes. Those and the capture frames are not kept in the
+repository: they are made again by the commands in the method's
+[tools table](../../Docs/ArtDirection/ModelQualityMethod.md#5-the-tools).
+
+Remaining failures are explained in the round's log
+([TheMiners.md](../../Docs/ArtDirection/TheMiners.md#where-the-round-ended)).

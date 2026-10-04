@@ -168,20 +168,21 @@ def swept(skull, name, mat, seed, sweep=(-0.6, -0.8, 0.0)):
     return objs
 
 
-def curls(skull, name, mat, seed, top=1.0, lift=1.1):
+def curls(skull, name, mat, seed, top=1.0, lift=1.1, nape=-0.85):
     """A mop of curls: soft round clumps blended into one cloud over the skull, a curl or two lifting
     off it, and a fringe of curls over the brow. top: the highest root (under a cap, only what shows
-    below its rim is grown)."""
+    below its rim is grown). nape: how low the hair grows at the back (in skull radii; higher on a head that
+    sits low on its shoulders, so the curls rest above the collar, not in it)."""
     rng = random.Random(seed)
-    objs = [cap(skull, f"{name}_Cap", mat, front=0.5, side=-0.15, back=-0.85, lift=1.12)]
+    objs = [cap(skull, f"{name}_Cap", mat, front=0.5, side=-0.15, back=nape, lift=1.12)]
     s = skull.scale()
     items = []
     tries = 0
     while len(items) < 46 and tries < 2000:
         tries += 1
         az = rng.uniform(0, math.tau)
-        z = rng.uniform(-0.75, top)
-        if z < hairline(az, 0.5, -0.15, -0.85) or (abs(math.remainder(az, math.tau)) < 0.9 and z < 0.55):
+        z = rng.uniform(nape + 0.1, top)
+        if z < hairline(az, 0.5, -0.15, nape) or (abs(math.remainder(az, math.tau)) < 0.9 and z < 0.55):
             continue  # above the hairline, and clear of the face
         root = on_sphere(az, z)
         size = rng.uniform(0.2, 0.28)
@@ -196,7 +197,7 @@ def curls(skull, name, mat, seed, top=1.0, lift=1.1):
         az = rng.uniform(0, math.tau)
         if abs(math.remainder(az, math.tau)) < 2.1:
             continue  # only at the back, never beside the face
-        z = rng.uniform(-0.4, min(top, 0.4))
+        z = rng.uniform(max(-0.4, nape + 0.25), min(top, 0.4))
         root = on_sphere(az, z)
         out = Vector((math.sin(az), -math.cos(az), 0))
         path = comb(root * 1.25, out * 0.7 + Vector((0, 0, -0.5)), 0.32, steps=8, lift=(0.25, 0.32), bend=2.6, twist=rng.uniform(-0.6, 0.6))

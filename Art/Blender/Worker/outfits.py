@@ -155,6 +155,8 @@ def skirt(b, mat, hem, flare=1.25, loose=0.014, open_front=False, folds=0.07, fo
     import bpy
     top_z = b.waist.z + 0.07
     hem_z = hem * b.H
+    b.skirt_hem = hem_z  # it hangs in four flaps, each on a bone at its hip (rigging.joints)
+    b.skirt_open = open_front
     rings, around = 9, 48
     bm = bmesh.new()
     verts = []
@@ -174,8 +176,9 @@ def skirt(b, mat, hem, flare=1.25, loose=0.014, open_front=False, folds=0.07, fo
             d *= fy + (1 - fy) * ease
         # Never inside what it covers: all round at the seat, at the sides down the thighs; below, the legs
         # part and the skirt hangs free.
+        knees = z <= b.pelvis.z - 0.28  # lower still (a long coat), it lies over the knees: see below
         angles = ((0.0, math.pi, -math.pi / 2, math.pi / 2, -math.pi / 4, -3 * math.pi / 4, math.pi / 4, 3 * math.pi / 4)
-                  if z > b.pelvis.z - 0.1 else (0.0, math.pi) if z > b.pelvis.z - 0.28 else ())
+                  if z > b.pelvis.z - 0.1 else (0.0, math.pi) if not knees else ())
         for g in under:
             for angle in angles:
                 h = surface_hit(g, (cx, cy), z, angle)
@@ -186,8 +189,8 @@ def skirt(b, mat, hem, flare=1.25, loose=0.014, open_front=False, folds=0.07, fo
                 # Grow the ellipse just enough to pass outside this point.
                 r = 1 / math.sqrt((c / w) ** 2 + (s_ / d) ** 2) if w > 0 and d > 0 else 0
                 if r < need:
-                    k = need / r
-                    w, d = w * k, d * k
+                    k_ = need / r
+                    w, d = w * k_, d * k_
         widen = 1 + (flare - 1) * (t ** 1.5)
         ring = []
         for a in range(around):
@@ -198,7 +201,18 @@ def skirt(b, mat, hem, flare=1.25, loose=0.014, open_front=False, folds=0.07, fo
             drop = 0.02 * t * math.sin(ang * 2 + seed)
             if k == rings and ragged:
                 drop += ragged * (0.5 + 0.5 * math.sin(ang * 11 + seed)) * rng.uniform(0.4, 1.0)
-            ring.append(bm.verts.new((cx + math.cos(ang) * w * widen * fold, cy + math.sin(ang) * d * widen * fold * 1.05, z - drop)))
+            xo, yo = math.cos(ang) * w * widen * fold, math.sin(ang) * d * widen * fold * 1.05
+            if knees:
+                # A long coat lies over the knees, which stand a little forward even at rest: the cloth goes out
+                # only where a leg is, and only as far as the leg asks (its own thickness, and a little room). Its
+                # shape elsewhere stays as measured. (Growing the whole ring to clear the knees made it a bell.)
+                reach = math.hypot(xo, yo)
+                for g in under:
+                    h = surface_hit(g, (cx, cy), z - drop, math.atan2(yo, xo))
+                    if h is not None and reach > 1e-6 and reach < h + 0.024:
+                        xo, yo = xo * (h + 0.024) / reach, yo * (h + 0.024) / reach
+                        reach = h + 0.024
+            ring.append(bm.verts.new((cx + xo, cy + yo, z - drop)))
         verts.append(ring)
     gap = around * 3 // 4  # the front (-y)
     for k in range(rings):
@@ -216,7 +230,33 @@ def skirt(b, mat, hem, flare=1.25, loose=0.014, open_front=False, folds=0.07, fo
     sub = obj.modifiers.new("Smooth", 'SUBSURF')
     sub.levels = sub.render_levels = 1
     shapes.apply_all(obj)
+    b.skirt_slack = skirt_slack(b, obj, hem_z)
     return [shapes.finish(obj, mat)]
+
+
+def skirt_slack(b, garment, hem_z):
+    """How far a thigh can swing forward, and back, before the leg reaches a skirt's cloth, in degrees: the room
+    between the leg and the cloth as modelled, seen from the hip the thigh turns about. The game pushes the
+    skirt's flaps only beyond this (MinerBody), so cloth the leg does not touch hangs still."""
+    surface = shapes.Surface(garment)
+    leg = b.p["leg"] * 1.25 + 0.012  # a trouser leg, a little generous
+    slack = [90.0, 90.0]
+    for i in (0, 1):
+        hip, knee, ankle = b.hips[i], b.knees[i], b.ankles[i]
+        z = hip.z - 0.1
+        while z > hem_z + 0.01:
+            # The leg's axis at this height: the thigh, or below the knee the shin.
+            at = hip.lerp(knee, (hip.z - z) / max(hip.z - knee.z, 1e-4)) if z >= knee.z else knee.lerp(ankle, (knee.z - z) / max(knee.z - ankle.z, 1e-4))
+            for k, way in enumerate((-1, 1)):  # to the front (-y), to the back
+                if k == 0 and z < knee.z:
+                    continue  # a shin hangs back from a thigh that swings forward
+                hit, _ = surface.cast(Vector((at.x, at.y, z)), Vector((0, way, 0)), 0.6)
+                if hit is None:
+                    continue
+                room = abs(hit.y - at.y) - leg
+                slack[k] = min(slack[k], math.degrees(math.atan2(max(room, 0.0), hip.z - z)))
+            z -= 0.02
+    return [round(s if s < 90 else 0.0, 2) for s in slack]
 
 
 def trousers(b, mat, loose=0.01, boot=0.15, folds=0.004, hidden_above=None):
@@ -310,6 +350,95 @@ def lay_on(b, points, horizontal=(), down=(), lift=0.004, keep_above=None):
     return out, normals
 
 
+def trunk_point(b, p):
+    """The nearest point to p on the trunk's axis (from under the hips up to the collar)."""
+    axis = [b.pelvis + Vector((0, 0, -0.3)), b.pelvis, b.waist, b.chest, b.collar]
+    best = None
+    for p0, p1 in zip(axis, axis[1:]):
+        d = p1 - p0
+        u = max(0.0, min(1.0, (Vector(p) - p0).dot(d) / max(d.length_squared, 1e-9)))
+        q = p0 + d * u
+        if best is None or (Vector(p) - q).length < (Vector(p) - best).length:
+            best = q
+    return best
+
+
+def taut(b, points, torso, clothes, lift=0.004, rounds=260, per=5, keep=(), free=0.09, width=0.0):
+    """A strap pulled tight over the clothes, as its load pulls it. The points are laid on the garments' real
+    surface (cast from outside towards the trunk's axis, so the path turns smoothly over a shoulder), then each is
+    drawn towards the middle of its neighbours and laid again, over and over: the path slides to the short, straight
+    line a taut strap takes, with no kinks. The two ends stay where they are (a strap's ends are on its rings),
+    and so do the points in keep (a strap hangs from the shoulder it bears on: left free, the shortest path between
+    two rings at the hip would slip down round the waist). Over its last stretch (free) before each end the strap
+    leaves the cloth and runs straight to its ring, as a strap under load does.
+    torso: the torso alone (the probe) and what hangs below it, for the chest, waist and hips, where the arms hang
+    beside the body; clothes: the real garments (shoulders, collar), for above the chest.
+    Returns the laid points and the surface's normals."""
+    under, over = shapes.Surface(*torso), shapes.Surface(*clothes)
+
+    def lay(p):
+        c = trunk_point(b, p)
+        d = Vector(p) - c
+        if d.length < 1e-4:
+            d = Vector((0, -1, 0))
+        d.normalize()
+        for surface in ((over, under) if p.z > b.chest.z + 0.02 else (under, over)):
+            hit, nm = surface.cast(c + d * 0.6, -d, 0.6)
+            if hit is not None:
+                return hit + nm * lift, nm
+        return Vector(p), d
+
+    pts = [Vector(q) for q in points]
+    laid = [pts[0]] + [lay(q)[0] for q in pts[1:-1]] + [pts[-1]]
+    for _ in range(rounds):
+        for k in range(1, len(laid) - 1):
+            if k in keep:
+                continue
+            laid[k] = lay(laid[k].lerp((laid[k - 1] + laid[k + 1]) * 0.5, 0.5))[0]
+    fine = spline(laid, per)
+    out, normals = [fine[0]], [None]
+    for q in fine[1:-1]:
+        hit, nm = lay(q)
+        out.append(hit)
+        normals.append(nm)
+    out.append(fine[-1])
+    normals.append(None)
+    normals[0], normals[-1] = normals[1], normals[-2]
+    if width:
+        # A strap is flat across its width: where the cloth curves under it (over a collar's rim), it rides on the
+        # highest of what lies under its edges and middle, and bridges the rest; it never cuts into the cloth.
+        raised = []
+        for k in range(1, len(out) - 1):
+            along = (out[k + 1] - out[k - 1]).normalized()
+            across = along.cross(normals[k]).normalized()
+            rise = max((lay(out[k] + across * s_)[0] - out[k]).dot(normals[k]) for s_ in (-width, -width * 0.5, width * 0.5, width))
+            raised.append(out[k] + normals[k] * max(0.0, rise))
+        out[1:-1] = raised
+    # The free stretch at each end: from where the strap leaves the cloth, straight to the ring.
+    for order in (range(len(out)), range(len(out) - 1, -1, -1)):
+        order = list(order)
+        run, leave = 0.0, None
+        for a_, c_ in zip(order, order[1:]):
+            run += (out[c_] - out[a_]).length
+            if run >= free:
+                leave = c_
+                break
+        if leave is None:
+            continue
+        end_, far, span = out[order[0]], out[leave], run
+        run = 0.0
+        for a_, c_ in zip(order, order[1:]):
+            if c_ == leave:
+                break
+            run += (out[c_] - out[a_]).length
+            u = run / span
+            straight = end_.lerp(far, u)
+            # Never inside the cloth: the straight line, or the cloth where it rises above the line.
+            if (straight - trunk_point(b, straight)).length >= (out[c_] - trunk_point(b, out[c_])).length - 0.001:
+                out[c_] = straight
+    return out, normals
+
+
 def neckband(b, mat, garment, loose=0.006):
     """A smock's rolled neckline, hugging the neck where it leaves the garment: each point of the ring
     sits on the garment's own surface (found by casting down onto it)."""
@@ -389,80 +518,156 @@ def shirt_front(b, mat, loose=0.012):
                   lambda z: (trunk_at(b, z, loose + 0.003)), mat, thickness=0.003, rows=8, columns=8)]
 
 
-def apron(b, mat, tie, bib=True, loose=0.03, hem=0.33, flare=1.2, over=()):
-    """A leather work apron: a bib on the chest, a skirt to the knee, a neck strap and ties.
-    over: the garments beneath; the apron hangs a little outside their real surface at every height."""
-    x, y = axis_at(b, b.waist.z)
-    top_z = b.chest.z + 0.03 if bib else b.waist.z + 0.03
-    hem_z = hem * b.H
-    span = lambda v: (0.45 if bib and v < 0.35 else 0.62) if not bib else 0.36 + 0.36 * min(1.0, max(0.0, (v - 0.25) / 0.2))
-    def radius(z):
-        w, d = trunk_at(b, max(z, b.pelvis.z - 0.02), loose)
-        t = min(1.0, max(0.0, (b.waist.z - z) / max(b.waist.z - hem_z, 1e-3)))
-        # Leather hangs close: widening only as much as the cloth beneath does (measured below).
-        k = 1 + (flare - 1) * t ** 1.5
-        w, d = w * k, d * k
-        if over:
-            centre = axis_at(b, z)
-            gap = 0.008 + 0.012 * t
-            for angle, is_front in ((-math.pi / 2, True), (-math.pi / 2 + 0.6, True), (-math.pi / 2 - 0.6, True)):
-                hits = [h for h in (surface_hit(g, centre, z, angle) for g in over) if h is not None]
-                if hits:
-                    # The ellipse's front is what the apron lies on; keep it just outside the deepest garment.
-                    need = max(hits) + gap
-                    if angle == -math.pi / 2:
-                        d = max(d, need)
-                    else:
-                        w = max(w, need * 0.95)
-        return w, d
-    out = [panel(f"{b.name}_Apron", (x, y), top_z, hem_z, span, radius, mat, thickness=0.007, rows=14, columns=14, folds=0.05, fold_count=3, seed=3)]
-    if bib:
-        # The neck strap: from the bib's top corners up over the shoulders, lying on the smock, crossing at the back.
-        top_garments = [g for g in over if g.name.endswith("Probe")]
-        for s in (-1, 1):
-            w0, d0 = trunk_at(b, top_z, loose)
-            path = [Vector((x + s * w0 * 0.33, y - d0 - 0.01, top_z)),
-                    Vector((b.chest.x + s * b.width("chest") * 0.42, b.chest.y - b.depth("chest") - 0.02, (top_z + b.collar.z) * 0.5)),
-                    b.collar + Vector((s * b.width("collar") * 0.95, -0.02, 0.04)),
-                    b.collar + Vector((s * b.width("collar") * 0.9, 0.04, 0.03)),
-                    Vector((b.chest.x - s * b.width("chest") * 0.2, b.chest.y + b.depth("chest"), b.chest.z)),
-                    Vector((b.waist.x - s * b.width("waist") * 0.45, b.waist.y + b.depth("waist"), b.waist.z + 0.01))]
-            laid, nms = lay_on(b, spline(path, 4), horizontal=top_garments + [g for g in over if not g.name.endswith("Probe")], down=top_garments, lift=0.004)
-            out.append(tube(f"{b.name}_ApronStrap{s}", laid, [0.009] * len(laid), [0.0028] * len(laid), mat, normals=nms, sides=6))
-    # The ties run round the waist on the garment's real surface, from the apron's sides to a knot at the back.
-    w, d = trunk_at(b, b.waist.z, loose)
-    for s in (-1, 1):
+def apron(b, mat, tie, hem=0.33, over=(), neck=()):
+    """A leather work apron, as it is made and as it hangs. A bib on the chest and a skirt to below the knee, cut
+    from one hide. The neck strap and the waist's ties hold it to the body: down to the ties it lies on the
+    clothes beneath it (each point is laid on their real surface), drawn in at the waist by the ties; below them
+    it hangs from the waist, as leather does, never tucking back under.
+    A strap goes from one corner of the bib's top round the back of the neck to the other: the apron hangs from
+    it. A tie from each side at the waist goes round to a knot at the back, its two ends hanging.
+    over: the garments beneath (the torso's probe and the skirt); neck: what the neck strap lies on."""
+    cloth = shapes.Surface(*over)
+    x0, y0 = axis_at(b, b.waist.z)
+    top_z, hem_z = b.chest.z + 0.03, hem * b.H
+    rows, columns, thick = 16, 14, 0.007
+
+    def span(v):
+        return 0.36 + 0.36 * min(1.0, max(0.0, (v - 0.25) / 0.2))
+
+    def reach(angle, z):
+        """How far out the clothes are at a height and angle from the front, from the trunk's axis there."""
+        cx, cy = axis_at(b, z)
+        d = Vector((math.cos(angle), math.sin(angle), 0))
+        hit, _ = cloth.cast(Vector((cx, cy, z)) + d * 0.7, -d, 0.7)
+        return None if hit is None else (Vector((hit.x - cx, hit.y - cy, 0)).length, cx, cy)
+
+    def spread(v, z):
+        """The apron's half-width at a height, as an angle from the front. The bib is as broad across as its span
+        of the chest's measured width (a bib is cut to the chest, not to how round the belly under it is); from
+        the row above the ties down, it keeps its span, so the waist and all below it hang as they were fitted."""
+        bib = min(1.0, max(0.0, ((j_tie - 1) / rows - v) / 0.12))
+        if bib <= 0:
+            return span(v)
+        want = math.sin(span(v)) * trunk_at(b, max(z, b.pelvis.z - 0.02), 0.03)[0]
+        angle = span(v)
+        for _ in range(4):
+            found = reach(-math.pi / 2 + angle, z)
+            if found is None:
+                break
+            angle = max(span(v), math.asin(min(0.95, want / max(found[0], 1e-3))))
+        return span(v) + (angle - span(v)) * bib
+
+    # The row the ties are sewn to, at the waist.
+    j_tie = min(rows, max(0, round((top_z - (b.waist.z - 0.01)) / (top_z - hem_z) * rows)))
+    tie_z = top_z + (hem_z - top_z) * j_tie / rows
+    grid, last = [], {}
+    for j in range(rows + 1):
+        v = j / rows
+        z = top_z + (hem_z - top_z) * v
+        row = []
+        wide = spread(v, z)
+        for i in range(columns + 1):
+            u = i / columns * 2 - 1
+            angle = -math.pi / 2 + u * wide
+            found = reach(angle, z)
+            # Leather a little off the cloth, more towards the hem; below the fullest point it hangs straight.
+            gap = 0.003 + thick * 0.5 + 0.012 * v
+            if found is None:
+                r, cx, cy = last.get(i, (trunk_at(b, z, 0.03)[1], x0, y0))
+            else:
+                r, cx, cy = found[0] + gap, found[1], found[2]
+                if i in last and j > j_tie:
+                    r = max(r, last[i][0] - 0.0015)
+            last[i] = (r, cx, cy)
+            fold = 1 + 0.02 * v * math.sin((u + 1) * 3 * math.pi + 3)
+            row.append(Vector((cx + math.cos(angle) * r * fold, cy + math.sin(angle) * r * fold, z)))
+        grid.append(row)
+    out = [shapes.sheet(f"{b.name}_Apron", grid, mat, thickness=thick)]
+    # The neck strap: from the bib's top corners up over the collar bones and round the back of the neck.
+    half_w, half_t = 0.0085, 0.0025
+    left, right = grid[0][-1], grid[0][0]
+    nape = b.collar + Vector((0, b.depth("collar") + 0.03, 0.02))
+    path = [left + Vector((-0.004, -0.002, -0.012)),
+            b.collar + Vector((b.width("collar") * 0.9, -0.03, 0.03)),
+            b.collar + Vector((b.width("collar") * 0.8, 0.04, 0.035)),
+            nape,
+            b.collar + Vector((-b.width("collar") * 0.8, 0.04, 0.035)),
+            b.collar + Vector((-b.width("collar") * 0.9, -0.03, 0.03)),
+            right + Vector((0.004, -0.002, -0.012))]
+    # It bears on the back of the neck (those points stay); each half is drawn taut down to its corner of the bib.
+    laid, nms = taut(b, spline(path, 2), list(over), list(neck), lift=0.004, keep=(4, 5, 6, 7, 8), free=0.03, width=half_w)
+    out.append(tube(f"{b.name}_ApronStrap", laid, [half_w] * len(laid), [half_t] * len(laid), tie, normals=nms, sides=6))
+    # The ties: from each side of the apron at the waist round to a knot at the back.
+    knot = None
+    for k, (edge, s) in enumerate(((grid[j_tie][0], -1), (grid[j_tie][-1], 1))):
+        cx, cy = axis_at(b, tie_z)
+        start_a = math.atan2(edge.y - cy, edge.x - cx)
+        end_a = math.pi / 2  # the middle of the back
+        if s < 0:
+            sweep = [start_a - (start_a - (-math.pi * 1.5)) * f for f in (0.0, 0.25, 0.5, 0.75, 1.0)]
+        else:
+            sweep = [start_a + (end_a - start_a) * f for f in (0.0, 0.25, 0.5, 0.75, 1.0)]
         pts = []
-        for k in range(9):
-            angle = -math.pi / 2 + s * (0.75 + k / 8 * (math.pi / 2 + 0.6))
-            r = max([h for h in (surface_hit(g, (x, y), b.waist.z, angle) for g in over) if h is not None] or [None]) if over else None
-            if r is None:
-                r = math.hypot(w * math.cos(angle), d * math.sin(angle))
-            pts.append(Vector((x + math.cos(angle) * (r + 0.005), y + math.sin(angle) * (r + 0.005), b.waist.z - 0.004 * k / 8)))
-        out.append(tube(f"{b.name}_ApronTie{s}", pts, [0.008] * 9, [0.003] * 9, tie, sides=6))
+        for a_ in sweep:
+            found = reach(a_, tie_z)
+            r = (found[0] if found else trunk_at(b, tie_z, 0.02)[0]) + 0.004
+            pts.append(Vector((cx + math.cos(a_) * r, cy + math.sin(a_) * r, tie_z)))
+        fine = spline(pts, 4)
+        laid, nms = [], []
+        for q in fine:
+            cx2, cy2 = axis_at(b, q.z)
+            d_ = Vector((q.x - cx2, q.y - cy2, 0)).normalized()
+            hit, nm = cloth.cast(Vector((cx2, cy2, q.z)) + d_ * 0.7, -d_, 0.7)
+            laid.append(hit + nm * 0.0035 if hit is not None else q)
+            nms.append(nm if hit is not None else d_)
+        # It is sewn to the apron, a finger's width in from the edge (on the apron's real, softened surface).
+        laid[0] = shapes.Surface(out[0]).nearest(grid[j_tie][1 if s < 0 else -2])[0]
+        knot = laid[-1]
+        out.append(tube(f"{b.name}_ApronTie{k}", laid, [0.007] * len(laid), [0.0022] * len(laid), tie, normals=nms, sides=6))
+    # The knot, and the ties' two ends hanging from it down the back.
+    back = Vector((0, 1, 0))
+    out.append(ellipsoid(f"{b.name}_ApronKnot", knot + back * 0.004, (0.013, 0.008, 0.01), tie, segments=10))
+    for k, s in enumerate((-1, 1)):
+        hang = [knot + Vector((s * 0.004, 0, -0.004)), knot + Vector((s * 0.014, 0, -0.035)), knot + Vector((s * 0.02, 0, -0.075))]
+        laid = [cloth.lay(q, 0.0035) for q in hang]
+        out.append(tube(f"{b.name}_ApronTieEnd{k}", [q for q, _ in laid], [0.007, 0.007, 0.006], [0.0022] * 3, tie, normals=[n_ for _, n_ in laid], sides=6))
     return out
 
 
 def patch(b, mat, at, size, angle=0.0, name="Patch", onto=None):
-    """A patch or pocket sewn flat onto a garment: cast from in front onto its surface at (x, z) of at,
-    and turned to lie along it. Its centre is kept on b.marks[name], for things tucked into it."""
+    """A patch or pocket sewn flat onto a garment: cast from in front onto its surface at (x, z) of at, turned to
+    lie along it, and then every point of it is laid on the cloth, so it follows the cloth's curve and never
+    stands off it. Its centre is kept on b.marks[name], for things tucked into it."""
     rotation = Matrix.Rotation(angle, 3, 'Y')
     at = Vector(at)
+    normal, surface = Vector((0, -1, 0)), None
     if onto is not None:
-        from mathutils.bvhtree import BVHTree
-        import bpy
-        tree = BVHTree.FromObject(onto, bpy.context.evaluated_depsgraph_get())
-        hit, normal, _, _ = tree.ray_cast(Vector((at.x, at.y - 0.5, at.z)), Vector((0, 1, 0)), 1.0)
+        surface = shapes.Surface(onto)
+        hit, normal_ = surface.cast(Vector((at.x, at.y - 0.5, at.z)), Vector((0, 1, 0)), 1.0)
         if hit is not None:
-            if normal.y > 0:
-                normal = -normal
+            normal = normal_
             along = Vector((0, 0, 1)).cross(normal).normalized()
             rotation = Matrix.Rotation(angle, 3, normal) @ Matrix((along, -normal, along.cross(-normal))).transposed()
-            at = hit + normal * (size[1] + 0.002)
+            at = hit + normal * (size[1] + 0.001)
     if not hasattr(b, "marks"):
         b.marks = {}
     b.marks[name] = at
-    return [slab(f"{b.name}_{name}", at, size, mat, rotation=rotation, soft=0.6)]
+    obj = slab(f"{b.name}_{name}", at, size, mat, rotation=rotation, soft=0.6)
+    if surface is not None:
+        # Enough points across it to follow the cloth's curve (a flat slab has none in the middle of its faces).
+        import bmesh
+        bm = bmesh.new()
+        bm.from_mesh(obj.data)
+        bmesh.ops.subdivide_edges(bm, edges=[e for e in bm.edges if e.calc_length() > 0.02], cuts=3, use_grid_fill=True)
+        bm.to_mesh(obj.data)
+        bm.free()
+        for v in obj.data.vertices:
+            height = (v.co - at).dot(normal)  # from the patch's middle layer
+            flat = v.co - normal * height
+            hit, _ = surface.cast(flat + normal * 0.06, -normal, 0.12)
+            if hit is not None:
+                v.co = hit + normal * (height + size[1] + 0.001)
+    return [obj]
 
 
 def buttons(b, mat, count=3, loose=0.022, size=0.014, onto=()):
@@ -483,87 +688,197 @@ def buttons(b, mat, count=3, loose=0.022, size=0.014, onto=()):
 
 # ---------------------------------------------------------------- accessories
 
-def satchel(b, strap_mat, bag_mat, buckle_mat, torso, below, loose=0.024):
-    """A small leather satchel hanging at the right hip from a strap over the left shoulder. The bag rests
-    against the coat, turned to its surface; the strap lies on the coat all the way and ends in the bag's top,
-    at two tabs. torso: the torso garments (probe) the strap lies on; below: the skirt the bag rests on."""
-    from mathutils.bvhtree import BVHTree
-    import bpy
-    sh = b.shoulders[1]
+def satchel(b, strap_mat, bag_mat, buckle_mat, torso, below, clothes, angle=0.5):
+    """A small leather satchel as a saddler makes one, hanging at the right hip from a strap over the left
+    shoulder. The bag is a soft box, fuller towards its bottom where its load settles; a flap is sewn along the
+    top's back edge, folds over the top and hangs down the front, held by a tongue and a buckle; a tab at each
+    end of the top holds a brass ring, and the strap's ends pass through the rings and are sewn back on
+    themselves. The bag's back rests on the coat's real surface, leaning as the hip does; the strap runs taut
+    from ring to ring over the clothes. torso: the torso alone (probe); below: the skirt the bag rests on;
+    clothes: the real garments the strap lies on over the shoulder. The bag has a bone of its own (Satchel), at
+    the rings, so it can swing from them and settle against the hip in the game."""
     z = b.pelvis.z - 0.03
     cx, cy = axis_at(b, z)
-    # Where the bag rests: on the skirt at the side of the right hip, a little to the front.
-    angle = math.pi + 0.45  # from +x round to the right side, then towards the front (-y)
-    side = Vector((math.cos(angle), math.sin(angle), 0))
-    reach = max([h for h in (surface_hit(g, (cx, cy), z, angle) for g in below + torso) if h is not None] or [trunk_at(b, z, loose)[0]])
-    half = Vector((0.07, 0.022, 0.06))  # half width, half depth, half height
-    rest = Vector((cx, cy, z)) + side * (reach + half.y + 0.004)
-    across = Vector((0, 0, 1)).cross(side).normalized()
-    turn = frame(across, side)  # local x along the hip, y out from it
-    out = [slab(f"{b.name}_Bag", rest, (half.x, half.y, half.z), bag_mat, rotation=turn, soft=0.7)]
-    out.append(slab(f"{b.name}_BagFlap", rest + side * (half.y + 0.004) + Vector((0, 0, half.z * 0.35)),
-                    (half.x * 1.04, 0.005, half.z * 0.65), bag_mat, rotation=turn, soft=0.5))
-    out.append(slab(f"{b.name}_Buckle", rest + side * (half.y + 0.011) + Vector((0, 0, -half.z * 0.1)), (0.011, 0.004, 0.011), buckle_mat, rotation=turn, soft=0.3))
-    # The strap: from the bag's top (the end nearer the front) up across the body, over the left shoulder and down
-    # the back to the bag's other end; it lies on the coat wherever it touches.
-    front_end = rest + across * (-half.x * 0.8) + Vector((0, 0, half.z))
-    back_end = rest + across * (half.x * 0.8) + Vector((0, 0, half.z))
-    wc, dc = trunk_at(b, b.chest.z, loose)
-    path = [front_end + Vector((0, 0, 0.02)),
+    theta = math.pi + angle  # from +x round to the right side, then towards the front (-y)
+    side = Vector((math.cos(theta), math.sin(theta), 0))
+    rest, lean = shapes.Surface(*(below + torso)).cast(Vector((cx, cy, z)) + side * 0.6, -side, 0.6)
+    if rest is None:
+        rest, lean = Vector((cx, cy, z)) + side * trunk_at(b, z, 0.024)[0], side
+    hx, hy, hz = 0.068, 0.023, 0.058  # half width, half depth, half height
+    # The bag's own axes: x along the hip towards the back, y out from the body (the coat's normal), z up.
+    x_axis = side.cross(Vector((0, 0, 1))).normalized()
+    y_axis = (lean - x_axis * lean.dot(x_axis)).normalized()
+    z_axis = x_axis.cross(y_axis).normalized()
+    turn = Matrix((x_axis, y_axis, z_axis)).transposed()
+    centre = rest + y_axis * (hy + 0.002)
+
+    def at(x, y, z_):
+        return centre + x_axis * x + y_axis * y + z_axis * z_
+
+    def full(z_):
+        """How much fuller the bag's front is at a height: its load settles to the bottom."""
+        return 1 + 0.2 * max(-1.0, min(1.0, -z_ / hz))
+    bag = slab(f"{b.name}_Bag", centre, (hx, hy, hz), bag_mat, rotation=turn, soft=0.8)
+    inverse = turn.transposed()
+    for v in bag.data.vertices:
+        q = inverse @ (v.co - centre)
+        if q.y > 0:
+            q.y *= full(q.z)
+        q.x *= 1 + 0.04 * max(0.0, -q.z / hz)
+        v.co = centre + turn @ q
+    out = [bag]
+    # The flap: from the top's back edge, over the top and down the front, its lower corners rounded.
+    def front(z_):
+        return hy * full(z_) + 0.0030
+    profile = [(-hy + 0.002, hz + 0.0030), (-hy * 0.45, hz + 0.0036), (hy * 0.35, hz + 0.0036), (front(hz * 0.9) - 0.001, hz * 0.9),
+               (front(hz * 0.5), hz * 0.5), (front(0.0), 0.0), (front(-hz * 0.2), -hz * 0.2), (front(-hz * 0.34) + 0.0005, -hz * 0.34)]
+    columns = [-1.0, -0.82, -0.45, 0.0, 0.45, 0.82, 1.0]
+    grid = []
+    for j, (y, z_) in enumerate(profile):
+        last = len(profile) - 1 - j  # rows from the flap's free edge
+        row = []
+        for u in columns:
+            # The free edge is rounded: its corners are cut back and lifted.
+            corner = max(0.0, abs(u) - 0.6) / 0.4
+            row.append(at(u * hx * 1.03, y, z_ + (0.012 * corner ** 2 if last == 0 else 0.004 * corner ** 2 if last == 1 else 0.0)))
+        grid.append(row)
+    out.append(shapes.sheet(f"{b.name}_BagFlap", grid, bag_mat, thickness=0.004))
+    # The tongue from the flap down to the buckle on the bag's front.
+    out.append(shapes.sheet(f"{b.name}_BagTongue", [[at(-0.008, front(z_) + 0.0034, z_), at(0.008, front(z_) + 0.0034, z_)]
+                                                   for z_ in (-hz * 0.08, -hz * 0.3, -hz * 0.5, -hz * 0.62)], strap_mat, thickness=0.0026, levels=0))
+    out.append(shapes.ring(f"{b.name}_Buckle", at(0, front(-hz * 0.47) + 0.0036, -hz * 0.47), x_axis, z_axis, 0.0125, 0.0085, 0.0018, buckle_mat, steps=8))
+    # A tab at each end of the top, holding a ring; the strap's ends go through the rings.
+    ends = []
+    for k, sgn in enumerate((-1, 1)):
+        x = sgn * (hx - 0.016)
+        out.append(slab(f"{b.name}_BagLoop{k}", at(x, 0.0, hz + 0.006), (0.0085, 0.0042, 0.011), strap_mat, rotation=turn, soft=0.5))
+        hole = at(x, 0.0, hz + 0.0235)
+        out.append(shapes.ring(f"{b.name}_BagRing{k}", hole, x_axis, z_axis, 0.0155, 0.0095, 0.0021, buckle_mat, steps=12))
+        ends.append(hole + z_axis * 0.0075)
+    # The strap: from the front ring up across the body, over the left shoulder, down the back to the back ring.
+    front_end, back_end = ends
+    sh = b.shoulders[1]
+    wc, dc = trunk_at(b, b.chest.z, 0.024)
+    path = [front_end,
             Vector((b.waist.x - b.width("waist") * 0.4, b.waist.y - b.depth("waist") - 0.02, b.waist.z)),
-            Vector((b.chest.x + wc * 0.35, b.chest.y - dc - 0.02, b.chest.z + 0.01)),
-            sh + Vector((-0.01, -0.03, b.p["arm"] * 1.3)),
-            sh + Vector((-0.015, 0.04, b.p["arm"] * 1.2)),
+            Vector((b.chest.x + wc * 0.3, b.chest.y - dc - 0.02, b.chest.z + 0.01)),
+            sh.lerp(b.collar, 0.45) + Vector((0, -0.03, 0.05)),
+            sh.lerp(b.collar, 0.45) + Vector((0, 0.04, 0.05)),
             Vector((b.chest.x + wc * 0.2, b.chest.y + dc, b.chest.z - 0.02)),
             Vector((b.waist.x - b.width("waist") * 0.7, b.waist.y + b.depth("waist"), b.waist.z - 0.02)),
-            back_end + Vector((0, 0, 0.02))]
-    pts = spline(path, 6)
-    laid, nms = lay_on(b, pts, horizontal=torso + below, down=[g for g in bpy.data.objects if g.name == f"{b.name}_Top"], lift=0.004)
+            back_end]
+    # It hangs from the shoulder: the points over the shoulder stay; each half is drawn taut down to its ring.
+    half_w, half_t = 0.0125, 0.0028
+    laid, nms = taut(b, spline(path, 2), torso + below, clothes, lift=0.0042, keep=(6, 7, 8), width=half_w)
     # Where it crosses the buttons down the front, it rides over them.
-    for k, q in enumerate(laid):
-        cx, cy = axis_at(b, q.z)
-        if q.y < cy:
-            laid[k] = q + nms[k] * 0.008 * max(0.0, 1 - abs(q.x - cx) / 0.05)
-    # The ends meet the bag's top exactly.
-    laid[0], laid[-1] = front_end + Vector((0, 0, 0.004)), back_end + Vector((0, 0, 0.004))
-    out.append(tube(f"{b.name}_Strap", laid, [0.014] * len(laid), [0.003] * len(laid), strap_mat, normals=nms, sides=8))
-    for k, end in enumerate((front_end, back_end)):
-        out.append(slab(f"{b.name}_StrapTab{k}", end + Vector((0, 0, -0.006)) + side * 0.002, (0.012, 0.006, 0.016), strap_mat, rotation=turn, soft=0.4))
+    for k, q in enumerate(laid[1:-1], 1):
+        ax, ay = axis_at(b, q.z)
+        if q.y < ay:
+            laid[k] = q + nms[k] * 0.008 * max(0.0, 1 - abs(q.x - ax) / 0.05)
+    nms[0], nms[-1] = y_axis, y_axis
+    strap = tube(f"{b.name}_Strap", laid, [half_w] * len(laid), [half_t] * len(laid), strap_mat, normals=nms, sides=8)
+    strap["wg_ends"] = [*front_end, *back_end]
+    strap["wg_end_bone"] = "Satchel"
+    out.append(strap)
+    # Each end is folded through its ring and sewn back on itself: a doubled length above the ring.
+    for k, (end_, near) in enumerate(((laid[0], laid[2]), (laid[-1], laid[-3]))):
+        along = (near - end_).normalized()
+        width = along.cross(y_axis).normalized()
+        face = width.cross(along).normalized()
+        if face.dot(y_axis) < 0:
+            face = -face
+        rows = [[end_ + along * s_ + face * 0.0042 - width * half_w, end_ + along * s_ + face * 0.0042 + width * half_w] for s_ in (-0.003, 0.012, 0.028)]
+        out.append(shapes.sheet(f"{b.name}_StrapTab{k}", rows, strap_mat, thickness=0.0032, levels=0))
+    # In the game the bag hangs from its rings: a bone there, and how it swings and where the hip stops it.
+    pivot = (front_end + back_end) * 0.5
+    b.props.append(("Satchel", pivot.copy(), pivot - z_axis * 0.08, "Pelvis"))
+    b.swings.append(dict(bone="Satchel", hand=None, length=(pivot - centre).length, radius=0.0, damping=0.8, limit=28,
+                         side=-1, ring=tuple(x_axis), stop=tuple(y_axis), rest=tuple(centre)))
     return out
 
 
-def bandolier(b, strap_mat, torso, below, start, end, loose=0.02):
-    """A strap across the body from one shoulder to the opposite hip (to carry something on the back),
-    lying on the clothes."""
-    import bpy
-    # Over the left shoulder, where the pick's head rides, across the chest to the right hip, and round the back.
+def sling(b, strap_mat, wood, iron, torso, below, clothes, length=0.74, head=1.0):
+    """A pickaxe carried on the back, as a miner slings one: a strap worn across the body, over the left shoulder
+    and round the right hip, pulled taut over the clothes; on its back two leather loops; the pick's handle
+    passes through the loops and lies along the strap, and the pick hangs by its head, which rests on the upper
+    loop, flat against the shoulder blade, its points along the back. Nothing here floats: the strap bears on the
+    shoulder, the loops are sewn to the strap, the head rests on a loop.
+    length: the pick's, foot to head; head: the head's size (1: a full pick)."""
     sh = b.shoulders[1]
-    wc, dc = trunk_at(b, b.chest.z, loose)
-    path = [Vector(start),
-            sh + Vector((-0.01, 0.04, b.p["arm"] * 1.2)),
-            sh + Vector((-0.01, -0.03, b.p["arm"] * 1.3)),
-            Vector((b.chest.x + wc * 0.2, b.chest.y - dc - 0.02, b.chest.z)),
-            Vector((b.waist.x - b.width("waist") * 0.55, b.waist.y - b.depth("waist") - 0.02, b.waist.z + 0.03)),
-            Vector((b.waist.x - b.width("waist") * 1.0, b.waist.y, b.waist.z + 0.01)),
-            Vector((b.waist.x - b.width("waist") * 0.4, b.waist.y + b.depth("waist") + 0.02, b.waist.z + 0.01)),
-            Vector(end)]
-    laid, nms = lay_on(b, spline(path, 5), horizontal=torso + below, down=[g for g in bpy.data.objects if g.name == f"{b.name}_Top"], lift=0.004)
-    return [tube(f"{b.name}_PickStrap", laid, [0.014] * len(laid), [0.003] * len(laid), strap_mat, normals=nms, sides=8)]
+    wc, dc = trunk_at(b, b.chest.z, 0.02)
+    ww, dw = b.width("waist"), b.depth("waist")
+    top = shapes.Surface(*clothes).lay(sh.lerp(b.collar, 0.5) + Vector((0, 0.0, 0.06)), 0.0042)[0]
+    hip = Vector((b.waist.x - ww - 0.03, b.waist.y, b.waist.z - 0.03))
+    path = [top,
+            sh.lerp(b.collar, 0.5) + Vector((0, -0.04, 0.04)),
+            Vector((b.chest.x + wc * 0.25, b.chest.y - dc - 0.02, b.chest.z)),
+            Vector((b.waist.x - ww * 0.55, b.waist.y - dw - 0.02, b.waist.z + 0.02)),
+            hip,
+            Vector((b.waist.x - ww * 0.5, b.waist.y + dw + 0.02, b.waist.z + 0.02)),
+            Vector((b.chest.x + wc * 0.2, b.chest.y + dc + 0.02, b.chest.z)),
+            sh.lerp(b.collar, 0.5) + Vector((0, 0.05, 0.04)),
+            top]
+    half_w, half_t = 0.0135, 0.0028
+    per = 5
+    # It bears on the shoulder (its two ends meet there) and turns round the hip: those stay; the rest is drawn taut.
+    laid, nms = taut(b, spline(path, 2), torso + below, clothes, lift=0.0042, keep=(8,), free=0.0, per=per, width=half_w)
+    out = [tube(f"{b.name}_PickStrap", laid, [half_w] * len(laid), [half_t] * len(laid), strap_mat, normals=nms, sides=8)]
+    # The strap's back, from the hip up to the shoulder: the handle lies along it, through two loops.
+    back, back_n = laid[8 * per:], nms[8 * per:]
+    handle_r = 0.017
+    off = half_t + 0.0065 + handle_r  # clear of the back where it swells between the loops
+
+    def on_back(f):
+        k = min(len(back) - 2, int(f * (len(back) - 1)))
+        return back[k] + back_n[k] * off, back_n[k]
+    (low, low_n), (high, high_n) = on_back(0.36), on_back(0.72)
+    d = (high - low).normalized()
+    out_n = ((low_n + high_n) * 0.5)
+    out_n = (out_n - d * out_n.dot(d)).normalized()
+    across = d.cross(out_n).normalized()
+    top = high + d * 0.047  # the head's collar sits on the upper loop
+    foot = top - d * length
+    out.extend(pick(b, foot, top, across, out_n, wood, iron, size=head))
+    for k, at in enumerate((low, high)):
+        loop = shapes.ring(f"{b.name}_PickLoop{k}", at - out_n * 0.0025, out_n, across, handle_r + 0.006, handle_r + 0.0035, 0.0038, strap_mat, steps=12)
+        # A leather loop is a band, not a wire: widen it along the handle.
+        for v in loop.data.vertices:
+            v.co += d * ((v.co - at).dot(d) * 2.2)
+        out.append(loop)
+    return out
 
 
-def lantern(b, grasp, brass, glass, name="Lantern"):
-    """A miner's lamp hanging from a hand: a brass base and cap around warm glass, on a wire bail."""
-    top = grasp - Vector((0, 0, 0.012))
-    out = [shapes.torus(f"{b.name}_{name}Bail", top - Vector((0, 0, 0.03)), 0.028, 0.0025, brass, rotation=(0, math.pi / 2, 0))]
-    body = top - Vector((0, 0, 0.06))
-    out.append(lathe(f"{b.name}_{name}Cap", [(0.012, 0.0), (0.036, -0.028), (0.034, -0.034), (0.0, -0.034)], brass, at=body + Vector((0, 0, 0.034))))
-    out.append(lathe(f"{b.name}_{name}Glass", [(0.0, 0.0), (0.026, 0.0), (0.029, 0.035), (0.026, 0.07), (0.0, 0.07)], glass, at=body - Vector((0, 0, 0.07))))
+def lantern(b, grasp, ring, brass, glass, wood, grip=0.007, span=0.09, name="Lantern"):
+    """A miner's lamp carried by its handle: a wooden grip (the bar the hand closes round, along ring) on a wire
+    bail hinged at two ears on the cap, and below it, hanging plumb, a vented brass cap, warm glass behind four
+    guard bars, and a brass base. grasp: the middle of the grip, inside the fingers."""
+    ring = Vector(ring).normalized()
+    ring = (ring - Vector((0, 0, ring.z))).normalized()  # the grip is level; the lamp hangs straight down from it
+    down = Vector((0, 0, -1))
+    turn = frame(ring, down) @ Matrix.Rotation(math.pi / 2, 3, 'Y')
+    out = [cylinder(f"{b.name}_{name}Handle", grasp, grip, span, wood, rotation=turn, vertices=14, bevel=0.25)]
+    apex = grasp + down * 0.052  # the cap's top, under the bail's arch
+    cap_r = 0.036
+    # The cap: a little vent on top, then the hood.
+    out.append(shapes.exact(lathe(f"{b.name}_{name}Cap", [(0.0, 0.012), (0.011, 0.012), (0.012, 0.0), (0.016, -0.004), (cap_r, -0.028), (0.034, -0.034), (0.0, -0.034)],
+                                  brass, at=apex, segments=16)))
+    body = apex + down * 0.034
+    out.append(shapes.exact(lathe(f"{b.name}_{name}Glass", [(0.0, 0.0), (0.026, 0.0), (0.029, 0.035), (0.026, 0.07), (0.0, 0.07)], glass, at=body + down * 0.07, segments=16)))
     for k in range(4):
         a = k / 4 * math.tau + 0.4
         x, y = math.cos(a) * 0.031, math.sin(a) * 0.031
-        out.append(tube(f"{b.name}_{name}Bar{k}", [body + Vector((x, y, 0)), body + Vector((x * 1.08, y * 1.08, -0.035)), body + Vector((x, y, -0.07))],
-                        [0.0025] * 3, [0.0025] * 3, brass, sides=6, levels=0))
-    out.append(lathe(f"{b.name}_{name}Base", [(0.0, 0.0), (0.034, 0.0), (0.036, 0.012), (0.03, 0.018), (0.0, 0.018)], brass, at=body - Vector((0, 0, 0.088))))
+        out.append(shapes.exact(tube(f"{b.name}_{name}Bar{k}", [body + Vector((x, y, 0.002)), body + Vector((x * 1.08, y * 1.08, -0.035)), body + Vector((x, y, -0.072))],
+                                     [0.0025] * 3, [0.0025] * 3, brass, sides=6, levels=0)))
+    out.append(shapes.exact(lathe(f"{b.name}_{name}Base", [(0.0, 0.0), (0.034, 0.0), (0.036, 0.012), (0.03, 0.018), (0.0, 0.018)], brass, at=body + down * 0.088, segments=16)))
+    # The bail: one wire through the grip, down each side to an ear on the cap's shoulder.
+    wire = 0.0019
+    for k, sgn in enumerate((-1, 1)):
+        ear = apex + ring * (sgn * (cap_r - 0.004)) + down * 0.024
+        end = grasp + ring * (sgn * span * 0.5)
+        path = [grasp + ring * (sgn * span * 0.3), end + ring * (sgn * 0.004), end + ring * (sgn * 0.007) + down * 0.012,
+                ear + ring * (sgn * 0.006) - down * 0.012, ear]
+        out.append(shapes.exact(tube(f"{b.name}_{name}Bail{k}", spline(path, 3), [wire] * 13, [wire] * 13, brass, sides=6, levels=0)))
+        out.append(cylinder(f"{b.name}_{name}Ear{k}", ear, 0.0045, 0.004, brass, rotation=turn, vertices=8, bevel=0))
     return out
 
 
@@ -572,16 +887,25 @@ def pickaxe(b, grasp, along, wood, iron, length=0.86, hold=0.22):
     hold: where along the handle the hand is, from its foot (0) to its head (1)."""
     d = Vector(along).normalized()
     low, high = grasp - d * length * hold, grasp + d * length * (1 - hold)
-    bow = d.cross(Vector((1, 0, 0))).normalized() * 0.012
-    handle = [low, low.lerp(high, 0.35) + bow, low.lerp(high, 0.7) + bow, high]
-    out = [tube(f"{b.name}_PickHandle", spline(handle, 4), [0.0145, 0.015, 0.0155, 0.016, 0.0165, 0.017, 0.0175, 0.018, 0.0185, 0.019, 0.019, 0.0185, 0.018],
-                [0.0125, 0.013, 0.0135, 0.014, 0.0145, 0.015, 0.0155, 0.016, 0.0165, 0.017, 0.017, 0.0165, 0.016], wood, sides=10)]
     across = d.cross(Vector((1, 0, 0)))
     if across.length < 0.1:
         across = d.cross(Vector((0, 1, 0)))
-    across.normalize()
-    curve = -d * 0.04
-    head = [high + across * 0.25 + curve, high + across * 0.12 + curve * 0.3, high, high - across * 0.1 + curve * 0.25, high - across * 0.2 + curve * 0.8]
+    return pick(b, low, high, across.normalized(), d.cross(across).normalized(), wood, iron, bow=0.012)
+
+
+def pick(b, low, high, across, flat, wood, iron, bow=0.0, size=1.0):
+    """A pickaxe from the foot of its handle (low) to its head (high): the head's points lie along across, and it
+    is flat towards flat (the side that lies against a back). bow: how much the handle is sprung; size: the
+    head's reach (1: a full pick)."""
+    d = (high - low).normalized()
+    across = Vector(across).normalized()
+    bend = across.cross(d).normalized() * bow
+    handle = [low, low.lerp(high, 0.35) + bend, low.lerp(high, 0.7) + bend, high]
+    out = [tube(f"{b.name}_PickHandle", spline(handle, 4), [0.0145, 0.015, 0.0155, 0.016, 0.0165, 0.017, 0.0175, 0.018, 0.0185, 0.019, 0.019, 0.0185, 0.018],
+                [0.0125, 0.013, 0.0135, 0.014, 0.0145, 0.015, 0.0155, 0.016, 0.0165, 0.017, 0.017, 0.0165, 0.016], wood, sides=10)]
+    curve = -d * 0.04 * size
+    head = [high + across * 0.25 * size + curve, high + across * 0.12 * size + curve * 0.3, high,
+            high - across * 0.1 * size + curve * 0.25, high - across * 0.2 * size + curve * 0.8]
     widths = [0.0, 0.016, 0.026, 0.018, 0.004]
     out.append(tube(f"{b.name}_PickHead", spline(head, 3), widths[:1] + [0.008, 0.012, 0.016, 0.02, 0.024, 0.026, 0.025, 0.022, 0.019, 0.015, 0.01, 0.005],
                     [0.0, 0.007, 0.01, 0.013, 0.016, 0.019, 0.021, 0.021, 0.019, 0.017, 0.015, 0.012, 0.009], iron, normals=[d] * 13, sides=8))
@@ -589,11 +913,30 @@ def pickaxe(b, grasp, along, wood, iron, length=0.86, hold=0.22):
     return out
 
 
-def mug(b, centre, mat, name="Mug"):
-    """A tin mug, held warm in the hand."""
-    out = [lathe(f"{b.name}_{name}", [(0.0, 0.0), (0.036, 0.0), (0.04, 0.004), (0.041, 0.085), (0.044, 0.09), (0.037, 0.09), (0.035, 0.012), (0.0, 0.012)],
-                 mat, at=centre - Vector((0, 0, 0.045)))]
-    out.append(shapes.torus(f"{b.name}_{name}Handle", centre + Vector((0.048, 0, 0.005)), 0.022, 0.005, mat, rotation=(math.pi / 2, 0, 0)))
+def mug(b, grasp, ring, mat, grip=0.0055, span=0.09, clear=0.03, name="Mug"):
+    """A big tin mug carried by its handle, the arm hanging: the handle's grip (the bar the hand closes round,
+    along ring) is in the fingers, and the mug hangs below it on its side, as an empty mug does.
+    grasp: the middle of the grip, inside the fingers; clear: from the grip's middle to the mug's wall, room
+    for the fingers that pass between them."""
+    ring = Vector(ring).normalized()
+    ring = (ring - Vector((0, 0, ring.z))).normalized()
+    down = Vector((0, 0, -1))
+    radius, height = 0.042, span + 0.022
+    axis = grasp + down * (radius + clear)  # the mug's own axis, level, under the grip
+    turn = frame(ring, down)
+    # The cup, turned on its side: its axis along the grip, its mouth to the front.
+    handle_turn = turn @ Matrix.Rotation(math.pi / 2, 3, 'Y')
+    out = [lathe(f"{b.name}_{name}", [(0.0, 0.0), (radius - 0.005, 0.0), (radius - 0.001, 0.004), (radius, height - 0.006), (radius + 0.003, height),
+                                       (radius - 0.004, height), (radius - 0.006, 0.012), (0.0, 0.012)], mat,
+                 at=axis - ring * (height * 0.5), rotation=handle_turn, segments=18)]
+    shapes.exact(out[0])
+    # The handle: a strap of tin from the wall out to the grip and back.
+    out.append(cylinder(f"{b.name}_{name}Handle", grasp, grip, span, mat, rotation=handle_turn, vertices=12, bevel=0.25))
+    for k, sgn in enumerate((-1, 1)):
+        end = grasp + ring * (sgn * span * 0.5)
+        wall = axis + ring * (sgn * span * 0.5) - down * (radius - 0.002)
+        path = [end - ring * (sgn * 0.006), end + ring * (sgn * 0.003) + down * 0.004, wall.lerp(end, 0.4) + ring * (sgn * 0.004), wall]
+        out.append(tube(f"{b.name}_{name}Arm{k}", spline(path, 3), [grip] * 10, [grip * 0.7] * 10, mat, normals=[ring] * 10, sides=8, levels=0))
     return out
 
 
@@ -618,11 +961,46 @@ def lamp_cap(b, leather, brass, glass):
     return out
 
 
-def hammer(b, at, tilt, wood, iron):
-    """A small hammer tucked into a pocket, its head showing."""
-    d = Vector(tilt).normalized()
-    out = [tube(f"{b.name}_HammerHandle", [at - d * 0.12, at, at + d * 0.12], [0.009, 0.01, 0.011], [0.009, 0.01, 0.011], wood, sides=8)]
-    head = at + d * 0.125
-    side = d.cross(Vector((0, 1, 0))).normalized()
-    out.append(slab(f"{b.name}_HammerHead", head, (0.045, 0.014, 0.016), iron, rotation=frame(side, d).to_euler(), soft=0.4))
-    return out
+def hammer(b, onto, at, wood, iron, leather):
+    """A small hammer carried as a smith carries one: a leather loop sewn to the apron at the hip; the handle
+    hangs down through the loop along the apron, and the head rests on the loop. at: where the loop is (cast
+    from in front onto the garments in onto). Returns its parts, and how it hangs: from where, the middle of its
+    hanging weight, the apron's outward normal there, and the direction across it."""
+    surface = shapes.Surface(*onto)
+    at = Vector(at)
+    hit, normal = surface.cast(Vector((at.x, at.y - 0.5, at.z)), Vector((0, 1, 0)), 1.0)
+    low, low_n = surface.cast(Vector((at.x, at.y - 0.5, at.z - 0.15)), Vector((0, 1, 0)), 1.0)
+    if hit is None:
+        hit, normal = at, Vector((0, -1, 0))
+    if low is None:
+        low, low_n = hit - Vector((0, 0, 0.15)), normal
+    radius = 0.0105
+    # The loop holds the handle a little off the cloth: the cloth at the waist moves with the spine as well as
+    # the hips, and the handle must not sink into it as the body sways.
+    off = 0.010
+    loop_at = hit + normal * (radius + off)
+    # It hangs straight down from the loop, unless the apron below is in the way: then it rests on the apron.
+    d = Vector((0, 0, -1))
+    for drop in (0.05, 0.1, 0.15, 0.2):
+        on, on_n = surface.cast(Vector((at.x, at.y - 0.5, at.z - drop)), Vector((0, 1, 0)), 1.0)
+        if on is None:
+            continue
+        need = ((on + on_n * (radius + 0.002)) - loop_at).normalized()
+        if need.dot(normal) > d.dot(normal):
+            d = need
+    across = d.cross(normal).normalized()
+    top = loop_at - d * 0.022  # the head's underside rests on the loop
+    out = [tube(f"{b.name}_HammerHandle", [top, loop_at, loop_at + d * 0.1, loop_at + d * 0.21], [0.0105, 0.0105, 0.0098, 0.0092],
+                [0.0105, 0.0105, 0.0098, 0.0092], wood, sides=8, levels=0)]
+    # The head, across the handle's top; its underside rests on the loop.
+    out.append(slab(f"{b.name}_HammerHead", top - d * 0.004, (0.045, 0.014, 0.016), iron, rotation=frame(across, -d), soft=0.4))
+    # The loop: sewn to the cloth on one side, round the handle on the other.
+    reach = radius + (off + 0.003) * 0.5
+    loop = shapes.ring(f"{b.name}_HammerLoop", hit + normal * reach - d * 0.004, normal, across, reach, radius + 0.003, 0.0035, leather, steps=12)
+    for v in loop.data.vertices:
+        v.co += d * ((v.co - loop_at).dot(d) * 2.4)
+    loop["wg_anchor"] = [*hit]
+    out.append(loop)
+    # Where it hangs from (the loop), where the body stops it (near the handle's end, which is what the cloth
+    # reaches first as the leg under it moves), and the apron's face there.
+    return out, loop_at, loop_at + d * 0.2, normal, across

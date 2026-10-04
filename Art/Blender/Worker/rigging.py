@@ -35,7 +35,23 @@ import shapes
 LOD_BUDGETS = (16000, 5000, 1600)
 ATLAS = 2048
 # Parts dropped from the farthest level of detail.
-DETAILS = ("_Lace", "_Button", "_LanternBar", "_ApronTie", "_Buckle", "_MugHandle", "_CapLampMount", "_Spring", "_StrapTab")
+DETAILS = ("_Lace", "_Eyelet", "_Button", "_LanternBar", "_LanternBail", "_LanternEar", "_ApronTie", "_Buckle", "_CapLampMount", "_Spring", "_StrapTab",
+           "_BagRing", "_BagLoop", "_PickLoop", "_ApronKnot", "_HammerLoop", "_StrapTab")
+# Parts that lie on others and move exactly with them: (the part's name, the parts it takes its weights from).
+# \1 is the part's own number (a boot's laces lie on that boot).
+LIKE = [
+    (r"_(?:Lace|Eyelet)(\d)$", [r"_Boot\1"]),
+    (r"_Strap$", [r"_Top", r"_Skirt", r"_Collar"]),
+    (r"_PickStrap$", [r"_Top", r"_Skirt", r"_Collar", r"_Lapel\d", r"_ShirtFront"]),
+    (r"_ApronStrap$", [r"_Top", r"_Neckband", r"_Apron"]),
+    (r"_ApronTie\d$|_ApronKnot$|_ApronTieEnd\d$", [r"_Top", r"_Skirt"]),
+    (r"_ApronPocket$|_HammerLoop$", [r"_Apron"]),
+    # An apron lies on the smock: it moves exactly with it.
+    (r"_Apron$", [r"_Top", r"_Skirt"]),
+    (r"_Patch0$", [r"_Top"]),
+    (r"_Patch1$", [r"_Skirt"]),
+    (r"_Button\d$", [r"_Top", r"_Skirt"]),
+]
 
 
 def side_of(i):
@@ -75,6 +91,13 @@ def joints(b):
     # Carried things with bones of their own (a lantern that swings, a mug in a hand).
     for name, head, tail, parent in getattr(b, "props", []):
         bones[name] = (head, tail, 0.05, parent)
+    # A skirt hangs in four flaps, front and back of each leg, each on a bone at its hip: the game turns a flap
+    # with the thigh that pushes it, and lets it hang when the thigh moves away.
+    hem = getattr(b, "skirt_hem", None)
+    if hem is not None:
+        for i in (0, 1):
+            for flap in ("Front", "Back"):
+                bones[f"Skirt{flap}.{side_of(i)}"] = (b.hips[i].copy(), Vector((b.hips[i].x, b.hips[i].y, hem)), 0.05, "Pelvis")
     return bones
 
 
@@ -133,22 +156,24 @@ def candidates(name):
     take the same bones from the same field (as weights transferred from the body would be), so the layers move
     together and do not cut through each other; carried things are rigid on one bone."""
     import re
-    m = re.search(r"_(Boot|Sole|Heel|Lace|BootCuff|Hand|Forearm|Roll|Finger|Thumb|Palm)(\d)", name)
+    m = re.search(r"_(Boot|Sole|Heel|Lace|Eyelet|BootCuff|Hand|Forearm|Roll|Finger|Thumb|Palm)(\d)", name)
     side = side_of(int(m.group(2))) if m else None
     # Carried things first (a lantern's own cap is not a cap on the head).
     if "_Lantern" in name:
         return "rigid:Lantern"
     if "_Mug" in name:
         return "rigid:Mug"
+    if "_HammerHandle" in name or "_HammerHead" in name:
+        return "rigid:Hammer"
     if any(k in name for k in ("_Bag", "_Buckle", "_StrapTab")):
-        return "rigid:Pelvis"
+        return "rigid:Satchel"
     if "_PickStrap" in name or name.endswith("_Strap"):
-        return TRUNK
+        return TRUNK + ARMS
     if "_Hair" in name or "_Cap" in name:
         return ["Head"]
     if name.endswith("_Skin"):
         return ["Head", "Neck", "Chest"]
-    if m and m.group(1) in ("Boot", "Sole", "Heel", "Lace", "BootCuff"):
+    if m and m.group(1) in ("Boot", "Sole", "Heel", "Lace", "Eyelet", "BootCuff"):
         return [f"Shin.{side}", f"Foot.{side}", f"Toe.{side}"]
     if m and m.group(1) in ("Hand",):
         return [f"Hand.{side}", f"Forearm.{side}"]
@@ -158,7 +183,7 @@ def candidates(name):
         return TRUNK + ARMS
     if name.endswith("_Trousers"):
         return ["Pelvis", "Spine"] + LEGS
-    if any(k in name for k in ("_Collar", "_Lapel", "_ShirtFront", "_Button", "_Neckband", "_ApronStrap", "_Patch0", "_ApronTie")):
+    if any(k in name for k in ("_Collar", "_Lapel", "_ShirtFront", "_Button", "_Neckband", "_ApronStrap", "_Patch0", "_ApronTie", "_ApronKnot")):
         # On the torso: the same bones, by the same rule, as the top beneath them.
         return TRUNK + ARMS
     if "_Pick" in name:
@@ -184,14 +209,26 @@ def skin(obj, b, bones):
     if names == "skirt":
         # Coats, smocks and aprons: above the waist they follow the torso exactly as the top beneath them does;
         # below, they hang from the pelvis, and towards the hem the thighs carry more of them, each its own side.
+        # Below the hips they hang in four flaps (front and back of each leg, blending into each other round the
+        # body and into the pelvis above); a flap is wholly its own from a hand's width above the hem down, where
+        # the legs are under it, so a leg that pushes its flap never comes through.
         top = b.pelvis.z
-        hem = min(v.co.z for v in mesh.vertices)
-        width = b.trunk["pelvis"][0]
+        hem = getattr(b, "skirt_hem", None) or min(v.co.z for v in mesh.vertices)
+        width, depth = b.trunk["pelvis"]
+        whole = min(0.45, max(1e-3, (top - (hem + 0.09)) / max(top - hem, 1e-3)))
+        flaps = "SkirtFront.L" in bones
         for v in mesh.vertices:
             t = max(0.0, min(1.0, (top - v.co.z) / max(top - hem, 1e-3)))
-            thigh = 0.62 * t
             left = max(0.0, min(1.0, 0.5 + (v.co.x - b.pelvis.x) / (1.2 * width)))
-            hang = {"Pelvis": 1 - thigh, "Thigh.L": thigh * left, "Thigh.R": thigh * (1 - left)}
+            if flaps:
+                share = max(0.0, min(1.0, t / whole))
+                share = share * share * (3 - 2 * share)
+                front = max(0.0, min(1.0, 0.5 - (v.co.y - b.pelvis.y) / (0.9 * depth)))
+                hang = {"Pelvis": 1 - share, "SkirtFront.L": share * left * front, "SkirtBack.L": share * left * (1 - front),
+                        "SkirtFront.R": share * (1 - left) * front, "SkirtBack.R": share * (1 - left) * (1 - front)}
+            else:
+                thigh = 0.62 * t
+                hang = {"Pelvis": 1 - thigh, "Thigh.L": thigh * left, "Thigh.R": thigh * (1 - left)}
             above = max(0.0, min(1.0, (v.co.z - b.pelvis.z) / max(b.waist.z - b.pelvis.z, 1e-3)))
             if above > 0:
                 body_w = dict(capsule_weights(v.co, ["Pelvis", "Spine", "Chest"], bones))
@@ -225,10 +262,58 @@ def simplify_to(obj, ratio, floor=120):
     shapes.apply_all(obj)
 
 
+def weights_like(obj, sources, anchor=None):
+    """A part lying on others takes their weights: each vertex those of the nearest point on their surfaces (as a
+    weight transfer does), so it moves exactly with what it lies on and never lifts off it or sinks into it.
+    anchor: one point whose weights the whole part takes, for a rigid thing hung on cloth (a hammer in its loop):
+    it moves with the cloth there, and keeps its shape."""
+    from mathutils.bvhtree import BVHTree
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    trees = [(s, BVHTree.FromObject(s, depsgraph)) for s in sources]
+    obj.vertex_groups.clear()
+    for v in obj.data.vertices:
+        best = None
+        for s, tree in trees:
+            hit, _, index, dist = tree.find_nearest(anchor if anchor is not None else v.co, 0.5)
+            if hit is not None and (best is None or dist < best[3]):
+                best = (s, hit, index, dist)
+        if best is None:
+            continue
+        s, hit, index, _ = best
+        blend, total = {}, 0.0
+        for vi in s.data.polygons[index].vertices:
+            sv = s.data.vertices[vi]
+            w = 1.0 / (1e-4 + (sv.co - hit).length)
+            total += w
+            for g in sv.groups:
+                n = s.vertex_groups[g.group].name
+                blend[n] = blend.get(n, 0.0) + w * g.weight
+        for n, w in blend.items():
+            if w / total > 0.01:
+                g = obj.vertex_groups.get(n) or obj.vertex_groups.new(name=n)
+                g.add([v.index], w / total, 'REPLACE')
+
+
+def ends_follow(obj, ends, bone, reach=0.075):
+    """A strap's last stretch before each end blends from the clothes it lies on to the bone its end is tied to."""
+    groups = obj.vertex_groups
+    target = groups.get(bone) or groups.new(name=bone)
+    for v in obj.data.vertices:
+        d = min((v.co - e).length for e in ends)
+        if d >= reach:
+            continue
+        w = 1 - d / reach
+        w = w * w * (3 - 2 * w)
+        for g in v.groups:
+            groups[g.group].add([v.index], g.weight * (1 - w), 'REPLACE')
+        target.add([v.index], w, 'REPLACE')
+
+
 def mark_details(obj):
-    """A face attribute: 1 on small details that the farthest level of detail drops."""
+    """A face attribute: 1 on small details that the farthest level of detail drops, 2 on the finest (laces,
+    eyelets), dropped from the middle level on."""
     attr = obj.data.attributes.new("wg_detail", 'INT', 'FACE')
-    flag = 1 if any(k in obj.name for k in DETAILS) else 0
+    flag = 2 if obj.get("wg_fine") else 1 if any(k in obj.name for k in DETAILS) else 0
     for i in range(len(obj.data.polygons)):
         attr.data[i].value = flag
 
@@ -356,41 +441,87 @@ def finish_materials(obj, name, materials, atlas_image):
     uv["Atlas"].name = "UVMap"
 
 
-def lod_copy(obj, name, budget, drop_details=False):
+def lod_copy(obj, name, budget, drop=2):
+    """A lighter copy. drop: details of this level and above are left out (2 the finest only, 1 all small details)."""
     copy = obj.copy()
     copy.data = obj.data.copy()
     copy.name = copy.data.name = name
     bpy.context.scene.collection.objects.link(copy)
-    if drop_details:
-        bm = bmesh.new()
-        bm.from_mesh(copy.data)
-        layer = bm.faces.layers.int.get("wg_detail")
-        bmesh.ops.delete(bm, geom=[f for f in bm.faces if f[layer] == 1], context='FACES')
-        bm.to_mesh(copy.data)
-        bm.free()
+    bm = bmesh.new()
+    bm.from_mesh(copy.data)
+    layer = bm.faces.layers.int.get("wg_detail")
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if f[layer] >= drop], context='FACES')
+    bm.to_mesh(copy.data)
+    bm.free()
     simplify_to(copy, budget / max(triangles(copy), 1))
     return copy
 
 
-def build(name, b, parts, materials, recipes, face_images, out_dir):
-    """Skins, simplifies, joins, bakes and exports one being. Returns its dimensions for the game."""
+def prepare(name, b, parts):
+    """The skeleton, and the parts skinned and simplified to the nearest level's budget, still apart (as the
+    audit measures them)."""
+    import re
     rig, bones = armature(b, f"Miner_{name}_Rig")
     meshes = [o for o in parts if o.type == 'MESH']
     for o in meshes:
         skin(o, b, bones)
         mark_details(o)
-    total = sum(triangles(o) for o in meshes)
-    ratio = LOD_BUDGETS[0] / total
+    # What lies on something takes its weights from it.
     for o in meshes:
-        simplify_to(o, ratio)
+        for pattern, sources in LIKE:
+            m = re.search(pattern, o.name)
+            if not m:
+                continue
+            number = m.group(1) if m.groups() and m.group(1) else ""
+            wanted = [re.compile(b.name + s.replace("\\1", number) + "$") for s in sources]
+            found = [s for s in meshes if s is not o and any(w.match(s.name) for w in wanted)]
+            if found:
+                weights_like(o, found, Vector(list(o["wg_anchor"])) if o.get("wg_anchor") else None)
+            break
+        # A strap's ends go with what they are tied to (a bag that swings on its own bone).
+        if o.get("wg_ends") and o.get("wg_end_bone") in bones:
+            flat = list(o["wg_ends"])
+            ends_follow(o, [Vector(flat[k:k + 3]) for k in range(0, len(flat), 3)], o["wg_end_bone"])
+    # Thin exact parts (laces, rings, wire) keep their shape; the rest shares what is left of the budget.
+    exact = sum(triangles(o) for o in meshes if o.get("wg_exact"))
+    total = sum(triangles(o) for o in meshes if not o.get("wg_exact"))
+    ratio = max(LOD_BUDGETS[0] - exact, 1000) / total
+    for o in meshes:
+        if not o.get("wg_exact"):
+            simplify_to(o, ratio)
+        limit_influences(o)
+    return rig, bones, meshes
+
+
+def limit_influences(obj, limit=4):
+    """At most four bones a vertex, as the game skins (simplifying blends the weights of merged vertices)."""
+    groups = obj.vertex_groups
+    for v in obj.data.vertices:
+        ws = sorted(((g.weight, g.group) for g in v.groups if g.weight > 0), reverse=True)
+        if len(ws) <= limit:
+            continue
+        keep = ws[:limit]
+        total = sum(w for w, _ in keep)
+        for w, g in ws[limit:]:
+            groups[g].remove([v.index])
+        for w, g in keep:
+            groups[g].add([v.index], w / total, 'REPLACE')
+
+
+def build(name, b, parts, materials, recipes, face_images, out_dir, audit=None):
+    """Skins, simplifies, joins, bakes and exports one being. Returns its dimensions for the game.
+    audit: called with (b, meshes, bones) on the parts before they are joined."""
+    rig, bones, meshes = prepare(name, b, parts)
+    if audit is not None:
+        audit(b, meshes, bones)
     lod0 = shapes.join(f"Miner_{name}_LOD0", meshes)
     face_materials = {n for n, m in materials.items() if m["kind"] == "skin"}
     unwrap_atlas(lod0, face_materials)
     atlas_path = os.path.join(out_dir, f"Miner_{name}_Atlas.png")
     atlas = bake_atlas(lod0, materials, recipes, face_images, atlas_path)
     finish_materials(lod0, name, materials, atlas)
-    lod1 = lod_copy(lod0, f"Miner_{name}_LOD1", LOD_BUDGETS[1])
-    lod2 = lod_copy(lod0, f"Miner_{name}_LOD2", LOD_BUDGETS[2], drop_details=True)
+    lod1 = lod_copy(lod0, f"Miner_{name}_LOD1", LOD_BUDGETS[1], drop=2)
+    lod2 = lod_copy(lod0, f"Miner_{name}_LOD2", LOD_BUDGETS[2], drop=1)
     for lod in (lod0, lod1, lod2):
         lod.parent = rig
         mod = lod.modifiers.new("Rig", 'ARMATURE')
