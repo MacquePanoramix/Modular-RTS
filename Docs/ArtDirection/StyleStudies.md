@@ -2,7 +2,7 @@
 
 **Rendered:** October 1, 2026, in Blender 4.4 (Cycles, GPU).
 **Status:** Not chosen. On October 1 Luis judged these "not bad", but they did not
-match what he imagines. He supplied the [Visual Soul](VisualSoul.md) handoff
+match what Luis imagines. Luis supplied the [Visual Soul](VisualSoul.md) handoff
 instead, and it is now the art direction. This page is kept as a record.
 **Source:** [`Art/Blender/StyleStudies/style_studies.py`](../../Art/Blender/StyleStudies/style_studies.py).
 Every image is generated from that script and can be reproduced or adjusted:
@@ -95,7 +95,7 @@ Luis can:
 - pick one direction;
 - mix them, for example C's proportions and materials with A's warmth and
   painterly light;
-- or point to references that capture what he imagines.
+- or point to references that capture what Luis imagines.
 
 The chosen direction is recorded in GAME_VISION.md, and S1's worker model is
 built in it.

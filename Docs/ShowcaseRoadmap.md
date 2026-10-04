@@ -8,7 +8,7 @@
   (two cameras, the Ordinary Place, rendering candidates, then the model).
 - **O4:** the worker model first.
 - **O2:** strength comes from the body plus training.
-- **GitHub:** each stage merges into `main` after his playtest.
+- **GitHub:** each stage merges into `main` after Luis's playtest.
 
 Each stage still gets its own plan in [NextMilestonePlan.md](NextMilestonePlan.md).
 **Sources:**
@@ -103,7 +103,7 @@ Strength and Burden checkpoint A delivered:
 - heel/toe feet and weight transfer;
 - a natural 1.8 m/s pace.
 
-Luis judged it "much better". The arrival shuffle he reported is fixed: the
+Luis judged it "much better". The arrival shuffle Luis reported is fixed: the
 body finishes its stride and stands still. See
 [GroundedBodyPlaytest.md](Playtests/GroundedBodyPlaytest.md).
 

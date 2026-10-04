@@ -62,7 +62,7 @@ Sent after seeing the first iteration's captures. He had not played its build.
 
 > Actually can I admit something to you? I feel a bit guilty since I see you put so much effort into trying to change it and make it better, but honestly I think I like the before better. Like I remember I was testing the before and I got into this position, took a photo of it and absolutely loved the result. I'm sorry...
 
-**Attachment:** his own screenshot from the hand-painted pass build
+**Attachment:** Luis's own screenshot from the hand-painted pass build
 (`Builds/WindowsOrdinaryPlace`):
 - **The setting.** Look E at 19:12 (dusk), in the Explore camera, low on the
   path in front of the house.
@@ -92,11 +92,11 @@ Claude asked three things:
 ## How it was recorded
 
 - **The verdict.** The hand-painted pass is "already quite beautiful" and
-  matches much of his taste, but it is not yet the emotion he seeks. He
+  matches much of Luis's taste, but it is not yet the emotion Luis seeks. Luis
   wants to look "even further beyond" rather than stop there.
 - **The aim.** Not just the visual, but a breathtaking, out-of-this-world
   emotion, "the image from my mind's eye straight out of a dream".
-- **The method he asks for.** Seek the stylistic and artistic essence, not
+- **The method Luis asks for.** Seek the stylistic and artistic essence, not
   the surface. Time and research are welcome: "I don't mind we spend a long
   time in this checkpoint".
 - **What follows.** The research and the essence it found are in
@@ -117,9 +117,9 @@ Claude asked three things:
     adopted.
   - Its code is kept on the archive branch `claude/essence-exploration`, and
     its record in [TheEssencePlaytest.md](../Playtests/TheEssencePlaytest.md).
-  - What his favourite frame says about his taste is read in
-    [TheEssence.md](../ArtDirection/TheEssence.md#luiss-verdict-and-what-his-favourite-frame-teaches).
-- **The merge.** Approved in his answers. The hand-painted pass was merged
+  - What Luis's favourite frame says about that taste is read in
+    [TheEssence.md](../ArtDirection/TheEssence.md#luiss-verdict-and-what-luiss-favourite-frame-teaches).
+- **The merge.** Approved in Luis's answers. The hand-painted pass was merged
   into `main` (7f7fcc0).
 - **The fireflies.** They come back for this scene, on by default.
 - **The dusk mood.** It is deepened in small switchable steps over the

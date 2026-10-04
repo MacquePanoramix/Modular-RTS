@@ -316,7 +316,7 @@ house. He asked for:
 - the dusk mood deepened in small steps, before moving to the worker model.
 
 So each detail is a small step that switches on and off over the
-hand-painted look, judged on his own frame:
+hand-painted look, judged on Luis's own frame:
 
 | Key | Detail | Default |
 |---|---|---|
@@ -334,7 +334,7 @@ build.
 
 **Captures.** `OrdinaryPlaceCapture.Capture -captureSet dusk` recreates
 Luis's frame (and the doorway at night) with each detail off and on. The
-worker steps out of the shot, as in his frame.
+worker steps out of the shot, as in Luis's frame.
 
 See [Validation.md](../Validation.md) for tests, build and cost.
 

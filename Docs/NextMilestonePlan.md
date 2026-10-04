@@ -1,6 +1,6 @@
 # Implementation plan — S1 (revised): the Ordinary Place and two cameras
 
-**Revised:** October 1, 2026, from Luis's Visual Soul handoff and his
+**Revised:** October 1, 2026, from Luis's Visual Soul handoff and
 two-camera direction
 ([correspondence](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md),
 [VisualSoul.md](ArtDirection/VisualSoul.md)).
@@ -19,7 +19,7 @@ splits the work into checkpoints Luis playtests one at a time:
    (painted light + paint filter + ink) as the working base and agreed that
    hand-painted textures come next. That is **S1c, second pass** (below). It was
    built on October 2. Luis found it "already quite beautiful" but not yet the
-   emotion he seeks.
+   emotion Luis seeks.
 4. **S1e, the essence beyond the surface.** Luis asked for the breathtaking,
    out-of-this-world emotion, every frame a painting, and a style unique to
    Wonder Gather. The first iteration was built on October 2. Luis preferred
@@ -183,7 +183,7 @@ with each.
   night, set side by side with the references.
 - **A short moving sequence** where possible.
 - **Frame time** at 1920×1080, with representative grass and light density.
-- **Luis's choice.** Luis picks or mixes the rendering approach in his
+- **Luis's choice.** Luis picks or mixes the rendering approach in the
   playtest. Until then it stays Open.
 
 ## S1c, second pass — hand-painted surfaces
@@ -231,9 +231,9 @@ switchable for comparison.
 
 ## S1e — The essence beyond the surface
 
-Luis on October 2: the hand-painted pass is "already quite beautiful", but he
+Luis on October 2: the hand-painted pass is "already quite beautiful", but Luis
 wants "the breath-taking out of this world emotion", the stylistic essence
-rather than the surface. He welcomes a long checkpoint and research. Two
+rather than the surface. Luis welcomes a long checkpoint and research. Two
 follow-ups the same day raised the bar:
 - every frame the camera lands on should be a painting, driven by light, while
   the RTS still runs well;
@@ -242,12 +242,12 @@ follow-ups the same day raised the bar:
   ([correspondence](Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md)).
 
 **The study.** [TheEssence.md](ArtDirection/TheEssence.md) reads why Luis's
-references move him and measures them against our captures. It then proposes
+references move Luis and measures them against our captures. It then proposes
 Wonder Gather's own language: a thesis, seven signature devices and a frame
 test.
 
 **Outcome of the first iteration:** not adopted. Luis likes "the before"
-better, and his favourite frame shows why: the lit house at dusk, intimate,
+better, and Luis's favourite frame shows why: the lit house at dusk, intimate,
 enclosed and tonal. Any further iteration starts from the hand-painted pass,
 adds options beside it instead of replacing it, and is shown early as frames.
 The iterations below were the plan before the verdict.

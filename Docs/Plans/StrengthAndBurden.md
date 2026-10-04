@@ -1,6 +1,6 @@
 > Historical milestone plan, archived October 1, 2026. Checkpoint A (the grounded
-> body) was implemented, and Luis judged it much better. His arrival-shuffle note
-> is fixed. On October 1 he clarified the showcase's scope: a single worker with a
+> body) was implemented, and Luis judged it much better. Luis's arrival-shuffle note
+> is fixed. On October 1 Luis clarified the showcase's scope: a single worker with a
 > character creator, real hauling options and Blender-quality models. Checkpoints
 > B and C carry forward as stages S3 and S4 of [ShowcaseRoadmap.md](../ShowcaseRoadmap.md),
 > with D5 revised: no back-stow, and leaving the pickaxe behind is not the
@@ -15,7 +15,7 @@
 chosen as recommended (see [Decisions](#decisions-for-luis)). D6–D9 proceed
 on their recommendations until Luis says otherwise. **Checkpoint A is implemented
 and technically validated. It awaits Luis's playtest**
-([GroundedBodyPlaytest.md](../Playtests/GroundedBodyPlaytest.md)); B and C follow his review. The completed previous plan is archived in
+([GroundedBodyPlaytest.md](../Playtests/GroundedBodyPlaytest.md)); B and C follow Luis's review. The completed previous plan is archived in
 [Plans/EquippedWorker.md](EquippedWorker.md).
 
 ## Where this starts
@@ -96,7 +96,7 @@ extended rather than replaced with a third-party rig.
 ## Scope: three checkpoints
 
 Each checkpoint ends with a build and a playtest by Luis. The next checkpoint
-starts only after his review, so a wrong direction is caught early.
+starts only after Luis's review, so a wrong direction is caught early.
 
 ### Checkpoint A — A grounded body
 
