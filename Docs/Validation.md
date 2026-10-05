@@ -1516,3 +1516,56 @@ the round's log in
   - **Other hardware.**
   - **Luis's eye.** Passing checks are not acceptance of the look or the
     feel.
+
+## S1d, the miners — after Luis's look: the shoulder strap, and Round's neckband (October 5)
+
+Luis liked the method's first round except the strap on Small's shoulder,
+and said to go on with the plan
+([correspondence](Correspondence/2026-10-05_THE_SHOULDER_STRAP.md);
+[TheMiners.md](ArtDirection/TheMiners.md#after-luiss-look-october-5)).
+
+- **Environment.** The isolated worktree was at dab5ed0. The validated files
+  were then copied into the main project. Luis's own uncommitted files were
+  not touched.
+- **The strap.**
+  - **First try:** kept taut, but moved out on the shoulder and under the
+    collar. Read beside the build Luis preferred, it still was not that
+    strap: it had a pinch at the shoulder and dropped straight down the back.
+    The audit also found it 3.1 mm inside the collar (limit 3.0).
+  - **Second try, kept:** the strap's course and breadth exactly as in the
+    build Luis preferred (laid soft on the coat, not drawn tight), with its
+    ends on the bag's rings. Read beside that build in five views
+    (`Images/Miners/Method2_Strap.jpg`): the same strap.
+  - **A small failure on the way:** the wider strap left its folded ends
+    1.6 mm off it in the sharpest turn (limit 1.5). The ends were set 0.6 mm
+    closer.
+- **Round's neckband.** The flaw left open after the first round was read
+  closely. It was not a seam, as first thought: making the band seamless
+  changed nothing. A probe of which surface is uppermost round the neck
+  showed the band sitting below the join of skin and cloth at the back, where
+  the smock falls away steeply. The band now sits on that join at the back
+  and the sides; the front is unchanged
+  (`Images/Miners/Method2_Neckband.jpg`). A first version also moved the band
+  at the front, by up to 43 mm; that was taken back, since nobody asked for
+  it.
+- **The audit** (five rounds of the whole pipeline):
+  - **At rest:** 0 of 386 (Small), 0 of 268 (Long), 0 of 203 (Round, one new
+    check: a neckband sits on its garment's neckline all the way round).
+  - **On the recorded movement:** the same four checks as after the first
+    round remain, with the same values and reasons. The strap passes all of
+    its checks: it meets both rings, and does not sink into the coat or the
+    collar.
+- **Tests.**
+  - **Miner tests:** 8 of 8 passed in every round.
+  - **Full PlayMode suite (121 tests, 3 skipped as explicit):** one run on
+    the strap's final state, 118/118 passed (947.3 s). It was not run again
+    after the neckband: that change is to Round's model only, and no code
+    changed.
+- **Release build.** It passed, on the final state
+  (`Builds/WindowsOrdinaryPlace`).
+- **Not tested:**
+  - **The crowd benchmark** was not run again: no code changed, and the
+    models' weights are as they were.
+  - **Moving, by eye.** The strap and the neckband were judged on frames.
+  - **Luis's eye.** The strap is put back from the pictures of the build Luis
+    preferred; Luis has not yet seen it in the game.

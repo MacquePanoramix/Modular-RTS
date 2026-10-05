@@ -75,8 +75,9 @@ Luis asked for. The round's log, with before and after images, is in
 3. **The satchel.** Each end of the strap passes through a ring on the bag.
    The bag hangs from the strap, rests against the hip, and moves with the
    stride.
-4. **The strap,** over the shoulder and across the buttons: pulled straight
-   by the bag's weight.
+4. **The strap,** over the shoulder and across the buttons. Since October 5
+   it lies as it did before the round (Luis preferred that): out on the
+   shoulder, soft on the coat, below the collar.
 
 **On Long and Round:**
 

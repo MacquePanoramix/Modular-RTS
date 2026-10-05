@@ -318,13 +318,18 @@ def torus(name, at, major, minor, mat, rotation=(0, 0, 0), segments=24, around=8
     return finish(obj, mat)
 
 
-def tube(name, points, widths, thicks, mat, normals=None, sides=10, levels=1, cap=True):
+def tube(name, points, widths, thicks, mat, normals=None, sides=10, levels=1, cap=True, closed=False):
     """A tube along points whose cross-section is an ellipse: half-width along the side, half-thickness
     along the normal. A zero size at either end closes it to a point (a lock of hair, a tapered handle).
-    normals: per point, the direction of the thin axis (for hair, away from the scalp)."""
+    normals: per point, the direction of the thin axis (for hair, away from the scalp).
+    closed: the points go round a loop (a neckband): the last joins the first, with no seam and no ends. Give
+    normals with it, so the section sits the same way all the way round."""
     pts = [Vector(p) for p in points]
     n = len(pts)
-    tangents = [(pts[min(i + 1, n - 1)] - pts[max(i - 1, 0)]).normalized() for i in range(n)]
+    if closed:
+        tangents = [(pts[(i + 1) % n] - pts[i - 1]).normalized() for i in range(n)]
+    else:
+        tangents = [(pts[min(i + 1, n - 1)] - pts[max(i - 1, 0)]).normalized() for i in range(n)]
     frames = []
     if normals is not None:
         for t, nm in zip(tangents, normals):
@@ -347,7 +352,7 @@ def tube(name, points, widths, thicks, mat, normals=None, sides=10, levels=1, ca
             continue
         rings.append([bm.verts.new(p + bv * math.cos(a) * w + nv * math.sin(a) * h)
                       for a in (k / sides * math.tau for k in range(sides))])
-    for r0, r1 in zip(rings, rings[1:]):
+    for r0, r1 in zip(rings, rings[1:] + ([rings[0]] if closed else [])):
         if len(r0) == 1 and len(r1) == 1:
             continue
         if len(r0) == 1:
@@ -359,7 +364,7 @@ def tube(name, points, widths, thicks, mat, normals=None, sides=10, levels=1, ca
         else:
             for k in range(sides):
                 bm.faces.new((r0[k], r1[k], r1[(k + 1) % sides], r0[(k + 1) % sides]))
-    if cap:
+    if cap and not closed:
         for ring in (rings[0], rings[-1]):
             if len(ring) > 2:
                 bm.faces.new(ring if ring is rings[-1] else list(reversed(ring)))

@@ -1,6 +1,6 @@
 # Wonder Gather — Current State
 
-**Updated:** October 4, 2026.
+**Updated:** October 5, 2026.
 
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
@@ -19,6 +19,16 @@
   are the base art style for every being and thing in the world, not one
   character's costume
   ([VisualSoul.md](ArtDirection/VisualSoul.md#the-language-for-every-being-and-thing)).
+  - **Luis's verdict on that round (October 5):** "I really liked all the
+    changes you did, except the shoulder strap."
+    - **The strap** on Small's shoulder is put back as it was: out on the
+      shoulder, soft on the coat, below the collar. Its ends stay on the
+      bag's rings
+      ([TheMiners.md](ArtDirection/TheMiners.md#after-luiss-look-october-5)).
+    - **The method learned:** change only what a note or a failed check
+      names.
+    - **Next, on Luis's word to go on with the plan:** see
+      [NextMilestonePlan.md](NextMilestonePlan.md).
   - **A method for model quality, and its first round (October 3 and 4).**
     Luis asked for a strategy, to refer to from now on, for making every
     model as polished as possible. It is

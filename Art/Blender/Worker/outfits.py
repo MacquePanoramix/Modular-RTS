@@ -414,7 +414,13 @@ def taut(b, points, torso, clothes, lift=0.004, rounds=260, per=5, keep=(), free
             rise = max((lay(out[k] + across * s_)[0] - out[k]).dot(normals[k]) for s_ in (-width, -width * 0.5, width * 0.5, width))
             raised.append(out[k] + normals[k] * max(0.0, rise))
         out[1:-1] = raised
-    # The free stretch at each end: from where the strap leaves the cloth, straight to the ring.
+    release(b, out, free)
+    return out, normals
+
+
+def release(b, out, free):
+    """The free stretch at each end of a strap: from where it leaves the cloth, straight to its ring, as a strap
+    under load runs. out: the strap's points, changed in place."""
     for order in (range(len(out)), range(len(out) - 1, -1, -1)):
         order = list(order)
         run, leave = 0.0, None
@@ -436,24 +442,78 @@ def taut(b, points, torso, clothes, lift=0.004, rounds=260, per=5, keep=(), free
             # Never inside the cloth: the straight line, or the cloth where it rises above the line.
             if (straight - trunk_point(b, straight)).length >= (out[c_] - trunk_point(b, out[c_])).length - 0.001:
                 out[c_] = straight
-    return out, normals
+
+
+def worn(b, points, torso, coat, lift=0.004, free=0.09):
+    """A strap worn soft on the body, along the course it is given: every point laid on the coat (from above over
+    the shoulder, towards the trunk's axis below it), not drawn tight. It keeps the broad, easy line of a leather
+    strap resting on a shoulder and across a back. Luis preferred this on Small's shoulder (October 5) to the
+    strap pulled taut, which sat nearer the neck and climbed over the collar. Its ends are on their rings: over
+    its last stretch before each it leaves the cloth and runs straight to the ring (release).
+    Returns the laid points and the surface's normals."""
+    laid, normals = lay_on(b, spline(points, 6), horizontal=list(torso), down=list(coat), lift=lift)
+    laid[0], laid[-1] = Vector(points[0]), Vector(points[-1])
+    release(b, laid, free)
+    return laid, normals
 
 
 def neckband(b, mat, garment, loose=0.006):
-    """A smock's rolled neckline, hugging the neck where it leaves the garment: each point of the ring
-    sits on the garment's own surface (found by casting down onto it)."""
+    """A smock's rolled neckline, hugging the neck where it leaves the garment. Each point of the ring sits on
+    the garment's own surface (found by casting down onto it), at the band's measure round the neck. Where the
+    place the neck really comes out of the cloth is not under the band there (at the back of a round neck the
+    cloth falls away steeply, and the band would land low), the band moves to that place: the join of skin and
+    cloth is what a neckband is for, and left bare it shows as slivers of skin and cloth."""
     from mathutils.bvhtree import BVHTree
     import bpy
     nk = b.hr * b.p.get("neck_r", 0.5)
     c = b.collar + Vector((0, 0.008, 0.0))
-    surface = BVHTree.FromObject(garment, bpy.context.evaluated_depsgraph_get())
-    pts = []
-    for k in range(25):
-        a = k / 24 * math.tau
-        x, y = c.x + math.cos(a) * (nk * 1.1 + loose), c.y + math.sin(a) * (nk * 1.05 + loose)
-        hit = surface.ray_cast(Vector((x, y, c.z + 0.3)), Vector((0, 0, -1)), 0.6)[0]
-        pts.append(Vector((x, y, (hit.z if hit is not None else c.z) + 0.004)))
-    return [tube(f"{b.name}_Neckband", pts, [0.012] * 25, [0.009] * 25, mat, sides=8, cap=False)]
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    surface = BVHTree.FromObject(garment, depsgraph)
+    skin = bpy.data.objects.get(f"{b.name}_Skin")
+    neck = BVHTree.FromObject(skin, depsgraph) if skin is not None else None
+    count = 24
+    measured, joins, lean = [], [], []
+    for k in range(count):
+        a = k / count * math.tau
+        ux, uy = math.cos(a), math.sin(a)
+        rx, ry = nk * 1.1 + loose, nk * 1.05 + loose
+
+        def on_cloth(grow):
+            x_, y_ = c.x + ux * (rx + grow), c.y + uy * (ry + grow)
+            found = surface.ray_cast(Vector((x_, y_, c.z + 0.3)), Vector((0, 0, -1)), 0.6)[0]
+            return x_, y_, (found if found is not None and found.z > c.z - 0.06 else None)
+        grow = 0.0
+        x, y, hit = on_cloth(grow)
+        while hit is None and grow < 0.045:
+            grow += 0.002
+            x, y, hit = on_cloth(grow)
+        measured.append(Vector((x, y, (hit.z if hit is not None else c.z) + 0.004)))
+        # The join: going down the neck, the first height at which the cloth, not the skin, is outermost.
+        join, d = None, Vector((ux, uy, 0))
+        z = c.z + 0.05
+        while neck is not None and z > c.z - 0.05:
+            origin = Vector((c.x, c.y, z)) + d * 0.3
+            on_skin, on_cloth_ = neck.ray_cast(origin, -d, 0.3)[0], surface.ray_cast(origin, -d, 0.3)[0]
+            if on_cloth_ is not None and (on_skin is None or (origin - on_cloth_).length <= (origin - on_skin).length):
+                join = on_cloth_ + d * 0.006 - Vector((0, 0, 0.002))
+                break
+            z -= 0.002
+        joins.append(join)
+        lean.append((d + Vector((0, 0, 1))).normalized())
+    # How far the band must go to the join: nothing where the join is under it already, and nothing at the front,
+    # where the chin hides the join and the neckline keeps the look it had.
+    move = []
+    for k, (at, join) in enumerate(zip(measured, joins)):
+        away = (join - at).length if join is not None else 0.0
+        back = min(1.0, max(0.0, (math.sin(k / count * math.tau) + 0.3) / 0.5))
+        move.append(min(1.0, max(0.0, (away - 0.006) / 0.008)) * back * back * (3 - 2 * back))
+    for _ in range(2):  # ease it in round the ring, so the band keeps a smooth line
+        move = [max(move[k], (move[k - 1] + move[k] * 2 + move[(k + 1) % count]) * 0.25) for k in range(count)]
+    pts = [at.lerp(join, w) if join is not None else at for at, join, w in zip(measured, joins, move)]
+    for _ in range(2):
+        pts = [(pts[k - 1] + pts[k] * 2 + pts[(k + 1) % count]) * 0.25 if 0 < move[k] else pts[k] for k in range(count)]
+    print(f"NECKBAND {b.name}: moved to the join by (mm) " + " ".join(f"{(q - at).length * 1000:.0f}" for q, at in zip(pts, measured)))
+    return [tube(f"{b.name}_Neckband", pts, [0.012] * count, [0.009] * count, mat, normals=lean, sides=8, closed=True)]
 
 
 def collar(b, mat, height=0.08, wide=2.2, open_front=True, loose=0.02):
@@ -761,15 +821,17 @@ def satchel(b, strap_mat, bag_mat, buckle_mat, torso, below, clothes, angle=0.5)
     wc, dc = trunk_at(b, b.chest.z, 0.024)
     path = [front_end,
             Vector((b.waist.x - b.width("waist") * 0.4, b.waist.y - b.depth("waist") - 0.02, b.waist.z)),
-            Vector((b.chest.x + wc * 0.3, b.chest.y - dc - 0.02, b.chest.z + 0.01)),
-            sh.lerp(b.collar, 0.45) + Vector((0, -0.03, 0.05)),
-            sh.lerp(b.collar, 0.45) + Vector((0, 0.04, 0.05)),
+            Vector((b.chest.x + wc * 0.35, b.chest.y - dc - 0.02, b.chest.z + 0.01)),
+            sh + Vector((-0.01, -0.03, b.p["arm"] * 1.3)),
+            sh + Vector((-0.015, 0.04, b.p["arm"] * 1.2)),
             Vector((b.chest.x + wc * 0.2, b.chest.y + dc, b.chest.z - 0.02)),
             Vector((b.waist.x - b.width("waist") * 0.7, b.waist.y + b.depth("waist"), b.waist.z - 0.02)),
             back_end]
-    # It hangs from the shoulder: the points over the shoulder stay; each half is drawn taut down to its ring.
-    half_w, half_t = 0.0125, 0.0028
-    laid, nms = taut(b, spline(path, 2), torso + below, clothes, lift=0.0042, keep=(6, 7, 8), width=half_w)
+    # It rests out on the shoulder and lies soft on the coat itself, across the back below the collar, which
+    # falls over it where the two meet: the strap as Luis preferred it (October 5). Its ends are on the rings.
+    half_w, half_t = 0.014, 0.003
+    coat = [g for g in clothes if not g.name.endswith("_Collar")] or list(clothes)
+    laid, nms = worn(b, path, torso + below, coat, lift=0.004)
     # Where it crosses the buttons down the front, it rides over them.
     for k, q in enumerate(laid[1:-1], 1):
         ax, ay = axis_at(b, q.z)
@@ -787,7 +849,7 @@ def satchel(b, strap_mat, bag_mat, buckle_mat, torso, below, clothes, angle=0.5)
         face = width.cross(along).normalized()
         if face.dot(y_axis) < 0:
             face = -face
-        rows = [[end_ + along * s_ + face * 0.0042 - width * half_w, end_ + along * s_ + face * 0.0042 + width * half_w] for s_ in (-0.003, 0.012, 0.028)]
+        rows = [[end_ + along * s_ + face * 0.0036 - width * half_w, end_ + along * s_ + face * 0.0036 + width * half_w] for s_ in (-0.003, 0.012, 0.028)]
         out.append(shapes.sheet(f"{b.name}_StrapTab{k}", rows, strap_mat, thickness=0.0032, levels=0))
     # In the game the bag hangs from its rings: a bone there, and how it swings and where the hip stops it.
     pivot = (front_end + back_end) * 0.5

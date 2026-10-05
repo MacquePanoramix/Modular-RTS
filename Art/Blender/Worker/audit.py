@@ -43,6 +43,8 @@ LIES = [
     # A patch or pocket: its outer face is its own thickness from the cloth, and no more.
     (r"ApronPocket", r"Apron", 0.0110),
     (r"Patch0", r"Top", 0.0075),
+    # A neckband sits on its garment's neckline all the way round (its far side is its own thickness away).
+    (r"Neckband", r"Top", 0.024),
     (r"Patch1", r"Skirt", 0.009),  # a patch's outer face is 5 mm off the cloth it is sewn on
 ]
 # (part, others, tolerance): some point of the part within tolerance of the others.

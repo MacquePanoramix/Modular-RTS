@@ -2,11 +2,13 @@
 
 **Made:** October 2, 2026; polished October 3 and 4.
 **Status:**
+- **Luis's verdict on the method's first round** (October 5): "I really liked
+  all the changes you did, except the shoulder strap." The strap is put back
+  as it was ([below](#after-luiss-look-october-5)).
 - **The method's first round** (October 3 and 4): Luis's five notes on Small
   are answered, and all three were taken through the
   [model quality method](ModelQualityMethod.md)
-  ([below](#the-methods-first-round-october-3-and-4)). It waits for Luis's
-  play.
+  ([below](#the-methods-first-round-october-3-and-4)).
 - **Luis's verdict.** "Almost perfect… already adorable", after the second
   pass.
 - **Polished** on the points Luis raised
@@ -26,6 +28,38 @@ everything, units included, like detailed character creators
 ([correspondence](../Correspondence/2026-10-02_WORKER_CONCEPTS_FEEDBACK.md)).
 
 ![The three miners at dusk](../Images/Miners/Miners_Dusk.jpg)
+
+## After Luis's look (October 5)
+
+Luis: "I really liked all the changes you did, except the shoulder strap. I
+mean I kinda prefered the before for this one"
+([correspondence](../Correspondence/2026-10-05_THE_SHOULDER_STRAP.md)).
+
+![Small's strap: the build Luis preferred, after the first round, and now](../Images/Miners/Method2_Strap.jpg)
+
+- **What the round had done.** Luis's note was that the strap did not join
+  the bag. The round joined it, and also redrew the strap's whole course: it
+  was pulled taut, sat nearer the neck, and climbed over the collar's rim.
+- **Now.** The strap has the course and the breadth it had in the build Luis
+  preferred: out on the shoulder, lying soft on the coat across the back,
+  below the collar, which falls over it where they meet. Its ends still pass
+  through the rings on the bag.
+- **Checked:** the audit passes on the strap at rest and on the recorded
+  movement (it meets both rings; it does not sink into the coat or the
+  collar). The same four small checks as before remain
+  ([below](#where-the-round-ended)).
+- **What the method learned** is in its
+  [misses ledger](ModelQualityMethod.md#9-the-misses-ledger): change only
+  what a note or a failed check names.
+- **Also closed: Round's neckband.** The round had left a small flaw open at
+  the back of Round's neck. Looked at closely, it was slivers of skin and
+  cloth where the neck comes out of the smock: on a round back the cloth
+  falls away steeply, and the band had landed below the join it is there to
+  cover. The band now sits on that join at the back and the sides. The front,
+  under the chin, is as it was. A new check keeps a neckband on its
+  garment's neckline all the way round.
+
+  ![Round's neckband from the front, the side and behind: before, and now](../Images/Miners/Method2_Neckband.jpg)
 
 ## The method's first round (October 3 and 4)
 
@@ -50,7 +84,7 @@ first, then fix
 |---|---|---|
 | **The leg does not line up with the boot** | The boot's shaft was modelled standing straight up. The shin leans about 11° forward from the ankle, even at rest, so the shaft's top sat 2.6 cm behind the shin. It only showed from the side, at ground level | The shaft follows the shin. The trousers fall over it all round, and the audit checks that on every recorded frame |
 | **The laces' crosses float** | The shaft had been slimmed in the last polish, but the laces kept the old measurements. They stood 15 to 18 mm off the leather | Laces are laid on the boot's real surface. They run through eyelets and end in a bow |
-| **The strap does not join the bag** | Tabs had been added to the bag, but the strap only passed near them | The bag has two rings, held by leather loops. Each end of the strap passes through its ring and is folded back and stitched. The strap is pulled straight by the bag's weight, and lies on the coat over the shoulder |
+| **The strap does not join the bag** | Tabs had been added to the bag, but the strap only passed near them | The bag has two rings, held by leather loops. Each end of the strap passes through its ring and is folded back and stitched. (The round also pulled the strap taut over the shoulder; Luis preferred it as it was, and on October 5 it was [put back](#after-luiss-look-october-5)) |
 | **The lantern floats up close** | The grip was a guessed point: the bail hung 9 mm below the curled fingers | The lantern has a wooden handle. The hand is wrapped round it, finger by finger, with the thumb closing over, and the palm is cut to fit it. The wrist gives as the lantern swings |
 | **The bag should hang with gravity** | The bag was rigid on the hips, its flap a board 7 mm off it | The satchel hangs from its rings on a bone of its own. It rests against the hip, swings as Small walks, and the coat pushes it out as the leg under it moves. The flap is folded over the top, with a tongue and a buckle |
 
@@ -126,7 +160,8 @@ beyond Luis's five:
   - a patch on Long's coat lifts a few millimetres at one corner in the
     sharpest turn (five bones share the cloth there, and the engine keeps
     four for each point);
-  - a small tooth in the rim of Round's neckband, at the back;
+  - a small tooth in the rim of Round's neckband, at the back
+    ([closed on October 5](#after-luiss-look-october-5));
   - from the side, Long's pickaxe lies flat on the back and adds little to
     the silhouette.
 - **Not built yet:** the sweep of extreme poses (a deep knee bend, arms

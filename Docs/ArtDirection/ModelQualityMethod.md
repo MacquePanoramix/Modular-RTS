@@ -190,6 +190,11 @@ with every angle in the capture matrix (section 4).
    a cause.
 5. **Keep what Luis liked.** A fix that would change a movement or a shape
    Luis has praised is made beside it, not through it.
+6. **Change only what a note or a failed check names.** A model Luis has seen
+   and not faulted is liked as it is. Where a note touches one end of a thing
+   (a strap's join to its bag), the rest of that thing (its course over the
+   shoulder) stays. Read each before-and-after pair for anything different
+   that was not asked for, and take it back.
 
 ### Pass 7 — Record and learn
 
@@ -303,6 +308,7 @@ catches them now.
 | Oct 3, evening | The strap still not joined to the bag | Tabs were added, but the strap was never made to pass through them | The construction pass; "strap meets each ring" |
 | Oct 3, evening | The lantern floating up close | The grip was a guessed point, never measured; the closed fist left 2 to 4 mm for a handle; the hand was never seen closer than a metre | "Handle meets hand"; the hand wrapped round the handle and cut to fit it; the hand zone in macro |
 | Oct 3, evening | The bag not hanging with gravity | The bag was rigid on the pelvis; nobody asked what gravity does to it | Question 3; the bag hangs from its rings on a bone of its own and swings |
+| Oct 5 | The shoulder strap was better before the round | Luis's note was about the strap's join to the bag. The round also redrew its whole course: pulled taut, nearer the neck, over the collar's rim. That passed every check, and no step asked whether the look Luis already had was being changed without being asked | "Change only what a note or a failed check names" (pass 6); the before-and-after pairs are read for changes nobody asked for |
 
 ### What the method's own rounds taught it
 
@@ -314,6 +320,7 @@ catches them now.
 | First | A test read the bones after the miner had walked on, and measured the walk | A check reads one moment: the body reports what it last posed |
 | First | A change to Small's skirt would have calmed a movement Luis had praised | Keep what Luis liked (pass 6) |
 | First | The audit's reports were written among the game's assets | Tools write to `Art/Review`, never into `Assets` |
+| First, from Luis's look (October 5) | A strap that kinked was "corrected" into a taut one. Luis preferred the soft one | A rule of the method (no kinks, taut under load) is a help, not a taste. Where it would restyle something Luis has seen, it waits for Luis |
 
 ## 10. Research behind the method
 

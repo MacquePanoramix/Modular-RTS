@@ -1,4 +1,4 @@
-AUDIT Round: 1 failing of 202 checks (distances in mm)
+AUDIT Round: 1 failing of 203 checks (distances in mm)
   FAIL sinks     HammerHandle into Apron                    limit  3.5  rest    0.0   worst    3.9 at walk122   (6/118 frames)  stand 0.0 walk 3.9 turn 3.7 stop 3.3  [-0.104, -0.155, 0.593]
   ok   beneath   Trousers under Skirt                       limit  3.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  None
   ok   bones     Apron                                      limit  4.0  rest    4.0  None
@@ -44,7 +44,7 @@ AUDIT Round: 1 failing of 202 checks (distances in mm)
   ok   floating  Apron                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.0, -0.109, 1.147]
   ok   floating  ApronKnot                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.0, 0.059, 0.926]
   ok   floating  ApronPocket                                limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.008, -0.193, 0.702]
-  ok   floating  ApronStrap                                 limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.095, -0.06, 1.215]
+  ok   floating  ApronStrap                                 limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.102, -0.062, 1.202]
   ok   floating  ApronTie0                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.029, -0.053, 0.917]
   ok   floating  ApronTie1                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.038, -0.059, 0.911]
   ok   floating  ApronTieEnd0                               limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.004, 0.056, 0.904]
@@ -78,7 +78,7 @@ AUDIT Round: 1 failing of 202 checks (distances in mm)
   ok   floating  Eyelet1#9                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.129, -0.069, 0.163]
   ok   floating  Forearm0                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.371, 0.078, 0.791]
   ok   floating  Forearm1                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.369, 0.055, 0.791]
-  ok   floating  Hair#0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.011, 0.149, 1.334]
+  ok   floating  Hair#0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.006, 0.097, 1.525]
   ok   floating  Hair#1                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.163, 0.117, 1.463]
   ok   floating  Hair#2                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.082, -0.09, 1.49]
   ok   floating  Hair#3                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.109, 0.144, 1.388]
@@ -121,7 +121,7 @@ AUDIT Round: 1 failing of 202 checks (distances in mm)
   ok   floating  Lace1#7                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.132, -0.062, 0.116]
   ok   floating  Lace1#8                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.088, -0.071, 0.136]
   ok   floating  Lace1#9                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.131, -0.067, 0.138]
-  ok   floating  Neckband                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.095, 0.036, 1.293]
+  ok   floating  Neckband                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.101, 0.044, 1.261]
   ok   floating  Roll0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.297, 0.01, 0.96]
   ok   floating  Roll1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.31, 0.135, 0.961]
   ok   floating  Skin                                       limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.146, 0.035, 1.38]
@@ -152,8 +152,9 @@ AUDIT Round: 1 failing of 202 checks (distances in mm)
   ok   lies on   Eyelet1 on Boot1                           limit  7.0  rest    2.6   worst    5.6 at turn148   (0/118 frames)  [0.004, 0.12, 0.035]
   ok   lies on   Lace0 on Boot0                             limit  9.5  rest    6.7   worst    7.8 at walk30    (0/118 frames)  [-0.097, 0.051, 0.072]
   ok   lies on   Lace1 on Boot1                             limit  9.5  rest    6.7   worst    8.6 at turn148   (0/118 frames)  [-0.014, 0.106, 0.036]
+  ok   lies on   Neckband on Top                            limit 24.0  rest   11.6   worst   11.7 at walk24    (0/118 frames)  [0.02, 0.092, 1.102]
   ok   meets     Apron with Skirt|Top.Body                  limit  6.0  rest    0.8   worst    0.9 at walk72    (0/118 frames)  [0.079, -0.076, 0.885]
-  ok   meets     ApronStrap with Apron                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  [0.095, -0.06, 1.215]
+  ok   meets     ApronStrap with Apron                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  [0.102, -0.062, 1.202]
   ok   meets     ApronTie0 with Apron                       limit  2.0  rest    1.5   worst    1.5 at stop234   (0/118 frames)  [-0.032, -0.032, 0.8]
   ok   meets     ApronTie0 with ApronKnot                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  [-0.029, -0.053, 0.917]
   ok   meets     ApronTie1 with Apron                       limit  2.0  rest    1.1   worst    1.1 at stop234   (0/118 frames)  [0.034, -0.036, 0.8]

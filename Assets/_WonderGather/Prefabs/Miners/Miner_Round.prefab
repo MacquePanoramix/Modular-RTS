@@ -1156,7 +1156,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 32c91615e118cc54d9e27d92b0fe0781, type: 2}
     - target: {fileID: 4742473837712756890, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
       propertyPath: m_LocalReferencePoint.z
-      value: -0.00396128
+      value: -0.0040318817
       objectReference: {fileID: 0}
     - target: {fileID: 4742473837712756890, guid: b1f5d15ade3105b4d9d1db251753a443, type: 3}
       propertyPath: m_LODs.Array.data[0].screenRelativeHeight
