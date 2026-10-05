@@ -383,6 +383,48 @@ def side_of_surface(fr, part, co, reach=0.1):
     return float(np.dot(co - np.array(h[0]), np.array(h[1]))) * fr.flip.get(part.name, 1.0)
 
 
+def leg_lines(fr, bones):
+    """Each leg's line in a frame: hip, knee, ankle (the heads of its thigh, shin and foot bones), posed."""
+    out = {}
+    for s in ("L", "R"):
+        pts = []
+        for n in (f"Thigh.{s}", f"Shin.{s}", f"Foot.{s}"):
+            if n not in bones:
+                break
+            p = np.array(bones[n][0], dtype=np.float64)
+            if fr.mats is not None and n in fr.mats:
+                m = fr.mats[n]
+                p = m[:3, :3] @ p + m[:3, 3]
+            pts.append(p)
+        if len(pts) == 3:
+            out[s] = pts
+    return out or None
+
+
+def crosses(t, line, co):
+    """Whether the way from the hip down a leg's line to the point nearest co, and from there out to co, crosses
+    a surface."""
+    hip, knee, ankle = line
+    best = None
+    for k, (p, q) in enumerate(((hip, knee), (knee, ankle))):
+        d = q - p
+        u = float(np.clip(np.dot(co - p, d) / max(float(np.dot(d, d)), 1e-9), 0.0, 1.0))
+        on = p + d * u
+        gap = float(np.linalg.norm(co - on))
+        if best is None or gap < best[0]:
+            best = (gap, k, on)
+    _, k, on = best
+    path = [hip, on, co] if k == 0 else [hip, knee, on, co]
+    for p, q in zip(path, path[1:]):
+        d = q - p
+        length = float(np.linalg.norm(d))
+        if length < 1e-6:
+            continue
+        if t.ray_cast(Vector(p), Vector(d / length), length)[0] is not None:
+            return True
+    return False
+
+
 def front_of(fr, bones):
     """The way the being faces in a frame (it faces -y at rest), turned with the pelvis."""
     f = np.array((0.0, -1.0, 0.0))
@@ -481,8 +523,15 @@ def check_frame(report, fr, label, parts, contacts, covered, bones, floating):
                 if b.name not in fr.open:
                     fr.open[b.name] = tb.ray_cast(Vector(middle), Vector(front), 1.0)[0] is None
                 opened = fr.open[b.name]
+                legs = leg_lines(fr, bones) if a.name == "Trousers" else None
+                side = None
+                if legs is not None:
+                    names = list(bones.keys())
+                    left = a.weights[:, [names.index(n) for n in ("Thigh.L", "Shin.L", "Foot.L") if n in names]].sum(axis=1)
+                    right = a.weights[:, [names.index(n) for n in ("Thigh.R", "Shin.R", "Foot.R") if n in names]].sum(axis=1)
+                    side = np.where(left >= right, "L", "R")
                 worst, where = 0.0, None
-                for co in fr.verts[a.name]:
+                for i, co in enumerate(fr.verts[a.name]):
                     level = float(np.dot(co - h, up))
                     if level < low or level > high:
                         continue
@@ -497,8 +546,13 @@ def check_frame(report, fr, label, parts, contacts, covered, bones, floating):
                     if hit[0] is None:
                         continue
                     out = dist - hit[3]
-                    if out > worst:
-                        worst, where = out, co
+                    if out <= worst:
+                        continue
+                    # A leg that comes out under a lifted hem is outside the skirt, and not through it: it is
+                    # through the cloth only if the way to it down its own leg crosses the cloth.
+                    if legs is not None and not crosses(tb, legs[side[i]], co):
+                        continue
+                    worst, where = out, co
                 report.add("beneath", f"{a.name} under {b.name}", worst, tol, where, label)
     for c in contacts:
         a = names.get(c["part"])

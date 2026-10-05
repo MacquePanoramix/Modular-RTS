@@ -6,7 +6,9 @@ This folder belongs to the
 | Item | What it is |
 |---|---|
 | `sheets.py` | Turns the frames of `MinerCloseCapture` into labelled contact sheets: one per zone, one per walk view across the eight phases, and so on. `python Art/Review/sheets.py <frames> <sheets>` (needs Pillow) |
+| `sweep_sheets.py` | Turns the pictures of the sweep of extreme poses into contact sheets, six poses a sheet. `python Art/Review/sweep_sheets.py <sweep folder> <sheets>` (needs Pillow) |
 | `Miners/audit_<Name>.txt` | The automatic audit's last report for each miner, on the game's recorded movement: every check, its limit, its value at rest, its worst value, and where |
+| `Miners/sweep_<Name>.txt` | The last report of the sweep of extreme poses (27 poses beyond the game's own movement): the same lines, with a value for each kind of pose in place of the phases. `pinched` is the percentage a sleeve or a trouser leg thins at a joint; `stretched` is how many times its length a cloth's longest edge is pulled |
 
 **How to read a report line:**
 
@@ -28,4 +30,6 @@ repository: they are made again by the commands in the method's
 [tools table](../../Docs/ArtDirection/ModelQualityMethod.md#5-the-tools).
 
 Remaining failures are explained in the round's log
-([TheMiners.md](../../Docs/ArtDirection/TheMiners.md#where-the-round-ended)).
+([TheMiners.md](../../Docs/ArtDirection/TheMiners.md#where-the-round-ended)),
+and the sweep's in
+[its own section](../../Docs/ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5).

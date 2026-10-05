@@ -2,6 +2,9 @@
 
 **Made:** October 2, 2026; polished October 3 and 4.
 **Status:**
+- **The sweep of extreme poses** (October 5) is built. It found nothing in
+  the poses the game uses; what it found beyond them is logged
+  ([below](#the-sweep-of-extreme-poses-october-5)).
 - **Luis's verdict on the method's first round** (October 5): "I really liked
   all the changes you did, except the shoulder strap." The strap is put back
   as it was ([below](#after-luiss-look-october-5)).
@@ -60,6 +63,85 @@ mean I kinda prefered the before for this one"
   garment's neckline all the way round.
 
   ![Round's neckband from the front, the side and behind: before, and now](../Images/Miners/Method2_Neckband.jpg)
+
+## The sweep of extreme poses (October 5)
+
+The method's pass 4 had one part not built: poses beyond the game's own
+movement, as riggers use to test a rig's whole range. It is built now, as the
+first step of [the miners at work](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices).
+
+**What it does.** It takes each miner through 27 poses, one joint at a time
+and in a few combinations:
+- **arms:** forward 45° and 90°, overhead, back, out to the side; elbows to
+  130°; wrists up and down; a backswing and a strike;
+- **legs:** a knee lifted to 45° and 90°, a leg back, knees bent to 90°, a
+  deep bend, toes bent;
+- **trunk and head:** a bow of 40°, a lean back, a side bend, a twist; the
+  head down, up, turned and tilted.
+
+Each pose is skinned as the game skins it. The coats' flaps go with the
+thighs and what a hand holds follows the hand, as in the game. Every pose
+gets the audit's checks, two new ones, and three pictures:
+- **pinched:** how much thinner a sleeve or a trouser leg gets at a bent
+  joint, against the rest pose (limit: 45%);
+- **stretched:** how long the longest edge of a cloth is pulled, against the
+  rest pose (limit: 1.9 times).
+
+![Small: elbows, wrists, a backswing and a strike](../Images/Miners/Method2_Sweep_Small_Arms.jpg)
+
+![Long: the shoulders, arms forward, overhead, back and out](../Images/Miners/Method2_Sweep_Long_Shoulders.jpg)
+
+![Round: the legs, to a deep bend](../Images/Miners/Method2_Sweep_Round_Legs.jpg)
+
+**What the game reaches today,** measured on its recorded movement: the
+shoulders turn up to 35° from the rest pose, the elbows 28°, a thigh 30° to
+42° walking and up to 52° in the sharpest turn, a knee about 50°, the spine
+5°. Today's swing keeps both hands within 32 cm of a point in front of the
+hips, so it does not raise the arms to the shoulder.
+
+**What it found.** Nothing fails in those ranges. Everything that fails is in
+a pose no movement reaches yet. Nothing was changed on the models: each
+finding is logged with the movement that would need it fixed.
+
+| Where | What the sweep found | Small | Long | Round | Does a movement reach it? |
+|---|---|---|---|---|---|
+| **Shoulders,** arms forward 90° | The sleeve thins at the joint | 25% | 22% | 24% | Not yet; today's swing stays below it. Within the limit |
+| **Shoulders,** a backswing with the arms at 120° | The same, more | 43% | 37% | 45% | Not yet. At the limit |
+| **Shoulders,** arms overhead | The sleeve collapses at the joint; the cloth is pulled to 2.5 to 3.1 times its length | 64% | 59% | 66% | Not yet |
+| **Elbows** at 130° | The sleeve thins | 44% | 45% | 40% | Not yet (today's swing bends them less). At the limit |
+| **Knees,** to a deep bend | The trouser leg thins | 39% | 37% | 39% | Not yet. Within the limit |
+| **Wrists, neck, waist twist, toes** | — | pass | pass | pass | — |
+| **Coats in a deep bend, or a knee lifted to 90°** | The flaps are turned by the thighs, so the cloth is pulled long (Small 3.7 times, Long 9.1 times) and the knees come out at the front opening | fails | fails | fails | Not yet. The sharpest turn lifts a thigh to 52° |
+| **Long's coat, knees bent 90° standing** | The shins fold back through the long coat (66 mm) | — | fails | — | Not yet |
+| **A bow of 40°** | Long: the pickaxe's loop leaves its strap by 21 mm. Round: the apron's ties lift 2 mm past their limit | pass | fails | fails | Not yet. The walk bends the spine 5° |
+| **Round, a deep bend** | The hammer goes up to 10 mm into the smock and trousers; the apron's pocket lifts 8 mm past its limit | — | — | fails | Not yet |
+| **Small,** arms overhead | The strap goes 4 mm into the coat at the shoulder | fails | — | — | Not yet |
+| **Small,** a side bend of 20° | The free hand goes 4.6 mm into the coat | fails | — | — | Not as posed: in the game the arm is carried clear of the coat |
+
+**What each will need, when a movement asks for it:**
+- **Arms above the shoulder** (an overhead swing, S3's effort-driven swing, a
+  wave): a helper bone at each shoulder that takes half of the arm's turn, so
+  the sleeve is shared between three bones, not two. It would bring the
+  backswing to about 13% and overhead to about 29%. It also changes the
+  shoulder a little in every pose, so it is done with before-and-after
+  pictures of the walk, not silently.
+- **A deep bend or a kneel in a coat:** the coat's flaps need to fold at the
+  knee as well as turn at the hip (a second bone in each flap), and Long's
+  back flaps must be pushed by the shins.
+- **A deep bow:** the pickaxe's loop and the apron's ties follow more than
+  one bone of the trunk.
+
+**The sweep's own first mistakes** (read before any fixing, as pass 3 asks):
+- the trunk and the head bent backward where the poses said forward (a limb
+  that hangs and a trunk that stands turn opposite ways about the same axis);
+- what a hand holds stayed behind when the arm was raised;
+- a leg under a lifted hem counted as "through the cloth". The audit's check
+  was corrected for this: a point counts only if the way to it from the hip,
+  down the leg, crosses the cloth. With it, the knee in Small's sharpest turn
+  reads 11 mm, not 29 mm ([below](#where-the-round-ended)).
+
+**Reports:** `Art/Review/Miners/sweep_<Name>.txt`. **To run it:** see the
+method's [tools table](ModelQualityMethod.md#5-the-tools).
 
 ## The method's first round (October 3 and 4)
 
@@ -144,7 +226,7 @@ beyond Luis's five:
 
   | Model | Where | What remains | Why it is left |
   |---|---|---|---|
-  | Small | The sharpest turn, one frame | The knee shows 29 mm past the coat's lifted hem | It comes out under the hem, not through the cloth. The step in that turn is a high one; that is the walk's matter, and the walk is not changed without Luis's word |
+  | Small | The sharpest turn, one frame | The knee shows 29 mm past the coat's lifted hem (11 mm since October 5, when the check stopped counting a leg under a lifted hem as through the cloth) | It comes out under the hem, not through the cloth. The step in that turn is a high one; that is the walk's matter, and the walk is not changed without Luis's word |
   | Small | The same step, one frame | The trouser's cuff goes 9 mm into the boot's shaft | The same high step bends the knee further than any stride does |
   | Long | The sharpest turn, two frames | The free hand brushes 7 mm into the coat's front | The knee lifts the coat into a hand that is swinging forward. Cloth would give |
   | Round | Walking, 6 frames of 118 | The hammer's handle presses 3.9 mm into the apron (the limit is 3.5) | The leg lifts the apron against the handle. Leather would give |
@@ -164,8 +246,9 @@ beyond Luis's five:
     ([closed on October 5](#after-luiss-look-october-5));
   - from the side, Long's pickaxe lies flat on the back and adds little to
     the silhouette.
-- **Not built yet:** the sweep of extreme poses (a deep knee bend, arms
-  raised). It joins the method when the miners mine and haul.
+- **The sweep of extreme poses** (a deep knee bend, arms raised) was not
+  built in this round. It was built on October 5
+  ([above](#the-sweep-of-extreme-poses-october-5)).
 
 The reports are kept in `Art/Review/Miners`. See
 [Validation.md](../Validation.md) for the full evidence.
@@ -449,12 +532,11 @@ look at in the Scene view. They are never saved into the scene.
 
 ## Next
 
-- **Luis plays the build:** the five notes on Small, and Long and Round up
-  close ([MinersPlaytest.md](../Playtests/MinersPlaytest.md#after-the-methods-first-round-october-4)).
-- **The method's next round** starts from Luis's notes. Whatever Luis finds
-  that it missed goes into its
+- **The miners at work** (the plan is in
+  [NextMilestonePlan.md](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)):
+  hands that close on what they hold, a pickaxe made for each body with its
+  grips read from the model, a tool solve that reads the body, and then the
+  miners at the rock. The last needs Luis's choices M1 to M4.
+- **Faces in motion.** A blink or a change of expression.
+- **Whatever Luis finds** that the method missed goes into its
   [misses ledger](ModelQualityMethod.md#9-the-misses-ledger).
-- **Mining with the miners.** Size the pickaxe and its grips to each body, and
-  move the equipment scene onto the miners.
-- **Hands and faces in motion.** Hands that close on what they hold, and a
-  blink or a change of expression.

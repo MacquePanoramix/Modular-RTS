@@ -140,9 +140,25 @@ Problems like these show here before anyone looks:
 - a handle turning in the closed fingers;
 - one boot passing through the other in a turn.
 
-**Not built yet:** extreme poses beyond the game's own movement (a deep knee
-bend, arms raised), as riggers use to test a rig's whole range. They join the
-sweep when the miners mine and haul.
+3. **The sweep of extreme poses** (`sweep.py`, built on October 5). The
+   game's own movement does not bend every joint to its end, and new work
+   (mining, hauling) will ask more. As riggers do, the sweep takes each joint
+   through its range, one at a time and in a few combinations: 27 poses, from
+   arms overhead to a deep bend. Each pose is skinned as the game skins it and
+   gets the pass 3 checks, plus two of its own:
+   - **pinched:** how much thinner a sleeve or a trouser leg gets at a bent
+     joint, against the rest pose;
+   - **stretched:** how long a cloth's longest edge is pulled, against the
+     rest pose.
+
+   It also renders three pictures of every pose, which are read as pass 5
+   reads the capture.
+
+**What a sweep finding means.** A failure in a pose that a movement of the
+game reaches is fixed. A failure in a pose nothing reaches yet is logged with
+the movement that would need it, and fixed when that movement is built: a rig
+is not changed for a pose nobody will see, least of all where the change
+would also touch a look Luis already has (pass 6).
 
 ### Pass 5 — The exhaustive look (in the engine)
 
@@ -242,11 +258,14 @@ editor, and `<project>` the Unity project.
 | **Set up in the game** | `<Unity> -batchmode -projectPath <project> -executeMethod WonderGather.Editor.MinerSetup.CreateAll -quit` | The miners' prefabs and the scene, from the new models |
 | **Capture** | `<Unity> … -testFilter WonderGather.Tests.MinerCloseCapture -captureOut <frames> [-captureMiner Small] [-captureSets zones,walk]` | PPM frames |
 | **Sheets** | `python Art/Review/sheets.py <frames> <sheets>` | JPG frames and contact sheets |
+| **Sweep of extreme poses** | `blender -b --factory-startup --python Art/Blender/Worker/workers.py -- --out <folder> --sweep [--only Small]` | `sweep_<Name>.txt`, `sweep_<Name>_poses.txt` and three pictures of each pose, in `<folder>` |
+| **Sweep sheets** | `python Art/Review/sweep_sheets.py <folder> <sheets>` | Contact sheets of the sweep, six poses a sheet |
 
 A recording belongs to the build it was recorded from. After the models or
 the walk change, record again before auditing in motion.
 
-The last round's reports are kept in `Art/Review/Miners` (`audit_<Name>.txt`).
+The last round's reports are kept in `Art/Review/Miners` (`audit_<Name>.txt`
+for the recorded movement, `sweep_<Name>.txt` for the extreme poses).
 
 ## 6. What to look for (the defect catalogue)
 
@@ -321,6 +340,8 @@ catches them now.
 | First | A change to Small's skirt would have calmed a movement Luis had praised | Keep what Luis liked (pass 6) |
 | First | The audit's reports were written among the game's assets | Tools write to `Art/Review`, never into `Assets` |
 | First, from Luis's look (October 5) | A strap that kinked was "corrected" into a taut one. Luis preferred the soft one | A rule of the method (no kinks, taut under load) is a help, not a taste. Where it would restyle something Luis has seen, it waits for Luis |
+| The sweep (October 5) | The sweep's first run bent the trunk backward for "forward", left held things behind a raised arm, and counted a leg under a lifted hem as through the cloth | A new check's first report is read on its pictures before any model is touched. The first thing a new tool finds is usually its own mistakes |
+| The sweep | Its findings were all in poses no movement reaches | A finding is weighed by whether a movement reaches the pose. It is logged with the movement that would need it, not fixed ahead of it |
 
 ## 10. Research behind the method
 

@@ -29,8 +29,13 @@ splits the work into checkpoints Luis playtests one at a time:
    the hand-painted look, judged on Luis's favourite frame: fireflies (on),
    the hearth's flicker and the window glow. Built on October 2. The
    hand-painted pass itself was merged into `main` (7f7fcc0).
-6. **S1d, the worker model**, next, in the hand-painted language, starting
-   with concept frames shown early.
+6. **S1d, the worker model**, in the hand-painted language. Three miners,
+   rigged and walking, taken through the model quality method; Luis liked the
+   round on October 5 ([TheMiners.md](ArtDirection/TheMiners.md)).
+7. **S1d, last part: the miners at work.** Planned on October 5
+   ([below](#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices));
+   its first step, the sweep of extreme poses, is built. Steps 2 to 4 do not
+   depend on Luis's choices; step 5 needs M1 to M4.
 
 The previous S1 plan (style studies, then the worker model) is archived in
 [Plans/S1_WorkerModelAndStyleStudies.md](Plans/S1_WorkerModelAndStyleStudies.md).
@@ -296,6 +301,62 @@ This step follows Luis's S1c choice, so the model is made for the chosen look:
   - Navigation and camera framing follow the body.
 - **A better pickaxe**, whose grip and head points match its tool data.
 - **Tests** for gait, support and grip on the model rig.
+
+## S1d, last part — the miners at work (plan, waiting for Luis's choices)
+
+**Written:** October 5, 2026, after Luis said to go on with the plan
+([correspondence](Correspondence/2026-10-05_THE_SHOULDER_STRAP.md)).
+
+**Why it needs a word from Luis first.** Every stage begins with a plan and
+Luis's approval ([ShowcaseRoadmap.md](ShowcaseRoadmap.md#working-agreement-for-this-roadmap)).
+The step also changes what the miners carry and do, which Luis has not yet
+decided (M1 to M4 below). What does not depend on those choices is done
+first.
+
+**The goal.** The miners do what the 2.2 m test body does today: walk to the
+rock and strike it with a pickaxe. The pickaxe is made for their size, and
+their hands hold what they hold. This closes S1d's own list: "a better
+pickaxe whose grip and head points match its tool data" and "tests for gait,
+support and grip on the model rig".
+
+**Not in this step:** the effort-driven swing (S3), strength and hauling
+(S4), and the creator (S2). The swing keeps today's shape.
+
+### Steps
+
+| Step | What | Depends on Luis's choices? |
+|---|---|---|
+| 1 | **The sweep of extreme poses** (the method's pass 4): arms raised, elbows and knees bent deep, the waist bowed and twisted. Fix what it finds at the joints work will use | No. **Built on October 5** ([TheMiners.md](ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5)). Nothing fails in the poses today's swing uses, so nothing was changed. What fails beyond them is logged for the movements that will need it (an overhead swing in S3; a kneel) |
+| 2 | **Hands that close.** A hand closes round a handle of a given thickness, and opens again. The audit checks it: fingers meet the handle and do not enter it | No |
+| 3 | **A pickaxe made for each body.** One modelled pickaxe (the one Long carries), sized to the body. Its grips and its striking head are read from the model, so the tool's data and its shape cannot drift apart | No |
+| 4 | **The tool's solve reads the body.** Today it assumes the test body's arms and height. It will take reach and hand places from each body, and work with one hand or two | No |
+| 5 | **At the rock.** The miners walk to a mineral boulder and strike it, with today's rule that only a real contact of the pick's head counts | M1, M2, M3, M4 |
+| 6 | **Evidence.** Tests on each miner; the mining recorded for the audit in motion; work views added to the capture; a build; a playtest guide | — |
+
+### Choices for Luis
+
+Each has a recommendation, marked as a default. Nothing here is Locked.
+
+| ID | Question | Options | Recommended default |
+|---|---|---|---|
+| **M1** | Where do the miners mine? | (a) A mineral boulder a little way down the path in the Ordinary Place, out of Luis's favourite frame. (b) A small new place built from the same land, sky and light. (c) The grey equipment test map | (a). It keeps them in the place Luis likes, and leaves the house alone (V3 stays open) |
+| **M2** | Where is a miner's pickaxe when it is not in use? | (a) On the back in a sling, as Long's is. Small and Round would each gain a strap and a pickaxe on the back. (b) Carried in the right hand. (c) It waits at the rock, leaning on it, and the miner takes it up there | (c) for Small and Round, so their looks do not change without Luis's word; Long uses the one already on the back |
+| **M3** | What does a miner do with the lantern or the mug while working? | (a) Keeps holding it and swings a light pick with one hand. (b) Sets it down beside the rock, and picks it up after. Small's lantern would light the work. (c) Hangs it on the belt or the bag | (b). It is the most physical, and needs a small "put down, pick up" movement |
+| **M4** | What happens to what is mined, until hauling exists (S4)? | (a) Pieces fall and lie in a heap by the rock; nothing is carried yet. (b) Today's stand-in: a bundle carried in both hands to a delivery place | (a). It matches the roadmap's O3 (loose pieces), and does not invent a carry that S4 will replace |
+
+### Contracts to keep
+
+- **The procedural body.** Planted feet, arrival without shuffling, grips at
+  actual grips, navigation owning the root, no active ragdoll.
+- **The contact gate.** Only the tool's solved head touching the mineable
+  surface yields material; reach is judged before contact, never stretched
+  to fit.
+- **The test body and its maps** keep working as they do. The body-aware
+  solve gives the same result for the test body as today's constants.
+- **Change only what is asked.** The miners' looks change only where a
+  choice above says so.
+- **The method.** Every new pose and object goes through the model quality
+  method before Luis sees it.
 
 ## Contracts to keep
 

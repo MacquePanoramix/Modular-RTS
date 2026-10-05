@@ -27,8 +27,16 @@
       ([TheMiners.md](ArtDirection/TheMiners.md#after-luiss-look-october-5)).
     - **The method learned:** change only what a note or a failed check
       names.
-    - **Next, on Luis's word to go on with the plan:** see
-      [NextMilestonePlan.md](NextMilestonePlan.md).
+    - **Next, on Luis's word to go on with the plan: the miners at work**
+      ([NextMilestonePlan.md](NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
+      - **Step 1, the sweep of extreme poses, is built.** Nothing fails in
+        the poses the game uses. What fails beyond them (arms overhead, a
+        deep bend in a coat, a deep bow) is logged with the movement that
+        would need it
+        ([TheMiners.md](ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5)).
+      - **Steps 2 to 4 do not need Luis's choices:** hands that close, a
+        pickaxe made for each body, a tool solve that reads the body.
+      - **Step 5, the miners at the rock, needs Luis's choices M1 to M4.**
   - **A method for model quality, and its first round (October 3 and 4).**
     Luis asked for a strategy, to refer to from now on, for making every
     model as polished as possible. It is
@@ -54,8 +62,8 @@
       knees through the coats mid-stride, boots through each other in sharp
       turns, and a lantern that leaned even standing still.
     - **Left open, each with its reason:** four small audit checks (three of
-      them single moments of the sharpest turn), and the sweep of extreme
-      poses, not built yet.
+      them single moments of the sharpest turn). The sweep of extreme poses
+      was built on October 5.
   - **Polished after Luis's play (October 3, evening).**
     - **Small:** the lantern is carried in the hand and swings; the satchel
       hangs from its strap at the hip; legs line up with the boots; the neck

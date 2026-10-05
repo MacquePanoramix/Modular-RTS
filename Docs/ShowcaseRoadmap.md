@@ -110,7 +110,7 @@ body finishes its stride and stands still. See
 ### S1 — The Ordinary Place, two cameras and the worker model (in progress)
 
 Revised on October 1. Luis set aside the three Blender style studies and
-supplied the Visual Soul handoff ([VisualSoul.md](ArtDirection/VisualSoul.md)). He also
+supplied the Visual Soul handoff ([VisualSoul.md](ArtDirection/VisualSoul.md)). Luis also
 asked for two camera systems. The detailed plan is in
 [NextMilestonePlan.md](NextMilestonePlan.md). It has four checkpoints:
 
@@ -239,7 +239,7 @@ pickaxes) still hold.
 - Work happens on a branch (currently `claude/worker-showcase`). A stage is
   merged into `main` after Luis playtests it (chosen October 1).
 - Implementation and validation happen in an isolated copy while Luis's Editor
-  stays open. His uncommitted work is never included or discarded.
+  stays open. Luis's uncommitted work is never included or discarded.
 - Every stage ends with:
   - tests;
   - a rendered review;

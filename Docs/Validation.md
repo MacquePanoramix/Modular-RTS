@@ -1569,3 +1569,48 @@ and said to go on with the plan
   - **Moving, by eye.** The strap and the neckband were judged on frames.
   - **Luis's eye.** The strap is put back from the pictures of the build Luis
     preferred; Luis has not yet seen it in the game.
+
+## S1d, the miners at work — step 1: the sweep of extreme poses (October 5)
+
+The first step of the plan Luis said to go on with
+([NextMilestonePlan.md](NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
+Findings are in
+[TheMiners.md](ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5).
+
+- **What was run.** The sweep (`workers.py --sweep`) on the three miners as
+  committed in e7a2a67: 27 poses each, 81 pictures a miner, read on 15
+  contact sheets. No model and no game code changed.
+- **The sweep's first run was wrong in three ways,** found on its own
+  pictures and reports before anything else was read: the trunk and head
+  bent backward for "forward"; held things stayed behind a raised arm; a leg
+  under a lifted hem counted as through the cloth. All three were corrected
+  and the sweep run again.
+- **Results of the second run** (failing checks of all):
+
+  | Miner | Failing | Of |
+  |---|---|---|
+  | Small | 7 | 206 |
+  | Long | 9 | 86 |
+  | Round | 14 | 73 |
+
+  Every failure is in a pose no movement of the game reaches yet: arms
+  overhead, a knee lifted to 90°, knees bent 90°, a deep bend, a bow of 40°,
+  and one side bend with the arm not carried as the game carries it. In the
+  ranges the game reaches (measured on its recorded movement: shoulders 35°
+  from rest, elbows 28°, a thigh 52°, a knee about 50°, the spine 5°) nothing
+  fails. Today's swing keeps both hands within 32 cm of a point in front of
+  the hips (the grips are 32 cm apart and the tool turns about the lower
+  one), so it does not raise the arms to the shoulder. Nothing was changed on
+  the models.
+- **The audit's corrected check, on the recorded movement** (the recording of
+  e7a2a67): the same four items remain. One reads differently: the knee in
+  Small's sharpest turn is 11.3 mm past the hem, not 29.2 mm, now that a leg
+  under a lifted hem is not counted as through the cloth. Reports:
+  `Art/Review/Miners/audit_<Name>.txt` and `sweep_<Name>.txt`.
+- **Not tested:**
+  - **No Unity run.** Nothing in the game changed; the miner tests and the
+    suite were last run on the strap's state (above).
+  - **The sweep's poses are not the game's.** They are single joints turned
+    in the rest pose's axes, not solved movement. The mining itself will be
+    recorded and audited when it is built.
+  - **Luis's eye.**

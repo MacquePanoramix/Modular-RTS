@@ -1060,3 +1060,31 @@ the round's log is in
   - `MinerCloseCapture` (`[Explicit]`): the capture matrix. `CaptureTools`
     holds what the two share.
   - `Art/Review/sheets.py`: contact sheets from the frames.
+
+## The sweep of extreme poses — October 5
+
+The first step of "the miners at work"
+([NextMilestonePlan.md](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices);
+findings in [TheMiners.md](../ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5)).
+No game code changed.
+
+- **`Art/Blender/Worker/sweep.py`** (new).
+  - **Poses:** a table of 27 (`poses()`), each a set of turns on bones, in
+    the rest pose's own axes. A limb that hangs goes forward by a negative
+    turn about x; the trunk and the head bow forward by a positive one.
+  - **The solve** (`solve`): forward kinematics down the rig, then linear
+    blend skinning on the exported weights, as the game does. Skirt flaps
+    follow the thighs with the measured slack (as `MinerBody.Drape`). A thing
+    in a hand follows the hand and hangs plumb within the wrist's give (32°,
+    as `MinerBody`); a thing hung on the body stays plumb.
+  - **Checks:** the audit's own on every pose, plus `pinched` (a joint's
+    cover against the rest pose, for the points both bones share) and
+    `stretched` (a cloth's longest edge against the rest pose).
+  - **Output:** `sweep_<Name>.txt`, `sweep_<Name>_poses.txt`, and three
+    pictures of each pose (two sides and the joint tested).
+- **`workers.py`:** `--sweep` runs it alone, without baking or exporting.
+- **`audit.py`:** the `beneath` check for legs under a skirt counts a point
+  only if the way to it from the hip, down the leg's line, crosses the cloth
+  (`leg_lines`, `crosses`). A leg showing under a lifted hem is not through
+  the cloth.
+- **`Art/Review/sweep_sheets.py`** (new): contact sheets of the sweep.
