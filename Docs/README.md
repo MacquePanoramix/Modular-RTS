@@ -24,6 +24,7 @@ and routes to everything else.
 | [Design/](Design/) | Design notes that feed GAME_VISION: the early design brief and the one-worker showcase vision |
 | [Plans/](Plans/) | Completed or superseded milestone plans, archived when replaced |
 | [Playtests/](Playtests/) | One guide per playable milestone: how to run it, what to judge, and its evidence and limits. The latest: [MinersPlaytest.md](Playtests/MinersPlaytest.md) (choose a miner, walk the meadow) |
+| [Reviews/](Reviews/) | Reviews of the whole project against Luis's direction, made when Luis asks. The latest: [2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md) (what Luis has asked for and where each thing stands; how a pickaxe is really swung; how a body can answer to real forces; a proposal) |
 | [Technical/](Technical/) | Architecture and history for engineers and agents ([UnityProjectContext.md](Technical/UnityProjectContext.md)) and the equipment/mining contracts |
 | [Images/](Images/) | Screenshots and renders, in one folder per milestone, named like its playtest guide |
 
@@ -33,6 +34,7 @@ When something happens, it is written down in these places:
 
 | What happened | Where it is recorded |
 |---|---|
+| **Luis asks whether the project is on course** | A review in `Reviews/<date>_<Topic>.md`, with a proposal; the plan it leads to goes in NextMilestonePlan |
 | **Luis sends a message** | Verbatim in `Correspondence/<date>_<TOPIC>.md`, with how it was recorded. A summary goes in CURRENT_STATE ("Latest Game Director direction"), and a row per decision in GAME_VISION's decision log |
 | **A look or a character changes** | Its art direction page (for example [TheMiners.md](ArtDirection/TheMiners.md)), with before-and-after images in `Images/<Milestone>/` |
 | **Something becomes playable** | Its playtest guide (how to run it, what to judge, its limits) |

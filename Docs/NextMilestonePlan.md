@@ -36,7 +36,15 @@ splits the work into checkpoints Luis playtests one at a time:
    ([below](#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices));
    steps 1 to 4 are built (the sweep of extreme poses, hands that close, a
    pickaxe for each body, a tool solve that reads the body), and the miners
-   can be watched mining with `K`. Step 5 needs M1 to M4.
+   can be watched mining with `K`. Step 5 was waiting for M1 to M4; Luis's
+   message of October 6 overtakes it (below).
+8. **S3, weight and strength at the rock: proposed on October 6, waiting
+   for Luis** ([below](#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)).
+   Luis asked for a review of the whole project and said what the prototype
+   is for: real weight, real strength, any rock, and the creator
+   ([message](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md);
+   [review](Reviews/2026-10-06_SamePageReview.md)). When Luis approves it,
+   this S1 plan is archived under [Plans/](Plans/) and S3 becomes the plan.
 
 The previous S1 plan (style studies, then the worker model) is archived in
 [Plans/S1_WorkerModelAndStyleStudies.md](Plans/S1_WorkerModelAndStyleStudies.md).
@@ -330,6 +338,23 @@ Bodies with a shape make the same swing over the right shoulder. The first
 body's swing, its timing and the rule of the strike are unchanged, and the
 swing's effort and character remain S3's.
 
+**Overtaken on October 6.** Luis answered the choices in a wider message
+([correspondence](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md)):
+
+- **M1 is answered:** any of the boulders already in the Ordinary Place, by
+  a click. No special rock.
+- **M2, M3 and M4 are overtaken.** Where a pickaxe is kept and what is done
+  with what is mined become choices of equipment (none, a pickaxe, a strap
+  for the back, a backpack, a dragged sack, a cart). Luis's first idea was
+  that the hands hold nothing ("I'm not sure yet").
+- **Step 5 is not built as written.** It would have walked the miners to a
+  rock to play the stored swing there. Luis wants the swing to have real
+  weight and real strength first. Its useful part, mining any boulder,
+  moves into the S3 proposal below.
+- **What steps 1 to 4 built is kept** as the ground for S3: the bodies'
+  measures, the hands that close, the pickaxes made for each body, the rule
+  of the strike ([review](Reviews/2026-10-06_SamePageReview.md#4-what-carries-over)).
+
 ### Steps
 
 | Step | What | Depends on Luis's choices? |
@@ -381,6 +406,117 @@ would be shown beside the present ones before anything is replaced.
   choice above says so.
 - **The method.** Every new pose and object goes through the model quality
   method before Luis sees it.
+
+## S3 — Weight and strength at the rock (proposed, waiting for Luis)
+
+**Written:** October 6, 2026, from Luis's message of that day
+([correspondence](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md))
+and the review it asked for
+([Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md)).
+**Status:** proposed. Nothing of it is built. It begins when Luis approves
+it and answers A, B and C below.
+
+**Which of the prototype's questions it answers.** The first of them: does
+a body with real strength, moving a tool with real weight against a real
+rock, look true and not goofy? Everything else in the prototype (carrying,
+equipment, the creator) is built on the answer.
+
+**The proposed order of stages** (the roadmap's names are kept):
+
+| Order | Stage | What it gives |
+|---|---|---|
+| **Next** | **S3, weight and strength at the rock** (this plan) | A miner really lifting a pickaxe that has weight, with a strength that can be changed while watching; then mining any boulder by a click |
+| Then | **S4, carrying and equipment** | No pickaxe, a pickaxe, a strap for the back, a backpack, a dragged sack, a cart; stones brought home; loads that change the walk |
+| Then | **S2, the creator** | The screen: the three appearances, strength with its gentle change of body, equipment, and what this worker will be able to do |
+| Last | **S5, ready for players** | As in the roadmap |
+
+[ShowcaseRoadmap.md](ShowcaseRoadmap.md) is rewritten to this order only
+when Luis approves it.
+
+### The approach
+
+Everything a miner holds, carries, drags or pulls is a real body in the
+physics, with its real weight and balance. The miner's arms, shoulders and
+back move it only by pushing and pulling, and each working joint has a most
+it can give, set by strength. The legs keep the planted walk, and balance
+is worked out from the real weights: the body leans, braces, slows or
+cannot, but does not fall over. A swing is planned as intentions (raise the
+head as high as it will go; bring it down on that spot), and what happens
+comes out of the weights and the limits.
+
+This is option C of the review
+([there](Reviews/2026-10-06_SamePageReview.md#three-ways-to-build-it)),
+and it replaces decision D1 if Luis chooses it (choice A). The whole body
+moved by forces, balance included, would be tried afterwards as a marked
+experiment beside it.
+
+### Steps
+
+| Step | What | What Luis gets to see |
+|---|---|---|
+| 1 | **Weigh everything.** Each body part and each pickaxe gets its weight, its balance point and how hard it is to turn, measured from its own model's volume and what it is made of (as the grips and the striking point already are) | A table: what each miner and each pickaxe weighs |
+| 2 | **The bench.** One miner standing on plain ground, with a pickaxe that is a real body. A strength number that can be changed. A grid of strengths and pickaxe weights, side by side, each trying to lift the pickaxe to the shoulder and bring it down on a block. Two ways of building the arms are tried here and compared (the engine's jointed physical body; or forces worked out at the hands, with the arms following) | **Clips, before anything is built on it.** Also: what one miner costs, and whether it is steady at every frame rate |
+| 3 | **The hands.** Both hands free on all three miners, as Luis chooses in B. The hands that carry today are remade as hands that close | The remade miners beside the present ones, before anything is replaced |
+| 4 | **The swing.** Its six parts ([review](Reviews/2026-10-06_SamePageReview.md#the-swing-in-six-parts)): set, lift, top, drive, strike, recover. The upper hand slides along the handle. The legs and the back work: the feet set, the knees bend, the weight shifts. The jolt of the strike goes into the arms | The three miners swinging, at several strengths |
+| 5 | **Holding and walking with the tool.** How it is held comes from strength: in one hand at its balance point; in two hands; the head resting on the ground and dragged; or not at all. Dragging slows the walk | The same miner at several strengths, walking |
+| 6 | **Any boulder.** A click on any boulder of the Ordinary Place sends the miner to mine it. A place to stand is found from the rock's own shape and the ground. A spot to strike is found on its surface within this body's reach. The swing adapts to the spot's height and slant. What is struck off falls as real stones and lies where it falls (bringing them home is S4) | Mining several different boulders |
+| 7 | **In the Ordinary Place.** A plain panel: the strength slider, and a light, a middling and a heavy pickaxe. The look with `K` is retired | The build |
+| 8 | **Evidence** (below), the playtest guide, the documents | |
+
+### Evidence
+
+- **Tests:**
+  - a heavier pickaxe is lifted lower and arrives slower, on the same body;
+  - a stronger body lifts the same pickaxe higher and it arrives faster;
+  - a body too weak for its pickaxe does not strike, and nothing is mined;
+  - the head's speed and energy at each strike are measured and shown;
+  - the pickaxe never passes through its bearer, at any strength;
+  - the hands stay on the handle, and let go only when the plan says so or
+    their hold is overcome;
+  - only a real touch of the head on the rock yields anything (the rule of
+    the strike, unchanged);
+  - any boulder of the place can be mined, by each of the three bodies;
+  - the old test body and its maps work as before.
+- **The model quality method:** the audit in motion, run across a range of
+  strengths, since the motion is no longer the same every time.
+- **Cost:** one miner at work, and a crowd, measured in a release build
+  against today's figures.
+- **Pictures and clips** at every step, read before any number is believed.
+- **A build** and a playtest guide.
+
+### Contracts to keep
+
+- **The rule of the strike.**
+- **The walk:** planted feet, arrival without shuffling, each body's own
+  gait. Loads may change it; nothing else does.
+- **The test body and its maps** keep working as they do.
+- **The looks Luis has liked** change only where a choice below says so,
+  and are shown beside the new before anything is replaced.
+- **The project's rule on physics bodies.** AGENTS.md says not to introduce
+  active ragdolls "without a corresponding milestone request". Luis's
+  message is taken as that request for the working parts of the body, and
+  only once this plan is approved. The whole body moved by forces stays
+  behind a separate, marked experiment.
+
+### Choices for Luis
+
+| ID | Question | Options | Recommended |
+|---|---|---|---|
+| **A** | How far does the physics go first? (Replaces D1) | (a) Physical work on planted legs: the tool, the loads, the arms and the back are real; the legs walk as now; balance is worked out from the real weights. (b) The whole body physical, balance included: it can stumble and fall | (a) first, then (b) as a marked experiment. (a) is the first half of (b) |
+| **B** | What becomes of the lantern and the mug? | (a) Both hands empty; the lantern and the mug hang from the belt or the bag, as looks only. (b) Both hands empty; they are left out. (c) As now | (a), shown beside the present miners first |
+| **C** | Is the order of stages right? | (a) S3, S4, S2, S5. (b) The creator first | (a), with a plain strength slider from S3's step 2 |
+
+### Left open, not decided here
+
+- **Strength's scale:** what the numbers on the slider are, and how the
+  body changes with them (the creator, S2; a first version of the body's
+  change could come with step 3 if Luis wishes).
+- **Whether a rock visibly wears away** as it is mined.
+- **Whether how well it is struck changes how much is mined** (D6). S3
+  measures every strike; the amount stays fixed until Luis decides.
+- **How Long stands in the game** (P1).
+- **How heavy the miners are.** They are small beings. Their weights will
+  come from their models; whether that reads well is for the bench to show.
 
 ## Contracts to keep
 

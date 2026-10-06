@@ -2,6 +2,20 @@
 
 **Updated:** October 6, 2026.
 
+- **Where things stand (October 6, after Luis's message).** Luis restated
+  what the prototype is for and asked for a review of the whole project
+  ([message](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md)).
+  - **The review:** [Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md).
+    The look is on Luis's page. The work on what the prototype is for (real
+    weight, real strength, any rock, carrying, the creator) has not begun,
+    and this week's mining is a drawn path with no weight in it
+    ([a clip of it](Images/Miners/Work_Clip_Side.gif)).
+  - **The proposal:** S3, weight and strength at the rock, comes next
+    ([the plan](NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)),
+    then carrying and equipment (S4), then the creator (S2).
+  - **It waits for Luis:** choice A (how far the physics goes), B (the
+    lantern and the mug), C (the order of stages).
+  - **Nothing more is built until Luis answers.**
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.
@@ -51,9 +65,10 @@
         ([TheMiners.md](ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6)).
         **To see it:** `K` in the Ordinary Place
         ([MinersPlaytest.md](Playtests/MinersPlaytest.md#a-first-look-at-the-work-october-6)).
-      - **Step 5, the miners at the rock, needs Luis's choices M1 to M4**
-        ([the plan](NextMilestonePlan.md#choices-for-luis)). The look with
-        `K` is there to help choose.
+      - **Step 5, the miners at the rock, is overtaken** by Luis's message
+        of October 6: M1 is answered (any boulder, by a click), M2 to M4
+        become choices of equipment, and the swing is to have real weight
+        before it is taken to a rock.
   - **A method for model quality, and its first round (October 3 and 4).**
     Luis asked for a strategy, to refer to from now on, for making every
     model as polished as possible. It is
@@ -146,14 +161,43 @@
 A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 
 - one worker, made in a video-game style character creator;
-- a small landscape with one mineral boulder and a delivery point;
-- physical mining and real hauling;
+- a small landscape whose boulders can each be mined, by a click (October
+  6), and a place to bring the stones;
+- physical mining with real weight and real strength (October 6: "that's
+  the whole point of it"), and real hauling;
 - models made to high quality in Blender.
 
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director direction (October 3, late evening)
+## Latest Game Director direction (October 6)
+
+Recorded verbatim in
+[Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md),
+with what was said plainly kept apart from what was said as a present
+thought:
+
+- **Any rock.** No special rock: the player clicks one of the map's big
+  boulders and the miner mines it. Small in scale, final in kind.
+- **Real weight and real strength, in this prototype.** The character
+  really lifts the tool; bodies "react against real physics, with real
+  strength in their limbs, and against objects with real weight". Like
+  ragdolls, without being goofy.
+- **The creator is part of the prototype;** the three miners are its
+  appearances.
+- **Equipment is a choice with consequences:** no pickaxe, a pickaxe, a
+  strap for the back (asks strength of the back), a backpack, a dragged
+  sack, a wheeled cart. The rocks are brought back.
+- **Present thoughts, not decisions:** nothing held in the hands ("I'm not
+  sure yet"); strength as one general number, maybe a slider; strength
+  showing gently in the body.
+- **The worry:** "I'm worried you lost a bit sight of what I actually want
+  with this prototype."
+- **Asked for:** a review of everything, research into how a pickaxe is
+  really swung, and how to proceed. Written as
+  [Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md).
+
+## Game Director direction (October 3, late evening)
 
 Recorded verbatim in
 [Correspondence/2026-10-03_PHYSICAL_OBJECTS_AND_A_QUALITY_METHOD.md](Correspondence/2026-10-03_PHYSICAL_OBJECTS_AND_A_QUALITY_METHOD.md):
@@ -371,6 +415,10 @@ Still valid from September 30:
 
 ## Recommended next action
 
+**First (October 6):** Luis reads the review ([Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md))
+and answers A, B and C. S3 begins on that word. The items below are still
+open from before.
+
 1. **Luis checks the dusk fixes** in the build:
    - fewer fireflies, still marked when far out;
    - the lamplight close up.
@@ -388,7 +436,8 @@ Still valid from September 30:
 Luis's other choices on October 1:
 
 - **Model first** (O4).
-- **Strength** comes from the body plus training (O2).
+- **Strength** comes from the body plus training (O2). Overtaken on
+  October 6 by Luis's present thought: one general number, maybe a slider.
 - **Stage merges.** Each stage merges into `main` after Luis's playtest.
 
 ## Housekeeping
@@ -407,7 +456,8 @@ Luis's other choices on October 1:
 - Next concrete milestone: Docs/NextMilestonePlan.md
 - Design authority: Docs/GAME_VISION.md
 - Showcase reference: Docs/Design/WorkerShowcaseVision.md and Docs/Correspondence/
-- Latest playtest guide: Docs/Playtests/GroundedBodyPlaytest.md
+- Latest playtest guide: Docs/Playtests/MinersPlaytest.md
+- Reviews of the whole project: Docs/Reviews/
 - Technical contracts: Docs/Technical/EquipmentArchitecture.md and Docs/Technical/UnityProjectContext.md
 - Design meaning and collaboration: Docs/DESIGN_RATIONALE.md and Docs/PROJECT_CULTURE.md
 - Evidence: Docs/Validation.md

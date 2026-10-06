@@ -7,6 +7,7 @@ This folder belongs to the
 |---|---|
 | `sheets.py` | Turns the frames of `MinerCloseCapture` into labelled contact sheets: one per zone, one per walk view across the eight phases, and so on. `python Art/Review/sheets.py <frames> <sheets>` (needs Pillow) |
 | `sweep_sheets.py` | Turns the pictures of the sweep of extreme poses into contact sheets, six poses a sheet. `python Art/Review/sweep_sheets.py <sweep folder> <sheets>` (needs Pillow) |
+| `clip.py` | Puts the frames of the capture's `clip` set together: the three miners side by side as a looping moving picture (one swing, 25 frames a second) and as a strip of moments. `python Art/Review/clip.py <frames> <out>` (needs Pillow). The frames come from `MinerCloseCapture` with `-captureSets clip` |
 | `Miners/audit_<Name>.txt` | The automatic audit's last report for each miner, on the game's recorded movement: every check, its limit, its value at rest, its worst value, and where |
 | `Miners/hands_<Name>.txt` | How each free hand closes on handles of several thicknesses, its own tool's among them: for each digit, how near it lies (`meets`) and how deep any of it is (`enters`); for the palm, how the handle rests |
 | `Miners/tool_<Name>.txt` | The pickaxe made for each miner: its size, its grips and the handle's thickness there, its striking point, as measured on the model |

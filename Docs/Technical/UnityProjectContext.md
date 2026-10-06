@@ -1190,6 +1190,10 @@ Steps 3 and 4 of "the miners at work"
   - **`MinerWorkPreview`** (new): `K` in the Ordinary Place. `RockFace`
     (also used by tests and captures) and `FaceDistance`.
   - **Tests:** `MinerToolTests` (three). `MinerPoseRecord` records the
-    mining; `MinerCloseCapture` has the `work` set.
+    mining; `MinerCloseCapture` has the `work` set and, only when asked
+    for (`-captureSets clip`), the `clip` set: every frame of four seconds
+    of the mining at 25 frames a second, which `Art/Review/clip.py` puts
+    together as a moving picture (added October 6 for
+    [the review](../Reviews/2026-10-06_SamePageReview.md)).
 - **Not built:** a place to mine, body-sized places to stand, where a tool
   is kept, hauling (step 5 and the choices M1 to M4).

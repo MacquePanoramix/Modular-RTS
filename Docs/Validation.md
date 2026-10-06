@@ -1751,3 +1751,27 @@ Findings are in
   - **Many miners mining at once,** and its cost.
   - **Other hardware.**
   - **Luis's eye.**
+
+## A clip of the mining as it is, for the review (October 6)
+
+Luis could not find how to watch the mining and asked for a review of the
+whole project. A moving picture of the present swing was made for it.
+
+- **Added:** a `clip` set in `MinerCloseCapture` (only when asked for:
+  `-captureSets clip`). After the first strike it renders every frame of
+  four seconds of each miner's mining from the side and from before it, at
+  25 frames a second. `Art/Review/clip.py` puts one swing of the three
+  together as a looping picture and as a strip.
+- **Run:** in the isolated copy, once: 1 of 1 passed; 600 frames.
+- **Measured on those frames:** the swing's progress is the same number on
+  every frame for Small, Long and Round. One swing takes 20 frames (0.8 s),
+  then 5 frames of pause, whatever the body and whatever the pickaxe (517,
+  718 and 561 mm). The lift takes about a third of a second.
+- **Seen in the pictures:** only the arm and the tool move. The legs, the
+  hips and the back stay as they stand.
+- **Not run:** the other tests and the build. Nothing in the game changed;
+  the capture set is new and off unless asked for.
+
+Pictures: `Docs/Images/Miners/Work_Clip_Side.gif`, `Work_Clip_Front.gif`,
+`Work_Clip_Strip.jpg`. The finding is used in
+[Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md#what-the-swing-is-today).

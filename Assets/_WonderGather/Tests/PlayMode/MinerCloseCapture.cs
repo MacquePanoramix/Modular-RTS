@@ -21,6 +21,7 @@ namespace WonderGather.Tests
     // Frames are PPM images named <miner>_<set>_<view>.
     // Run on its own: -runTests -testPlatform PlayMode -testFilter WonderGather.Tests.MinerCloseCapture -captureOut <folder>
     //   [-captureMiner Small] [-captureSets orbit,distances,zones,walk,motion,fresh,work]
+    //   -captureSets clip (only when asked for): every frame of four seconds of the work, at 25 frames a second.
     [Explicit("A capture for review, not a test.")]
     public sealed class MinerCloseCapture
     {
@@ -267,6 +268,45 @@ namespace WonderGather.Tests
                             Shot("work", $"{label}_hands", hands, .5f, 80, 18);
                             Shot("work", $"{label}_handsleft", hands, .5f, 280, 18);
                         }
+                        time.Hour = hour;
+                        gatherer.CancelOrder();
+                        biped.ConfigureWork(null, null);
+                        UnityEngine.Object.Destroy(tool);
+                        UnityEngine.Object.Destroy(gatherer);
+                        UnityEngine.Object.Destroy(rock);
+                        UnityEngine.Object.Destroy(depot.gameObject);
+                        yield return null;
+                        yield return Place();
+                    }
+
+                    // A clip of the work, for watching the movement itself and not moments of it: every frame of four
+                    // seconds, from the side and from before it, at 25 frames a second. Only when asked for by name.
+                    if (sets.Contains("clip") && body.Pickaxe != null)
+                    {
+                        yield return Place();
+                        var gatherer = unit.gameObject.AddComponent<Gatherer>();
+                        var tool = unit.gameObject.AddComponent<EquippedTool>();
+                        tool.SetDefinition(body.Pickaxe);
+                        biped.ConfigureWork(gatherer, null);
+                        var (node, depot, rock) = CaptureTools.RockFace(unit.transform.position, away, MinerWorkPreview.FaceDistance(biped, body.Pickaxe), OnGround(spot - away * 3), true, height * .95f);
+                        float hour = time.Hour;
+                        time.Hour = 13;
+                        gatherer.SetPerformance(new UnitPerformance(100, 20, 100, 100));
+                        gatherer.Configure(depot, Vector3.zero);
+                        gatherer.Gather(node);
+                        float began = Time.time;
+                        while (tool.AcceptedStrikes < 1 && Time.time - began < 30) yield return null;
+                        while (tool.Progress > .05f && Time.time - began < 40) yield return null;
+                        Time.captureFramerate = 25;
+                        yield return null;
+                        for (int frame = 0; frame < 100; frame++)
+                        {
+                            Shot("clip", $"side_{frame:000}", Mid(), 2.5f, 90, 5, 360, 360);
+                            Shot("clip", $"front_{frame:000}", Mid(), 2.5f, 68, 14, 360, 360);
+                            Debug.Log($"MINER_CLIP {tag} {frame} progress {tool.Progress:F3} strikes {tool.AcceptedStrikes}");
+                            yield return null;
+                        }
+                        Time.captureFramerate = 30;
                         time.Hour = hour;
                         gatherer.CancelOrder();
                         biped.ConfigureWork(null, null);

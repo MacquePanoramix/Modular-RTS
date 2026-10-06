@@ -102,6 +102,20 @@ Luis asked for. The round's log, with before and after images, is in
 
 ## A first look at the work (October 6)
 
+> **After Luis's message of October 6.** Luis could not find how to watch
+> the mining, and judged it from pictures. Here it is moving, as the game
+> plays it today (one swing, at real speed):
+>
+> ![The mining today](../Images/Miners/Work_Clip_Side.gif)
+>
+> **What it shows:** all three swing at the same instant, in 0.8 s, and
+> only the arm moves. Nothing in it has weight. It is not what the
+> prototype is for, and the proposal is to replace it
+> ([review](../Reviews/2026-10-06_SamePageReview.md#what-the-swing-is-today)).
+> To watch it in the build all the same: run
+> `Builds/WindowsOrdinaryPlace/WonderGather.exe`, pick a miner in the
+> choice that opens (`M` opens it again), then press `K`.
+
 The miners can mine. It is a first look, so that the swing and the hands can
 be judged in play before where and how they mine is decided
 ([TheMiners.md](../ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6)).

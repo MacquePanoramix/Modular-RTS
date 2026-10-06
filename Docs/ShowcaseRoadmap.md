@@ -1,5 +1,16 @@
 # The Worker Showcase — roadmap to the playtest build
 
+> **October 6, 2026: a new order is proposed, waiting for Luis.** Luis
+> restated what the prototype is for (real weight, real strength, any rock,
+> the creator; [message](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md)).
+> The review Luis asked for ([Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md))
+> proposes that S3 comes next, widened to "weight and strength at the
+> rock", then S4, then S2, then S5
+> ([plan](NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)).
+> It also proposes to replace D1. This roadmap is rewritten to that order
+> only when Luis approves it. Until then, read the stages below as the
+> order of October 1.
+
 **Created:** October 1, 2026, from Luis's clarification of the showcase's scope.
 **Status:** Living plan. On October 1 Luis chose:
 

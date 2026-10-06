@@ -79,6 +79,17 @@ Steps 3 and 4 of [the miners at work](../NextMilestonePlan.md#s1d-last-part--the
 for them. The miners can now mine: each with a pickaxe made for it, held in
 hands that close on it.
 
+> **Read with this (October 6, after Luis's message).** What is built here
+> places the pickaxe and the hands rightly. It gives the swing no weight:
+> the swing is still the stored curve, the same 0.8 s for every body and
+> every pickaxe
+> ([a clip](../Images/Miners/Work_Clip_Side.gif);
+> [the review](../Reviews/2026-10-06_SamePageReview.md#what-the-swing-is-today)).
+> Luis wants real weight and real strength in it, and the proposal is to
+> build that next
+> ([plan](../NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)).
+> The measures, the hands and the pickaxes below are what it will stand on.
+
 ![Round at the rock, in the game](../Images/Miners/Work_Round.jpg)
 
 **To see it in play:** in the Ordinary Place, press `K`. A plain block of

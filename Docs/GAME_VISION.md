@@ -421,7 +421,9 @@ These questions must remain visible rather than being silently answered by imple
 - How much individual variation do instances receive?
 - What is the practical unit count and target match duration?
 - How physically simulated can combat become without losing control, readability, or performance?
-- Should the body be physics-informed kinematic, physics-driven (active ragdoll), or a hybrid, and where is the boundary?
+- Should the body be physics-informed kinematic, physics-driven (active ragdoll), or a hybrid, and where is the boundary? (October 6: under review. Luis asks for real physics with real strength; proposed: physical work on planted legs first, the whole body as a marked experiment after.)
+- Does a rock visibly wear away as it is mined?
+- What is the scale of strength, and how does a body's appearance change with it?
 - What is a worker's natural pace relative to RTS movement speed, and does body or load set top speed?
 - How does the game explain hesitation, refusal, fear, protection, and autonomous choices?
 - Which single-player and secondary multiplayer modes support the central vision?
@@ -501,7 +503,15 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-10-03 | Proactive polish | Working agreement, from Luis | Every character passes a close audit in the engine before Luis sees it; the practices are recorded in [CharacterPractices.md](ArtDirection/CharacterPractices.md) | — |
 | 2026-10-03 | Physical objects | Direction from Luis | Physicality and the reality of all movement are among the game's main focuses: anything that reads as an object behaves as a proper object that responds to its environment (held, hung, swinging with gravity), never floating | — |
 | 2026-10-06 | The miners mine: a pickaxe for each body, swung over the shoulder | Built, awaiting Luis's playtest (`K` in the Ordinary Place) | Each miner's pickaxe is made for its arms and hands; the tool's solve reads the body, its shape included. The first body's swing put the tool through chest and head, so bodies with a shape swing over the right shoulder; the first body's swing and the rule of the strike are unchanged ([TheMiners.md](ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6)) | Luis |
-| 2026-10-06 | Where and how the miners mine | Open (M1 to M4) | The place, where a pickaxe is kept, what the lantern's or the mug's hand does, and what happens to what is mined. A look at the mining is in play to help choose ([the plan](NextMilestonePlan.md#choices-for-luis)) | Luis |
+| 2026-10-06 | What the prototype is for | Direction, restated by Luis | Bodies "react against real physics, with real strength in their limbs, and against objects with real weight"; "that's the whole point of it". Like ragdolls, without being goofy ([correspondence](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md)) | — |
+| 2026-10-06 | Any rock | Direction from Luis | The miner mines any of the map's boulders by a click, not a rock made for mining; the mining adapts to the rock. The prototype is small in scale and final in kind | — |
+| 2026-10-06 | Body technique (D1) | Under review | D1 (a body posed, not moved by forces) was chosen "for this milestone" on Claude's recommendation. Luis's message asks for real physics. Proposed in its place: physical work on planted legs, then the whole body as a marked experiment ([review](Reviews/2026-10-06_SamePageReview.md#6-how-a-body-can-answer-to-real-forces-without-being-goofy)) | Luis's choice A |
+| 2026-10-06 | Strength | Possible (Luis's present thought) | One general number, "maybe" a slider, in place of named bands (D3) and of build plus training (O2); later perhaps by limb. It shows gently in the body's appearance | Luis's decision; the creator (S2) |
+| 2026-10-06 | The hands | Possible (Luis's present thought: "I'm not sure yet") | Luis's first idea was that the miners hold nothing, so that the hands are about the pickaxe and strength. The lantern and the mug were allowed "for now" | Luis's choice B |
+| 2026-10-06 | Equipment | Direction from Luis | A choice with consequences: no pickaxe (cannot mine), a pickaxe, a strap for the back (asks strength of the back), a backpack, a dragged sack, a wheeled cart. The rocks are brought back; "all of that needs logistics and real strength and weight against it" | S4 |
+| 2026-10-06 | The creator | Direction, restated by Luis | Part of the hi-fi prototype; the three miners are its appearances | S2 |
+| 2026-10-06 | Review of the whole project | Done, at Luis's request | The look is on Luis's page. The physical work and the creator are not begun, and this week's mining has no weight in it. Proposed order: S3 (weight and strength at the rock), S4, S2, S5 ([review](Reviews/2026-10-06_SamePageReview.md); [plan](NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)) | Luis's choices A, B, C |
+| 2026-10-06 | Where and how the miners mine | Overtaken the same day (M1 answered: any boulder; M2 to M4 become choices of equipment) | The place, where a pickaxe is kept, what the lantern's or the mug's hand does, and what happens to what is mined. A look at the mining is in play to help choose ([the plan](NextMilestonePlan.md#choices-for-luis)) | Luis |
 | 2026-10-05 | How Long stands in the game | Open (P1) | Since October 3 the prefab stands each model with its head above its hips. Long was built upright with the head forward, so in the game Long leans back 11°. Found while fitting the closing hands; not changed ([pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game)) | Luis |
 | 2026-10-05 | Luis's verdict on the method's first round | Direction from Luis | "I really liked all the changes you did, except the shoulder strap." The strap on Small's shoulder is put back as it was; its ends stay on the bag's rings ([correspondence](Correspondence/2026-10-05_THE_SHOULDER_STRAP.md)) | — |
 | 2026-10-05 | Change only what is asked | Working agreement (Claude's lesson) | A model Luis has seen and not faulted is liked as it is. A note changes what it names; the method's own rules do not restyle the rest | — |
@@ -880,3 +890,43 @@ S3 and S4.
 - whether mined material falls as loose pieces;
 - the stage order;
 - third-party asset sourcing.
+
+## Real weight, real strength, any rock — October 6, 2026
+
+After the report on the miners' first swings, Luis sent a spoken message
+([verbatim](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md)).
+It answers the open choices in a wider way and restates what the hi-fi
+prototype is for.
+
+**Said plainly:**
+
+- the miners mine any of the map's boulders, by a click; no rock is made
+  for mining; the prototype is built the way the game itself will want it;
+- the tool has real weight and the body really lifts it; bodies "react
+  against real physics, with real strength in their limbs, and against
+  objects with real weight"; this is "the whole point" of the prototype;
+- like ragdolls, without being goofy;
+- the character creator is part of the prototype, with the three miners as
+  its appearances;
+- equipment is a choice with consequences: no pickaxe, a pickaxe, a strap
+  for the back, a backpack, a dragged sack, a wheeled cart; the rocks are
+  brought back.
+
+**Said as present thoughts** (kept as Possible): empty hands; strength as
+one general number, maybe a slider, later perhaps by limb; strength showing
+gently in the body.
+
+**The review Luis asked for** is
+[Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md).
+Its findings: the look is on Luis's page; the documents hold what Luis
+says; the work has not reached it. Since October 1 every commit concerned
+the look, the cameras and the models. The mining built on October 6 is a
+stored curve with no weight in it. Decision D1 (September 30) took the body
+away from physics on an argument that joined "like a ragdoll" with "goofy",
+which Luis keeps apart.
+
+**Proposed, waiting for Luis:** S3 (weight and strength at the rock) next,
+then S4 (carrying and equipment), S2 (the creator) and S5
+([plan](NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)).
+Choices A (how far the physics goes), B (the lantern and the mug) and C
+(the order) are Luis's.
