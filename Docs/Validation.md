@@ -1848,3 +1848,29 @@ Stage S3, approved by Luis that day ([plan](NextMilestonePlan.md);
   - **Other hardware.**
   - **Luis's eye.**
 
+## S3, step 3 — both hands free, the lantern and the mug at the hip (October 6)
+
+- **Built:** Small's and Long's left hands as closing hands; the lantern on
+  a hook and the mug in a loop at the hip
+  ([TheMiners.md](ArtDirection/TheMiners.md#both-hands-free-the-lantern-and-the-mug-at-the-hip-october-6)).
+- **Two full cycles** (build, setup, record, test, audit, capture, sheets).
+  - **At rest:** Small 0 failing of 396 checks, Long 0 of 277, Round 0 of
+    203. The hands' closing: 0 of 96, 0 of 84, 0 of 96.
+  - **In the game's movement:** Small 9 of 465, Long 1 of 333, Round 3 of
+    257. Of Small's nine: five are the moment of the sharpest turn that
+    waits for Luis's word (one of them new: the knee meets the lantern),
+    three are the old swing (being replaced), and one is new: the free left
+    hand brushes the coat for two frames of a turn, as Long's right does.
+  - **First cycle:** Small 13, Long 4. The tab stood off the coat, and the
+    lantern and the mug pressed about 5 mm into the skirt while walking.
+    The tab now lies on the cloth's slope. The 5 mm is allowed, as the
+    bag's 6 mm is: a thing resting on a coat presses into it a little.
+- **Tests:** miner tests, tool tests and the physical tests, 14 of 14
+  (one expected count changed: six hands close, not four).
+- **Read in pictures:** the orbit, the lantern's and the mug's zones, the
+  walk's eight phases, before and now side by side.
+- **Not tested:**
+  - **The full suite and the build** with these models: they run at the
+    end of step 4.
+  - **The physical bench with Small and Long:** next, in step 4.
+  - **Luis's eye** on where the things hang.

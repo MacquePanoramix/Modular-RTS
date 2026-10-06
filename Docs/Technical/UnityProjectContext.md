@@ -1283,3 +1283,30 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
     moved must be taken then (B8); a batch run cannot wait for the end of
     a frame.
 - **Not built:** see [the design](../Design/ThePhysicalBody.md#step-2-the-bench-october-6).
+
+## The physical body, step 3: both hands free — October 6
+
+- **Blender:**
+  - **`outfits.hip_hang`** (new): a leather tab sewn to the coat, with a
+    brass hook standing off it or a loop of thong; where a handle rests in
+    it; and how the thing hangs from there (straight down, or resting on
+    the cloth below). It chooses the tab's height: the highest place where
+    the thing leans out from plumb by no more than a set angle.
+    **`outfits.hang_by`** turns parts built hanging plumb to hang that way.
+  - **`workers.py`**: `REST` hangs Small's lantern and Long's mug this way
+    (`hung=...`), and no hand is modelled shut. `REST_CARRYING` and
+    `--carrying` build them as before. The lantern and the mug keep their
+    bones (`Lantern`, `Mug`), now children of the pelvis, with a stop on
+    the coat and `rides` (the hook goes with the cloth). `carriage` hangs
+    the arm on that side clear of the thing; `shape` leaves hung things
+    out of the body's front.
+  - **`rigging.py`**: `_HipTab`, `_HipHook`, `_HipLoop` take their weights
+    from the skirt or the top, and are dropped at the farthest level.
+  - **`audit.py`**: a lantern's grip rests in a hand or in its hook, a
+    mug's handle in a hand or its loop; hook and loop meet the tab, the tab
+    lies on the coat; what hangs at the hip may press 6 mm into the skirt
+    (as the bag does).
+- **Unity:** nothing new. Both of every miner's hands are free
+  (`MinerBody.HandFree`), so the old swing holds with two hands on all
+  three. `MinerTests` expects six closing hands. Small's line in the
+  choice reads "a lantern at the hip".

@@ -327,7 +327,7 @@ namespace WonderGather.Tests
                     }
                 }
             }
-            Assert.That(hands, Is.EqualTo(4), "Small's and Long's free hands and both of Round's should close.");
+            Assert.That(hands, Is.EqualTo(6), "Both hands of each miner should close (the lantern and the mug hang at the hip since October 6).");
         }
 
         [UnityTest] public IEnumerator TheMinersHeadsStayAboveTheirFeet()

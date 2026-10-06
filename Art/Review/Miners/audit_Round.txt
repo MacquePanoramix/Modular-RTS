@@ -80,7 +80,7 @@ AUDIT Round: 3 failing of 257 checks (distances in mm)
   ok   floating  Eyelet1#9                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.129, -0.069, 0.163]
   ok   floating  Forearm0                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.371, 0.078, 0.791]
   ok   floating  Forearm1                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.369, 0.055, 0.791]
-  ok   floating  Hair#0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.006, 0.156, 1.353]
+  ok   floating  Hair#0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.008, 0.163, 1.411]
   ok   floating  Hair#1                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.163, 0.117, 1.463]
   ok   floating  Hair#2                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.082, -0.09, 1.49]
   ok   floating  Hair#3                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.109, 0.144, 1.388]

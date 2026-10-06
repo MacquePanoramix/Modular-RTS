@@ -910,6 +910,86 @@ def sling(b, strap_mat, wood, iron, torso, below, clothes, length=0.74, head=1.0
     return out
 
 
+def hip_hang(b, onto, at, towards, leather, brass=None, bar=0.007, radius=0.036, reach=0.17, neck=0.05, arm=0.045, lean=22.0, drum=False):
+    """A place on the clothes where a thing hangs by its handle, and how it hangs there. A leather tab is sewn to
+    the cloth; on it a brass hook that stands out from the cloth and turns up at its end (brass given), or else
+    a loop of leather thong. The thing's handle (a level bar of radius bar, lying along the cloth) rests in the
+    hook or the loop, and the thing hangs below it: straight down, unless the cloth below is in the way; then it
+    rests on the cloth, as a thing hung at a hip does.
+    A coat's skirt bells out below the waist, and a thing hung on that slope would lie on it. The tab is sewn at
+    the highest place, from at down, where the thing leans out from plumb by no more than lean degrees.
+    at: about where; towards: the way out from the body there. radius: the thing's half-width; reach: how far
+    below the handle it reaches; neck: how far below the handle its width begins (a lamp's bail, a mug's handle,
+    are thin above that); drum: it is round and lies on its side below its handle (a mug), so its width grows
+    from nothing at its top; arm: how far the hook stands out from the cloth.
+    Returns the parts (they go with the cloth), where the handle rests, the way the thing hangs, the way out from
+    the cloth, and the level direction along the cloth."""
+    surface = shapes.Surface(*onto)
+    at, towards = Vector(at), Vector(towards).normalized()
+    down = Vector((0, 0, -1))
+    wire = 0.0024
+    half_w, half_h = bar + 0.0045, 0.017
+
+    def hung_at(hit, normal):
+        out_ = (normal - Vector((0, 0, normal.z)))
+        out_ = out_.normalized() if out_.length > 1e-3 else towards
+        seat = hit + out_ * arm + down * (0.021 - wire - bar) if brass else hit + out_ * (half_w + 0.0035) + down * (0.010 + half_h - 0.0022 - bar)
+        # Straight down from there, unless the cloth below is in the way: then it leans out and rests on the cloth.
+        d = down
+        for k in range(1, 9):
+            drop = reach * k / 8
+            on, on_n = surface.cast(Vector((seat.x, seat.y, seat.z - drop)) + out_ * 0.5, -out_, 1.0)
+            if on is None:
+                continue
+            wide = bar if drop < neck else math.sqrt(max(0.0, radius * radius - (drop - neck - radius) ** 2)) if drum else radius
+            need = ((on + on_n * (max(wide, bar) + 0.004)) - seat).normalized()
+            if need.dot(out_) > d.dot(out_):
+                d = need
+        return seat, d, out_
+
+    best = None
+    for k in range(20):
+        hit, normal = surface.cast(at - Vector((0, 0, 0.01 * k)) + towards * 0.5, -towards, 1.0)
+        if hit is None:
+            continue
+        seat, d, out_ = hung_at(hit, normal)
+        leans = math.degrees(math.acos(max(-1.0, min(1.0, -d.z))))
+        if best is None or leans < best[0]:
+            best = (leans, hit, normal, seat, d, out_)
+        if leans <= lean:
+            break
+    if best is None:
+        raise RuntimeError(f"{b.name}: there is no cloth at the hip to sew a hook to.")
+    _, hit, normal, seat, d, out_ = best
+    across = Vector((0, 0, 1)).cross(out_).normalized()
+    # The tab, sewn flat to the cloth: it lies along the cloth's own slope, its back on the cloth.
+    level = Vector((0, 0, 1)).cross(normal).normalized()
+    rise = normal.cross(level).normalized()
+    tab = slab(f"{b.name}_HipTab", hit + normal * 0.0018 + rise * 0.005, (0.011, 0.0022, 0.016), leather,
+               rotation=Matrix((level, -normal, level.cross(-normal))).transposed(), soft=0.5)
+    tab["wg_anchor"] = [*hit]
+    if brass:
+        # A hook of brass wire: out from the tab, down, and turned up at its end.
+        path = [hit + out_ * 0.003 + Vector((0, 0, 0.012)), hit + out_ * 0.008 + Vector((0, 0, 0.004)), hit + out_ * (arm * 0.5) + down * 0.010,
+                hit + out_ * arm + down * 0.021, hit + out_ * (arm + 0.012) + down * 0.014, hit + out_ * (arm + 0.015) + down * 0.002]
+        hook = shapes.exact(tube(f"{b.name}_HipHook", spline(path, 4), [wire] * 21, [wire] * 21, brass, sides=7, levels=0))
+    else:
+        # A loop of thong hanging from the tab; the handle passes through it and rests in its bottom.
+        hook = shapes.ring(f"{b.name}_HipLoop", hit + out_ * (half_w + 0.0035) + down * 0.010, out_, Vector((0, 0, 1)), half_w, half_h, 0.0022, leather, steps=14)
+    hook["wg_anchor"] = [*hit]
+    return [tab, hook], seat, d, out_, across
+
+
+def hang_by(parts, seat, d):
+    """Turns parts built hanging straight down from seat so that they hang along d."""
+    turn = Vector((0, 0, -1)).rotation_difference(Vector(d).normalized()).to_matrix().to_4x4()
+    move = Matrix.Translation(seat) @ turn @ Matrix.Translation(-Vector(seat))
+    for o in parts:
+        o.data.transform(move)
+        o.data.update()
+    return parts
+
+
 def lantern(b, grasp, ring, brass, glass, wood, grip=0.007, span=0.09, name="Lantern"):
     """A miner's lamp carried by its handle: a wooden grip (the bar the hand closes round, along ring) on a wire
     bail hinged at two ears on the cap, and below it, hanging plumb, a vented brass cap, warm glass behind four

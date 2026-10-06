@@ -38,8 +38,12 @@
       struggles ([clips and figures](Design/ThePhysicalBody.md#step-2-the-bench-october-6);
       [the clip](Images/PhysicalBody/Bench_Round_Strengths.gif);
       [all nine](Images/PhysicalBody/Bench_Round.gif)).
+    - **Step 3, both hands free: built** (October 6). Small's lantern
+      hangs from a hook on the coat and Long's mug in a loop of thong at
+      the hip; both hands of all three miners close on a handle
+      ([pictures](ArtDirection/TheMiners.md#both-hands-free-the-lantern-and-the-mug-at-the-hip-october-6)).
     - **It is a bench, not yet the game:** the look with `K` is still the
-      old swing. Steps 3 (free hands) and 4 (the swing proper) come next.
+      old swing. Step 4 (the swing proper) comes next.
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

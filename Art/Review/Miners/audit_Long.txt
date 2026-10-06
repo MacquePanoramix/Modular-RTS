@@ -1,6 +1,6 @@
-AUDIT Long: 1 failing of 322 checks (distances in mm)
+AUDIT Long: 1 failing of 333 checks (distances in mm)
   FAIL sinks     Hand0 into Skirt                           limit  3.0  rest    0.0   worst    8.4 at turn164   (2/146 frames)  stand 0.0 walk 0.0 turn 8.4 stop 0.0 mine 0.0  [-0.237, -0.161, 0.549]
-  ok   beneath   Trousers under Skirt                       limit  3.0  rest    2.6   worst    2.6 at rest      (0/146 frames)  [-0.122, -0.085, 0.761]
+  ok   beneath   Trousers under Skirt                       limit  3.0  rest    2.3   worst    3.0 at walk114   (0/146 frames)  [-0.096, -0.294, 0.623]
   ok   bones     Boot0                                      limit  4.0  rest    3.0  None
   ok   bones     Boot1                                      limit  4.0  rest    3.0  None
   ok   bones     Collar                                     limit  4.0  rest    3.0  None
@@ -8,9 +8,11 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   bones     Eyelet1                                    limit  4.0  rest    2.0  None
   ok   bones     Hair                                       limit  4.0  rest    1.0  None
   ok   bones     Hand0                                      limit  4.0  rest    4.0  None
-  ok   bones     Hand1                                      limit  4.0  rest    2.0  None
+  ok   bones     Hand1                                      limit  4.0  rest    4.0  None
   ok   bones     Heel0                                      limit  4.0  rest    3.0  None
   ok   bones     Heel1                                      limit  4.0  rest    3.0  None
+  ok   bones     HipLoop                                    limit  4.0  rest    2.0  None
+  ok   bones     HipTab                                     limit  4.0  rest    2.0  None
   ok   bones     Lace0                                      limit  4.0  rest    2.0  None
   ok   bones     Lace1                                      limit  4.0  rest    2.0  None
   ok   bones     Lapel0                                     limit  4.0  rest    3.0  None
@@ -37,7 +39,7 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   covered   Boot0 in Trousers.R                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   covered   Boot1 in Trousers.L                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   floating  Boot0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.073, -0.027, 0.019]
-  ok   floating  Boot1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.062, -0.149, 0.038]
+  ok   floating  Boot1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.061, -0.145, 0.033]
   ok   floating  Collar                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.1, -0.053, 1.476]
   ok   floating  Eyelet0#0                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.112, -0.072, 0.264]
   ok   floating  Eyelet0#1                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.082, -0.073, 0.266]
@@ -109,7 +111,7 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   floating  Hair#44                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.01, -0.09, 1.847]
   ok   floating  Hair#45                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.005, -0.089, 1.847]
   ok   floating  Hair#46                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.004, -0.09, 1.857]
-  ok   floating  Hair#47                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.036, -0.215, 1.83]
+  ok   floating  Hair#47                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.04, -0.213, 1.829]
   ok   floating  Hair#48                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.035, -0.221, 1.835]
   ok   floating  Hair#49                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.046, -0.225, 1.828]
   ok   floating  Hair#5                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.102, -0.189, 1.793]
@@ -118,9 +120,11 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   floating  Hair#8                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.103, -0.125, 1.78]
   ok   floating  Hair#9                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.018, -0.209, 1.857]
   ok   floating  Hand0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.467, -0.058, 0.773]
-  ok   floating  Hand1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.407, -0.069, 0.83]
+  ok   floating  Hand1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.401, -0.041, 0.852]
   ok   floating  Heel0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.114, 0.077, 0.0]
   ok   floating  Heel1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.051, 0.07, 0.0]
+  ok   floating  HipLoop                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.163, -0.078, 0.867]
+  ok   floating  HipTab                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.143, -0.08, 0.867]
   ok   floating  Lace0#0                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.091, -0.078, 0.215]
   ok   floating  Lace0#1                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.116, -0.077, 0.261]
   ok   floating  Lace0#10                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.112, -0.06, 0.162]
@@ -163,10 +167,10 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   floating  Lace1#9                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.112, -0.056, 0.143]
   ok   floating  Lapel0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.055, -0.147, 1.476]
   ok   floating  Lapel1                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.08, -0.146, 1.482]
-  ok   floating  Mug                                        limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.44, 0.049, 0.706]
-  ok   floating  MugArm0                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.435, 0.032, 0.782]
-  ok   floating  MugArm1                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.435, -0.049, 0.782]
-  ok   floating  MugHandle                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.438, 0.036, 0.777]
+  ok   floating  Mug                                        limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.165, -0.146, 0.795]
+  ok   floating  MugArm0                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.141, -0.113, 0.862]
+  ok   floating  MugArm1                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.179, -0.041, 0.86]
+  ok   floating  MugHandle                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.139, -0.117, 0.856]
   ok   floating  Patch0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.033, -0.104, 1.196]
   ok   floating  Patch1                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.178, -0.046, 0.728]
   ok   floating  PickCollar                                 limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.033, 0.057, 1.449]
@@ -180,7 +184,7 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   floating  Skirt                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.029, 0.038, 1.199]
   ok   floating  Sole0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.078, 0.085, 0.003]
   ok   floating  Sole1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.082, 0.086, 0.021]
-  ok   floating  Top                                        limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.442, -0.02, 0.921]
+  ok   floating  Top                                        limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.443, -0.023, 0.926]
   ok   floating  Trousers                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.139, -0.085, 0.48]
   ok   grounded  Sole0                                      limit  4.0  rest    0.6  [-0.08, 0.076, 0.001]
   ok   grounded  Sole1                                      limit  4.0  rest    0.6  [0.08, 0.076, 0.001]
@@ -197,29 +201,33 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   inside out Trousers                                   limit  0.0  rest    0.0  None
   ok   lies on   Eyelet0 on Boot0                           limit  7.0  rest    2.9   worst    5.7 at turn164   (0/146 frames)  [-0.255, 0.231, 0.135]
   ok   lies on   Eyelet1 on Boot1                           limit  7.0  rest    2.7   worst    6.9 at turn152   (0/146 frames)  [0.067, 0.063, 0.145]
+  ok   lies on   HipTab on Skirt|Top.Body                   limit  9.0  rest    5.8   worst    7.6 at walk22    (0/146 frames)  [0.12, -0.247, 0.763]
   ok   lies on   Lace0 on Boot0                             limit  9.5  rest    7.0   worst    9.2 at walk32    (0/146 frames)  [-0.085, 0.163, 0.151]
   ok   lies on   Lace1 on Boot1                             limit  9.5  rest    7.1   worst    9.5 at turn152   (0/146 frames)  [0.041, 0.1, 0.116]
   ok   lies on   Patch0 on Top                              limit  7.5  rest    5.7   worst    5.8 at turn186   (0/146 frames)  [0.079, -0.264, 1.051]
   ok   lies on   Patch1 on Skirt                            limit  9.0  rest    6.2   worst    8.6 at turn162   (0/146 frames)  [-0.213, -0.19, 0.624]
   ok   meets     Hand0 with WorkPickHandle                  limit  2.0  rest      -   worst    0.0 at mine236   (0/28 frames)  [-0.066, -0.51, 0.926]
-  ok   meets     MugArm0 with Mug                           limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.435, 0.032, 0.782]
-  ok   meets     MugArm0 with MugHandle                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.435, 0.032, 0.782]
-  ok   meets     MugArm1 with Mug                           limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.435, -0.049, 0.782]
-  ok   meets     MugArm1 with MugHandle                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.435, -0.049, 0.782]
-  ok   meets     MugHandle with Hand0|Hand1                 limit  1.5  rest    0.9   worst    0.9 at rest      (0/146 frames)  [0.446, 0.002, 0.785]
+  ok   meets     Hand1 with WorkPickHandle                  limit  2.0  rest      -   worst    0.0 at mine236   (0/28 frames)  [-0.002, -0.505, 1.158]
+  ok   meets     HipLoop with HipTab                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.163, -0.078, 0.867]
+  ok   meets     HipTab with Skirt|Top.Body                 limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.143, -0.08, 0.867]
+  ok   meets     MugArm0 with Mug                           limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.141, -0.113, 0.862]
+  ok   meets     MugArm0 with MugHandle                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.141, -0.113, 0.862]
+  ok   meets     MugArm1 with Mug                           limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.179, -0.041, 0.86]
+  ok   meets     MugArm1 with MugHandle                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.179, -0.041, 0.86]
+  ok   meets     MugHandle with Hand0|Hand1|HipLoop         limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.139, -0.117, 0.856]
   ok   meets     PickCollar with PickLoop1                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.033, 0.057, 1.449]
   ok   meets     PickHandle with PickLoop0                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.192, 0.146, 0.946]
   ok   meets     PickHandle with PickLoop1                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.192, 0.146, 0.946]
   ok   meets     PickLoop0 with PickStrap                   limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.031, 0.101, 1.272]
   ok   meets     PickLoop1 with PickStrap                   limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.052, 0.075, 1.435]
   ok   meets     PickStrap with Top|Collar                  limit  4.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.094, -0.058, 1.528]
-  ok   pinched   elbow.L                                    limit 45.0  rest      -   worst    1.2 at mine236   (0/28 frames)  [0.259, -0.04, 1.045]
+  ok   pinched   elbow.L                                    limit 45.0  rest      -   worst   23.7 at mine256   (0/28 frames)  [0.264, -0.309, 0.993]
   ok   pinched   elbow.R                                    limit 45.0  rest      -   worst   16.7 at mine244   (0/28 frames)  [-0.326, -0.268, 1.012]
-  ok   pinched   knee.L                                     limit 45.0  rest      -   worst    0.0 at mine290   (0/28 frames)  [0.058, -0.222, 0.381]
+  ok   pinched   knee.L                                     limit 45.0  rest      -   worst    0.0 at mine290   (0/28 frames)  [0.08, -0.231, 0.404]
   ok   pinched   knee.R                                     limit 45.0  rest      -   worst    0.0 at mine290   (0/28 frames)  [-0.095, -0.237, 0.389]
-  ok   pinched   shoulder.L                                 limit 45.0  rest      -   worst    0.9 at mine236   (0/28 frames)  [0.158, -0.236, 1.348]
+  ok   pinched   shoulder.L                                 limit 45.0  rest      -   worst   12.8 at mine270   (0/28 frames)  [0.183, -0.207, 1.332]
   ok   pinched   shoulder.R                                 limit 45.0  rest      -   worst    3.0 at mine288   (0/28 frames)  [-0.166, -0.189, 1.356]
-  ok   pinched   wrist.L                                    limit 45.0  rest      -   worst    0.1 at mine286   (0/28 frames)  [0.286, -0.127, 0.766]
+  ok   pinched   wrist.L                                    limit 45.0  rest      -   worst    8.5 at mine288   (0/28 frames)  [0.061, -0.482, 1.141]
   ok   pinched   wrist.R                                    limit 45.0  rest      -   worst   14.0 at mine270   (0/28 frames)  [-0.187, -0.527, 1.035]
   ok   sinks     Boot0 into Boot1                           limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     Boot0 into Trousers.L                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
@@ -241,30 +249,33 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   sinks     Heel0 into Boot1                           limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     Heel0 into Trousers.L                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     Heel1 into Trousers.R                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     HipLoop into Skirt                         limit  6.0  rest    0.0   worst    5.3 at turn158   (0/146 frames)  [0.13, -0.248, 0.704]
+  ok   sinks     HipLoop into Top.Body                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     HipLoop into Trousers                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     Mug into Hand0                             limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     Mug into Hand1                             limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
-  ok   sinks     Mug into Skirt                             limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Mug into Skirt                             limit  6.0  rest    0.0   worst    5.1 at turn162   (0/146 frames)  [0.144, -0.305, 0.624]
   ok   sinks     Mug into Top.Body                          limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     Mug into Trousers                          limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     Mug into WorkPickHandle                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
   ok   sinks     Mug into WorkPickHead                      limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
   ok   sinks     MugArm0 into Hand0                         limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugArm0 into Hand1                         limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
-  ok   sinks     MugArm0 into Skirt                         limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     MugArm0 into Skirt                         limit  6.0  rest    0.0   worst    0.0 at walk24    (0/146 frames)  [0.106, -0.28, 0.697]
   ok   sinks     MugArm0 into Top.Body                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugArm0 into Trousers                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugArm0 into WorkPickHandle                limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
   ok   sinks     MugArm0 into WorkPickHead                  limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
   ok   sinks     MugArm1 into Hand0                         limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugArm1 into Hand1                         limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
-  ok   sinks     MugArm1 into Skirt                         limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     MugArm1 into Skirt                         limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugArm1 into Top.Body                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugArm1 into Trousers                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugArm1 into WorkPickHandle                limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
   ok   sinks     MugArm1 into WorkPickHead                  limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
   ok   sinks     MugHandle into Hand0                       limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugHandle into Hand1                       limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
-  ok   sinks     MugHandle into Skirt                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     MugHandle into Skirt                       limit  6.0  rest    0.0   worst    0.5 at walk24    (0/146 frames)  [0.103, -0.283, 0.699]
   ok   sinks     MugHandle into Top.Body                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugHandle into Trousers                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     MugHandle into WorkPickHandle              limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
@@ -277,7 +288,7 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   sinks     PickHandle into Skin                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     PickHandle into Skirt                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     PickHandle into Top                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
-  ok   sinks     PickHead into Collar                       limit  2.0  rest    0.0   worst    0.3 at turn172   (0/146 frames)  [-0.066, -0.131, 1.354]
+  ok   sinks     PickHead into Collar                       limit  2.0  rest    0.0   worst    0.3 at turn168   (0/146 frames)  [-0.062, -0.138, 1.394]
   ok   sinks     PickHead into Skin                         limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     PickHead into Skirt                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
   ok   sinks     PickHead into Top                          limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
@@ -316,8 +327,8 @@ AUDIT Long: 1 failing of 322 checks (distances in mm)
   ok   sinks     WorkPickHead into Skirt                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
   ok   sinks     WorkPickHead into Top                      limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
   ok   sinks     WorkPickHead into Trousers                 limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
-  ok   stretched Collar                                     limit  1.9  rest      -   worst    1.0 at mine290   (0/28 frames)  [0.102, -0.214, 1.359]
+  ok   stretched Collar                                     limit  1.9  rest      -   worst    1.1 at mine272   (0/28 frames)  [0.1, -0.254, 1.358]
   ok   stretched Skin                                       limit  1.9  rest      -   worst    1.0 at mine290   (0/28 frames)  [-0.0, -0.311, 1.443]
   ok   stretched Skirt                                      limit  1.9  rest      -   worst    1.0 at mine290   (0/28 frames)  [0.032, -0.0, 0.373]
-  ok   stretched Top                                        limit  1.9  rest      -   worst    1.6 at mine236   (0/28 frames)  [-0.309, -0.204, 0.976]
+  ok   stretched Top                                        limit  1.9  rest      -   worst    1.9 at mine244   (0/28 frames)  [0.139, -0.212, 1.349]
   ok   stretched Trousers                                   limit  1.9  rest      -   worst    1.1 at mine288   (0/28 frames)  [0.096, -0.198, 0.875]

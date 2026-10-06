@@ -13,7 +13,8 @@ Ordinary Place with the choice of miner.
 ## What to try
 
 1. **Choose your miner.** The choice opens when the place loads:
-   - **Small:** young and curious, a lantern in hand.
+   - **Small:** young and curious, a lantern at the hip (in the hand
+     until October 6).
    - **Long:** tall and unhurried, a pickaxe on the back.
    - **Round:** sturdy and laughing, a lamp on the cap.
 

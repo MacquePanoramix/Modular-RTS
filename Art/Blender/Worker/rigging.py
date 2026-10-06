@@ -41,7 +41,7 @@ HAND_TRIANGLES = 1600
 ATLAS = 2048
 # Parts dropped from the farthest level of detail.
 DETAILS = ("_Lace", "_Eyelet", "_Button", "_LanternBar", "_LanternBail", "_LanternEar", "_ApronTie", "_Buckle", "_CapLampMount", "_Spring", "_StrapTab",
-           "_BagRing", "_BagLoop", "_PickLoop", "_ApronKnot", "_HammerLoop", "_StrapTab")
+           "_BagRing", "_BagLoop", "_PickLoop", "_ApronKnot", "_HammerLoop", "_StrapTab", "_HipTab", "_HipHook", "_HipLoop")
 # Parts that lie on others and move exactly with them: (the part's name, the parts it takes its weights from).
 # \1 is the part's own number (a boot's laces lie on that boot).
 LIKE = [
@@ -51,6 +51,8 @@ LIKE = [
     (r"_ApronStrap$", [r"_Top", r"_Neckband", r"_Apron"]),
     (r"_ApronTie\d$|_ApronKnot$|_ApronTieEnd\d$", [r"_Top", r"_Skirt"]),
     (r"_ApronPocket$|_HammerLoop$", [r"_Apron"]),
+    # A tab sewn to the coat at the hip, and the hook or the loop on it.
+    (r"_HipTab$|_HipHook$|_HipLoop$", [r"_Skirt", r"_Top"]),
     # An apron lies on the smock: it moves exactly with it.
     (r"_Apron$", [r"_Top", r"_Skirt"]),
     (r"_Patch0$", [r"_Top"]),
@@ -195,7 +197,7 @@ def candidates(name):
         return TRUNK + ARMS
     if "_Pick" in name:
         return "rigid:Chest"
-    if any(k in name for k in ("_Skirt", "_Apron", "_Patch1", "_ApronPocket", "_Hammer")):
+    if any(k in name for k in ("_Skirt", "_Apron", "_Patch1", "_ApronPocket", "_Hammer", "_Hip")):
         return "skirt"
     return None
 

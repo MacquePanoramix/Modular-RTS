@@ -201,15 +201,25 @@ HANDLES = {"lantern": 0.007, "mug": 0.0055}
 
 # ---------------------------------------------------------------- the rest pose, for rigging
 
-# What changes when the game moves them: things held in the hands go to the belt or the back, so the hands
-# are free for work; the arms hang a little out from the body; the feet stand under the hips; the head looks ahead.
+# What changes when the game moves them: things held in the hands go to the hip or the back, so both hands are
+# free for work; the arms hang a little out from the body; the feet stand under the hips; the head looks ahead.
 REST = {
-    # Small carries the lantern in the left hand, away from the satchel at the right hip.
+    # Small's lantern hangs by its bail from a hook on the coat, in front of the left thigh, away from the satchel
+    # at the right hip and out of the way of the hands as they swing: it lights the ground ahead.
+    "Small": dict(swap={"lantern": ("lantern", dict(hung=dict(towards=(0.42, -0.91, 0), up=0.0)))}),
+    # Long's mug hangs by its handle in a loop of thong on the coat at the left hip; the pickaxe rides on the back
+    # on a strap across the chest.
+    "Long": dict(swap={"pickaxe": ("sling", dict(length=0.62, head=0.7)), "mug": ("mug", dict(hung=dict(towards=(0.9, -0.43, 0), up=0.0)))}),
+    "Round": dict(),
+}
+# As they were until October 6: the lantern and the mug carried in the left hand, which was modelled closed round
+# the handle (build with --carrying).
+REST_CARRYING = {
     "Small": dict(swap={"lantern": ("lantern", dict(hand=1))}, hold={1: "lantern"}),
-    # Long carries the mug in the left hand; the pickaxe rides on the back on a strap across the chest.
     "Long": dict(swap={"pickaxe": ("sling", dict(length=0.62, head=0.7)), "mug": ("mug", dict(hand=1))}, hold={1: "mug"}),
     "Round": dict(),
 }
+CARRYING = False
 
 
 def rest_preset(name, preset):
@@ -225,7 +235,7 @@ def rest_preset(name, preset):
         return shoulder + Vector((s * 0.42 * length, 0.03, -0.9 * length))
     b["arms"] = [dict(wrist=hang, pole=(0.3, 1, 0)), dict(wrist=hang, pole=(0.3, 1, 0))]
     p["body"] = b
-    rest = REST.get(name, {})
+    rest = (REST_CARRYING if CARRYING else REST).get(name, {})
     hands = [dict(grip="relaxed", palm=(1, 0, 0)), dict(grip="relaxed", palm=(-1, 0, 0))]
     for i, what in rest.get("hold", {}).items():
         # A hand that carries something by its handle: the arm hangs, the palm towards the body, and the fingers
@@ -308,6 +318,13 @@ def carriage(b, objs, hang):
                 out = max((side * (v.co.x - hips.x) for o in bag for v in o.data.vertices), default=0.0)
                 cuff = b.p["arm"] * 1.2 + 0.02
                 carry[arm] = max(carry[arm], round(max(0.0, out + cuff + 0.008 - (shoulder_out + hang["armOut"])), 4))
+            if s["bone"] in ("Lantern", "Mug"):
+                # The arm on that side hangs clear of what hangs at the hip: of the part of it that the hand passes
+                # as it swings (within a hand's swing of the hips, front and back).
+                thing = [o for o in objs if f"_{s['bone']}" in o.name]
+                out = max((side * (v.co.x - hips.x) for o in thing for v in o.data.vertices if abs(v.co.y - hips.y) < 0.13), default=0.0)
+                cuff = b.p["arm"] * 1.2 + 0.02
+                carry[arm] = max(carry[arm], round(max(0.0, out + cuff + 0.008 - (shoulder_out + hang["armOut"])), 4))
             # It rests on the skirt, and the thigh under the skirt pushes the skirt out as it swings: the skirt's
             # share of the thigh's movement at the bag's lower part (as the skirt is weighted, rigging.skin).
             hem = getattr(b, "skirt_hem", None)
@@ -342,6 +359,10 @@ def shape(b, objs):
     front, face, half = 0.0, 0.0, 0.0
     for o in objs:
         if o.type != 'MESH':
+            continue
+        # What hangs and swings at the hip (a lantern, a mug, on its hook) is not the body's front: a tool held
+        # before the body is above it.
+        if any(k in o.name for k in ("_Lantern", "_Mug", "_Hip")):
             continue
         zs = [v.co.z for v in o.data.vertices]
         if not zs:
@@ -548,6 +569,31 @@ def dress(b, piece, o, held, skin):
         below = [x for x in bpy.data.objects if x.name == f"{b.name}_Skirt"]
         clothes = [x for x in bpy.data.objects if x.name in (f"{b.name}_Top", f"{b.name}_Collar")]
         return outfits.satchel(b, "Leather", "Accent", "Brass", torso, below, clothes, **o)
+    if piece in ("lantern", "mug") and o.get("hung"):
+        # Hung at the hip by its handle: from a hook (the lantern's bail) or a loop of thong (the mug's handle) on
+        # a tab sewn to the coat. It has a bone of its own where the handle rests, and swings from there; the
+        # cloth under it stops it. Its hook goes with the cloth (it rides on it).
+        hung = o["hung"]
+        lamp = piece == "lantern"
+        onto = [x for x in bpy.data.objects if x.name in (f"{b.name}_Skirt", f"{b.name}_Top")]
+        hand_length = b.p.get("hand", 0.11) * b.H
+        hook, seat, d, out_, across = outfits.hip_hang(
+            b, onto, b.pelvis + Vector((0, 0, hung.get("up", 0.04))), hung["towards"], "Leather", "Brass" if lamp else None,
+            bar=HANDLES[piece], radius=0.036 if lamp else 0.044, reach=0.175 if lamp else 0.11,
+            neck=0.05 if lamp else HANDLES["mug"] + hand_length * 0.155, lean=22 if lamp else 33, drum=not lamp)
+        if lamp:
+            parts = outfits.lantern(b, seat, across, "Brass", "Glass", "Wood", grip=HANDLES["lantern"], span=min(0.095, hand_length * 0.62))
+            length, damping, limit = 0.12, 0.9, 55
+        else:
+            parts = outfits.mug(b, seat, across, "Mug", grip=HANDLES["mug"], span=hand_length * 0.5, clear=HANDLES["mug"] + hand_length * 0.155)
+            length, damping, limit = 0.075, 0.88, 50
+        outfits.hang_by(parts, seat, d)
+        bone = "Lantern" if lamp else "Mug"
+        b.props.append((bone, seat.copy(), seat + d * length, "Pelvis"))
+        b.swings.append(dict(bone=bone, hand=None, length=length, radius=0.0, damping=damping, limit=limit, side=1 if seat.x > b.pelvis.x else -1,
+                             ring=tuple(across), stop=tuple(out_), rest=tuple(seat + d * (length + 0.02) + out_ * 0.006), rides=True))
+        print(f"HUNG {b.name} {bone}: from the hip at {[round(c, 3) for c in seat]}, leaning {math.degrees(math.acos(max(-1, min(1, -d.z)))):.0f} degrees out from plumb")
+        return hook + parts
     if piece == "lantern":
         grasp, (a, t, n) = held[o["hand"]]
         # Carried by its handle inside the closed fingers; it has a bone of its own at the handle, so it can swing.
@@ -719,8 +765,10 @@ if __name__ == "__main__":
     parser.add_argument("--sweep", action="store_true", help="only the sweep of extreme poses (sweep.py): its report and a picture of each pose")
     parser.add_argument("--hands", action="store_true", help="only the closing of the free hands round handles (hands.py): its report and pictures")
     parser.add_argument("--weigh", action="store_true", help="only what each part of the body weighs (weights.py): its report, and miners.json")
+    parser.add_argument("--carrying", action="store_true", help="as until October 6: the lantern and the mug carried in a hand modelled closed round the handle")
     args = parser.parse_args(argv)
     os.makedirs(args.out, exist_ok=True)
+    CARRYING = args.carrying
     if args.rigged or args.audit or args.sweep or args.hands or args.weigh:
         build_rigged(args.out, args.only, args.dims, args.poses, audit_only=args.audit, report=args.report, sweep_only=args.sweep,
                      hands_only=args.hands, weigh_only=args.weigh)

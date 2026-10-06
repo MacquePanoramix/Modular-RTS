@@ -46,14 +46,18 @@ LIES = [
     # A neckband sits on its garment's neckline all the way round (its far side is its own thickness away).
     (r"Neckband", r"Top", 0.024),
     (r"Patch1", r"Skirt", 0.009),  # a patch's outer face is 5 mm off the cloth it is sewn on
+    (r"HipTab", r"Skirt|Top\.Body", 0.009),  # a tab sewn flat: its outer face is its own thickness off the cloth
 ]
 # (part, others, tolerance): some point of the part within tolerance of the others.
 MEETS = [
-    (r"LanternHandle", r"Hand\d", 0.0015),
+    # A lantern's grip is in a hand, or rests in the hook it hangs from; a mug's handle likewise, in its loop.
+    (r"LanternHandle", r"Hand\d|HipHook", 0.0015),
+    (r"HipHook|HipLoop", r"HipTab", 0.002),
+    (r"HipTab", r"Skirt|Top\.Body", 0.002),
     (r"LanternBail(\d)", r"LanternHandle", 0.0015),
     (r"LanternBail(\d)", r"LanternEar\1", 0.0015),
     (r"LanternEar\d", r"LanternCap", 0.0015),
-    (r"MugHandle", r"Hand\d", 0.0015),
+    (r"MugHandle", r"Hand\d|HipLoop", 0.0015),
     (r"MugArm\d", r"MugHandle", 0.0015),
     (r"MugArm\d", r"Mug", 0.0015),
     (r"BagLoop\d", r"Bag", 0.001),
@@ -85,9 +89,14 @@ MEETS = [
 # (part, solids, tolerance): no point of the part deeper than tolerance inside the solids.
 APART = [
     (r"Hand\d", r"Top\.Body|Skirt|Apron|Bag|Pick(Handle|Head)|Hammer(Handle|Head)", 0.003),
-    (r"Lantern\w*", r"Trousers|Skirt|Top\.Body|Boot\d|Bag", 0.002),
-    (r"Mug\w*", r"Top\.Body|Skirt|Trousers", 0.002),
+    (r"Lantern\w*", r"Trousers|Top\.Body|Boot\d|Bag", 0.002),
+    (r"Mug\w*", r"Top\.Body|Trousers", 0.002),
+    # What hangs at the hip rests on the coat: it presses a little into the soft cloth under it as the cloth moves
+    # (as a bag does).
+    (r"Lantern\w*|Mug\w*|HipLoop", r"Skirt", 0.006),
     (r"Mug|MugArm\d|MugHandle|Lantern\w*", r"Hand\d", 0.0015),
+    (r"HipHook", r"Skirt|Top\.Body|Trousers", 0.002),
+    (r"HipLoop", r"Top\.Body|Trousers", 0.002),
     (r"Bag\w*|Buckle\w*|StrapTab\d", r"Top\.Body|Top\.Arm\.[LR]|Trousers", 0.002),
     # A bag rests on the coat: its back presses a little into the soft cloth under it as the cloth moves.
     (r"Bag\w*|Buckle\w*|StrapTab\d", r"Skirt", 0.006),

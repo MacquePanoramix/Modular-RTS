@@ -24,7 +24,7 @@ namespace WonderGather.Editor
         public static readonly string[] Names = { "Small", "Long", "Round" };
         private static readonly string[] Notes =
         {
-            "young and curious, a lantern in hand",
+            "young and curious, a lantern at the hip",
             "tall and unhurried, a pickaxe on the back",
             "sturdy and laughing, a lamp on the cap",
         };

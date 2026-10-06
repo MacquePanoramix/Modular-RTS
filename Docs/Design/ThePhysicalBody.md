@@ -339,7 +339,16 @@ average, while raising it. "Lands at": the head's speed as it strikes.*
 | B7 | A hand came off the handle at full stretch | The link that keeps the handle within an arm's length was measured from the shoulder, not from where the wrist must be | Measured from the wrist. Left: up to 3 cm, for a step or two, in the fastest part of the blow |
 | B8 | In the pictures the pickaxe was a frame ahead of the hands | The pictures were taken before the body was posed | Pictures and measures are taken after the body is posed |
 
-**What is not there yet:**
+### Step 3: both hands free, things that hang (October 6)
+
+Both hands close on all three miners. Small's lantern hangs from a hook on
+the coat in front of the left thigh; Long's mug hangs in a loop of thong at
+the left hip. The pictures, the checks and what was found are in
+[TheMiners.md](../ArtDirection/TheMiners.md#both-hands-free-the-lantern-and-the-mug-at-the-hip-october-6).
+They swing as they did, from a bone of their own; they are not yet objects
+a hand can take (step 8).
+
+**What is not there yet** (of the bench, step 2):
 
 - **The swing's plan is rough.** The path is the first swing's. The hands
   do not slide on the handle. The legs do nothing. Step 4.

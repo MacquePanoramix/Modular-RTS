@@ -1,17 +1,17 @@
-WEIGHT Worker_Long: 58.5 kg (53.9 kg of body, 4.6 kg worn and carried); 1.86 m tall; its centre 1.032 m up, +41 mm ahead of the model's origin
+WEIGHT Worker_Long: 58.5 kg (53.9 kg of body, 4.6 kg worn and carried); 1.86 m tall; its centre 1.033 m up, +42 mm ahead of the model's origin
   part              kg  of body  centre along    moments (kg m2): across, about, deep
-  Pelvis          9.19     8.43          0.23      0.12753  0.05953  0.14457
+  Pelvis          9.68     8.43          0.18      0.14936  0.08093  0.17798
   Spine           8.09     7.98          0.53      0.05040  0.04938  0.06766
   Chest           7.57     5.06          0.41      0.06508  0.07458  0.07402
   Neck            1.38     1.38          0.50      0.00366  0.00199  0.00366
   Head            6.48     6.31          0.36      0.03871  0.03154  0.03683
-  UpperArm.L      1.82     1.76          0.47      0.01697  0.00166  0.01697
+  UpperArm.L      1.82     1.76          0.47      0.01697  0.00166  0.01696
   Forearm.L       1.01     0.98          0.46      0.00661  0.00062  0.00661
-  Hand.L          0.85     0.36          0.86      0.00293  0.00139  0.00354
-  UpperArm.R      1.82     1.76          0.47      0.01693  0.00166  0.01692
+  Hand.L          0.37     0.36          0.57      0.00079  0.00018  0.00089
+  UpperArm.R      1.82     1.76          0.47      0.01692  0.00166  0.01691
   Forearm.R       1.01     0.98          0.46      0.00662  0.00062  0.00662
   Hand.R          0.37     0.36          0.57      0.00078  0.00018  0.00089
-  Thigh.L         4.87     4.78          0.46      0.08164  0.00875  0.08163
+  Thigh.L         4.87     4.78          0.46      0.08163  0.00875  0.08163
   Shin.L          2.74     2.66          0.45      0.04422  0.00285  0.04415
   Foot.L          1.52     1.52          0.24      0.00525  0.00290  0.00508
   Toe.L           0.30     0.30          0.45      0.00016  0.00030  0.00036
@@ -21,7 +21,7 @@ WEIGHT Worker_Long: 58.5 kg (53.9 kg of body, 4.6 kg worn and carried); 1.86 m t
   Toe.R           0.30     0.30          0.45      0.00016  0.00030  0.00036
   worn and carried:
     PickHead                   1596 g
-    Skirt                       691 g
+    Skirt                       692 g
     Mug                         437 g
     Top                         350 g
     Trousers                    316 g

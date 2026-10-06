@@ -73,6 +73,76 @@ mean I kinda prefered the before for this one"
 
   ![Round's neckband from the front, the side and behind: before, and now](../Images/Miners/Method2_Neckband.jpg)
 
+## Both hands free: the lantern and the mug at the hip (October 6)
+
+Step 3 of [S3](../NextMilestonePlan.md). Luis's choice
+([message](../Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)):
+"the items hanging somewhere, like that makes physical sense, from the
+clothes". The hands are for the pickaxe; how strong the hands are is what
+the creator will be about.
+
+![Small and Long, before and now](../Images/PhysicalBody/FreeHands_BeforeAndNow.jpg)
+
+- **Both hands close** on all three miners now. Small's and Long's left
+  hands, which were modelled shut round a handle, are hands like their
+  right ones: fifteen finger bones, closing on any handle from 12 to 44 mm.
+- **Small's lantern** hangs by its bail from a brass hook, on a leather tab
+  sewn to the coat in front of the left thigh. It is there because:
+  - the satchel is at the right hip;
+  - a hand swinging at the side would strike a lantern hung at the side;
+  - in front, it lights the ground ahead.
+- **Long's mug** hangs by its handle in a loop of leather thong, on a tab
+  sewn to the coat at the left hip, on its side as an empty mug hangs.
+- **Where on the coat.** A coat's skirt bells out below the waist, and a
+  thing hung on that slope would lie on it. Each tab is sewn at the highest
+  place where the thing leans out from plumb by no more than a set angle
+  (22 degrees for the lantern, 33 for the mug): about the height the hand
+  carried it at before. Below that it rests against the coat, as a thing
+  hung at a hip does.
+- **They still swing.** Each hangs from a bone of its own where its handle
+  rests, swings with the walk, and is stopped by the coat. The hook and the
+  loop go with the cloth they are sewn to. This is the same swinging Luis
+  liked, from a new place; they are not yet objects a hand can take
+  (step 8).
+- **The arms.** Small's left arm hangs and swings freely now (it held the
+  lantern out, and swung less). Long's left arm hangs 6 cm further out, to
+  pass the mug.
+- **As they were:** `workers.py --carrying` builds them with the lantern
+  and the mug in the hand again.
+
+**Checked (the model quality method):**
+
+| | Small | Long | Round |
+|---|---|---|---|
+| At rest | 0 failing of 396 | 0 of 277 | 0 of 203 |
+| The hands' closing | 0 of 96 | 0 of 84 | 0 of 96 |
+| In the game's movement | 9 of 465 | 1 of 333 | 3 of 257 |
+
+**What fails in movement, and why it is left:**
+
+- **One moment of the sharpest turn** (Small, 5 of the 9; two frames of
+  146). It is the walk's high step, which has been waiting for Luis's word
+  since October 4: the knee comes up under the lifted hem. The lantern now
+  hangs in front of that knee, so in one of those frames the knee is also
+  18 mm into the lantern.
+- **A hand brushing the coat in a turn** (Small's left, 5.4 mm for two
+  frames; Long's right, 8.4 mm, known since October 4).
+- **The old swing** (Small, 3; Round, 2): the satchel's strap and the
+  sleeve under two raised arms. Small now swings with both hands, so there
+  is more of it than before (the strap 11.9 mm into the coat). The old
+  swing is being replaced (step 4); these are looked at again on the new
+  one.
+- **Round's hammer** on the apron while walking (3.9 mm; known).
+
+**Found on the way:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| F1 | Hung at the waist, the lantern lay on the coat at 46 degrees, the mug at 69 | The coats bell out below the waist: Small's doubles its width in 15 cm | The tab is sewn where the thing hangs within a set lean; the hook stands 45 mm off the cloth |
+| F2 | The fit took a lantern's wire bail, and a mug's top, to be as wide as the thing itself | It allowed for the full width from the handle down | The width begins where the thing's body does; a mug on its side is round |
+| F3 | With the lantern in front, the body's "front" for a tool came out 6 cm further forward | The lantern was measured as part of the body's front | What hangs and swings at the hip is not the body's front: a tool held before the body is above it |
+| F4 | The tab stood 3.7 mm off the coat | It was set upright on a sloping cloth | It lies along the cloth's own slope |
+
 ## A pickaxe for each, and the first swings (October 6)
 
 Steps 3 and 4 of [the miners at work](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices), and the evidence of step 6
