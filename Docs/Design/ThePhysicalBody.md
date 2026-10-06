@@ -218,16 +218,141 @@ physics tells them what they are bearing. The arms, the back and
 everything held follow the physics, pulled toward the intention as hard as
 strength allows. On rung 4 the whole body follows the physics.
 
-**To be settled on the bench, by pictures and numbers:**
+**What the bench settled** (October 6; [below](#9-what-is-built)):
 
-- whether the arms are best built from the engine's jointed physical body,
-  or from forces worked out at the hands with the arms following;
-- whether it is steady at every frame rate;
-- what one body costs;
-- how it reads at the miners' size.
+- **How the arms are built: forces at the hands, the arms following.** The
+  object is a real body in the engine's physics. Each hand pushes and turns
+  it, and can give only what its arm's joints can at that moment, in that
+  pose. The arms are then drawn to where the object is. This was built and
+  it answered the bench's questions.
+- **The other way was not built:** the engine's own jointed physical body
+  for the arms. The plan said both would be tried and compared, and only
+  one was. It stays worth trying if the arms' own movement comes to look
+  stiff, because that way gives each part of the arm its own swing.
+- **Steady at every frame rate tried:** the same lift and the same blow
+  with the game running free, and at 25, 50 and 100 frames a second.
+- **What one body costs:** about 26 millionths of a second for each step of
+  the physics (fifty a second), for the hands' own work, measured in the
+  editor. A hundred miners at work would add about 2 thousandths of a
+  second a frame. The engine's own share for the objects is not in that
+  figure.
+- **How it reads at the miners' size:** see the clips. That judgement is
+  Luis's.
 
 **The riskiest part is rung 4** (the fall, and getting up believably). It
 is built after the swing works, and shown as clips before it is trusted.
+
+## 9. What is built
+
+### Step 1: everything weighed (October 6)
+
+Each part of each miner, and each pickaxe, has a weight, a place where
+that weight is, and a resistance to turning. All of it is measured on the
+models themselves (`Art/Blender/Worker/weights.py`):
+
+- **the body under its clothes,** as the solids its own measures describe,
+  at the density of a living body;
+- **what it wears,** by the area of each piece of cloth, leather or sheet
+  metal;
+- **solid wood and iron** (a pickaxe, a hammer) by their volume.
+
+| | Small | Long | Round |
+|---|---|---|---|
+| Height | 1.42 m | 1.86 m | 1.56 m |
+| **Weight** | **40.7 kg** | **58.5 kg** | **87.6 kg** |
+| of which worn and carried | 1.8 kg | 4.6 kg | 2.8 kg |
+| The head | 10.0 kg | 6.5 kg | 9.8 kg |
+| One arm (upper arm, forearm, hand) | 1.9 kg | 3.2 kg | 3.7 kg |
+| Its weight's centre, above the ground | 0.81 m | 1.03 m | 0.87 m |
+| **Its pickaxe** | **1.50 kg**, 517 mm | **3.21 kg**, 718 mm | **2.39 kg**, 561 mm |
+| The pickaxe against the body's weight | 3.7% | 5.5% | 2.7% |
+| The most its shoulder gives, at strength 1 | 24 N·m | 31 N·m | 61 N·m |
+
+The full reports: `Art/Review/Miners/weights_<Name>.txt` and
+`tool_<Name>.txt`.
+
+**What the figures say:**
+
+- **The heads are heavy.** Small's is a quarter of its weight. That is the
+  shape of the characters, weighed honestly. Whether it reads well when the
+  body has to balance is for step 6 to show.
+- **Round is twice Small's weight,** and by far the strongest in the arms:
+  strength is built from the limbs' own thickness.
+- **Long's pickaxe is heavy for Long.** A pickaxe is sized by the arm that
+  swings it, and its weight grows much faster than its length. Long's arms
+  are long and thin. This is expected to show when Long has both hands free
+  (step 3). It has not been tried yet.
+- **A real pickaxe** of the common kind is 0.9 m long with a head of 2.3
+  to 3.2 kg: with its handle, 4 to 5.5% of the weight of a grown person of
+  75 kg. The miners' are 2.7 to 5.5% of theirs.
+
+### Step 2: the bench (October 6)
+
+Round stands in the Ordinary Place with its pickaxe over a block. The
+pickaxe is a real body. Round bows to it, raises it over the right
+shoulder as high as it will go, and brings it down on the block. This is
+tried at three strengths, with the pickaxe at half, once and twice its own
+weight.
+
+![Round at three strengths](../Images/PhysicalBody/Bench_Round_Strengths.gif)
+
+*Its own pickaxe (2.39 kg) at half strength, ordinary strength and double
+strength. All nine: [Bench_Round.gif](../Images/PhysicalBody/Bench_Round.gif);
+as stills: [Bench_Round_Strips.jpg](../Images/PhysicalBody/Bench_Round_Strips.jpg).*
+
+**Nothing in these clips is timed by hand.** The plan says only where the
+pickaxe is meant to go. How fast it rises, how hard the arms work, how
+fast it lands: these come out of the weights and of what the arms can
+give.
+
+| Strength | Pickaxe at half weight (1.19 kg) | Its own (2.39 kg) | Twice its weight (4.78 kg) |
+|---|---|---|---|
+| **0.5** | raised in 0.60 s, arms at 55%; lands at 6.2 m/s | 0.62 s, 83%; 4.1 m/s | **1.36 s**, 97%, and not as high; **2.2 m/s** |
+| **1** (ordinary) | 0.60 s, 27%; 8.4 m/s | **0.60 s, 42%; 6.5 m/s** | 0.60 s, 73%; 4.5 m/s |
+| **2** | 0.60 s, 14%; 9.6 m/s | 0.60 s, 21%; 8.3 m/s | 0.60 s, 36%; 6.5 m/s |
+
+*"Arms at 55%": the hardest-worked joint used 55% of what it has, on
+average, while raising it. "Lands at": the head's speed as it strikes.*
+
+**How to read it:**
+
+- **The weak one with the heavy pickaxe** takes more than twice as long to
+  raise it, with everything it has, does not get it as high, and lands a
+  feeble blow. No rule says so: the arms run out.
+- **Twice the strength with twice the weight** is the same swing (0.60 s,
+  about 40%, 6.5 m/s) with twice the energy behind it. That is what physics
+  says it should be, and it is a check that the sums are right.
+- **An ordinary blow** with Round's own pickaxe lands with about 50 joules:
+  what the same pickaxe would have if dropped from 2.1 m. The arms and the
+  back add to what gravity gives.
+
+**What the bench found, and what was done about each:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| B1 | Told to go straight to the end of the blow with all it had, the pickaxe swung the wrong way round: its head fell back behind the hands and came through underneath | Each arm gave what it could of its own share, and the two shares no longer added up to the turn that was meant | Both arms give the same share of what is asked, so together they always push the way that was meant. The plan leads the pickaxe along its path, a fixed way ahead of where it is |
+| B2 | With the trunk upright, two hands can hold the handle only while it leans less than about 45 degrees forward | The upper hand's arm is too short to follow the handle further | The body bows from the hips to its work. The bow is by intention only: the back's own strength is not yet counted |
+| B3 | The blow landed at the same speed whatever the strength | The arms finished early and the back's steady pace brought the head down | The back goes first; the arms follow when it is well on its way |
+| B4 | After the blow the pickaxe vaulted over its own head | The plan went on pushing into the block | After a blow the pickaxe is meant to stay where the blow left its head |
+| B5 | The same lift took 72% of the arms at one frame rate and 37% at another | The body is posed once a frame and the physics steps on its own clock: read as last posed, the body moved in stairs | The physics reads the body as it stands at each step's own moment. The same at every rate tried since |
+| B6 | After the blow the pickaxe went on turning in the hands, another 45 degrees | A pickaxe's weight is nearly all at its head, so a blow there stops the head and hardly slows the turn. What stops the turn in a real swing is the hands and forearms on the handle, and they had no weight | The arms' own weight rides on the handle where each hand holds. A muscle forced back resists with more than it can push with |
+| B7 | A hand came off the handle at full stretch | The link that keeps the handle within an arm's length was measured from the shoulder, not from where the wrist must be | Measured from the wrist. Left: up to 3 cm, for a step or two, in the fastest part of the blow |
+| B8 | In the pictures the pickaxe was a frame ahead of the hands | The pictures were taken before the body was posed | Pictures and measures are taken after the body is posed |
+
+**What is not there yet:**
+
+- **The swing's plan is rough.** The path is the first swing's. The hands
+  do not slide on the handle. The legs do nothing. Step 4.
+- **The back is as strong as it likes.** It bows at one pace whatever it
+  carries. Steps 4 and 6.
+- **Balance is not measured.** Step 6.
+- **Only Round has been tried,** because only Round has two free hands.
+  Step 3.
+- **The pickaxe does not yet stop at the miner's own body.**
+- **It is not in the game's mining.** The look with `K` is the old swing.
+- **Strength's figures are a first setting,** from an ordinary grown
+  person's arm. They have not been set against measured swings.
+- **Luis has not judged it.**
 
 ## Sources
 

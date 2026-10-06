@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 2538325946651080330}
   - component: {fileID: 8767443450206716691}
   - component: {fileID: 6466934155777013954}
+  - component: {fileID: 1173964628449800061}
   m_Layer: 0
   m_Name: Miner_Small
   m_TagString: Untagged
@@ -718,6 +719,81 @@ MonoBehaviour:
     along: {x: 0.0000015960959, y: 0.9999998, z: 0.000029784396}
   pickaxe: {fileID: 11400000, guid: 3ff8c85455bf39a49a0ca2d46aa6be0e, type: 2}
   flapSlack: {x: 0, y: 0}
+--- !u!114 &1173964628449800061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5670151192814786648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fc445f01a0c5774f9da27c1b1064fd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.PhysicalBody
+  parts:
+  - bone: {fileID: 7828424823916121335}
+    mass: 7.5777
+    centre: {x: -0.00148, y: 0.058379825, z: -0.0008900091}
+  - bone: {fileID: 4067099685884200698}
+    mass: 4.5602
+    centre: {x: -0.00003, y: 0.08060983, z: -0.000070005655}
+  - bone: {fileID: 1575764136667454172}
+    mass: 3.3976
+    centre: {x: 0.00071, y: 0.050359704, z: -0.00014990568}
+  - bone: {fileID: 4805121692291165974}
+    mass: 1.0018
+    centre: {x: 0, y: 0.058966286, z: 0.000000055413693}
+  - bone: {fileID: 4986923011873541591}
+    mass: 9.962
+    centre: {x: -0.00027, y: 0.08362498, z: -0.011133973}
+  - bone: {fileID: 7317490338212657809}
+    mass: 1.1186
+    centre: {x: 0.0002175087, y: 0.110469535, z: -0.00014195594}
+  - bone: {fileID: 4888717343527438867}
+    mass: 0.6037
+    centre: {x: 0.00007971609, y: 0.09056904, z: -0.000098006785}
+  - bone: {fileID: 711018695390905413}
+    mass: 0.4917
+    centre: {x: -0.03638232, y: 0.13782778, z: 0.012302903}
+  - bone: {fileID: 2923595937170566873}
+    mass: 1.1109
+    centre: {x: -0.00015656663, y: 0.111625776, z: -0.00009346569}
+  - bone: {fileID: 7077676808443954894}
+    mass: 0.6024
+    centre: {x: -0.00007307553, y: 0.09053894, z: 0.000014901159}
+  - bone: {fileID: 7858223597140355620}
+    mass: 0.2013
+    centre: {x: 0.00015145646, y: 0.06776165, z: -0.000052316544}
+  - bone: {fileID: 8405080821607070005}
+    mass: 2.383
+    centre: {x: -0.0000011845259, y: 0.12502804, z: -0.00001852047}
+  - bone: {fileID: 7598799445850630589}
+    mass: 1.3501
+    centre: {x: 0.000053409436, y: 0.1226963, z: 0.0005100184}
+  - bone: {fileID: 2270632584190029281}
+    mass: 1.0749
+    centre: {x: -0.011468888, y: 0.029501196, z: -0.03303373}
+  - bone: {fileID: 572968196648695721}
+    mass: 0.2119
+    centre: {x: -0.0000015678818, y: 0.024976727, z: 0.005480141}
+  - bone: {fileID: 7857773324356805863}
+    mass: 2.3825
+    centre: {x: 0.00000070000533, y: 0.12498692, z: -0.000020427839}
+  - bone: {fileID: 3473471823010019944}
+    mass: 1.3508
+    centre: {x: -0.00006375864, y: 0.122682676, z: 0.00052757567}
+  - bone: {fileID: 1609480273840780106}
+    mass: 1.0748
+    centre: {x: 0.011471629, y: 0.029506622, z: -0.033041634}
+  - bone: {fileID: 733131919436873476}
+    mass: 0.2119
+    centre: {x: 0.0000015678818, y: 0.024976727, z: 0.005480141}
+  arms: 05000000060000000700000008000000090000000a000000i
+  mass: 40.6678
+  armRadius: 0.033
+  legRadius: 0.041
+  strength: 1
 --- !u!1 &5882402190698486394
 GameObject:
   m_ObjectHideFlags: 0

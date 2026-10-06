@@ -13,6 +13,29 @@ namespace WonderGather
         // The handle's radius where each hand grips it (x: the primary grip, y: the secondary). A hand closes
         // round a handle of that thickness. The first pickaxe's shaft is 65 mm across.
         [SerializeField] private Vector2 gripRadii = new Vector2(.0325f, .0325f);
+        // What it weighs (kg), where its weight is, and how hard it is to turn about that point (kg m2 about its three
+        // principal axes, and how those are turned), in the tool's own space: measured on its model. A tool without
+        // a weight (the first pickaxe) cannot be held by a body that answers to forces.
+        [SerializeField] private float mass;
+        [SerializeField] private Vector3 centre, inertia;
+        [SerializeField] private Quaternion inertiaTurn = Quaternion.identity;
+        // Its extent along the handle (the foot's and the top's height) and its point, for the solid the physics gives it.
+        [SerializeField] private Vector2 span;
+        [SerializeField] private Vector3 point;
+        public bool HasWeight => mass > 0;
+        public float Mass => mass;
+        public Vector3 Centre => centre;
+        public Vector3 Inertia => inertia;
+        public Quaternion InertiaTurn => inertiaTurn;
+        public float Foot => span.x;
+        public float Top => span.y;
+        public Vector3 Point => point;
+        public void ConfigureWeight(float kilograms, Vector3 at, Vector3 moments, Quaternion turn, float foot, float top, Vector3 tip)
+        {
+            if (!(kilograms > 0 && kilograms < 100) || !Finite(at) || !(moments.x > 0 && moments.y > 0 && moments.z > 0) || !(top > foot) || !Finite(tip))
+                throw new ArgumentException("A tool's weight needs a mass, a centre, three moments and its extent.");
+            mass = kilograms; centre = at; inertia = moments; inertiaTurn = Quaternion.Normalize(turn); span = new Vector2(foot, top); point = tip;
+        }
         public string Id => id;
         public string DisplayName => displayName;
         public GameObject Prefab => prefab;

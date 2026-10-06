@@ -11,6 +11,15 @@ namespace WonderGather
     // A body with hands of its own (a modelled being). It says which hands are free to hold a tool, and where a
     // wrist must be for a hand to hold a handle; and it is told, each frame, what each hand holds, so that it can
     // turn the hand onto the handle and close the fingers. Hand 0 is the left, 1 the right.
+    // Something that says where a hand must be (a real object in it, moved by forces): the body is told how it stands,
+    // then asked for each guided hand's wrist. The arm follows; it does not place the object.
+    public interface IArmGuide
+    {
+        void Stands(Vector3 hips, Quaternion posture, Vector3 leftShoulder, Vector3 rightShoulder);
+        bool Guides(int hand);
+        Vector3 Wrist(int hand, Vector3 shoulder);
+    }
+
     public interface IHandHolds
     {
         bool HandFree(int hand);
@@ -141,6 +150,42 @@ namespace WonderGather
         private IHandHolds holds;
         private bool holdsLooked;
         private IHandHolds Holds { get { if(!holdsLooked) { holds=GetComponent<IHandHolds>(); holdsLooked=true; } return holds; } }
+        private IArmGuide guide;
+        // Set by what guides the arms when it begins and ends.
+        public void GuideArms(IArmGuide value)=>guide=value;
+        // How the body stood when it was last posed: for what works on the physics' own clock.
+        private Vector3 hipsNow;
+        private Quaternion postureNow=Quaternion.identity;
+        private readonly Vector3[] shoulderNow=new Vector3[2],elbowNow=new Vector3[2];
+        public Vector3 HipsNow=>hipsNow;
+        public Quaternion PostureNow=>postureNow;
+        public Vector3 ShoulderNow(int index)=>shoulderNow[index];
+        // The body is posed once a frame; the physics steps on its own clock, sometimes twice in a frame. Read as it
+        // was last posed, the body would move in stairs. This is how it will stand at a moment a little after it was
+        // last posed, going on as it was going.
+        private Vector3 hipsBefore;
+        private Quaternion postureBefore=Quaternion.identity;
+        private readonly Vector3[] shoulderBefore=new Vector3[2],elbowBefore=new Vector3[2];
+        private float posedAt=-1,posedBefore=-1;
+        public void StandsAt(float time,out Vector3 hips,out Quaternion posture,System.Span<Vector3> shoulders,System.Span<Vector3> elbows)
+        {
+            float span=posedAt-posedBefore;
+            float on=posedBefore>=0&&span>1e-6f?Mathf.Clamp((time-posedAt)/span,0,4):0;
+            hips=hipsNow+(hipsNow-hipsBefore)*on;
+            posture=on>0?Quaternion.SlerpUnclamped(postureBefore,postureNow,1+on):postureNow;
+            for(int i=0;i<2;i++)
+            {
+                shoulders[i]=shoulderNow[i]+(shoulderNow[i]-shoulderBefore[i])*on;
+                elbows[i]=elbowNow[i]+(elbowNow[i]-elbowBefore[i])*on;
+            }
+        }
+        // The body bows from the hips by an angle (forward is positive), at its own pace: for work that needs the
+        // hands low or the weight thrown forward. Asked for by what plans the work; 0 stands it up again.
+        private float bowWanted,bow;
+        private const float BowPace=150;
+        public void Bow(float degrees)=>bowWanted=Mathf.Clamp(degrees,-15,60);
+        public float BowNow=>bow;
+        public Vector3 ElbowNow(int index)=>elbowNow[index];
         private Vector3 previousPosition,previousVelocity,velocity,acceleration;
         private Quaternion facing;
         private float pelvisY,hipLift,phase,cadence=1,duty=.6f,gaitWeight,jogWeight;
@@ -633,6 +678,8 @@ namespace WonderGather
             Vector3 localAcceleration=Quaternion.Inverse(facing)*acceleration;
             float pitch=Mathf.Clamp(localAcceleration.z*1.8f+speed*1.2f+jog*3,-7,12),roll=Mathf.Clamp(-localAcceleration.x*1.6f,-6,6);
             if(equipment!=null && equipment.Busy) pitch+=Mathf.Sin(equipment.Progress*Mathf.PI)*4;
+            bow=dt>0?Mathf.MoveTowards(bow,bowWanted,BowPace*dt):bowWanted;
+            pitch+=bow;
             // posture: the steady body frame used by tools and carried loads.
             Quaternion posture=facing*Quaternion.Euler(pitch,0,roll);
             Quaternion hipFrame=posture*Quaternion.Euler(0,yaw,list);
@@ -662,6 +709,15 @@ namespace WonderGather
             Vector3 leftShoulder=waist+chest*new Vector3(-P.shoulder.x,P.shoulder.y,P.shoulder.z),rightShoulder=waist+chest*new Vector3(P.shoulder.x,P.shoulder.y,P.shoulder.z);
             // One explicit update order: supported torso -> tool trajectory/contact -> grip IK.
             if(equipment!=null) equipment.SolveFrame(dt,hips,posture,leftShoulder,rightShoulder,!support[0].swinging&&!support[1].swinging);
+            if(dt>0)
+            {
+                hipsBefore=hipsNow;postureBefore=postureNow;shoulderBefore[0]=shoulderNow[0];shoulderBefore[1]=shoulderNow[1];
+                elbowBefore[0]=elbowNow[0];elbowBefore[1]=elbowNow[1];
+                posedBefore=posedAt;posedAt=Time.time;
+            }
+            else posedBefore=-1;
+            hipsNow=hips;postureNow=posture;shoulderNow[0]=leftShoulder;shoulderNow[1]=rightShoulder;
+            if(guide!=null) guide.Stands(hips,posture,leftShoulder,rightShoulder);
             float armAmplitude=Mathf.Lerp(Mathf.Lerp(.05f,.22f,Mathf.Clamp01(speed/2.2f)),.16f,jogWeight)*gaitWeight*(P.armHang.y/.83f)*P.armSwing;
             bool hasToes=Pair(toes);
             for(int i=0;i<2;i++)
@@ -718,6 +774,13 @@ namespace WonderGather
                         handLocal[i]=Quaternion.Inverse(posture)*(wrist-hips);
                     }
                 }
+                // A hand on a real object goes where the object is.
+                if(guide!=null && guide.Guides(i))
+                {
+                    wrist=guide.Wrist(i,shoulder);
+                    handLocal[i]=Quaternion.Inverse(posture)*(wrist-hips);
+                    busy=true;
+                }
                 // Free arms point their elbows back; carrying and gripping turn them out and down.
                 handsBusy[i]=dt>0&&handsInitialized?Mathf.MoveTowards(handsBusy[i],busy?1:0,dt*4):busy?1:0;
                 SolveArm(i,Vector3.Lerp(new Vector3(side*.2f,-.1f,-1),new Vector3(side*.55f,-.6f,-.25f),handsBusy[i]),chest,shoulder,wrist);
@@ -735,6 +798,7 @@ namespace WonderGather
             Vector3 bend=Vector3.ProjectOnPlane(posture*bendHint,axis).normalized;
             if(bend.sqrMagnitude<.001f) bend=Vector3.Cross(axis,posture*Vector3.forward).normalized;
             Vector3 elbow=shoulder+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,upper*upper-along*along));
+            elbowNow[index]=elbow;
             Segment(upperArms[index],shoulder,elbow,.13f*P.scale);Segment(forearms[index],elbow,wrist,.11f*P.scale);
             handPositions[index]=transform.InverseTransformPoint(wrist);
         }

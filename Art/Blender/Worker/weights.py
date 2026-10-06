@@ -9,9 +9,9 @@ turn. They are measured here on the model itself, as a tool's grips and a body's
   volume. Each piece is given to the part of the body that carries it (the bone its skin follows);
 - a tool, by the volume of its parts and what they are made of.
 
-A body's parts are given per bone: a mass, where its centre is along the bone (0 at the bone's head, 1 at its
-tail), and three moments about that centre: across the body (about the side-to-side axis), about the bone's own
-line, and about the front-to-back axis. A tool is given whole: its mass, its centre, its principal moments and how
+A body's parts are given per bone: a mass, where its centre is (in the being's space as the game has it, and
+along the bone: 0 at the bone's head, 1 at its tail), and three moments about that centre: across the body (about
+the side-to-side axis), about the bone's own line, and about the front-to-back axis. A tool is given whole: its mass, its centre, its principal moments and how
 they are turned, in the tool's own space.
 
     weights.body(b, meshes, bones)      one being's parts (meshes: its parts, skinned, before they are joined)
@@ -268,10 +268,15 @@ def body(b, meshes, bones):
         along = (both.centre - head).dot(y) / max((tail - head).length, 1e-6)
         moments = [x.dot(both.inertia @ x), y.dot(both.inertia @ y), z.dot(both.inertia @ z)]
         parts.append(dict(bone=name, mass=round(both.mass, 4), body=round(own[name].mass, 4), along=round(along, 4),
-                          off=game((both.centre - head) - y * (both.centre - head).dot(y)), inertia=[round(v, 6) for v in moments]))
+                          at=game(both.centre), inertia=[round(v, 6) for v in moments]))
         whole = whole + both
+    # Four joints as modelled, for the game to find how the model sits in its prefab: the hips' middle, the collar,
+    # and the two shoulders (left, right).
+    joints = [bones["Pelvis"][0], bones["Neck"][0], bones["UpperArm.L"][0], bones["UpperArm.R"][0]]
     return dict(mass=round(whole.mass, 3), body=round(sum(s.mass for s in own.values()), 3), worn=round(sum(s.mass for s in on.values()), 3),
-                centre=game(whole.centre), parts=parts), pieces
+                centre=game(whole.centre), parts=parts, frame=[c for j in joints for c in game(j)],
+                # The limbs' thickness (the body's own measures): what its strength is built from.
+                armRadius=round(b.p["arm"], 4), legRadius=round(b.p["leg"], 4)), pieces
 
 
 def game(v):

@@ -24,9 +24,20 @@
     - **Added:** stamina (short-term tiredness); the interaction click (a
       key and a click show a thing's options, with a cancel); every action
       done physically by the body; all of it built to be built upon.
-  - **Steps:** twelve, in [the plan](NextMilestonePlan.md#steps). The
-    first two (weigh everything; the bench) come before anything else, and
-    the bench's clips go to Luis before more is built on it.
+  - **Steps:** twelve, in [the plan](NextMilestonePlan.md#steps).
+    - **Step 1, everything weighed: built** (October 6). Small weighs
+      40.7 kg, Long 58.5 kg, Round 87.6 kg; their pickaxes 1.50, 3.21 and
+      2.39 kg ([the table](Design/ThePhysicalBody.md#step-1-everything-weighed-october-6)).
+    - **Step 2, the bench: built, and waiting for Luis's eye**
+      (October 6). Round raises a pickaxe that has real weight and brings
+      it down on a block, at three strengths and three weights. How fast
+      it rises and how hard it lands come out of the weights and of what
+      the arms can give; a weak miner with a heavy pickaxe visibly
+      struggles ([clips and figures](Design/ThePhysicalBody.md#step-2-the-bench-october-6)).
+
+      ![Round at three strengths](Images/PhysicalBody/Bench_Round_Strengths.gif)
+    - **It is a bench, not yet the game:** the look with `K` is still the
+      old swing. Steps 3 (free hands) and 4 (the swing proper) come next.
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

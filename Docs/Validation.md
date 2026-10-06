@@ -1775,3 +1775,76 @@ whole project. A moving picture of the present swing was made for it.
 Pictures: `Docs/Images/Miners/Work_Clip_Side.gif`, `Work_Clip_Front.gif`,
 `Work_Clip_Strip.jpg`. The finding is used in
 [Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md#what-the-swing-is-today).
+
+## S3, steps 1 and 2 — everything weighed, and the bench (October 6)
+
+Stage S3, approved by Luis that day ([plan](NextMilestonePlan.md);
+[design and findings](Design/ThePhysicalBody.md#9-what-is-built)).
+
+- **Built:** the weights of every miner and pickaxe, measured on the
+  models; a pickaxe as a real body in a miner's hands, moved only as hard
+  as the arms' joints can; a bench that tries it at several strengths and
+  weights.
+- **The weights** (`workers.py --weigh`, `tools.py --weigh`): Small 40.7 kg,
+  Long 58.5 kg, Round 87.6 kg; pickaxes 1.50, 3.21 and 2.39 kg. Reports in
+  `Art/Review/Miners/weights_<Name>.txt` and `tool_<Name>.txt`.
+  - **Checked by hand:** Small's trunk, head and arm were worked out
+    beforehand from its measures (about 13 kg, 10 kg and 1.9 kg); the build
+    gives 14.8, 10.0 and 1.9. The pickaxes' moments agree with a head on a
+    handle.
+  - **Fixed on the way:** a pick's collar was weighed as a solid drum of
+    iron (677 g on Long's); it is a ring round the handle (296 g).
+- **In the game** (`MinerSetup.CreateAll`, in the isolated copy): each
+  prefab has its weights; how each model sits in its prefab came out as the
+  hands' fit had found it (Long 11.25, Round 2.44, Small 0.56 degrees).
+- **The bench** (`PhysicalBench`, Round, frame for step at 50 a second;
+  two swings each, alike in every case):
+
+  | Strength | Pickaxe 1.19 kg | 2.39 kg (its own) | 4.78 kg |
+  |---|---|---|---|
+  | 0.5 | raised in 0.60 s at 55%; 6.2 m/s, 23 J | 0.62 s, 83%; 4.1 m/s, 21 J | 1.36 s, 97%, 0.71 m; 2.2 m/s, 11 J |
+  | 1 | 0.60 s, 27%; 8.4 m/s, 42 J | 0.60 s, 42%; 6.5 m/s, 51 J | 0.60 s, 73%; 4.5 m/s, 48 J |
+  | 2 | 0.60 s, 14%; 9.6 m/s, 55 J | 0.60 s, 21%; 8.3 m/s, 83 J | 0.60 s, 36%; 6.5 m/s, 101 J |
+
+  All but the weakest with the heaviest raise the head 0.84 to 0.88 m.
+  - **The hands** stay within 0 to 19 mm of where they hold (a step or two
+    in the fastest part of the blow); 29 mm at most in the tests.
+  - **The pickaxe** leans at most 36 degrees aside in the hands (14 are
+    meant), but for the weakest with the heaviest, which lets it fall back
+    at the top (86).
+- **Frame rate.** The ordinary swing, running free and at 25 and 50 frames
+  a second: raised at 42% of the arms; the blow at 6.6, 6.6 and 6.5 m/s.
+  (Before the fix B5 the same lift took 72% at 25 frames a second and 37%
+  at 50.) At 100 frames a second it was run only before the last two
+  changes, and agreed then.
+- **Cost.** One body's hands: 26 millionths of a second a physics step, on
+  average over about 350 steps, in the editor (44 in the first run of a
+  session). The engine's own share for the object is not in it.
+- **Tests.**
+  - **`PhysicalBodyTests`** (new, three): 3 of 3. Its figures: ordinary,
+    raised 0.88 m in 0.60 s at 42%, struck at 6.6 m/s; heavy, 75% and
+    4.2 m/s; strong, 21% and 8.3 m/s; feeble, 0.72 m in 1.42 s at 96%,
+    1.4 m/s.
+  - **Miner tests and tool tests:** all passed with them (14 in that run);
+    the old swing still holds its handle to 0.0 mm.
+  - **Full PlayMode suite, one run:** 129 tests; 125 passed, none failed,
+    4 skipped as explicit (1,061 s).
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`). Nothing in
+  it looks different: the bench is a test.
+- **What failed on the way, and why:** the eight findings B1 to B8 in
+  [the design](Design/ThePhysicalBody.md#step-2-the-bench-october-6). Two
+  were found only in pictures (the pickaxe swinging the wrong way round;
+  the pickaxe a frame ahead of the hands, which was the pictures' own
+  fault) and two only in a step-by-step trace (the back and the arms out
+  of time; the plan pushing into the block).
+- **Not tested:**
+  - **A second run of the suite,** and the crowd benchmark.
+  - **Small and Long,** and any one-handed hold: only Round has two free
+    hands.
+  - **The cost in a release build,** and with many at work at once.
+  - **The other way of building the arms** (the engine's jointed body):
+    not built.
+  - **The game's own mining:** it still uses the old swing.
+  - **Other hardware.**
+  - **Luis's eye.**
+

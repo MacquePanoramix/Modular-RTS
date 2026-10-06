@@ -51,6 +51,27 @@ namespace WonderGather.Editor
             public float bodyFront, faceFront, headHalf;
             // The hands that close round a handle (hands.py).
             public Gripped[] grips;
+            // What each part of the body weighs (weights.py).
+            public Weighed weights;
+        }
+
+        [Serializable]
+        private class Weighed
+        {
+            public float mass, body, worn, armRadius, legRadius;
+            // Four joints as modelled (the hips' middle, the collar, the left and the right shoulder), in the being's
+            // own space: how the model sits in its prefab is found from them.
+            public float[] frame;
+            public WeighedPart[] parts;
+        }
+
+        [Serializable]
+        private class WeighedPart
+        {
+            public string bone;
+            public float mass;
+            // Its centre, in the being's own space as modelled.
+            public float[] at;
         }
 
         [Serializable]
@@ -80,6 +101,9 @@ namespace WonderGather.Editor
             // Where the hands grip (the right hand's, then the left's), the handle's radius at each, the ball
             // the strike sweeps, and the point itself.
             public float[] primaryGrip, secondaryGrip, gripRadii, head, tip;
+            // What it weighs, where, and how hard it is to turn (weights.py).
+            public float mass;
+            public float[] centre, inertia, inertiaTurn;
         }
 
         [Serializable]
@@ -311,10 +335,39 @@ namespace WonderGather.Editor
                 e.skirtSlack != null && e.skirtSlack.Length == 2 ? new Vector2(e.skirtSlack[0], e.skirtSlack[1]) : Vector2.zero,
                 Grips(e, root.transform, Bone));
             miner.ConfigureTool(Pickaxe(name, outline));
+            Weigh(root, name, e, Bone);
             Debug.Log($"MINER_HANGING {name} " + string.Join(", ", hanging.Select(h => $"{h.bone.name} {h.length:F3} m stop {h.stopDistance:F3}")));
             Debug.Log($"MINER_GRIPS {name} " + string.Join(", ", (e.grips ?? new Gripped[0]).Select(g => $"{g.hand} {g.bones.Length} joints, {g.radii.Length} handles")));
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath(name));
             Object.DestroyImmediate(root);
+        }
+
+        // What the body weighs: each part's mass at its place in its own bone. The model's data is in the being's space
+        // as modelled; the prefab stands the model squared to its own axes, so where the model sits is found from
+        // four of its joints (the hips, the collar, the shoulders) and the bones that are those joints.
+        private static void Weigh(GameObject root, string name, Entry e, Func<string, Transform> bone)
+        {
+            var w = e.weights;
+            if (w == null || w.parts == null || w.parts.Length == 0 || w.frame == null || w.frame.Length != 12)
+                throw new InvalidOperationException($"{name} has not been weighed (workers.py --weigh).");
+            Vector3 At(float[] v, int k = 0) => new Vector3(v[k], v[k + 1], v[k + 2]);
+            Vector3 hipsM = At(w.frame), collarM = At(w.frame, 3), leftM = At(w.frame, 6), rightM = At(w.frame, 9);
+            Vector3 hips = bone("Pelvis").position, collar = bone("Neck").position, left = bone("UpperArm.L").position, right = bone("UpperArm.R").position;
+            Quaternion Frame(Vector3 up, Vector3 across) => Quaternion.LookRotation(Vector3.Cross(across, up).normalized, up.normalized);
+            Quaternion sits = Frame(collar - hips, right - left) * Quaternion.Inverse(Frame(collarM - hipsM, rightM - leftM));
+            float scale = (collar - hips).magnitude / (collarM - hipsM).magnitude;
+            if (Mathf.Abs(scale - 1) > .02f) throw new InvalidOperationException($"{name}'s model is not the size its weights were measured at ({scale:F3}).");
+            var parts = w.parts.Select(p =>
+            {
+                var b = bone(p.bone);
+                return new PhysicalBody.Part { bone = b, mass = p.mass, centre = b.InverseTransformPoint(hips + sits * (At(p.at) - hipsM)) };
+            }).ToArray();
+            int Index(string n) => Array.FindIndex(w.parts, p => p.bone == n);
+            var physical = root.AddComponent<PhysicalBody>();
+            physical.Configure(parts, new[] { Index("UpperArm.L"), Index("Forearm.L"), Index("Hand.L"), Index("UpperArm.R"), Index("Forearm.R"), Index("Hand.R") },
+                w.armRadius, w.legRadius);
+            Debug.Log($"MINER_WEIGHT {name}: {physical.Mass:F1} kg in {parts.Length} parts; its centre {physical.CentreOfMass().y - root.transform.position.y:F3} m up; "
+                + $"the model sits {Quaternion.Angle(sits, root.transform.rotation):F2} degrees off its prefab's axes");
         }
 
         public const string ToolFolder = "Assets/_WonderGather/Data/Miners";
@@ -396,6 +449,10 @@ namespace WonderGather.Editor
             Vector3 In(float[] v) => new Vector3(v[0], v[1], v[2]);
             tool.Configure("pickaxe", "Pickaxe", prefab, In(told.primaryGrip), In(told.secondaryGrip), In(told.head), told.headRadius,
                 new Vector2(told.gripRadii[0], told.gripRadii[1]));
+            if (!(told.mass > 0) || told.centre == null || told.inertia == null || told.inertiaTurn == null)
+                throw new InvalidOperationException($"{name}'s pickaxe has not been weighed (tools.py --weigh).");
+            tool.ConfigureWeight(told.mass, In(told.centre), In(told.inertia), new Quaternion(told.inertiaTurn[0], told.inertiaTurn[1], told.inertiaTurn[2], told.inertiaTurn[3]),
+                told.foot, told.top, In(told.tip));
             EditorUtility.SetDirty(tool);
             Debug.Log($"MINER_TOOL {name}: a pickaxe {told.length:F2} m long, gripped at {told.primaryGrip[1]:F3} and {told.secondaryGrip[1]:F3}, "
                 + $"its handle {told.gripRadii[0] * 2000:F0} and {told.gripRadii[1] * 2000:F0} mm thick there");

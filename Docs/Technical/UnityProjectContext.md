@@ -1197,3 +1197,89 @@ Steps 3 and 4 of "the miners at work"
     [the review](../Reviews/2026-10-06_SamePageReview.md)).
 - **Not built:** a place to mine, body-sized places to stand, where a tool
   is kept, hauling (step 5 and the choices M1 to M4).
+
+## The physical body, steps 1 and 2: weights, and a real tool in the hands — October 6
+
+Stage S3 ([plan](../NextMilestonePlan.md); [design](../Design/ThePhysicalBody.md)).
+Nothing here is in the game's mining yet: it is a bench, run as a test.
+
+- **Blender** (`Art/Blender/Worker`):
+  - **`weights.py`** (new). `body(b, meshes, bones)` weighs one being:
+    the body under its clothes as solids from its own measures (the
+    trunk's widths and depths, the limbs' thicknesses, the head), at
+    1000 kg/m3; what it wears by area (cloth 0.55, hair 0.3, leather 1.8,
+    sheet metal 6.8, glass 5.0 kg/m2) or, for a pick's or a hammer's wood
+    and iron, by volume (700 and 7850 kg/m3). Each piece goes to the part
+    of the body whose bone its skin follows. `tool(parts)` weighs a tool:
+    mass, centre, principal moments and their turn, in the tool's space.
+    A pick's collar is a ring, not the solid drum it is modelled as.
+  - **`workers.py --weigh`** and **`tools.py --weigh`** add the weights
+    to `miners.json` (`weights`: per bone a mass and its centre; four
+    joints; the limbs' thickness) and `tools.json` (`mass`, `centre`,
+    `inertia`, `inertiaTurn`) without rebuilding. A full build weighs
+    too. The pickaxe is weighed on a fine copy (the game's is faceted).
+- **Unity:**
+  - **`PhysicalBody`** (new, on each miner). Each part's mass at its
+    place in its own bone; the centre of mass from the pose; the arms'
+    capacities. A joint's capacity is an ordinary grown arm's (shoulder
+    70, elbow 60, wrist 12 N·m; hold 400 N) scaled by the cube of the
+    limb's thickness against 47 mm (the hold by its square), times
+    `Strength` (1: ordinary for the build). `MinerSetup.Weigh` fills it,
+    finding how the model sits in its prefab from four joints (the same
+    angles the hands' fit found).
+  - **`ToolDefinition`**: `Mass`, `Centre`, `Inertia`, `InertiaTurn`,
+    `Foot`, `Top`, `Point` (`ConfigureWeight`).
+  - **`PhysicalHands`** (new; added at need). `Take(tool, place, turn,
+    weight)` makes the tool a `Rigidbody` with its own mass properties and
+    a solid (a capsule for the handle, one for the head), and holds it in
+    the free hands. `Want(place, turn, all)` says where it is meant to
+    be. Each physics step:
+    1. the push and the turn that would bring it there without overshoot
+       (a rate of 14 a second, 16 for the turn; 30 when `all`), following
+       the wanted place's own motion, and holding the weight up;
+    2. shared between the hands: two hands turn it by pushing opposite
+       ways across the handle; a twist about the handle is the wrists';
+    3. limited: a push at the hand asks a turning force of the shoulder
+       and of the elbow (a hinge), beside what the arm's own weight asks;
+       neither gives more than its capacity; a muscle gives less the
+       faster the hand already moves that way (nothing at 14 arm's
+       lengths a second) and 1.5 times as much when forced back. **Both
+       arms give the same share** of what is asked, the lesser one's, so
+       the two together push the way that was meant;
+    4. applied as forces on the body.
+
+    The hand, half the forearm and an eighth of the upper arm ride on the
+    handle as mass at each held place (one mass, centre and inertia for
+    tool and arms, by Jacobi's turns). A `ConfigurableJoint` from each
+    shoulder (a kinematic body, moved to the shoulder plus the palm's
+    offset) keeps the wrist within an arm's length.
+  - **`IArmGuide`** (in `ProceduralBiped.cs`). The body is told how it
+    stands, then asked for each guided hand's wrist: the arm follows the
+    object, it does not place it. `PhysicalHands` implements it, and
+    turns each hand onto the handle through `IHandHolds`.
+  - **`ProceduralBiped`**: `GuideArms`; `Bow(degrees)` (the body bows
+    from the hips at 150 degrees a second); `StandsAt(time, ...)`: the
+    hips, the posture, the shoulders and the elbows as they will be at a
+    moment a little after the body was last posed, going on as it was
+    going. The physics reads the body through it (B5 in the design's
+    findings).
+  - **`HeldThing`** (new, on the held object): what it last struck, and
+    blows given with its striking part.
+  - **`PhysicalSwing`** (new): the bench's rough plan of a swing, as
+    intentions. It leads the tool along the first swing's path over the
+    shoulder, a set way ahead of where the tool is (22 degrees for the
+    lift, at a set pace; 50 for the blow, with no pace set), with the
+    body bowing to its work. Step 4 replaces it.
+- **Tests** (`Tests/PlayMode`):
+  - **`PhysicalBodyTests`** (three): every miner and pickaxe weighed;
+    strength and weight decide the swing; the swing is the same at any
+    frame rate.
+  - **`PhysicalBench`** (`[Explicit]`): the grid, its figures (`BENCH`
+    lines), a step-by-step trace (`-benchTrace`), every other frame of
+    each (`-benchFrames`), at a set frame rate (`-benchRate`).
+    `Art/Review/bench_clip.py` puts the frames together.
+  - **`AfterEverything`** (new): calls back when a frame's bodies have
+    all been posed. A picture or a measure of something the physics
+    moved must be taken then (B8); a batch run cannot wait for the end of
+    a frame.
+- **Not built:** see [the design](../Design/ThePhysicalBody.md#step-2-the-bench-october-6).
