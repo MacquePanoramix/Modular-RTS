@@ -28,8 +28,10 @@
     - **Step 1, everything weighed: built** (October 6). Small weighs
       40.7 kg, Long 58.5 kg, Round 87.6 kg; their pickaxes 1.50, 3.21 and
       2.39 kg ([the table](Design/ThePhysicalBody.md#step-1-everything-weighed-october-6)).
-    - **Step 2, the bench: built, and waiting for Luis's eye**
-      (October 6). Round raises a pickaxe that has real weight and brings
+    - **Step 2, the bench: built; Luis finds it "very promising so far"**
+      and says to go on with the plan as it is
+      ([message](Correspondence/2026-10-06_THE_BENCH_IS_PROMISING.md)).
+      (October 6.) Round raises a pickaxe that has real weight and brings
       it down on a block, at three strengths and three weights. How fast
       it rises and how hard it lands come out of the weights and of what
       the arms can give; a weak miner with a heavy pickaxe visibly

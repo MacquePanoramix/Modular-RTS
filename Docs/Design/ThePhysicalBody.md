@@ -352,7 +352,10 @@ average, while raising it. "Lands at": the head's speed as it strikes.*
 - **It is not in the game's mining.** The look with `K` is the old swing.
 - **Strength's figures are a first setting,** from an ordinary grown
   person's arm. They have not been set against measured swings.
-- **Luis has not judged it.**
+- **Luis's look (October 6):** "very promising so far … On the hands
+  side it's already looking quite good"; the full swing, with the body
+  adapting to its strength and to the rock, is what is wanted next
+  ([message](../Correspondence/2026-10-06_THE_BENCH_IS_PROMISING.md)).
 
 ## Sources
 
