@@ -1387,3 +1387,35 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   work tires a muscle and rest brings it back; a tired miner weakens,
   rests and goes on (32 swings, frame for step). `PhysicalBench` takes
   `-benchSwings`, `-benchFrom` and `-benchView`.
+
+## The physical body, in the place: `K` shows the swing with real weight — October 6
+
+- **`MinerWorkPreview`** (rewritten). `K` in the Ordinary Place:
+  - **`Toggle()`** begins or ends the look on the chosen miner. Beginning
+    adds `PhysicalHands`, `PhysicalBack` and `PhysicalSwing` to it; the
+    miner bows (0.7 s); a block (a plain cube with a collider, named
+    "Block (a look at the work)") is put under where the pick's head then
+    rests; `PhysicalHands.Take` gives it its pickaxe.
+  - **`End()`** drops and destroys the pickaxe, the three components and
+    the block, straightens the body (`Bow(0)`, `Sink(0)`, `SetBack(0)`),
+    and puts strength back to 1 with tiredness cleared. It also ends when
+    another miner is chosen or the miner has moved 0.3 m.
+  - **`SetStrength(value)`** (0.3 to 3; keys `,` and `.`, a factor of
+    1.25) sets `PhysicalBody.Strength` at once.
+    **`SetWeight(value)`** (0.4 to 3; keys `-` and `=`) ends the look and
+    begins it again on the next frame, since what the last look added to
+    the miner is destroyed only at the end of the frame.
+  - **`Showing`, `Swinging`, `Swing`, `Strength`, `Weight`.** `OnGUI`
+    writes the line at the foot of the screen.
+  - **`RockFace` and `FaceDistance`** stay, as static helpers for the
+    first swing's tests and captures (`CaptureTools.RockFace`).
+- **The first swing** (`Gatherer`, `EquippedTool`, `MineableResource`) is
+  no longer reached from the Ordinary Place. The equipment scene, the
+  recording for the audit in motion (`MinerPoseRecord`), the `work` and
+  `clip` capture sets and `EachMinerSwingsItsOwnPickaxeAndTheHeadStrikesTheRock`
+  still use it.
+- **Tests:** `MinerToolTests.TheLookAtTheWorkBeginsAndEndsCleanly`
+  (rewritten for this look). `PhysicalLookCapture` (explicit): pictures of
+  the look as the key begins it, for each miner, from its side and from
+  the game's camera; `-lookOut`, `-lookFrames`, `-lookStrength`,
+  `-lookWeight`.

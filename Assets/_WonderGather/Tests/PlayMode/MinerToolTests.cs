@@ -68,37 +68,58 @@ namespace WonderGather.Tests
             }
         }
 
-        // The look at the work, in play: K puts a plain rock before the chosen miner, which mines it with its own
-        // pickaxe; when its arms are full it begins again (nothing is hauled yet); K again, or walking away, puts
-        // the rock and the pickaxe away and leaves the miner as it was.
-        [UnityTest] public IEnumerator TheLookAtTheWorkBeginsAndEndsCleanly()
+        // The look at the work, in play: K puts a plain block before the chosen miner, which swings its own pickaxe
+        // down on it with real weight, by its own strength (the comma and the full stop change that; minus and
+        // equals, the pickaxe's weight); K again, or walking away, puts the block and the pickaxe away and leaves
+        // the miner as it was.
+        [UnityTest, Timeout(600000)] public IEnumerator TheLookAtTheWorkBeginsAndEndsCleanly()
         {
             var look = Object.FindAnyObjectByType<MinerWorkPreview>();
             Assert.That(look, Is.Not.Null, "The Ordinary Place has no look at the miners' work.");
             for (int index = 0; index < 3; index++)
             {
                 choice.Choose(index);
-                for (int k = 0; k < 20; k++) yield return null;
+                for (float until = Time.time + .4f; Time.time < until;) yield return null;
                 var unit = choice.Current;
                 string name = choice.NameOf(index);
+                var physical = unit.GetComponent<PhysicalBody>();
                 look.Toggle();
-                Assert.That(look.Showing, Is.True, name + " did not begin to mine.");
-                var tool = look.Tool;
+                Assert.That(look.Showing, Is.True, name + " did not begin its work.");
                 float began = Time.time;
-                while (tool != null && tool.AcceptedStrikes < 1 && Time.time - began < 30) yield return null;
-                Assert.That(tool != null && tool.AcceptedStrikes >= 1, Is.True, name + " did not strike the rock in the look at its work.");
+                while (!look.Swinging && Time.time - began < 5) yield return null;
+                Assert.That(look.Swinging, Is.True, name + " did not take up its pickaxe.");
+                var swing = look.Swing;
+                while (swing.results.Count < 1 && Time.time - began < 30) yield return null;
+                Assert.That(swing.results.Count, Is.GreaterThanOrEqualTo(1), name + " did not finish a swing in the look at its work.");
+                Assert.That(swing.results[0].struck, Is.True, name + " did not strike the block in the look at its work.");
+                // Stronger at a key: it takes effect at once.
+                look.SetStrength(2);
+                Assert.That(physical.Strength, Is.EqualTo(2).Within(1e-4f));
+                // A heavier pickaxe: it takes it up afresh.
+                look.SetWeight(1.5f);
+                began = Time.time;
+                while (!look.Swinging && Time.time - began < 5) yield return null;
+                Assert.That(look.Swinging, Is.True, name + " did not take up the heavier pickaxe.");
+                Assert.That(unit.GetComponent<PhysicalHands>().ToolMass, Is.EqualTo(unit.GetComponent<MinerBody>().Pickaxe.Mass * 1.5f).Within(.01f));
                 look.Toggle();
                 yield return null;
                 yield return null;
+                look.SetStrength(1);
+                look.SetWeight(1);
                 Assert.That(look.Showing, Is.False);
-                Assert.That(unit.GetComponent<Gatherer>(), Is.Null, name + " kept a gatherer after the look.");
-                Assert.That(unit.GetComponent<EquippedTool>(), Is.Null, name + " kept a tool after the look.");
-                Assert.That(Object.FindObjectsByType<MineableResource>(FindObjectsSortMode.None).Length, Is.EqualTo(0), "The rock was left behind.");
-                // And it walks on as before.
+                Assert.That(unit.GetComponent<PhysicalHands>(), Is.Null, name + " kept its hands' work after the look.");
+                Assert.That(unit.GetComponent<PhysicalSwing>(), Is.Null, name + " kept a swing after the look.");
+                Assert.That(unit.GetComponent<PhysicalBack>(), Is.Null, name + " kept its back's work after the look.");
+                Assert.That(physical.Strength, Is.EqualTo(1).Within(1e-4f), name + " was left stronger or weaker than it was.");
+                Assert.That(Object.FindObjectsByType<HeldThing>(FindObjectsSortMode.None).Length, Is.EqualTo(0), "The pickaxe was left behind.");
+                Assert.That(GameObject.Find("Block (a look at the work)"), Is.Null, "The block was left behind.");
+                // And it stands up and walks on as before.
                 var body = unit.GetComponent<MinerBody>();
+                var biped = unit.GetComponent<ProceduralBiped>();
                 began = Time.time;
-                while ((body.Held(0) > 0 || body.Held(1) > 0) && Time.time - began < 3) yield return null;
-                Assert.That(body.Held(0) + body.Held(1), Is.EqualTo(0), name + "'s hands did not open again.");
+                while ((body.Held(0) > 0 || body.Held(1) > 0 || Mathf.Abs(biped.BowNow) > .5f) && Time.time - began < 3) yield return null;
+                Assert.That(body.Held(0) + body.Held(1), Is.EqualTo(0), "The hands did not open again: " + name);
+                Assert.That(Mathf.Abs(biped.BowNow), Is.LessThan(.6f), "It did not stand up again: " + name);
                 Assert.That(unit.Motor.TryMove(OnGround(unit.transform.position + unit.transform.forward * -2f)), Is.True);
                 began = Time.time;
                 var from = unit.transform.position;

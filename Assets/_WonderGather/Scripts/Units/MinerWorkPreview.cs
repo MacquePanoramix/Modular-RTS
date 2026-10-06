@@ -1,41 +1,56 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 namespace WonderGather
 {
-    // A look at the miners at work, before where and how they will mine is decided (Luis's choices M1 to M4). With K a
-    // plain block of rock stands in front of the chosen miner, and it mines it with the pickaxe made for it; K again
-    // (or walking away, or choosing another miner) puts the rock and the pickaxe away. Nothing here is the game's
-    // mining yet: there is no place for it, nothing is hauled, and where a pickaxe is kept is not decided. It is here
-    // so that the swing and the hands can be seen in play.
+    // A look at the miners at work with real weight (S3: Docs/Design/ThePhysicalBody.md), in play. With K a plain block
+    // of rock stands before the chosen miner, and it swings the pickaxe made for it down on the block, by its own
+    // strength: the pickaxe is a real body, the arms and the back give what they can, and they tire (PhysicalHands,
+    // PhysicalBack, PhysicalSwing). The comma and the full stop make the miner weaker and stronger; minus and equals
+    // make its pickaxe lighter and heavier. K again (or walking away, or choosing another miner) puts the block and
+    // the pickaxe away.
+    //
+    // It is the bench, brought into the place so that it can be watched and tried. It is not the game's mining yet:
+    // nothing is mined, and any boulder by a click is a later step.
     [RequireComponent(typeof(MinerChoice))]
     public sealed class MinerWorkPreview : MonoBehaviour
     {
         private MinerChoice choice;
-        private InputAction toggle;
-        private SelectableUnit working;
-        private Gatherer gatherer;
-        private EquippedTool tool;
-        private GameObject rock, home;
-        private ResourceNode node;
+        private InputAction toggle, weaker, stronger, lighter, heavier;
+        private SelectableUnit working, again;
+        private PhysicalBody physical;
+        private PhysicalHands hands;
+        private PhysicalBack back;
+        private PhysicalSwing swing;
+        private GameObject rock;
+        private Coroutine setting;
         private Vector3 stand;
-        private SelectableUnit again;
+        private float strength = 1, weight = 1;
         private GUIStyle note;
-        public bool Showing => working != null;
-        public EquippedTool Tool => tool;
+        public bool Showing => working != null || again != null;
+        // The swing being shown (its results, its phase), once the miner has taken up its pickaxe.
+        public PhysicalSwing Swing => swing;
+        public bool Swinging => swing != null && hands != null && hands.Held != null;
+        public float Strength => strength;
+        public float Weight => weight;
 
         private void Awake()
         {
             choice = GetComponent<MinerChoice>();
             toggle = new InputAction("Watch the miner work", InputActionType.Button, "<Keyboard>/k");
+            weaker = new InputAction("Weaker", InputActionType.Button, "<Keyboard>/comma");
+            stronger = new InputAction("Stronger", InputActionType.Button, "<Keyboard>/period");
+            lighter = new InputAction("Lighter pickaxe", InputActionType.Button, "<Keyboard>/minus");
+            heavier = new InputAction("Heavier pickaxe", InputActionType.Button, "<Keyboard>/equals");
         }
-        private void OnEnable() => toggle?.Enable();
-        private void OnDisable() { toggle?.Disable(); End(); }
-        private void OnDestroy() => toggle?.Dispose();
+        private void OnEnable() { toggle?.Enable(); weaker?.Enable(); stronger?.Enable(); lighter?.Enable(); heavier?.Enable(); }
+        private void OnDisable() { toggle?.Disable(); weaker?.Disable(); stronger?.Disable(); lighter?.Disable(); heavier?.Disable(); End(); }
+        private void OnDestroy() { toggle?.Dispose(); weaker?.Dispose(); stronger?.Dispose(); lighter?.Dispose(); heavier?.Dispose(); }
 
-        // A rock face to mine: a block whose near face stands `reach` in front of a place to stand, facing it, with
-        // a place to deliver to. What is seen (if it is) and what is struck are the same block.
+        // A rock face to mine, for the first swing's tests and captures: a block whose near face stands `reach` in
+        // front of a place to stand, facing it, with a place to deliver to. What is seen (if it is) and what is
+        // struck are the same block.
         public static (ResourceNode node, ResourceDepot depot, GameObject rock) RockFace(Vector3 stand, Vector3 facing, float reach, Vector3 deliver, bool visible, float height)
         {
             var size = new Vector3(.7f, height, .8f);
@@ -63,89 +78,136 @@ namespace WonderGather
             return (node, home.AddComponent<ResourceDepot>(), rock);
         }
 
-        // How far in front of a body its rock face stands: where the head's swing meets it, a little short of the
-        // swing's farthest reach.
+        // How far in front of a body the first swing's rock face stands: where the head's swing meets it, a little
+        // short of the swing's farthest reach.
         public static float FaceDistance(ProceduralBiped body, ToolDefinition pickaxe)
             => (body.ToolHand.z + (pickaxe.Head - pickaxe.PrimaryGrip).magnitude) * .78f;
 
         private void Update()
         {
-            if (toggle != null && toggle.WasPressedThisFrame()) Toggle();
-            // Beginning again waits until the last look's own parts are gone (they go at the end of a frame).
-            if (again != null && !Showing)
+            if (again != null)
             {
+                // What the last look added to the miner is gone by now: it begins afresh.
                 var unit = again;
-                if (choice.Current != unit || !unit.gameObject.activeInHierarchy) again = null;
-                else if (unit.GetComponent<Gatherer>() == null && unit.GetComponent<EquippedTool>() == null) { again = null; Begin(unit); }
+                again = null;
+                if (choice.Current == unit) Begin(unit);
             }
+            if (toggle != null && toggle.WasPressedThisFrame()) Toggle();
             if (!Showing) return;
             // Chosen another, sent elsewhere, or walked off: the look is over.
-            if (choice.Current != working || !working.gameObject.activeInHierarchy || gatherer == null || gatherer.State == Gatherer.Activity.Idle
+            if (choice.Current != working || !working.gameObject.activeInHierarchy
                 || Vector3.ProjectOnPlane(working.transform.position - stand, Vector3.up).sqrMagnitude > .09f) { End(); return; }
-            // Nothing is hauled yet: when its arms are full it puts everything down and begins again.
-            if (gatherer.State == Gatherer.Activity.ToDepot || gatherer.State == Gatherer.Activity.WaitingForDepot)
-            {
-                var unit = working;
-                End();
-                if (unit.Motor != null) unit.Motor.Stop();
-                again = unit;
-            }
+            if (weaker.WasPressedThisFrame()) SetStrength(strength / 1.25f);
+            if (stronger.WasPressedThisFrame()) SetStrength(strength * 1.25f);
+            if (lighter.WasPressedThisFrame()) SetWeight(weight / 1.25f);
+            if (heavier.WasPressedThisFrame()) SetWeight(weight * 1.25f);
         }
 
         // K: begin the look, or end it.
         public void Toggle()
         {
-            if (Showing || again != null) { again = null; End(); }
+            if (Showing) End();
             else Begin(choice != null ? choice.Current : null);
+        }
+
+        // How strong the miner is (1: ordinary for its build). It takes effect at once.
+        public void SetStrength(float value)
+        {
+            strength = Mathf.Clamp(value, .3f, 3);
+            if (physical != null) physical.Strength = strength;
+        }
+
+        // The pickaxe's weight, as a share of its own. The miner takes it up afresh.
+        public void SetWeight(float value)
+        {
+            value = Mathf.Clamp(value, .4f, 3);
+            if (Mathf.Approximately(value, weight)) return;
+            weight = value;
+            if (!Showing) return;
+            var unit = working;
+            End();
+            again = unit;
         }
 
         private void Begin(SelectableUnit unit)
         {
-            if (unit == null || !unit.TryGetComponent<MinerBody>(out var body) || body.Pickaxe == null
-                || !unit.TryGetComponent<ProceduralBiped>(out var biped) || unit.GetComponent<Gatherer>() != null || unit.GetComponent<EquippedTool>() != null) return;
+            if (unit == null || !unit.TryGetComponent<MinerBody>(out var body) || body.Pickaxe == null || !body.Pickaxe.HasWeight
+                || !unit.TryGetComponent<ProceduralBiped>(out var biped) || !unit.TryGetComponent<PhysicalBody>(out var weighed) || !weighed.Ready
+                || unit.GetComponent<PhysicalHands>() != null || unit.GetComponent<EquippedTool>() != null) return;
             if (unit.Motor != null) unit.Motor.Stop();
-            Vector3 facing = Vector3.ProjectOnPlane(unit.transform.forward, Vector3.up).normalized;
-            stand = unit.transform.position;
-            gatherer = unit.gameObject.AddComponent<Gatherer>();
-            tool = unit.gameObject.AddComponent<EquippedTool>();
-            tool.SetDefinition(body.Pickaxe);
-            biped.ConfigureWork(gatherer, null);
-            float tall = body.Rig.head != null ? body.Rig.head.position.y - unit.transform.position.y : 1.2f;
-            Vector3 behind = stand - facing * 3;
-            if (NavMesh.SamplePosition(behind, out var hit, 3, NavMesh.AllAreas)) behind = hit.position;
-            ResourceDepot depot;
-            (node, depot, rock) = RockFace(stand, facing, FaceDistance(biped, body.Pickaxe), behind, true, tall * .95f);
-            home = depot.gameObject;
-            var paint = Shader.Find("Wonder Gather/Painted");
-            var seen = rock.GetComponentInChildren<MeshRenderer>();
-            if (paint != null && seen != null)
-            {
-                var stone = new Material(paint) { name = "Preview rock" };
-                stone.SetColor("_BaseColor", new Color(.36f, .38f, .42f));
-                seen.sharedMaterial = stone;
-            }
-            gatherer.SetPerformance(new UnitPerformance(100, 20, 100, 100));
-            gatherer.Configure(depot, Vector3.zero);
             working = unit;
-            if (!gatherer.Gather(node)) End();
+            stand = unit.transform.position;
+            physical = weighed;
+            physical.Strength = strength;
+            physical.Refresh();
+            hands = unit.gameObject.AddComponent<PhysicalHands>();
+            back = unit.gameObject.AddComponent<PhysicalBack>();
+            swing = unit.gameObject.AddComponent<PhysicalSwing>();
+            swing.hands = hands; swing.back = back; swing.body = biped; swing.tool = body.Pickaxe;
+            setting = StartCoroutine(Set(unit, body.Pickaxe));
+        }
+
+        // The miner bows to its work; the block is put under where the pick's head then rests; it takes up the pickaxe.
+        private IEnumerator Set(SelectableUnit unit, ToolDefinition pickaxe)
+        {
+            back.Want(PhysicalSwing.RestBow);
+            yield return new WaitForSeconds(.7f);
+            if (working != unit || swing == null) yield break;
+            swing.Intend(PhysicalSwing.Rest, out var at, out var turned);
+            Vector3 rests = at + turned * pickaxe.Head;
+            float top = rests.y - pickaxe.HeadRadius - .015f;
+            Vector3 facing = Vector3.ProjectOnPlane(unit.transform.forward, Vector3.up).normalized;
+            rock = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            rock.name = "Block (a look at the work)";
+            rock.transform.SetPositionAndRotation(new Vector3(rests.x, top - .6f, rests.z), Quaternion.LookRotation(facing));
+            rock.transform.localScale = new Vector3(.5f, 1.2f, .5f);
+            var paint = Shader.Find("Wonder Gather/Painted");
+            if (paint != null)
+            {
+                var stone = new Material(paint) { name = "Block (a look at the work)" };
+                stone.SetColor("_BaseColor", new Color(.36f, .38f, .42f));
+                rock.GetComponent<MeshRenderer>().sharedMaterial = stone;
+            }
+            hands.Take(pickaxe, at, turned, weight);
+            setting = null;
         }
 
         public void End()
         {
-            if (gatherer != null) gatherer.CancelOrder();
-            if (working != null && working.TryGetComponent<ProceduralBiped>(out var biped)) biped.ConfigureWork(null, null);
-            if (tool != null) Destroy(tool);
-            if (gatherer != null) Destroy(gatherer);
+            again = null;
+            if (setting != null) { StopCoroutine(setting); setting = null; }
+            if (hands != null)
+            {
+                var was = hands.Drop();
+                if (was != null) Destroy(was.gameObject);
+            }
+            if (swing != null) Destroy(swing);
+            if (back != null) Destroy(back);
+            if (hands != null) Destroy(hands);
             if (rock != null) Destroy(rock);
-            if (home != null) Destroy(home);
-            working = null; gatherer = null; tool = null; rock = null; home = null; node = null;
+            if (working != null && working.TryGetComponent<ProceduralBiped>(out var biped)) { biped.Bow(0); biped.Sink(0); biped.SetBack(0); }
+            if (physical != null) { physical.Strength = 1; physical.Refresh(); }
+            working = null; physical = null; hands = null; back = null; swing = null; rock = null;
         }
 
         private void OnGUI()
         {
             if (!Application.isPlaying || choice == null || choice.Open || choice.Count == 0) return;
             note ??= new GUIStyle(GUI.skin.label) { fontSize = 11, alignment = TextAnchor.UpperCenter };
-            GUI.Label(new Rect(Screen.width * .5f - 160, Screen.height - 48, 320, 20), Showing || again != null ? "K: put the pickaxe away" : "K: watch it mine (a first look)", note);
+            var place = new Rect(Screen.width * .5f - 330, Screen.height - 48, 660, 20);
+            if (!Showing) { GUI.Label(place, "K: watch it work, with real weight", note); return; }
+            string line = $"K: put the pickaxe away   , . strength {strength:0.00}   - = pickaxe x{weight:0.00}";
+            if (Swinging)
+            {
+                line += $" ({hands.ToolMass:0.0} kg)   spent {swing.Spent * 100:0}%";
+                if (swing.results.Count > 0)
+                {
+                    var last = swing.results[swing.results.Count - 1];
+                    line += last.struck ? $"   last blow {last.speed:0.0} m/s" : "   last swing did not strike";
+                }
+                if (swing.phase == PhysicalSwing.Phase.Rest) line += "   (resting)";
+            }
+            GUI.Label(place, line, note);
         }
     }
 }

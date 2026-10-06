@@ -421,8 +421,9 @@ chest's.*
 
 - **The legs have no strength of their own.** They bend and straighten at
   a set pace, whatever they carry. Step 6.
-- **It is not in the game's mining.** The look with `K` is the old swing.
-  Steps 9 and 11.
+- **It is not in the game's mining.** Since later on October 6 the look
+  with `K` shows this swing on a block
+  ([below](#in-the-place-to-try-october-6)); a boulder is step 9.
 - **The pickaxe does not yet stop at the miner's own body,** nor at what
   hangs at the hip.
 - **Tiredness** came with step 5 (below).
@@ -490,13 +491,56 @@ it goes back to work.
 **Open:** how fast tiredness comes and goes (the paces here are a first
 setting); whether there is a longer tiredness; what the player is shown.
 
+### In the place, to try (October 6)
+
+The bench could only be seen in clips. So that Luis can watch the work and
+try it, this swing is now what the `K` key shows in the Ordinary Place, in
+place of the old swing.
+
+![The three miners at the block, in the place](../Images/PhysicalBody/Look_InThePlace.gif)
+
+*Each miner where the place puts it, with its own pickaxe, at ordinary
+strength.*
+
+| Key | What it does |
+|---|---|
+| `K` | The chosen miner bows, a block stands before it, and it takes up its pickaxe and works on the block. `K` again (or walking it away, or choosing another miner) puts the block and the pickaxe away |
+| `,` and `.` (the two keys right of `M`) | Weaker and stronger, a quarter at a time, from 0.3 to 3 times ordinary. It takes effect at once |
+| `-` and `=` (the two keys right of `0`) | A lighter and a heavier pickaxe, from 0.4 to 3 times its own weight. The miner takes it up afresh |
+
+A line at the foot of the screen says the strength, the pickaxe's weight,
+how spent the miner is and how fast the last blow landed.
+
+- **It is an early part of step 11,** brought forward so that the work can
+  be watched while the rest is built. Keys stand in for the panel. The
+  plan said the look with `K` would be retired; for now the key is kept
+  and what it shows is replaced.
+- **It is the bench, not mining.** Nothing is mined, the block is put
+  where the miner stands, and the pickaxe appears in the hands. Any
+  boulder by a click is step 9; taking up and laying down the pickaxe is
+  step 8.
+- **The old swing is no longer shown in the Ordinary Place.** Its code is
+  still there (the equipment scene and its tests use it) until step 9
+  replaces the game's mining.
+
+**At the ends of the keys** (all three miners, the look begun as the key
+begins it; nothing breaks at any of them):
+
+| Strength | Pickaxe | What is seen |
+|---|---|---|
+| 3 | 0.4 of its weight | Fast, easy swings. The blows land at about 10 m/s (6 to 7 at ordinary strength with its own pickaxe), the hands stay at the end of the handle, the arms give 8 to 16% of what they have |
+| 3 | 3 times its weight | Much like an ordinary miner with its own pickaxe: 5.7 to 6.7 m/s; Small's and Long's upper hand a quarter of the way up the handle |
+| 0.3 | 0.4 of its weight | A weak body. The upper hand is right at the head, the back gives all it has and hardly straightens, and the blows land at 4 to 5.6 m/s |
+| 0.3 | 3 times its weight | **It cannot swing it, and what it then does is not designed yet.** Round holds the head on the block and cannot raise it. Small's and Long's pickaxe slips off the block and hangs head down from their hands in front of their legs, where nothing stops it passing through them. What a body does with a tool too heavy for it (drag it, or leave it) is step 7 |
+
 **What is not there yet** (of the bench, step 2):
 
 - **The swing's plan was rough,** the back as strong as it liked, and only
   Round had been tried. Steps 3 and 4 answered these (above).
 - **Balance is measured only as far as the hips going back.** Step 6.
 - **The pickaxe does not yet stop at the miner's own body.**
-- **It is not in the game's mining.** The look with `K` is the old swing.
+- **It is not in the game's mining:** it can be tried on a block with `K`
+  ([above](#in-the-place-to-try-october-6)).
 - **Strength's figures are a first setting,** from an ordinary grown
   person's arm. They have not been set against measured swings.
 - **Luis's look (October 6):** "very promising so far … On the hands

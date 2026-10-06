@@ -103,52 +103,65 @@ Luis asked for. The round's log, with before and after images, is in
 
 ## A first look at the work (October 6)
 
-> **After Luis's message of October 6.** Luis could not find how to watch
-> the mining, and judged it from pictures. Here it is moving, as the game
-> plays it today (one swing, at real speed):
->
-> ![The mining today](../Images/Miners/Work_Clip_Side.gif)
->
-> **What it shows:** all three swing at the same instant, in 0.8 s, and
-> only the arm moves. Nothing in it has weight. It is not what the
-> prototype is for, and the proposal is to replace it
-> ([review](../Reviews/2026-10-06_SamePageReview.md#what-the-swing-is-today)).
-> To watch it in the build all the same: run
-> `Builds/WindowsOrdinaryPlace/WonderGather.exe`, pick a miner in the
-> choice that opens (`M` opens it again), then press `K`.
+> **Changed later on October 6.** `K` now shows the swing with real weight
+> ([design](../Design/ThePhysicalBody.md#in-the-place-to-try-october-6)).
+> What it showed before was the first swing: all three miners at the same
+> instant, in 0.8 s, only the arm moving, nothing with weight
+> ([clip](../Images/Miners/Work_Clip_Side.gif);
+> [review](../Reviews/2026-10-06_SamePageReview.md#what-the-swing-is-today)).
+> Luis's message of October 6 asked for real weight and real strength in
+> its place, and that swing is no longer shown.
 
-The miners can mine. It is a first look, so that the swing and the hands can
-be judged in play before where and how they mine is decided
-([TheMiners.md](../ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6)).
+![The three miners at the block, in the place](../Images/PhysicalBody/Look_InThePlace.gif)
 
-![Round at the rock](../Images/Miners/Work_Round.jpg)
-
-**To try:**
-1. Choose a miner (`M`) and walk it somewhere open.
-2. Press `K`. A plain block of rock stands in front of it, and it mines the
-   block with the pickaxe made for it. `K` again (or walking it away, or
-   choosing another miner) puts the rock and the pickaxe away.
+**To try** (run `Builds/WindowsOrdinaryPlace/WonderGather.exe`):
+1. Choose a miner in the choice that opens (`M` opens it again) and walk
+   it somewhere open and level.
+2. Press `K`. It bows, a plain block stands before it, and it takes up the
+   pickaxe made for it and works on the block. `K` again (or walking it
+   away, or choosing another miner) puts the block and the pickaxe away.
 3. Go close with the Explore camera, and round it.
+4. `,` and `.` (the two keys right of `M`) make it weaker and stronger.
+   `-` and `=` (the two keys right of `0`) make its pickaxe lighter and
+   heavier (it takes it up afresh). A line at the foot of the
+   screen says the strength, the weight, how spent it is and how fast the
+   last blow landed.
+5. Leave it working. After a while it tires: it stands up, rests with the
+   pickaxe in one hand at its side, and goes on.
 
 **What to look at:**
-- **The hands on the handle.** Fingers wrapped round it, the thumb closed,
-  nothing floating and nothing through.
-- **The swing.** Up over the right shoulder, beside the head, and down onto
-  the rock. Does it read as mining? It is plain on purpose (one pace, no
-  weight shift): its effort and character are a later stage (S3).
-- **One hand or two.** Small and Long swing with the right hand, because the
-  left holds the lantern or the mug. Round swings with both.
-- **Each one's pickaxe:** sized to its arms, its handle to its hand.
+- **Weight.** Does the pickaxe look as if it weighs something, going up and
+  coming down?
+- **Strength.** Weaker, or with a heavier pickaxe: the upper hand goes up
+  the handle towards the head, the lift is slower, the blow lands softer.
+  Stronger, or lighter: the other way. Is the difference enough to read,
+  and does it read as strength?
+- **Each body.** The three do not swing alike. Long's pickaxe is heavy for
+  Long: its upper hand is right up at the head.
+- **Tiring and resting.** Does the rest read as a rest?
+- **The hands on the handle,** sliding, letting go and taking hold again.
 
-**What is not there, and waits for Luis's choices**
-([the plan](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#choices-for-luis)):
-- **M1, where they mine.** The block is a stand-in, put where the miner
-  stands.
-- **M2, where a pickaxe is kept.** It appears in the hand from nowhere. Long
-  has the one on the back and a second in the hand.
-- **M3, the lantern and the mug.** They stay in the other hand.
-- **M4, what is mined.** Nothing falls and nothing is carried. After twenty
-  strikes the miner puts everything down and begins again.
+**What is not there:**
+- **It is not mining.** Nothing is mined, the block is put where the miner
+  stands, and the pickaxe appears in the hands from nowhere. Taking it up
+  and laying it down (step 8), any boulder by a click (step 9) and the
+  panel in place of the keys (step 11) are still to come
+  ([the plan](../NextMilestonePlan.md#steps)).
+- **Balance.** The hips go back to keep the weight over the feet, and that
+  is all so far: the body does not brace, step or fall yet (steps 6
+  and 10).
+- **The pickaxe does not stop at the miner's own body,** nor at the
+  lantern or the mug at the hip.
+
+**At the ends of the keys** (all three miners, the look begun as the key
+begins it; nothing breaks at any of them):
+
+| Strength | Pickaxe | What is seen |
+|---|---|---|
+| 3 | 0.4 of its weight | Fast, easy swings. The blows land at about 10 m/s (6 to 7 at ordinary strength with its own pickaxe), the hands stay at the end of the handle, the arms give 8 to 16% of what they have |
+| 3 | 3 times its weight | Much like an ordinary miner with its own pickaxe: 5.7 to 6.7 m/s; Small's and Long's upper hand a quarter of the way up the handle |
+| 0.3 | 0.4 of its weight | A weak body. The upper hand is right at the head, the back gives all it has and hardly straightens, and the blows land at 4 to 5.6 m/s |
+| 0.3 | 3 times its weight | **It cannot swing it, and what it then does is not designed yet.** Round holds the head on the block and cannot raise it. Small's and Long's pickaxe slips off the block and hangs head down from their hands in front of their legs, where nothing stops it passing through them. What a body does with a tool too heavy for it (drag it, or leave it) is step 7 |
 
 ## What changed for the game
 
@@ -219,11 +232,12 @@ The benchmark is in the build: run it with `-wgcrowd`. It writes
 
 ## Not yet
 
-- **Mining as part of the game.** The miners can be watched mining with `K`
-  (October 6, [above](#a-first-look-at-the-work-october-6)). A place to mine,
-  walking up to it, where the pickaxe is kept and hauling are not built: they
-  wait for Luis's choices M1 to M4. The equipment scene still uses the 2.2 m
-  test body.
+- **Mining as part of the game.** The miners can be watched working on a
+  block with `K` (October 6, [above](#a-first-look-at-the-work-october-6)).
+  A boulder to mine, walking up to it, taking up the pickaxe and hauling
+  are not built: they are the later steps of S3 and S4
+  ([the plan](../NextMilestonePlan.md#steps)). The equipment scene still
+  uses the 2.2 m test body and the first swing.
 - **Faces.** One expression each. The hands that carry something keep one
   closed shape.
 - **Not watched by eye.** Turning on the spot and jogging were not checked

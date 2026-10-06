@@ -1969,3 +1969,50 @@ Built on the bench
   - **A second run of the suite,** the crowd benchmark, the cost.
   - **Luis's eye.**
 
+## S3 — the swing with real weight in the Ordinary Place, behind `K` (October 6)
+
+An early part of step 11
+([how to try it](Design/ThePhysicalBody.md#in-the-place-to-try-october-6)).
+
+- **The look's own test**
+  (`MinerToolTests.TheLookAtTheWorkBeginsAndEndsCleanly`, rewritten):
+  passed. For each miner:
+  - the look begins, it takes up its pickaxe, and its first swing strikes
+    the block;
+  - strength set to 2 is the body's strength at once;
+  - a pickaxe at 1.5 times its weight is taken up afresh, and weighs that;
+  - ending the look leaves no hands', back's or swing's component on the
+    miner, no pickaxe and no block; its strength is 1 again; its hands are
+    open and it is upright within 3 s; and it walks on.
+- **Full PlayMode suite, one run:** 134 tests; 129 passed, none failed,
+  5 skipped as explicit (1,149 s).
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Read in pictures** (`PhysicalLookCapture`, new): each miner where the
+  place puts it, the look begun as the key begins it, from its side (90
+  frames) and from the game's camera.
+  - **Ordinary strength, own pickaxe:** Small's first blow lands at
+    6.2 m/s and Round's at 6.7 m/s. Long's blow is in the pictures; its
+    swing was not over when the frames ended, so it has no figure.
+  - **The four ends of the keys' ranges** (200 frames each): nothing
+    breaks. At strength 3 with the pickaxe at 0.4 of its weight the blows
+    land at 9.6 to 11.1 m/s. At strength 3 and 3 times the weight, 5.7 to
+    6.7 m/s. At strength 0.3 and 0.4 of the weight, 4.0 to 5.6 m/s with
+    the upper hand at the head. At strength 0.3 and 3 times the weight no
+    miner can swing: Round holds the head on the block; Small's and Long's
+    pickaxe slips off it and hangs head down in front of their legs.
+- **What failed on the way:** changing the pickaxe's weight did not begin
+  the look again. The look ended and began within one frame, and what the
+  last look had added to the miner is destroyed only at the end of a
+  frame, so the new one found it still there and did not begin. It now
+  begins on the next frame. The look's test caught it.
+- **Not tested:**
+  - **The keys in the built game.** The look was driven through the calls
+    the keys make, in play mode in the editor. Nobody has pressed the keys
+    in the build, and the line at the foot of the screen has not been seen
+    in a picture.
+  - **On a slope,** or with something where the block would stand: the
+    miners were where the place puts them, on level ground.
+  - **Changing strength or weight many times in a row,** or while the
+    miner rests.
+  - **A second run of the suite,** the crowd benchmark, the cost.
+  - **Luis's eye.**

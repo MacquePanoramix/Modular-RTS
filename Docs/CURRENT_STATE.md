@@ -56,8 +56,15 @@
       pick's head. It then stands up and rests, the pickaxe carried in one
       hand at its side, and goes back to work in under half a minute
       ([clip and figures](Design/ThePhysicalBody.md#step-5-tiredness-october-6)).
-    - **It is a bench, not yet the game:** the look with `K` is still the
-      old swing. Step 6 (balance: lean, brace and step) comes next.
+    - **It can be tried in the build** (October 6): in the Ordinary Place
+      `K` now shows this swing on a block, in place of the old swing; `,`
+      and `.` make the miner weaker and stronger, `-` and `=` make its
+      pickaxe lighter and heavier
+      ([how to try it](Playtests/MinersPlaytest.md#a-first-look-at-the-work-october-6);
+      [clip](Images/PhysicalBody/Look_InThePlace.gif)). It is still the
+      bench, not mining: nothing is mined, and a boulder by a click is
+      step 9.
+    - **Next:** step 6 (balance: lean, brace and step).
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.
@@ -105,7 +112,8 @@
         swing goes over the shoulder; the mining is recorded and audited
         with the pickaxe in the hands
         ([TheMiners.md](ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6)).
-        **To see it:** `K` in the Ordinary Place
+        That swing had no weight; since later on October 6, `K` in the
+        Ordinary Place shows the swing with real weight instead
         ([MinersPlaytest.md](Playtests/MinersPlaytest.md#a-first-look-at-the-work-october-6)).
       - **Step 5, the miners at the rock, is overtaken** by Luis's message
         of October 6: M1 is answered (any boulder, by a click), M2 to M4

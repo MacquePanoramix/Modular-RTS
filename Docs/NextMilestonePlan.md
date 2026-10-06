@@ -76,7 +76,7 @@ Where Luis's new things fit is marked **(new)**.
 | 8 | **The interaction click and the small actions (new).** Space and a click open a thing's options beside it, with a cancel. The first actions, each done by the body: take the lantern or the mug in hand and hang it back; lay the pickaxe down and pick it up; rest | Each action, close up | |
 | 9 | **Any boulder.** A click on any boulder of the Ordinary Place sends the miner to mine it. A place to stand is found from the rock's own shape and the ground. A spot to strike is found on its surface within this body's reach. The swing adapts to the spot. What is struck off falls as real stones and lies where it falls (bringing them home is S4) | Mining several different boulders | |
 | 10 | **The fall, and getting up (A).** When no step can catch the body, or its legs cannot bear it, the whole body follows the physics, protects itself, lies, and gets up. The riskiest step | Clips of extreme cases, before it is trusted | |
-| 11 | **In the Ordinary Place.** A plain panel: the strength slider, and a light, a middling and a heavy pickaxe. The look with `K` is retired | The build | |
+| 11 | **In the Ordinary Place.** A plain panel: the strength slider, and a light, a middling and a heavy pickaxe. The look with `K` is retired | The build | **An early part, October 6** ([how to try it](Design/ThePhysicalBody.md#in-the-place-to-try-october-6)): so that the work can be watched in the build now, `K` shows the swing with real weight in place of the old swing, with keys for strength (`,` `.`) and for the pickaxe's weight (`-` `=`). The panel, and whether the key stays, remain for this step |
 | 12 | **Evidence** (below), the playtest guide, the documents | | |
 
 **Why this order.**

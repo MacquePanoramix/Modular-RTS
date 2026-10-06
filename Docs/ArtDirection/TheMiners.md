@@ -4,9 +4,10 @@
 **Status:**
 - **The miners mine** (October 6): each with a pickaxe made for its arms and
   hands, swung over the shoulder, the head's contact with the rock counting
-  as before. A first look in play: `K` in the Ordinary Place
-  ([below](#a-pickaxe-for-each-and-the-first-swings-october-6)). Where and
-  how they will mine waits for Luis's choices M1 to M4.
+  as before ([below](#a-pickaxe-for-each-and-the-first-swings-october-6)).
+  That first swing had no weight. Since later on October 6, `K` in the
+  Ordinary Place shows the swing with real weight instead
+  ([ThePhysicalBody.md](../Design/ThePhysicalBody.md#in-the-place-to-try-october-6)).
 - **Hands that close** (October 5): the free hands close round a handle of
   any thickness from 12 to 44 mm, and open again
   ([below](#hands-that-close-october-5)). One question for Luis came out of
@@ -162,12 +163,10 @@ hands that close on it.
 
 ![Round at the rock, in the game](../Images/Miners/Work_Round.jpg)
 
-**To see it in play:** in the Ordinary Place, press `K`. A plain block of
-rock stands in front of the chosen miner and it mines it; `K` again puts the
-rock and the pickaxe away ([MinersPlaytest.md](../Playtests/MinersPlaytest.md#a-first-look-at-the-work-october-6)).
-It is a first look, not the game's mining: where they mine, where a pickaxe
-is kept, what the other hand does and what happens to what is mined are
-Luis's choices M1 to M4.
+**In play:** this first swing was what `K` showed in the Ordinary Place.
+Since later on October 6, `K` shows the swing with real weight instead
+([MinersPlaytest.md](../Playtests/MinersPlaytest.md#a-first-look-at-the-work-october-6)),
+and this one is seen only in the pictures and the clip here.
 
 ### A pickaxe made for each body
 
