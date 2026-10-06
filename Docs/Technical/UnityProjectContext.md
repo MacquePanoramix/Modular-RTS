@@ -1310,3 +1310,48 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   (`MinerBody.HandFree`), so the old swing holds with two hands on all
   three. `MinerTests` expects six closing hands. Small's line in the
   choice reads "a lantern at the hip".
+
+## The physical body, step 4: the swing — October 6
+
+- **`PhysicalHands`:**
+  - **A hand slides** (`Slide(hand, along)`, `Sliding`, `GripAlong`,
+    `LowestGrip`, `HighestGrip`): its place on the handle moves at 1.6 m/s,
+    no nearer the other hand than a fist and a half. The link from its
+    shoulder and the mass that rides with it move with it (the held
+    thing's mass, centre and inertia are worked out again). While it
+    slides it holds loosely: what it would have pulled along the handle is
+    the other hand's to give. `RadiusAt(along)`: the handle's thickness
+    there, for the fingers.
+  - **`GripPlace(hand)`**: where a hand holds, as the physics has it.
+  - **Collisions are speculative** (`ContinuousSpeculative`): a pick's head
+    moves fast by turning, which sweeping does not follow (S2).
+- **`PhysicalBack`** (new). Each physics step: the turning force the upper
+  body's weight asks of the back about the hips; what the hands' pushes ask
+  (the load); the muscle's answer, which would bring the bow to where it is
+  meant to be without overshoot (9 a second), limited by
+  `PhysicalBody.BackCapacity` (less the faster it already bends, nothing at
+  320 degrees a second; 1.5 times as much when forced back); the bow is
+  integrated and given to the body (`ProceduralBiped.Bow(angle, pace)`).
+  Then the hips: `Ahead` is how far the weight of body and tool stands
+  ahead of the middle of the feet, and the hips go back by half of that
+  each step (`SetBack`).
+- **`PhysicalBody`:** the parts above the hips (`UpperBody`: their mass,
+  centre and inertia about the hips, from the pose); `BackCapacity`: 2.4
+  times what the upper body asks bent level, times `Strength`.
+- **`ProceduralBiped`:** `Bow(degrees, pace)`; `SetBack` (the hips go back
+  behind the feet, at 0.5 m/s); `Sink` (the hips sink and the knees bend,
+  at 0.6 m/s); `FootMiddle`; `StandingHipHeight`.
+- **`PhysicalSwing`:**
+  - **The upper hand:** at rest it reads how much of the arms holding the
+    tool takes, and slides the upper hand towards the head by that (none
+    below 22%, all the way at 50%); in the blow it slides back.
+  - **`Aim(point)`:** searches the bow, the knees' bend and the tool's lean
+    for the pick's head to be at the point, standing where it stands
+    (preferring to stand tall). The rest pose, the blow's bow and where the
+    blow means to end follow from it. The legs straighten under the lift.
+  - **`Result`:** also `choked`, `backEffort`, `landed`.
+- **Tests:** `PhysicalBodyTests` has five: weighed; strength and weight
+  decide the swing; each miner swings its own pickaxe; the body adapts to
+  its strength and to where it strikes; the same at any frame rate.
+  `PhysicalBench` takes `-benchMarks` (heights to aim at).
+  `Art/Review/row_clip.py` puts clips side by side.

@@ -348,15 +348,92 @@ the left hip. The pictures, the checks and what was found are in
 They swing as they did, from a bone of their own; they are not yet objects
 a hand can take (step 8).
 
+### Step 4: the swing (October 6)
+
+After Luis's look at the bench ("very promising … the version we want is a
+full swing that will involve the body adapting to the strength
+capabilities and rock").
+
+![The three miners with their own pickaxes](../Images/PhysicalBody/Swing_ThreeMiners.gif)
+
+*Each miner with the pickaxe made for it, at ordinary strength.*
+
+![Round aimed at three heights](../Images/PhysicalBody/Swing_Round_Aimed.gif)
+
+*Round aiming at a low block, one at the hips' height and one at the
+chest's.*
+
+**What the body now does by itself:**
+
+- **The upper hand goes up the handle for the lift, by as much as the tool
+  feels heavy.** Holding the pickaxe at rest tells the body how much of its
+  arms that takes. If it is little, the hands stay where they are. If it is
+  much, the upper hand slides up towards the head, where the weight is,
+  before the lift. In the blow it slides down to meet the lower hand, and
+  the swing lengthens as it comes over. A sliding hand holds loosely: it
+  steadies the handle and does not pull along it.
+- **The back has its own strength.** It holds up the upper body, further
+  out the further it bows, and whatever the hands are holding up, at the
+  end of the arms. An ordinary back holds up about two and a half times
+  its own upper body bent level. A back that is overloaded straightens
+  slowly, or not at all.
+- **The hips go back as the body bows,** by as much as keeps its weight,
+  the pickaxe's with it, over its feet. This is the first rung of the
+  ladder of balance.
+- **Aimed at a point, the body takes the stance that reaches it.** It finds
+  how far to bow, how far to bend its knees and how the pickaxe must lean
+  for the head to rest just over that point. It prefers to stand tall. The
+  legs straighten under the lift and bend again into the blow.
+
+**The three miners, each with its own pickaxe, at ordinary strength:**
+
+| | Small | Long | Round |
+|---|---|---|---|
+| The pickaxe | 1.50 kg | 3.21 kg | 2.39 kg |
+| The upper hand goes up the handle | 26% of the way to the head | **all the way** | 18% |
+| Raised | 0.79 m in 0.60 s | 1.03 m in 0.60 s | 0.88 m in 0.60 s |
+| The arms, while raising it | 42% of what they have | **65%** | 36% |
+| The back, while raising it | 28% | 32% | 30% |
+| The head lands at | 6.3 m/s | 6.1 m/s | 6.9 m/s |
+
+**Round, by its own adapting:**
+
+| | The upper hand | |
+|---|---|---|
+| At half strength | 88% of the way to the head | raised with the arms at 66%, where they needed 83% with the hands left in place |
+| At double strength | stays where it is | |
+
+| Aimed at | The knees bend | The pick's head lands |
+|---|---|---|
+| A low block (a fifth of its height) | 23 cm | 11 mm from the height aimed at, at 6.9 m/s |
+| A block at half its height | not at all | 13 mm from it, at 6.9 m/s |
+
+**What the step found:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| S1 | Long needs its upper hand right at the head, and two thirds of its arms, to raise its own pickaxe | The pickaxe is sized by the arm that swings it, and its weight grows much faster than its length; Long's arms are long and thin | Nothing: it is true of this body and this tool. At half strength Long cannot manage it. It is what the creator's strength and a lighter pickaxe will be for |
+| S2 | A blow was reported 10 cm inside the block | The pick's head moves fast by the tool's turning, and the engine found it inside the block only after the step | The tool is watched for ahead of each step, so the head is stopped at the surface. Where a blow landed is read from the head itself |
+| S3 | The same lift felt lighter after the back and the hips were added | The hips going back bring the hands nearer the body | Nothing: it is what going back is for |
+| S4 | Aimed at a block as high as the chest, the pickaxe ends lying on its side on the block | A blow on something that high should come in level, at its face, not down on its top | Left for step 9, where a rock's own shape says where and how to strike |
+
+**What is not there yet:**
+
+- **The legs have no strength of their own.** They bend and straighten at
+  a set pace, whatever they carry. Step 6.
+- **It is not in the game's mining.** The look with `K` is the old swing.
+  Steps 9 and 11.
+- **The pickaxe does not yet stop at the miner's own body,** nor at what
+  hangs at the hip.
+- **No tiredness yet.** Every swing is as strong as the first. Step 5.
+- **The path over the shoulder is still the first swing's,** on the right
+  side only.
+
 **What is not there yet** (of the bench, step 2):
 
-- **The swing's plan is rough.** The path is the first swing's. The hands
-  do not slide on the handle. The legs do nothing. Step 4.
-- **The back is as strong as it likes.** It bows at one pace whatever it
-  carries. Steps 4 and 6.
-- **Balance is not measured.** Step 6.
-- **Only Round has been tried,** because only Round has two free hands.
-  Step 3.
+- **The swing's plan was rough,** the back as strong as it liked, and only
+  Round had been tried. Steps 3 and 4 answered these (above).
+- **Balance is measured only as far as the hips going back.** Step 6.
 - **The pickaxe does not yet stop at the miner's own body.**
 - **It is not in the game's mining.** The look with `K` is the old swing.
 - **Strength's figures are a first setting,** from an ordinary grown

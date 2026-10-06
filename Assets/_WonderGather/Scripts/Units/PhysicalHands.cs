@@ -30,6 +30,8 @@ namespace WonderGather
         private const float Fastest = 14;
         // A muscle that is being forced back resists with more than it can push with.
         private const float Braking = 1.5f;
+        // How fast a hand slides along a handle, in metres a second.
+        private const float SlidePace = 1.6f;
         // The arm's own mass that rides on the handle with each hand: the hand, and these shares of the forearm and
         // of the upper arm (the rest turns about the elbow and the shoulder, and hardly moves with the hand). It is
         // held up with the tool, and falls with it in a blow.
@@ -46,7 +48,10 @@ namespace WonderGather
         private readonly Vector3[] grip = new Vector3[2];
         private readonly Rigidbody[] anchors = new Rigidbody[2];
         private readonly ConfigurableJoint[] links = new ConfigurableJoint[2];
-        private readonly float[] effort = new float[2], miss = new float[2], rides = new float[2];
+        private readonly float[] effort = new float[2], miss = new float[2], rides = new float[2], slideTo = new float[2];
+        // The span of the handle a hand's middle can hold (from above its foot to below its head), a fist's
+        // half-width, and the share of the tool's own weight it was taken at.
+        private float lowest, highest, fist, ofItsWeight = 1;
         // The tool's own weight (what is held weighs more: the arms' mass rides on it).
         private float toolMass;
         public float ToolMass => toolMass;
@@ -59,6 +64,21 @@ namespace WonderGather
         public HeldThing Thing => thing;
         public ToolDefinition Tool => tool;
         public bool Holds(int hand) => held != null && on[hand];
+        // Where along the handle a hand holds (the tool's own y), and the span it can hold.
+        public float GripAlong(int hand) => grip[hand].y;
+        public float LowestGrip => lowest;
+        public float HighestGrip => highest;
+        // A hand slides along the handle to another place, at its own pace. While it slides it holds loosely: it
+        // steadies the handle but does not pull along it.
+        public void Slide(int hand, float along) { if (held != null && on[hand]) slideTo[hand] = Mathf.Clamp(along, lowest, highest); }
+        public bool Sliding(int hand) => held != null && on[hand] && Mathf.Abs(slideTo[hand] - grip[hand].y) > .002f;
+        // How thick the handle is where a hand holds it: it tapers evenly between the two places it was measured at.
+        public float RadiusAt(float along)
+        {
+            float a = tool.PrimaryGrip.y, b = tool.SecondaryGrip.y, ra = tool.GripRadius(1), rb = tool.GripRadius(0);
+            float r = Mathf.LerpUnclamped(ra, rb, (along - a) / (b - a));
+            return Mathf.Clamp(r, Mathf.Min(ra, rb) * .85f, Mathf.Max(ra, rb) * 1.12f);
+        }
         // The share of its capacity the hardest-worked joint of this arm gave at the last step (1: all it has).
         public float Effort(int hand) => effort[hand];
         // What this hand pushed the object with at the last step, in newtons.
@@ -66,6 +86,8 @@ namespace WonderGather
         // How far the hand's own hold was from the place it holds on the handle, when last drawn.
         public float Miss(int hand) => miss[hand];
         public Vector3 HeadPosition => held != null ? held.position + held.rotation * tool.Head : transform.position;
+        // Where a hand holds, in the world (as the physics has the object now).
+        public Vector3 GripPlace(int hand) => held != null ? held.position + held.rotation * grip[hand] : transform.position;
         // For measuring what this costs: the time spent in the steps of every body's hands since it was last cleared.
         public static bool Timed;
         public static long TimedTicks;
@@ -110,8 +132,14 @@ namespace WonderGather
             head.sharedMaterial = surface;
             held = go.AddComponent<Rigidbody>();
             toolMass = definition.Mass * weight;
+            ofItsWeight = weight;
+            fist = Mathf.Max(definition.GripRadius(0), definition.GripRadius(1)) * 2.5f;
+            lowest = definition.Foot + fist + .01f;
+            highest = definition.Top - .07f * (definition.Top - definition.Foot) - fist;
             held.interpolation = RigidbodyInterpolation.Interpolate;
-            held.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            // A pick's head moves fast by the tool's turning, not by its travelling: it is watched for ahead of each
+            // step, so it is stopped at a surface and not found inside it afterwards.
+            held.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             held.linearDamping = 0;
             held.angularDamping = .05f;
             held.maxAngularVelocity = 60;
@@ -127,6 +155,7 @@ namespace WonderGather
             {
                 on[i] = holds.HandFree(i);
                 grip[i] = i == 0 ? definition.SecondaryGrip : definition.PrimaryGrip;
+                slideTo[i] = grip[i].y;
                 rides[i] = 0;
                 if (!on[i]) continue;
                 physical.ArmParts(i, partAt, partMass);
@@ -259,8 +288,9 @@ namespace WonderGather
         public Vector3 Wrist(int hand, Vector3 shoulder)
         {
             Vector3 place = model.TransformPoint(grip[hand]), way = model.up;
-            holds.HoldHandle(hand, true, place, way, tool.GripRadius(hand), shoulder);
-            return holds.WristFor(hand, place, way, tool.GripRadius(hand), shoulder);
+            float radius = RadiusAt(grip[hand].y);
+            holds.HoldHandle(hand, true, place, way, radius, shoulder);
+            return holds.WristFor(hand, place, way, radius, shoulder);
         }
 
         // The most of a push (0 to 1) a joint can carry: the push asks it for `asked`, its limb's own weight for `own`,
@@ -284,6 +314,20 @@ namespace WonderGather
         private void Step()
         {
             float dt = Time.fixedDeltaTime;
+            // A hand that slides moves along the handle, no nearer the other than a fist and a half.
+            bool slid = false;
+            for (int i = 0; i < 2; i++)
+            {
+                if (!on[i] || Mathf.Abs(slideTo[i] - grip[i].y) <= .0005f) continue;
+                float to = Mathf.MoveTowards(grip[i].y, slideTo[i], SlidePace * dt);
+                int other = 1 - i;
+                if (on[other]) to = i == 0 ? Mathf.Max(to, grip[other].y + fist * 1.5f) : Mathf.Min(to, grip[other].y - fist * 1.5f);
+                if (Mathf.Abs(to - grip[i].y) < 1e-5f) { slideTo[i] = grip[i].y; continue; }
+                grip[i].y = to;
+                links[i].anchor = grip[i];
+                slid = true;
+            }
+            if (slid) Weigh(ofItsWeight);
             // The body as it stands at this step's own moment.
             Span<Vector3> shoulders = stackalloc Vector3[2];
             Span<Vector3> elbows = stackalloc Vector3[2];
@@ -294,7 +338,7 @@ namespace WonderGather
                 // The wrist must stay within an arm's length of the shoulder. The held place is a palm away from the
                 // wrist: the link is measured from the shoulder moved by that palm.
                 Vector3 place = held.position + held.rotation * grip[i], way = held.rotation * Vector3.up;
-                Vector3 palm = place - holds.WristFor(i, place, way, tool.GripRadius(i), shoulders[i]);
+                Vector3 palm = place - holds.WristFor(i, place, way, RadiusAt(grip[i].y), shoulders[i]);
                 anchors[i].MovePosition(shoulders[i] + palm);
             }
             effort[0] = effort[1] = 0;
@@ -346,6 +390,19 @@ namespace WonderGather
             {
                 f[only] = force;
                 t[only] = torque - Vector3.Cross(at[only] - centre, force);
+            }
+
+            // A sliding hand holds loosely: what it would have pulled along the handle is the other hand's to give.
+            if (count == 2)
+            {
+                Vector3 handle = held.rotation * Vector3.up;
+                for (int i = 0; i < 2; i++)
+                {
+                    if (Mathf.Abs(slideTo[i] - grip[i].y) <= .002f) continue;
+                    float pulls = Vector3.Dot(f[i], handle);
+                    f[i] -= handle * pulls;
+                    f[1 - i] += handle * pulls;
+                }
             }
 
             // What the arms can give of it. Each arm has its own most; both then give the same share of what was
@@ -410,7 +467,7 @@ namespace WonderGather
             for (int i = 0; i < 2; i++)
             {
                 miss[i] = 0;
-                if (!on[i] || miner.Held(i) < 1 || !miner.HandleIn(i, tool.GripRadius(i), out var point, out _)) continue;
+                if (!on[i] || miner.Held(i) < 1 || !miner.HandleIn(i, RadiusAt(grip[i].y), out var point, out _)) continue;
                 miss[i] = Vector3.Distance(point, model.TransformPoint(grip[i]));
             }
         }

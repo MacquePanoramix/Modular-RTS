@@ -75,14 +75,17 @@ namespace WonderGather.Tests
         private struct Tried
         {
             public PhysicalSwing.Result first, second;
-            public float miss, aside;
+            public float miss, aside, sink, mark;
             public int swings;
         }
 
-        // Round (both hands free) swings the bench's swing twice, at a strength, with its pickaxe at a share of its weight.
-        private IEnumerator Try(float strength, float weight, System.Action<Tried> done)
+        private IEnumerator Try(float strength, float weight, System.Action<Tried> done) => Try("Round", strength, weight, 0, done);
+
+        // A miner swings twice, at a strength, with its pickaxe at a share of its weight. mark: the height the blow
+        // is aimed at, as a share of the miner's height (0: where the pick rests unaimed).
+        private IEnumerator Try(string who, float strength, float weight, float mark, System.Action<Tried> done)
         {
-            choice.Choose(Index("Round"));
+            choice.Choose(Index(who));
             yield return Wait(.2f);
             var unit = choice.Current;
             var miner = unit.GetComponent<MinerBody>();
@@ -97,18 +100,30 @@ namespace WonderGather.Tests
             var definition = miner.Pickaxe;
             var hands = unit.gameObject.AddComponent<PhysicalHands>();
             var swing = unit.gameObject.AddComponent<PhysicalSwing>();
-            swing.hands = hands; swing.body = biped; swing.tool = definition;
-            biped.Bow(PhysicalSwing.RestBow);
+            var back = unit.gameObject.AddComponent<PhysicalBack>();
+            swing.hands = hands; swing.back = back; swing.body = biped; swing.tool = definition;
+            back.Want(PhysicalSwing.RestBow);
             yield return Wait(.6f);
             swing.Intend(PhysicalSwing.Rest, out var at, out var turned);
             Vector3 rests = at + turned * definition.Head;
+            var tried = new Tried();
+            if (mark > 0)
+            {
+                float height = miner.Rig.head.position.y - unit.transform.position.y;
+                rests.y = unit.transform.position.y + mark * height + definition.HeadRadius + .015f;
+                swing.Aim(rests - Vector3.up * .015f);
+                back.Want(swing.RestBowNow);
+                biped.Sink(swing.SinkFor);
+                yield return Wait(.8f);
+                swing.Intend(swing.RestLean, out at, out turned);
+                tried.sink = swing.SinkFor; tried.mark = rests.y - .015f;
+            }
             float top = rests.y - definition.HeadRadius - .015f, floor = ground.Height(rests.x, rests.z) - .1f;
             var rock = GameObject.CreatePrimitive(PrimitiveType.Cube);
             rock.transform.SetPositionAndRotation(new Vector3(rests.x, (top + floor) * .5f, rests.z), Quaternion.LookRotation(away));
             rock.transform.localScale = new Vector3(.5f, top - floor, .5f);
             rock.GetComponent<MeshRenderer>().enabled = false;
             hands.Take(definition, at, turned, weight);
-            var tried = new Tried();
             var after = new GameObject("After everything").AddComponent<AfterEverything>();
             after.Then = () =>
             {
@@ -128,7 +143,8 @@ namespace WonderGather.Tests
             Object.Destroy(swing);
             Object.Destroy(hands);
             Object.Destroy(rock);
-            biped.Bow(0);
+            Object.Destroy(back);
+            biped.Sink(0);
             physical.Strength = 1;
             yield return Wait(.2f);
             done(tried);
@@ -166,9 +182,52 @@ namespace WonderGather.Tests
             Assert.That(strong.first.liftEffort, Is.LessThan(ordinary.first.liftEffort * .7f));
             Assert.That(strong.first.speed, Is.GreaterThan(ordinary.first.speed * 1.1f));
             // Too weak for it: slow to raise, at all it has, and a feeble blow.
-            Assert.That(feeble.first.liftTime, Is.GreaterThan(ordinary.first.liftTime * 1.5f));
-            Assert.That(feeble.first.liftEffort, Is.GreaterThan(.9f));
-            Assert.That(feeble.first.speed, Is.LessThan(ordinary.first.speed * .6f));
+            Assert.That(feeble.first.liftTime, Is.GreaterThan(ordinary.first.liftTime * 1.2f));
+            Assert.That(feeble.first.liftEffort, Is.GreaterThan(.8f));
+            Assert.That(feeble.first.speed, Is.LessThan(ordinary.first.speed * .7f));
+        }
+
+        // Each miner swings the pickaxe made for it, with both hands, by its own strength.
+        [UnityTest, Timeout(600000)]
+        public IEnumerator EachMinerSwingsItsOwnPickaxeByItsOwnStrength()
+        {
+            foreach (string who in new[] { "Small", "Long", "Round" })
+            {
+                Tried tried = default;
+                yield return Try(who, 1, 1, 0, t => tried = t);
+                Debug.Log($"PHYSICAL_OWN {who}: upper hand {tried.first.choked:P0} of the way to the head; raised {tried.first.lifted:F2} m in {tried.first.liftTime:F2} s, arms {tried.first.liftEffort:P0}, back {tried.first.backEffort:P0}; "
+                    + $"struck at {tried.first.speed:F1} m/s; hands at most {tried.miss * 1000:F0} mm off, the tool {tried.aside:F0} degrees aside");
+                Assert.That(tried.swings, Is.EqualTo(2), who + " did not swing twice.");
+                Assert.That(tried.first.struck && tried.second.struck, Is.True, who + " did not strike.");
+                Assert.That(tried.first.reached, Is.GreaterThan(.98f), who + " did not raise its pickaxe all the way.");
+                Assert.That(tried.first.speed, Is.InRange(3.5f, 10f), "The blow of " + who);
+                Assert.That(tried.first.liftEffort, Is.LessThan(.85f), who + " should have something to spare raising its own pickaxe.");
+                Assert.That(tried.first.backEffort, Is.InRange(.1f, .7f), "The back of " + who);
+                Assert.That(tried.miss, Is.LessThan(.035f), "A hand of " + who + " came off the handle.");
+                Assert.That(tried.aside, Is.LessThan(45f), "The pickaxe turned aside in the hands of " + who);
+            }
+        }
+
+        // The body adapts by itself. A body the tool is heavy for takes it nearer the head to raise it; one it is light
+        // for does not. Aimed low, the body bends its knees and bows to reach, and the blow lands where it was aimed.
+        [UnityTest, Timeout(600000)]
+        public IEnumerator TheBodyAdaptsToItsStrengthAndToWhereItStrikes()
+        {
+            Tried weak = default, strong = default, low = default, high = default;
+            yield return Try("Round", .5f, 1, 0, t => weak = t);
+            yield return Try("Round", 2, 1, 0, t => strong = t);
+            yield return Try("Round", 1, 1, .22f, t => low = t);
+            yield return Try("Round", 1, 1, .5f, t => high = t);
+            Debug.Log($"PHYSICAL_ADAPTS upper hand: weak {weak.first.choked:P0}, strong {strong.first.choked:P0} of the way to the head; aimed low: sinks {low.sink:F3} m, its head lands {(low.first.landed.y - low.mark) * 1000:F0} mm from the mark's height at {low.first.speed:F1} m/s; "
+                + $"aimed high: sinks {high.sink:F3} m, lands {(high.first.landed.y - high.mark) * 1000:F0} mm from it at {high.first.speed:F1} m/s");
+            Assert.That(weak.first.choked, Is.GreaterThan(.6f), "A body the pickaxe is heavy for should take it near the head.");
+            Assert.That(strong.first.choked, Is.LessThan(.2f), "A body the pickaxe is light for has no need to.");
+            Assert.That(weak.first.struck && strong.first.struck, Is.True);
+            Assert.That(low.sink, Is.GreaterThan(.1f), "Aimed low, the knees should bend.");
+            Assert.That(high.sink, Is.LessThan(low.sink - .08f), "Aimed higher, the knees bend less.");
+            Assert.That(low.first.struck && high.first.struck, Is.True, "An aimed blow did not land.");
+            Assert.That(low.first.landed.y, Is.EqualTo(low.mark).Within(.06f), "The low blow did not land at the height it was aimed at.");
+            Assert.That(high.first.landed.y, Is.EqualTo(high.mark).Within(.06f), "The higher blow did not land at the height it was aimed at.");
         }
 
         // The body is posed once a frame and the physics steps on its own clock: what comes out must not depend on how

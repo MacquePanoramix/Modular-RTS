@@ -1874,3 +1874,57 @@ Stage S3, approved by Luis that day ([plan](NextMilestonePlan.md);
     end of step 4.
   - **The physical bench with Small and Long:** next, in step 4.
   - **Luis's eye** on where the things hang.
+
+## S3, step 4 — the swing (October 6)
+
+Built on the bench: the upper hand that slides, the back's own strength,
+the hips going back, and a swing aimed at a point
+([design](Design/ThePhysicalBody.md#step-4-the-swing-october-6)).
+
+- **The physical tests** (`PhysicalBodyTests`, five): 5 of 5. Their
+  figures:
+  - **Each miner, its own pickaxe, ordinary strength:** Small raises it
+    0.79 m in 0.60 s with the arms at 42% and the back at 28%, the upper
+    hand 26% of the way to the head, and lands the head at 6.3 m/s; Long
+    1.03 m, 65%, 32%, the hand all the way up, 6.1 m/s; Round 0.88 m, 36%,
+    30%, the hand 18% of the way, 6.9 m/s. Hands at most 20 mm off the
+    handle; the tool at most 28 degrees aside (14 are meant).
+  - **Strength and weight** (Round): ordinary, arms 36%, 6.9 m/s; the
+    pickaxe twice as heavy, 52%, 5.2 m/s; twice the strength, 19%, 8.4 m/s;
+    half the strength with twice the weight, 0.78 m in 0.78 s at 88%,
+    3.7 m/s.
+  - **Adapting:** at half strength Round's upper hand goes 88% of the way
+    to the head, at double strength not at all. Aimed at a low block the
+    knees bend 23 cm and the head lands 11 mm from the height aimed at;
+    aimed at half its height they do not bend, and it lands 13 mm from it.
+  - **Frame rate:** running free, arms 36% and 6.85 m/s; at 25 frames a
+    second, 37% and 6.78 m/s.
+- **The bench**, all three miners at strengths 0.5, 1 and 2: at half
+  strength Small and Round still manage (arms 73% and 66%); Long takes
+  1.34 s to raise its pickaxe with the arms at 97%, lands it at 2.7 m/s
+  and loses its line (the tool 140 degrees aside).
+- **Miner tests and tool tests:** passed in the suite.
+- **Full PlayMode suite, one run:** 131 tests; 127 passed, none failed,
+  4 skipped as explicit (1,129 s). These are step 3's models too.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`): the miners
+  in it have both hands free, the lantern and the mug at the hip. The
+  swing in it is still the old one (`K`).
+- **Read in pictures:** each miner's swing frame by frame; Round at two
+  strengths; Round aimed at three heights.
+- **What failed on the way:**
+  - A name the hands' code used twice (it did not compile).
+  - **The place of a blow, read from the engine, was 10 cm inside the
+    block** in one case and 14 cm above it in another way of detecting
+    collisions (S2). It is read from the pick's head itself now.
+  - **Two tests' expectations** were written for a body that could not
+    move its hand: the feeble swing is quicker now that the hand goes up
+    the handle (0.78 s, where 1.42 s was expected).
+- **Not tested:**
+  - **A second run of the suite,** and the crowd benchmark.
+  - **The cost** of the back and of sliding (the hands' own was 26
+    millionths of a second a step in step 2).
+  - **Small and Long aimed** at a point, and any miner aimed at a face
+    (S4).
+  - **The game's own mining,** which still uses the old swing.
+  - **Luis's eye** on the three miners' swings.
+

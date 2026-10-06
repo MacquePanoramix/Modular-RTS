@@ -363,9 +363,13 @@ namespace WonderGather.Editor
                 return new PhysicalBody.Part { bone = b, mass = p.mass, centre = b.InverseTransformPoint(hips + sits * (At(p.at) - hipsM)) };
             }).ToArray();
             int Index(string n) => Array.FindIndex(w.parts, p => p.bone == n);
+            // The back carries everything above the hips.
+            var above = Enumerable.Range(0, w.parts.Length).Where(i => w.parts[i].bone != "Pelvis" && !w.parts[i].bone.StartsWith("Thigh")
+                && !w.parts[i].bone.StartsWith("Shin") && !w.parts[i].bone.StartsWith("Foot") && !w.parts[i].bone.StartsWith("Toe")).ToArray();
             var physical = root.AddComponent<PhysicalBody>();
             physical.Configure(parts, new[] { Index("UpperArm.L"), Index("Forearm.L"), Index("Hand.L"), Index("UpperArm.R"), Index("Forearm.R"), Index("Hand.R") },
-                w.armRadius, w.legRadius);
+                above, hips, w.armRadius, w.legRadius);
+            Debug.Log($"MINER_BACK {name}: its back gives {physical.BackCapacity:F0} N m at most");
             Debug.Log($"MINER_WEIGHT {name}: {physical.Mass:F1} kg in {parts.Length} parts; its centre {physical.CentreOfMass().y - root.transform.position.y:F3} m up; "
                 + $"the model sits {Quaternion.Angle(sits, root.transform.rotation):F2} degrees off its prefab's axes");
         }

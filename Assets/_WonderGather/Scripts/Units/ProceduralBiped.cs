@@ -181,10 +181,24 @@ namespace WonderGather
         }
         // The body bows from the hips by an angle (forward is positive), at its own pace: for work that needs the
         // hands low or the weight thrown forward. Asked for by what plans the work; 0 stands it up again.
-        private float bowWanted,bow;
+        private float bowWanted,bow,bowPace=BowPace;
         private const float BowPace=150;
-        public void Bow(float degrees)=>bowWanted=Mathf.Clamp(degrees,-15,60);
+        public void Bow(float degrees)=>Bow(degrees,BowPace);
+        // pace: degrees a second (a back that moves by its own strength says how fast it is going).
+        public void Bow(float degrees,float pace){bowWanted=Mathf.Clamp(degrees,-15,60);bowPace=Mathf.Max(1,pace);}
         public float BowNow=>bow;
+        // The hips go back behind the feet by so much (forward is negative), and sink by so much (the knees bend),
+        // each at its own pace: to keep the body's weight over its feet when it bows, and to reach low.
+        private float backWanted,back,sinkWanted,sink;
+        private const float BackPace=.5f,SinkPace=.6f;
+        public void SetBack(float metres)=>backWanted=Mathf.Clamp(metres,-.08f*HipHeight,.28f*HipHeight);
+        public void Sink(float metres)=>sinkWanted=Mathf.Clamp(metres,0,.35f*HipHeight);
+        public float BackWanted=>backWanted;
+        public float BackNow=>back;
+        public float SinkNow=>sink;
+        public float StandingHipHeight=>HipHeight;
+        // How far ahead of where a foot is placed its middle is: where it carries weight best.
+        public float FootMiddle=>(BallLength+ToeLength-HeelLength)*.5f;
         public Vector3 ElbowNow(int index)=>elbowNow[index];
         private Vector3 previousPosition,previousVelocity,velocity,acceleration;
         private Quaternion facing;
@@ -678,7 +692,9 @@ namespace WonderGather
             Vector3 localAcceleration=Quaternion.Inverse(facing)*acceleration;
             float pitch=Mathf.Clamp(localAcceleration.z*1.8f+speed*1.2f+jog*3,-7,12),roll=Mathf.Clamp(-localAcceleration.x*1.6f,-6,6);
             if(equipment!=null && equipment.Busy) pitch+=Mathf.Sin(equipment.Progress*Mathf.PI)*4;
-            bow=dt>0?Mathf.MoveTowards(bow,bowWanted,BowPace*dt):bowWanted;
+            bow=dt>0?Mathf.MoveTowards(bow,bowWanted,bowPace*dt):bowWanted;
+            back=dt>0?Mathf.MoveTowards(back,backWanted,BackPace*dt):backWanted;
+            sink=dt>0?Mathf.MoveTowards(sink,sinkWanted,SinkPace*dt):sinkWanted;
             pitch+=bow;
             // posture: the steady body frame used by tools and carried loads.
             Quaternion posture=facing*Quaternion.Euler(pitch,0,roll);
@@ -687,7 +703,7 @@ namespace WonderGather
             // pelvisY is the smoothed target height. The reach projection is solved from it every
             // frame and never written back: feeding the projected height into the next target
             // ratchets the pelvis toward the ground whenever both feet are out of reach.
-            Vector3 hips=ReachableHips(transform.position+facing*new Vector3(sway,0,0)+Vector3.up*(pelvisY-transform.position.y));
+            Vector3 hips=ReachableHips(transform.position+facing*new Vector3(sway,0,-back)+Vector3.up*(pelvisY-transform.position.y-sink));
             // When support passes to a foot that allows a higher pelvis, rise smoothly. This filters
             // the output only; lowering stays immediate so planted legs always reach.
             float lift=hips.y-transform.position.y;

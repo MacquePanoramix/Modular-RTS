@@ -42,8 +42,16 @@
       hangs from a hook on the coat and Long's mug in a loop of thong at
       the hip; both hands of all three miners close on a handle
       ([pictures](ArtDirection/TheMiners.md#both-hands-free-the-lantern-and-the-mug-at-the-hip-october-6)).
+    - **Step 4, the swing: built** (October 6). All three miners swing
+      their own pickaxes with both hands. The body adapts by itself: the
+      upper hand goes up the handle by as much as the tool feels heavy;
+      the back has its own strength; the hips go back to keep the weight
+      over the feet; aimed at a point, it bows and bends its knees to
+      reach it
+      ([clips and figures](Design/ThePhysicalBody.md#step-4-the-swing-october-6)).
+      Long's pickaxe is heavy for Long.
     - **It is a bench, not yet the game:** the look with `K` is still the
-      old swing. Step 4 (the swing proper) comes next.
+      old swing. Step 5 (stamina) comes next.
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

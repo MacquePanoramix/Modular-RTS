@@ -27,11 +27,18 @@ namespace WonderGather
         // can give at most, held still: the shoulder and the elbow in newton metres, the wrist, and the hand's hold
         // in newtons.
         private const float ArmReference = .047f, ShoulderReference = 70, ElbowReference = 60, WristReference = 12, HoldReference = 400;
+        // An ordinary back holds up about this many times its own upper body bent level (a grown person's upper body
+        // bent level asks about 130 N m of a back that can give about 300).
+        private const float BackHolds = 2.4f;
 
         [SerializeField] private Part[] parts = new Part[0];
         // The arms' parts (upper arm, forearm, hand; left then right), as indices into parts.
         [SerializeField] private int[] arms = new int[0];
         [SerializeField] private float mass, armRadius, legRadius;
+        // The parts the back carries (everything above the hips), as indices into parts; and what they ask of the
+        // back when the body is bent level: their mass times how far from the hips they are, standing (kg m).
+        [SerializeField] private int[] upper = new int[0];
+        [SerializeField] private float upperAsks;
         [SerializeField, Range(.1f, 4)] private float strength = 1;
 
         public float Mass => mass;
@@ -39,20 +46,43 @@ namespace WonderGather
         public float LegRadius => legRadius;
         public int PartCount => parts.Length;
         public Part PartAt(int index) => parts[index];
-        public bool Ready => parts.Length > 0 && arms.Length == 6 && mass > 0 && armRadius > 0;
+        public bool Ready => parts.Length > 0 && arms.Length == 6 && upper.Length > 0 && mass > 0 && armRadius > 0;
         // 1: ordinary for this body's build.
         public float Strength { get => strength; set => strength = Mathf.Clamp(value, .1f, 4); }
 
-        public void Configure(Part[] weighed, int[] armParts, float arm, float leg)
+        // upperParts: the parts above the hips; hips: where the hips are now (the body standing as modelled).
+        public void Configure(Part[] weighed, int[] armParts, int[] upperParts, Vector3 hips, float arm, float leg)
         {
-            if (weighed == null || weighed.Length == 0 || armParts == null || armParts.Length != 6 || !(arm > 0) || !(leg > 0))
-                throw new ArgumentException("A body's weights need its parts, its arms' parts and its limbs' thickness.");
+            if (weighed == null || weighed.Length == 0 || armParts == null || armParts.Length != 6 || upperParts == null || upperParts.Length == 0 || !(arm > 0) || !(leg > 0))
+                throw new ArgumentException("A body's weights need its parts, its arms' parts, its upper body's parts and its limbs' thickness.");
             foreach (var p in weighed) if (p.bone == null || !(p.mass > 0)) throw new ArgumentException("A part of the body has no bone or no weight.");
             foreach (int i in armParts) if (i < 0 || i >= weighed.Length) throw new ArgumentException("An arm's part is missing from the body's weights.");
-            parts = weighed; arms = armParts; armRadius = arm; legRadius = leg;
+            foreach (int i in upperParts) if (i < 0 || i >= weighed.Length) throw new ArgumentException("A part of the upper body is missing from the body's weights.");
+            parts = weighed; arms = armParts; upper = upperParts; armRadius = arm; legRadius = leg;
             mass = 0;
             foreach (var p in parts) mass += p.mass;
+            upperAsks = 0;
+            foreach (int i in upper) upperAsks += parts[i].mass * Vector3.Distance(parts[i].bone.TransformPoint(parts[i].centre), hips);
         }
+
+        // The upper body as the back carries it now: its mass, where its weight is, and how hard it is to turn about
+        // the hips.
+        public void UpperBody(Vector3 hips, out float kilograms, out Vector3 centre, out float inertia)
+        {
+            kilograms = 0; inertia = 0;
+            Vector3 sum = Vector3.zero;
+            foreach (int i in upper)
+            {
+                var p = parts[i];
+                Vector3 at = p.bone.TransformPoint(p.centre);
+                kilograms += p.mass; sum += at * p.mass; inertia += p.mass * (at - hips).sqrMagnitude;
+            }
+            centre = kilograms > 0 ? sum / kilograms : hips;
+            inertia = Mathf.Max(inertia, 1e-3f);
+        }
+
+        // The most the back gives, in newton metres.
+        public float BackCapacity => BackHolds * upperAsks * Physics.gravity.magnitude * strength;
 
         public Vector3 CentreOfMass()
         {

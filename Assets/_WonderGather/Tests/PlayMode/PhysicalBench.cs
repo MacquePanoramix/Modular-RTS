@@ -40,6 +40,8 @@ namespace WonderGather.Tests
             string folder = CaptureTools.Argument("-benchOut") ?? Path.Combine(Application.dataPath, "..", "Captures", "Bench");
             string who = CaptureTools.Argument("-benchMiner") ?? "Round";
             float[] strengths = Numbers("-benchStrengths", .5f, 1, 2), weights = Numbers("-benchWeights", .5f, 1, 2);
+            // -benchMarks: heights to aim the blow at, as shares of the miner's height (0: where the pick rests unaimed).
+            float[] marks = Numbers("-benchMarks", 0);
             int frames = (int)Numbers("-benchFrames", 0)[0];
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
@@ -71,6 +73,7 @@ namespace WonderGather.Tests
 
                 foreach (float strength in strengths)
                 foreach (float weight in weights)
+                foreach (float mark in marks)
                 {
                     choice.Choose(index);
                     yield return null;
@@ -90,13 +93,26 @@ namespace WonderGather.Tests
                     float height = miner.Rig.head.position.y - unit.transform.position.y;
                     var hands = unit.gameObject.AddComponent<PhysicalHands>();
                     var swing = unit.gameObject.AddComponent<PhysicalSwing>();
-                    swing.hands = hands; swing.body = biped; swing.tool = definition;
+                    var back = unit.gameObject.AddComponent<PhysicalBack>();
+                    swing.hands = hands; swing.back = back; swing.body = biped; swing.tool = definition;
                     // It bows to its work first, and the block is put under where the pick's head then rests.
-                    biped.Bow(PhysicalSwing.RestBow);
+                    back.Want(PhysicalSwing.RestBow);
                     for (float until = Time.time + .6f; Time.time < until;) yield return null;
                     swing.Intend(PhysicalSwing.Rest, out var at, out var turned);
-                    // A low block under where the pick's head rests: what the swing comes down on.
+                    // A block under where the pick's head rests: what the swing comes down on. Aimed, the block's top
+                    // is at a height of its own, as far ahead, and the body takes the stance that reaches it.
                     Vector3 rests = at + turned * definition.Head;
+                    if (mark > 0)
+                    {
+                        rests.y = unit.transform.position.y + mark * height + definition.HeadRadius + .015f;
+                        swing.Aim(rests - Vector3.up * .015f);
+                        back.Want(swing.RestBowNow);
+                        biped.Sink(swing.SinkFor);
+                        for (float until = Time.time + .8f; Time.time < until;) yield return null;
+                        swing.Intend(swing.RestLean, out at, out turned);
+                        Debug.Log(string.Format(culture, "BENCH {0}: aimed at {1:0.00} of its height: bows {2:0} degrees, sinks {3:0.000} m, the tool leaning {4:0}; the aim is {5:0} mm off",
+                            who, mark, swing.RestBowNow, swing.SinkFor, swing.RestLean + 6, swing.AimMiss * 1000));
+                    }
                     float top = rests.y - definition.HeadRadius - .015f, floor = ground.Height(rests.x, rests.z) - .1f;
                     var rock = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     rock.name = "Bench block";
@@ -111,7 +127,7 @@ namespace WonderGather.Tests
                     }
                     hands.Take(definition, at, turned, weight);
                     PhysicalHands.TimedTicks = 0; PhysicalHands.TimedSteps = 0; PhysicalHands.Timed = true;
-                    string tag = string.Format(culture, "{0}_s{1:0.0#}_w{2:0.0#}", who.ToLowerInvariant(), strength, weight);
+                    string tag = string.Format(culture, mark > 0 ? "{0}_s{1:0.0#}_w{2:0.0#}_m{3:0.00}" : "{0}_s{1:0.0#}_w{2:0.0#}", who.ToLowerInvariant(), strength, weight, mark);
                     float miss = 0, tilt = 0;
                     string when = "";
                     int shot = 0, wanted = 2, frame = 0;
@@ -153,9 +169,10 @@ namespace WonderGather.Tests
                     {
                         var r = swing.results[k];
                         Debug.Log(string.Format(culture,
-                            "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: swing {3}: raised {4:0.00} m ({5:0}% of the way) in {6:0.00} s, its hardest joint at {8:0}% of what it has on average; {7}",
+                            "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: swing {3}: upper hand {9:0}% of the way to the head; raised {4:0.00} m ({5:0}% of the way) in {6:0.00} s, its hardest joint at {8:0}% of what it has on average, its back at {10:0}%; {7}",
                             who, strength, carried, k + 1, r.lifted, r.reached * 100, r.liftTime,
-                            r.struck ? string.Format(culture, "struck at {0:0.0} m/s, {1:0} J", r.speed, r.energy) : "did not strike", r.liftEffort * 100));
+                            r.struck ? string.Format(culture, "struck at {0:0.0} m/s, {1:0} J", r.speed, r.energy) : "did not strike", r.liftEffort * 100, r.choked * 100, r.backEffort * 100)
+                            + string.Format(culture, "; landed {0:0.000} m up, {1:0.000} m ahead", r.landed.y - unit.transform.position.y, Vector3.Dot(r.landed - unit.transform.position, away)));
                     }
                     Debug.Log(string.Format(culture, "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: {3} swings in {4:0.0} s; hands at most {5:0.0} mm off the handle ({11}); the tool leaned at most {6:0} degrees aside; shoulder {7:0} Nm, elbow {8:0} Nm, wrist {9:0.0} Nm, hold {10:0} N",
                         who, strength, carried, swing.results.Count, Time.time - began, miss * 1000, tilt, physical.ShoulderCapacity, physical.ElbowCapacity, physical.WristCapacity, physical.HoldCapacity, when));
@@ -168,7 +185,8 @@ namespace WonderGather.Tests
                     UnityEngine.Object.Destroy(swing);
                     UnityEngine.Object.Destroy(hands);
                     UnityEngine.Object.Destroy(rock);
-                    biped.Bow(0);
+                    UnityEngine.Object.Destroy(back);
+                    biped.Sink(0);
                     physical.Strength = 1;
                     for (float until = Time.time + .1f; Time.time < until;) yield return null;
                 }
