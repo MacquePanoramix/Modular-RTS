@@ -1138,3 +1138,55 @@ The second step of "the miners at work"
     bones, and fifteen for each closing hand).
 - **Not yet used by the game:** nothing calls `Hold` until a tool is in the
   hand (the next steps).
+
+## A pickaxe for each body, and a tool solve that reads the body — October 6
+
+Steps 3 and 4 of "the miners at work"
+([TheMiners.md](../ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6)).
+
+- **Blender** (`Art/Blender/Worker/`).
+  - **`tools.py`** (new). `pickaxe(name)` builds one miner's pickaxe with
+    `outfits.pick` (round-handled, stouter by the hand, a quarter of the
+    faces); `measured` reads the grips, the handle's radius at each and the
+    striking head from the model; `build` bakes a 512 atlas, exports
+    `Pickaxe_<Name>.fbx` (two levels of detail) and writes `tools.json`;
+    `handle_radii` gives the hands their own rows.
+  - **`workers.shape`:** `bodyFront`, `faceFront`, `headHalf` in
+    `miners.json`. `--dims` now merges into an entry (the hands' closing is
+    only found by a full build). `miners.json` is written under a lock.
+  - **`audit.py`:** `run(…, tool=…)`. On frames that carry `"t"` the tool's
+    parts (`WorkPickHandle`, `WorkPickHead`, `WorkPickCollar`) are posed by
+    the pseudo-bone `Tool`; `WORK_APART` and `WORK_MEETS` apply; the sweep's
+    `pinched` and `stretched` run on those frames.
+  - **`hands.tables(…, own)`:** rows for the body's own handles.
+- **Unity.**
+  - **`ToolDefinition`:** `gripRadii`, `GripRadius(hand)`.
+  - **`ProceduralBiped`.**
+    - `IHandHolds` (interface): `HandFree`, `WristFor`, `HoldHandle`.
+    - For tools: `ArmReach`, `ToolScale`, `ToolReachMin/Max`, `ToolHand`,
+      `ShoulderFromHips`. Without measurements of its own (the first body)
+      each returns the exact number it replaced.
+    - `Proportions.bodyFront`, `faceFront`, `headHalf`.
+    - A hand that is not free takes no load's place.
+  - **`EquippedTool`.**
+    - `Uses(hand)`, `WristPosition(hand, shoulder)`, `HandleDirection`,
+      `Model`. Reach is judged at the wrist, for each hand that holds; the
+      lower grip is the right hand's.
+    - `PoseAt`: for a body with hands of its own, the swing over the
+      shoulder (the hands' path is a curve from ready to raised, and out as
+      it strikes; the tool leans 14° outwards when raised). Otherwise the
+      first body's swing, unchanged.
+    - `SolveFrame` tells the body's hands what they hold (`HoldHandle`).
+  - **`MinerBody`** implements `IHandHolds`: `HoldTurn` (the hand bone's
+    turn to lie on a handle), `WristFor` (less the model's shoulder
+    offset), `HoldHandle` (closes or lets go; the hand turns onto the handle
+    as it opens). `Pickaxe`: the tool made for this body.
+  - **`MinerSetup.Pickaxe`:** imports the tool, checks it came in the right
+    way up (and turns it to strike forwards), paints and outlines it, gives
+    it two levels of detail, and writes `Data/Miners/Pickaxe_<Name>.asset`.
+  - **`MinerWorkPreview`** (new): `K` in the Ordinary Place. `RockFace`
+    (also used by tests and captures) and `FaceDistance`.
+  - **Tests:** `MinerToolTests` (three). `MinerPoseRecord` records the
+    mining; `MinerCloseCapture` has the `work` set.
+- **Not built:** a place to mine, body-sized places to stand, where a tool
+  is kept, hauling (step 5 and the choices M1 to M4).

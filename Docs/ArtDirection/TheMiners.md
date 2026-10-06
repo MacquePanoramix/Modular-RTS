@@ -2,6 +2,11 @@
 
 **Made:** October 2, 2026; polished October 3 and 4.
 **Status:**
+- **The miners mine** (October 6): each with a pickaxe made for its arms and
+  hands, swung over the shoulder, the head's contact with the rock counting
+  as before. A first look in play: `K` in the Ordinary Place
+  ([below](#a-pickaxe-for-each-and-the-first-swings-october-6)). Where and
+  how they will mine waits for Luis's choices M1 to M4.
 - **Hands that close** (October 5): the free hands close round a handle of
   any thickness from 12 to 44 mm, and open again
   ([below](#hands-that-close-october-5)). One question for Luis came out of
@@ -68,6 +73,161 @@ mean I kinda prefered the before for this one"
 
   ![Round's neckband from the front, the side and behind: before, and now](../Images/Miners/Method2_Neckband.jpg)
 
+## A pickaxe for each, and the first swings (October 6)
+
+Steps 3 and 4 of [the miners at work](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices), and the evidence of step 6
+for them. The miners can now mine: each with a pickaxe made for it, held in
+hands that close on it.
+
+![Round at the rock, in the game](../Images/Miners/Work_Round.jpg)
+
+**To see it in play:** in the Ordinary Place, press `K`. A plain block of
+rock stands in front of the chosen miner and it mines it; `K` again puts the
+rock and the pickaxe away ([MinersPlaytest.md](../Playtests/MinersPlaytest.md#a-first-look-at-the-work-october-6)).
+It is a first look, not the game's mining: where they mine, where a pickaxe
+is kept, what the other hand does and what happens to what is mined are
+Luis's choices M1 to M4.
+
+### A pickaxe made for each body
+
+![The three pickaxes](../Images/Miners/Pickaxes.jpg)
+
+One modelled pickaxe, the one Long carries on the back, made at the size of
+the body that swings it (`Art/Blender/Worker/tools.py`):
+
+| | Made for arms of | Length | Handle at the two grips | Triangles (far away) |
+|---|---|---|---|---|
+| **Small** | 0.43 m | 517 mm | 29 and 33 mm thick | 714 (214) |
+| **Round** | 0.47 m | 561 mm | 35 and 39 mm | 714 (214) |
+| **Long** | 0.61 m | 718 mm | 36 and 41 mm | 714 (214) |
+
+- **Sized by the arms** (the first pickaxe was made for arms of 0.87 m), and
+  its handle by the hand: a tenth of the hand's length, and round, so the
+  closed fingers lie on it all the way round.
+- **Its data is measured on the model:** where the two hands grip, how thick
+  the handle is there, and where the head's long point strikes. The data and
+  the shape cannot drift apart, and the game checks on import that the model
+  came in the right way up.
+- **Each hand has a closing for exactly its own handle:** the table of
+  [hands that close](#hands-that-close-october-5) gets two more rows, solved
+  on the skin for this handle's two thicknesses.
+
+### The tool's solve reads the body
+
+The first body's tool assumed its arms, its height and a body with no depth.
+Now it asks the body:
+
+- **How far the arms reach,** and so how far a shoulder may be from a wrist
+  that holds the tool.
+- **Where the hands work:** below the shoulders by the same share of the arm
+  as on the first body, and held clear of the body's own front (its coat, its
+  belly, an apron's pocket, a hammer) by room for the hand that is between
+  the handle and the body. The front, the face and the head's width are
+  measured on the model.
+- **Which hands are free.** Small and Long swing with the right hand; the
+  left keeps the lantern or the mug. Round swings with both.
+- **Where a wrist must be** for the handle to lie in the closed hand exactly
+  where the model's build measured the fingers on it. The hand turns onto
+  the handle, thumb towards the head.
+- **Where the model's own shoulders are.** They are not exactly where the
+  body solves them (on Long, 9 cm behind: the lean of
+  [P1](#for-luis-how-long-stands-in-the-game)).
+
+The first body and its maps are untouched: with no measurements of its own it
+keeps the exact numbers it had.
+
+### The swing goes over the shoulder
+
+![The three miners' hands on their pickaxes](../Images/Miners/Work_Hands.jpg)
+
+The first body's swing turns the tool about a hand held still in front of the
+hips. At the top of the backswing the tool's head is then inside the chest.
+On a figure of grey capsules nobody could see that; on Round it went through
+chest and head. So a body with a shape of its own makes the same swing (the
+same lean of the tool at every moment) over its right shoulder:
+- as the tool leans back, the hands go out to the right and up in front of
+  that shoulder, and the tool leans a little outwards, so its head passes
+  above the shoulder and beside the body's own head;
+- as it comes forward the hands come down the same way, and reach out as it
+  strikes, so the handle's foot swings clear of the body's front.
+
+The rule of the strike is unchanged: only a real contact of the pick's head
+with the rock counts. The swing's timing is the first body's. Its shape and
+effort are S3's work.
+
+![Small at the rock](../Images/Miners/Work_Small.jpg)
+
+![Long at the rock](../Images/Miners/Work_Long.jpg)
+
+### Checked
+
+- **The mining is recorded and audited.** The game's recording now ends with
+  two swings at a rock face (56 frames a miner). The audit puts the pickaxe
+  in the hands on those frames and checks that:
+  - the tool passes through nothing (the body, the clothes, the head and
+    hair, what else is carried);
+  - the fingers do not enter the handle (the deepest is 0.3 mm);
+  - each hand that holds touches the handle (0.0 mm on every frame);
+  - the sleeves and the skin at shoulder, elbow and wrist do not collapse or
+    stretch (at the elbows the sleeves thin by up to 29%, at Round's left shoulder (the arm that reaches across) by 30%, and at the wrists by up to 22%, against a limit of 45%; the cloth is pulled to 2.0 times its length at that shoulder and 1.9 on Small's right sleeve, against a limit of 1.9).
+- **In the game,** three new tests:
+  - each miner has a pickaxe made for its arms and hands;
+  - each swings it at a rock face and strikes twice, each strike yielding;
+    with a hand closed on it, the handle is where the hand holds it (0.0 mm
+    and 0.0° off on every frame) and both feet are planted;
+  - the look at the work (`K`) begins, strikes, and ends leaving the miner
+    as it was.
+- **Read on pictures:** 21 new sheets (seven views of six moments of the
+  swing, for each miner), with the close-ups of every failure on the way.
+
+**What remains in the mining, each small:**
+
+| Model | What | Why it is left |
+|---|---|---|
+| Small | The bag's strap end presses 3.9 mm into the right sleeve, on 6 frames of 28 | The elbow of the swinging arm passes the strap at the hip. Cloth and leather give; a wider elbow is the swing's matter (S3) |
+| Round | The apron's strap presses 2.4 mm into the smock at the shoulder (the limit is 2.0), on 2 frames | The shoulder rises under it as the arms go up |
+| Round | The cloth at the left shoulder is pulled to 2.0 times its length (the limit is 1.9), on 7 frames | The left arm reaches across to a swing over the right shoulder: 108° from its rest. The shoulder's helper bone (logged by the sweep) would ease it |
+| Small | The right sleeve's cloth is pulled to 1.9 times its length, at the limit, on 2 frames | The same, less |
+
+### What the two steps found
+
+![Found on the way](../Images/Miners/Work_Found.jpg)
+
+| # | Found | Cause | What was done |
+|---|---|---|---|
+| **W1** | At the top of the backswing the pickaxe passed through chest and head | The first body's swing turns the tool about a hand held still at the hips. It does the same on the first body, where it could not be seen | Bodies with a shape swing over the shoulder. The first body's swing is untouched |
+| **W2** | The pick's head 43 mm into Round's face; handles 6 mm into coats; a handle through Round's hammer | The hands' place came from the skeleton alone, and a coat or a belly stands well ahead of the hips | The body's front, face and head width are measured on the model. The tool is held clear of them, and reaches out as it strikes |
+| **W3** | On the backswing the pick's head went 11 mm into Small's hair | The swing cleared the shoulder, not the head | The raised hands go out past the head's measured width |
+| **W4** | After the first piece was mined, the hand with the lantern (or the mug) moved in front of the belly: 6 mm into the coat, the lantern with it | It took the place of a hand carrying a load, the first body's stand-in for hauling | A hand that carries something of its own takes no load |
+| **W5** | Long's hand was 88 mm from its handle | The model's shoulders are not where the body solves them: 9 cm behind on Long ([P1](#for-luis-how-long-stands-in-the-game)) | The wrist is asked for less the shoulder's offset. The handle is then 0.0 mm from the hand |
+| **W6** | Small's thumb pressed 2.5 mm into its handle | Its handle's thickness fell between two rows of the hand's table, and the thumb holds differently in the two (on the fingers, on the handle). The blend of the two went through the handle | A body's own tools get rows of their own in the table |
+| **W7** | The pickaxe came into the game with its point towards its bearer | The import turns a model that has no skeleton the other way | The setup's own check caught it on the first run. The model is turned to strike forwards |
+| **W8** | Small walked up to the rock and missed it | A body stops within 12 to 16 cm of its place. That is nothing to a 2.2 m body and a third of Small's reach | **Not fixed.** Places to stand and how exactly a body arrives belong to the rock (step 5). In the tests and the look, the miner starts at its place |
+
+Three of these (W1, W2, W4) passed every test in the game before a picture
+was looked at: the tests asserted strikes and hands on the handle, and both
+were true with the pickaxe in the miner's face.
+
+### Limits of this first mining
+
+- **There is no place to mine yet** (M1). The look puts a plain block where
+  the miner stands.
+- **Where a pickaxe is kept is not decided** (M2). In the look it appears in
+  the hand and is put away into nothing. Long has the one on the back and a
+  second in the hand.
+- **The other hand keeps the lantern or the mug** (M3 is not decided; this is
+  what a hand that cannot open must do).
+- **Nothing is hauled** (M4). In the look, after twenty strikes the miner
+  puts everything down and begins again.
+- **The swing is plain.** One pace, no weight shift, no follow-through, the
+  feet still. Its effort and shape are S3.
+- **A small body's arrival** at a place to work is not exact enough (W8).
+- **The wrists turn up to 88°** on the handle, most of it a turn about the
+  forearm, which the model makes at the wrist alone (it has no bone that
+  rolls the forearm). It reads well in the close-ups; it was not a pose the
+  sweep had tested.
+- **Not judged by Luis.**
+
 ## Hands that close (October 5)
 
 The second step of [the miners at work](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices): a free hand closes round a
@@ -109,9 +269,9 @@ handle and opens again.
 
 ![The three miners' hands on a handle 30 mm thick](../Images/Miners/Hands_ThreeMiners.jpg)
 
-**Nothing new shows in play yet.** No miner has a tool in hand until the next
-step. At rest the free hands look as they did (more triangles, the same
-shape):
+**At rest the free hands look as they did** (more triangles, the same shape).
+They close in play since October 6, on the pickaxe
+([above](#a-pickaxe-for-each-and-the-first-swings-october-6)):
 
 ![The free hands in the game at rest, before and after](../Images/Miners/Hands_AtRest_Game.jpg)
 
@@ -168,8 +328,9 @@ hips:
   they should is choice M3.
 - **Handles are taken as round.** A flattened handle (as on the pickaxe Long
   carries) would leave about 2 mm under the fingers on its flat sides.
-- **No handle is in the game yet,** so the closing was judged in Blender's
-  pictures and by the game's test, not in play.
+- **Between two rows of the table** the thumb may hold differently, and a
+  blend of the two can press into a handle (2.5 mm on Small's pickaxe before
+  it had rows of its own). A body's own tools get their own rows.
 
 ## The sweep of extreme poses (October 5)
 
@@ -624,8 +785,9 @@ look at in the Scene view. They are never saved into the scene.
 
 ## Limits
 
-- **Rigged in the game,** but only walking and standing. Mining still uses
-  the test body (see [MinersPlaytest.md](../Playtests/MinersPlaytest.md#not-yet)).
+- **Rigged in the game:** walking, standing, and a first mining with a
+  pickaxe (October 6). Mining as part of the game (a place, hauling) is not
+  built (see [MinersPlaytest.md](../Playtests/MinersPlaytest.md#not-yet)).
 - **The posed models are heavy.** About 95,000–105,000 faces each, for
   portraits. The game uses the rigged versions: 18,000, 5,000 and 1,600
   triangles.
@@ -641,10 +803,9 @@ look at in the Scene view. They are never saved into the scene.
 
 - **The miners at work** (the plan is in
   [NextMilestonePlan.md](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
-  Built: the sweep of extreme poses, and hands that close. Next: a pickaxe
-  made for each body with its grips read from the model, a tool solve that
-  reads the body, and then the miners at the rock. The last needs Luis's
-  choices M1 to M4.
+  Built: the sweep of extreme poses, hands that close, a pickaxe made for
+  each body, and a tool solve that reads the body. Next: the miners at the
+  rock, which needs Luis's choices M1 to M4.
 - **Faces in motion.** A blink or a change of expression.
 - **Whatever Luis finds** that the method missed goes into its
   [misses ledger](ModelQualityMethod.md#9-the-misses-ledger).

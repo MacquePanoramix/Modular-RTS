@@ -46,6 +46,9 @@ namespace WonderGather.Editor
             public Hung[] hanging;
             // How far a thigh swings, in degrees, before it reaches the skirt's front and back flaps.
             public float[] skirtSlack;
+            // The body's shape, for a tool swung in front of it: how far its front and its face stand ahead of the
+            // hips, and its head's half-width.
+            public float bodyFront, faceFront, headHalf;
             // The hands that close round a handle (hands.py).
             public Gripped[] grips;
         }
@@ -61,6 +64,22 @@ namespace WonderGather.Editor
             public float[] rest, open, radii, closed;
             // A point on each handle's axis, and the handles' direction through the closed fingers.
             public float[] centres, axis;
+            // The way the fingers leave the wrist.
+            public float[] along;
+        }
+
+        // A tool made for a miner (tools.json, written by Art/Blender/Worker/tools.py), in the tool's own space:
+        // y up the handle towards the head, z the way it strikes.
+        [Serializable] private class ToolFile { public Tooled[] tools; }
+
+        [Serializable]
+        private class Tooled
+        {
+            public string name;
+            public float size, length, headRadius, foot, top;
+            // Where the hands grip (the right hand's, then the left's), the handle's radius at each, the ball
+            // the strike sweeps, and the point itself.
+            public float[] primaryGrip, secondaryGrip, gripRadii, head, tip;
         }
 
         [Serializable]
@@ -205,6 +224,7 @@ namespace WonderGather.Editor
                 bounce = e.bounce > 0 ? e.bounce : 1, sway = e.sway > 0 ? e.sway : 1, armSwing = e.arm_swing > 0 ? e.arm_swing : 1,
                 armCarry = e.armCarry != null && e.armCarry.Length == 2 ? new Vector2(e.armCarry[0], e.armCarry[1]) : Vector2.zero,
                 armSwingSide = e.armSwingSide != null && e.armSwingSide.Length == 2 ? new Vector2(e.armSwingSide[0], e.armSwingSide[1]) : Vector2.one,
+                bodyFront = e.bodyFront, faceFront = e.faceFront, headHalf = e.headHalf,
             });
             biped.SetTuning(.65f, Mathf.Clamp(.16f * scale, .05f, .3f), .34f);
 
@@ -286,10 +306,96 @@ namespace WonderGather.Editor
                 .Where(f => f.bone != null).ToArray(),
                 e.skirtSlack != null && e.skirtSlack.Length == 2 ? new Vector2(e.skirtSlack[0], e.skirtSlack[1]) : Vector2.zero,
                 Grips(e, root.transform, Bone));
+            miner.ConfigureTool(Pickaxe(name, outline));
             Debug.Log($"MINER_HANGING {name} " + string.Join(", ", hanging.Select(h => $"{h.bone.name} {h.length:F3} m stop {h.stopDistance:F3}")));
             Debug.Log($"MINER_GRIPS {name} " + string.Join(", ", (e.grips ?? new Gripped[0]).Select(g => $"{g.hand} {g.bones.Length} joints, {g.radii.Length} handles")));
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath(name));
             Object.DestroyImmediate(root);
+        }
+
+        public const string ToolFolder = "Assets/_WonderGather/Data/Miners";
+        public static string PickaxePath(string name) => ToolFolder + "/Pickaxe_" + name + ".asset";
+
+        // The pickaxe made for one miner: its model as a prefab in the tool's own space, painted and outlined as
+        // the miners are, and its data (grips, the handle's thickness, the striking head) as the model's build
+        // measured them. The mineral asks for a "pickaxe"; every size of it answers to that.
+        private static ToolDefinition Pickaxe(string name, Material outline)
+        {
+            var file = JsonUtility.FromJson<ToolFile>(File.ReadAllText(Folder + "/tools.json"));
+            var told = file.tools.FirstOrDefault(x => x.name == name) ?? throw new InvalidOperationException("tools.json has no pickaxe for " + name);
+            string modelPath = Folder + "/Pickaxe_" + name + ".fbx", atlasPath = Folder + "/Pickaxe_" + name + "_Atlas.png";
+            var texture = (TextureImporter)AssetImporter.GetAtPath(atlasPath) ?? throw new FileNotFoundException("The pickaxe's atlas is missing.", atlasPath);
+            texture.sRGBTexture = true;
+            texture.mipmapEnabled = true;
+            texture.wrapMode = TextureWrapMode.Clamp;
+            texture.anisoLevel = 4;
+            texture.maxTextureSize = 512;
+            texture.textureCompression = TextureImporterCompression.CompressedHQ;
+            texture.SaveAndReimport();
+            var paint = MaterialAt(MaterialFolder + "/Pickaxe " + name + ".mat", Painted());
+            paint.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(atlasPath));
+            paint.SetColor("_BaseColor", Color.white);
+            paint.SetFloat("_Variation", .12f);
+            paint.SetFloat("_Brush", .3f);
+            paint.SetFloat("_BrushScale", 14);
+            paint.SetFloat("_Softness", .38f);
+            paint.SetFloat("_Translucency", 0);
+            paint.SetFloat("_Gloss", .12f);
+            paint.SetFloat("_VertexColor", 0);
+            paint.SetColor("_EmissionColor", Color.black);
+            paint.SetFloat("_Drawn", 1);
+            EditorUtility.SetDirty(paint);
+
+            var importer = (ModelImporter)AssetImporter.GetAtPath(modelPath) ?? throw new FileNotFoundException("Build the miners' tools first.", modelPath);
+            importer.animationType = ModelImporterAnimationType.None;
+            importer.importAnimation = false;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.importBlendShapes = false;
+            importer.bakeAxisConversion = true;
+            importer.importNormals = ModelImporterNormals.Import;
+            importer.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
+            importer.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), "Pickaxe_" + name), paint);
+            importer.SaveAndReimport();
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(modelPath) ?? throw new InvalidOperationException("The pickaxe did not import: " + name);
+
+            var root = new GameObject("Pickaxe (" + name + ")");
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(model);
+            instance.name = "Model";
+            instance.transform.SetParent(root.transform, false);
+            var renderers = instance.GetComponentsInChildren<MeshRenderer>(true).OrderBy(r => r.name).ToArray();
+            if (renderers.Length != 2) throw new InvalidOperationException($"{name}'s pickaxe should have two levels of detail, has {renderers.Length}.");
+            // The data is in the tool's own space: the model must have come in the same way up, at the same size.
+            // (The model comes in with its point towards its bearer; it is turned to strike forwards.)
+            if (renderers[0].bounds.max.z < -renderers[0].bounds.min.z) instance.transform.localRotation = Quaternion.Euler(0, 180, 0) * instance.transform.localRotation;
+            Bounds seen = renderers[0].bounds;
+            Vector3 tip = new Vector3(told.tip[0], told.tip[1], told.tip[2]);
+            if (Mathf.Abs(seen.min.y - told.foot) > .01f || Mathf.Abs(seen.max.y - told.top) > .01f || Mathf.Abs(seen.max.z - tip.z) > .01f || seen.max.z < -seen.min.z)
+                throw new InvalidOperationException($"{name}'s pickaxe came in the wrong way round: it spans {seen.min} to {seen.max}; its foot should be at y {told.foot:F3}, its top at {told.top:F3}, its point at z {tip.z:F3}.");
+            renderers[0].sharedMaterials = new[] { paint, outline };
+            renderers[1].sharedMaterials = new[] { paint };
+            // A tool is about a third of its bearer's height: it changes level, and is left out, when its bearer is.
+            var lods = instance.GetComponent<LODGroup>() ?? instance.AddComponent<LODGroup>();
+            lods.SetLODs(new[] { new LOD(.06f, new Renderer[] { renderers[0] }), new LOD(.0013f, new Renderer[] { renderers[1] }) });
+            lods.RecalculateBounds();
+            var prefab = PrefabUtility.SaveAsPrefabAsset(root, PrefabFolder + "/Pickaxe_" + name + ".prefab");
+            Object.DestroyImmediate(root);
+
+            Directory.CreateDirectory(ToolFolder);
+            AssetDatabase.Refresh();
+            var tool = AssetDatabase.LoadAssetAtPath<ToolDefinition>(PickaxePath(name));
+            if (tool == null)
+            {
+                tool = ScriptableObject.CreateInstance<ToolDefinition>();
+                AssetDatabase.CreateAsset(tool, PickaxePath(name));
+            }
+            Vector3 In(float[] v) => new Vector3(v[0], v[1], v[2]);
+            tool.Configure("pickaxe", "Pickaxe", prefab, In(told.primaryGrip), In(told.secondaryGrip), In(told.head), told.headRadius,
+                new Vector2(told.gripRadii[0], told.gripRadii[1]));
+            EditorUtility.SetDirty(tool);
+            Debug.Log($"MINER_TOOL {name}: a pickaxe {told.length:F2} m long, gripped at {told.primaryGrip[1]:F3} and {told.secondaryGrip[1]:F3}, "
+                + $"its handle {told.gripRadii[0] * 2000:F0} and {told.gripRadii[1] * 2000:F0} mm thick there");
+            return tool;
         }
 
         // The hands that close: for each, every finger joint's turn (in the joint's own frame) from its rest to the
@@ -346,6 +452,7 @@ namespace WonderGather.Editor
                     joints = joints, open = Turns(g.open, 0), radii = g.radii, closed = closed.ToArray(),
                     centres = Enumerable.Range(0, rows).Select(r => hand.InverseTransformPoint(At(g.centres, r))).ToArray(),
                     axis = Quaternion.Inverse(hand.rotation) * (sits * new Vector3(g.axis[0], g.axis[1], g.axis[2]).normalized),
+                    along = Quaternion.Inverse(hand.rotation) * (sits * new Vector3(g.along[0], g.along[1], g.along[2]).normalized),
                 };
             }
             return grips;
@@ -533,6 +640,8 @@ namespace WonderGather.Editor
             choice.Configure(units, Names, Notes, selection, 0);
             // A crowd of miners for the benchmark (-wgcrowd); idle otherwise.
             group.AddComponent<MinerCrowdBenchmark>().Configure(prefabs);
+            // A first look at them at work, with K (until where and how they mine is decided).
+            group.AddComponent<MinerWorkPreview>();
             EditorUtility.SetDirty(selection);
             if (!EditorSceneManager.SaveScene(scene)) throw new IOException("Could not save " + OrdinaryPlaceSetup.ScenePath);
             Debug.Log("ORDINARY_PLACE_MINERS_OK");

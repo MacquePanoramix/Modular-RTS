@@ -709,6 +709,11 @@ def run(b, meshes, bones, out_dir, poses=None, every=2, snap=True, tool=None):
                 MEETS.extend(WORK_MEETS + held)
                 try:
                     check_frame(report, fr, f"{label}{k}", here, contacts, covered, bones, floating=False)
+                    # Work bends the arms further than walking does: the sleeves and the skin at shoulder, elbow
+                    # and wrist are measured as the sweep of extreme poses measures them (sweep.py).
+                    import sweep
+                    sweep.pinched(report, fr, rest, parts, bones, bone_index, f"{label}{k}")
+                    sweep.stretched(report, fr, parts, f"{label}{k}")
                 finally:
                     del APART[-len(WORK_APART):]
                     del MEETS[-len(WORK_MEETS + held):]

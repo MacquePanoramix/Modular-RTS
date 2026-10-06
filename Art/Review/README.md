@@ -8,6 +8,8 @@ This folder belongs to the
 | `sheets.py` | Turns the frames of `MinerCloseCapture` into labelled contact sheets: one per zone, one per walk view across the eight phases, and so on. `python Art/Review/sheets.py <frames> <sheets>` (needs Pillow) |
 | `sweep_sheets.py` | Turns the pictures of the sweep of extreme poses into contact sheets, six poses a sheet. `python Art/Review/sweep_sheets.py <sweep folder> <sheets>` (needs Pillow) |
 | `Miners/audit_<Name>.txt` | The automatic audit's last report for each miner, on the game's recorded movement: every check, its limit, its value at rest, its worst value, and where |
+| `Miners/hands_<Name>.txt` | How each free hand closes on handles of several thicknesses, its own tool's among them: for each digit, how near it lies (`meets`) and how deep any of it is (`enters`); for the palm, how the handle rests |
+| `Miners/tool_<Name>.txt` | The pickaxe made for each miner: its size, its grips and the handle's thickness there, its striking point, as measured on the model |
 | `Miners/sweep_<Name>.txt` | The last report of the sweep of extreme poses (27 poses beyond the game's own movement): the same lines, with a value for each kind of pose in place of the phases. `pinched` is the percentage a sleeve or a trouser leg thins at a joint; `stretched` is how many times its length a cloth's longest edge is pulled |
 
 **How to read a report line:**
@@ -21,7 +23,9 @@ FAIL sinks  HammerHandle into Apron  limit 3.5  rest 0.0  worst 3.9 at walk122  
 - **`rest`:** the value in the modelled rest pose.
 - **`worst`:** the worst value on the recorded frames, and the frame.
 - **`(6/118 frames)`:** how many audited frames fail.
-- **`stand … stop`:** the worst value in each phase of the recording.
+- **`stand … stop`:** the worst value in each phase of the recording. Since
+  October 6 there is a fifth, `mine`: two swings at a rock face, with the
+  pickaxe in the hands (its parts are named `WorkPick…`).
 - **`[x, y, z]`:** where, in the model's space, in metres.
 
 The audit also renders a close view of each failure (`snap_*.png`) beside the

@@ -16,6 +16,11 @@ namespace WonderGather.Tests
             return null;
         }
 
+        // A rock face to mine, for tests and captures: the same plain block the look at the work shows in play
+        // (MinerWorkPreview). It is made at need, not in the scene: where the miners will mine is Luis's choice (M1).
+        public static (ResourceNode node, ResourceDepot depot, GameObject rock) RockFace(Vector3 stand, Vector3 facing, float reach, Vector3 deliver, bool visible = false, float height = 2.6f)
+            => MinerWorkPreview.RockFace(stand, facing, reach, deliver, visible, height);
+
         public static void Render(Camera camera, string path, int width, int height)
         {
             var target = new RenderTexture(width, height, 24);

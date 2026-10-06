@@ -127,14 +127,22 @@ finding: correct the check, and say so in the round's log.
 This is the same audit, in motion.
 
 1. **The game records its own movement** (`MinerPoseRecord`). Every miner
-   stands, starts walking, walks straight, turns sharply and stops. For
-   every frame (30 a second, 235 frames) it writes, for each bone, the
-   matrix that skinning applies.
+   stands, starts walking, walks straight, turns sharply and stops, and then
+   mines: two swings at a rock face with the pickaxe made for it. For every
+   frame (30 a second, 291 frames) it writes, for each bone, the matrix that
+   skinning applies; on the mining frames, the pickaxe's own place as well.
 2. **Blender replays the recording.** It poses each part exactly as the game
    skins it, runs the pass 3 checks on every second frame, and reports the
    worst value for standing, walking, turning and stopping separately.
 
+   On the mining frames the tool is in the hands (its parts are built again
+   in Blender at the same size). The tool must pass through nothing; the
+   fingers must not enter its handle; each hand that holds it must touch it;
+   and the sleeves and skin at shoulder, elbow and wrist are measured as the
+   sweep measures them.
+
 Problems like these show here before anyone looks:
+- a tool passing through the one who swings it;
 - a knee coming through a coat;
 - a carried thing swinging into the body;
 - a handle turning in the closed fingers;
@@ -256,10 +264,11 @@ editor, and `<project>` the Unity project.
 | **Audit in motion** | The audit command, plus `--poses <poses>` | The same report, with the worst value per phase |
 | **Build for the game** | `blender … workers.py -- --out Assets/_WonderGather/Art/Worker/Miners --rigged [--poses <poses>] [--report <folder>]` | The models, atlases and `miners.json`. The audit runs as part of every build. Its reports go to `Art/Review/Miners` (or `<folder>`), never among the game's assets |
 | **Set up in the game** | `<Unity> -batchmode -projectPath <project> -executeMethod WonderGather.Editor.MinerSetup.CreateAll -quit` | The miners' prefabs and the scene, from the new models |
-| **Capture** | `<Unity> … -testFilter WonderGather.Tests.MinerCloseCapture -captureOut <frames> [-captureMiner Small] [-captureSets zones,walk]` | PPM frames |
+| **Capture** | `<Unity> … -testFilter WonderGather.Tests.MinerCloseCapture -captureOut <frames> [-captureMiner Small] [-captureSets zones,walk,work]` | PPM frames. The `work` set: the miner at a rock face by day, six moments of one swing from seven sides |
 | **Sheets** | `python Art/Review/sheets.py <frames> <sheets>` | JPG frames and contact sheets |
 | **Sweep of extreme poses** | `blender -b --factory-startup --python Art/Blender/Worker/workers.py -- --out <folder> --sweep [--only Small]` | `sweep_<Name>.txt`, `sweep_<Name>_poses.txt` and three pictures of each pose, in `<folder>` |
 | **Sweep sheets** | `python Art/Review/sweep_sheets.py <folder> <sheets>` | Contact sheets of the sweep, six poses a sheet |
+| **Tools** | `blender -b --factory-startup --python Art/Blender/Worker/tools.py -- --out Assets/_WonderGather/Art/Worker/Miners [--only Small] [--report <folder>] [--preview <folder>]` | `Pickaxe_<Name>.fbx`, its atlas and `tools.json` (grips, handle thickness and striking head, measured on the model); `tool_<Name>.txt`; with `--preview`, two pictures of each |
 | **Hands that close** | `blender … workers.py -- --out <folder> --hands [--only Round]` | `hands_<Name>.txt` (each digit on each handle: meets, enters) and four pictures of every closed hand. The check also runs in every build, without pictures |
 
 A recording belongs to the build it was recorded from. After the models or
@@ -280,6 +289,7 @@ for the recorded movement, `sweep_<Name>.txt` for the extreme poses).
 | **Against gravity** | A bag standing stiff; a strap slack or kinked under weight; an apron like a board |
 | **Wrong motion** | Something rigid that should swing; a thing trailing as if in a wind; something bending like rubber; popping; jitter |
 | **Deformation** | Elbows and knees collapsing; wrists twisting; cloth stretching at the shoulders; a hand's skin folding when its fingers close |
+| **Tools** | A tool passing through its bearer; a hand off its handle, or fingers in it; a tool held in the clothes; a hand that should be busy doing something else |
 | **Stance** | A being standing differently in the game from how it was built (leaning, straightened, turned) |
 | **Surface** | Blurry or stretched paint; seams; a face fading; values too close together |
 | **Readability** | Tangents; clutter; a silhouette that no longer says who it is |
@@ -346,6 +356,9 @@ catches them now.
 | The sweep | Its findings were all in poses no movement reaches | A finding is weighed by whether a movement reaches the pose. It is logged with the movement that would need it, not fixed ahead of it |
 | Hands that close (October 5) | A hand folded on its back when its fingers closed: it had 622 triangles | Triangles are budgeted by what a part must do, not only by its size. A part that bends at many joints needs points to bend at |
 | Hands | A solve "converged" on fingers bent backwards, and on a finger left pointing: every number said "touching" | A number that says "touching" is read on a picture before it is believed. The pictures of the first run are part of the check, not an extra |
+| At work (October 6) | The first body's swing put the pickaxe through the miner's chest and head. It always had, on the first body, where a figure of capsules hid it | A movement made on a stand-in is read again, on pictures, on the first real body it meets, before anything is built on it |
+| At work | Every test in the game passed with the pick's head 43 mm inside Round's face. The tests asserted strikes and hands on the handle, and both were true | A passing test says what it asserts and nothing more. A new movement is recorded, audited with what it holds, and read on pictures before it is believed |
+| At work | The tool was held inside the coat. The hands' place came from the skeleton, and a body has a front | What a solve needs to know of a body is measured on the model and given to it (front, face, head width), not guessed from bones |
 | Hands | The game put Long's closed fingers 4.5 mm from where the build measured them. The prefab squares a model by its head and feet, and Long's sits 11° off its own axes; nothing had compared the two | Data measured on the model is fitted to the model's own bones in the game, never to the prefab's axes. The setup reports how far apart the two are. And the built model is read beside the game's standing pose (pass 5) |
 
 ## 10. Research behind the method

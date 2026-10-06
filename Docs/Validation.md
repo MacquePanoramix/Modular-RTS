@@ -1688,3 +1688,66 @@ Findings are in
   - **Other levels of detail closed.** The closing was measured on the
     nearest level's skin only.
   - **Luis's eye.**
+
+## S1d, the miners at work — steps 3 and 4: a pickaxe for each, and the tool's solve (October 6)
+
+[TheMiners.md](ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6).
+
+- **Environment.** The isolated worktree at 3ee044b with these steps'
+  changes. The validated files were then copied into the main project.
+  Luis's own uncommitted files were not touched.
+- **The tools** (`tools.py`): three pickaxes, none failing its checks (a
+  handle a hand can close on, and round). 517, 561 and 718 mm long; 714
+  triangles (214 far away).
+- **The hands' closing:** 0 failing of 48 (Small), 42 (Long) and 96 (Round)
+  checks, with the rows for each one's own handle.
+- **The audit** (`Art/Review/Miners/audit_<Name>.txt`):
+  - **At rest:** 0 of 386 (Small), 0 of 267 (Long), 0 of 203 (Round).
+  - **On the recorded movement** (291 frames each, 56 of them mining with
+    the pickaxe in the hands): the same four checks as before remain from
+    the walk. In the mining, two small ones: Small's bag strap end 3.9 mm
+    into the right sleeve (6 frames of 28), Round's apron strap 2.4 mm into
+    the smock (limit 2.0; 2 frames), and the cloth of a sleeve pulled just
+    past its limit (below). The tool passes through nothing; the
+    fingers enter the handle by at most 0.3 mm; every holding hand touches
+    it on every frame. At the elbows the sleeves thin by up to 29%, at Round's left shoulder (the arm that reaches across) by 30%, and at the wrists by up to 22%, against a limit of 45%; the cloth is pulled to 2.0 times its length at that shoulder and 1.9 on Small's right sleeve, against a limit of 1.9.
+- **How it got there** (a capture, then three recordings, each audited and
+  read; failing checks for Small, Long and Round, the walk's four among
+  them):
+  1. the first body's swing, captured: the pickaxe through chest and head
+     (seen on the first picture; no test caught it);
+  2. over the shoulder, recorded: 13, 7 and 9 (the pick's head 43 mm into
+     Round's face, handles in coats, a lantern in a coat);
+  3. with the body's shape measured and a carrying hand left alone: 4, 1
+     and 2;
+  4. with rows for each one's own handle: 3, 1 and 2. With the sleeves and
+     the skin at the joints measured too (the last reports): 4, 1 and 3.
+- **Tests.**
+  - **Miner tests:** 9 of 9. **Tool tests** (new): 3 of 3. In the swing
+    test, with a hand closed on it the handle was 0.0 mm and 0.0° from
+    where the hand holds it, over 2,246 to 4,524 frames a miner.
+  - **Full PlayMode suite (125 tests, 3 skipped as explicit), three runs:**
+    1. 122 of 122 passed (1,009 s).
+    2. 119 of 122: three failures, all of one kind (a foot without support
+       on the first body, twice; Round's ankle 0.44 m from its planted foot
+       in the walk to the door). The computer was in use and stalling: the
+       run took 63 s longer over the same tests, and the benchmark that
+       followed has a row with a mean of 114 ms beside a 95th percentile of
+       6 ms. A stalled frame moves a body further than a foot can follow.
+    3. 122 of 122 passed (run after the three had passed alone, twice).
+
+    The first body's equipment tests are among them and unchanged.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Crowd benchmark** (1920×1080, by day, the computer in use and the
+  window in the background as on the hands' run; one run): two runs, both disturbed (several rows have a mean above their 95th percentile, which a stalled frame does). The undisturbed rows are in line with the hands' run: a hundred miners in the close view, 7.2 and 7.3 ms (7.7 then); fifty, 6.2 and 6.2 (6.6 then). No
+  miner in it holds a tool.
+- **Not tested:**
+  - **Watched in play.** The swing was judged on captured frames, the
+    audit and the tests. `K` shows it; nobody has watched it yet.
+  - **Arriving at a rock.** In every test and capture the miner starts at
+    its place (a small body stops too far from it; step 5).
+  - **Hauling, delivering, putting the tool away.** Not built for the
+    miners.
+  - **Many miners mining at once,** and its cost.
+  - **Other hardware.**
+  - **Luis's eye.**

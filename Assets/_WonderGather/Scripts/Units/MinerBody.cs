@@ -9,7 +9,7 @@ namespace WonderGather
     // roll so that knees and elbows bend the way the body bends them.
     // Index 0 of every pair is the being's left, as in ProceduralBiped.
     [DefaultExecutionOrder(50)]
-    public sealed class MinerBody : MonoBehaviour
+    public sealed class MinerBody : MonoBehaviour, IHandHolds
     {
         [System.Serializable]
         public struct Bones
@@ -94,6 +94,8 @@ namespace WonderGather
             // and its direction there (through the closed fingers, towards the thumb).
             public Vector3[] centres;
             public Vector3 axis;
+            // The way the fingers leave the wrist, in the hand bone's space (square to the axis).
+            public Vector3 along;
         }
 
         // How far a relaxed wrist turns with a swinging weight, in degrees.
@@ -109,6 +111,19 @@ namespace WonderGather
         [SerializeField] private Grip[] grips = new Grip[0];
         private Quaternion[][] gripRest = new Quaternion[0][];
         private readonly float[] held = new float[2], heldTarget = new float[2], heldRadius = new float[2], heldPosed = { -1, -1 };
+        // What a tool has put in each hand this frame, and how far the hand has turned onto it.
+        private readonly bool[] onHandle = new bool[2];
+        private readonly Vector3[] handleGrip = new Vector3[2], handleWay = new Vector3[2], handleShoulder = new Vector3[2];
+        private readonly Quaternion[] handleTurn = { Quaternion.identity, Quaternion.identity };
+        private readonly float[] handleWeight = new float[2];
+        // How far each modelled shoulder is from where the body solved it, in the solved chest's frame. The model's
+        // trunk keeps its own bones and its own bearing, so its shoulders are near the solved ones, not on them
+        // (Long's are 9 cm behind). A walking arm does not care; a hand that must lie on a handle does.
+        private readonly Vector3[] shoulderOff = new Vector3[2];
+        // The pickaxe made for this body's arms and hands.
+        [SerializeField] private ToolDefinition pickaxe;
+        public ToolDefinition Pickaxe => pickaxe;
+        public void ConfigureTool(ToolDefinition tool) => pickaxe = tool;
         // How far a thigh swings, in degrees, before it reaches its front and its back flap (x, y): the room between
         // the leg and the cloth as they were modelled. A long coat hangs well clear of the legs, so only the end of
         // each stride moves it; cloth that is not touched hangs still.
@@ -180,6 +195,44 @@ namespace WonderGather
             point = bones.hands[hand].TransformPoint(Vector3.Lerp(grip.centres[row], grip.centres[next], blend));
             direction = bones.hands[hand].TransformDirection(grip.axis).normalized;
             return true;
+        }
+
+        // IHandHolds: a hand that closes is free to hold a tool; one that carries something is not.
+        public bool HandFree(int hand) => CanHold(hand);
+
+        // How the hand's bone must be turned, in the world, to hold a handle: the handle runs through the closed
+        // fingers with the tool's head on the thumb's side, and the fingers leave the wrist as nearly as may be the
+        // way the arm reaches.
+        private Quaternion HoldTurn(int hand, Vector3 grip, Vector3 handle, Vector3 shoulder)
+        {
+            Vector3 reach = Vector3.ProjectOnPlane(grip - shoulder, handle);
+            if (reach.sqrMagnitude < 1e-8f) reach = Vector3.ProjectOnPlane(transform.forward, handle);
+            if (reach.sqrMagnitude < 1e-8f) reach = Vector3.ProjectOnPlane(transform.up, handle);
+            return Quaternion.LookRotation(handle, reach) * Quaternion.Inverse(Quaternion.LookRotation(grips[hand].axis, grips[hand].along));
+        }
+
+        public Vector3 WristFor(int hand, Vector3 grip, Vector3 handle, float radius, Vector3 shoulder)
+        {
+            if (!CanHold(hand) || handle.sqrMagnitude < 1e-8f) return grip;
+            var held_ = grips[hand];
+            Row(held_, radius, out int row, out int next, out float blend);
+            Vector3 centre = Vector3.Scale(Vector3.Lerp(held_.centres[row], held_.centres[next], blend), bones.hands[hand].lossyScale);
+            // The body will solve its arm from its own shoulder; the model's arm is that arm, moved to the model's
+            // shoulder. So the body is asked for the wrist less that much, and the model's wrist lands on the place.
+            Vector3 off = solved.torso != null ? solved.torso.rotation * shoulderOff[hand] : Vector3.zero;
+            return grip - HoldTurn(hand, grip, handle, shoulder + off) * centre - off;
+        }
+
+        public void HoldHandle(int hand, bool on, Vector3 grip, Vector3 handle, float radius, Vector3 shoulder)
+        {
+            if (hand < 0 || hand > 1) return;
+            on &= CanHold(hand);
+            if (on) Hold(hand, radius);
+            else if (onHandle[hand]) Release(hand);
+            onHandle[hand] = on;
+            handleGrip[hand] = grip;
+            handleWay[hand] = handle;
+            handleShoulder[hand] = shoulder;
         }
 
         // The table's two rows a radius lies between, and how far from the first to the second.
@@ -330,8 +383,13 @@ namespace WonderGather
                 bones.upperArms[i].rotation = upper * root * upperRest[i];
                 Quaternion fore = Turn(root * foreAim[i], restBack, wrist - elbow, elbowBend);
                 bones.forearms[i].rotation = fore * root * foreRest[i];
-                // The hand carries on from the forearm.
-                bones.hands[i].rotation = fore * root * handRest[i];
+                // The hand carries on from the forearm. Holding a tool, it turns to lie on the handle (as it opens to
+                // take it), and turns back when it lets go.
+                Quaternion follows = fore * root * handRest[i];
+                shoulderOff[i] = Quaternion.Inverse(solved.torso.rotation) * (bones.upperArms[i].position - shoulder);
+                if (onHandle[i]) handleTurn[i] = HoldTurn(i, handleGrip[i], handleWay[i], bones.upperArms[i].position);
+                handleWeight[i] = Mathf.MoveTowards(handleWeight[i], onHandle[i] ? 1 : 0, Mathf.Clamp(Time.deltaTime, 0, 1 / 20f) / (GripTime * GripOpening));
+                bones.hands[i].rotation = handleWeight[i] > 0 ? Quaternion.Slerp(follows, handleTurn[i], Mathf.SmoothStep(0, 1, handleWeight[i])) : follows;
             }
             for (int i = 0; i < 2; i++) Close(i);
             Drape();

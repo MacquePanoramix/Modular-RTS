@@ -34,9 +34,9 @@ splits the work into checkpoints Luis playtests one at a time:
    round on October 5 ([TheMiners.md](ArtDirection/TheMiners.md)).
 7. **S1d, last part: the miners at work.** Planned on October 5
    ([below](#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices));
-   its first two steps are built (the sweep of extreme poses, and hands that
-   close). Steps 3 and 4 do not depend on Luis's choices; step 5 needs M1 to
-   M4.
+   steps 1 to 4 are built (the sweep of extreme poses, hands that close, a
+   pickaxe for each body, a tool solve that reads the body), and the miners
+   can be watched mining with `K`. Step 5 needs M1 to M4.
 
 The previous S1 plan (style studies, then the worker model) is archived in
 [Plans/S1_WorkerModelAndStyleStudies.md](Plans/S1_WorkerModelAndStyleStudies.md).
@@ -323,20 +323,37 @@ support and grip on the model rig".
 **Not in this step:** the effort-driven swing (S3), strength and hauling
 (S4), and the creator (S2). The swing keeps today's shape.
 
+**Amended on October 6.** Today's shape could not be kept on the miners: it
+puts the pickaxe through the chest and head of any body that has them
+([TheMiners.md](ArtDirection/TheMiners.md#the-swing-goes-over-the-shoulder)).
+Bodies with a shape make the same swing over the right shoulder. The first
+body's swing, its timing and the rule of the strike are unchanged, and the
+swing's effort and character remain S3's.
+
 ### Steps
 
 | Step | What | Depends on Luis's choices? |
 |---|---|---|
 | 1 | **The sweep of extreme poses** (the method's pass 4): arms raised, elbows and knees bent deep, the waist bowed and twisted. Fix what it finds at the joints work will use | No. **Built on October 5** ([TheMiners.md](ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5)). Nothing fails in the poses today's swing uses, so nothing was changed. What fails beyond them is logged for the movements that will need it (an overhead swing in S3; a kneel) |
 | 2 | **Hands that close.** A hand closes round a handle of a given thickness, and opens again. The audit checks it: fingers meet the handle and do not enter it | No. **Built on October 5** ([TheMiners.md](ArtDirection/TheMiners.md#hands-that-close-october-5)): the free hands, on handles from 12 to 44 mm. The hands that carry stay closed (M3) |
-| 3 | **A pickaxe made for each body.** One modelled pickaxe (the one Long carries), sized to the body. Its grips and its striking head are read from the model, so the tool's data and its shape cannot drift apart | No |
-| 4 | **The tool's solve reads the body.** Today it assumes the test body's arms and height. It will take reach and hand places from each body, and work with one hand or two | No |
-| 5 | **At the rock.** The miners walk to a mineral boulder and strike it, with today's rule that only a real contact of the pick's head counts | M1, M2, M3, M4 |
-| 6 | **Evidence.** Tests on each miner; the mining recorded for the audit in motion; work views added to the capture; a build; a playtest guide | — |
+| 3 | **A pickaxe made for each body.** One modelled pickaxe (the one Long carries), sized to the body. Its grips and its striking head are read from the model, so the tool's data and its shape cannot drift apart | No. **Built on October 6** ([TheMiners.md](ArtDirection/TheMiners.md#a-pickaxe-made-for-each-body)) |
+| 4 | **The tool's solve reads the body.** Today it assumes the test body's arms and height. It will take reach and hand places from each body, and work with one hand or two | No. **Built on October 6** ([TheMiners.md](ArtDirection/TheMiners.md#the-tools-solve-reads-the-body)). It also had to read the body's shape, and the swing had to go over the shoulder |
+| 5 | **At the rock.** The miners walk to a mineral boulder and strike it, with today's rule that only a real contact of the pick's head counts | M1, M2, M3, M4. **Not built.** It also owes: places to stand sized to each body, and an arrival exact enough for a small one (W8) |
+| 6 | **Evidence.** Tests on each miner; the mining recorded for the audit in motion; work views added to the capture; a build; a playtest guide | **Built for steps 1 to 4** (October 6): three tool tests, the mining audited with the pickaxe in the hands, the `work` views, the build, and the look with `K` |
 
 ### Choices for Luis
 
 Each has a recommendation, marked as a default. Nothing here is Locked.
+Since October 6 the miners can be watched mining with `K` in the Ordinary
+Place, which shows what M2 and M3 are about: the pickaxe appears from
+nowhere, and Small and Long swing with one hand because the other holds the
+lantern or the mug.
+
+**What M3 would cost, learned since.** The hands that carry (Small's left,
+Long's left) are modelled closed round their handles and cut to fit: the
+look Luis approved on October 5. They cannot open. Options (b) and (c) need
+them remade as hands that close, as the free hands were. The remade hands
+would be shown beside the present ones before anything is replaced.
 
 | ID | Question | Options | Recommended default |
 |---|---|---|---|

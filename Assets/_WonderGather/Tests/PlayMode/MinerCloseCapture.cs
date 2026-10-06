@@ -20,7 +20,7 @@ namespace WonderGather.Tests
     //   fresh      the silhouette (black on white) and clay (no paint), for fresh eyes.
     // Frames are PPM images named <miner>_<set>_<view>.
     // Run on its own: -runTests -testPlatform PlayMode -testFilter WonderGather.Tests.MinerCloseCapture -captureOut <folder>
-    //   [-captureMiner Small] [-captureSets orbit,distances,zones,walk,motion,fresh]
+    //   [-captureMiner Small] [-captureSets orbit,distances,zones,walk,motion,fresh,work]
     [Explicit("A capture for review, not a test.")]
     public sealed class MinerCloseCapture
     {
@@ -70,7 +70,7 @@ namespace WonderGather.Tests
         {
             string folder = CaptureTools.Argument("-captureOut") ?? Path.Combine(Application.dataPath, "..", "Captures", "MinerClose");
             string only = CaptureTools.Argument("-captureMiner");
-            var sets = new HashSet<string>((CaptureTools.Argument("-captureSets") ?? "orbit,distances,zones,walk,motion,fresh").Split(','));
+            var sets = new HashSet<string>((CaptureTools.Argument("-captureSets") ?? "orbit,distances,zones,walk,motion,fresh,work").Split(','));
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
             yield return null;
@@ -230,6 +230,51 @@ namespace WonderGather.Tests
                             Shot("walk", $"{p}_hem", pelvis.position - Vector3.up * .2f, 1.0f, 20, -8);
                         }
                         unit.Motor.Stop();
+                        yield return Place();
+                    }
+
+                    // At work: the miner at a rock face with the pickaxe made for it, through one swing (after the first
+                    // has struck): ready, raising, raised, striking, struck, recovering. From its side, from behind and
+                    // before it, and close on the hands from both sides.
+                    if (sets.Contains("work") && body.Pickaxe != null)
+                    {
+                        yield return Place();
+                        var gatherer = unit.gameObject.AddComponent<Gatherer>();
+                        var tool = unit.gameObject.AddComponent<EquippedTool>();
+                        tool.SetDefinition(body.Pickaxe);
+                        biped.ConfigureWork(gatherer, null);
+                        float swing = (body.Pickaxe.Head - body.Pickaxe.PrimaryGrip).magnitude;
+                        var (node, depot, rock) = CaptureTools.RockFace(unit.transform.position, away, (biped.ToolHand.z + swing) * .78f, OnGround(spot - away * 3), true, height * .95f);
+                        // By day: work is judged in plain light.
+                        float hour = time.Hour;
+                        time.Hour = 13;
+                        gatherer.Configure(depot, Vector3.zero);
+                        gatherer.Gather(node);
+                        float began = Time.time;
+                        while (tool.AcceptedStrikes < 1 && Time.time - began < 30) yield return null;
+                        while (tool.Progress > .05f && Time.time - began < 40) yield return null;
+                        var moments = new (string label, float progress)[] { ("0ready", .02f), ("1raising", .2f), ("2raised", .39f), ("3striking", .5f), ("4struck", .68f), ("5recovering", .85f) };
+                        foreach (var (label, progress) in moments)
+                        {
+                            float waited = Time.time;
+                            while (tool.Progress < progress && Time.time - waited < 5) yield return null;
+                            Vector3 hands = tool.Uses(0) ? (tool.GripPosition(0) + tool.GripPosition(1)) * .5f : tool.GripPosition(1);
+                            Shot("work", $"{label}_side", Mid(), 2.2f, 90, 5);
+                            Shot("work", $"{label}_left", Mid(), 2.2f, 270, 5);
+                            Shot("work", $"{label}_back", Mid(), 2.2f, 150, 12);
+                            Shot("work", $"{label}_front", Mid(), 2.2f, 68, 14);
+                            Shot("work", $"{label}_above", Mid() + Vector3.up * height * .25f, 2f, 120, 55);
+                            Shot("work", $"{label}_hands", hands, .5f, 80, 18);
+                            Shot("work", $"{label}_handsleft", hands, .5f, 280, 18);
+                        }
+                        time.Hour = hour;
+                        gatherer.CancelOrder();
+                        biped.ConfigureWork(null, null);
+                        UnityEngine.Object.Destroy(tool);
+                        UnityEngine.Object.Destroy(gatherer);
+                        UnityEngine.Object.Destroy(rock);
+                        UnityEngine.Object.Destroy(depot.gameObject);
+                        yield return null;
                         yield return Place();
                     }
 

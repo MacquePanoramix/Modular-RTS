@@ -1,6 +1,6 @@
 # Wonder Gather — Current State
 
-**Updated:** October 5, 2026.
+**Updated:** October 6, 2026.
 
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
@@ -43,9 +43,17 @@
         11° compared with the model as built
         ([pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game)).
         Not changed.
-      - **Steps 3 and 4 do not need Luis's choices:** a pickaxe made for
-        each body, a tool solve that reads the body.
-      - **Step 5, the miners at the rock, needs Luis's choices M1 to M4.**
+      - **Steps 3 and 4 are built (October 6): the miners mine.** Each has
+        a pickaxe made for its arms and hands; the tool's solve reads the
+        body (reach, a front to keep clear of, which hands are free); the
+        swing goes over the shoulder; the mining is recorded and audited
+        with the pickaxe in the hands
+        ([TheMiners.md](ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6)).
+        **To see it:** `K` in the Ordinary Place
+        ([MinersPlaytest.md](Playtests/MinersPlaytest.md#a-first-look-at-the-work-october-6)).
+      - **Step 5, the miners at the rock, needs Luis's choices M1 to M4**
+        ([the plan](NextMilestonePlan.md#choices-for-luis)). The look with
+        `K` is there to help choose.
   - **A method for model quality, and its first round (October 3 and 4).**
     Luis asked for a strategy, to refer to from now on, for making every
     model as polished as possible. It is

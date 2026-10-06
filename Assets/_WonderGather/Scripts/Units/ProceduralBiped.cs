@@ -8,6 +8,19 @@ namespace WonderGather
     // feet keep fixed world-space support frames; heel strike, roll and toe-off only rotate
     // the rendered foot about those frames. Equipment consumes the supported torso pose
     // before the arms consume its solved grips.
+    // A body with hands of its own (a modelled being). It says which hands are free to hold a tool, and where a
+    // wrist must be for a hand to hold a handle; and it is told, each frame, what each hand holds, so that it can
+    // turn the hand onto the handle and close the fingers. Hand 0 is the left, 1 the right.
+    public interface IHandHolds
+    {
+        bool HandFree(int hand);
+        // The wrist's place for this hand to hold a handle of this radius whose axis passes through grip and
+        // runs along handle (towards the tool's head), the arm reaching from shoulder.
+        Vector3 WristFor(int hand, Vector3 grip, Vector3 handle, float radius, Vector3 shoulder);
+        // This frame the hand holds such a handle (on), or nothing.
+        void HoldHandle(int hand, bool on, Vector3 grip, Vector3 handle, float radius, Vector3 shoulder);
+    }
+
     [RequireComponent(typeof(NavMeshAgent))]
     public sealed class ProceduralBiped : MonoBehaviour
     {
@@ -37,6 +50,10 @@ namespace WonderGather
             // arm that carries a lantern holds it clear of the coat), and how much of the walk's swing it keeps
             // (a carrying arm swings less). Zero swing reads as 1, so a body saved before this walks as it did.
             public Vector2 armCarry, armSwingSide;
+            // The body's own shape, for a tool swung in front of it (zero: not measured, as on the first body): how
+            // far its front stands ahead of the hips between hips and shoulders, how far its face does, and its
+            // head's half-width.
+            public float bodyFront, faceFront, headHalf;
             public static Proportions Default => new Proportions
             {
                 hipHeight = 1.43f, hipWidth = .21f, legSegment = .68f, ankleHeight = .13f, heelLength = .07f, ballLength = .19f, toeLength = .11f,
@@ -67,6 +84,22 @@ namespace WonderGather
         private float HipHeight=1.43f,HipWidth=.21f,LegReach=1.33f,LegLimit=1.359f,NarrowStance=.14f,ClosedTolerance=.15f,SettleTolerance=.3f;
         private float AnkleHeight=.13f,HeelLength=.07f,BallLength=.19f,ToeLength=.11f;
         public Proportions BodyProportions=>P;
+        // For tools. The first body (2.2 m) and its pickaxe set the pattern: its arms reach 0.87 m, its lower hand
+        // works 3 cm below the hips and 24 cm in front of them, and a wrist that holds a tool is between 2.5 and
+        // 86.5 cm from its shoulder. A body with its own measurements keeps those proportions of its own arm; the
+        // first body keeps the exact numbers.
+        public float ArmReach=>P.upperArm+P.forearm;
+        public float ToolScale=>customProportions?ArmReach/.87f:1;
+        public float ToolReachMax=>customProportions?ArmReach-.005f*ToolScale:.865f;
+        public float ToolReachMin=>customProportions?.025f*ToolScale:.025f;
+        // Where the lower hand holds a tool at work, from the hips in the body's steady frame: below the shoulders
+        // by the same share of the arm, and as far forward.
+        // A body with a front of its own (a coat, a belly, an apron) holds the tool clear of it: by room for the
+        // hand that is between the handle and the body.
+        public Vector3 ToolHand=>customProportions?new Vector3(0,P.waistRise+P.shoulder.y-ArmReach*(.52f/.87f),Mathf.Max(ArmReach*(.24f/.87f),P.bodyFront+ArmReach*HandRoom)):new Vector3(0,-.03f,.24f);
+        private const float HandRoom=.16f;
+        // The right shoulder, from the hips in the body's steady frame.
+        public Vector3 ShoulderFromHips=>new Vector3(P.shoulder.x,P.waistRise+P.shoulder.y,P.shoulder.z);
         public void SetProportions(Proportions value)
         {
             if(!(value.hipHeight>.2f&&value.hipWidth>.01f&&value.legSegment>.1f&&value.upperArm>.05f&&value.forearm>.05f&&value.scale>.1f&&value.armHang.y>.05f))
@@ -105,6 +138,9 @@ namespace WonderGather
         private readonly Vector3[] handLocal=new Vector3[2];
         private readonly float[] handsBusy=new float[2];
         private NavMeshAgent agent;
+        private IHandHolds holds;
+        private bool holdsLooked;
+        private IHandHolds Holds { get { if(!holdsLooked) { holds=GetComponent<IHandHolds>(); holdsLooked=true; } return holds; } }
         private Vector3 previousPosition,previousVelocity,velocity,acceleration;
         private Quaternion facing;
         private float pelvisY,hipLift,phase,cadence=1,duty=.6f,gaitWeight,jogWeight;
@@ -659,8 +695,10 @@ namespace WonderGather
                 bool busy=false;
                 if(worker!=null)
                 {
-                    busy=worker.Carried>0||(equipment!=null&&equipment.HandsOnTool)||(i==1&&Working&&worker.MiningTarget==null);
-                    if(worker.Carried>0) wrist=hips+posture*(new Vector3(side*.22f,-.12f,.37f)*P.scale);
+                    // A hand that carries something of its own (a lantern, a mug) keeps to it: it takes no load.
+                    bool free=Holds==null||holds.HandFree(i);
+                    busy=(worker.Carried>0&&free)||(equipment!=null&&equipment.HandsOnTool&&equipment.Uses(i))||(i==1&&Working&&worker.MiningTarget==null);
+                    if(worker.Carried>0&&free) wrist=hips+posture*(new Vector3(side*.22f,-.12f,.37f)*P.scale);
                     if(i==1&&Working&&worker.MiningTarget==null)
                     {
                         float progress=Mathf.Clamp01(worker.ActionProgress);
@@ -672,9 +710,11 @@ namespace WonderGather
                     Vector3 local=Quaternion.Inverse(posture)*(wrist-hips);
                     handLocal[i]=handsInitialized&&dt>0?Vector3.Lerp(handLocal[i],local,1-Mathf.Exp(-18*dt)):local;
                     wrist=hips+posture*handLocal[i];
-                    if(equipment!=null && equipment.HandsOnTool)
+                    // A hand that holds the tool goes to where its wrist must be for that (the grip itself, for a
+                    // body without hands of its own). A hand that is not free keeps to what it carries.
+                    if(equipment!=null && equipment.HandsOnTool && equipment.Uses(i))
                     {
-                        wrist=equipment.GripPosition(i);
+                        wrist=equipment.WristPosition(i,shoulder);
                         handLocal[i]=Quaternion.Inverse(posture)*(wrist-hips);
                     }
                 }

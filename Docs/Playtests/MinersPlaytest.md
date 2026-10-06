@@ -100,6 +100,41 @@ Luis asked for. The round's log, with before and after images, is in
   sharpest turn, a knee shows under the lifted hem: the walk's high step,
   left for Luis's word.
 
+## A first look at the work (October 6)
+
+The miners can mine. It is a first look, so that the swing and the hands can
+be judged in play before where and how they mine is decided
+([TheMiners.md](../ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6)).
+
+![Round at the rock](../Images/Miners/Work_Round.jpg)
+
+**To try:**
+1. Choose a miner (`M`) and walk it somewhere open.
+2. Press `K`. A plain block of rock stands in front of it, and it mines the
+   block with the pickaxe made for it. `K` again (or walking it away, or
+   choosing another miner) puts the rock and the pickaxe away.
+3. Go close with the Explore camera, and round it.
+
+**What to look at:**
+- **The hands on the handle.** Fingers wrapped round it, the thumb closed,
+  nothing floating and nothing through.
+- **The swing.** Up over the right shoulder, beside the head, and down onto
+  the rock. Does it read as mining? It is plain on purpose (one pace, no
+  weight shift): its effort and character are a later stage (S3).
+- **One hand or two.** Small and Long swing with the right hand, because the
+  left holds the lantern or the mug. Round swings with both.
+- **Each one's pickaxe:** sized to its arms, its handle to its hand.
+
+**What is not there, and waits for Luis's choices**
+([the plan](../NextMilestonePlan.md#choices-for-luis)):
+- **M1, where they mine.** The block is a stand-in, put where the miner
+  stands.
+- **M2, where a pickaxe is kept.** It appears in the hand from nowhere. Long
+  has the one on the back and a second in the hand.
+- **M3, the lantern and the mug.** They stay in the other hand.
+- **M4, what is mined.** Nothing falls and nothing is carried. After twenty
+  strikes the miner puts everything down and begins again.
+
 ## What changed for the game
 
 - **Carried things are carried.**
@@ -169,13 +204,13 @@ The benchmark is in the build: run it with `-wgcrowd`. It writes
 
 ## Not yet
 
-- **Mining.** The miners walk in the Ordinary Place. Mining and hauling with a
-  pickaxe (the equipment scene) still use the 2.2 m test body; the tool's
-  grips are sized for it.
-- **Hands at work, and faces.** The free hands can close on a handle
-  (October 5, [TheMiners.md](../ArtDirection/TheMiners.md#hands-that-close-october-5)),
-  but nothing puts a tool in them yet, so in play they keep their relaxed
-  shape. Faces keep one expression.
+- **Mining as part of the game.** The miners can be watched mining with `K`
+  (October 6, [above](#a-first-look-at-the-work-october-6)). A place to mine,
+  walking up to it, where the pickaxe is kept and hauling are not built: they
+  wait for Luis's choices M1 to M4. The equipment scene still uses the 2.2 m
+  test body.
+- **Faces.** One expression each. The hands that carry something keep one
+  closed shape.
 - **Not watched by eye.** Turning on the spot and jogging were not checked
   this way.
 - **Other hardware.** Only the RTX 4060 Laptop was tried.

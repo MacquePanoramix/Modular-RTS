@@ -1,0 +1,4 @@
+TOOL Pickaxe_Small: 0 failing; made for arms of 0.433 m and a hand of 149 mm
+  length 517 mm, 714 triangles (far away 214)
+  grips at -100 and +60 mm, the handle 28.9 and 32.5 mm thick there
+  the point at [0, 252, 137] mm; the strike's ball 17 mm at [0, 255, 120] mm
