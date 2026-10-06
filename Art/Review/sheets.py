@@ -8,6 +8,7 @@ group, labelled, for reading view by view:
 - zone: one sheet per zone (head, neck, back, chest, hem, hands, boots, carried things, bag);
 - walk: one sheet per view across the eight phases (the same view, phase by phase);
 - motion: one sheet per movement (start, turn, stop);
+- work: one sheet per view across the swing's six moments (ready, raising, raised, striking, struck, recovering);
 - fresh: silhouettes, clay, and the eye-level orbit mirrored and in grey values.
 
 Usage: python sheets.py <capture folder> <sheet folder> [--keep-ppm]
@@ -63,6 +64,8 @@ def main(src, dst, keep):
             key = f"{miner}_walk_{view.split('_', 1)[1]}"
         elif kind == "motion":
             key = f"{miner}_motion_{view.split('_')[0]}"
+        elif kind == "work":
+            key = f"{miner}_work_{view.split('_')[-1]}"
         else:
             key = f"{miner}_fresh_{view.split('_')[0]}"
         groups[key].append(stem)

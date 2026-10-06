@@ -955,25 +955,29 @@ def pickaxe(b, grasp, along, wood, iron, length=0.86, hold=0.22):
     return pick(b, low, high, across.normalized(), d.cross(across).normalized(), wood, iron, bow=0.012)
 
 
-def pick(b, low, high, across, flat, wood, iron, bow=0.0, size=1.0, thick=1.0, round_=False):
+def pick(b, low, high, across, flat, wood, iron, bow=0.0, size=1.0, thick=1.0, round_=False, light=False):
     """A pickaxe from the foot of its handle (low) to its head (high): the head's points lie along across, and it
     is flat towards flat (the side that lies against a back). bow: how much the handle is sprung; size: the
     head's reach (1: a full pick). thick: how stout it is (1: a handle 33 mm across at its middle; the head and
     its collar with it). round_: a round handle, for a tool the hands close on (tools.py); as carried on a back
-    it is a little flattened, as a pick's handle is."""
+    it is a little flattened, as a pick's handle is. light: built with a quarter of the faces, for a tool that
+    many hands carry at once."""
     d = (high - low).normalized()
     across = Vector(across).normalized()
     bend = across.cross(d).normalized() * bow
     handle = [low, low.lerp(high, 0.35) + bend, low.lerp(high, 0.7) + bend, high]
     wide = [w * thick for w in (0.0145, 0.015, 0.0155, 0.016, 0.0165, 0.017, 0.0175, 0.018, 0.0185, 0.019, 0.019, 0.0185, 0.018)]
     flat_ = [w * thick for w in (0.0125, 0.013, 0.0135, 0.014, 0.0145, 0.015, 0.0155, 0.016, 0.0165, 0.017, 0.017, 0.0165, 0.016)]
-    out = [tube(f"{b.name}_PickHandle", spline(handle, 4), wide, wide if round_ else flat_, wood, sides=14 if round_ else 10)]
+    levels = 0 if light else 1
+    out = [tube(f"{b.name}_PickHandle", spline(handle, 4), wide, wide if round_ else flat_, wood, sides=14 if round_ else 10, levels=levels)]
     curve = -d * 0.04 * size
     head = [high + across * 0.25 * size + curve, high + across * 0.12 * size + curve * 0.3, high,
             high - across * 0.1 * size + curve * 0.25, high - across * 0.2 * size + curve * 0.8]
     out.append(tube(f"{b.name}_PickHead", spline(head, 3), [w * thick for w in (0.0, 0.008, 0.012, 0.016, 0.02, 0.024, 0.026, 0.025, 0.022, 0.019, 0.015, 0.01, 0.005)],
-                    [w * thick for w in (0.0, 0.007, 0.01, 0.013, 0.016, 0.019, 0.021, 0.021, 0.019, 0.017, 0.015, 0.012, 0.009)], iron, normals=[d] * 13, sides=8))
-    out.append(cylinder(f"{b.name}_PickCollar", high - d * 0.01 * thick, 0.024 * thick, 0.05 * thick, iron, rotation=frame(d, across) @ Matrix.Rotation(math.pi / 2, 3, 'Y')))
+                    [w * thick for w in (0.0, 0.007, 0.01, 0.013, 0.016, 0.019, 0.021, 0.021, 0.019, 0.017, 0.015, 0.012, 0.009)], iron, normals=[d] * 13, sides=8,
+                    levels=levels))
+    out.append(cylinder(f"{b.name}_PickCollar", high - d * 0.01 * thick, 0.024 * thick, 0.05 * thick, iron, rotation=frame(d, across) @ Matrix.Rotation(math.pi / 2, 3, 'Y'),
+                        vertices=14 if light else 24))
     return out
 
 

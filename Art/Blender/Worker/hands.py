@@ -369,13 +369,19 @@ def table(b, i, obj, radii=RADII):
     return skin, rows
 
 
-def tables(b, meshes):
-    """Every closing hand's table, from its skinned part: {body index: (skin, rows)}."""
+def tables(b, meshes, own=()):
+    """Every closing hand's table, from its skinned part: {body index: (skin, rows)}.
+    own: the radii of the handles of this body's own tools. They get rows of their own, so the closing on them
+    is solved, not blended: between two rows the thumb may hold differently (on the fingers of a thin handle,
+    on the handle itself of a thick one), and a blend of the two can press into the handle."""
+    radii = sorted(RADII)
+    for r in own:
+        radii = sorted([x for x in radii if abs(x - r) > 0.0004] + [r])
     out = {}
     for i in sorted(closing(b)):
         obj = next((o for o in meshes if o.name == f"{b.name}_Hand{i}"), None)
         if obj is not None:
-            out[i] = table(b, i, obj)
+            out[i] = table(b, i, obj, radii)
     return out
 
 

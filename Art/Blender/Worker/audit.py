@@ -115,7 +115,18 @@ BENEATH = [
     (r"Trousers", r"Skirt", 0.003),
 ]
 # Solids: closed surfaces whose inside can be told from their normals.
-SOLIDS = r"Top(\.Body|\.Arm\.[LR])?|Skirt|Trousers(\.[LR])?|Boot\d|Bag|Skin|Apron|Collar|Cap|Hand\d|Pick(Handle|Head)|Hammer(Handle|Head)"
+SOLIDS = r"Top(\.Body|\.Arm\.[LR])?|Skirt|Trousers(\.[LR])?|Boot\d|Bag|Skin|Apron|Collar|Cap|Hand\d|Pick(Handle|Head)|Hammer(Handle|Head)|WorkPick(Handle|Head|Collar)"
+# At work, with the tool the game put in the hands (its parts are named Work...; tools.py). The tool passes through
+# nothing: not the body, the clothes, the head, nor what else is carried. The fingers that hold it do not enter its
+# handle, and each hand that holds it touches it.
+WORK_APART = [
+    (r"WorkPick(Handle|Head|Collar)", r"Top|Skirt|Skin|Collar|Cap|Trousers|Apron|Bag|Boot\d|Pick(Handle|Head)|Hammer(Handle|Head)", 0.003),
+    (r"Hair|Neckband|Lantern\w*|Mug\w*|Strap|PickStrap|ApronStrap", r"WorkPick(Handle|Head)", 0.003),
+    (r"Hand\d", r"WorkPickHandle", 0.0015),
+]
+WORK_MEETS = [
+    (r"Hand0", r"WorkPickHandle", 0.002),
+]
 
 
 class Part:
@@ -236,6 +247,13 @@ def load_poses(path, bones):
     a[:3, 3] = fit[3]
     ai = np.linalg.inv(a)
     frames = [(fr["label"], {n: a @ m4(m) @ ai for n, m in zip(names, fr["m"])}) for fr in data["frames"]]
+    # A tool in the hands: its own matrix (from the tool's space in the game to the mesh's). The tool's parts
+    # are built in Blender with the handle up z and the strike towards -y; in the game its space has y up the
+    # handle and z the way it strikes.
+    to_game = np.array([[-1.0, 0, 0, 0], [0, 0, 1.0, 0], [0, -1.0, 0, 0], [0, 0, 0, 1.0]])
+    for (_, mats), fr in zip(frames, data["frames"]):
+        if "t" in fr:
+            mats["Tool"] = a @ m4(fr["t"]) @ to_game
     # A bone the recording does not have (made since it was recorded) goes with its parent.
     for _, mats in frames:
         for n in bones:
@@ -631,13 +649,16 @@ def split(parts, bone_index):
             parts.append(p.sub("Top.Arm.R", [arm_r[list(q)].mean() >= 0.35 for q in p.polys]))
 
 
-def run(b, meshes, bones, out_dir, poses=None, every=2, snap=True):
-    """Audits one being's parts at rest and, given recorded frames, in motion. Writes audit_<name>.txt/.json."""
+def run(b, meshes, bones, out_dir, poses=None, every=2, snap=True, tool=None):
+    """Audits one being's parts at rest and, given recorded frames, in motion. Writes audit_<name>.txt/.json.
+    tool: the parts of the tool the game puts in its hands at work (named <being>_Work..., each wholly on a
+    vertex group "Tool"). They join the audit on the frames that carry the tool's place (the mining)."""
     prefix = b.name + "_"
-    bone_names = list(bones.keys()) + ["Root"]
+    bone_names = list(bones.keys()) + ["Root", "Tool"]
     bone_index = {n: i for i, n in enumerate(bone_names)}
     parts = [Part(o, prefix, bone_index) for o in meshes if o.type == 'MESH' and len(o.data.polygons)]
     split(parts, bone_index)
+    working = [Part(o, prefix, bone_index) for o in (tool or []) if o.type == 'MESH' and len(o.data.polygons)]
     name = b.name.split("_")[-1]
     report = Report(name)
     rest = Frame(parts, {p.name: p.rest for p in parts})
@@ -651,6 +672,8 @@ def run(b, meshes, bones, out_dir, poses=None, every=2, snap=True):
     for p in parts:
         if p.virtual and p.name.split(".")[0] in rest.flip:
             rest.flip[p.name] = rest.flip[p.name.split(".")[0]]
+    for p in working:
+        rest.flip[p.name] = 1.0 if signed_volume(p.rest, p.polys) >= 0 else -1.0
     for p in match(parts, r"Sole\d"):
         report.add("grounded", p.name, abs(float(p.rest[:, 2].min())), 0.004, p.rest[p.rest[:, 2].argmin()], "rest")
     contacts = []
@@ -676,9 +699,21 @@ def run(b, meshes, bones, out_dir, poses=None, every=2, snap=True):
         for k, (label, mats) in enumerate(frames):
             if k % every:
                 continue
-            fr = Frame(parts, {p.name: pose(p, mats, bone_names) for p in parts}, mats)
+            # The tool is in the hands on the frames that say where it is.
+            here = parts + working if "Tool" in mats else parts
+            fr = Frame(here, {p.name: pose(p, mats, bone_names) for p in here}, mats)
             fr.flip, fr.open = rest.flip, rest.open
-            check_frame(report, fr, f"{label}{k}", parts, contacts, covered, bones, floating=(k % (every * 10) == 0))
+            if "Tool" in mats and working:
+                held = [(r"Hand1", r"WorkPickHandle", 0.002)] if 1 in hands_that_close(b) else []
+                APART.extend(WORK_APART)
+                MEETS.extend(WORK_MEETS + held)
+                try:
+                    check_frame(report, fr, f"{label}{k}", here, contacts, covered, bones, floating=False)
+                finally:
+                    del APART[-len(WORK_APART):]
+                    del MEETS[-len(WORK_MEETS + held):]
+            else:
+                check_frame(report, fr, f"{label}{k}", here, contacts, covered, bones, floating=(k % (every * 10) == 0))
             frames_by_label[f"{label}{k}"] = mats
     text = report.text()
     print(text)
@@ -687,8 +722,13 @@ def run(b, meshes, bones, out_dir, poses=None, every=2, snap=True):
     with open(os.path.join(out_dir, f"audit_{name}.json"), "w", encoding="utf-8") as f:
         json.dump(list(report.rows.values()), f, indent=1)
     if snap and report.failures():
-        snapshots(parts, bone_names, report.failures(), frames_by_label, out_dir, name)
+        snapshots(parts + working, bone_names, report.failures(), frames_by_label, out_dir, name)
     return report
+
+
+def hands_that_close(b):
+    """The body indices of the hands that close on a handle (hands.py), without importing it here."""
+    return {i for i, h in getattr(b, "hands", {}).items() if h.get("closes")}
 
 
 def snapshots(parts, bone_names, failures, frames, out_dir, name, limit=30):

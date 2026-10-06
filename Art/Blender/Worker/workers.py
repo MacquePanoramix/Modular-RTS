@@ -329,7 +329,32 @@ def carriage(b, objs, hang):
     measured = getattr(b, "skirt_slack", [0.0, 0.0])
     slack = [round(max(0.0, s - 3.0) * 0.8, 2) for s in measured] if getattr(b, "skirt_open", False) else [0.0, 0.0]
     print(f"SKIRT {b.name}: the legs swing {measured} degrees before they reach the cloth; the flaps wait {slack}")
-    return dict(armCarry=carry, armSwingSide=keep, hanging=hanging, skirtSlack=slack)
+    return dict(armCarry=carry, armSwingSide=keep, hanging=hanging, skirtSlack=slack, **shape(b, objs))
+
+
+def shape(b, objs):
+    """For a tool swung in front of the body: how far the body's front stands ahead of the hips between the
+    hips and the shoulders (its clothes and whatever it wears there: an apron's pocket, a hammer, a strap), how
+    far its face does, and its head's half-width (hair and cap included). Measured on the model at rest."""
+    hips = (b.hips[0] + b.hips[1]) * 0.5
+    out = abs(b.shoulders[1].x - hips.x)
+    top = b.shoulders[1].z
+    front, face, half = 0.0, 0.0, 0.0
+    for o in objs:
+        if o.type != 'MESH':
+            continue
+        zs = [v.co.z for v in o.data.vertices]
+        if not zs:
+            continue
+        head = "_Skin" in o.name or sum(zs) / len(zs) > b.collar.z + 0.02
+        for v in o.data.vertices:
+            ahead, aside = hips.y - v.co.y, abs(v.co.x - hips.x)
+            if head and v.co.z > b.collar.z + 0.01:
+                face, half = max(face, ahead), max(half, aside)
+            elif hips.z - 0.05 <= v.co.z <= top + 0.02 and aside < out * 0.8:
+                front = max(front, ahead)
+    print(f"SHAPE {b.name}: its front stands {front * 1000:.0f} mm ahead of the hips, its face {face * 1000:.0f} mm; its head is {half * 2000:.0f} mm wide")
+    return dict(bodyFront=round(front, 4), faceFront=round(face, 4), headHalf=round(half, 4))
 
 
 def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=False, report=None, sweep_only=False, hands_only=False):
@@ -349,6 +374,7 @@ def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=Fal
         report = out_dir if audit_only else os.path.normpath(os.path.join(HERE, "..", "..", "Review", "Miners"))
     os.makedirs(report, exist_ok=True)
     dims = {}
+    partial = set()  # measured again without remaking the model: what only a full build finds (the hands' closing) is kept
     for name, preset in PRESETS.items():
         if only and name not in only:
             continue
@@ -365,21 +391,34 @@ def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=Fal
             gait.update(carriage(b, objs, rigging.hang(b, b.upper, b.fore)))
         if dims_only:
             dims[name] = dict(rigging.dimensions(b, rigging.joints(b)), **gait)
+            partial.add(name)
             continue
         recorded = os.path.join(poses, f"Miner_{name}_poses.json") if poses else None
         if recorded and not os.path.exists(recorded):
             recorded = None
 
         closed = {}
+        # This body's own pickaxe: how thick its handle is where the hands grip it.
+        import tools
+        own = tools.handle_radii(name, b, rigging.joints(b))
 
         def check(b_, meshes, bones):
-            audit.run(b_, meshes, bones, report, recorded)
+            # At work the game puts this body's own pickaxe in its hands: the audit holds it too, on the frames
+            # recorded while mining.
+            working = []
+            if recorded:
+                import tools
+                working = [o for o in tools.pickaxe(name, tools.measured_on(b_, bones))[0] if o.type == 'MESH']
+                for o in working:
+                    o.name = f"{b_.name}_Work{o.name.split('_')[-1]}"
+                    o.vertex_groups.new(name="Tool").add([v.index for v in o.data.vertices], 1.0, 'REPLACE')
+            audit.run(b_, meshes, bones, report, recorded, tool=working)
             # The free hands closed round handles of several thicknesses: checked here, on the parts as skinned.
-            closed.update(hands.tables(b_, meshes))
+            closed.update(hands.tables(b_, meshes, own))
             hands.report(b_, closed, report, pictures=False)
         if hands_only:
             _, bones, meshes = rigging.prepare(name, b, objs)
-            hands.report(b, hands.tables(b, meshes), report)
+            hands.report(b, hands.tables(b, meshes, own), report)
             continue
         if sweep_only:
             import sweep
@@ -397,13 +436,26 @@ def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=Fal
     previous = {}
     if audit_only:
         return
-    if os.path.exists(path):
-        with open(path, encoding="utf-8") as f:
-            previous = {m["name"]: m for m in json.load(f).get("miners", [])}
-    for name, d in dims.items():
-        previous[name] = dict(name=name, **d)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(dict(miners=[previous[n] for n in PRESETS if n in previous]), f, indent=2)
+    # Several builds may finish together, one for each miner: one at a time reads the file, adds its own, writes.
+    import time
+    lock = path + ".lock"
+    for _ in range(1200):
+        try:
+            os.mkdir(lock)
+            break
+        except FileExistsError:
+            time.sleep(0.1)
+    try:
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as f:
+                previous = {m["name"]: m for m in json.load(f).get("miners", [])}
+        for name, d in dims.items():
+            previous[name] = dict(previous.get(name, {}) if name in partial else {}, name=name, **d)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(dict(miners=[previous[n] for n in PRESETS if n in previous]), f, indent=2)
+    finally:
+        if os.path.isdir(lock):
+            os.rmdir(lock)
 
 
 # ---------------------------------------------------------------- building
