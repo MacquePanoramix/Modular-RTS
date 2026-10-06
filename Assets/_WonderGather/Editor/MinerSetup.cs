@@ -235,6 +235,10 @@ namespace WonderGather.Editor
             var bones = instance.GetComponentsInChildren<Transform>(true);
             Transform Bone(string bone) => bones.FirstOrDefault(x => x.name == bone) ?? throw new InvalidOperationException($"{name} has no bone {bone}.");
             Vector3 up = Bone("Head").position - Bone("Pelvis").position;
+            // -minerStance built: stand the model on its own vertical, as it was built, not with its head straight
+            // above its hips. For Luis's choice P1 (Long was built with the head carried forward, and so leans back
+            // 11 degrees in the game). The default is what has been played since October 3.
+            if (Argument("-minerStance") == "built") up = instance.transform.up;
             Vector3 forward = Vector3.ProjectOnPlane(Bone("Toe.L").position - Bone("Foot.L").position + Bone("Toe.R").position - Bone("Foot.R").position, up);
             instance.transform.localRotation = Quaternion.Inverse(Quaternion.LookRotation(forward, up)) * instance.transform.localRotation;
             float height = instance.GetComponentsInChildren<Renderer>().Select(r => r.bounds.max.y).Max();

@@ -366,7 +366,7 @@ would be shown beside the present ones before anything is replaced.
 
 | ID | Question | Options | Until Luis says |
 |---|---|---|---|
-| **P1** | How should Long stand in the game? Since October 3 the prefab has stood each model with its head straight above its hips. Long was built upright with the head carried forward, so in the game Long leans back 11° ([pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game)) | (a) As in the game now. (b) As built. It can be shown in the game beside (a) first | (a): it is what Luis has played |
+| **P1** | How should Long stand in the game? Since October 3 the prefab has stood each model with its head straight above its hips. Long was built upright with the head carried forward, so in the game Long leans back 11° ([pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game)) | (a) As in the game now. (b) As built. Both are shown in the game in [the pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game) | (a): it is what Luis has played |
 
 ### Contracts to keep
 

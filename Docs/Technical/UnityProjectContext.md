@@ -1184,6 +1184,9 @@ Steps 3 and 4 of "the miners at work"
   - **`MinerSetup.Pickaxe`:** imports the tool, checks it came in the right
     way up (and turns it to strike forwards), paints and outlines it, gives
     it two levels of detail, and writes `Data/Miners/Pickaxe_<Name>.asset`.
+  - **`MinerSetup`:** `-minerStance built` stands each model on its own
+    vertical (choice P1). The default stands it with its head above its
+    hips, as since October 3.
   - **`MinerWorkPreview`** (new): `K` in the Ordinary Place. `RockFace`
     (also used by tests and captures) and `FaceDistance`.
   - **Tests:** `MinerToolTests` (three). `MinerPoseRecord` records the

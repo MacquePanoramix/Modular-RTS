@@ -309,11 +309,20 @@ hips:
 
 ![Long as built, and in the game from both sides](../Images/Miners/Long_Stance.jpg)
 
+**Both stances, in the game** (October 6). The upper row is the game as it
+is. The lower row is the same Long stood on the model's own vertical:
+
+![Long in the game: as played, and as built](../Images/Miners/Long_Stance_Game.jpg)
+
 - **Not changed.** This is how Long has stood in every build Luis has
-  played.
+  played. The built stance is an option of the prefabs' setup
+  (`-minerStance built`), not the default.
+- **What else the built stance would change:** Round by 2.4° and Small by
+  0.6° (the same squaring); Long's modelled shoulders would be where the
+  body solves them (they are 9 cm behind now, which the tool's solve allows
+  for); and the walk and the audit would be read again for all three.
 - **The question (P1 in [the plan](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)):** keep the game's stance, or
-  stand Long as built? The built stance can be shown in the game beside the
-  present one before anything is replaced.
+  stand Long as built?
 - **The method had no check for this.** Nothing compared how a model stands
   in the game with how it was built. The prefab's setup now reports the
   difference for every hand it fits.
