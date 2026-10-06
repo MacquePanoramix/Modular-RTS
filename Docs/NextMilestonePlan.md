@@ -1,478 +1,115 @@
-# Implementation plan — S1 (revised): the Ordinary Place and two cameras
+# Implementation plan — S3: weight and strength at the rock
 
-**Revised:** October 1, 2026, from Luis's Visual Soul handoff and
-two-camera direction
-([correspondence](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md),
-[VisualSoul.md](ArtDirection/VisualSoul.md)).
-**Baseline:** the grounded body (S0) and the arrival fix. Unity 6000.6.0f1 /
-URP (Forward+, HDR); Blender 4.4/4.5.
-**Status:** In progress. The plan follows the handoff's own instructions
-("start with one ordinary place…", "feasibility needs an in-engine test"). It
-splits the work into checkpoints Luis playtests one at a time:
-
-1. **S1a, the two cameras.** Built and tested on October 1, and waiting
-   for Luis's playtest ([TwoCamerasPlaytest.md](Playtests/TwoCamerasPlaytest.md)).
-2. **S1b, the Ordinary Place.** First in-engine pass built on October 1
-   ([OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md)).
-3. **S1c, choosing the rendering approach.** Five candidates can be switched
-   live in the build, with matched captures and measured costs. Luis chose E
-   (painted light + paint filter + ink) as the working base and agreed that
-   hand-painted textures come next. That is **S1c, second pass** (below). It was
-   built on October 2. Luis found it "already quite beautiful" but not yet the
-   emotion Luis seeks.
-4. **S1e, the essence beyond the surface.** Luis asked for the breathtaking,
-   out-of-this-world emotion, every frame a painting, and a style unique to
-   Wonder Gather. The first iteration was built on October 2. Luis preferred
-   the hand-painted pass, so it was archived on `claude/essence-exploration`
-   and not adopted ([TheEssencePlaytest.md](Playtests/TheEssencePlaytest.md)).
-5. **S1c, third pass: dusk details.** These are small switchable steps over
-   the hand-painted look, judged on Luis's favourite frame: fireflies (on),
-   the hearth's flicker and the window glow. Built on October 2. The
-   hand-painted pass itself was merged into `main` (7f7fcc0).
-6. **S1d, the worker model**, in the hand-painted language. Three miners,
-   rigged and walking, taken through the model quality method; Luis liked the
-   round on October 5 ([TheMiners.md](ArtDirection/TheMiners.md)).
-7. **S1d, last part: the miners at work.** Planned on October 5
-   ([below](#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices));
-   steps 1 to 4 are built (the sweep of extreme poses, hands that close, a
-   pickaxe for each body, a tool solve that reads the body), and the miners
-   can be watched mining with `K`. Step 5 was waiting for M1 to M4; Luis's
-   message of October 6 overtakes it (below).
-8. **S3, weight and strength at the rock: proposed on October 6, waiting
-   for Luis** ([below](#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)).
-   Luis asked for a review of the whole project and said what the prototype
-   is for: real weight, real strength, any rock, and the creator
-   ([message](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md);
-   [review](Reviews/2026-10-06_SamePageReview.md)). When Luis approves it,
-   this S1 plan is archived under [Plans/](Plans/) and S3 becomes the plan.
-
-The previous S1 plan (style studies, then the worker model) is archived in
-[Plans/S1_WorkerModelAndStyleStudies.md](Plans/S1_WorkerModelAndStyleStudies.md).
-Its model work continues as S1d.
-
-## The question
-
-Can Wonder Gather's visual soul (lighting that leads the emotion, surfaces that
-feel alive, characters with a soul, playful wonder) be rendered in this Unity
-project, in motion, by day and by night, at an acceptable runtime cost? And
-can the player both command the world quickly and wander through it up close?
-
-## S1a — Two camera systems
-
-Luis wants an "Age of Empires-like best RTS possible camera" for playing, and
-an Explore camera for wonder: free, like the Blender/Unity viewport, "cozy to
-navigate and soft". It must not go through the floor or buildings, yet can get
-"very near" them and look up at the sky.
-
-The toggle and both modes go into the shared camera rig, so every existing map
-gets them.
-
-### Toggle
-
-- **Key.** `V` switches modes. An on-screen hint shows the current mode and
-  its controls.
-- **Into Explore.** Explore starts exactly where the RTS view is, so nothing
-  jumps.
-- **Back to Strategy.** Strategy re-centers smoothly on the ground the Explore
-  camera was looking at, keeping its heading.
-
-### Strategy mode (RTS)
-
-- **Pan.** WASD/arrow keys pan faster and more crisply than today: speed
-  scales with height, and starts and stops are short.
-- **Edge scrolling.** The screen scrolls at the screen edge, in the focused
-  game window only.
-- **Grab-pan.** Middle-mouse drag grabs the ground and moves it 1:1.
-- **Zoom.** The wheel zooms in toward the cursor and out from the center. The
-  view flattens when close and steepens when high.
-- **Rotation.** Q/E rotate, as today. Alt + middle-mouse drag also rotates.
-- **Focus.** F focuses the selection, as today.
-- **Limits.** Map bounds and terrain-aware height, as today.
-- **Existing preferences.** Per-map preferences such as the 0.005 zoom
-  sensitivity are kept.
-
-### Explore mode (free POV)
-
-| Input | Action |
-|---|---|
-| Hold right mouse + move | Look around, including straight up at the sky. The cursor hides while looking |
-| WASD | Fly along the view |
-| Q / E | Down / up |
-| Shift / Ctrl | Faster / slower |
-| Wheel | Glide forward/back. With right mouse held, it changes the flight speed |
-| Middle-mouse drag (or Alt + left drag) | Orbit around the point being looked at, or around the followed worker |
-| Shift + middle-mouse drag | Slide sideways and up/down |
-| F | Glide to a close, three-quarter view of the selection, then follow it as it walks. Moving or looking ends the follow |
-| Left click / drag | Select, as in Strategy |
-| Right click (without dragging) | Command, as in Strategy. A right-drag only looks |
-
-**Softness:**
-
-- Movement eases in and out.
-- Speed scales with distance to the nearest surface: slow and precise near
-  grass and walls, quick high up.
-- Looking is lightly smoothed.
-
-**Safeties:**
-
-- The camera is a small sphere (about 6 cm) with a very near clipping plane. It
-  can get within a few centimeters of the ground, walls and props, but never
-  passes into them. It slides along them instead of stopping dead.
-- Workers gently push the camera aside when they walk into it.
-- A soft ceiling and the map's bounds keep the player in the world.
-
-Buildings stay solid while they have no interior. A decorated interior may
-later be made enterable (Possible).
-
-**The game keeps running.** Explore is a viewpoint, not a pause, and orders
-still work.
-
-### Evidence for S1a
-
-PlayMode tests:
-
-- the ground, a wall and a building can't be penetrated, but can be
-  approached to within about 15 cm;
-- sliding along a wall;
-- looking at the sky;
-- the toggle has no jump, and the view re-centers on the way back;
-- a followed worker stays framed;
-- zoom keeps the point under the cursor fixed;
-- a right-drag in Explore issues no command, and a right-click does.
-
-Also: the full regression suite twice, a Windows build, and a playtest guide.
-
-## S1b — The Ordinary Place (in-engine look test)
-
-The handoff asks for "a small house, grassland, path and worker" in the
-existing prototype, at night and by day. It's a new scene, *The Ordinary Place*,
-playable with both cameras:
-
-- **Land.** Gently rolling grassland with a worn dirt path, a few stones and
-  layered distant hills for aerial perspective (A, E).
-- **The house.**
-  - Modeled in Blender from a reproducible script: plaster walls, timber
-    frame, shingled roof, chimney, deep-set windows, an open door, a step,
-    flower pots, a bench, firewood and a fence.
-  - Warm window and door lights spill onto the wall, step, path and grass (A).
-  - It has no interior, so it stays solid to the Explore camera.
-- **Grass.**
-  - Dense, wind-moved blades running from a dark blue-green root to warm
-    tips, with taller seed-head grass that catches window light at night
-    (A, D).
-  - It must stay readable from strategic height and lush up close.
-- **Sky and time of day.**
-  - A painted sky: soft-edged clouds, a lilac and apricot dusk (E), and stars
-    and a moon at night (A, F).
-  - A time-of-day control moves through day, golden hour, dusk and night. It
-    drives sun, moon, sky, ambient light, fog and the house lights together.
-- **The worker.**
-  - Today's procedural body walks the path and around the house under player
-    orders, so moving characters and changing light can be judged.
-  - The real character model is S1d. A placeholder scarf or coat may be added
-    to test how cloth reads, without committing to a costume.
-
-## S1c — Rendering candidates, compared in engine
-
-The handoff leaves the rendering technique open and asks for real captures and
-a measured cost. The same scene can switch live, with a key, between
-candidates that share the same models:
-
-1. **Painted light.**
-   - A custom lit shader with a soft, brush-broken light/shadow edge.
-   - Cool colored shadows from the sky instead of black.
-   - Painterly hue and value variation per material.
-   - Warm local lights, rim light, aerial fog, bloom and color grading.
-2. **Painted light + paint filter.** Candidate 1 plus a screen-space paint
-   filter that turns fine detail into brush-like patches.
-3. **Painted light + ink.** Candidate 1 plus loose, varying contour lines,
-   mainly on characters and silhouettes (B, E).
-
-The candidates can be combined. A subtle paper or brush grain is evaluated
-with each.
-
-### Evidence for S1c
-
-- **Matched captures.** Several angles, near and far, by day, at dusk and at
-  night, set side by side with the references.
-- **A short moving sequence** where possible.
-- **Frame time** at 1920×1080, with representative grass and light density.
-- **Luis's choice.** Luis picks or mixes the rendering approach in the
-  playtest. Until then it stays Open.
-
-## S1c, second pass — hand-painted surfaces
-
-Luis's verdict on the first pass: "going really well into the Visual Soul",
-but not there yet. He prefers E, the most illustrated candidate. The biggest
-remaining gap was painterly surface. In the references the brushwork belongs
-to the objects ("Brush marks, uneven plaster and flowing grass belong to the
-objects", A). Screen filters only paint over the whole image.
-
-**The approach.** Each Ordinary Place model gets a painted colour texture,
-made reproducibly by its Blender script:
-
-1. **Unwrap.** Every mesh is UV-unwrapped.
-2. **Bake.** Cycles bakes surface information into the textures:
-   - ambient occlusion for cavities;
-   - edges and curvature;
-   - upward-facing areas.
-3. **Paint.** A painter's language is applied in shader nodes and baked into
-   the colour texture:
-   - broad warm-to-cool value shifts;
-   - lit, worn edges;
-   - cool coloured cavities;
-   - directional brush strokes that follow the material (plaster daubs,
-     wood grain along beams, shingle-by-shingle variation, stone outlines);
-   - moss on upward stone and roof;
-   - stains low on the walls.
-4. **Import.** The models are exported with UVs, and the textures are
-   imported into `Assets/_WonderGather/Art/OrdinaryPlace/Textures`.
-5. **Shade.** The painted shader samples them. The in-shader dabs relax where
-   a real painted texture exists, and the brush-broken light edge stays.
-
-These textures are painted by script, not by hand. A human painter could
-later paint over them in Blender, because the UVs and source files are kept.
-
-**Base look:** E (painted light + paint filter + ink). The candidates stay
-switchable for comparison.
-
-**Evidence:**
-
-- matched captures before and after, beside references A–F;
-- frame cost in the benchmark;
-- the full suite;
-- a build.
-
-## S1e — The essence beyond the surface
-
-Luis on October 2: the hand-painted pass is "already quite beautiful", but Luis
-wants "the breath-taking out of this world emotion", the stylistic essence
-rather than the surface. Luis welcomes a long checkpoint and research. Two
-follow-ups the same day raised the bar:
-- every frame the camera lands on should be a painting, driven by light, while
-  the RTS still runs well;
-- the Visual Soul is the soul, and the result must go above and beyond it, to
-  something unique to Wonder Gather
-  ([correspondence](Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md)).
-
-**The study.** [TheEssence.md](ArtDirection/TheEssence.md) reads why Luis's
-references move Luis and measures them against our captures. It then proposes
-Wonder Gather's own language: a thesis, seven signature devices and a frame
-test.
-
-**Outcome of the first iteration:** not adopted. Luis likes "the before"
-better, and Luis's favourite frame shows why: the lit house at dusk, intimate,
-enclosed and tonal. Any further iteration starts from the hand-painted pass,
-adds options beside it instead of replacing it, and is shown early as frames.
-The iterations below were the plan before the verdict.
-
-**Iterations:**
-
-1. **The beyond and the painting.** Built October 2 (archived):
-   - **The beyond:**
-     - the far world on a bluff above a valley lake;
-     - monumental Blender-modelled clouds;
-     - planar water reflections;
-     - aerial perspective in the sky's colour;
-     - cloud shadows;
-     - the luminous palette.
-   - **Look F:**
-     - the painting pass (strokes along the forms);
-     - ink on characters only;
-     - the hour's palette;
-     - seeds and fireflies.
-   - **Viewpoint keys.**
-2. **Forms that read as paint.** Painted tree clumps, painted far land and
-   mountains, brushed cloud edges, and strokes that breathe with the wind.
-3. **The meadow and the warm light.** Gusts, flowers, a stream, and the glow
-   and motes of lamplight.
-4. **The signature decisions** that need Luis: the curving world and cosmic
-   night, and giant flowers and reeds.
-
-**Constraints:**
-- **The playable meadow and its navigation are untouched.** The far world is
-  only scenery.
-- **Frame cost** is measured in a release build at every iteration. The RTS
-  must keep headroom for units.
-- **References.** Luis's film references are described but never committed.
-
-## S1d — The worker model (former S1 scope)
-
-This step follows Luis's S1c choice, so the model is made for the chosen look:
-
-- **The model.** A Blender worker in the Visual Soul language: distinctive
-  silhouette and proportions, strong hair and coat shapes, and a simple drawn
-  face. Proportions stay Open, so the body is built to vary in S2.
-- **Rig and dimensions.**
-  - A skeleton matching the procedural rig, with a rig adapter driving its
-    bones.
-  - Body dimensions read from the model, replacing the 2.2 m test biped.
-  - Navigation and camera framing follow the body.
-- **A better pickaxe**, whose grip and head points match its tool data.
-- **Tests** for gait, support and grip on the model rig.
-
-## S1d, last part — the miners at work (plan, waiting for Luis's choices)
-
-**Written:** October 5, 2026, after Luis said to go on with the plan
-([correspondence](Correspondence/2026-10-05_THE_SHOULDER_STRAP.md)).
-
-**Why it needs a word from Luis first.** Every stage begins with a plan and
-Luis's approval ([ShowcaseRoadmap.md](ShowcaseRoadmap.md#working-agreement-for-this-roadmap)).
-The step also changes what the miners carry and do, which Luis has not yet
-decided (M1 to M4 below). What does not depend on those choices is done
-first.
-
-**The goal.** The miners do what the 2.2 m test body does today: walk to the
-rock and strike it with a pickaxe. The pickaxe is made for their size, and
-their hands hold what they hold. This closes S1d's own list: "a better
-pickaxe whose grip and head points match its tool data" and "tests for gait,
-support and grip on the model rig".
-
-**Not in this step:** the effort-driven swing (S3), strength and hauling
-(S4), and the creator (S2). The swing keeps today's shape.
-
-**Amended on October 6.** Today's shape could not be kept on the miners: it
-puts the pickaxe through the chest and head of any body that has them
-([TheMiners.md](ArtDirection/TheMiners.md#the-swing-goes-over-the-shoulder)).
-Bodies with a shape make the same swing over the right shoulder. The first
-body's swing, its timing and the rule of the strike are unchanged, and the
-swing's effort and character remain S3's.
-
-**Overtaken on October 6.** Luis answered the choices in a wider message
-([correspondence](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md)):
-
-- **M1 is answered:** any of the boulders already in the Ordinary Place, by
-  a click. No special rock.
-- **M2, M3 and M4 are overtaken.** Where a pickaxe is kept and what is done
-  with what is mined become choices of equipment (none, a pickaxe, a strap
-  for the back, a backpack, a dragged sack, a cart). Luis's first idea was
-  that the hands hold nothing ("I'm not sure yet").
-- **Step 5 is not built as written.** It would have walked the miners to a
-  rock to play the stored swing there. Luis wants the swing to have real
-  weight and real strength first. Its useful part, mining any boulder,
-  moves into the S3 proposal below.
-- **What steps 1 to 4 built is kept** as the ground for S3: the bodies'
-  measures, the hands that close, the pickaxes made for each body, the rule
-  of the strike ([review](Reviews/2026-10-06_SamePageReview.md#4-what-carries-over)).
-
-### Steps
-
-| Step | What | Depends on Luis's choices? |
-|---|---|---|
-| 1 | **The sweep of extreme poses** (the method's pass 4): arms raised, elbows and knees bent deep, the waist bowed and twisted. Fix what it finds at the joints work will use | No. **Built on October 5** ([TheMiners.md](ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5)). Nothing fails in the poses today's swing uses, so nothing was changed. What fails beyond them is logged for the movements that will need it (an overhead swing in S3; a kneel) |
-| 2 | **Hands that close.** A hand closes round a handle of a given thickness, and opens again. The audit checks it: fingers meet the handle and do not enter it | No. **Built on October 5** ([TheMiners.md](ArtDirection/TheMiners.md#hands-that-close-october-5)): the free hands, on handles from 12 to 44 mm. The hands that carry stay closed (M3) |
-| 3 | **A pickaxe made for each body.** One modelled pickaxe (the one Long carries), sized to the body. Its grips and its striking head are read from the model, so the tool's data and its shape cannot drift apart | No. **Built on October 6** ([TheMiners.md](ArtDirection/TheMiners.md#a-pickaxe-made-for-each-body)) |
-| 4 | **The tool's solve reads the body.** Today it assumes the test body's arms and height. It will take reach and hand places from each body, and work with one hand or two | No. **Built on October 6** ([TheMiners.md](ArtDirection/TheMiners.md#the-tools-solve-reads-the-body)). It also had to read the body's shape, and the swing had to go over the shoulder |
-| 5 | **At the rock.** The miners walk to a mineral boulder and strike it, with today's rule that only a real contact of the pick's head counts | M1, M2, M3, M4. **Not built.** It also owes: places to stand sized to each body, and an arrival exact enough for a small one (W8) |
-| 6 | **Evidence.** Tests on each miner; the mining recorded for the audit in motion; work views added to the capture; a build; a playtest guide | **Built for steps 1 to 4** (October 6): three tool tests, the mining audited with the pickaxe in the hands, the `work` views, the build, and the look with `K` |
-
-### Choices for Luis
-
-Each has a recommendation, marked as a default. Nothing here is Locked.
-Since October 6 the miners can be watched mining with `K` in the Ordinary
-Place, which shows what M2 and M3 are about: the pickaxe appears from
-nowhere, and Small and Long swing with one hand because the other holds the
-lantern or the mug.
-
-**What M3 would cost, learned since.** The hands that carry (Small's left,
-Long's left) are modelled closed round their handles and cut to fit: the
-look Luis approved on October 5. They cannot open. Options (b) and (c) need
-them remade as hands that close, as the free hands were. The remade hands
-would be shown beside the present ones before anything is replaced.
-
-| ID | Question | Options | Recommended default |
-|---|---|---|---|
-| **M1** | Where do the miners mine? | (a) A mineral boulder a little way down the path in the Ordinary Place, out of Luis's favourite frame. (b) A small new place built from the same land, sky and light. (c) The grey equipment test map | (a). It keeps them in the place Luis likes, and leaves the house alone (V3 stays open) |
-| **M2** | Where is a miner's pickaxe when it is not in use? | (a) On the back in a sling, as Long's is. Small and Round would each gain a strap and a pickaxe on the back. (b) Carried in the right hand. (c) It waits at the rock, leaning on it, and the miner takes it up there | (c) for Small and Round, so their looks do not change without Luis's word; Long uses the one already on the back |
-| **M3** | What does a miner do with the lantern or the mug while working? | (a) Keeps holding it and swings a light pick with one hand. (b) Sets it down beside the rock, and picks it up after. Small's lantern would light the work. (c) Hangs it on the belt or the bag | (b). It is the most physical, and needs a small "put down, pick up" movement |
-| **M4** | What happens to what is mined, until hauling exists (S4)? | (a) Pieces fall and lie in a heap by the rock; nothing is carried yet. (b) Today's stand-in: a bundle carried in both hands to a delivery place | (a). It matches the roadmap's O3 (loose pieces), and does not invent a carry that S4 will replace |
-
-### Also for Luis, found on the way
-
-| ID | Question | Options | Until Luis says |
-|---|---|---|---|
-| **P1** | How should Long stand in the game? Since October 3 the prefab has stood each model with its head straight above its hips. Long was built upright with the head carried forward, so in the game Long leans back 11° ([pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game)) | (a) As in the game now. (b) As built. Both are shown in the game in [the pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game) | (a): it is what Luis has played |
-
-### Contracts to keep
-
-- **The procedural body.** Planted feet, arrival without shuffling, grips at
-  actual grips, navigation owning the root, no active ragdoll.
-- **The contact gate.** Only the tool's solved head touching the mineable
-  surface yields material; reach is judged before contact, never stretched
-  to fit.
-- **The test body and its maps** keep working as they do. The body-aware
-  solve gives the same result for the test body as today's constants.
-- **Change only what is asked.** The miners' looks change only where a
-  choice above says so.
-- **The method.** Every new pose and object goes through the model quality
-  method before Luis sees it.
-
-## S3 — Weight and strength at the rock (proposed, waiting for Luis)
-
-**Written:** October 6, 2026, from Luis's message of that day
-([correspondence](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md))
-and the review it asked for
+**Proposed:** October 6, 2026, in the review Luis asked for
 ([Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md)).
-**Status:** proposed. Nothing of it is built. It begins when Luis approves
-it and answers A, B and C below.
+**Approved by Luis:** October 6, 2026: "I like the order that you proposed.
+So yeah, let's go with it", with more to fit in
+([correspondence](Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)).
+**Baseline:** 246c11b on `claude/worker-showcase`. Unity 6000.6.0f1 / URP;
+Blender 4.4/4.5.
+**The design it builds:** [Design/ThePhysicalBody.md](Design/ThePhysicalBody.md).
+**The plan before it** (S1: the Ordinary Place, two cameras, the miners) is
+archived in
+[Plans/S1_OrdinaryPlaceCamerasAndMiners.md](Plans/S1_OrdinaryPlaceCamerasAndMiners.md).
 
-**Which of the prototype's questions it answers.** The first of them: does
-a body with real strength, moving a tool with real weight against a real
-rock, look true and not goofy? Everything else in the prototype (carrying,
-equipment, the creator) is built on the answer.
+## Which of the prototype's questions it answers
 
-**The proposed order of stages** (the roadmap's names are kept):
+The first of them: does a body with real strength, moving a tool with real
+weight against a real rock, look true and not goofy? Carrying, equipment
+and the creator are built on the answer.
+
+## The order of stages (approved October 6)
 
 | Order | Stage | What it gives |
 |---|---|---|
-| **Next** | **S3, weight and strength at the rock** (this plan) | A miner really lifting a pickaxe that has weight, with a strength that can be changed while watching; then mining any boulder by a click |
-| Then | **S4, carrying and equipment** | No pickaxe, a pickaxe, a strap for the back, a backpack, a dragged sack, a cart; stones brought home; loads that change the walk |
+| **Now** | **S3, weight and strength at the rock** (this plan) | A miner really lifting a pickaxe that has weight, with strength and tiredness that can be watched; a body that is very stable and can still fall; the interaction click; mining any boulder |
+| Then | **S4, carrying and equipment** | No pickaxe, a pickaxe, a strap for the back, a backpack, a dragged sack, a cart; stones brought home; loads that change the walk; each of these done by the body, physically |
 | Then | **S2, the creator** | The screen: the three appearances, strength with its gentle change of body, equipment, and what this worker will be able to do |
-| Last | **S5, ready for players** | As in the roadmap |
+| Last | **S5, ready for players** | As in [ShowcaseRoadmap.md](ShowcaseRoadmap.md) |
 
-[ShowcaseRoadmap.md](ShowcaseRoadmap.md) is rewritten to this order only
-when Luis approves it.
+## Luis's choices (October 6)
 
-### The approach
+| ID | Question | Luis's answer |
+|---|---|---|
+| **A** | How far does the physics go? | **A mixture.** Very stable, never naturally wobbly, but able to trip or fall "in this, like, ragdoll-ish way if it's an extreme situation that calls for it". This replaces D1 |
+| **B** | The lantern and the mug | **Hanging somewhere that makes physical sense,** from the clothes. Hands empty |
+| **C** | The order of stages | **As proposed.** Where the new things fit is left to Claude |
+
+**Added by Luis in the same message:**
+
+- **Stamina:** tiredness of the muscles, short-term at least, already in
+  this prototype.
+- **The interaction click:** a key and a click on something show its
+  options beside it, with a cancel.
+- **Every action is physical:** equipping, unequipping, strapping, putting
+  into a bag are all seen done by the body, with real weight.
+- **Built to be built upon:** running and sword fights come later, on the
+  same body.
+
+## The approach
 
 Everything a miner holds, carries, drags or pulls is a real body in the
 physics, with its real weight and balance. The miner's arms, shoulders and
 back move it only by pushing and pulling, and each working joint has a most
-it can give, set by strength. The legs keep the planted walk, and balance
-is worked out from the real weights: the body leans, braces, slows or
-cannot, but does not fall over. A swing is planned as intentions (raise the
-head as high as it will go; bring it down on that spot), and what happens
-comes out of the weights and the limits.
+it can give, set by strength and lowered by tiredness. The legs keep the
+planted walk while the body's weight is within its feet. The body leans,
+braces and steps as its real weights require, and falls only when no step
+can catch it. A swing or any other action is planned as intentions, and
+what happens comes out of the weights and the limits.
 
-This is option C of the review
-([there](Reviews/2026-10-06_SamePageReview.md#three-ways-to-build-it)),
-and it replaces decision D1 if Luis chooses it (choice A). The whole body
-moved by forces, balance included, would be tried afterwards as a marked
-experiment beside it.
+Why this is both stable and able to fall, and how each part works:
+[Design/ThePhysicalBody.md](Design/ThePhysicalBody.md).
 
-### Steps
+## Steps
 
-| Step | What | What Luis gets to see |
-|---|---|---|
-| 1 | **Weigh everything.** Each body part and each pickaxe gets its weight, its balance point and how hard it is to turn, measured from its own model's volume and what it is made of (as the grips and the striking point already are) | A table: what each miner and each pickaxe weighs |
-| 2 | **The bench.** One miner standing on plain ground, with a pickaxe that is a real body. A strength number that can be changed. A grid of strengths and pickaxe weights, side by side, each trying to lift the pickaxe to the shoulder and bring it down on a block. Two ways of building the arms are tried here and compared (the engine's jointed physical body; or forces worked out at the hands, with the arms following) | **Clips, before anything is built on it.** Also: what one miner costs, and whether it is steady at every frame rate |
-| 3 | **The hands.** Both hands free on all three miners, as Luis chooses in B. The hands that carry today are remade as hands that close | The remade miners beside the present ones, before anything is replaced |
-| 4 | **The swing.** Its six parts ([review](Reviews/2026-10-06_SamePageReview.md#the-swing-in-six-parts)): set, lift, top, drive, strike, recover. The upper hand slides along the handle. The legs and the back work: the feet set, the knees bend, the weight shifts. The jolt of the strike goes into the arms | The three miners swinging, at several strengths |
-| 5 | **Holding and walking with the tool.** How it is held comes from strength: in one hand at its balance point; in two hands; the head resting on the ground and dragged; or not at all. Dragging slows the walk | The same miner at several strengths, walking |
-| 6 | **Any boulder.** A click on any boulder of the Ordinary Place sends the miner to mine it. A place to stand is found from the rock's own shape and the ground. A spot to strike is found on its surface within this body's reach. The swing adapts to the spot's height and slant. What is struck off falls as real stones and lies where it falls (bringing them home is S4) | Mining several different boulders |
-| 7 | **In the Ordinary Place.** A plain panel: the strength slider, and a light, a middling and a heavy pickaxe. The look with `K` is retired | The build |
-| 8 | **Evidence** (below), the playtest guide, the documents | |
+Where Luis's new things fit is marked **(new)**.
 
-### Evidence
+| Step | What | What Luis gets to see | State |
+|---|---|---|---|
+| 1 | **Weigh everything.** Each body part and each pickaxe gets its weight, its balance point and how hard it is to turn, measured from its own model and what it is made of | A table: what each miner and each pickaxe weighs | |
+| 2 | **The bench.** One miner standing on plain ground, with a pickaxe that is a real body, and a strength that can be changed. A grid of strengths and pickaxe weights, each trying to lift the pickaxe to the shoulder and bring it down on a block. The two ways of building the arms are tried and compared | **Clips, before anything is built on it.** Also what one body costs, and whether it is steady at every frame rate | |
+| 3 | **Free hands, and things that hang (B).** Both hands free and closing on all three miners. The lantern and the mug hang from the clothes by something real, as real bodies | The remade miners beside the present ones, before anything is replaced | |
+| 4 | **The swing,** in its six parts ([review](Reviews/2026-10-06_SamePageReview.md#the-swing-in-six-parts)): set, lift, top, drive, strike, recover. The upper hand slides along the handle. The legs and the back work. The jolt of the strike goes into the arms | The three miners swinging, at several strengths | |
+| 5 | **Stamina (new).** Short-term tiredness for the arms, the back and the legs. A tired miner lifts lower, drives slower, rests the head on the ground and waits | One miner worked until it tires, then resting | |
+| 6 | **Balance: lean, brace and step (A).** The body's real weights decide how it stands: leaning against a load, bracing before an effort, stepping to catch itself | A miner with a pickaxe too heavy for it; a miner pulled | |
+| 7 | **Holding and walking with the tool.** How it is held comes from strength: in one hand at its balance point; in two hands; the head on the ground and dragged; or not at all. Dragging slows the walk | The same miner at several strengths, walking | |
+| 8 | **The interaction click and the small actions (new).** Space and a click open a thing's options beside it, with a cancel. The first actions, each done by the body: take the lantern or the mug in hand and hang it back; lay the pickaxe down and pick it up; rest | Each action, close up | |
+| 9 | **Any boulder.** A click on any boulder of the Ordinary Place sends the miner to mine it. A place to stand is found from the rock's own shape and the ground. A spot to strike is found on its surface within this body's reach. The swing adapts to the spot. What is struck off falls as real stones and lies where it falls (bringing them home is S4) | Mining several different boulders | |
+| 10 | **The fall, and getting up (A).** When no step can catch the body, or its legs cannot bear it, the whole body follows the physics, protects itself, lies, and gets up. The riskiest step | Clips of extreme cases, before it is trusted | |
+| 11 | **In the Ordinary Place.** A plain panel: the strength slider, and a light, a middling and a heavy pickaxe. The look with `K` is retired | The build | |
+| 12 | **Evidence** (below), the playtest guide, the documents | | |
+
+**Why this order.**
+
+- **Steps 1 and 2 first:** everything else stands on them, and they answer
+  what is not yet known (steadiness, cost, how it reads at the miners'
+  size).
+- **Stamina (5) straight after the swing (4):** it is the same rule as
+  strength, and it is seen best in repeated swings.
+- **Lean, brace and step (6) before the fall (10):** they are what makes
+  the body "very stable". The fall is the last rung of the same ladder, and
+  the hardest to make believable, so it comes when the rest is steady.
+- **The interaction click (8) before any boulder (9):** laying the pickaxe
+  down and picking it up are how a miner comes to hold one at all, now that
+  it no longer appears from nowhere.
+- **Strapping, bags, the sack and the cart** are S4's, built from the same
+  small actions as step 8.
+
+## Evidence
 
 - **Tests:**
   - a heavier pickaxe is lifted lower and arrives slower, on the same body;
   - a stronger body lifts the same pickaxe higher and it arrives faster;
   - a body too weak for its pickaxe does not strike, and nothing is mined;
+  - a tired body is weaker, and recovers with rest;
   - the head's speed and energy at each strike are measured and shown;
   - the pickaxe never passes through its bearer, at any strength;
   - the hands stay on the handle, and let go only when the plan says so or
     their hold is overcome;
+  - a body within its balance does not step or fall; a body pulled hard
+    enough steps; pulled harder, it falls, and gets up;
+  - nothing appears in a hand or vanishes from one: every object is at
+    every moment held, hanging, or lying;
   - only a real touch of the head on the rock yields anything (the rule of
     the strike, unchanged);
   - any boulder of the place can be mined, by each of the three bodies;
@@ -484,62 +121,42 @@ experiment beside it.
 - **Pictures and clips** at every step, read before any number is believed.
 - **A build** and a playtest guide.
 
-### Contracts to keep
+## Contracts to keep
 
 - **The rule of the strike.**
 - **The walk:** planted feet, arrival without shuffling, each body's own
-  gait. Loads may change it; nothing else does.
+  gait, while the body is within its balance. Loads and the ladder of
+  balance may change it; nothing else does.
 - **The test body and its maps** keep working as they do.
-- **The looks Luis has liked** change only where a choice below says so,
-  and are shown beside the new before anything is replaced.
+- **The looks Luis has liked** are shown beside the new before anything is
+  replaced.
+- **Shown early.** Each step's clips go to Luis before the next is built on
+  it, the bench and the fall above all.
 - **The project's rule on physics bodies.** AGENTS.md says not to introduce
   active ragdolls "without a corresponding milestone request". Luis's
-  message is taken as that request for the working parts of the body, and
-  only once this plan is approved. The whole body moved by forces stays
-  behind a separate, marked experiment.
-
-### Choices for Luis
-
-| ID | Question | Options | Recommended |
-|---|---|---|---|
-| **A** | How far does the physics go first? (Replaces D1) | (a) Physical work on planted legs: the tool, the loads, the arms and the back are real; the legs walk as now; balance is worked out from the real weights. (b) The whole body physical, balance included: it can stumble and fall | (a) first, then (b) as a marked experiment. (a) is the first half of (b) |
-| **B** | What becomes of the lantern and the mug? | (a) Both hands empty; the lantern and the mug hang from the belt or the bag, as looks only. (b) Both hands empty; they are left out. (c) As now | (a), shown beside the present miners first |
-| **C** | Is the order of stages right? | (a) S3, S4, S2, S5. (b) The creator first | (a), with a plain strength slider from S3's step 2 |
-
-### Left open, not decided here
-
-- **Strength's scale:** what the numbers on the slider are, and how the
-  body changes with them (the creator, S2; a first version of the body's
-  change could come with step 3 if Luis wishes).
-- **Whether a rock visibly wears away** as it is mined.
-- **Whether how well it is struck changes how much is mined** (D6). S3
-  measures every strike; the amount stays fixed until Luis decides.
-- **How Long stands in the game** (P1).
-- **How heavy the miners are.** They are small beings. Their weights will
-  come from their models; whether that reads well is for the bench to show.
-
-## Contracts to keep
-
-- **The procedural body.** All S0 contracts hold: planted feet, arrival
-  without shuffling, grips at actual grips, navigation owning the root, and no
-  active ragdoll.
-- **Shared camera rig.** Existing maps keep working, and their per-map camera
-  preferences keep their values.
+  messages of October 6 are that request: bodies answer to real physics, and
+  can fall "ragdoll-ish" in extreme situations.
 - **Protected files.** Luis's uncommitted files (TheGroup.unity, two
   ProjectSettings files, `_Recovery`) are never edited, committed or
   discarded.
-- **Third-party material.** Anything downloaded or reused needs Luis's
-  approval and a recorded license. Everything in S1 is planned to be made from
-  scratch: Blender scripts, Unity shaders and generated textures.
+- **Third-party material** needs Luis's approval. Everything here is
+  planned to be made from scratch.
 
-## Decisions for Luis
+## Left open, not decided here
 
-These have defaults so the work can proceed. Each can be changed at the
-S1a/S1b playtests.
-
-| ID | Question | Default used |
-|---|---|---|
-| C1–C4 | Camera toggle key, orders while exploring, controls, entering buildings | **Accepted Oct 1** ("I really liked the camera") |
-| V1 | Rendering approach | **Working base, Oct 1:** E, plus hand-painted textures (second pass). **Oct 2:** look F (the painting pass, ink on characters only, the hour's palette) tried in S1e; Luis preferred the hand-painted pass in E. Not Locked |
-| V2 | Proportions, architecture, setting | Open, as the handoff states. S1b uses a modest cottage and grassland |
-| V3 | Is the house the worker's home and delivery point in the showcase? | Possible. It would join the Visual Soul place to the worker loop. Not built until Luis decides |
+- **The interaction key.** Space is proposed
+  ([why](Design/ThePhysicalBody.md#the-key-the-space-bar-recommended)); it
+  is one setting, for Luis to try.
+- **The list of interaction options.** Luis's examples and a proposed list
+  are in [the design](Design/ThePhysicalBody.md#options-for-the-prototype-a-proposal-luis-asked-what-else-makes-sense).
+- **Stamina's pace,** whether there is a longer-term tiredness, and what
+  the player is shown of it.
+- **Strength's scale:** what the numbers on the slider are, and how the
+  body's appearance changes with them (the creator, S2).
+- **Whether a rock visibly wears away** as it is mined.
+- **Whether how well it is struck changes how much is mined** (D6). S3
+  measures every strike; the amount stays fixed until Luis decides.
+- **How Long stands in the game** (P1), and the walk's high step in the
+  sharpest turn.
+- **How heavy the miners are.** They are small beings. Their weights come
+  from their models; whether that reads well is for the bench to show.

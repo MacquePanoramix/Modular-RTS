@@ -1,7 +1,7 @@
 # A shutdown, and resuming — October 5 and 6, 2026
 
 **From:** Luis (Game Director), while step 2 of
-[the miners at work](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)
+[the miners at work](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)
 (hands that close) was in its final validation.
 
 ## Messages (verbatim)

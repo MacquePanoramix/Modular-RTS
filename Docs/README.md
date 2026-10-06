@@ -12,7 +12,7 @@ and routes to everything else.
 | [DESIGN_RATIONALE.md](DESIGN_RATIONALE.md) | The few "whys" that must not drift |
 | [PROJECT_CULTURE.md](PROJECT_CULTURE.md) | Roles and how work is routed |
 | [ShowcaseRoadmap.md](ShowcaseRoadmap.md) | The Worker Showcase stages (S0–S5) and their open decisions |
-| [NextMilestonePlan.md](NextMilestonePlan.md) | The current stage's plan |
+| [NextMilestonePlan.md](NextMilestonePlan.md) | The current stage's plan (S3: weight and strength at the rock) |
 | [Validation.md](Validation.md) | Evidence for every milestone: tests, builds, captures, failures and fixes |
 
 ## Folders
@@ -21,7 +21,7 @@ and routes to everything else.
 |---|---|
 | [ArtDirection/](ArtDirection/) | **The art direction.** [VisualSoul.md](ArtDirection/VisualSoul.md) (Luis's handoff, and the direction now) and its approved reference images. [TheEssence.md](ArtDirection/TheEssence.md) (the study of what lies under the soul, what Luis's favourite frame teaches, and a proposed language). [StyleStudies.md](ArtDirection/StyleStudies.md) (the earlier Blender studies, not chosen). [TheMiners.md](ArtDirection/TheMiners.md) (the worker's redesign: Small, Long and Round, built from modules, S1d). [CharacterPractices.md](ArtDirection/CharacterPractices.md) (how beings are built: practices, natural walks). [ModelQualityMethod.md](ArtDirection/ModelQualityMethod.md) (how every model is checked and improved: the standard, seven passes, the capture matrix, the misses ledger). [WorkerConcepts.md](ArtDirection/WorkerConcepts.md) (their first concepts, superseded) |
 | [Correspondence/](Correspondence/) | Luis's messages, verbatim and dated, with how each was recorded |
-| [Design/](Design/) | Design notes that feed GAME_VISION: the early design brief and the one-worker showcase vision |
+| [Design/](Design/) | Design notes that feed GAME_VISION: the early design brief, the one-worker showcase vision, and [ThePhysicalBody.md](Design/ThePhysicalBody.md) (how a body is very stable and still able to fall; strength and stamina; real objects; every action physical; the interaction click) |
 | [Plans/](Plans/) | Completed or superseded milestone plans, archived when replaced |
 | [Playtests/](Playtests/) | One guide per playable milestone: how to run it, what to judge, and its evidence and limits. The latest: [MinersPlaytest.md](Playtests/MinersPlaytest.md) (choose a miner, walk the meadow) |
 | [Reviews/](Reviews/) | Reviews of the whole project against Luis's direction, made when Luis asks. The latest: [2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md) (what Luis has asked for and where each thing stands; how a pickaxe is really swung; how a body can answer to real forces; a proposal) |

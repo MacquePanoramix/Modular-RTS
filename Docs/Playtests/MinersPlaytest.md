@@ -140,7 +140,7 @@ be judged in play before where and how they mine is decided
 - **Each one's pickaxe:** sized to its arms, its handle to its hand.
 
 **What is not there, and waits for Luis's choices**
-([the plan](../NextMilestonePlan.md#choices-for-luis)):
+([the plan](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#choices-for-luis)):
 - **M1, where they mine.** The block is a stand-in, put where the miner
   stands.
 - **M2, where a pickaxe is kept.** It appears in the hand from nowhere. Long

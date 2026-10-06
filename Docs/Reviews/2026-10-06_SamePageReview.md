@@ -12,8 +12,15 @@ the 51 commits of the repository; the game's code where it concerns work,
 weight and strength; and outside sources on pickaxes and on bodies moved by
 forces ([listed at the end](#sources)).
 
-**Status:** a review and a proposal. Nothing in it is decided. The
-decisions are Luis's ([what I need from Luis](#8-what-i-need-from-luis)).
+**Status:** a review and a proposal, as written before Luis answered.
+**Luis answered the same day** ([message](../Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)):
+the order is approved; A is a mixture (very stable, yet able to fall in an
+extreme situation); B is (a), the lantern and the mug hanging from the
+clothes; and stamina, an interaction click and "all the actions" being
+physical are added. The design that follows is
+[Design/ThePhysicalBody.md](../Design/ThePhysicalBody.md), and the plan is
+[NextMilestonePlan.md](../NextMilestonePlan.md). The text below is left as
+it was put to Luis.
 
 ## 1. The short answer
 
@@ -303,7 +310,7 @@ A plain strength slider would exist from S3's first step, so strength can
 be played with long before the creator's screen is made.
 
 **S3's steps** are written out in
-[NextMilestonePlan.md](../NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis).
+[NextMilestonePlan.md](../NextMilestonePlan.md).
 In short:
 
 1. **Weigh everything.** Each body part and each pickaxe gets its weight

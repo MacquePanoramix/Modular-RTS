@@ -1064,7 +1064,7 @@ the round's log is in
 ## The sweep of extreme poses — October 5
 
 The first step of "the miners at work"
-([NextMilestonePlan.md](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices);
+([NextMilestonePlan.md](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices);
 findings in [TheMiners.md](../ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5)).
 No game code changed.
 

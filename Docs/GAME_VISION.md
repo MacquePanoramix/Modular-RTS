@@ -421,7 +421,9 @@ These questions must remain visible rather than being silently answered by imple
 - How much individual variation do instances receive?
 - What is the practical unit count and target match duration?
 - How physically simulated can combat become without losing control, readability, or performance?
-- Should the body be physics-informed kinematic, physics-driven (active ragdoll), or a hybrid, and where is the boundary? (October 6: under review. Luis asks for real physics with real strength; proposed: physical work on planted legs first, the whole body as a marked experiment after.)
+- Where exactly is the boundary between the posed body and the physical one? (October 6, Luis: a mixture. Very stable, yet able to fall in an extreme situation. The proposed boundary is the ladder of balance in Design/ThePhysicalBody.md; the bench will show whether it holds.)
+- Which key gives the interaction click, and which options does each thing offer?
+- How fast does tiredness come and go, is there a longer-term tiredness, and what is the player shown of it?
 - Does a rock visibly wear away as it is mined?
 - What is the scale of strength, and how does a body's appearance change with it?
 - What is a worker's natural pace relative to RTS movement speed, and does body or load set top speed?
@@ -503,15 +505,22 @@ New ideas enter as **Possible**. Only an explicit design decision promotes them 
 | 2026-10-03 | Proactive polish | Working agreement, from Luis | Every character passes a close audit in the engine before Luis sees it; the practices are recorded in [CharacterPractices.md](ArtDirection/CharacterPractices.md) | — |
 | 2026-10-03 | Physical objects | Direction from Luis | Physicality and the reality of all movement are among the game's main focuses: anything that reads as an object behaves as a proper object that responds to its environment (held, hung, swinging with gravity), never floating | — |
 | 2026-10-06 | The miners mine: a pickaxe for each body, swung over the shoulder | Built, awaiting Luis's playtest (`K` in the Ordinary Place) | Each miner's pickaxe is made for its arms and hands; the tool's solve reads the body, its shape included. The first body's swing put the tool through chest and head, so bodies with a shape swing over the right shoulder; the first body's swing and the rule of the strike are unchanged ([TheMiners.md](ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6)) | Luis |
+| 2026-10-06 | The order of stages | Approved by Luis | S3 (weight and strength at the rock), S4 (carrying and equipment), S2 (the creator), S5. Where the new things below fit is left to Claude ([correspondence](Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)) | S3's steps as they are shown |
+| 2026-10-06 | Body technique (replaces D1) | Direction from Luis | "Very stable", never "naturally wobbly", yet able to trip or fall "in this, like, ragdoll-ish way if it's an extreme situation that calls for it" (a very strong pull, a thrust put in too hard, limbs giving out). Proposed to realize it: the ladder of balance, where real weights decide whether the body leans, braces, steps or falls ([design](Design/ThePhysicalBody.md#2-can-very-stable-and-able-to-fall-be-combined)) | The bench and the clips of each rung |
+| 2026-10-06 | Stamina | Direction from Luis | "Some level of stamina for the muscles and tiredness", short-term at least, already in this prototype. Its pace, any longer-term tiredness and what the player is shown stay Open | S3 step 5 |
+| 2026-10-06 | The lantern and the mug (choice B) | Chosen by Luis | They hang "somewhere … that makes physical sense, from the clothes". Hands are empty | S3 step 3, shown beside the present miners first |
+| 2026-10-06 | The interaction click | Direction from Luis | The ordinary right-click stays the RTS order. A key and a click on something that can be interacted with show its options beside it, "MMO style", with a cancel. It is for actions an ordinary RTS has no click for, and its key would be "the most important" after moving the map. The key (Space is proposed) and the list of options are Open | S3 step 8 |
+| 2026-10-06 | Every action is physical | Direction from Luis | "I want all the actions to feel physical and real … It needs to be all the actions": equipping, unequipping, strapping, putting into a bag are seen done by the body, believably, with real weight | S3 step 8; S4 |
+| 2026-10-06 | Built to be built upon | Direction from Luis | What is made for the prototype is what the final game grows from: running and sword fights come later, on the same body | — |
 | 2026-10-06 | What the prototype is for | Direction, restated by Luis | Bodies "react against real physics, with real strength in their limbs, and against objects with real weight"; "that's the whole point of it". Like ragdolls, without being goofy ([correspondence](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md)) | — |
 | 2026-10-06 | Any rock | Direction from Luis | The miner mines any of the map's boulders by a click, not a rock made for mining; the mining adapts to the rock. The prototype is small in scale and final in kind | — |
-| 2026-10-06 | Body technique (D1) | Under review | D1 (a body posed, not moved by forces) was chosen "for this milestone" on Claude's recommendation. Luis's message asks for real physics. Proposed in its place: physical work on planted legs, then the whole body as a marked experiment ([review](Reviews/2026-10-06_SamePageReview.md#6-how-a-body-can-answer-to-real-forces-without-being-goofy)) | Luis's choice A |
+| 2026-10-06 | Body technique (D1) | Replaced the same day (see "Body technique (replaces D1)") | D1 (a body posed, not moved by forces) was chosen "for this milestone" on Claude's recommendation. Luis's message asks for real physics. Proposed in its place: physical work on planted legs, then the whole body as a marked experiment ([review](Reviews/2026-10-06_SamePageReview.md#6-how-a-body-can-answer-to-real-forces-without-being-goofy)) | Luis's choice A |
 | 2026-10-06 | Strength | Possible (Luis's present thought) | One general number, "maybe" a slider, in place of named bands (D3) and of build plus training (O2); later perhaps by limb. It shows gently in the body's appearance | Luis's decision; the creator (S2) |
 | 2026-10-06 | The hands | Possible (Luis's present thought: "I'm not sure yet") | Luis's first idea was that the miners hold nothing, so that the hands are about the pickaxe and strength. The lantern and the mug were allowed "for now" | Luis's choice B |
 | 2026-10-06 | Equipment | Direction from Luis | A choice with consequences: no pickaxe (cannot mine), a pickaxe, a strap for the back (asks strength of the back), a backpack, a dragged sack, a wheeled cart. The rocks are brought back; "all of that needs logistics and real strength and weight against it" | S4 |
 | 2026-10-06 | The creator | Direction, restated by Luis | Part of the hi-fi prototype; the three miners are its appearances | S2 |
-| 2026-10-06 | Review of the whole project | Done, at Luis's request | The look is on Luis's page. The physical work and the creator are not begun, and this week's mining has no weight in it. Proposed order: S3 (weight and strength at the rock), S4, S2, S5 ([review](Reviews/2026-10-06_SamePageReview.md); [plan](NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)) | Luis's choices A, B, C |
-| 2026-10-06 | Where and how the miners mine | Overtaken the same day (M1 answered: any boulder; M2 to M4 become choices of equipment) | The place, where a pickaxe is kept, what the lantern's or the mug's hand does, and what happens to what is mined. A look at the mining is in play to help choose ([the plan](NextMilestonePlan.md#choices-for-luis)) | Luis |
+| 2026-10-06 | Review of the whole project | Done, at Luis's request | The look is on Luis's page. The physical work and the creator are not begun, and this week's mining has no weight in it. Proposed order: S3 (weight and strength at the rock), S4, S2, S5 ([review](Reviews/2026-10-06_SamePageReview.md); [plan](NextMilestonePlan.md)) | Luis's choices A, B, C |
+| 2026-10-06 | Where and how the miners mine | Overtaken the same day (M1 answered: any boulder; M2 to M4 become choices of equipment) | The place, where a pickaxe is kept, what the lantern's or the mug's hand does, and what happens to what is mined. A look at the mining is in play to help choose ([the plan](Plans/S1_OrdinaryPlaceCamerasAndMiners.md#choices-for-luis)) | Luis |
 | 2026-10-05 | How Long stands in the game | Open (P1) | Since October 3 the prefab stands each model with its head above its hips. Long was built upright with the head forward, so in the game Long leans back 11°. Found while fitting the closing hands; not changed ([pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game)) | Luis |
 | 2026-10-05 | Luis's verdict on the method's first round | Direction from Luis | "I really liked all the changes you did, except the shoulder strap." The strap on Small's shoulder is put back as it was; its ends stay on the bag's rings ([correspondence](Correspondence/2026-10-05_THE_SHOULDER_STRAP.md)) | — |
 | 2026-10-05 | Change only what is asked | Working agreement (Claude's lesson) | A model Luis has seen and not faulted is liked as it is. A note changes what it names; the method's own rules do not restyle the rest | — |
@@ -927,6 +936,30 @@ which Luis keeps apart.
 
 **Proposed, waiting for Luis:** S3 (weight and strength at the rock) next,
 then S4 (carrying and equipment), S2 (the creator) and S5
-([plan](NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)).
+([plan](NextMilestonePlan.md)).
 Choices A (how far the physics goes), B (the lantern and the mug) and C
 (the order) are Luis's.
+
+## Stable but able to fall, stamina, the interaction click — October 6, 2026 (second message)
+
+Luis answered the review's three choices
+([verbatim](Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)).
+
+- **The order is approved:** S3, S4, S2, S5.
+- **The physics is a mixture.** Characters are very stable and never
+  naturally wobbly, yet can trip or fall, ragdoll-ish, when an extreme
+  situation calls for it. Luis asked whether the two can be combined. They
+  can: it is how people stand (sway, bend, step, and only then fall) and
+  how the games that do it well are built. The design is in
+  [Design/ThePhysicalBody.md](Design/ThePhysicalBody.md).
+- **The lantern and the mug** hang from the clothes; hands are empty.
+- **Stamina** is wanted already: short-term tiredness of the muscles.
+- **The interaction click** is new: a key and a click show a thing's
+  options beside it, with a cancel, for actions an ordinary RTS has no
+  click for. The ordinary right-click is unchanged.
+- **Every action is physical,** not only the important ones.
+- **Built to be built upon:** running and sword fights later use the same
+  body.
+
+The plan is [NextMilestonePlan.md](NextMilestonePlan.md): twelve steps,
+the bench first.

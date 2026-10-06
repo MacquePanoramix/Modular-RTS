@@ -2,20 +2,31 @@
 
 **Updated:** October 6, 2026.
 
-- **Where things stand (October 6, after Luis's message).** Luis restated
-  what the prototype is for and asked for a review of the whole project
-  ([message](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md)).
-  - **The review:** [Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md).
-    The look is on Luis's page. The work on what the prototype is for (real
-    weight, real strength, any rock, carrying, the creator) has not begun,
-    and this week's mining is a drawn path with no weight in it
-    ([a clip of it](Images/Miners/Work_Clip_Side.gif)).
-  - **The proposal:** S3, weight and strength at the rock, comes next
-    ([the plan](NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)),
-    then carrying and equipment (S4), then the creator (S2).
-  - **It waits for Luis:** choice A (how far the physics goes), B (the
-    lantern and the mug), C (the order of stages).
-  - **Nothing more is built until Luis answers.**
+- **Now: S3, weight and strength at the rock.** Approved by Luis on
+  October 6 ([the plan](NextMilestonePlan.md);
+  [the design](Design/ThePhysicalBody.md)).
+  - **What it is for:** a body with real strength moving a tool with real
+    weight against a real rock, true and not goofy. Luis: "that's the whole
+    point of it."
+  - **How it came about:** Luis restated what the prototype is for and
+    asked for a review of the whole project
+    ([message](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md);
+    [review](Reviews/2026-10-06_SamePageReview.md)).
+    The look is on Luis's page. The work on what the prototype is for had
+    not begun, and the mining built that week was a drawn path with no
+    weight in it ([a clip of it](Images/Miners/Work_Clip_Side.gif)).
+  - **Luis's answers** ([message](Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)):
+    - **The order:** S3, then carrying and equipment (S4), then the creator
+      (S2), then readiness for players (S5).
+    - **The physics:** a mixture. Very stable, never wobbly, yet able to
+      trip or fall "ragdoll-ish" in an extreme situation.
+    - **The lantern and the mug** hang from the clothes; hands are empty.
+    - **Added:** stamina (short-term tiredness); the interaction click (a
+      key and a click show a thing's options, with a cancel); every action
+      done physically by the body; all of it built to be built upon.
+  - **Steps:** twelve, in [the plan](NextMilestonePlan.md#steps). The
+    first two (weigh everything; the bench) come before anything else, and
+    the bench's clips go to Luis before more is built on it.
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.
@@ -42,7 +53,7 @@
     - **The method learned:** change only what a note or a failed check
       names.
     - **Next, on Luis's word to go on with the plan: the miners at work**
-      ([NextMilestonePlan.md](NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
+      ([NextMilestonePlan.md](Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
       - **Step 1, the sweep of extreme poses, is built.** Nothing fails in
         the poses the game uses. What fails beyond them (arms overhead, a
         deep bend in a coat, a deep bow) is logged with the movement that
@@ -170,7 +181,29 @@ A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director direction (October 6)
+## Latest Game Director direction (October 6, second message)
+
+Recorded verbatim in
+[Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md](Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md):
+
+- **A mixture of stable and able to fall.** "I want characters to be very
+  stable, but for them to still technically have these possibilities of
+  tripping in this, like, ragdoll-ish way if it's an extreme situation that
+  calls for it."
+- **Stamina:** "some level of stamina for the muscles and tiredness",
+  short-term at least, already in this prototype.
+- **Things hang where it makes physical sense,** from the clothes.
+- **The interaction click.** The ordinary right-click stays the RTS order.
+  A key and a click on something show its options beside it, "MMO style",
+  with a cancel. It is for actions an ordinary RTS has no click for. The
+  key is to be researched; Space is proposed.
+- **Every action is physical:** "It's not just the important actions …
+  It needs to be all the actions."
+- **Built to be built upon:** running and sword fights come later, on the
+  same body.
+- **The order of stages is approved.**
+
+## Game Director direction (October 6, first message)
 
 Recorded verbatim in
 [Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md),
@@ -415,9 +448,10 @@ Still valid from September 30:
 
 ## Recommended next action
 
-**First (October 6):** Luis reads the review ([Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md))
-and answers A, B and C. S3 begins on that word. The items below are still
-open from before.
+**Now (October 6):** S3 is approved and begun
+([the plan](NextMilestonePlan.md)). Luis next sees the bench's clips: one
+miner, several strengths, several weights of pickaxe. The items below are
+still open from before.
 
 1. **Luis checks the dusk fixes** in the build:
    - fewer fireflies, still marked when far out;

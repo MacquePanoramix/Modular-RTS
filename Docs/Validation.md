@@ -1573,7 +1573,7 @@ and said to go on with the plan
 ## S1d, the miners at work — step 1: the sweep of extreme poses (October 5)
 
 The first step of the plan Luis said to go on with
-([NextMilestonePlan.md](NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
+([NextMilestonePlan.md](Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
 Findings are in
 [TheMiners.md](ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5).
 

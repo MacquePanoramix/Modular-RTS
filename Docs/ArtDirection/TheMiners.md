@@ -75,7 +75,7 @@ mean I kinda prefered the before for this one"
 
 ## A pickaxe for each, and the first swings (October 6)
 
-Steps 3 and 4 of [the miners at work](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices), and the evidence of step 6
+Steps 3 and 4 of [the miners at work](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices), and the evidence of step 6
 for them. The miners can now mine: each with a pickaxe made for it, held in
 hands that close on it.
 
@@ -87,7 +87,7 @@ hands that close on it.
 > [the review](../Reviews/2026-10-06_SamePageReview.md#what-the-swing-is-today)).
 > Luis wants real weight and real strength in it, and the proposal is to
 > build that next
-> ([plan](../NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)).
+> ([plan](../NextMilestonePlan.md)).
 > The measures, the hands and the pickaxes below are what it will stand on.
 
 ![Round at the rock, in the game](../Images/Miners/Work_Round.jpg)
@@ -241,7 +241,7 @@ were true with the pickaxe in the miner's face.
 
 ## Hands that close (October 5)
 
-The second step of [the miners at work](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices): a free hand closes round a
+The second step of [the miners at work](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices): a free hand closes round a
 handle and opens again.
 
 ![Round's right hand: at rest, open, and closed on two handles](../Images/Miners/Hands_Closing.jpg)
@@ -332,7 +332,7 @@ is. The lower row is the same Long stood on the model's own vertical:
   0.6° (the same squaring); Long's modelled shoulders would be where the
   body solves them (they are 9 cm behind now, which the tool's solve allows
   for); and the walk and the audit would be read again for all three.
-- **The question (P1 in [the plan](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)):** keep the game's stance, or
+- **The question (P1 in [the plan](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)):** keep the game's stance, or
   stand Long as built?
 - **The method had no check for this.** Nothing compared how a model stands
   in the game with how it was built. The prefab's setup now reports the
@@ -356,7 +356,7 @@ is. The lower row is the same Long stood on the model's own vertical:
 
 The method's pass 4 had one part not built: poses beyond the game's own
 movement, as riggers use to test a rig's whole range. It is built now, as the
-first step of [the miners at work](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices).
+first step of [the miners at work](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices).
 
 **What it does.** It takes each miner through 27 poses, one joint at a time
 and in a few combinations:
@@ -822,7 +822,7 @@ look at in the Scene view. They are never saved into the scene.
 ## Next
 
 - **The miners at work** (the plan is in
-  [NextMilestonePlan.md](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
+  [NextMilestonePlan.md](../Plans/S1_OrdinaryPlaceCamerasAndMiners.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
   Built: the sweep of extreme poses, hands that close, a pickaxe made for
   each body, and a tool solve that reads the body. Next: the miners at the
   rock, which needs Luis's choices M1 to M4.

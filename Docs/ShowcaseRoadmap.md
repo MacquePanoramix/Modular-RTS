@@ -1,15 +1,24 @@
 # The Worker Showcase — roadmap to the playtest build
 
-> **October 6, 2026: a new order is proposed, waiting for Luis.** Luis
-> restated what the prototype is for (real weight, real strength, any rock,
-> the creator; [message](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md)).
-> The review Luis asked for ([Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md))
-> proposes that S3 comes next, widened to "weight and strength at the
-> rock", then S4, then S2, then S5
-> ([plan](NextMilestonePlan.md#s3--weight-and-strength-at-the-rock-proposed-waiting-for-luis)).
-> It also proposes to replace D1. This roadmap is rewritten to that order
-> only when Luis approves it. Until then, read the stages below as the
-> order of October 1.
+> **October 6, 2026: a new order, approved by Luis.** Luis restated what
+> the prototype is for (real weight, real strength, any rock, the creator;
+> [message](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md))
+> and approved the order proposed in the review Luis asked for
+> ([Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md);
+> [answer](Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)):
+>
+> | Order | Stage | In short |
+> |---|---|---|
+> | **Now** | **S3, weight and strength at the rock** | Real weight, strength and tiredness; a body that is very stable and can still fall; the interaction click; any boulder ([plan](NextMilestonePlan.md); [design](Design/ThePhysicalBody.md)) |
+> | Then | **S4, carrying and equipment** | No pickaxe, a pickaxe, a strap for the back, a backpack, a dragged sack, a cart; stones brought home; every action done by the body |
+> | Then | **S2, the creator** | The three appearances, strength as one number that shows gently in the body, equipment, and what this worker will be able to do |
+> | Last | **S5, ready for players** | As below |
+>
+> **Read the rest of this page with that in mind.** The stages below are
+> described as they were written on October 1. Three of their decisions are
+> replaced: D1 (the body is now physical where it works, stable, and able
+> to fall); D3 and O2 (strength is one number, perhaps a slider); and the
+> one boulder (any boulder of the place can be mined).
 
 **Created:** October 1, 2026, from Luis's clarification of the showcase's scope.
 **Status:** Living plan. On October 1 Luis chose:
