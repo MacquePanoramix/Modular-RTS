@@ -6,8 +6,8 @@ namespace WonderGather
 {
     // A look at the miners at work with real weight (S3: Docs/Design/ThePhysicalBody.md), in play. With K a plain block
     // of rock stands before the chosen miner, and it swings the pickaxe made for it down on the block, by its own
-    // strength: the pickaxe is a real body, the arms and the back give what they can, and they tire (PhysicalHands,
-    // PhysicalBack, PhysicalSwing). The comma and the full stop make the miner weaker and stronger; minus and equals
+    // strength: the pickaxe is a real body, the arms and the back give what they can, they tire, and the body keeps its
+    // own balance (PhysicalHands, PhysicalBack, PhysicalBalance, PhysicalSwing). The comma and the full stop make the miner weaker and stronger; minus and equals
     // make its pickaxe lighter and heavier. K again (or walking away, or choosing another miner) puts the block and
     // the pickaxe away.
     //
@@ -22,6 +22,7 @@ namespace WonderGather
         private PhysicalBody physical;
         private PhysicalHands hands;
         private PhysicalBack back;
+        private PhysicalBalance balance;
         private PhysicalSwing swing;
         private GameObject rock;
         private Coroutine setting;
@@ -142,6 +143,7 @@ namespace WonderGather
             physical.Refresh();
             hands = unit.gameObject.AddComponent<PhysicalHands>();
             back = unit.gameObject.AddComponent<PhysicalBack>();
+            balance = unit.gameObject.AddComponent<PhysicalBalance>();
             swing = unit.gameObject.AddComponent<PhysicalSwing>();
             swing.hands = hands; swing.back = back; swing.body = biped; swing.tool = body.Pickaxe;
             setting = StartCoroutine(Set(unit, body.Pickaxe));
@@ -150,8 +152,9 @@ namespace WonderGather
         // The miner bows to its work; the block is put under where the pick's head then rests; it takes up the pickaxe.
         private IEnumerator Set(SelectableUnit unit, ToolDefinition pickaxe)
         {
+            balance.Brace(PhysicalSwing.StanceWider, PhysicalSwing.StanceStagger);
             back.Want(PhysicalSwing.RestBow);
-            yield return new WaitForSeconds(.7f);
+            yield return new WaitForSeconds(1.3f);
             if (working != unit || swing == null) yield break;
             swing.Intend(PhysicalSwing.Rest, out var at, out var turned);
             Vector3 rests = at + turned * pickaxe.Head;
@@ -183,11 +186,12 @@ namespace WonderGather
             }
             if (swing != null) Destroy(swing);
             if (back != null) Destroy(back);
+            if (balance != null) Destroy(balance);
             if (hands != null) Destroy(hands);
             if (rock != null) Destroy(rock);
             if (working != null && working.TryGetComponent<ProceduralBiped>(out var biped)) { biped.Bow(0); biped.Sink(0); biped.SetBack(0); }
             if (physical != null) { physical.Strength = 1; physical.Refresh(); }
-            working = null; physical = null; hands = null; back = null; swing = null; rock = null;
+            working = null; physical = null; hands = null; back = null; balance = null; swing = null; rock = null;
         }
 
         private void OnGUI()

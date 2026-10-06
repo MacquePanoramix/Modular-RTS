@@ -48,6 +48,11 @@ namespace WonderGather.Tests
             // 270: its left) and above level.
             float[] view = Numbers("-benchView", 100, 8);
             int frames = (int)Numbers("-benchFrames", 0)[0];
+            // -benchBalance measure|on: the miner keeps its own balance (or only measures it).
+            // -benchPull newtons,degrees,from,for: something pulls it at the chest, that hard, that way round it
+            // (0: forwards, 90: to its right), from so many seconds after it begins, for so many seconds.
+            string balancing = CaptureTools.Argument("-benchBalance");
+            float[] pull = Numbers("-benchPull", 0, 0, 0, 0);
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
             yield return null;
@@ -100,9 +105,17 @@ namespace WonderGather.Tests
                     var swing = unit.gameObject.AddComponent<PhysicalSwing>();
                     var back = unit.gameObject.AddComponent<PhysicalBack>();
                     swing.hands = hands; swing.back = back; swing.body = biped; swing.tool = definition;
+                    PhysicalBalance balance = null;
+                    if (balancing != null)
+                    {
+                        balance = unit.gameObject.AddComponent<PhysicalBalance>();
+                        balance.Acts = balancing != "measure";
+                        if (balancing != "unbraced") balance.Brace(PhysicalSwing.StanceWider, PhysicalSwing.StanceStagger);
+                    }
+                    Vector3 across = Vector3.Cross(Vector3.up, away);
                     // It bows to its work first, and the block is put under where the pick's head then rests.
                     back.Want(PhysicalSwing.RestBow);
-                    for (float until = Time.time + .6f; Time.time < until;) yield return null;
+                    for (float until = Time.time + (balance != null ? 1.3f : .6f); Time.time < until;) yield return null;
                     swing.Intend(PhysicalSwing.Rest, out var at, out var turned);
                     // A block under where the pick's head rests: what the swing comes down on. Aimed, the block's top
                     // is at a height of its own, as far ahead, and the body takes the stance that reaches it.
@@ -137,6 +150,7 @@ namespace WonderGather.Tests
                     string when = "";
                     int shot = 0, wanted = swings, frame = 0;
                     physical.Refresh();
+                    if (balance != null) balance.Mark();
                     float began = Time.time;
                     if (CaptureTools.Argument("-benchTrace") != null) swing.trace = new List<string>();
                     Debug.Log(string.Format(culture, "BENCH {0}: the block's top is {1:0.000} m up, its middle {2:0.000} m ahead, {3:0.00} m across", who, top - unit.transform.position.y,
@@ -147,6 +161,11 @@ namespace WonderGather.Tests
                     after.Then = () =>
                     {
                         if (hands.Held == null) return;
+                        if (balance != null && pull[0] > 0 && Time.time - began >= pull[2] && Time.time - began < pull[2] + pull[3])
+                        {
+                            // It comes on over a third of a second, and is given at every step of the physics until the
+                            // next frame.
+                        }
                         for (int hand = 0; hand < 2; hand++)
                         {
                             if (hands.Miss(hand) <= miss) continue;
@@ -163,6 +182,23 @@ namespace WonderGather.Tests
                             dir = dir * Mathf.Cos(view[1] * Mathf.Deg2Rad) + Vector3.up * Mathf.Sin(view[1] * Mathf.Deg2Rad);
                             camera.transform.SetPositionAndRotation(target + dir * 3f, Quaternion.LookRotation(-dir));
                             CaptureTools.Render(camera, Path.Combine(folder, $"{tag}_{shot:000}"), 360, 360);
+                            if (balance != null)
+                            {
+                                // What it stands on and where its weight is, from above, in its own first place's frame
+                                // (to its right, ahead), for a drawing beside the picture.
+                                var line = new System.Text.StringBuilder();
+                                line.AppendFormat(culture, "BALANCE {0} {1:000}:", tag, shot);
+                                for (int f = 0; f < 2; f++)
+                                {
+                                    biped.Sole(f, out Vector3 heel, out Vector3 toe, out float half);
+                                    line.AppendFormat(culture, " {0} {1:0.000} {2:0.000} {3:0.000} {4:0.000} {5:0.000}", biped.FootPlanted(f) ? 1 : 0,
+                                        Vector3.Dot(heel - spot, across), Vector3.Dot(heel - spot, away), Vector3.Dot(toe - spot, across), Vector3.Dot(toe - spot, away), half);
+                                }
+                                foreach (var at in new[] { balance.Weight, balance.WeightPoint, balance.Presses, biped.HipsNow })
+                                    line.AppendFormat(culture, " {0:0.000} {1:0.000}", Vector3.Dot(at - spot, across), Vector3.Dot(at - spot, away));
+                                line.AppendFormat(culture, " {0:0.000} {1}", balance.Margin, swing.phase);
+                                Debug.Log(line.ToString());
+                            }
                             shot++;
                         }
                     };
@@ -183,6 +219,10 @@ namespace WonderGather.Tests
                     Debug.Log(string.Format(culture, "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: {3} swings in {4:0.0} s; hands at most {5:0.0} mm off the handle ({11}); the tool leaned at most {6:0} degrees aside; shoulder {7:0} Nm, elbow {8:0} Nm, wrist {9:0.0} Nm, hold {10:0} N",
                         who, strength, carried, swing.results.Count, Time.time - began, miss * 1000, tilt, physical.ShoulderCapacity, physical.ElbowCapacity, physical.WristCapacity, physical.HoldCapacity, when));
                     PhysicalHands.Timed = false;
+                    if (balance != null)
+                        Debug.Log(string.Format(culture, "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: balance ({6}): its weight's point came no nearer the edge of its feet than {3:0} mm (negative: outside them); its hips leaned {4:0} mm at most; it took {5} steps to catch itself; its feet bear {7:0} N; its legs are {8:0}% spent and gave way {9:0} mm",
+                            who, strength, carried, balance.LeastMargin * 1000, balance.MostLean * 1000, balance.Steps, balance.Acts ? "acting" : "measuring", balance.Bears,
+                            physical.Spent(PhysicalBody.Muscles.Legs) * 100, balance.GaveWay * 1000));
                     Debug.Log(string.Format(culture, "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: rested {3} times; at the end its arms are {4:0}% and {5:0}% spent, its back {6:0}%",
                         who, strength, hands.ToolMass, swing.rests, physical.Spent(PhysicalBody.Muscles.LeftArm) * 100, physical.Spent(PhysicalBody.Muscles.RightArm) * 100, physical.Spent(PhysicalBody.Muscles.Back) * 100));
                     if (PhysicalHands.TimedSteps > 0)
@@ -194,6 +234,7 @@ namespace WonderGather.Tests
                     UnityEngine.Object.Destroy(hands);
                     UnityEngine.Object.Destroy(rock);
                     UnityEngine.Object.Destroy(back);
+                    if (balance != null) UnityEngine.Object.Destroy(balance);
                     biped.Sink(0);
                     physical.Strength = 1;
                     for (float until = Time.time + .1f; Time.time < until;) yield return null;

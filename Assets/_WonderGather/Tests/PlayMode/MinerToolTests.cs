@@ -110,6 +110,7 @@ namespace WonderGather.Tests
                 Assert.That(unit.GetComponent<PhysicalHands>(), Is.Null, name + " kept its hands' work after the look.");
                 Assert.That(unit.GetComponent<PhysicalSwing>(), Is.Null, name + " kept a swing after the look.");
                 Assert.That(unit.GetComponent<PhysicalBack>(), Is.Null, name + " kept its back's work after the look.");
+                Assert.That(unit.GetComponent<PhysicalBalance>(), Is.Null, name + " kept its balance's work after the look.");
                 Assert.That(physical.Strength, Is.EqualTo(1).Within(1e-4f), name + " was left stronger or weaker than it was.");
                 Assert.That(Object.FindObjectsByType<HeldThing>(FindObjectsSortMode.None).Length, Is.EqualTo(0), "The pickaxe was left behind.");
                 Assert.That(GameObject.Find("Block (a look at the work)"), Is.Null, "The block was left behind.");

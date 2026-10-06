@@ -88,6 +88,14 @@ namespace WonderGather
         public float Effort(int hand) => effort[hand];
         // What this hand pushed the object with at the last step, in newtons.
         public Vector3 Push(int hand) => push[hand];
+        // All this arm gave the object at the last step: its push, and what the arm's own length held it back with
+        // (an object hanging from a straight arm is held by the arm's bones, not by a push).
+        public Vector3 Gives(int hand) => held != null && on[hand] ? push[hand] + (links[hand] != null ? links[hand].currentForce * LinkGives : Vector3.zero) : Vector3.zero;
+        // The engine reports a link's force as it acts on the object (measured: a weight hanging from such a link
+        // reports its own weight, upwards).
+        private const float LinkGives = 1;
+        // The arm's own mass that rides on the handle with this hand, in kilograms.
+        public float Rides(int hand) => held != null && on[hand] ? rides[hand] : 0;
         // How far the hand's own hold was from the place it holds on the handle, when last drawn.
         public float Miss(int hand) => miss[hand];
         public Vector3 HeadPosition => held != null ? held.position + held.rotation * tool.Head : transform.position;

@@ -30,6 +30,9 @@ namespace WonderGather
         // An ordinary back holds up about this many times its own upper body bent level (a grown person's upper body
         // bent level asks about 130 N m of a back that can give about 300).
         private const float BackHolds = 2.4f;
+        // An ordinary grown person's leg, as the models measure a limb, and what its knee can give at most, in newton
+        // metres. A first setting, like the arm's.
+        private const float LegReference = .06f, KneeReference = 200;
 
         [SerializeField] private Part[] parts = new Part[0];
         // The arms' parts (upper arm, forearm, hand; left then right), as indices into parts.
@@ -76,8 +79,32 @@ namespace WonderGather
         }
         // Fresh again, at once (a new day, a new try).
         public void Refresh() => Array.Clear(spent, 0, spent.Length);
+        // Where this body carries its weight when it stands at ease, as a share of the way from its heels to its
+        // toes: its own way of standing, measured the first time it has stood still for a moment with nothing asked
+        // of it. NaN until then.
+        public float StandsOn { get; private set; } = float.NaN;
+        private ProceduralBiped stance;
+        private int stood;
+
+        private void MeasureStance()
+        {
+            if (stance == null && !TryGetComponent(out stance)) return;
+            bool still = stance.Ready && stance.CurrentGait == ProceduralBiped.Gait.Standing && stance.FootPlanted(0) && stance.FootPlanted(1)
+                && Mathf.Abs(stance.BowNow) < .5f && stance.LeanNow.sqrMagnitude < 1e-8f && stance.SinkNow < .001f && !stance.Guided;
+            stood = still ? stood + 1 : 0;
+            if (stood < 15) return;
+            stance.Sole(0, out Vector3 leftHeel, out Vector3 leftToe, out _);
+            stance.Sole(1, out Vector3 rightHeel, out Vector3 rightToe, out _);
+            Vector3 heels = (leftHeel + rightHeel) * .5f, along = (leftToe + rightToe) * .5f - heels;
+            along.y = 0;
+            Vector3 from = CentreOfMass() - heels;
+            from.y = 0;
+            StandsOn = Mathf.Clamp(Vector3.Dot(from, along) / Mathf.Max(1e-6f, along.sqrMagnitude), .15f, .65f);
+        }
+
         private void FixedUpdate()
         {
+            if (float.IsNaN(StandsOn) && Ready) MeasureStance();
             // Muscles nothing worked at the last step are resting.
             for (int i = 0; i < spent.Length; i++)
             {
@@ -137,6 +164,9 @@ namespace WonderGather
         public float ElbowCapacity => ElbowReference * Build * strength;
         public float WristCapacity => WristReference * Build * strength;
         public float HoldCapacity => HoldReference * Mathf.Pow(armRadius / ArmReference, 2) * strength;
+        // The most a knee gives, in newton metres: fresh, and now.
+        public float KneeCapacity => KneeReference * Mathf.Pow(legRadius / LegReference, 3) * strength;
+        public float KneeNow => KneeCapacity * Fresh(Muscles.Legs);
         // What an arm's joints give now, as tired as that arm is.
         public float ShoulderOf(int side) => ShoulderCapacity * Fresh(Arm(side));
         public float ElbowOf(int side) => ElbowCapacity * Fresh(Arm(side));

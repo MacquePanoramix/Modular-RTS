@@ -26,6 +26,7 @@ namespace WonderGather
         private ProceduralBiped body;
         private PhysicalBody physical;
         private PhysicalHands hands;
+        private PhysicalBalance balance;
         private float wanted, angle, rate;
         private bool began;
 
@@ -48,6 +49,7 @@ namespace WonderGather
         private void OnDisable()
         {
             if (body == null) return;
+            body.BowIs(float.NaN);
             body.Bow(0);
             body.SetBack(0);
         }
@@ -56,6 +58,7 @@ namespace WonderGather
         {
             if (!physical.Ready || !body.Ready) return;
             if (hands == null) hands = GetComponent<PhysicalHands>();
+            if (balance == null) balance = GetComponent<PhysicalBalance>();
             if (!began) { angle = body.BowNow; rate = 0; began = true; }
             float dt = Time.fixedDeltaTime;
             Span<Vector3> unused = stackalloc Vector3[4];
@@ -83,8 +86,10 @@ namespace WonderGather
             angle += rate * dt;
             if (angle < -15) { angle = -15; rate = Mathf.Max(rate, 0); }
             if (angle > 60) { angle = 60; rate = Mathf.Min(rate, 0); }
-            // The body is drawn between the steps: it goes on to where the bow will be at the next one.
+            // The body is drawn between the steps: it goes on to where the bow will be at the next one. What works on
+            // the physics' clock is told where the bow is now.
             body.Bow(angle + rate * dt, Mathf.Abs(rate) + 30);
+            body.BowIs(angle);
 
             // Its weight over its feet: the hips go back by a share of how far ahead of the feet the weight stands.
             Vector3 weight = physical.CentreOfMass() * physical.Mass;
@@ -94,7 +99,9 @@ namespace WonderGather
             Vector3 forward = Vector3.ProjectOnPlane(posture * Vector3.forward, Vector3.up).normalized;
             // The middle of a foot is ahead of its ankle: that is where the weight is carried best.
             Ahead = Vector3.Dot(weight / total - feet, forward) - body.FootMiddle;
-            body.SetBack(body.BackWanted + Ahead * Settles);
+            // A body that keeps its own balance (PhysicalBalance) moves its hips by that.
+            if (balance == null || !balance.isActiveAndEnabled || !balance.Acts) body.SetBack(body.BackWanted + Ahead * Settles);
+            else body.SetBack(0);
         }
     }
 }

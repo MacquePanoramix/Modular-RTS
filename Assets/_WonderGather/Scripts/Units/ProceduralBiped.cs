@@ -139,6 +139,8 @@ namespace WonderGather
             public Quaternion rotation,fromRotation,toRotation;
             public float progress,rate,clearance,pitch,liftPitch,toeBend,lastPhase;
             public bool swinging,gaitSwing,liftedThisCycle;
+            // It goes to a place of the body's own choosing (StepTo), not to where the stance would have it.
+            public bool own;
             // Which side of the standing boot this swing bows round (0 until it needs to).
             public float bow;
         }
@@ -153,6 +155,7 @@ namespace WonderGather
         private IArmGuide guide;
         // Set by what guides the arms when it begins and ends.
         public void GuideArms(IArmGuide value)=>guide=value;
+        public bool Guided=>guide!=null;
         // How the body stood when it was last posed: for what works on the physics' own clock.
         private Vector3 hipsNow;
         private Quaternion postureNow=Quaternion.identity;
@@ -167,8 +170,28 @@ namespace WonderGather
         private Quaternion postureBefore=Quaternion.identity;
         private readonly Vector3[] shoulderBefore=new Vector3[2],elbowBefore=new Vector3[2];
         private float posedAt=-1,posedBefore=-1;
+        // What moves the body on the physics' own clock says where it has it now (the back its bow, in degrees; the
+        // balance its lean, in metres to the right and ahead). The body as it was last drawn, moved by what they have
+        // done since, is then how it stands at this step, whatever the frame rate. NaN: nothing says.
+        private float bowIs=float.NaN,bowPosed;
+        private Vector2 leanIs=new Vector2(float.NaN,0);
+        public void BowIs(float degrees)=>bowIs=degrees;
+        public void LeanIs(Vector2 metres)=>leanIs=metres;
         public void StandsAt(float time,out Vector3 hips,out Quaternion posture,System.Span<Vector3> shoulders,System.Span<Vector3> elbows)
         {
+            bool bowKnown=!float.IsNaN(bowIs),leanKnown=!float.IsNaN(leanIs.x);
+            if(bowKnown||leanKnown)
+            {
+                Vector3 shift=leanKnown?facing*new Vector3(leanIs.x-leanPosed.x,0,leanIs.y-leanPosed.y):Vector3.zero;
+                Quaternion turn=bowKnown?Quaternion.AngleAxis(bowIs-bowPosed,postureNow*Vector3.right):Quaternion.identity;
+                hips=hipsNow+shift;posture=turn*postureNow;
+                for(int i=0;i<2;i++)
+                {
+                    shoulders[i]=hips+turn*(shoulderNow[i]-hipsNow);
+                    elbows[i]=hips+turn*(elbowNow[i]-hipsNow);
+                }
+                return;
+            }
             float span=posedAt-posedBefore;
             float on=posedBefore>=0&&span>1e-6f?Mathf.Clamp((time-posedAt)/span,0,4):0;
             hips=hipsNow+(hipsNow-hipsBefore)*on;
@@ -197,6 +220,110 @@ namespace WonderGather
         public float BackNow=>back;
         public float SinkNow=>sink;
         public float StandingHipHeight=>HipHeight;
+        // The body's lean: how far its hips stand from where its stance alone would put them, to its right (x) and
+        // ahead (y), as its balance says (PhysicalBalance). The balance moves on the physics' clock and the body is
+        // drawn between its steps, so it goes there at a pace it is given. The hips go no further than the legs
+        // allow: these shares of the hips' height.
+        public const float LeanAside=.16f,LeanBack=.28f,LeanAhead=.1f;
+        private Vector2 leanWanted,lean;
+        private float leanPace=1;
+        public void SetLean(Vector2 metres,float pace)
+        {
+            leanWanted=new Vector2(Mathf.Clamp(metres.x,-LeanAside*HipHeight,LeanAside*HipHeight),Mathf.Clamp(metres.y,-LeanBack*HipHeight,LeanAhead*HipHeight));
+            leanPace=Mathf.Max(.01f,pace);
+        }
+        public Vector2 LeanNow=>lean;
+        // The lean the body was last drawn with.
+        private Vector2 leanPosed;
+        public Vector2 LeanPosed=>leanPosed;
+        public Quaternion FacingNow=>facing;
+        // When the body was last posed.
+        public float PosedAt=>posedAt;
+        // The stance: how much further apart than the hips the feet stand (each side), and how far the left foot
+        // stands ahead of the right. The feet step to it, one at a time.
+        private float stanceWider,stanceStagger;
+        private bool stanceDue;
+        public void SetStance(float wider,float stagger)
+        {
+            // No further apart than the legs span.
+            wider=Mathf.Clamp(wider,0,Mathf.Max(0,.5f*HipHeight-HipWidth));stagger=Mathf.Clamp(stagger,-HipHeight,HipHeight);
+            if(Mathf.Abs(wider-stanceWider)<.005f&&Mathf.Abs(stagger-stanceStagger)<.005f) return;
+            stanceWider=wider;stanceStagger=stagger;stanceDue=true;
+        }
+        public float StanceWider=>stanceWider;
+        public float StanceStagger=>stanceStagger;
+        // The feet are where the stance asked for has them.
+        public bool StanceTaken=>!stanceDue&&!support[0].swinging&&!support[1].swinging;
+        // A foot is due to step to its place in the stance, and waits for the body's weight to be off it: what keeps
+        // the body's balance says when it may lift (PhysicalBalance). -1: none waits.
+        public System.Func<int,bool> MayLift;
+        private int liftDue=-1;
+        public int LiftDue=>liftDue;
+        // The middle of the stance: where the body stands between its feet's own places.
+        public Vector3 StanceMiddle=>transform.position+facing*new Vector3(0,0,.02f);
+        // The body inclines as a whole against what loads it (PhysicalBalance): to its right (x) and forwards (y), in
+        // degrees, at a pace.
+        private Vector2 tiltWanted,tilt;
+        private float tiltPace=40;
+        public void SetTilt(Vector2 degrees,float pace){tiltWanted=Vector2.ClampMagnitude(degrees,15);tiltPace=Mathf.Max(1,pace);}
+        // Braced, the knees bend: the hips sink by so much more, whatever else asks them to sink.
+        private float crouchWanted,crouch;
+        public void Crouch(float metres)=>crouchWanted=Mathf.Clamp(metres,0,.3f*HipHeight);
+        // How far each knee stands out from the line between its hip and its ankle, in metres (how bent the leg is);
+        // and how far it stands out when the leg is as straight as it goes.
+        private readonly float[] kneeOut=new float[2];
+        public float KneeOut(int index)=>kneeOut[index];
+        public float KneeOutStraight=>Mathf.Sqrt(Mathf.Max(0,P.legSegment*P.legSegment-LegReach*LegReach*.25f));
+        // How fast the hips rise, as a share of their own pace: the legs' own strength says (PhysicalBalance).
+        private float rises=1;
+        public void SetRise(float share)=>rises=Mathf.Clamp01(share);
+        // A boot's line on the ground, from heel to toe, and half its width: what the body stands on.
+        public void Sole(int index,out Vector3 heel,out Vector3 toe,out float halfWidth)
+        {
+            var foot=support[index];
+            Vector3 ahead=foot.rotation*Vector3.forward;
+            heel=foot.position-ahead*HeelLength;toe=foot.position+ahead*(BallLength+ToeLength);halfWidth=BootHalfWidth;
+        }
+        // Where a foot stands when the body stands as its stance has it.
+        public Vector3 FootHome(int index)=>Home(index);
+        // A step taken at once to a place of the body's own choosing (to catch its balance): the foot goes there in
+        // the time given, and stays there. Only from standing on both feet.
+        public bool StepTo(int index,Vector3 point,float duration,out Vector3 lands)
+        {
+            lands=point;
+            if(!initialized||CurrentGait!=Gait.Standing||stopping||support[0].swinging||support[1].swinging) return false;
+            // It never lands on the standing boot: where it would, it lands clear of it.
+            var other=support[1-index];
+            Quaternion landing=SoleRotation(Vector3.up);
+            if(BootGap(point,landing,other.position,other.rotation,out var away)<BootRoom)
+            {
+                Vector3 side=facing*new Vector3(index==0?-1:1,0,0);
+                float straight=away!=Vector3.zero?StepClear(point,landing,other,away,BootRoom):-1,aside=StepClear(point,landing,other,side,BootRoom);
+                if(straight>=0&&(aside<0||straight<=aside)) point+=away*straight;
+                else if(aside>=0) point+=side*aside;
+            }
+            if(!Ground(point,out var ground,out var normal)||Mathf.Abs(ground.y-transform.position.y)>.8f) return false;
+            var foot=support[index];
+            Lift(index,false);
+            foot.own=true;foot.to=ground;foot.toNormal=normal;foot.toRotation=SoleRotation(normal);
+            foot.rate=1/Mathf.Clamp(duration,.12f,.6f);foot.clearance=.09f*HipHeight;
+            lands=ground;
+            return true;
+        }
+        // The root goes where the body's balance takes it (a step taken to catch itself). This is not walking, and
+        // starts no gait. The hips stay where they are: the lean takes up what the root gave.
+        public Vector3 Shift(Vector3 delta)
+        {
+            delta.y=0;
+            Vector3 before=transform.position;
+            if(agent!=null&&agent.isActiveAndEnabled&&agent.isOnNavMesh) agent.Move(delta);else transform.position+=delta;
+            Vector3 moved=transform.position-before;
+            previousPosition+=moved;
+            Vector3 local=Quaternion.Inverse(facing)*moved;
+            var took=new Vector2(local.x,local.z);
+            lean-=took;leanWanted-=took;
+            return moved;
+        }
         // How far ahead of where a foot is placed its middle is: where it carries weight best.
         public float FootMiddle=>(BallLength+ToeLength-HeelLength)*.5f;
         public Vector3 ElbowNow(int index)=>elbowNow[index];
@@ -257,7 +384,9 @@ namespace WonderGather
         }
         private static bool Pair(Transform[] values)=>values!=null&&values.Length==2&&values[0]!=null&&values[1]!=null;
         private bool RigValid=>pelvis!=null&&torso!=null&&head!=null&&Pair(thighs)&&Pair(shins)&&Pair(feet)&&Pair(upperArms)&&Pair(forearms);
-        private Vector3 Home(int index)=>transform.position+facing*new Vector3(index==0?-HipWidth:HipWidth,0,.02f);
+        private Vector3 Home(int index)=>transform.position+facing*new Vector3(index==0?-HipWidth-stanceWider:HipWidth+stanceWider,0,.02f+(index==0?.5f:-.5f)*stanceStagger);
+        // Where a hip stands over the ground when the body stands upright where it is.
+        private Vector3 HipOver(int index)=>transform.position+facing*new Vector3(index==0?-HipWidth:HipWidth,0,.02f);
         private bool Ground(Vector3 point,out Vector3 position,out Vector3 normal)
         {
             if(Physics.Raycast(point+Vector3.up*3,Vector3.down,out var hit,6,groundMask,QueryTriggerInteraction.Ignore)&&hit.normal.y>.65f)
@@ -381,6 +510,7 @@ namespace WonderGather
         private void UpdateFeet(float dt)
         {
             bool gaitActive=CurrentGait!=Gait.Standing&&!stopping;
+            liftDue=-1;
             for(int i=0;i<2;i++)
             {
                 var foot=support[i];
@@ -441,7 +571,7 @@ namespace WonderGather
         private void Lift(int index,bool gaitSwing)
         {
             var foot=support[index];
-            foot.swinging=true;foot.gaitSwing=gaitSwing;foot.progress=0;foot.liftedThisCycle=true;foot.bow=0;
+            foot.swinging=true;foot.gaitSwing=gaitSwing;foot.progress=0;foot.liftedThisCycle=true;foot.bow=0;foot.own=false;
             foot.from=foot.to=foot.position;foot.fromNormal=foot.toNormal=foot.normal;foot.fromRotation=foot.toRotation=foot.rotation;
             foot.liftPitch=foot.pitch;
             foot.clearance=gaitSwing?footLift*Mathf.Lerp(.55f,.9f,jogWeight):.05f;
@@ -450,6 +580,7 @@ namespace WonderGather
         private void Retarget(int index)
         {
             var foot=support[index];
+            if(foot.own) return;
             Vector3 point=Home(index);
             if(foot.gaitSwing&&CurrentGait!=Gait.Standing&&!stopping)
             {
@@ -587,7 +718,7 @@ namespace WonderGather
         private void Land(int index)
         {
             var foot=support[index];
-            foot.swinging=false;foot.progress=0;
+            foot.swinging=false;foot.progress=0;foot.own=false;
             foot.position=foot.to;foot.normal=foot.toNormal;foot.rotation=foot.toRotation;
             if(!foot.gaitSwing) foot.pitch=0;
             foot.gaitSwing=false;nextFoot=1-index;StepCount++;
@@ -598,14 +729,19 @@ namespace WonderGather
         private void Settle()
         {
             bool narrow=StanceNarrow();
+            // A stance that was asked for is taken exactly; one that is only held tolerates drift.
+            float tolerance=stanceDue?SettleTolerance*.12f:SettleTolerance;
             for(int order=0;order<2;order++)
             {
                 int i=(nextFoot+order)%2;var foot=support[i];
-                if(HomeError(i)<SettleTolerance&&Turn(i)<40&&!narrow) continue;
+                if(HomeError(i)<tolerance&&Turn(i)<40&&!narrow) continue;
                 if(!Ground(Home(i),out var point,out var normal)||Mathf.Abs(point.y-transform.position.y)>.8f) return;
+                // The body's weight comes off a foot before it lifts.
+                if(MayLift!=null&&!MayLift(i)){liftDue=i;return;}
                 Lift(i,false);foot.to=point;foot.toNormal=normal;foot.toRotation=SoleRotation(normal);
                 return;
             }
+            stanceDue=false;
         }
         // The rendered foot pitches about its heel (toe up) or its ball (heel up).
         private Vector3 FootPoint(Foot foot,Vector3 local)
@@ -678,7 +814,7 @@ namespace WonderGather
             for(int i=0;i<2;i++)
             {
                 if(support[i].swinging) continue;
-                Vector3 hip=Home(i),ankle=support[i].ankle;
+                Vector3 hip=HipOver(i),ankle=support[i].ankle;
                 float horizontal=Vector3.ProjectOnPlane(hip-ankle,Vector3.up).sqrMagnitude;
                 horizontalOverreach|=horizontal>LegReach*LegReach;
                 height=Mathf.Min(height,ankle.y+Mathf.Sqrt(Mathf.Max(.01f,LegReach*LegReach-horizontal)));
@@ -694,8 +830,12 @@ namespace WonderGather
             if(equipment!=null && equipment.Busy) pitch+=Mathf.Sin(equipment.Progress*Mathf.PI)*4;
             bow=dt>0?Mathf.MoveTowards(bow,bowWanted,bowPace*dt):bowWanted;
             back=dt>0?Mathf.MoveTowards(back,backWanted,BackPace*dt):backWanted;
-            sink=dt>0?Mathf.MoveTowards(sink,sinkWanted,SinkPace*dt):sinkWanted;
-            pitch+=bow;
+            sink=dt>0?Mathf.MoveTowards(sink,sinkWanted,SinkPace*(sinkWanted<sink?rises:1)*dt):sinkWanted;
+            lean=dt>0?Vector2.MoveTowards(lean,leanWanted,leanPace*dt):leanWanted;
+            leanPosed=lean;bowPosed=bow;
+            tilt=dt>0?Vector2.MoveTowards(tilt,tiltWanted,tiltPace*dt):tiltWanted;
+            crouch=dt>0?Mathf.MoveTowards(crouch,crouchWanted,SinkPace*.5f*(crouchWanted<crouch?rises:1)*dt):crouchWanted;
+            pitch+=bow+tilt.y;roll-=tilt.x;
             // posture: the steady body frame used by tools and carried loads.
             Quaternion posture=facing*Quaternion.Euler(pitch,0,roll);
             Quaternion hipFrame=posture*Quaternion.Euler(0,yaw,list);
@@ -703,7 +843,7 @@ namespace WonderGather
             // pelvisY is the smoothed target height. The reach projection is solved from it every
             // frame and never written back: feeding the projected height into the next target
             // ratchets the pelvis toward the ground whenever both feet are out of reach.
-            Vector3 hips=ReachableHips(transform.position+facing*new Vector3(sway,0,-back)+Vector3.up*(pelvisY-transform.position.y-sink));
+            Vector3 hips=ReachableHips(transform.position+facing*new Vector3(sway+lean.x,0,lean.y-back)+Vector3.up*(pelvisY-transform.position.y-sink-crouch));
             // When support passes to a foot that allows a higher pelvis, rise smoothly. This filters
             // the output only; lowering stays immediate so planted legs always reach.
             float lift=hips.y-transform.position.y;
@@ -752,7 +892,8 @@ namespace WonderGather
                 }
                 Vector3 axis=(ankle-hip).normalized;float distance=Mathf.Min(Vector3.Distance(hip,ankle),LegLimit);
                 Vector3 bend=Vector3.ProjectOnPlane(hipFrame*Vector3.forward,axis).normalized;
-                Vector3 knee=(hip+ankle)*.5f+bend*Mathf.Sqrt(Mathf.Max(0,P.legSegment*P.legSegment-distance*distance*.25f));
+                kneeOut[i]=Mathf.Sqrt(Mathf.Max(0,P.legSegment*P.legSegment-distance*distance*.25f));
+                Vector3 knee=(hip+ankle)*.5f+bend*kneeOut[i];
                 Segment(thighs[i],hip,knee,.19f*P.scale);Segment(shins[i],knee,ankle,.15f*P.scale);
                 // Each arm swings against its own leg: back as that foot reaches forward.
                 float carryOut=i==0?P.armCarry.x:P.armCarry.y,swingSide=i==0?P.armSwingSide.x:P.armSwingSide.y;
