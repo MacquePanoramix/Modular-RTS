@@ -26,6 +26,9 @@ namespace WonderGather
         {
             if (!Environment.GetCommandLineArgs().Contains("-wgcrowd") || miners == null || miners.Length == 0) { enabled = false; return; }
             random = new System.Random(7);
+            // The game pauses when its window is not in front. A measurement must not: it would wait for as long
+            // as someone is using the computer for anything else.
+            Application.runInBackground = true;
             StartCoroutine(Run());
         }
 

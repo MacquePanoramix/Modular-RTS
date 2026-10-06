@@ -127,11 +127,30 @@ miner walking between random places in the meadow:
 
 A hundred miners add about 2.1 ms: about 0.02 ms each. (Measured again on October 4, with the hanging things and the skirts' flaps.)
 
-- **Levels of detail:** about 17,400, 5,000 and 1,600 triangles per miner.
+**With the finger bones (measured October 6).** The computer was in use and
+the game's window in the background, so every figure is higher than the
+table above and the two are not comparable. The builds without and with the
+finger bones were measured one after the other, twice each (means, the 95th
+percentile in brackets):
+
+| Miners walking | Without finger bones: strategy view | close view | With finger bones: strategy view | close view |
+|---|---|---|---|---|
+| 0 | 5.46 (6.64) | 5.22 (6.04) | 5.46 (6.79) | 5.19 (5.95) |
+| 25 | 6.30 (8.81) | 5.85 (8.07) | 6.32 (8.98) | 5.83 (7.93) |
+| 50 | 6.76 (9.34) | 6.64 (9.04) | 7.00 (9.51) | 6.61 (8.98) |
+| 100 | 7.97 (10.00) | 7.70 (9.40) | 8.16 (10.00) | 7.72 (9.51) |
+
+A hundred miners add about 2.5 ms without the finger bones and about 2.6 ms
+with them: no more than two runs of the same build differ by.
+
+- **Levels of detail:** about 18,300 (Small, Long) or 19,600 (Round), then
+  5,000 and 1,600 triangles per miner. A hand that closes keeps 1,600
+  triangles at the nearest level.
 - **Materials:** one painted material and one texture (2048²) each, plus
   the outline on the nearer two levels.
-- **Bones:** 25 for Small, 24 for Long and Round: the body's 19, one for each
-  hanging thing, and four for the skirt's flaps.
+- **Bones:** 40 for Small, 39 for Long, 54 for Round: the body's 19, one for
+  each hanging thing, four for the skirt's flaps, and fifteen for each hand
+  that closes.
 
 The benchmark is in the build: run it with `-wgcrowd`. It writes
 `miner-crowd-benchmark.csv` beside the player log.
@@ -153,8 +172,10 @@ The benchmark is in the build: run it with `-wgcrowd`. It writes
 - **Mining.** The miners walk in the Ordinary Place. Mining and hauling with a
   pickaxe (the equipment scene) still use the 2.2 m test body; the tool's
   grips are sized for it.
-- **Fixed hands and faces.** Hands keep one relaxed shape, and faces one
-  expression.
+- **Hands at work, and faces.** The free hands can close on a handle
+  (October 5, [TheMiners.md](../ArtDirection/TheMiners.md#hands-that-close-october-5)),
+  but nothing puts a tool in them yet, so in play they keep their relaxed
+  shape. Faces keep one expression.
 - **Not watched by eye.** Turning on the spot and jogging were not checked
   this way.
 - **Other hardware.** Only the RTX 4060 Laptop was tried.

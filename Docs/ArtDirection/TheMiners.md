@@ -2,6 +2,10 @@
 
 **Made:** October 2, 2026; polished October 3 and 4.
 **Status:**
+- **Hands that close** (October 5): the free hands close round a handle of
+  any thickness from 12 to 44 mm, and open again
+  ([below](#hands-that-close-october-5)). One question for Luis came out of
+  it: [how Long stands in the game](#for-luis-how-long-stands-in-the-game).
 - **The sweep of extreme poses** (October 5) is built. It found nothing in
   the poses the game uses; what it found beyond them is logged
   ([below](#the-sweep-of-extreme-poses-october-5)).
@@ -63,6 +67,109 @@ mean I kinda prefered the before for this one"
   garment's neckline all the way round.
 
   ![Round's neckband from the front, the side and behind: before, and now](../Images/Miners/Method2_Neckband.jpg)
+
+## Hands that close (October 5)
+
+The second step of [the miners at work](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices): a free hand closes round a
+handle and opens again.
+
+![Round's right hand: at rest, open, and closed on two handles](../Images/Miners/Hands_Closing.jpg)
+
+- **Which hands.** Small's right, Long's right and both of Round's. A hand
+  that carries something (Small's lantern, Long's mug) stays as modelled: it
+  was made closed round its handle and cut to fit, and cannot open. What
+  those hands do at work is Luis's choice M3.
+- **What a closing hand has.** Three bones for each finger and for the thumb
+  (fifteen a hand), and 1,600 triangles of its own at the nearest level of
+  detail.
+- **How it closes.** The model's build closes the hand, skinned as the game
+  skins it, round handles of six thicknesses from 12 to 44 mm:
+  - the handle is laid at the root of the fingers, as low as the fingers can
+    still go round it;
+  - each finger closes until the skin of its two outer bones touches the
+    handle;
+  - the thumb unfolds forward from above the palm until it meets the handle
+    or a finger.
+
+  The game keeps those closings as a table and blends between neighbours for
+  a thickness in between. To take a handle the hand first opens (the fingers
+  straighten, the thumb lifts clear), then closes: about a third of a second
+  in all.
+- **Checked on the skin, in Blender.** For every hand and every handle: each
+  finger and the thumb lie on what they close on (the farthest is 0.06 mm
+  off), and nothing is more than 0.3 mm inside the handle. 144 checks, none
+  failing (`Art/Review/Miners/hands_<Name>.txt`).
+- **Checked in the game.** A new test closes every free hand on every handle
+  of the table and on one in between:
+  - each joint and fingertip lands within 1 mm of where the build measured
+    it;
+  - no finger bone passes inside the handle;
+  - closing takes time;
+  - let go, the fingers return exactly to their rest.
+
+![The three miners' hands on a handle 30 mm thick](../Images/Miners/Hands_ThreeMiners.jpg)
+
+**Nothing new shows in play yet.** No miner has a tool in hand until the next
+step. At rest the free hands look as they did (more triangles, the same
+shape):
+
+![The free hands in the game at rest, before and after](../Images/Miners/Hands_AtRest_Game.jpg)
+
+**What it costs.**
+- **Bones:** 40 for Small, 39 for Long, 54 for Round (they were 25, 24 and
+  24). The farthest level of detail has no skin on the finger bones.
+- **Triangles at the nearest level:** about 18,300 for Small and Long and
+  19,600 for Round (they were about 17,400). The other levels are unchanged
+  (5,000 and 1,600).
+- **Frame time,** a hundred miners walking: about 2.6 ms added with the
+  finger bones and about 2.5 ms without, measured one after the other on
+  October 6. That difference is no more than two runs of the same build
+  differ by ([MinersPlaytest.md](../Playtests/MinersPlaytest.md#what-it-costs)).
+
+### What the step found
+
+| # | Found | Cause | What was done |
+|---|---|---|---|
+| **H1** | The back of a closing hand folded into a dark patch | The hand had 622 triangles. Shared out with everything else by size, that is far too few to bend fifteen joints | A hand that closes keeps 1,600 triangles of its own |
+| **H2** | Fingers bent backwards at their last joint, differently on every handle | Each bone took its curl axis from its own direction, and a bone pointing straight out of the palm has none | A finger curls about one axis, taken once from the straight finger |
+| **H3** | One finger left pointing while the others closed | The root of a finger touches a handle that lies against it, however the finger curls. The solve took that as "closed" | A finger is closed by the skin of its two outer bones. The whole finger, root included, is kept out of the handle |
+| **H4** | The root of a finger pressed 1 to 2 mm into thick handles | A finger tapers, and its outer bones were laid as far from the handle as its first | Each bone stands off by its own thickness |
+| **H5** | The thumb passed between the handle and the fingers and touched neither | Its path was drawn for one thickness | It unfolds from above the palm until it meets something. If it would pass between, its tip turns onto the handle |
+| **H6** | In the game, Long's closed fingers were 4.5 mm from where the build measured them | The prefab squares each model by its head and feet, not by the model's own axes. Long's sits 11° off; Round's 2.4°; Small's 0.6° | The closing is fitted to the hand's own bones, not to the prefab's axes. The squaring itself is not changed ([below](#for-luis-how-long-stands-in-the-game)) |
+
+![The back of a hand closed on three handles: 622 triangles above, 1,600 below](../Images/Miners/Hands_Fold.jpg)
+
+### For Luis: how Long stands in the game
+
+H6 uncovered something older than this step. Since the miners were rigged
+(October 3), the prefab turns each model so that its head is straight above
+its hips. Long was built upright, the head carried forward on the neck. So
+in the game Long's whole body leans back by 11°, and the head sits above the
+hips:
+
+![Long as built, and in the game from both sides](../Images/Miners/Long_Stance.jpg)
+
+- **Not changed.** This is how Long has stood in every build Luis has
+  played.
+- **The question (P1 in [the plan](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)):** keep the game's stance, or
+  stand Long as built? The built stance can be shown in the game beside the
+  present one before anything is replaced.
+- **The method had no check for this.** Nothing compared how a model stands
+  in the game with how it was built. The prefab's setup now reports the
+  difference for every hand it fits.
+
+### Limits of the closing hands
+
+- **The thumb does not wrap over the fingers.** On a thick handle it presses
+  the handle from the wrist's side; on a thin one it closes on the fingers.
+  The hand's proportions (a short thumb set near the wrist) do not let it
+  reach round.
+- **The hands that carry cannot open** (Small's left, Long's left). Whether
+  they should is choice M3.
+- **Handles are taken as round.** A flattened handle (as on the pickaxe Long
+  carries) would leave about 2 mm under the fingers on its flat sides.
+- **No handle is in the game yet,** so the closing was judged in Blender's
+  pictures and by the game's test, not in play.
 
 ## The sweep of extreme poses (October 5)
 
@@ -523,8 +630,8 @@ look at in the Scene view. They are never saved into the scene.
   portraits. The game uses the rigged versions: 18,000, 5,000 and 1,600
   triangles.
 - **Fixed expressions.** Each face is painted with one expression.
-- **Coarse fingers.** Finger shapes are good from a step away, but coarse up
-  close.
+- **Fingers.** The free hands have finger bones and close on a handle
+  (October 5). The hands that carry something are still one closed shape.
 - **The walk's high step in the sharpest turn.** For a frame, the knee shows
   under the coat's lifted hem. The walk itself is not changed without Luis's
   word.
@@ -533,10 +640,11 @@ look at in the Scene view. They are never saved into the scene.
 ## Next
 
 - **The miners at work** (the plan is in
-  [NextMilestonePlan.md](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)):
-  hands that close on what they hold, a pickaxe made for each body with its
-  grips read from the model, a tool solve that reads the body, and then the
-  miners at the rock. The last needs Luis's choices M1 to M4.
+  [NextMilestonePlan.md](../NextMilestonePlan.md#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices)).
+  Built: the sweep of extreme poses, and hands that close. Next: a pickaxe
+  made for each body with its grips read from the model, a tool solve that
+  reads the body, and then the miners at the rock. The last needs Luis's
+  choices M1 to M4.
 - **Faces in motion.** A blink or a change of expression.
 - **Whatever Luis finds** that the method missed goes into its
   [misses ledger](ModelQualityMethod.md#9-the-misses-ledger).

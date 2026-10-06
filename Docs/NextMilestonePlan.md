@@ -34,8 +34,9 @@ splits the work into checkpoints Luis playtests one at a time:
    round on October 5 ([TheMiners.md](ArtDirection/TheMiners.md)).
 7. **S1d, last part: the miners at work.** Planned on October 5
    ([below](#s1d-last-part--the-miners-at-work-plan-waiting-for-luiss-choices));
-   its first step, the sweep of extreme poses, is built. Steps 2 to 4 do not
-   depend on Luis's choices; step 5 needs M1 to M4.
+   its first two steps are built (the sweep of extreme poses, and hands that
+   close). Steps 3 and 4 do not depend on Luis's choices; step 5 needs M1 to
+   M4.
 
 The previous S1 plan (style studies, then the worker model) is archived in
 [Plans/S1_WorkerModelAndStyleStudies.md](Plans/S1_WorkerModelAndStyleStudies.md).
@@ -327,7 +328,7 @@ support and grip on the model rig".
 | Step | What | Depends on Luis's choices? |
 |---|---|---|
 | 1 | **The sweep of extreme poses** (the method's pass 4): arms raised, elbows and knees bent deep, the waist bowed and twisted. Fix what it finds at the joints work will use | No. **Built on October 5** ([TheMiners.md](ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5)). Nothing fails in the poses today's swing uses, so nothing was changed. What fails beyond them is logged for the movements that will need it (an overhead swing in S3; a kneel) |
-| 2 | **Hands that close.** A hand closes round a handle of a given thickness, and opens again. The audit checks it: fingers meet the handle and do not enter it | No |
+| 2 | **Hands that close.** A hand closes round a handle of a given thickness, and opens again. The audit checks it: fingers meet the handle and do not enter it | No. **Built on October 5** ([TheMiners.md](ArtDirection/TheMiners.md#hands-that-close-october-5)): the free hands, on handles from 12 to 44 mm. The hands that carry stay closed (M3) |
 | 3 | **A pickaxe made for each body.** One modelled pickaxe (the one Long carries), sized to the body. Its grips and its striking head are read from the model, so the tool's data and its shape cannot drift apart | No |
 | 4 | **The tool's solve reads the body.** Today it assumes the test body's arms and height. It will take reach and hand places from each body, and work with one hand or two | No |
 | 5 | **At the rock.** The miners walk to a mineral boulder and strike it, with today's rule that only a real contact of the pick's head counts | M1, M2, M3, M4 |
@@ -343,6 +344,12 @@ Each has a recommendation, marked as a default. Nothing here is Locked.
 | **M2** | Where is a miner's pickaxe when it is not in use? | (a) On the back in a sling, as Long's is. Small and Round would each gain a strap and a pickaxe on the back. (b) Carried in the right hand. (c) It waits at the rock, leaning on it, and the miner takes it up there | (c) for Small and Round, so their looks do not change without Luis's word; Long uses the one already on the back |
 | **M3** | What does a miner do with the lantern or the mug while working? | (a) Keeps holding it and swings a light pick with one hand. (b) Sets it down beside the rock, and picks it up after. Small's lantern would light the work. (c) Hangs it on the belt or the bag | (b). It is the most physical, and needs a small "put down, pick up" movement |
 | **M4** | What happens to what is mined, until hauling exists (S4)? | (a) Pieces fall and lie in a heap by the rock; nothing is carried yet. (b) Today's stand-in: a bundle carried in both hands to a delivery place | (a). It matches the roadmap's O3 (loose pieces), and does not invent a carry that S4 will replace |
+
+### Also for Luis, found on the way
+
+| ID | Question | Options | Until Luis says |
+|---|---|---|---|
+| **P1** | How should Long stand in the game? Since October 3 the prefab has stood each model with its head straight above its hips. Long was built upright with the head carried forward, so in the game Long leans back 11° ([pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game)) | (a) As in the game now. (b) As built. It can be shown in the game beside (a) first | (a): it is what Luis has played |
 
 ### Contracts to keep
 

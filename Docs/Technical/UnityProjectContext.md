@@ -1088,3 +1088,53 @@ No game code changed.
   (`leg_lines`, `crosses`). A leg showing under a lifted hem is not through
   the cloth.
 - **`Art/Review/sweep_sheets.py`** (new): contact sheets of the sweep.
+
+## Hands that close — October 5
+
+The second step of "the miners at work"
+([TheMiners.md](../ArtDirection/TheMiners.md#hands-that-close-october-5)).
+
+- **Blender** (`Art/Blender/Worker/`).
+  - **`hands.py`** (new).
+    - `joints`: fifteen bones for every hand that closes (`Index1.R` …
+      `Little3.R`, `Thumb1.R` … `Thumb3.R`), each from its joint to the
+      next, on its hand.
+    - `weights`: the hand's skin shared with the digits it lies on. The
+      joints' zones never overlap, so a point is on at most two bones of a
+      finger and four in all (the engine keeps four).
+    - `table`: for each handle radius (`RADII`, 6 to 22 mm), where every
+      joint goes. `close` solves one hand on one handle by halving, on the
+      skinned mesh: each finger until its outer bones' skin touches
+      (`finger_goals`, `curled`), then the thumb (`thumb_goal`). The handle
+      is lowered towards the palm while the fingers can still close.
+    - `report` (`hands_<Name>.txt`, pictures with `--hands`) and `export`
+      (the `grips` entry of `miners.json`: bones, joints at rest, open and
+      closed for each radius, the handle's axis).
+  - **`body.py`:** `hand` records each digit's joints (`b.hands`); a hand
+    that closes keeps only its own surface (`shapes.keep_largest`). `wrap`
+    takes one standoff a bone.
+  - **`rigging.py`:** `HAND_TRIANGLES`; `whole_hand` (the farthest level has
+    no skin on finger bones); `skin` calls `hands.weights`.
+  - **`workers.py`:** `--hands`; every build checks the hands and exports
+    `grips`.
+- **Unity.**
+  - **`MinerBody`.**
+    - `Grip`: a hand's finger joints, and each one's turn (in its own frame)
+      to the open hand and to the hand closed on each handle.
+    - `Hold(hand, radius)`, `Release(hand)`, `Held(hand)`, `CanHold(hand)`;
+      `HandleIn(hand, radius, …)` gives where the handle lies in the hand
+      now.
+    - `Close`: from rest to open to closed, in 0.3 s. A hand at rest or
+      fully closed is not touched again.
+  - **`MinerCrowdBenchmark`:** keeps running when the game's window is not
+    in front (it hung for as long as the computer was in use).
+  - **`MinerSetup.Grips`:** turns the model's joint places into each bone's
+    turn (the smallest turn that aims it, its parents' first: the same rule
+    as `hands.turns`). The model's space is fitted to the hand's own bones
+    from three knuckles, because the prefab squares the model by head and
+    feet (Long's sits 11° off its own axes). It logs `MINER_GRIP_FIT`.
+  - **Tests:** `MinerTests.AFreeHandClosesRoundAHandleAndOpensAgain`. The
+    bone guard in `EachMinerIsLightEnoughForTheRts` is now 58 (the body's
+    bones, and fifteen for each closing hand).
+- **Not yet used by the game:** nothing calls `Hold` until a tool is in the
+  hand (the next steps).

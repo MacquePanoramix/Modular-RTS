@@ -34,8 +34,17 @@
         deep bend in a coat, a deep bow) is logged with the movement that
         would need it
         ([TheMiners.md](ArtDirection/TheMiners.md#the-sweep-of-extreme-poses-october-5)).
-      - **Steps 2 to 4 do not need Luis's choices:** hands that close, a
-        pickaxe made for each body, a tool solve that reads the body.
+      - **Step 2, hands that close, is built.** The free hands (Small's
+        and Long's right, both of Round's) close round a handle of any
+        thickness from 12 to 44 mm and open again, measured on the skin
+        ([TheMiners.md](ArtDirection/TheMiners.md#hands-that-close-october-5)).
+        Nothing shows in play until a tool is in the hand.
+      - **A question for Luis came out of it:** in the game Long leans back
+        11° compared with the model as built
+        ([pictures](ArtDirection/TheMiners.md#for-luis-how-long-stands-in-the-game)).
+        Not changed.
+      - **Steps 3 and 4 do not need Luis's choices:** a pickaxe made for
+        each body, a tool solve that reads the body.
       - **Step 5, the miners at the rock, needs Luis's choices M1 to M4.**
   - **A method for model quality, and its first round (October 3 and 4).**
     Luis asked for a strategy, to refer to from now on, for making every

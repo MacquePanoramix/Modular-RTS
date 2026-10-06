@@ -1614,3 +1614,77 @@ Findings are in
     in the rest pose's axes, not solved movement. The mining itself will be
     recorded and audited when it is built.
   - **Luis's eye.**
+
+## S1d, the miners at work — step 2: hands that close (October 5)
+
+[TheMiners.md](ArtDirection/TheMiners.md#hands-that-close-october-5).
+
+- **Environment.** The isolated worktree at 1bb78a6 with this step's changes
+  (committed as a1b1ed0 before the last runs).
+  The validated files were then copied into the main project. Luis's own
+  uncommitted files were not touched.
+- **The closing, checked on the skin** (`workers.py --hands`, and in every
+  build): 144 checks (four hands, six handles, five digits and the palm),
+  none failing. The farthest digit is 0.06 mm off what it closes on; the
+  deepest is 0.3 mm inside a handle (limit 0.5).
+- **On the way there** (each read on the pictures before the numbers were
+  believed):
+  - a dark fold on the back of one hand: 622 triangles; fixed by a budget
+    of 1,600 (first 1,800, which left Round 18 triangles under the test's
+    limit);
+  - fingers bent backwards, and one left pointing, in solves that reported
+    "touching": a curl axis taken from each bone, and a finger's root taken
+    as its grip. Both corrected;
+  - the thumb touching nothing on some handles: corrected.
+- **The audit of the three miners** (four rounds of the whole pipeline):
+  - **At rest:** 0 of 386 (Small), 0 of 267 (Long), 0 of 203 (Round).
+  - **On the recorded movement:** the same four checks as before remain.
+    One value moved: Long's free hand into the coat in the sharpest turn
+    reads 8.4 mm, not 7.3 mm (the hand has more points now; the same two
+    frames).
+- **Tests.**
+  - **Miner tests:** 9 of 9 passed, one of them new (the closing hands).
+    That test first failed on Long by 4.5 mm: the game's turns were made in
+    the prefab's axes, and Long's model sits 11° off them. The closing is
+    now fitted to the hand's own bones.
+  - **Full PlayMode suite (122 tests, 3 skipped as explicit), twice:**
+    119 of 119 passed (973.4 s); 119 of 119 passed (974.4 s).
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Crowd benchmark** (1920×1080, RTX 4060 Laptop, by day; frame ms, the
+  95th percentile in brackets). Measured on October 6 with the computer in
+  use and the game's window in the background, so every figure is higher
+  than October 4's (no miners: 5.5 ms now, 4.8 ms then) and the two days
+  are not comparable. So the build without the finger bones (1bb78a6) and
+  the build with them were each built and measured twice, one after the
+  other; each figure is the mean of its two runs:
+
+  | Miners walking | Without finger bones: strategy view | close view | With finger bones: strategy view | close view |
+  |---|---|---|---|---|
+  | 0 | 5.46 (6.64) | 5.22 (6.04) | 5.46 (6.79) | 5.19 (5.95) |
+  | 25 | 6.30 (8.81) | 5.85 (8.07) | 6.32 (8.98) | 5.83 (7.93) |
+  | 50 | 6.76 (9.34) | 6.64 (9.04) | 7.00 (9.51) | 6.61 (8.98) |
+  | 100 | 7.97 (10.00) | 7.70 (9.40) | 8.16 (10.00) | 7.72 (9.51) |
+
+  A hundred miners add 2.39 to 2.60 ms without the finger bones and 2.51 to
+  2.79 ms with them (four readings each): about 0.1 ms more, which is no
+  more than two runs of the same build differ by.
+- **The benchmark first hung** for seventeen minutes: the game pauses when
+  its window is not in front, and the computer was in use. The benchmark
+  now keeps running in the background (`Application.runInBackground`, set
+  only for `-wgcrowd`). That one line was added after the suite's two runs;
+  the build and the benchmark were made with it.
+- **The validation was cut off once** by a shutdown, in the second suite
+  run. The first run's result stands; the second run, the build and the
+  benchmark were run again the next morning
+  ([correspondence](Correspondence/2026-10-05_SHUTDOWN_AND_RESUME.md)).
+- **The look at rest.** The free hands' captures in the game were read
+  beside the last round's: the same shape and pose
+  (`Images/Miners/Hands_AtRest_Game.jpg`).
+- **Not tested:**
+  - **Closing in play.** Nothing in the game closes a hand yet; it was
+    judged in Blender's pictures and by the test.
+  - **A real handle.** The handles are ideal round bars. The pickaxe comes
+    in the next step.
+  - **Other levels of detail closed.** The closing was measured on the
+    nearest level's skin only.
+  - **Luis's eye.**

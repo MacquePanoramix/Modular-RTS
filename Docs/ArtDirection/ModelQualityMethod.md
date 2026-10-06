@@ -260,6 +260,7 @@ editor, and `<project>` the Unity project.
 | **Sheets** | `python Art/Review/sheets.py <frames> <sheets>` | JPG frames and contact sheets |
 | **Sweep of extreme poses** | `blender -b --factory-startup --python Art/Blender/Worker/workers.py -- --out <folder> --sweep [--only Small]` | `sweep_<Name>.txt`, `sweep_<Name>_poses.txt` and three pictures of each pose, in `<folder>` |
 | **Sweep sheets** | `python Art/Review/sweep_sheets.py <folder> <sheets>` | Contact sheets of the sweep, six poses a sheet |
+| **Hands that close** | `blender … workers.py -- --out <folder> --hands [--only Round]` | `hands_<Name>.txt` (each digit on each handle: meets, enters) and four pictures of every closed hand. The check also runs in every build, without pictures |
 
 A recording belongs to the build it was recorded from. After the models or
 the walk change, record again before auditing in motion.
@@ -278,7 +279,8 @@ for the recorded movement, `sweep_<Name>.txt` for the extreme poses).
 | **Missing construction** | A strap with no ring; a flap with no hinge; laces with no eyelets |
 | **Against gravity** | A bag standing stiff; a strap slack or kinked under weight; an apron like a board |
 | **Wrong motion** | Something rigid that should swing; a thing trailing as if in a wind; something bending like rubber; popping; jitter |
-| **Deformation** | Elbows and knees collapsing; wrists twisting; cloth stretching at the shoulders |
+| **Deformation** | Elbows and knees collapsing; wrists twisting; cloth stretching at the shoulders; a hand's skin folding when its fingers close |
+| **Stance** | A being standing differently in the game from how it was built (leaning, straightened, turned) |
 | **Surface** | Blurry or stretched paint; seams; a face fading; values too close together |
 | **Readability** | Tangents; clutter; a silhouette that no longer says who it is |
 | **Light** | Lamps lighting the wrong places; a flame bleached white; broken outlines; flicker |
@@ -342,6 +344,9 @@ catches them now.
 | First, from Luis's look (October 5) | A strap that kinked was "corrected" into a taut one. Luis preferred the soft one | A rule of the method (no kinks, taut under load) is a help, not a taste. Where it would restyle something Luis has seen, it waits for Luis |
 | The sweep (October 5) | The sweep's first run bent the trunk backward for "forward", left held things behind a raised arm, and counted a leg under a lifted hem as through the cloth | A new check's first report is read on its pictures before any model is touched. The first thing a new tool finds is usually its own mistakes |
 | The sweep | Its findings were all in poses no movement reaches | A finding is weighed by whether a movement reaches the pose. It is logged with the movement that would need it, not fixed ahead of it |
+| Hands that close (October 5) | A hand folded on its back when its fingers closed: it had 622 triangles | Triangles are budgeted by what a part must do, not only by its size. A part that bends at many joints needs points to bend at |
+| Hands | A solve "converged" on fingers bent backwards, and on a finger left pointing: every number said "touching" | A number that says "touching" is read on a picture before it is believed. The pictures of the first run are part of the check, not an extra |
+| Hands | The game put Long's closed fingers 4.5 mm from where the build measured them. The prefab squares a model by its head and feet, and Long's sits 11° off its own axes; nothing had compared the two | Data measured on the model is fitted to the model's own bones in the game, never to the prefab's axes. The setup reports how far apart the two are. And the built model is read beside the game's standing pose (pass 5) |
 
 ## 10. Research behind the method
 
