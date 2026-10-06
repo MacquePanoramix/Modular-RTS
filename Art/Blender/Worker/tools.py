@@ -33,6 +33,7 @@ import hands  # noqa: E402
 import outfits  # noqa: E402
 import rigging  # noqa: E402
 import shapes  # noqa: E402
+import weights  # noqa: E402
 
 # The first pickaxe (the 2.2 m test body's), which every other is a size of: the arms it was made for, and along
 # its length (1 from foot to head) where the origin, the two grips and the head are.
@@ -59,10 +60,11 @@ def measured_on(b, bones):
     return arm, b.p.get("hand", 0.11) * b.H
 
 
-def pickaxe(name, made_for=None):
+def pickaxe(name, made_for=None, light=True):
     """A miner's pickaxe, at the origin in Blender's space: the handle up z, the long point towards -y (the
     being's front). made_for: the arm and the hand it is made for (measured from the miner's preset if not
-    given). Returns its parts, its size against the first pickaxe, and the hand's length."""
+    given). light: built with few faces, as the game carries it (a finer one is built to be weighed). Returns
+    its parts, its size against the first pickaxe, and the hand's length."""
     arm, hand = made_for or measure(name)
     size = arm / ARMS
     owner = types.SimpleNamespace(name=f"Pickaxe_{name}")
@@ -70,8 +72,20 @@ def pickaxe(name, made_for=None):
     # outfits.pick's handle is 16.5 mm at its middle; this one is a tenth of the hand's length, and round, so
     # that the closed fingers lie on it all the way round.
     parts = outfits.pick(owner, low, high, (0, -1, 0), (1, 0, 0), "Wood", "Iron", bow=0.0, size=size * 1.1,
-                         thick=hand * HANDLE / 0.0165, round_=True, light=True)
+                         thick=hand * HANDLE / 0.0165, round_=True, light=light)
     return parts, size, hand
+
+
+def weighed(name):
+    """What a miner's pickaxe weighs, where its weight is and how hard it is to turn: measured on a fine copy of
+    it (round where the game's is faceted), which is then put away."""
+    parts, _, _ = pickaxe(name, light=False)
+    for o in parts:
+        o.name = o.name.replace("Pickaxe_", "Weighed_")
+    data = weights.tool(parts)
+    for o in parts:
+        bpy.data.objects.remove(o)
+    return data
 
 
 def measured(parts, size):
@@ -106,6 +120,14 @@ def handle_radii(name, b, bones):
     for o in parts:
         bpy.data.objects.remove(o)
     return [g["radius"] for g in grips]
+
+
+def weight_lines(weight, lower_grip):
+    """The report's lines on a tool's weight."""
+    return [f"  it weighs {weight['mass'] * 1000:.0f} g ({', '.join(f'{k} {v * 1000:.0f} g' for k, v in weight['pieces'].items())}); its weight is "
+            f"{weight['centre'][1] * 1000:+.0f} mm along the handle from the origin, {(weight['centre'][1] - lower_grip) * 1000:.0f} mm above the lower grip, "
+            f"{weight['centre'][2] * 1000:+.0f} mm towards the point",
+            f"  to turn it about its centre: {', '.join(f'{v:.5f}' for v in weight['inertia'])} kg m2"]
 
 
 def game(v):
@@ -152,6 +174,7 @@ def build(name, out_dir, preview=None):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     import painting
     import workers
+    weight = weighed(name)
     parts, size, hand = pickaxe(name)
     grips, tip, centre, ball = measured(parts, size)
     failing = []
@@ -207,11 +230,15 @@ def build(name, out_dir, preview=None):
         head=game(centre), headRadius=round(ball, 5), tip=game(tip),
         # The model's own extent, for the game to check that it came in the right way up.
         foot=round(low, 5), top=round(high, 5),
+        # What it weighs (kg), where its weight is, and how hard it is to turn about that point (kg m2, about its
+        # three principal axes, and how those are turned): measured on the model (weights.py).
+        mass=weight["mass"], centre=weight["centre"], inertia=weight["inertia"], inertiaTurn=weight["inertiaTurn"],
     )
     lines = [f"TOOL Pickaxe_{name}: {len(failing)} failing; made for arms of {size * ARMS:.3f} m and a hand of {hand * 1000:.0f} mm",
              f"  length {data['length'] * 1000:.0f} mm, {triangles} triangles (far away {data['far']})",
              f"  grips at {grips[0]['at'] * 1000:+.0f} and {grips[1]['at'] * 1000:+.0f} mm, the handle {grips[0]['radius'] * 2000:.1f} and {grips[1]['radius'] * 2000:.1f} mm thick there",
              f"  the point at {[round(c * 1000) for c in game(tip)]} mm; the strike's ball {ball * 1000:.0f} mm at {[round(c * 1000) for c in game(centre)]} mm"]
+    lines += weight_lines(weight, grips[0]["at"])
     lines += [f"  FAIL {f}" for f in failing]
     print("\n".join(lines))
     return data, lines
@@ -224,6 +251,7 @@ if __name__ == "__main__":
     parser.add_argument("--only", nargs="*")
     parser.add_argument("--report", help="where the tools' report goes (default: Art/Review/Miners)")
     parser.add_argument("--preview", help="a folder for a picture of each tool (Pickaxe_<Name>_<view>.png)")
+    parser.add_argument("--weigh", action="store_true", help="only weigh the tools: tools.json and the reports gain their weights, nothing is rebuilt")
     args = parser.parse_args(argv)
     os.makedirs(args.out, exist_ok=True)
     report = args.report or os.path.normpath(os.path.join(HERE, "..", "..", "Review", "Miners"))
@@ -236,6 +264,24 @@ if __name__ == "__main__":
     import workers
     for name in workers.PRESETS:
         if args.only and name not in args.only:
+            continue
+        if args.weigh:
+            if name not in previous:
+                raise SystemExit(f"tools.json has no {name}: build the tools first.")
+            bpy.ops.wm.read_factory_settings(use_empty=True)
+            weight = weighed(name)
+            previous[name].update(mass=weight["mass"], centre=weight["centre"], inertia=weight["inertia"], inertiaTurn=weight["inertiaTurn"])
+            added = weight_lines(weight, previous[name]["primaryGrip"][1])
+            print(f"TOOL Pickaxe_{name}\n" + "\n".join(added))
+            kept = []
+            old = os.path.join(report, f"tool_{name}.txt")
+            if os.path.exists(old):
+                with open(old, encoding="utf-8") as f:
+                    kept = [l.rstrip("\n") for l in f if not l.startswith(("  it weighs", "  to turn it"))]
+            failing = [l for l in kept if l.startswith("  FAIL")]
+            kept = [l for l in kept if not l.startswith("  FAIL")]
+            with open(old, "w", encoding="utf-8") as f:
+                f.write("\n".join(kept + added + failing) + "\n")
             continue
         if args.preview:
             os.makedirs(args.preview, exist_ok=True)

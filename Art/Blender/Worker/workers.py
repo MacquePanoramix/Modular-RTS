@@ -357,7 +357,8 @@ def shape(b, objs):
     return dict(bodyFront=round(front, 4), faceFront=round(face, 4), headHalf=round(half, 4))
 
 
-def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=False, report=None, sweep_only=False, hands_only=False):
+def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=False, report=None, sweep_only=False, hands_only=False,
+                 weigh_only=False):
     """The miners for the game: rest pose, skeleton, skin, levels of detail, one atlas each, and their dimensions.
     dims_only: only the dimensions (miners.json), without remaking the models.
     Every build is audited (audit.py): at rest, and on the game's recorded frames when poses (a folder of
@@ -365,9 +366,12 @@ def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=Fal
     report: where the audit's reports go. A build's go to Art/Review/Miners, never among the game's assets.
     sweep_only: the sweep of poses beyond the game's own movement (sweep.py), without baking or exporting.
     hands_only: the closing of the free hands round handles (hands.py), with a picture of each, without baking
-    or exporting."""
+    or exporting.
+    weigh_only: what each part of the body weighs (weights.py), written into miners.json beside what is there,
+    without baking or exporting."""
     import audit
     import hands
+    import weights
     if sweep_only or hands_only:
         audit_only = True
     if report is None:
@@ -398,6 +402,7 @@ def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=Fal
             recorded = None
 
         closed = {}
+        weighed = {}
         # This body's own pickaxe: how thick its handle is where the hands grip it.
         import tools
         own = tools.handle_radii(name, b, rigging.joints(b))
@@ -416,6 +421,17 @@ def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=Fal
             # The free hands closed round handles of several thicknesses: checked here, on the parts as skinned.
             closed.update(hands.tables(b_, meshes, own))
             hands.report(b_, closed, report, pictures=False)
+            # What each part weighs, with what it wears: measured here too, on the parts before they are joined.
+            measured, pieces = weights.body(b_, meshes, bones)
+            weights.report(b_, measured, pieces, report)
+            weighed.update(measured)
+        if weigh_only:
+            _, bones, meshes = rigging.prepare(name, b, objs)
+            measured, pieces = weights.body(b, meshes, bones)
+            weights.report(b, measured, pieces, report)
+            dims[name] = dict(weights=measured)
+            partial.add(name)
+            continue
         if hands_only:
             _, bones, meshes = rigging.prepare(name, b, objs)
             hands.report(b, hands.tables(b, meshes, own), report)
@@ -432,6 +448,7 @@ def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=Fal
         dims[name], _ = rigging.build(name, b, objs, MATERIALS, recipes, face_images, out_dir, audit=check)
         dims[name].update(gait)
         dims[name]["grips"] = hands.export(b, closed)
+        dims[name]["weights"] = dict(weighed)
     path = os.path.join(out_dir, "miners.json")
     previous = {}
     if audit_only:
@@ -701,11 +718,12 @@ if __name__ == "__main__":
     parser.add_argument("--report", help="where the audit's reports go (default: --out for --audit; Art/Review/Miners for a build)")
     parser.add_argument("--sweep", action="store_true", help="only the sweep of extreme poses (sweep.py): its report and a picture of each pose")
     parser.add_argument("--hands", action="store_true", help="only the closing of the free hands round handles (hands.py): its report and pictures")
+    parser.add_argument("--weigh", action="store_true", help="only what each part of the body weighs (weights.py): its report, and miners.json")
     args = parser.parse_args(argv)
     os.makedirs(args.out, exist_ok=True)
-    if args.rigged or args.audit or args.sweep or args.hands:
+    if args.rigged or args.audit or args.sweep or args.hands or args.weigh:
         build_rigged(args.out, args.only, args.dims, args.poses, audit_only=args.audit, report=args.report, sweep_only=args.sweep,
-                     hands_only=args.hands)
+                     hands_only=args.hands, weigh_only=args.weigh)
         sys.exit(0)
     built = build(args.out, args.only)
     painted = paint(built, args.out) if args.paint else {}
