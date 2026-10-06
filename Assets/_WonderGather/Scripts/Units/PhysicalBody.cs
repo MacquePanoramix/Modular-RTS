@@ -47,6 +47,45 @@ namespace WonderGather
         public int PartCount => parts.Length;
         public Part PartAt(int index) => parts[index];
         public bool Ready => parts.Length > 0 && arms.Length == 6 && upper.Length > 0 && mass > 0 && armRadius > 0;
+        // Tiredness (S3, step 5). Each group of muscles that works has a share of itself that is spent for now. Work
+        // spends it, the harder the faster; rest brings it back, the sooner the less the muscles are doing. What a
+        // group can give is what is not spent. The paces here are a first setting: all-out work spends a third of a
+        // group in about ten seconds, and a spent third comes back in about half a minute of rest.
+        public enum Muscles { LeftArm, RightArm, Back, Legs }
+        private const float Tires = .04f, Restores = .012f, AtRest = 3.5f, MostSpent = .85f;
+        // A muscle working at less than this share of what it has does not tire: it can go on all day.
+        private const float Sustains = .18f;
+        private readonly float[] spent = new float[4];
+        private readonly bool[] worked = new bool[4];
+        public static Muscles Arm(int side) => side == 0 ? Muscles.LeftArm : Muscles.RightArm;
+        // The share of a group that is spent (0: fresh), and the share that is not.
+        public float Spent(Muscles muscles) => spent[(int)muscles];
+        public float Fresh(Muscles muscles) => 1 - spent[(int)muscles];
+        // Said once a physics step by whatever works a group: the share of what it has now that it gave.
+        public void Worked(Muscles muscles, float effort, float dt)
+        {
+            int i = (int)muscles;
+            worked[i] = true;
+            Tire(i, Mathf.Clamp01(effort), dt);
+        }
+        private void Tire(int i, float effort, float dt)
+        {
+            float rests = Restores * (1 + (AtRest - 1) * (1 - effort) * (1 - effort)) * spent[i];
+            float tires = Tires * Mathf.Max(0, effort - Sustains) / (1 - Sustains) * (1 - spent[i]);
+            spent[i] = Mathf.Clamp(spent[i] + (tires - rests) * dt, 0, MostSpent);
+        }
+        // Fresh again, at once (a new day, a new try).
+        public void Refresh() => Array.Clear(spent, 0, spent.Length);
+        private void FixedUpdate()
+        {
+            // Muscles nothing worked at the last step are resting.
+            for (int i = 0; i < spent.Length; i++)
+            {
+                if (!worked[i]) Tire(i, 0, Time.fixedDeltaTime);
+                worked[i] = false;
+            }
+        }
+
         // 1: ordinary for this body's build.
         public float Strength { get => strength; set => strength = Mathf.Clamp(value, .1f, 4); }
 
@@ -81,8 +120,9 @@ namespace WonderGather
             inertia = Mathf.Max(inertia, 1e-3f);
         }
 
-        // The most the back gives, in newton metres.
+        // The most the back gives, in newton metres: fresh, and now.
         public float BackCapacity => BackHolds * upperAsks * Physics.gravity.magnitude * strength;
+        public float BackNow => BackCapacity * Fresh(Muscles.Back);
 
         public Vector3 CentreOfMass()
         {
@@ -97,6 +137,10 @@ namespace WonderGather
         public float ElbowCapacity => ElbowReference * Build * strength;
         public float WristCapacity => WristReference * Build * strength;
         public float HoldCapacity => HoldReference * Mathf.Pow(armRadius / ArmReference, 2) * strength;
+        // What an arm's joints give now, as tired as that arm is.
+        public float ShoulderOf(int side) => ShoulderCapacity * Fresh(Arm(side));
+        public float ElbowOf(int side) => ElbowCapacity * Fresh(Arm(side));
+        public float WristOf(int side) => WristCapacity * Fresh(Arm(side));
 
         // One arm's own weight: each of its three parts' mass and where it is now.
         public void ArmParts(int side, Span<Vector3> at, Span<float> kilograms)

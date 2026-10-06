@@ -76,14 +76,15 @@ namespace WonderGather.Tests
         {
             public PhysicalSwing.Result first, second;
             public float miss, aside, sink, mark;
-            public int swings;
+            public int swings, rests;
+            public System.Collections.Generic.List<PhysicalSwing.Result> all;
         }
 
         private IEnumerator Try(float strength, float weight, System.Action<Tried> done) => Try("Round", strength, weight, 0, done);
 
-        // A miner swings twice, at a strength, with its pickaxe at a share of its weight. mark: the height the blow
-        // is aimed at, as a share of the miner's height (0: where the pick rests unaimed).
-        private IEnumerator Try(string who, float strength, float weight, float mark, System.Action<Tried> done)
+        // A miner swings twice (or more), at a strength, with its pickaxe at a share of its weight. mark: the height
+        // the blow is aimed at, as a share of the miner's height (0: where the pick rests unaimed).
+        private IEnumerator Try(string who, float strength, float weight, float mark, System.Action<Tried> done, int swings = 2)
         {
             choice.Choose(Index(who));
             yield return Wait(.2f);
@@ -91,6 +92,7 @@ namespace WonderGather.Tests
             var miner = unit.GetComponent<MinerBody>();
             var biped = unit.GetComponent<ProceduralBiped>();
             var physical = unit.GetComponent<PhysicalBody>();
+            physical.Refresh();
             unit.Motor.Stop();
             unit.GetComponent<NavMeshAgent>().Warp(spot);
             unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
@@ -132,8 +134,10 @@ namespace WonderGather.Tests
                 tried.aside = Mathf.Max(tried.aside, Vector3.Angle(hands.Held.rotation * Vector3.right, unit.transform.right));
             };
             float began = Time.time;
-            while (swing.results.Count < 2 && Time.time - began < 30) yield return null;
+            while (swing.results.Count < swings && Time.time - began < 30 + swings * 12) yield return null;
             tried.swings = swing.results.Count;
+            tried.rests = swing.rests;
+            tried.all = new System.Collections.Generic.List<PhysicalSwing.Result>(swing.results);
             if (tried.swings > 0) tried.first = swing.results[0];
             if (tried.swings > 1) tried.second = swing.results[1];
             after.Then = null;
@@ -228,6 +232,60 @@ namespace WonderGather.Tests
             Assert.That(low.first.struck && high.first.struck, Is.True, "An aimed blow did not land.");
             Assert.That(low.first.landed.y, Is.EqualTo(low.mark).Within(.06f), "The low blow did not land at the height it was aimed at.");
             Assert.That(high.first.landed.y, Is.EqualTo(high.mark).Within(.06f), "The higher blow did not land at the height it was aimed at.");
+        }
+
+        // Tiredness by itself: hard work spends a muscle, the harder the faster; light work does not; rest brings it back.
+        [UnityTest]
+        public IEnumerator HardWorkTiresAMuscleAndRestBringsItBack()
+        {
+            choice.Choose(Index("Round"));
+            yield return Wait(.2f);
+            var physical = choice.Current.GetComponent<PhysicalBody>();
+            physical.Refresh();
+            var arm = PhysicalBody.Muscles.RightArm;
+            float fresh = physical.ShoulderOf(1);
+            for (int k = 0; k < 500; k++) physical.Worked(arm, 1, .02f);
+            float afterTen = physical.Spent(arm);
+            Assert.That(afterTen, Is.InRange(.2f, .45f), "Ten seconds of all-out work should spend about a third of an arm.");
+            Assert.That(physical.ShoulderOf(1), Is.EqualTo(fresh * (1 - afterTen)).Within(.01f), "A spent arm gives less.");
+            Assert.That(physical.Spent(PhysicalBody.Muscles.LeftArm), Is.EqualTo(0).Within(1e-4f), "Only the arm that worked is spent.");
+            for (int k = 0; k < 1500; k++) physical.Worked(arm, 0, .02f);
+            Assert.That(physical.Spent(arm), Is.LessThan(afterTen * .45f), "Half a minute of rest should bring most of it back.");
+            physical.Refresh();
+            for (int k = 0; k < 3000; k++) physical.Worked(arm, .15f, .02f);
+            Assert.That(physical.Spent(arm), Is.LessThan(.01f), "Light work can go on: it does not tire.");
+            for (int k = 0; k < 500; k++) physical.Worked(arm, .5f, .02f);
+            float half = physical.Spent(arm);
+            Assert.That(half, Is.GreaterThan(.05f).And.LessThan(afterTen), "Harder work tires faster.");
+            physical.Refresh();
+        }
+
+        // A miner that goes on swinging tires: it lands its blows more weakly, takes the tool nearer the head, and in
+        // the end stops to rest, standing up straight; rested, it goes on, stronger again.
+        [UnityTest, Timeout(900000)]
+        public IEnumerator ATiredMinerWeakensRestsAndGoesOn()
+        {
+            Tried tried = default;
+            Time.captureFramerate = 50;
+            try { yield return Try("Round", 1, 1, 0, t => tried = t, 32); }
+            finally { Time.captureFramerate = 0; }
+            Assert.That(tried.swings, Is.EqualTo(32), "It did not get through its swings.");
+            Assert.That(tried.rests, Is.EqualTo(1), "Thirty-two swings should ask for one rest.");
+            int rested = tried.all.FindIndex(1, r => r.spent < tried.all[tried.all.IndexOf(r) - 1].spent - .1f);
+            Assert.That(rested, Is.GreaterThan(10), "It rested too soon.");
+            var first = tried.all[0];
+            var last = tried.all[rested - 1];
+            var after = tried.all[rested];
+            Debug.Log($"PHYSICAL_TIRED first: {first.speed:F1} m/s, upper hand {first.choked:P0}, arms {first.liftEffort:P0}; swing {rested}, before its rest: {last.spent:P0} spent, {last.speed:F1} m/s, upper hand {last.choked:P0}, arms {last.liftEffort:P0}; "
+                + $"after it: {after.spent:P0} spent, {after.speed:F1} m/s");
+            Assert.That(last.spent, Is.InRange(PhysicalSwing.RestsAt - .06f, PhysicalSwing.RestsAt + .03f));
+            Assert.That(last.speed, Is.LessThan(first.speed * .9f), "A tired blow should land more weakly.");
+            Assert.That(last.choked, Is.GreaterThan(first.choked + .2f), "Tired, it should take the tool nearer the head.");
+            Assert.That(last.liftEffort, Is.GreaterThan(first.liftEffort + .1f), "Tired, the same lift should take more of what is left.");
+            Assert.That(after.spent, Is.LessThan(PhysicalSwing.GoesOnAt + .06f), "It went on before it was rested.");
+            Assert.That(after.speed, Is.GreaterThan(last.speed + .2f), "Rested, it should strike harder again.");
+            Assert.That(tried.all.TrueForAll(r => r.struck), Is.True, "A swing did not strike.");
+            Assert.That(tried.miss, Is.LessThan(.04f), "A hand came off the handle.");
         }
 
         // The body is posed once a frame and the physics steps on its own clock: what comes out must not depend on how

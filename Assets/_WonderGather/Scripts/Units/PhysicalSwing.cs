@@ -16,7 +16,7 @@ namespace WonderGather
     // Still by intention only: the legs (they bend and straighten at a set pace, whatever they carry).
     public sealed class PhysicalSwing : MonoBehaviour
     {
-        public enum Phase { Ready, Lift, Top, Drive, Struck, Recover }
+        public enum Phase { Ready, Lift, Top, Drive, Struck, Recover, Rest }
 
         public struct Result
         {
@@ -29,6 +29,8 @@ namespace WonderGather
             public float backEffort;
             // Where the pick's head was (its striking ball's middle) when it struck.
             public Vector3 landed;
+            // How spent the most spent of the arms and the back was when the lift began (0: fresh).
+            public float spent;
             // Where the upper hand held for the lift, as a share of the way from its own place to the head.
             public float choked;
             // The head's speed as it struck, and the tool's energy then (taking all its weight to be at the head).
@@ -44,6 +46,9 @@ namespace WonderGather
         // The upper hand goes up the handle for the lift, as far as the body needs it there: not at all if holding
         // the tool at rest takes less than this share of what the arms have, all the way to the head at this share.
         private const float ChokeFrom = .22f, ChokeFull = .5f;
+        // It rests after a blow when its arms or its back are this spent, and goes on when they are this fresh
+        // again. Resting, it stands up straight with the tool held at ease across its thighs, and gets its breath.
+        public const float RestsAt = .4f, GoesOnAt = .15f;
         // The intention leads the tool along its path by so many degrees of lean, and no further: gently and at a
         // set pace for the lift, far ahead and with no pace set for the blow.
         private const float LiftLead = 22, LiftPace = (Rest - Raised) / .6f, BlowLead = 50;
@@ -57,6 +62,18 @@ namespace WonderGather
         public List<string> trace;
         // How long it stands ready before the first lift.
         public float settle = 1.2f;
+        // How many times it has stopped to rest.
+        public int rests;
+        private PhysicalBody physical;
+        // How spent the most spent of the arms and the back is.
+        public float Spent
+        {
+            get
+            {
+                if (physical == null) physical = GetComponent<PhysicalBody>();
+                return Mathf.Max(physical.Spent(PhysicalBody.Muscles.LeftArm), physical.Spent(PhysicalBody.Muscles.RightArm), physical.Spent(PhysicalBody.Muscles.Back));
+            }
+        }
         private float clock, angle = Rest, stalled, low, high, worked, bent, headSpeed, heavy = -1;
         // The swing as it is aimed: the tool's lean at rest and where the blow means to end, the bow at rest and into
         // the blow, and how far the hips sink for it. Unaimed, they are the bench's.
@@ -132,6 +149,19 @@ namespace WonderGather
             angle = rest;
         }
 
+        // The tool carried at the side in the upper hand alone: level, its head ahead and its point down, the arm
+        // hanging, the hand out past the hip and whatever hangs there.
+        private void AtSide(Vector3 hips, Quaternion posture, out Vector3 position, out Quaternion rotation)
+        {
+            float reach = body.ArmReach;
+            Vector3 shoulder = body.ShoulderFromHips;
+            float aside = .2f * reach + body.BodyProportions.armCarry.x, ahead = .06f * reach;
+            float drop = Mathf.Sqrt(Mathf.Max(.01f, .94f * reach * .94f * reach - aside * aside - ahead * ahead));
+            rotation = posture * Quaternion.LookRotation(Vector3.down, Vector3.forward);
+            Vector3 hand = hips + posture * new Vector3(-(shoulder.x + aside), shoulder.y - drop, shoulder.z + ahead);
+            position = hand - rotation * new Vector3(0, hands.GripAlong(0), 0);
+        }
+
         // How the tool leans now against the body's own upright, in degrees: forward is positive.
         public float Lean() => Lean(body.PostureNow);
 
@@ -168,9 +198,10 @@ namespace WonderGather
                         if (hands.Holds(0) && hands.Holds(1))
                             hands.Slide(0, Mathf.Lerp(tool.SecondaryGrip.y, hands.HighestGrip, Mathf.InverseLerp(ChokeFrom, ChokeFull, heavy)));
                     }
-                    if (clock >= settle && !hands.Sliding(0))
+                    if (clock >= settle && !hands.Sliding(0) && hands.Holds(1))
                     {
                         low = high = headUp; worked = 0; bent = 0; steps = 0; now = default;
+                        now.spent = Spent;
                         now.choked = hands.Holds(0) ? Mathf.InverseLerp(tool.SecondaryGrip.y, hands.HighestGrip, hands.GripAlong(0)) : 0;
                         Go(Phase.Lift);
                     }
@@ -224,15 +255,45 @@ namespace WonderGather
                     }
                     break;
                 case Phase.Struck:
-                    if (clock >= .35f) Go(Phase.Recover);
+                    if (clock >= .35f)
+                    {
+                        if (Spent >= RestsAt) { rests++; Go(Phase.Rest); }
+                        else Go(Phase.Recover);
+                    }
+                    break;
+                case Phase.Rest:
+                    // It stands up straight, which is what rests a back, and carries the tool as a tool is carried:
+                    // in one hand at the side, held near its head where its weight is, the arm hanging.
+                    back.Want(Mathf.Sin(clock * 2.4f) * 1.5f);
+                    body.Sink(0);
+                    if (hands.Holds(1))
+                    {
+                        hands.Slide(0, hands.HighestGrip);
+                        if (clock > .25f && !hands.Sliding(0)) hands.Release(1);
+                    }
+                    if (clock >= 2.5f && Spent <= GoesOnAt)
+                    {
+                        // It takes the tool up to its work again from where it holds it.
+                        from = hands.Held.position; fromTurn = hands.Held.rotation;
+                        Go(Phase.Recover);
+                    }
                     break;
                 case Phase.Recover:
                     back.Want(restBow);
                     body.Sink(sink);
-                    if (clock >= .85f) { results.Add(now); angle = rest; settle = .3f; Go(Phase.Ready); }
+                    // After a rest the lower hand takes hold again, once the tool is back before the body.
+                    if (!hands.Holds(1) && !hands.Reaching(1) && clock > .45f) hands.Grasp(1, tool.PrimaryGrip.y);
+                    if (clock >= .85f && hands.Holds(1)) { results.Add(now); angle = rest; settle = .3f; Go(Phase.Ready); }
                     break;
             }
+            float bears = 1;
             if (phase == Phase.Struck) { position = from; rotation = fromTurn; }
+            else if (phase == Phase.Rest)
+            {
+                AtSide(hips, posture, out var to, out var toTurn);
+                float t = Mathf.SmoothStep(0, 1, clock / 1.3f);
+                position = Vector3.Lerp(from, to, t); rotation = Quaternion.Slerp(fromTurn, toTurn, t);
+            }
             else if (phase == Phase.Recover)
             {
                 Intend(rest, hips, posture, out var to, out var toTurn);
@@ -240,7 +301,7 @@ namespace WonderGather
                 position = Vector3.Lerp(from, to, t); rotation = Quaternion.Slerp(fromTurn, toTurn, t);
             }
             else Intend(angle, hips, posture, out position, out rotation);
-            hands.Want(position, rotation, hard);
+            hands.Want(position, rotation, hard, bears);
             if (trace != null && results.Count == 0 && phase != Phase.Ready && phase != Phase.Recover)
                 trace.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                     "{0} {1:0.00}s lean {2:0} wanted {3:0} bow {4:0} head {5:0.000} up {6:0.000} ahead at {7:0.0} m/s; blows {8} (head {9}); efforts {10:0.00} {11:0.00}",

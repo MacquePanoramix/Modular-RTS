@@ -1355,3 +1355,35 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   its strength and to where it strikes; the same at any frame rate.
   `PhysicalBench` takes `-benchMarks` (heights to aim at).
   `Art/Review/row_clip.py` puts clips side by side.
+
+## The physical body, step 5: tiredness — October 6
+
+- **`PhysicalBody`:**
+  - **`Muscles`** (`LeftArm`, `RightArm`, `Back`, `Legs`), each with a
+    share that is spent. `Worked(muscles, effort, dt)` is said once a
+    physics step by whatever works a group; groups nothing worked rest (in
+    `FixedUpdate`). The rule: spent rises by 0.04 a second times the effort
+    above 0.18 (rescaled to 0 to 1) times what is not spent; it falls by
+    0.012 a second times itself, 3.5 times as fast at no effort (by the
+    square of what is not being given). At most 0.85.
+  - **`ShoulderOf(side)`, `ElbowOf`, `WristOf`, `BackNow`:** what the
+    joints give now (their capacity times what is not spent). `Refresh()`
+    clears tiredness.
+- **`PhysicalHands`:** uses each arm's own capacities and tells each arm
+  what it gave. `Want(..., bears)`: the share of the thing's weight the
+  hands mean to carry. `Release(hand)`: one hand lets go (its link and
+  riding mass go). `Grasp(hand, along)`: a free hand reaches (0.35 s; the
+  wrist goes from where it was to where it will hold, the fingers close as
+  it arrives) and then holds and pushes. `Reaching(hand)`.
+- **`PhysicalBack`:** uses `BackNow` and tells the back what it gave.
+- **`PhysicalSwing`:** `Phase.Rest`, entered after a blow when `Spent` (the
+  most spent of the arms and the back) is at `RestsAt` (0.4): the back
+  straightens (with a slow sway, as breathing), the upper hand goes to the
+  head's end of the handle, the lower hand lets go, and the tool goes to
+  `AtSide` (level at the left side, the arm hanging, out past what hangs
+  there). At `GoesOnAt` (0.15) it recovers: the tool returns to rest over
+  its mark and the lower hand takes hold again. `Result.spent`; `rests`.
+- **Tests:** `PhysicalBodyTests` has seven: with the five before, hard
+  work tires a muscle and rest brings it back; a tired miner weakens,
+  rests and goes on (32 swings, frame for step). `PhysicalBench` takes
+  `-benchSwings`, `-benchFrom` and `-benchView`.

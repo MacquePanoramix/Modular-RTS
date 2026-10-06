@@ -425,9 +425,70 @@ chest's.*
   Steps 9 and 11.
 - **The pickaxe does not yet stop at the miner's own body,** nor at what
   hangs at the hip.
-- **No tiredness yet.** Every swing is as strong as the first. Step 5.
+- **Tiredness** came with step 5 (below).
 - **The path over the shoulder is still the first swing's,** on the right
   side only.
+
+### Step 5: tiredness (October 6)
+
+Luis: "some level of stamina for the muscles and tiredness", short-term at
+least.
+
+![Fresh, tired, and resting](../Images/PhysicalBody/Tired_Round.gif)
+
+*Round's first swing; its 26th, with its arms and back 40% spent; and the
+rest it then takes.*
+
+- **Each group of muscles tires by itself:** each arm, the back (the legs
+  are counted too, and do not work yet). A share of the group is spent for
+  now, and what it can give is what is not spent.
+- **Hard work spends it, the harder the faster.** All-out work spends a
+  third of a group in about ten seconds.
+- **Light work does not tire.** Below about a fifth of what a muscle has,
+  it can go on all day. This is what makes a restful way of holding a tool
+  restful.
+- **Rest brings it back,** the sooner the less the muscles are doing: most
+  of a spent third in about half a minute.
+- **Nothing else was added to make a tired miner look tired.** It is a
+  weaker miner for a while, so by the same rules as before it lifts with
+  more of what it has left, takes the tool nearer its head, and lands a
+  weaker blow.
+
+**Round, its own pickaxe, swinging on:**
+
+| | The first swing | The 26th, before its rest | The 27th, after it |
+|---|---|---|---|
+| Spent | 1% | 40% | 15% |
+| The head lands at | 6.7 m/s | 5.5 m/s | 5.9 m/s |
+| The upper hand, up the handle | 19% of the way | 83% | |
+| The arms, raising it | 37% of what they have | 55% of what is left | |
+
+**The rest.** When its arms or its back are 40% spent, it stops after a
+blow. It stands up straight, which is what rests a back. Its lower hand
+lets go, and it carries the pickaxe in its upper hand alone, near the head
+where the weight is, level at its side with the arm hanging: the way a
+tool is carried. That costs the arm less than a fifth of what it has, so
+the arm rests too. When it is down to 15% spent (under half a minute), the lower hand reaches for the handle and takes hold again, and
+it goes back to work.
+
+**What the step found:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| T1 | Resting bowed over the block with the pick lying on it, the arms rested and the back did not | Holding a bow is work for a back, whatever the hands do | To rest, the body stands up |
+| T2 | Straightening while the hands stayed on the tool dragged the tool off the block | The arms are not long enough to hold a tool on the block from upright | The tool comes with the body: it is carried |
+| T3 | Holding the tool level across the thighs with two hands, the upper arm never rested | One hand is always beyond the weight, so it carries more than all of it, with the arm reaching forward round the belly | One hand at the balance point, at the side, the arm hanging |
+| T4 | Even a light hold kept a muscle a little tired for ever | The first rule tired a muscle at any effort | Light work does not tire |
+
+**What came with it, for later steps:**
+
+- **A hand lets go and takes hold again** (with a reach that takes a
+  moment). The small actions of step 8 are made of this.
+- **The tool carried in one hand at its balance point** is the first of
+  the ways of holding and walking with a tool (step 7).
+
+**Open:** how fast tiredness comes and goes (the paces here are a first
+setting); whether there is a longer tiredness; what the player is shown.
 
 **What is not there yet** (of the bench, step 2):
 

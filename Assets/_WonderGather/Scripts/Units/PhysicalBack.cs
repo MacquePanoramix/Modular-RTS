@@ -69,7 +69,7 @@ namespace WonderGather
             if (holding)
                 for (int i = 0; i < 2; i++)
                     if (hands.Holds(i)) load += Vector3.Dot(Vector3.Cross(hands.GripPlace(i) - hips, -hands.Push(i)), across);
-            float capacity = physical.BackCapacity;
+            float capacity = physical.BackNow;
             float error = (wanted - angle) * Mathf.Deg2Rad, speed = rate * Mathf.Deg2Rad;
             // What would bring the bow to where it is meant to be without overshoot, and holds the weight up meanwhile.
             float asked = inertia * (Quick * Quick * error - 2 * Quick * speed) - weighs - load;
@@ -77,6 +77,8 @@ namespace WonderGather
             float most = capacity * (gives ? 1 - Mathf.Clamp01(Mathf.Abs(rate) / Fastest) : Braking);
             float given = Mathf.Clamp(asked, -most, most);
             Effort = Mathf.Abs(given) / capacity;
+            // Work tires: the back is told what it gave.
+            physical.Worked(PhysicalBody.Muscles.Back, Effort, dt);
             rate += (given + weighs + load) / inertia * Mathf.Rad2Deg * dt;
             angle += rate * dt;
             if (angle < -15) { angle = -15; rate = Mathf.Max(rate, 0); }

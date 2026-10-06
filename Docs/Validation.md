@@ -1928,3 +1928,44 @@ the hips going back, and a swing aimed at a point
   - **The game's own mining,** which still uses the old swing.
   - **Luis's eye** on the three miners' swings.
 
+## S3, step 5 — tiredness (October 6)
+
+Built on the bench
+([design](Design/ThePhysicalBody.md#step-5-tiredness-october-6)).
+
+- **The physical tests** (`PhysicalBodyTests`, seven): 7 of 7. The two new
+  ones:
+  - **A muscle by itself:** ten seconds of all-out work spend between a
+    fifth and under a half of an arm (about a third); a spent arm gives
+    that much less; the other arm is not spent; half a minute of rest
+    brings back more than half of it; two and a half minutes at 15% of
+    what it has do not tire it; work at 50% tires it, less than all-out
+    work does.
+  - **A miner that goes on** (Round, its own pickaxe, 32 swings, frame for
+    step): its first blow lands at 6.7 m/s with the upper hand 19% of the
+    way to the head and the arms at 37%; its 26th, 40% spent, at 5.5 m/s,
+    the hand 83% of the way, the arms at 55% of what is left; it rests
+    once; its next blow, 15% spent, lands at 5.9 m/s. Every swing strikes.
+- **The five from before** pass with tiredness in: their two swings spend
+  little (5% after the first).
+- **Full PlayMode suite, one run:** 133 tests; 129 passed, none failed,
+  4 skipped as explicit.
+- **Release build.** It passed.
+- **Read in pictures:** the last swings before a rest, the rest and the
+  return, from the side and from the front.
+- **What failed on the way** (T1 to T4 in the design): three ways of
+  resting that did not rest. Bowed over the block, the back stayed spent
+  and the run never went on (it timed out, twice). Straightening with the
+  hands still on the tool pulled the tool off the block. Holding the tool
+  across the thighs kept the upper arm working. Also: an edit of mine
+  dropped the swing's recovery step, and the miner stood still for 400
+  seconds; the count of swings showed it.
+- **Not tested:**
+  - **Small and Long tiring,** and a rest with something hanging on the
+    side the tool is carried on (Long's mug is there; the hand is put out
+    past it by the arm's own allowance).
+  - **The tool against the body** while carried at the side: nothing stops
+    it there yet.
+  - **A second run of the suite,** the crowd benchmark, the cost.
+  - **Luis's eye.**
+

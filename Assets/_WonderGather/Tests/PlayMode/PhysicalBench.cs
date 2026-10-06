@@ -42,6 +42,11 @@ namespace WonderGather.Tests
             float[] strengths = Numbers("-benchStrengths", .5f, 1, 2), weights = Numbers("-benchWeights", .5f, 1, 2);
             // -benchMarks: heights to aim the blow at, as shares of the miner's height (0: where the pick rests unaimed).
             float[] marks = Numbers("-benchMarks", 0);
+            // -benchSwings: how many swings each makes (2). -benchFrom: the frames begin at that swing (0).
+            int swings = (int)Numbers("-benchSwings", 2)[0], framesFrom = (int)Numbers("-benchFrom", 0)[0];
+            // -benchView: where the pictures are taken from, in degrees round the miner (0: before it, 90: its right,
+            // 270: its left) and above level.
+            float[] view = Numbers("-benchView", 100, 8);
             int frames = (int)Numbers("-benchFrames", 0)[0];
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
@@ -130,7 +135,8 @@ namespace WonderGather.Tests
                     string tag = string.Format(culture, mark > 0 ? "{0}_s{1:0.0#}_w{2:0.0#}_m{3:0.00}" : "{0}_s{1:0.0#}_w{2:0.0#}", who.ToLowerInvariant(), strength, weight, mark);
                     float miss = 0, tilt = 0;
                     string when = "";
-                    int shot = 0, wanted = 2, frame = 0;
+                    int shot = 0, wanted = swings, frame = 0;
+                    physical.Refresh();
                     float began = Time.time;
                     if (CaptureTools.Argument("-benchTrace") != null) swing.trace = new List<string>();
                     Debug.Log(string.Format(culture, "BENCH {0}: the block's top is {1:0.000} m up, its middle {2:0.000} m ahead, {3:0.00} m across", who, top - unit.transform.position.y,
@@ -150,17 +156,17 @@ namespace WonderGather.Tests
                         }
                         tilt = Mathf.Max(tilt, Vector3.Angle(hands.Held.rotation * Vector3.right, unit.transform.right));
                         // From its side, every other frame from a little before the first lift on.
-                        if (frames > 0 && shot < frames && (swing.phase != PhysicalSwing.Phase.Ready || swing.results.Count > 0 || Time.time - began > .7f) && frame++ % 2 == 0)
+                        if (frames > 0 && shot < frames && swing.results.Count >= framesFrom && (swing.phase != PhysicalSwing.Phase.Ready || swing.results.Count > 0 || Time.time - began > .7f) && frame++ % 2 == 0)
                         {
                             Vector3 target = unit.transform.position + Vector3.up * height * .55f + away * .3f;
-                            Vector3 dir = Quaternion.AngleAxis(100, Vector3.up) * away;
-                            dir = dir * Mathf.Cos(8 * Mathf.Deg2Rad) + Vector3.up * Mathf.Sin(8 * Mathf.Deg2Rad);
+                            Vector3 dir = Quaternion.AngleAxis(view[0], Vector3.up) * away;
+                            dir = dir * Mathf.Cos(view[1] * Mathf.Deg2Rad) + Vector3.up * Mathf.Sin(view[1] * Mathf.Deg2Rad);
                             camera.transform.SetPositionAndRotation(target + dir * 3f, Quaternion.LookRotation(-dir));
                             CaptureTools.Render(camera, Path.Combine(folder, $"{tag}_{shot:000}"), 360, 360);
                             shot++;
                         }
                     };
-                    while ((swing.results.Count < wanted || (frames > 0 && shot < frames)) && Time.time - began < 40) yield return null;
+                    while ((swing.results.Count < wanted || (frames > 0 && shot < frames)) && Time.time - began < 40 + swings * 12) yield return null;
                     after.Then = null;
                     UnityEngine.Object.Destroy(after.gameObject);
                     float carried = hands.ToolMass;
@@ -172,11 +178,13 @@ namespace WonderGather.Tests
                             "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: swing {3}: upper hand {9:0}% of the way to the head; raised {4:0.00} m ({5:0}% of the way) in {6:0.00} s, its hardest joint at {8:0}% of what it has on average, its back at {10:0}%; {7}",
                             who, strength, carried, k + 1, r.lifted, r.reached * 100, r.liftTime,
                             r.struck ? string.Format(culture, "struck at {0:0.0} m/s, {1:0} J", r.speed, r.energy) : "did not strike", r.liftEffort * 100, r.choked * 100, r.backEffort * 100)
-                            + string.Format(culture, "; landed {0:0.000} m up, {1:0.000} m ahead", r.landed.y - unit.transform.position.y, Vector3.Dot(r.landed - unit.transform.position, away)));
+                            + string.Format(culture, "; {0:0}% spent when it began", r.spent * 100));
                     }
                     Debug.Log(string.Format(culture, "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: {3} swings in {4:0.0} s; hands at most {5:0.0} mm off the handle ({11}); the tool leaned at most {6:0} degrees aside; shoulder {7:0} Nm, elbow {8:0} Nm, wrist {9:0.0} Nm, hold {10:0} N",
                         who, strength, carried, swing.results.Count, Time.time - began, miss * 1000, tilt, physical.ShoulderCapacity, physical.ElbowCapacity, physical.WristCapacity, physical.HoldCapacity, when));
                     PhysicalHands.Timed = false;
+                    Debug.Log(string.Format(culture, "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: rested {3} times; at the end its arms are {4:0}% and {5:0}% spent, its back {6:0}%",
+                        who, strength, hands.ToolMass, swing.rests, physical.Spent(PhysicalBody.Muscles.LeftArm) * 100, physical.Spent(PhysicalBody.Muscles.RightArm) * 100, physical.Spent(PhysicalBody.Muscles.Back) * 100));
                     if (PhysicalHands.TimedSteps > 0)
                         Debug.Log(string.Format(culture, "BENCH {0} strength {1:0.00} pickaxe {2:0.00} kg: its hands' step took {3:0.0} microseconds on average, over {4} steps",
                             who, strength, carried, PhysicalHands.TimedTicks * 1e6 / System.Diagnostics.Stopwatch.Frequency / PhysicalHands.TimedSteps, PhysicalHands.TimedSteps));

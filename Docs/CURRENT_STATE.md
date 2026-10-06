@@ -50,8 +50,14 @@
       reach it
       ([clips and figures](Design/ThePhysicalBody.md#step-4-the-swing-october-6)).
       Long's pickaxe is heavy for Long.
+    - **Step 5, tiredness: built** (October 6). Each arm and the back tire
+      with hard work and come back with rest. After about 26 swings Round
+      is 40% spent: its blows are weaker and its hand is up near the
+      pick's head. It then stands up and rests, the pickaxe carried in one
+      hand at its side, and goes back to work in under half a minute
+      ([clip and figures](Design/ThePhysicalBody.md#step-5-tiredness-october-6)).
     - **It is a bench, not yet the game:** the look with `K` is still the
-      old swing. Step 5 (stamina) comes next.
+      old swing. Step 6 (balance: lean, brace and step) comes next.
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.
