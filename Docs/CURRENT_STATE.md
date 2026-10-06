@@ -33,9 +33,9 @@
       it down on a block, at three strengths and three weights. How fast
       it rises and how hard it lands come out of the weights and of what
       the arms can give; a weak miner with a heavy pickaxe visibly
-      struggles ([clips and figures](Design/ThePhysicalBody.md#step-2-the-bench-october-6)).
-
-      ![Round at three strengths](Images/PhysicalBody/Bench_Round_Strengths.gif)
+      struggles ([clips and figures](Design/ThePhysicalBody.md#step-2-the-bench-october-6);
+      [the clip](Images/PhysicalBody/Bench_Round_Strengths.gif);
+      [all nine](Images/PhysicalBody/Bench_Round.gif)).
     - **It is a bench, not yet the game:** the look with `K` is still the
       old swing. Steps 3 (free hands) and 4 (the swing proper) come next.
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
