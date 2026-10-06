@@ -1,5 +1,5 @@
-AUDIT Long: 1 failing of 268 checks (distances in mm)
-  FAIL sinks     Hand0 into Skirt                           limit  3.0  rest    0.0   worst    7.3 at turn164   (2/118 frames)  stand 0.0 walk 0.0 turn 7.3 stop 0.0  [-0.234, -0.2, 0.538]
+AUDIT Long: 1 failing of 267 checks (distances in mm)
+  FAIL sinks     Hand0 into Skirt                           limit  3.0  rest    0.0   worst    8.4 at turn164   (2/118 frames)  stand 0.0 walk 0.0 turn 8.4 stop 0.0  [-0.237, -0.161, 0.549]
   ok   beneath   Trousers under Skirt                       limit  3.0  rest    2.6   worst    2.6 at rest      (0/118 frames)  [-0.122, -0.085, 0.761]
   ok   bones     Boot0                                      limit  4.0  rest    3.0  None
   ok   bones     Boot1                                      limit  4.0  rest    3.0  None
@@ -7,7 +7,7 @@ AUDIT Long: 1 failing of 268 checks (distances in mm)
   ok   bones     Eyelet0                                    limit  4.0  rest    2.0  None
   ok   bones     Eyelet1                                    limit  4.0  rest    2.0  None
   ok   bones     Hair                                       limit  4.0  rest    1.0  None
-  ok   bones     Hand0                                      limit  4.0  rest    2.0  None
+  ok   bones     Hand0                                      limit  4.0  rest    4.0  None
   ok   bones     Hand1                                      limit  4.0  rest    2.0  None
   ok   bones     Heel0                                      limit  4.0  rest    3.0  None
   ok   bones     Heel1                                      limit  4.0  rest    3.0  None
@@ -117,8 +117,7 @@ AUDIT Long: 1 failing of 268 checks (distances in mm)
   ok   floating  Hair#7                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.013, -0.171, 1.866]
   ok   floating  Hair#8                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.103, -0.125, 1.78]
   ok   floating  Hair#9                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.018, -0.209, 1.857]
-  ok   floating  Hand0#0                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.466, -0.058, 0.773]
-  ok   floating  Hand0#1                                    limit  3.0  rest    2.0   worst    2.0 at rest      (0/12 frames)  [-0.442, 0.005, 0.757]
+  ok   floating  Hand0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.467, -0.058, 0.773]
   ok   floating  Hand1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.407, -0.069, 0.83]
   ok   floating  Heel0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.114, 0.077, 0.0]
   ok   floating  Heel1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.051, 0.07, 0.0]
@@ -257,7 +256,7 @@ AUDIT Long: 1 failing of 268 checks (distances in mm)
   ok   sinks     PickHandle into Skin                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  None
   ok   sinks     PickHandle into Skirt                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  None
   ok   sinks     PickHandle into Top                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  None
-  ok   sinks     PickHead into Collar                       limit  2.0  rest    0.0   worst    0.3 at walk66    (0/118 frames)  [-0.069, -0.132, 1.36]
+  ok   sinks     PickHead into Collar                       limit  2.0  rest    0.0   worst    0.3 at turn172   (0/118 frames)  [-0.066, -0.131, 1.354]
   ok   sinks     PickHead into Skin                         limit  2.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  None
   ok   sinks     PickHead into Skirt                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  None
   ok   sinks     PickHead into Top                          limit  2.0  rest    0.0   worst    0.0 at rest      (0/118 frames)  None

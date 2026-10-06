@@ -77,13 +77,38 @@ namespace WonderGather
             public bool front;
         }
 
+        // A free hand that closes: its fingers' bones (the four fingers, then the thumb; three each, the knuckle
+        // first), and how each turns, in its own frame, from its rest to the open hand and to the hand closed round
+        // handles of several thicknesses. The model's build finds those turns on the skinned mesh, so that the
+        // fingers lie on the handle and never enter it (Art/Blender/Worker/hands.py); the game only plays them.
+        [System.Serializable]
+        public struct Grip
+        {
+            public Transform[] joints;
+            // The open hand, ready to take a handle: one turn for each joint.
+            public Quaternion[] open;
+            // The handles the table holds (radius, metres, ascending), and for each, one turn for each joint.
+            public float[] radii;
+            public Quaternion[] closed;
+            // Where each of those handles lies in the closed hand: a point on its axis, in the hand bone's space;
+            // and its direction there (through the closed fingers, towards the thumb).
+            public Vector3[] centres;
+            public Vector3 axis;
+        }
+
         // How far a relaxed wrist turns with a swinging weight, in degrees.
         private const float WristGive = 32;
+        // How long a hand takes to open and close round a handle (seconds), and how much of that is the opening.
+        private const float GripTime = .3f, GripOpening = .35f;
 
         [SerializeField] private Bones bones;
         [SerializeField] private Solution solved;
         [SerializeField] private Hanging[] hanging = new Hanging[0];
         [SerializeField] private Flap[] flaps = new Flap[0];
+        // The hands that close: 0 the left, 1 the right. A hand modelled closed round what it carries has no joints.
+        [SerializeField] private Grip[] grips = new Grip[0];
+        private Quaternion[][] gripRest = new Quaternion[0][];
+        private readonly float[] held = new float[2], heldTarget = new float[2], heldRadius = new float[2], heldPosed = { -1, -1 };
         // How far a thigh swings, in degrees, before it reaches its front and its back flap (x, y): the room between
         // the leg and the cloth as they were modelled. A long coat hangs well clear of the legs, so only the end of
         // each stride moves it; cloth that is not touched hangs still.
@@ -108,13 +133,14 @@ namespace WonderGather
         public bool Ready => ready;
         public Bones Rig => bones;
 
-        public void Configure(Bones rig, Solution solution, Hanging[] things = null, Flap[] skirt = null, Vector2? skirtSlack = null)
+        public void Configure(Bones rig, Solution solution, Hanging[] things = null, Flap[] skirt = null, Vector2? skirtSlack = null, Grip[] fingers = null)
         {
             bones = rig;
             solved = solution;
             hanging = things ?? new Hanging[0];
             flaps = skirt ?? new Flap[0];
             flapSlack = skirtSlack ?? Vector2.zero;
+            grips = fingers ?? new Grip[0];
             ready = false;
             CaptureRest();
         }
@@ -129,6 +155,41 @@ namespace WonderGather
         public float HangingIntoBody(int index) => hangInto[index];
         public float HangingAskew(int index) => hangAskew[index];
         public System.Collections.Generic.IReadOnlyList<Flap> Skirt => flaps;
+
+        // Whether a hand can close round a handle (a hand that carries something is modelled closed, and cannot).
+        public bool CanHold(int hand) => hand >= 0 && hand < grips.Length && hand < 2 && grips[hand].joints != null && grips[hand].joints.Length > 0
+                                         && grips[hand].radii != null && grips[hand].radii.Length > 0;
+        // Close a hand round a handle of this radius: it opens first, as a hand does to take something. Or let go.
+        public void Hold(int hand, float radius)
+        {
+            if (!CanHold(hand)) return;
+            heldRadius[hand] = radius;
+            heldTarget[hand] = 1;
+        }
+        public void Release(int hand) { if (hand >= 0 && hand < 2) heldTarget[hand] = 0; }
+        // 0: relaxed, as modelled. 1: closed round its handle.
+        public float Held(int hand) => hand >= 0 && hand < 2 ? held[hand] : 0;
+        public Grip Fingers(int hand) => grips[hand];
+        // Where a handle of this radius lies in a hand, as the hand is now: a point on its axis, and its direction.
+        public bool HandleIn(int hand, float radius, out Vector3 point, out Vector3 direction)
+        {
+            point = direction = Vector3.zero;
+            if (!CanHold(hand)) return false;
+            var grip = grips[hand];
+            Row(grip, radius, out int row, out int next, out float blend);
+            point = bones.hands[hand].TransformPoint(Vector3.Lerp(grip.centres[row], grip.centres[next], blend));
+            direction = bones.hands[hand].TransformDirection(grip.axis).normalized;
+            return true;
+        }
+
+        // The table's two rows a radius lies between, and how far from the first to the second.
+        private static void Row(Grip grip, float radius, out int row, out int next, out float blend)
+        {
+            row = 0;
+            for (int k = 0; k + 1 < grip.radii.Length; k++) if (radius >= grip.radii[k]) row = k;
+            next = Mathf.Min(row + 1, grip.radii.Length - 1);
+            blend = next > row ? Mathf.InverseLerp(grip.radii[row], grip.radii[next], radius) : 0;
+        }
 
         private void Awake() => CaptureRest();
 
@@ -192,6 +253,15 @@ namespace WonderGather
             flapOut = new float[flapCount];
             for (int k = 0; k < flapCount; k++) flapRest[k] = flaps[k].bone != null ? flaps[k].bone.localRotation : Quaternion.identity;
             for (int i = 0; i < 2; i++) { thighRestSwing[i] = Swing(i); thighRestOut[i] = Out(i); }
+            // The fingers as modelled: each is turned from there.
+            gripRest = new Quaternion[grips != null ? grips.Length : 0][];
+            for (int h = 0; h < gripRest.Length; h++)
+            {
+                var joints = grips[h].joints ?? new Transform[0];
+                gripRest[h] = new Quaternion[joints.Length];
+                for (int j = 0; j < joints.Length; j++) gripRest[h][j] = joints[j] != null ? joints[j].localRotation : Quaternion.identity;
+            }
+            heldPosed[0] = heldPosed[1] = -1;
             ready = true;
         }
 
@@ -263,8 +333,34 @@ namespace WonderGather
                 // The hand carries on from the forearm.
                 bones.hands[i].rotation = fore * root * handRest[i];
             }
+            for (int i = 0; i < 2; i++) Close(i);
             Drape();
             for (int k = 0; k < hanging.Length; k++) Hang(k);
+        }
+
+        // A hand closing round a handle or letting go: from relaxed, it opens (the fingers straighten, the thumb
+        // lifts clear), then closes until the fingers lie on the handle.
+        private void Close(int hand)
+        {
+            if (!CanHold(hand) || hand >= gripRest.Length) return;
+            held[hand] = Mathf.MoveTowards(held[hand], heldTarget[hand], Mathf.Clamp(Time.deltaTime, 0, 1 / 20f) / GripTime);
+            // A hand at rest costs nothing: its fingers are where they were put.
+            if (Mathf.Approximately(held[hand], heldPosed[hand]) && (held[hand] <= 0 || held[hand] >= 1)) return;
+            heldPosed[hand] = held[hand];
+            var grip = grips[hand];
+            var rest = gripRest[hand];
+            float opening = Mathf.SmoothStep(0, 1, Mathf.Clamp01(held[hand] / GripOpening));
+            float closing = Mathf.SmoothStep(0, 1, Mathf.Clamp01((held[hand] - GripOpening) / (1 - GripOpening)));
+            Row(grip, heldRadius[hand], out int row, out int next, out float blend);
+            int count = grip.joints.Length;
+            for (int j = 0; j < count; j++)
+            {
+                if (grip.joints[j] == null) continue;
+                Quaternion turn = Quaternion.Slerp(Quaternion.identity, grip.open[j], opening);
+                if (closing > 0)
+                    turn = Quaternion.Slerp(turn, Quaternion.Slerp(grip.closed[row * count + j], grip.closed[next * count + j], blend), closing);
+                grip.joints[j].localRotation = rest[j] * turn;
+            }
         }
 
         // How far forward a thigh points, as an angle from straight down in the pelvis' own frame (degrees).

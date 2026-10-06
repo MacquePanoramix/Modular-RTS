@@ -18,7 +18,7 @@ AUDIT Small: 2 failing of 386 checks (distances in mm)
   ok   bones     Eyelet0                                    limit  4.0  rest    3.0  None
   ok   bones     Eyelet1                                    limit  4.0  rest    3.0  None
   ok   bones     Hair                                       limit  4.0  rest    1.0  None
-  ok   bones     Hand0                                      limit  4.0  rest    2.0  None
+  ok   bones     Hand0                                      limit  4.0  rest    4.0  None
   ok   bones     Hand1                                      limit  4.0  rest    2.0  None
   ok   bones     Heel0                                      limit  4.0  rest    3.0  None
   ok   bones     Heel1                                      limit  4.0  rest    3.0  None
@@ -81,7 +81,7 @@ AUDIT Small: 2 failing of 386 checks (distances in mm)
   ok   floating  Eyelet1#7                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.092, -0.048, 0.144]
   ok   floating  Eyelet1#8                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.063, -0.056, 0.165]
   ok   floating  Eyelet1#9                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.092, -0.053, 0.166]
-  ok   floating  Hair#0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.011, 0.058, 1.42]
+  ok   floating  Hair#0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.044, 0.101, 1.379]
   ok   floating  Hair#1                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.017, -0.059, 1.412]
   ok   floating  Hair#10                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.069, 0.031, 1.401]
   ok   floating  Hair#11                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.057, 0.035, 1.406]
@@ -124,7 +124,7 @@ AUDIT Small: 2 failing of 386 checks (distances in mm)
   ok   floating  Hair#7                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.084, 0.018, 1.408]
   ok   floating  Hair#8                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.083, -0.003, 1.396]
   ok   floating  Hair#9                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.062, 0.012, 1.409]
-  ok   floating  Hand0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.341, -0.006, 0.563]
+  ok   floating  Hand0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.341, -0.009, 0.546]
   ok   floating  Hand1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.322, -0.002, 0.555]
   ok   floating  Heel0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.094, 0.062, 0.0]
   ok   floating  Heel1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.044, 0.057, 0.0]

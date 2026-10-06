@@ -29,10 +29,15 @@ import bmesh
 import bpy
 from mathutils import Vector
 
+import hands
 import shapes
 
 # Budgets in triangles.
 LOD_BUDGETS = (16000, 5000, 1600)
+# A hand that closes keeps this many triangles at the nearest level, over and above that level's budget: fifteen
+# finger joints need rings of points to bend at. (Shared out with everything else, a hand got about 600, and its
+# skin folded when the fingers closed.)
+HAND_TRIANGLES = 1600
 ATLAS = 2048
 # Parts dropped from the farthest level of detail.
 DETAILS = ("_Lace", "_Eyelet", "_Button", "_LanternBar", "_LanternBail", "_LanternEar", "_ApronTie", "_Buckle", "_CapLampMount", "_Spring", "_StrapTab",
@@ -98,6 +103,8 @@ def joints(b):
         for i in (0, 1):
             for flap in ("Front", "Back"):
                 bones[f"Skirt{flap}.{side_of(i)}"] = (b.hips[i].copy(), Vector((b.hips[i].x, b.hips[i].y, hem)), 0.05, "Pelvis")
+    # A free hand closes: three bones for each finger and for the thumb (hands.py).
+    hands.joints(b, bones)
     return bones
 
 
@@ -238,8 +245,12 @@ def skin(obj, b, bones):
                     groups.setdefault(n, []).append((v.index, w))
     else:
         names = names or [n for n in bones]
+        closing = hands.of(obj, b)  # a hand that closes shares its skin with its fingers' bones
         for v in mesh.vertices:
-            for n, w in capsule_weights(v.co, names, bones):
+            ws = capsule_weights(v.co, names, bones)
+            if closing is not None:
+                ws = hands.weights(b, closing, v.co, ws)
+            for n, w in ws:
                 groups.setdefault(n, []).append((v.index, w))
     for n, items in groups.items():
         g = obj.vertex_groups.get(n) or obj.vertex_groups.new(name=n)
@@ -344,12 +355,14 @@ def unwrap_atlas(obj, face_materials):
     bpy.ops.object.mode_set(mode='OBJECT')
 
 
-def bake_atlas(obj, materials, recipes, face_images, path):
-    """Bakes every material's appearance into one image on the Atlas layout."""
+def bake_atlas(obj, materials, recipes, face_images, path, size=None):
+    """Bakes every material's appearance into one image on the Atlas layout. size: the image's side (a being's
+    is ATLAS; a small thing's can be less)."""
     import numpy as np
     import painting
-    image = bpy.data.images.new(os.path.basename(path), ATLAS, ATLAS, alpha=False)
-    image.pixels.foreach_set(np.tile(np.array([0.32, 0.25, 0.21, 1.0], dtype=np.float32), ATLAS * ATLAS))
+    size = size or ATLAS
+    image = bpy.data.images.new(os.path.basename(path), size, size, alpha=False)
+    image.pixels.foreach_set(np.tile(np.array([0.32, 0.25, 0.21, 1.0], dtype=np.float32), size * size))
     for slot in obj.material_slots:
         mat = slot.material
         name = mat.name
@@ -488,9 +501,27 @@ def prepare(name, b, parts):
     ratio = max(LOD_BUDGETS[0] - exact, 1000) / total
     for o in meshes:
         if not o.get("wg_exact"):
-            simplify_to(o, ratio)
+            closes = hands.of(o, b) is not None
+            simplify_to(o, max(ratio, HAND_TRIANGLES / max(triangles(o), 1)) if closes else ratio)
         limit_influences(o)
     return rig, bones, meshes
+
+
+def whole_hand(obj, b):
+    """Moves every finger bone's weights onto its hand, and removes the finger bones' groups from this mesh."""
+    for i in sorted(hands.closing(b)):
+        hand = obj.vertex_groups.get(f"Hand.{side_of(i)}")
+        fingers = [obj.vertex_groups.get(n) for names, _, _ in hands.digits(b, i) for n in names]
+        fingers = [g for g in fingers if g is not None]
+        if hand is None or not fingers:
+            continue
+        index = {g.index for g in fingers}
+        for v in obj.data.vertices:
+            moved = sum(g.weight for g in v.groups if g.group in index)
+            if moved > 0:
+                hand.add([v.index], moved, 'ADD')
+        for g in fingers:
+            obj.vertex_groups.remove(g)
 
 
 def limit_influences(obj, limit=4):
@@ -522,6 +553,8 @@ def build(name, b, parts, materials, recipes, face_images, out_dir, audit=None):
     finish_materials(lod0, name, materials, atlas)
     lod1 = lod_copy(lod0, f"Miner_{name}_LOD1", LOD_BUDGETS[1], drop=2)
     lod2 = lod_copy(lod0, f"Miner_{name}_LOD2", LOD_BUDGETS[2], drop=1)
+    # Far away a hand is a few points: its fingers go with the hand there, and that level carries no finger bones.
+    whole_hand(lod2, b)
     for lod in (lod0, lod1, lod2):
         lod.parent = rig
         mod = lod.modifiers.new("Rig", 'ARMATURE')

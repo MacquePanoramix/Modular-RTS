@@ -332,15 +332,18 @@ def carriage(b, objs, hang):
     return dict(armCarry=carry, armSwingSide=keep, hanging=hanging, skirtSlack=slack)
 
 
-def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=False, report=None, sweep_only=False):
+def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=False, report=None, sweep_only=False, hands_only=False):
     """The miners for the game: rest pose, skeleton, skin, levels of detail, one atlas each, and their dimensions.
     dims_only: only the dimensions (miners.json), without remaking the models.
     Every build is audited (audit.py): at rest, and on the game's recorded frames when poses (a folder of
     Miner_<Name>_poses.json) is given. audit_only: the audit alone, without baking or exporting.
     report: where the audit's reports go. A build's go to Art/Review/Miners, never among the game's assets.
-    sweep_only: the sweep of poses beyond the game's own movement (sweep.py), without baking or exporting."""
+    sweep_only: the sweep of poses beyond the game's own movement (sweep.py), without baking or exporting.
+    hands_only: the closing of the free hands round handles (hands.py), with a picture of each, without baking
+    or exporting."""
     import audit
-    if sweep_only:
+    import hands
+    if sweep_only or hands_only:
         audit_only = True
     if report is None:
         report = out_dir if audit_only else os.path.normpath(os.path.join(HERE, "..", "..", "Review", "Miners"))
@@ -367,8 +370,17 @@ def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=Fal
         if recorded and not os.path.exists(recorded):
             recorded = None
 
+        closed = {}
+
         def check(b_, meshes, bones):
             audit.run(b_, meshes, bones, report, recorded)
+            # The free hands closed round handles of several thicknesses: checked here, on the parts as skinned.
+            closed.update(hands.tables(b_, meshes))
+            hands.report(b_, closed, report, pictures=False)
+        if hands_only:
+            _, bones, meshes = rigging.prepare(name, b, objs)
+            hands.report(b, hands.tables(b, meshes), report)
+            continue
         if sweep_only:
             import sweep
             _, bones, meshes = rigging.prepare(name, b, objs)
@@ -380,6 +392,7 @@ def build_rigged(out_dir, only=None, dims_only=False, poses=None, audit_only=Fal
             continue
         dims[name], _ = rigging.build(name, b, objs, MATERIALS, recipes, face_images, out_dir, audit=check)
         dims[name].update(gait)
+        dims[name]["grips"] = hands.export(b, closed)
     path = os.path.join(out_dir, "miners.json")
     previous = {}
     if audit_only:
@@ -635,10 +648,12 @@ if __name__ == "__main__":
     parser.add_argument("--audit", action="store_true", help="only the model audit (rest pose, skinned and simplified), no export")
     parser.add_argument("--report", help="where the audit's reports go (default: --out for --audit; Art/Review/Miners for a build)")
     parser.add_argument("--sweep", action="store_true", help="only the sweep of extreme poses (sweep.py): its report and a picture of each pose")
+    parser.add_argument("--hands", action="store_true", help="only the closing of the free hands round handles (hands.py): its report and pictures")
     args = parser.parse_args(argv)
     os.makedirs(args.out, exist_ok=True)
-    if args.rigged or args.audit or args.sweep:
-        build_rigged(args.out, args.only, args.dims, args.poses, audit_only=args.audit, report=args.report, sweep_only=args.sweep)
+    if args.rigged or args.audit or args.sweep or args.hands:
+        build_rigged(args.out, args.only, args.dims, args.poses, audit_only=args.audit, report=args.report, sweep_only=args.sweep,
+                     hands_only=args.hands)
         sys.exit(0)
     built = build(args.out, args.only)
     painted = paint(built, args.out) if args.paint else {}

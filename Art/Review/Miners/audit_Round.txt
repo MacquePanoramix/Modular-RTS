@@ -24,8 +24,8 @@ AUDIT Round: 1 failing of 203 checks (distances in mm)
   ok   bones     HammerHandle                               limit  4.0  rest    1.0  None
   ok   bones     HammerHead                                 limit  4.0  rest    1.0  None
   ok   bones     HammerLoop                                 limit  4.0  rest    2.0  None
-  ok   bones     Hand0                                      limit  4.0  rest    2.0  None
-  ok   bones     Hand1                                      limit  4.0  rest    2.0  None
+  ok   bones     Hand0                                      limit  4.0  rest    4.0  None
+  ok   bones     Hand1                                      limit  4.0  rest    4.0  None
   ok   bones     Heel0                                      limit  4.0  rest    3.0  None
   ok   bones     Heel1                                      limit  4.0  rest    3.0  None
   ok   bones     Lace0                                      limit  4.0  rest    3.0  None
@@ -78,15 +78,15 @@ AUDIT Round: 1 failing of 203 checks (distances in mm)
   ok   floating  Eyelet1#9                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.129, -0.069, 0.163]
   ok   floating  Forearm0                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.371, 0.078, 0.791]
   ok   floating  Forearm1                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.369, 0.055, 0.791]
-  ok   floating  Hair#0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.011, 0.155, 1.449]
+  ok   floating  Hair#0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.002, 0.093, 1.528]
   ok   floating  Hair#1                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.163, 0.117, 1.463]
   ok   floating  Hair#2                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.082, -0.09, 1.49]
   ok   floating  Hair#3                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.109, 0.144, 1.388]
   ok   floating  HammerHandle                               limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.105, -0.099, 0.845]
   ok   floating  HammerHead                                 limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.072, -0.136, 0.863]
   ok   floating  HammerLoop                                 limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.107, -0.114, 0.86]
-  ok   floating  Hand0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.399, -0.0, 0.693]
-  ok   floating  Hand1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.389, -0.001, 0.693]
+  ok   floating  Hand0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.399, 0.0, 0.693]
+  ok   floating  Hand1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.389, -0.001, 0.694]
   ok   floating  Heel0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.126, 0.07, 0.0]
   ok   floating  Heel1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.07, 0.064, 0.0]
   ok   floating  Lace0#0                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.107, -0.083, 0.174]

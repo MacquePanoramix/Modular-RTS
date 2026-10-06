@@ -136,10 +136,12 @@ THUMBS = {
 def wrap(knuckle, segments, centre, radius):
     """The turns at a finger's three joints that wrap it round a bar: in the plane the finger curls in
     (x along the hand, y towards the palm side), each segment leaves its joint along the tangent to the circle
-    (centre, radius) that keeps the bar on the curling side. Returns the three turns, in radians."""
+    (centre, radius) that keeps the bar on the curling side. radius: one for all three segments, or one each (a
+    finger tapers, so its outer bones lie nearer the bar). Returns the three turns, in radians."""
     x, y = knuckle
     heading, turns = 0.0, []
-    for length in segments:
+    each = list(radius) if isinstance(radius, (list, tuple)) else [radius] * len(segments)
+    for length, radius in zip(segments, each):
         vx, vy = centre[0] - x, centre[1] - y
         dist = math.hypot(vx, vy)
         aim = math.atan2(vy, vx) - math.asin(min(1.0, radius / max(dist, 1e-6)))
@@ -197,10 +199,13 @@ def hand(b, i, skin, grip="relaxed", palm=None, along=None, ring=None, bar=None)
         thumb = [(0.12, 0.17, 0.04), (0.29, 0.28, 0.12),
                  (centre[0] - reach * 0.98, 0.25, centre[1] + reach * 0.2),
                  (centre[0] - reach * 0.72, 0.11, centre[1] + reach * 0.7)]
+    digits = []  # each finger's joints (knuckle to tip), for a hand that can close (hands.py)
     for k in range(4):
         base = local(0.5 - (0.04 if k == 3 else 0), (1.5 - k) * 0.105, 0.0)
         d = a.copy() if bar else (a + t * (1.5 - k) * 0.035).normalized()
         pts, r0 = [base], finger_r
+        digits.append(dict(points=pts, heading=d.copy(), knuckle=0.5 - (0.04 if k == 3 else 0),
+                           lengths=[lengths[k] * f_ for f_ in (0.45, 0.3, 0.25)], radius=r0))
         for seg, frac in enumerate((0.45, 0.3, 0.25)):
             # Each joint turns the finger towards the palm.
             d = (Matrix.Rotation(curls[k][seg], 3, d.cross(n).normalized()) @ d).normalized()
@@ -210,7 +215,20 @@ def hand(b, i, skin, grip="relaxed", palm=None, along=None, ring=None, bar=None)
     pts = [local(*q) for q in thumb]
     radii = [L * 0.09, L * 0.082, L * 0.072, L * 0.064]
     parts.append(tube(f"{b.name}_Thumb{i}", pts, radii, radii, skin, sides=10, levels=0))
+    # What a hand that closes needs to know of itself. A hand modelled closed round a handle is fused shut and
+    # cut to fit: it stays as modelled.
+    if not hasattr(b, "hands"):
+        b.hands = {}
+    b.hands[i] = dict(length=L, wrist=wr.copy(), along=a.copy(), thumbward=t.copy(), palm=n.copy(), fingers=digits,
+                      thumb=dict(points=pts, radius=L * 0.075), closes=not bar)
     obj = fuse(f"{b.name}_Hand{i}", parts, skin, voxel=L * 0.013, smooth=6, keep=None if bar else 3500)
+    if not bar:
+        # A hand that closes: fusing can seal a bubble inside, and when the fingers bend it would come through
+        # the skin. Only the hand's own surface is kept.
+        before = len(obj.data.vertices)
+        shapes.keep_largest(obj)
+        if len(obj.data.vertices) != before:
+            print(f"HAND {obj.name}: removed {before - len(obj.data.vertices)} points sealed inside")
     # Where it holds things: in the middle of the curled fingers.
     grasp = wr + a * L * 0.62 + n * L * 0.2
     if bar:

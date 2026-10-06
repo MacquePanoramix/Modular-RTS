@@ -81,7 +81,9 @@ namespace WonderGather.Tests
                     Assert.That(triangles, Is.LessThanOrEqualTo(budget[i]), $"{miner.name} LOD{i} has {triangles} triangles.");
                     // One painted material for the body (and one for a lamp's glass), plus the outline on the nearer two.
                     Assert.That(renderer.sharedMaterials.Length, Is.LessThanOrEqualTo(i < 2 ? 3 : 2));
-                    Assert.That(renderer.bones.Length, Is.LessThanOrEqualTo(28));
+                    // The body, the skirt's flaps, what hangs, and the fingers of the hands that close (fifteen a
+                    // hand). Every level lists the whole skeleton; the farthest has no skin on the finger bones.
+                    Assert.That(renderer.bones.Length, Is.LessThanOrEqualTo(58), $"{miner.name} LOD{i} has {renderer.bones.Length} bones.");
                 }
             }
         }
@@ -227,6 +229,105 @@ namespace WonderGather.Tests
                 Assert.That(closest, Is.GreaterThan(-.004f), $"{choice.NameOf(index)}'s boots overlapped by {-closest * 1000:F0} mm in the turn.");
                 unit.Motor.Stop();
             }
+        }
+
+        // The model's own account of its closing hands (miners.json, written by Art/Blender/Worker/hands.py).
+        [System.Serializable] private class GripFile { public GripMiner[] miners; }
+        [System.Serializable] private class GripMiner { public string name; public GripHand[] grips; }
+        [System.Serializable] private class GripHand { public string hand; public string[] bones; public float[] rest, radii, closed; }
+
+        // A free hand closes round a handle and opens again. Closed, every finger joint and fingertip is where the
+        // model's build put it when it measured the skin on the handle (there the fingers lie on the handle and do
+        // not enter it); no finger bone passes through the handle, for the table's handles and for one in between;
+        // closing takes time; and let go, the fingers return exactly to their modelled rest.
+        [UnityTest] public IEnumerator AFreeHandClosesRoundAHandleAndOpensAgain()
+        {
+            var file = JsonUtility.FromJson<GripFile>(System.IO.File.ReadAllText(Application.dataPath + "/_WonderGather/Art/Worker/Miners/miners.json"));
+            int hands = 0;
+            for (int index = 0; index < 3; index++)
+            {
+                choice.Choose(index);
+                for (int k = 0; k < 10; k++) yield return null;
+                var body = choice.Current.GetComponent<MinerBody>();
+                string name = choice.NameOf(index);
+                var entry = file.miners.First(m => m.name == name);
+                for (int hand = 0; hand < 2; hand++)
+                {
+                    string label = hand == 0 ? "Hand.L" : "Hand.R";
+                    var told = (entry.grips ?? new GripHand[0]).FirstOrDefault(g => g.hand == label);
+                    Assert.That(body.CanHold(hand), Is.EqualTo(told != null), $"{name}'s {label}: the body and the model disagree on whether it closes.");
+                    if (told == null) continue;
+                    hands++;
+                    var grip = body.Fingers(hand);
+                    var palm = body.Rig.hands[hand];
+                    int digits = grip.joints.Length / 3;
+                    Assert.That(digits, Is.EqualTo(5), $"{name}'s {label} should have four fingers and a thumb.");
+                    Vector3 Told(float[] v, int point) => new Vector3(v[point * 3], v[point * 3 + 1], v[point * 3 + 2]);
+                    // The fingers are at rest now, so the model's rest joints lie on the bones: that fixes how the
+                    // model's space sits on this hand (from three knuckles), whatever the arm is doing.
+                    Quaternion Frame(Vector3 p0, Vector3 p1, Vector3 p2) => Quaternion.LookRotation(p1 - p0, Vector3.Cross(p1 - p0, p2 - p0));
+                    Vector3 r0 = Told(told.rest, 0), r1 = Told(told.rest, 12), r2 = Told(told.rest, 16);
+                    Quaternion turn = Frame(grip.joints[0].position, grip.joints[9].position, grip.joints[12].position) * Quaternion.Inverse(Frame(r0, r1, r2));
+                    Vector3 shift = grip.joints[0].position - turn * r0;
+                    Vector3 InHand(Vector3 told_) => palm.InverseTransformPoint(turn * told_ + shift);
+                    var rest = grip.joints.Select(j => j.localRotation).ToArray();
+                    float fit = 0;
+                    for (int j = 0; j < grip.joints.Length; j++)
+                        fit = Mathf.Max(fit, Vector3.Distance(palm.InverseTransformPoint(grip.joints[j].position), InHand(Told(told.rest, j / 3 * 4 + j % 3))));
+                    Assert.That(fit, Is.LessThan(.0008f), $"{name}'s {label}: its finger bones are {fit * 1000:F1} mm from the model's joints at rest.");
+                    // Each fingertip, in its last bone's own space.
+                    var tips = Enumerable.Range(0, digits).Select(d => grip.joints[d * 3 + 2].InverseTransformPoint(palm.TransformPoint(InHand(Told(told.rest, d * 4 + 3))))).ToArray();
+
+                    var radii = told.radii.Concat(new[] { (told.radii[told.radii.Length / 2] + told.radii[told.radii.Length / 2 - 1]) * .5f }).ToArray();
+                    for (int r = 0; r < radii.Length; r++)
+                    {
+                        float radius = radii[r];
+                        body.Hold(hand, radius);
+                        yield return null;
+                        yield return null;
+                        Assert.That(body.Held(hand), Is.GreaterThan(0).And.LessThan(1), $"{name}'s {label} should take time to close.");
+                        float began = Time.time;
+                        while (body.Held(hand) < 1 && Time.time - began < 3) yield return null;
+                        yield return null;
+                        Assert.That(body.Held(hand), Is.EqualTo(1), $"{name}'s {label} did not close.");
+                        Assert.That(body.HandleIn(hand, radius, out var point, out var along), Is.True);
+                        Vector3 axisAt = palm.InverseTransformPoint(point), axis = palm.InverseTransformDirection(along).normalized;
+                        float off = 0, into = 0;
+                        string where = "";
+                        for (int d = 0; d < digits; d++)
+                        {
+                            var at = new Vector3[4];
+                            for (int j = 0; j < 3; j++) at[j] = palm.InverseTransformPoint(grip.joints[d * 3 + j].position);
+                            at[3] = palm.InverseTransformPoint(grip.joints[d * 3 + 2].TransformPoint(tips[d]));
+                            for (int j = 0; j < 4; j++)
+                            {
+                                if (r < told.radii.Length)
+                                {
+                                    float away = Vector3.Distance(at[j], InHand(Told(told.closed, r * digits * 4 + d * 4 + j)));
+                                    if (away > off) { off = away; where = (j < 3 ? grip.joints[d * 3 + j].name : grip.joints[d * 3 + 2].name + "'s tip"); }
+                                }
+                                if (j == 3) continue;
+                                // No bone's line passes inside the handle.
+                                for (int s = 0; s <= 8; s++)
+                                {
+                                    Vector3 from = Vector3.Lerp(at[j], at[j + 1], s / 8f) - axisAt;
+                                    into = Mathf.Max(into, radius - (from - axis * Vector3.Dot(from, axis)).magnitude);
+                                }
+                            }
+                        }
+                        Assert.That(off, Is.LessThan(.001f), $"{name}'s {label} on a handle of {radius * 2000:F0} mm: {where} is {off * 1000:F1} mm from where the model measured it.");
+                        Assert.That(into, Is.LessThan(.0005f), $"{name}'s {label} on a handle of {radius * 2000:F0} mm: a finger bone is {into * 1000:F1} mm inside the handle.");
+                        body.Release(hand);
+                        began = Time.time;
+                        while (body.Held(hand) > 0 && Time.time - began < 3) yield return null;
+                        yield return null;
+                        float left = 0;
+                        for (int j = 0; j < grip.joints.Length; j++) left = Mathf.Max(left, Quaternion.Angle(grip.joints[j].localRotation, rest[j]));
+                        Assert.That(left, Is.LessThan(.05f), $"{name}'s {label} did not open back to its rest ({left:F2} degrees off).");
+                    }
+                }
+            }
+            Assert.That(hands, Is.EqualTo(4), "Small's and Long's free hands and both of Round's should close.");
         }
 
         [UnityTest] public IEnumerator TheMinersHeadsStayAboveTheirFeet()

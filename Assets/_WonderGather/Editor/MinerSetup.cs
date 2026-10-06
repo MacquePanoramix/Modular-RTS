@@ -46,6 +46,21 @@ namespace WonderGather.Editor
             public Hung[] hanging;
             // How far a thigh swings, in degrees, before it reaches the skirt's front and back flaps.
             public float[] skirtSlack;
+            // The hands that close round a handle (hands.py).
+            public Gripped[] grips;
+        }
+
+        [Serializable]
+        private class Gripped
+        {
+            // The hand's bone, and its fingers' bones: the four fingers, then the thumb, three each from the knuckle.
+            public string hand;
+            public string[] bones;
+            // Each digit's four joints (knuckle to tip), in the being's own space (x to its right, y up, z forward):
+            // as modelled, with the hand open, and closed round a handle of each radius (one after another).
+            public float[] rest, open, radii, closed;
+            // A point on each handle's axis, and the handles' direction through the closed fingers.
+            public float[] centres, axis;
         }
 
         [Serializable]
@@ -269,10 +284,71 @@ namespace WonderGather.Editor
             }, hanging, new[] { ("SkirtFront.L", 0, true), ("SkirtBack.L", 0, false), ("SkirtFront.R", 1, true), ("SkirtBack.R", 1, false) }
                 .Select(f => new MinerBody.Flap { bone = bones.FirstOrDefault(x => x.name == f.Item1), leg = f.Item2, front = f.Item3 })
                 .Where(f => f.bone != null).ToArray(),
-                e.skirtSlack != null && e.skirtSlack.Length == 2 ? new Vector2(e.skirtSlack[0], e.skirtSlack[1]) : Vector2.zero);
+                e.skirtSlack != null && e.skirtSlack.Length == 2 ? new Vector2(e.skirtSlack[0], e.skirtSlack[1]) : Vector2.zero,
+                Grips(e, root.transform, Bone));
             Debug.Log($"MINER_HANGING {name} " + string.Join(", ", hanging.Select(h => $"{h.bone.name} {h.length:F3} m stop {h.stopDistance:F3}")));
+            Debug.Log($"MINER_GRIPS {name} " + string.Join(", ", (e.grips ?? new Gripped[0]).Select(g => $"{g.hand} {g.bones.Length} joints, {g.radii.Length} handles")));
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath(name));
             Object.DestroyImmediate(root);
+        }
+
+        // The hands that close: for each, every finger joint's turn (in the joint's own frame) from its rest to the
+        // open hand and to the hand closed round each handle. The model gives where the joints go; each bone takes
+        // the smallest turn that aims it there, its parents' turns first, exactly as the model's build did when it
+        // measured the closed hand on its handle (hands.turns). Index 0 is the left hand, 1 the right.
+        private static MinerBody.Grip[] Grips(Entry e, Transform root, Func<string, Transform> bone)
+        {
+            var grips = new MinerBody.Grip[2];
+            foreach (var g in e.grips ?? new Gripped[0])
+            {
+                var hand = bone(g.hand);
+                var joints = g.bones.Select(bone).ToArray();
+                int digits = joints.Length / 3, rows = g.radii.Length;
+                if (joints.Length != digits * 3 || g.rest.Length != digits * 12 || g.open.Length != digits * 12 || g.closed.Length != rows * digits * 12 || g.centres.Length != rows * 3)
+                    throw new InvalidOperationException($"{e.name}: the closing of {g.hand} does not match its bones.");
+                Vector3 Told(float[] v, int point) => new Vector3(v[point * 3], v[point * 3 + 1], v[point * 3 + 2]);
+                // The model's joints at rest are these bones: that fixes exactly how the model's space sits on this
+                // hand (from the first finger's, the little finger's and the thumb's knuckles). The prefab turns the
+                // model to face forward by its feet, which is near enough for a walk and not for a fingertip.
+                Quaternion Frame(Vector3 p0, Vector3 p1, Vector3 p2) => Quaternion.LookRotation(p1 - p0, Vector3.Cross(p1 - p0, p2 - p0));
+                int little = (digits - 2) * 4, thumb = (digits - 1) * 4;
+                Quaternion sits = Frame(joints[0].position, joints[(digits - 2) * 3].position, joints[(digits - 1) * 3].position)
+                                  * Quaternion.Inverse(Frame(Told(g.rest, 0), Told(g.rest, little), Told(g.rest, thumb)));
+                Vector3 from = joints[0].position - sits * Told(g.rest, 0);
+                Vector3 At(float[] v, int point) => sits * Told(v, point) + from;
+                float fit = 0;
+                for (int j = 0; j < joints.Length; j++) fit = Mathf.Max(fit, Vector3.Distance(joints[j].position, At(g.rest, j / 3 * 4 + j % 3)));
+                if (fit > .001f) throw new InvalidOperationException($"{e.name}: the bones of {g.hand} are {fit * 1000:F1} mm from the model's joints.");
+                Debug.Log($"MINER_GRIP_FIT {e.name} {g.hand}: bones on the model's joints within {fit * 1000:F2} mm; the model's space sits {Quaternion.Angle(sits, root.rotation):F2} degrees off the prefab's");
+                Quaternion[] Turns(float[] goal, int first)
+                {
+                    var turns = new Quaternion[joints.Length];
+                    for (int d = 0; d < digits; d++)
+                    {
+                        Quaternion carried = Quaternion.identity;
+                        for (int j = 0; j < 3; j++)
+                        {
+                            int p = d * 4 + j;
+                            Vector3 rest = At(g.rest, p + 1) - At(g.rest, p);
+                            Vector3 want = Quaternion.Inverse(carried) * (At(goal, first + p + 1) - At(goal, first + p));
+                            Quaternion turn = Quaternion.FromToRotation(rest, want);
+                            carried *= turn;
+                            var joint = joints[d * 3 + j];
+                            turns[d * 3 + j] = Quaternion.Inverse(joint.rotation) * turn * joint.rotation;
+                        }
+                    }
+                    return turns;
+                }
+                var closed = new List<Quaternion>();
+                for (int r = 0; r < rows; r++) closed.AddRange(Turns(g.closed, r * digits * 4));
+                grips[g.hand.EndsWith(".L") ? 0 : 1] = new MinerBody.Grip
+                {
+                    joints = joints, open = Turns(g.open, 0), radii = g.radii, closed = closed.ToArray(),
+                    centres = Enumerable.Range(0, rows).Select(r => hand.InverseTransformPoint(At(g.centres, r))).ToArray(),
+                    axis = Quaternion.Inverse(hand.rotation) * (sits * new Vector3(g.axis[0], g.axis[1], g.axis[2]).normalized),
+                };
+            }
+            return grips;
         }
 
         // A lamp's warm light where the model has glowing glass: on the bone that carries the glass.
