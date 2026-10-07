@@ -90,8 +90,15 @@
       miner's body, and a miner rests when told
       ([clips and figures](Design/ThePhysicalBody.md#step-8-first-half-the-interaction-click-and-the-pickaxe-laid-down-and-picked-up-october-7)).
       Space is a proposal, not yet Luis's choice.
-    - **Next:** the second half of step 8 (the lantern and the mug taken
-      in hand and hung back), then step 9 (any boulder).
+    - **Step 8, second half: built** (October 7). The lantern and the mug
+      are taken in hand and hung back by the miner's body: the hand
+      reaches to the handle, lifts it off its hook, and carries it at the
+      side with the arm hanging, as it was carried before October 6
+      ([clips and figures](Design/ThePhysicalBody.md#step-8-second-half-the-lantern-and-the-mug-taken-in-hand-and-hung-back-october-7)).
+      Setting them down on the ground is not built: each would have to be
+      made an object of its own. A pickaxe in one hand with the lantern in
+      the other is not built either.
+    - **Next:** step 9 (any boulder by a click).
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

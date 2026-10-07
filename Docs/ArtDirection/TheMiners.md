@@ -103,8 +103,9 @@ the creator will be about.
 - **They still swing.** Each hangs from a bone of its own where its handle
   rests, swings with the walk, and is stopped by the coat. The hook and the
   loop go with the cloth they are sewn to. This is the same swinging Luis
-  liked, from a new place; they are not yet objects a hand can take
-  (step 8).
+  liked, from a new place. Since step 8 a hand takes them off the hook and
+  the loop, and hangs them back
+  ([clips and figures](../Design/ThePhysicalBody.md#step-8-second-half-the-lantern-and-the-mug-taken-in-hand-and-hung-back-october-7)).
 - **The arms.** Small's left arm hangs and swings freely now (it held the
   lantern out, and swung less). Long's left arm hangs 6 cm further out, to
   pass the mug.

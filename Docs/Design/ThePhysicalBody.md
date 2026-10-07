@@ -345,8 +345,8 @@ Both hands close on all three miners. Small's lantern hangs from a hook on
 the coat in front of the left thigh; Long's mug hangs in a loop of thong at
 the left hip. The pictures, the checks and what was found are in
 [TheMiners.md](../ArtDirection/TheMiners.md#both-hands-free-the-lantern-and-the-mug-at-the-hip-october-6).
-They swing as they did, from a bone of their own; they are not yet objects
-a hand can take (step 8).
+They swing as they did, from a bone of their own. Since step 8 a hand takes
+them ([below](#step-8-second-half-the-lantern-and-the-mug-taken-in-hand-and-hung-back-october-7)).
 
 ### Step 4: the swing (October 6)
 
@@ -832,8 +832,8 @@ as the swing, on the same real pickaxe:
 
 **What is not there yet:**
 
-- **The lantern and the mug** (take in hand, hang back, set down): the
-  second half of this step.
+- **The lantern and the mug** came with the second half of this step
+  (below).
 - **A boulder's "Mine":** step 9.
 - **It always lays the pickaxe at its left,** flat, wherever it stands.
 - **It goes down very low** (a deep squat with the back bowed right over;
@@ -843,6 +843,105 @@ as the swing, on the same real pickaxe:
   up from the squat.
 
 **Open:** the key; the list of options; how long a tap is.
+
+### Step 8, second half: the lantern and the mug taken in hand and hung back (October 7)
+
+Luis: "I want all the actions to feel physical and real … It needs to be
+all the actions."
+
+![Small takes its lantern in hand, walks with it, and hangs it back](../Images/PhysicalBody/Action_Lantern.gif)
+
+*Small takes its lantern off its hook, carries it at its side, walks with
+it, and hangs it back.*
+
+![Long takes its mug in hand, walks with it, and hangs it back](../Images/PhysicalBody/Action_Mug.gif)
+
+*Long takes its mug out of its loop by the handle, walks with it, and
+hangs it back.*
+
+**What offers what** (with the click of the first half):
+
+| Clicked | It offers |
+|---|---|
+| The lantern or the mug, hanging | Take in hand |
+| The lantern or the mug, in the hand | Hang it back |
+
+**What the body does:**
+
+| Action | What the body does |
+|---|---|
+| **Take in hand** | The hand on the thing's own side reaches to the handle where it hangs. The fingers close on it. The hand lifts it off its hook (3 cm up, and a little out from the cloth) and brings it to the side. There the arm hangs, and the thing hangs from the hand |
+| **Hang it back** | The hand brings the handle back over the hook, lowers it on, opens, and the arm hangs free again |
+
+- **It is the same object throughout.** It hangs and swings from the hand
+  as it did from the hook: the same swinging Luis liked, now from the
+  handle's place in the closed fingers. The wrist gives with its swing,
+  and the body stops it.
+- **The carry is the one from before October 6,** when the lantern and
+  the mug were in the hand: the arm hanging at the side, far enough out
+  for the thing to hang straight down clear of the clothes, and swinging
+  less than a free arm (45% of its swing). It is that carry brought back,
+  not a new one.
+- **It works standing or walking.**
+- **The hands are for the pickaxe.** With the pickaxe in its hands, the
+  lantern offers nothing. A miner with its lantern in its hand that is
+  told to work (`K`), or to pick its pickaxe up, hangs the lantern back
+  first, and then does what it was told.
+
+**What a hand needs to know of the thing, measured from the models:**
+
+| | Small's lantern | Long's mug |
+|---|---|---|
+| Its handle's radius | 7.0 mm | 5.6 mm |
+| How far it reaches below its handle | 175 mm | 128 mm |
+| To each side of the line it hangs along | 44 mm | 50 mm |
+| How far the clothes reach to that side, where it hangs from the hand | 202 mm | 171 mm |
+| The body's side stops it at (from the pelvis) | 258 mm | 233 mm |
+| The arm that carries it hangs further out than a free arm by | 50 mm | 0 mm (Long's left arm already hangs 6 cm out, to pass the mug) |
+
+**On the path:**
+
+| | Small's lantern | Long's mug |
+|---|---|---|
+| In the hand, and at the side, after | 1.8 s | 1.8 s |
+| The fingers close this far from where the handle hung | 0.0 mm | 0.1 mm |
+| Carried, standing: from straight down | 0.0 degrees | 0.3 degrees |
+| Carried, standing: clear of the body by | 37 mm | 102 mm |
+| Walking: it swings to | 32 degrees | 34 degrees |
+| Walking: nearest the body | 4 mm clear | 83 mm clear |
+| Walking: the handle from its place in the fingers, at most | 0.0 mm | 0.0 mm |
+| Back on its hook after | 2.1 s | 2.1 s |
+
+**What the step found:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| H1 | First built, the lantern was carried before the belly, the elbow out to the side | A new carry: held a little out from its hook, because the body's side was not known to the game | The carry from before October 6: at the side, the arm hanging. How far the clothes reach at that side is measured from the model |
+| H2 | The fingers closed 6 mm (Small) and about 12 mm (Long) from the handle, and the thing slid into them | The arm is solved from the body's own shoulders, and the model's shoulders are not quite there | At the hook the hand is brought onto the handle by what it sees: where the handle would lie in its fingers, against where the handle is |
+| H3 | Brought to the side in 0.6 s, the lantern swung out to 51 degrees | It is a pendulum, and it was moved fast | It is brought in 0.9 s |
+| H4 | The height the hand hangs at came out as 1.0 m for both miners | A saved miner that has not woken still has the first body's proportions | The saved proportions are read |
+| H5 | The handle's radius was read as nothing | A bar's own points are at its two ends | The bar is cut across at the place the thing hangs from |
+
+**What is not there yet:**
+
+- **"Set it down"** (the third option the proposal gave these two): not
+  built. The lantern and the mug are part of their miner's model: left
+  on the ground, each would still be drawn, and hidden, with its miner.
+  To be left in the world it has to be made an object of its own, as the
+  pickaxe is. Whether, and when, is Luis's to say.
+- **A pickaxe in one hand and the lantern in the other.** The pickaxe is
+  carried in the left hand, the side the lantern and the mug hang on. So
+  a miner with its pickaxe cannot take its lantern, and hangs it back to
+  take its pickaxe.
+- **Round's hammer** stays in its loop: it hangs by its head, not by a
+  handle.
+- **Its weight is not moved to the arm.** The body's balance does not
+  know the thing has gone from the hip to the hand. (A lantern is light.)
+- **Only the hand on its own side** takes it; the other hand does not
+  reach across.
+
+**Open:** which hand carries what; whether these two are to be set down
+(the lantern on the ground by the work, giving its light there).
 
 **What is not there yet** (of the bench, step 2):
 

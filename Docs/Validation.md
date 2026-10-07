@@ -2232,3 +2232,66 @@ Built in the look with `K`
     something.
   - **What it costs,** the crowd benchmark.
   - **Luis's eye.**
+
+## S3, step 8, second half — the lantern and the mug taken in hand and hung back (October 7)
+
+Built for the chosen miner, with the interaction click
+([design](Design/ThePhysicalBody.md#step-8-second-half-the-lantern-and-the-mug-taken-in-hand-and-hung-back-october-7)).
+
+- **The hung things' tests** (`HungThingTests`, two): 2 of 2.
+  - **What hangs by a handle is taken in hand and hung back** (Small's
+    lantern, Long's mug; Round has nothing of the kind, and the click
+    shows none on it):
+    - **Measured from the models:** the lantern's handle 7.0 mm round,
+      the thing 175 mm deep and 44 mm to each side, stopped by the body's
+      side 258 mm from the pelvis; the mug's 5.6 mm, 128 mm, 50 mm and
+      233 mm.
+    - **On its hook** it shows itself to the click and offers "Take in
+      hand", not "Hang it back".
+    - **Taken:** at the side 1.80 s after the order, both. The fingers
+      closed 0.0 mm (lantern) and 0.1 mm (mug) from where the handle
+      hung; the arm was never stretched straight to reach it. Carried,
+      standing: the handle 0.0 mm from its place in the closed fingers,
+      its bar 1.6 and 1.2 degrees from lying along them; 297 and 244 mm
+      from its hook; hanging 0.0 and 0.3 degrees from straight down; 37
+      and 102 mm clear of the body. The arm hangs 50 mm (Small) and 0 mm
+      (Long) further out than free, at the height and the place it hung
+      before. The hand is not free for a tool.
+    - **In the hand** it offers "Hang it back", not "Take in hand".
+    - **Walking 2.5 m with it:** the handle never more than 0.0 mm from
+      the fingers; it swung to 32.4 and 34.4 degrees; nearest the body,
+      3.8 and 82.6 mm clear; standing again it hangs 0.0 degrees from
+      straight down.
+    - **Hung back:** on its hook 2.08 s after the order, both; 0.0 mm
+      from its hook; the hand open, free for a tool, and 0 mm from where
+      it hung before; the thing offers "Take in hand" again.
+  - **A miner hangs its thing back before it takes up its pickaxe**
+    (Small): with the lantern in its hand, `K` does not begin the look;
+    the lantern is hung back, and 3.4 s after `K` the pickaxe is in its
+    hands and the look shows the work. The look never showed while the
+    lantern was in the hand. With the pickaxe in its hands the lantern
+    offers nothing; after `K` again, it offers "Take in hand".
+- **Full PlayMode suite, one run:** 151 tests; 142 passed, none failed,
+  9 skipped as explicit (1,375 s). The figures above are that run's. The
+  interaction, carry, balance, physical-body, tool and walking tests are
+  in it, and pass: the arm's solver and the hung things' swing were both
+  touched.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **The prefabs.** The three miners' prefabs differ from before by the
+  new measures only (five lines for each hung thing).
+- **Read in pictures** (`HungThingCapture`): Small with its lantern and
+  Long with its mug, from the front left: taking, walking, hanging back.
+- **What failed on the way** (H1 to H5 in the design). Also: the first
+  test read how far the arm was from straight before the arm had been
+  asked for anything.
+- **Not tested:**
+  - **The space bar and the mouse themselves:** the orders were given as
+    the box gives them.
+  - **Taking it while walking,** and hanging it back while walking (the
+    code allows both; only standing was run).
+  - **A turn, a slope, a run** with the thing in the hand.
+  - **The right hand** (both things hang on the left).
+  - **Any frame rate but 50 a second** for the hand's settling on the
+    handle.
+  - **What it costs,** the crowd benchmark.
+  - **Luis's eye.**

@@ -1601,3 +1601,54 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   the pickaxe stays. `K` puts a lying pickaxe away before making one.
 - **Tests:** `InteractionTests` (three). `PhysicalActionCapture`
   (explicit): `-actionOut`, `-actionMiner`, `-actionView`.
+
+## The physical body, step 8 (second half): the lantern and the mug taken in hand — October 7
+
+- **`MinerBody.Hanging`** has what a hand needs to take a thing that
+  hangs by a handle: `bar` (the handle's direction in the thing's own
+  bone), `grip` (its radius), `deep` and `wide` (how far the thing reaches
+  below its handle, and to each side), `clear` (how far from the pelvis
+  the body's side stops it when it is carried there). A thing with no
+  `grip` is not taken (the satchel, Round's hammer).
+- **Measured from the model, in the editor** (`MinerSetup.MeasureThings`):
+  the bar is cut across at the bone's place, and the skin's crossings give
+  its radius; the thing's own skin gives `deep` and `wide`; the body's
+  skin (without the arms and what hangs) gives the clothes' reach to the
+  side over the heights the thing hangs at from a relaxed arm's hand, and
+  `clear` is that plus `wide` plus 12 mm. Creating the miners measures it;
+  **Wonder Gather > Measure What Hangs On The Miners** measures it into
+  the prefabs as they are, changing nothing else in them (that is how the
+  three prefabs got it).
+- **`MinerBody`, at run time:**
+  - `Takes(k)`; `Carry(k, hand)` (a hand has it; -1: back on its hook);
+    `InHand(k)`, `Taken(k)`, `Carries(hand)`; `Hook(k)`, `HookBar(k)`,
+    `HookHome(k)`, `HookOut(k)`, `HangsFrom(k)`, `HangingBar(k)`.
+  - In a hand the thing's bone is put at the handle's place in the closed
+    fingers (`HandleIn`), passing from the hook in 0.12 s. Its pendulum is
+    the same one (`Hang`), under the new place; the wrist gives with it
+    (the path a thing modelled in a hand always had); it turns about the
+    way it hangs until its bar lies in the fingers.
+  - The stop: on its hook, as before. In a hand, the body is where both
+    its front (the hook's stop) and its side (`clear`) would stop the
+    thing, and it is pushed out the nearer way (`Held`).
+  - `HandFree(hand)` is false for a hand with a thing in it.
+- **`ThingsInHand`** (new; made for a miner when first asked, `Of(unit)`;
+  null for a body with nothing to take). `Take(thing)`, `HangBack()`,
+  `CanTake(thing)`; `Now` (Hung, Reaching, Lifting, Carried, Returning,
+  Lowering, LettingGo), `Has`, `Busy`, `Hand`, `HangsOut`. It is a second
+  guide of the arm (`IArmGuide`): at the hook the wrist is where
+  `MinerBody.WristFor` puts it for the handle, corrected each frame by
+  half of what the hand still lacks (for 0.1 s before it closes or lets
+  go); carried, the wrist is the body's own hanging one.
+- **`HungThing`** (new): the mark on the thing's bone that the interaction
+  click points at.
+- **`ProceduralBiped`:** `GuideAlso(guide)` (a second guide, for a hand
+  the first does not guide); `FreeWrist(hand)` (where the wrist would be
+  unguided); `CarryAtSide(hand, metres, keep)` (the arm hangs that much
+  further out and keeps that share of its swing); `SavedProportions`.
+- **`InteractionClick`** shows the chosen miner's hung things and opens
+  their options; **`MinerWorkPreview.OptionsForHung`** gives them, and
+  `K` or "Pick it up" with a thing in the hand has it hung back first.
+- **Tests:** `HungThingTests` (two). `HungThingCapture` (explicit):
+  `-hungOut`, `-hungMiner`, `-hungView`, `-hungAim`, `-hungSize`,
+  `-hungEvery`, `-hungHour`.
