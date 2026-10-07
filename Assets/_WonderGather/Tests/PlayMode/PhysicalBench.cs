@@ -48,11 +48,9 @@ namespace WonderGather.Tests
             // 270: its left) and above level.
             float[] view = Numbers("-benchView", 100, 8);
             int frames = (int)Numbers("-benchFrames", 0)[0];
-            // -benchBalance measure|on: the miner keeps its own balance (or only measures it).
-            // -benchPull newtons,degrees,from,for: something pulls it at the chest, that hard, that way round it
-            // (0: forwards, 90: to its right), from so many seconds after it begins, for so many seconds.
+            // -benchBalance measure|on: the miner keeps its own balance (or only measures it). Pulling a miner is the
+            // balance's own bench (PhysicalBalanceBench).
             string balancing = CaptureTools.Argument("-benchBalance");
-            float[] pull = Numbers("-benchPull", 0, 0, 0, 0);
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
             yield return null;
@@ -110,7 +108,7 @@ namespace WonderGather.Tests
                     {
                         balance = unit.gameObject.AddComponent<PhysicalBalance>();
                         balance.Acts = balancing != "measure";
-                        if (balancing != "unbraced") balance.Brace(PhysicalSwing.StanceWider, PhysicalSwing.StanceStagger);
+                        balance.Brace(PhysicalSwing.StanceWider, PhysicalSwing.StanceStagger);
                     }
                     Vector3 across = Vector3.Cross(Vector3.up, away);
                     // It bows to its work first, and the block is put under where the pick's head then rests.
@@ -161,11 +159,6 @@ namespace WonderGather.Tests
                     after.Then = () =>
                     {
                         if (hands.Held == null) return;
-                        if (balance != null && pull[0] > 0 && Time.time - began >= pull[2] && Time.time - began < pull[2] + pull[3])
-                        {
-                            // It comes on over a third of a second, and is given at every step of the physics until the
-                            // next frame.
-                        }
                         for (int hand = 0; hand < 2; hand++)
                         {
                             if (hands.Miss(hand) <= miss) continue;

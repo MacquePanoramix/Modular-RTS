@@ -26,7 +26,6 @@ namespace WonderGather
         private PhysicalSwing swing;
         private GameObject rock;
         private Coroutine setting;
-        private Vector3 stand;
         private float strength = 1, weight = 1;
         private GUIStyle note;
         public bool Showing => working != null || again != null;
@@ -95,9 +94,8 @@ namespace WonderGather
             }
             if (toggle != null && toggle.WasPressedThisFrame()) Toggle();
             if (!Showing) return;
-            // Chosen another, sent elsewhere, or walked off: the look is over.
-            if (choice.Current != working || !working.gameObject.activeInHierarchy
-                || Vector3.ProjectOnPlane(working.transform.position - stand, Vector3.up).sqrMagnitude > .09f) { End(); return; }
+            // Chosen another, or sent somewhere: the look is over. A step it takes to keep its feet is not walking away.
+            if (choice.Current != working || !working.gameObject.activeInHierarchy || (working.Motor != null && working.Motor.IsMoving)) { End(); return; }
             if (weaker.WasPressedThisFrame()) SetStrength(strength / 1.25f);
             if (stronger.WasPressedThisFrame()) SetStrength(strength * 1.25f);
             if (lighter.WasPressedThisFrame()) SetWeight(weight / 1.25f);
@@ -137,7 +135,6 @@ namespace WonderGather
                 || unit.GetComponent<PhysicalHands>() != null || unit.GetComponent<EquippedTool>() != null) return;
             if (unit.Motor != null) unit.Motor.Stop();
             working = unit;
-            stand = unit.transform.position;
             physical = weighed;
             physical.Strength = strength;
             physical.Refresh();
