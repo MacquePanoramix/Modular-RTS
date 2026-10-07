@@ -57,6 +57,8 @@ namespace WonderGather
         // Reaching the ground, the arm stretches to this share of its length.
         private const float Stretches = .96f;
         private bool arrived;
+        private PhysicalFall fall;
+        private bool lookedForFall;
         // How often it has stepped nearer a tool it could not reach.
         private int nearer;
         // Going to take a tool up, it stops this near the place it means to stand (metres): nearer than a walk does.
@@ -153,6 +155,9 @@ namespace WonderGather
 
         private void FixedUpdate()
         {
+            // A body that is down, or getting up, is not the carry's to stand up.
+            if (fall == null && !lookedForFall) { fall = GetComponent<PhysicalFall>(); lookedForFall = true; }
+            if (fall != null && fall.Now != PhysicalFall.State.Up) return;
             if (hands == null || hands.Held == null || body == null)
             {
                 // The tool has slipped from its hand: it lies where it fell.

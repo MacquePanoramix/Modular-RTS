@@ -167,6 +167,8 @@ namespace WonderGather
 
         public bool Ready => ready;
         public Bones Rig => bones;
+        // The posed body's own segments, which the bones are turned to.
+        public Solution Solved => solved;
 
         public void Configure(Bones rig, Solution solution, Hanging[] things = null, Flap[] skirt = null, Vector2? skirtSlack = null, Grip[] fingers = null)
         {

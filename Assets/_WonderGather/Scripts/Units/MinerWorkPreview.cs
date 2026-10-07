@@ -42,6 +42,11 @@ namespace WonderGather
         private System.Action then;
         private System.Func<bool> thenWhen, thenWhile;
         private SelectableUnit thenFor;
+        // The body that can be let go (the fall), the pickaxe it last had in its hands, and whether it is down now.
+        private PhysicalFall fall;
+        private HeldThing had;
+        private bool down;
+        public PhysicalFall Fall => fall;
         // The boulder it has been sent to mine, where it stands and strikes for it, and whether it has come there and
         // set to work.
         private Boulder mining;
@@ -135,6 +140,15 @@ namespace WonderGather
                 else if (thenWhen == null || thenWhen()) { var act = then; then = null; act(); }
             }
             if (!Showing) return;
+            // It has fallen: its pickaxe has left its hands and lies where it fell, and its work is over. Nothing more
+            // is asked of it until it is up again; then, its hands empty, the look ends by itself.
+            if (hands != null && hands.Thing != null) had = hands.Thing;
+            if (fall != null && fall.Now != PhysicalFall.State.Up)
+            {
+                if (!down) Fell();
+                return;
+            }
+            down = false;
             // Chosen another: the look is over.
             if (choice.Current != working || !working.gameObject.activeInHierarchy) { End(); return; }
             // Sent somewhere while it works: it takes its pickaxe with it. (A step it takes to keep its feet is not
@@ -249,6 +263,19 @@ namespace WonderGather
             if (!found.found) { refused = Time.time; return; }
             mining = boulder; plan = found; tries = 0;
             GoToRock();
+        }
+
+        private void Fell()
+        {
+            down = true;
+            if (setting != null) { StopCoroutine(setting); setting = null; }
+            if (rock != null) Destroy(rock);
+            rock = null;
+            LeaveRock("it fell");
+            then = null;
+            if (had != null && had.Holder == null) lying = had;
+            if (swing != null) swing.enabled = false;
+            if (carry != null) carry.enabled = true;
         }
 
         // It is given its pickaxe, held at ease in one hand (as K gives it one for the block).
@@ -494,6 +521,10 @@ namespace WonderGather
             carry = unit.gameObject.AddComponent<PhysicalCarry>();
             carry.enabled = false;
             carry.hands = hands; carry.back = back; carry.body = biped; carry.tool = pickaxe;
+            // A body with real weights and a balance of its own can lose it: it can fall, and gets up.
+            fall = unit.GetComponent<PhysicalFall>();
+            if (fall == null) fall = unit.gameObject.AddComponent<PhysicalFall>();
+            had = null; down = false;
         }
 
         // The miner bows to its work; the block is put under where the pick's head then rests; it takes up the pickaxe
@@ -568,7 +599,8 @@ namespace WonderGather
                 return;
             }
             string line = $"{(Carrying && hands != null && hands.Held != null ? "K: work here" : "K: put the pickaxe away")}   Space + click: its options   , . strength {strength:0.00}   - = pickaxe x{weight:0.00}";
-            if (Time.time - refused < 4) line += "   it finds no place to stand and strike at that boulder";
+            if (down) line += "   it fell: its pickaxe lies where it left its hands";
+            else if (Time.time - refused < 4) line += "   it finds no place to stand and strike at that boulder";
             else if (mining != null) line += atRock ? $"   at a boulder: {mining.Stones.Count} stones struck off it" : "   going to a boulder";
             if (Carrying)
             {

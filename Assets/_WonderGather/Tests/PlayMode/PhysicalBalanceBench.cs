@@ -85,6 +85,10 @@ namespace WonderGather.Tests
                     biped.ResetPose();
                     for (float until = Time.time + .6f; Time.time < until;) yield return null;
                     float height = miner.Rig.head.position.y - unit.transform.position.y;
+                    // -balanceFall 1: with a body that can be let go (S3, step 10).
+                    PhysicalFall fall = null;
+                    if (Numbers("-balanceFall", 0)[0] > 0) fall = unit.gameObject.AddComponent<PhysicalFall>();
+                    float fellAt = -1;
                     var balance = unit.gameObject.AddComponent<PhysicalBalance>();
                     for (float until = Time.time + .8f; Time.time < until;) yield return null;
                     balance.Mark();
@@ -121,7 +125,8 @@ namespace WonderGather.Tests
                             rope.transform.localScale = new Vector3(.03f, .8f, .03f);
                         }
                         if (frames <= 0 || shot >= frames || frame++ % 2 != 0) return;
-                        Vector3 target = first + Vector3.up * height * .5f + towards * .3f;
+                        // (With a body that can fall, the picture goes with it: a rope drags what it has pulled down.)
+                        Vector3 target = (fall != null ? unit.transform.position : first) + Vector3.up * height * .5f + towards * .3f;
                         Vector3 dir = Quaternion.AngleAxis(view[0], Vector3.up) * away;
                         dir = dir * Mathf.Cos(view[1] * Mathf.Deg2Rad) + Vector3.up * Mathf.Sin(view[1] * Mathf.Deg2Rad);
                         camera.transform.SetPositionAndRotation(target + dir * view[2], Quaternion.LookRotation(-dir));
@@ -141,7 +146,15 @@ namespace WonderGather.Tests
                         shot++;
                     };
                     float watch = .5f + lasts + after;
-                    while (Time.time - began < watch || (frames > 0 && shot < frames && Time.time - began < watch + 20)) yield return null;
+                    while (Time.time - began < watch || (frames > 0 && shot < frames && Time.time - began < watch + 20))
+                    {
+                        if (fall != null && fellAt < 0 && fall.Now != PhysicalFall.State.Up) fellAt = Time.time - began - .5f;
+                        yield return null;
+                    }
+                    Debug.Log(string.Format(culture, "BENCH   {0} pulled with {1:0} N towards {2:0} degrees: a step had to land at most {3:0.00} of a step's reach from the other foot; its weight's point was outside its feet for {5:0.00} s at a stretch at most; {6} short steps in a row at most; {4}",
+                        who, newtons, way, balance.MostNeeded, fall == null ? "it has no body to be let go" : fellAt < 0 ? "it did not fall"
+                        : string.Format(culture, "it fell {0:0.00} s after the pull began ({1}), and is {2} at the end", fellAt, balance.Fell, fall.Now), balance.LongestOutside, balance.MostShort));
+                    if (fall != null) { if (fall.Now != PhysicalFall.State.Up) fall.TakeBack(); UnityEngine.Object.Destroy(fall); }
                     then.Then = null;
                     UnityEngine.Object.Destroy(then.gameObject);
                     Vector3 went = unit.transform.position - first;

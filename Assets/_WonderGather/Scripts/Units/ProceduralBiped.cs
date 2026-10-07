@@ -432,9 +432,13 @@ namespace WonderGather
             UpdateAnkles();
             Pose(0);
         }
+        // Let go, the body is not posed: something else puts its segments where they are (PhysicalFall). Taken back,
+        // it is posed afresh where it then stands (ResetPose).
+        public bool LetGo {get;set;}
         private void LateUpdate()
         {
             RefreshCargo();
+            if(LetGo){previousPosition=transform.position;return;}
             if(!initialized){ResetPose();return;}
             float dt=Time.deltaTime;if(dt<=0) return;
             if((transform.position-previousPosition).sqrMagnitude>4){ResetPose();return;}

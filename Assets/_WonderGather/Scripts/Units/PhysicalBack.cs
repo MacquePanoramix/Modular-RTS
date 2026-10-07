@@ -37,6 +37,8 @@ namespace WonderGather
         public float BowNow => angle;
         // How far the body means to bow from the hips, in degrees (forward is positive). It gets there as its back can.
         public void Want(float degrees) => wanted = Mathf.Clamp(degrees, -15, ProceduralBiped.MostBowed);
+        // The back is bowed this far now, and still (the body has just been put so: getting up from a fall).
+        public void Is(float degrees) { angle = Mathf.Clamp(degrees, -15, ProceduralBiped.MostBowed); rate = 0; began = true; }
 
         private void Awake()
         {

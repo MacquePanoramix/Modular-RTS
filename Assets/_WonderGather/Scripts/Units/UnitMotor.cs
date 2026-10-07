@@ -48,6 +48,21 @@ namespace WonderGather
             return found;
         }
 
+        // It has been carried off the walked ground where it stands (a fall): it is off it from now, and will come back
+        // to where it left it before it goes anywhere.
+        public void CarriedOff()
+        {
+            if (away == Away.No)
+            {
+                if (agent == null || !agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
+                Stop();
+                left = transform.position;
+                ridesUp = GroundAt(left, out float under) ? left.y - under : 0;
+                agent.enabled = false;
+            }
+            away = Away.There; hasPending = false;
+        }
+
         // It goes to a place a little off the walked ground. False if it is not on the walked ground to begin with, or
         // the place is too far from where it left it.
         public bool StepOff(Vector3 place)

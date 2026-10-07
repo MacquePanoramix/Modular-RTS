@@ -56,6 +56,14 @@ namespace WonderGather
         // and slower as they near all of it. Knees asked for more than they have give way, at this pace (metres a
         // second), and come up again when they are asked for less than this share.
         private const float Easy = .5f, GivesWay = .12f, ComesUp = .9f;
+        // The fall (rung 4; PhysicalFall, when the body has one). A step catches the body when it can land where the
+        // weight is going. One that would have to land further from the other foot than a step reaches lands short:
+        // a stumble. After this many short steps in a row no step is catching it; nor is one, if it would have to
+        // land this many times a step's reach away; nor are any, if the weight's point has been outside its feet for
+        // this long (seconds). Knees that have given way as far as they go and are still asked for more than they
+        // have, for this long, cannot bear it.
+        private const int Stumbles = 2;
+        private const float Hopeless = 2.5f, FallsAfter = 2.2f, Collapses = .3f;
 
         // When it does not act it only measures: the body stands as it is posed.
         public bool Acts = true;
@@ -121,11 +129,37 @@ namespace WonderGather
         public float GaveWay => gave;
         // The feet are set for an effort, or where a step left them.
         public bool Braced => planned || stepped;
-        public void Mark() { LeastMargin = float.MaxValue; MostLean = 0; Steps = 0; }
+        public void Mark() { LeastMargin = float.MaxValue; MostLean = 0; Steps = 0; MostNeeded = 0; LongestOutside = 0; outside = 0; MostShort = 0; shortSteps = 0; }
+        // The furthest a step has had to land from the other foot to catch the body, as a share of a step's reach
+        // (more than 1: it could not land there).
+        public float MostNeeded { get; private set; }
+        // The longest its weight's point has been outside its feet at a stretch (seconds).
+        public float LongestOutside { get; private set; }
+        // Why it last fell.
+        public string Fell { get; private set; } = "";
+        private float collapsing, outside;
+        private int shortSteps;
+        // The most steps in a row that landed short of where they had to.
+        public int MostShort { get; private set; }
+
+        // The body cannot keep its feet: if it has a body to be let go, it is let go.
+        private bool Falls(string why)
+        {
+            if (fall == null && !lookedForFall) { fall = GetComponent<PhysicalFall>(); lookedForFall = true; }
+            if (fall == null || !fall.isActiveAndEnabled || fall.Now != PhysicalFall.State.Up) return false;
+            Fell = why;
+            fall.LetGo();
+            return fall.Now != PhysicalFall.State.Up;
+        }
+        private PhysicalFall fall;
+        private bool lookedForFall;
 
         // Something pushes or pulls the body with a force (newtons) at a place, for this step of the physics.
         public void Push(Vector3 force, Vector3 at)
         {
+            // A body that has been let go takes it as a force.
+            if (fall == null && !lookedForFall) { fall = GetComponent<PhysicalFall>(); lookedForFall = true; }
+            if (fall != null && fall.Now != PhysicalFall.State.Up) { fall.Push(force, at); return; }
             if (pushes >= pushForce.Length) return;
             pushForce[pushes] = force; pushAt[pushes] = at; pushes++;
         }
@@ -158,9 +192,17 @@ namespace WonderGather
 
         private void OnEnable()
         {
+            Afresh();
+            body.MayLift = MayLift;
+        }
+
+        // The body stands somewhere afresh (it has just got up from a fall): what the balance knew of its weight, its
+        // steps and its knees is forgotten.
+        public void Afresh()
+        {
             lean = going = intent = drift = movedSince = steady = Vector2.zero; began = false;
             seenAt = -1; near = 0; shiftTime = 0; calm = 0; pushes = 0; stepped = false; waiting = -1; waited = 0; gave = 0;
-            body.MayLift = MayLift;
+            collapsing = 0; outside = 0; shortSteps = 0;
         }
 
         // A foot is due to step to its place in the stance: it may lift when the body's weight is off it.
@@ -342,6 +384,10 @@ namespace WonderGather
             }
             Vector2 point = stands + steady + going / pace;
             Margin = Inside(point, out _);
+            outside = Margin < 0 ? outside + dt : 0;
+            LongestOutside = Mathf.Max(LongestOutside, outside);
+            if (outside > FallsAfter && Falls("its weight has been outside its feet too long")) return;
+            if (!stepped) shortSteps = 0;
             // Where it would carry its weight standing as posed, if that is at ease; the nearest place at ease to that,
             // if not. It leans no more than it needs.
             float ease = AtEase * boot;
@@ -420,6 +466,8 @@ namespace WonderGather
                 physical.Worked(PhysicalBody.Muscles.Legs, LegEffort, dt);
                 body.SetRise(Mathf.Clamp01((1 - LegEffort) / (1 - Easy)));
                 if (LegEffort > 1) gave = Mathf.Min(gave + GivesWay * dt, .25f * hip);
+                collapsing = LegEffort > 1 && gave >= .25f * hip - 1e-4f ? collapsing + dt : 0;
+                if (collapsing > Collapses && Falls("its legs cannot bear it")) return;
                 else if (LegEffort < ComesUp) gave = Mathf.Max(0, gave - GivesWay * Mathf.Clamp01((1 - LegEffort) / (1 - Easy)) * dt);
                 // Where a step left its feet, the knees stay bent.
                 body.Crouch((stepped ? Crouches * hip : 0) + gave);
@@ -490,6 +538,13 @@ namespace WonderGather
             Vector2 from = Flat(body.FootPosition(foot)), other = Flat(body.FootPosition(1 - foot));
             Vector2 stride = lands - ahead * body.FootMiddle - from;
             if (stride.magnitude < .25f * boot) stride = (stride + way * .01f).normalized * (.25f * boot);
+            float needed = (from + stride - other).magnitude;
+            float reaches = needed / (StepReach * hip);
+            MostNeeded = Mathf.Max(MostNeeded, reaches);
+            shortSteps = reaches > 1 ? shortSteps + 1 : 0;
+            MostShort = Mathf.Max(MostShort, shortSteps);
+            if (reaches > Hopeless && Falls("no step reaches where its weight is going")) return false;
+            if (shortSteps >= Stumbles && Falls("its steps are not catching it")) return false;
             Vector2 to = other + Vector2.ClampMagnitude(from + stride - other, StepReach * hip);
             if (!body.StepTo(foot, new Vector3(to.x, ground, to.y), takes, out Vector3 landing)) return false;
             // The feet stay where the step leaves them, and the body stands between them.
