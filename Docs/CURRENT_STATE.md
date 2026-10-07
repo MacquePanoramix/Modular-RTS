@@ -84,7 +84,14 @@
       miner sent somewhere takes its pickaxe along, and `K` there puts it
       to work again
       ([clips and figures](Design/ThePhysicalBody.md#step-7-holding-and-walking-with-the-tool-october-7)).
-    - **Next:** step 8 (the interaction click and the small actions).
+    - **Step 8, first half: built** (October 7). The interaction click:
+      the space bar and a click open a thing's options beside it. The
+      pickaxe is laid down on the ground and picked up again by the
+      miner's body, and a miner rests when told
+      ([clips and figures](Design/ThePhysicalBody.md#step-8-first-half-the-interaction-click-and-the-pickaxe-laid-down-and-picked-up-october-7)).
+      Space is a proposal, not yet Luis's choice.
+    - **Next:** the second half of step 8 (the lantern and the mug taken
+      in hand and hung back), then step 9 (any boulder).
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

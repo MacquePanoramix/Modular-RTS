@@ -623,6 +623,10 @@ the more it is bent.
   ordinary strength, 0.78 s at half.
 - **Knees asked for more than they have give way,** and the body sinks
   until they can hold it.
+- **Changed in step 8** ([A2](#step-8-first-half-the-interaction-click-and-the-pickaxe-laid-down-and-picked-up-october-7)):
+  a knee's strength now comes from the body it carries, not from the
+  leg's thickness. Round's figures above became 2%, 36% and 74%, and it
+  rises in 0.34 s and 0.46 s.
 
 **What changed in what Luis has seen:**
 
@@ -737,7 +741,8 @@ again, on a block there. `K` at work puts everything away, as before.
   shoulder's bones bear it and a hand only steadies it. It needs the tool
   to rest on the body, and tools do not touch the body yet. Not in the
   plan; a proposal for Luis.
-- **Taking a left tool up again,** and laying one down on purpose: step 8.
+- **Taking a left tool up again,** and laying one down on purpose, came
+  with step 8 (below).
 - **The legs' effort while walking** (stooped, or loaded): it is counted
   standing only.
 - **A slope,** and sharp turns while dragging.
@@ -747,6 +752,97 @@ again, on a block there. `K` at work puts everything away, as before.
 - The share of a hand's hold at which a tool is dragged (a half).
 - How hard a body can pull, walking (three tenths of its weight).
 - Whether a heavy pickaxe goes over the shoulder.
+
+### Step 8, first half: the interaction click, and the pickaxe laid down and picked up (October 7)
+
+Luis: "a special click, where if you click something that can be
+interacted with, then it gives you … interaction options"; and "I want all
+the actions to feel physical and real … It needs to be all the actions."
+
+![Laying the pickaxe down](../Images/PhysicalBody/Action_LayDown.gif)
+
+*Each miner lays its pickaxe down: it stops its work, squats and bows,
+lays the tool flat beside it, lets go, and stands up.*
+
+![Picking it up again](../Images/PhysicalBody/Action_PickUp.gif)
+
+*Each walks back to its pickaxe, goes down, takes the handle under the
+head, and stands up with it.*
+
+**The click.**
+
+- **Hold the space bar** (or tap it, for the next click): what can be
+  interacted with shows its name.
+- **Click one of them:** its options open beside it in a small box, with
+  a **Cancel**. Escape, or a click elsewhere, closes it.
+- **While the key is held or the box is open,** the ordinary clicks do
+  nothing: nothing is selected or sent by mistake.
+- **The key is a proposal** (section 6): Space is not yet Luis's choice,
+  and it is one setting.
+
+**What offers what, so far:**
+
+| Clicked | It offers |
+|---|---|
+| The pickaxe, in the miner's hands | Lay it down |
+| A pickaxe lying on the ground | Pick it up |
+| The miner, at work | Rest |
+| The miner, standing with its pickaxe | Work here |
+
+**The actions are done by the body,** with the same arms, back and legs
+as the swing, on the same real pickaxe:
+
+| Action | What the body does |
+|---|---|
+| **Lay it down** | It takes the pickaxe in one hand at its side. It bows a little, bends its knees until the hand is at the ground, lays the tool flat, and lets go when it lies still. Then it stands up, by its back's and its legs' own strength |
+| **Pick it up** | It walks to stand with the handle, under the head, below where its shoulder will be. It goes down the same way until its hand reaches, takes hold, and stands up as the tool comes with it. If it finds the handle out of reach it steps nearer and goes down again |
+| **Rest** | It stops its work and stands with the pickaxe held as its strength allows |
+
+- **A pickaxe that lies stays in the world,** where it was laid or left.
+  It weighs what it weighs.
+- **A pickaxe too heavy for the hand** is taken by the end of its handle
+  and dragged, as in step 7.
+
+**On the path, with their own pickaxes:**
+
+| | Laid down in | Picked up in (with a walk of 2.5 m) |
+|---|---|---|
+| Small | 2.5 s | 4.5 s |
+| Long | 3.0 s | 4.6 s |
+| Round | 2.5 s | 4.9 s |
+
+**What the step found:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| A1 | Bowed as far as it went (58 degrees), the hand did not reach the ground | A body does not reach the ground from its back alone | It bows a little, then bends its knees, and bows further only for what that leaves. A body now bows to 80 degrees and squats to 0.6 of its hips' height |
+| A2 | Long squatted to lay its pickaxe down and could not get up | A knee's strength came from the leg's thickness, and Long's legs are long and thin: the squat asked all it had | A knee is as strong as its own body needs: it holds 1.6 times its share of the body with the thigh level, whatever its thickness (the back's rule) |
+| A3 | Bent right down, Round's hand stopped 8 cm short of a pickaxe on the ground | The unit's own place rides about 8 cm above the ground (the surface it walks on), and heights were taken from it | Heights are taken from the ground under the feet |
+| A4 | It came to stand too far from the pickaxe, or beside it | It stopped as near as a walk stops (12 cm), and aimed for the wrong place | It goes to where the handle will be under its bent shoulder, stops within 3 cm, and steps nearer if it still cannot reach |
+| A5 | Bent over the pickaxe it stepped to keep its balance, walked back, and bent again, over and over | A step moved it off the place it had walked to, and the walk took it back | Once it has come to the pickaxe it stays there |
+| A6 | A pickaxe let go weighed 2 kg too much | The part of the arms that rides on a held tool stayed on it | Let go, it weighs what it weighs |
+
+**What changed in the look with `K`:**
+
+- **A pickaxe left because it was too heavy** now ends the look by itself
+  when the miner has stood up, and stays lying. Before, the look waited
+  for `K`.
+- **`K` with a pickaxe lying somewhere** puts that one away and makes a
+  new one, as `K` always has.
+
+**What is not there yet:**
+
+- **The lantern and the mug** (take in hand, hang back, set down): the
+  second half of this step.
+- **A boulder's "Mine":** step 9.
+- **It always lays the pickaxe at its left,** flat, wherever it stands.
+- **It goes down very low** (a deep squat with the back bowed right over;
+  Round's head comes near the ground). Kneeling on one knee, which a
+  short-armed body would do, is not built.
+- **A very weak miner** has not been tried: it may not be able to stand
+  up from the squat.
+
+**Open:** the key; the list of options; how long a tap is.
 
 **What is not there yet** (of the bench, step 2):
 

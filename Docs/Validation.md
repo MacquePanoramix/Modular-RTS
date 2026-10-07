@@ -2186,3 +2186,49 @@ Built on the bench and in the look with `K`
     off the handle for an instant (measured, left: C4).
   - **What it costs,** the crowd benchmark.
   - **Luis's eye.**
+
+## S3, step 8, first half — the interaction click; the pickaxe laid down and picked up (October 7)
+
+Built in the look with `K`
+([design](Design/ThePhysicalBody.md#step-8-first-half-the-interaction-click-and-the-pickaxe-laid-down-and-picked-up-october-7)).
+
+- **The interaction tests** (`InteractionTests`, three): 3 of 3.
+  - **The pickaxe is laid down and picked up again by the body** (each
+    miner): in its hands it offers "Lay it down" and not "Pick it up".
+    Laid down in 2.5 s (Small), 3.0 s (Long) and 2.5 s (Round): the look
+    ends; the pickaxe lies on the ground (its lowest part no higher than
+    3 cm over it), still, 0.26 to 0.38 m from the miner, and weighs its
+    own weight; the miner is upright with nothing left on it. The miner
+    walks 2.5 m off and the pickaxe does not move. Lying, it offers "Pick
+    it up": taken up 4.5, 4.6 and 4.9 s after the order, in the left
+    hand; then carried in one hand, 0.46 to 0.71 m over the ground, the
+    miner upright, the hand on the handle. `K` then puts it to work, and
+    it strikes.
+  - **A miner at work rests when told and goes back to it:** standing
+    idle it offers nothing; at work, "Rest"; then it stands upright with
+    its pickaxe and no block; then "Work here", and it swings again.
+  - **The box:** armed, or open, it stops the ordinary clicks; the thing
+    nearest the pointer is picked, nothing 500 pixels away; an order
+    that is not offered is refused; closed, the ordinary clicks pass.
+- **The carry, balance, physical and tool tests:** 4, 4, 7 and 3: all
+  pass. With a knee now as strong as its body needs, Round's knees give
+  36% of what they have with the hips 0.21 m lower (it was 44%), and 74%
+  at half strength; it rises in 0.34 s, and in 0.46 s at half strength.
+- **Full PlayMode suite, one run:** 148 tests; 140 passed, none failed,
+  8 skipped as explicit (1,320 s).
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Read in pictures** (`PhysicalActionCapture`): each miner laying its
+  pickaxe down and picking it up, from its left.
+- **What failed on the way** (A1 to A6 in the design). Also: the first
+  test looked for the miner's hands in the frame the look ended, before
+  they were removed.
+- **Not tested:**
+  - **The space bar and the mouse themselves:** the orders were given as
+    the box gives them. Nobody has pressed the key in the build.
+  - **A pickaxe too heavy to carry,** laid down or picked up (it is let
+    go, and taken by the end of the handle, by the code; not run).
+  - **A weak miner:** whether it can stand up from the squat.
+  - **A slope steeper than the path,** and a pickaxe lying against
+    something.
+  - **What it costs,** the crowd benchmark.
+  - **Luis's eye.**

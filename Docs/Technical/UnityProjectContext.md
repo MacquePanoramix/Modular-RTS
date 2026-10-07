@@ -1557,3 +1557,47 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   miner with its pickaxe and puts it to work again. `PhysicalCarryBench`
   (explicit): `-carryMiner`, `-carryStrengths`, `-carryWeights`,
   `-carryWalk`, `-carryFrames`, `-carryView`.
+
+## The physical body, step 8 (first half): the interaction click; laying down and picking up — October 7
+
+- **`InteractionClick`** (new; added beside `MinerWorkPreview` at run
+  time until the place is set up with it, step 11). Space held, or tapped
+  for the next click (`Armed`); a left click picks the thing nearest the
+  pointer within 48 pixels (`Pick`; a tool is preferred to the miner that
+  holds it) and opens its options (`OpenOn`); `Choose(label)` gives the
+  order; `Close()`. While armed or open it is the `RtsInput` interface
+  blocker (`Blocks`). The things are the `HeldThing`s in the world and
+  the chosen miner; the options are asked of `MinerWorkPreview`
+  (`OptionsFor`, `OptionsForMiner`).
+- **`PhysicalCarry`:**
+  - **`LayDown()`:** from the one-hand carry, the hand takes the tool to
+    the ground under its shoulder, flat (the head's points level, the
+    handle the way the body faces), while `BendTo` takes the body down;
+    it lets go when the grip is within 3 cm of there and the tool is
+    still (`Lies`, `Way.Left`). A dragged tool is only let go.
+  - **`Fetch(lying)`:** `PhysicalHands.Adopt`; the left hand under the
+    head, or the right at the handle's end if the tool asks more than
+    half the hand's hold. It walks to where that place will be under its
+    bent shoulder (ahead by 0.8 of the shoulder's height over the hips),
+    with the agent's stopping distance at 3 cm for the walk; stays;
+    faces the way it came; `BendTo`; `Grasp` when within reach; then
+    `Way.OneHand` or `Way.Dragged`. If the place is more than 9 cm from
+    under its shoulder it steps nearer (three times at most). After 6 s
+    without reaching, it leaves it.
+  - **`BendTo(shoulder, place)`:** the bow to 42 degrees, then the hips
+    down to 0.6 of their height, then the bow to 78; the arm stretches to
+    0.96 of its length.
+  - Heights are from the ground under the feet (`Ground`).
+- **`PhysicalHands`:** `Adopt(lying)` (a tool in the world becomes the
+  held thing with no hand on it; `Grasp` then reaches for it);
+  `PlaceAlong(along)`. `Drop` takes the arms' riding mass off the tool.
+- **`HeldThing`:** `Tool`, `Weight`, `Holder`.
+- **`ProceduralBiped`:** `MostBowed` 80, `DeepestSink` 0.6.
+- **`PhysicalBody.KneeCapacity`:** 1.6 x half the body's weight x the
+  thigh's length x strength (it was by the leg's thickness).
+- **`MinerWorkPreview`:** `Lying` (the pickaxe in the world), `LayDown()`,
+  `PickUp(thing)`, `Rest()`, `OptionsFor`, `OptionsForMiner`, `Equip`.
+  When the miner's hands are empty and it has stood up, the look ends and
+  the pickaxe stays. `K` puts a lying pickaxe away before making one.
+- **Tests:** `InteractionTests` (three). `PhysicalActionCapture`
+  (explicit): `-actionOut`, `-actionMiner`, `-actionView`.

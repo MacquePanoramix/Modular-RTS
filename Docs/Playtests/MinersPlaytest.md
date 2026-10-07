@@ -131,7 +131,13 @@ Luis asked for. The round's log, with before and after images, is in
 6. Send it somewhere while it works (a right click on the ground). It
    takes its pickaxe with it, in one hand at its side. `K` where it stops
    puts it to work again, on a block there.
-7. Make it weak and its pickaxe heavy (`,` and `=` a few times each) and
+7. **The interaction click.** Hold the space bar: the pickaxe and the
+   miner show their names. Click the pickaxe and choose **Lay it down**:
+   the miner squats, lays it on the ground and stands up. Walk it away.
+   Hold Space, click the pickaxe on the ground and choose **Pick it up**:
+   it goes back, goes down and takes it. On the miner itself, at work:
+   **Rest**.
+8. Make it weak and its pickaxe heavy (`,` and `=` a few times each) and
    send it somewhere again. When the pickaxe asks more than half of its
    hand's hold, it drags it by the end of the handle, bent over, and walks
    slower. The line at the foot of the screen says which.
@@ -152,6 +158,8 @@ Luis asked for. The round's log, with before and after images, is in
 - **The hands on the handle,** sliding, letting go and taking hold again.
 - **Walking with it.** Does the pickaxe look carried, with a weight of its
   own? Does the drag read as a body with a tool too heavy for it?
+- **Laying down and picking up.** Does the body go down to the ground as
+  a body would? Is the space bar the right key for the click?
 
 **What is not there:**
 - **It is not mining.** Nothing is mined, the block is put where the miner
