@@ -10,7 +10,8 @@ namespace WonderGather
     // click elsewhere, closes it.
     //
     // Each option is an order to the chosen miner, done by its body. What the options are is asked of the look at the
-    // work (MinerWorkPreview), which is what gives a miner its physical work in this prototype.
+    // work (MinerWorkPreview), which is what gives a miner its physical work in this prototype. A click on the panel
+    // (MinerPanel) is the panel's, and not a click in the world.
     //
     // The key is one setting (Space is a proposal, not yet Luis's choice).
     [RequireComponent(typeof(MinerChoice), typeof(MinerWorkPreview))]
@@ -27,6 +28,7 @@ namespace WonderGather
 
         private MinerChoice choice;
         private MinerWorkPreview look;
+        private MinerPanel beside;
         private RtsInput input;
         private Camera view;
         private InputAction key, click, escape, point;
@@ -47,6 +49,12 @@ namespace WonderGather
         public string Label(int index) => options[index].label;
         // While it is armed or open, the ordinary clicks do nothing.
         public bool Blocks => Armed || IsOpen;
+        // A point of the screen that is on the panel is not in the world.
+        private bool OnPanel(Vector2 screen)
+        {
+            if (beside == null) beside = GetComponent<MinerPanel>();
+            return beside != null && beside.Over(screen);
+        }
 
         private void Awake()
         {
@@ -62,7 +70,7 @@ namespace WonderGather
         {
             key?.Enable(); click?.Enable(); escape?.Enable(); point?.Enable();
             input = FindAnyObjectByType<RtsInput>();
-            if (input != null) input.SetInterfaceBlocker(_ => Blocks);
+            if (input != null) input.SetInterfaceBlocker(pointer => Blocks || OnPanel(pointer));
         }
 
         private void OnDisable()
@@ -105,7 +113,9 @@ namespace WonderGather
 
         public string Named(Component thing)
         {
-            if (thing is HeldThing held) return held.Tool != null ? held.Tool.DisplayName.ToLowerInvariant() : "tool";
+            // A tool says what it weighs: the same pickaxe may lie there lighter and heavier.
+            if (thing is HeldThing held)
+                return held.Tool != null ? $"{held.Tool.DisplayName.ToLowerInvariant()}, {held.Tool.Mass * held.Weight:0.0} kg" : "tool";
             if (thing is HungThing) return thing.name.ToLowerInvariant();
             if (thing is Boulder) return "boulder";
             if (thing is SelectableUnit && choice != null) return choice.NameOf(choice.Chosen);
@@ -180,7 +190,7 @@ namespace WonderGather
                 if (!box.Contains(new Vector2(pointer.x, Screen.height - pointer.y))) Close();
                 return;
             }
-            if (!Armed) return;
+            if (!Armed || OnPanel(pointer)) return;
             usedWhileHeld = true;
             if (!OpenOn(Pick(pointer))) latched = false;
         }

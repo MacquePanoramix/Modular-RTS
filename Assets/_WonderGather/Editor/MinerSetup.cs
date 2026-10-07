@@ -843,7 +843,7 @@ namespace WonderGather.Editor
             choice.Configure(units, Names, Notes, selection, 0);
             // A crowd of miners for the benchmark (-wgcrowd); idle otherwise.
             group.AddComponent<MinerCrowdBenchmark>().Configure(prefabs);
-            // A first look at them at work, with K (until where and how they mine is decided).
+            // Their physical work in the place (it brings the interaction click and the panel with it).
             group.AddComponent<MinerWorkPreview>();
             EditorUtility.SetDirty(selection);
             if (!EditorSceneManager.SaveScene(scene)) throw new IOException("Could not save " + OrdinaryPlaceSetup.ScenePath);

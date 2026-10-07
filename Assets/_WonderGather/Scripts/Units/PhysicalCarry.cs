@@ -42,6 +42,8 @@ namespace WonderGather
         public float Pace { get; private set; } = 1;
         // A tool it has left, lying where it left it.
         public Rigidbody Lies { get; private set; }
+        // Why it did not take up a tool it went for, if it did not.
+        public string NotTaken { get; private set; } = "";
 
         private PhysicalBody physical;
         private PhysicalBalance balance;
@@ -91,20 +93,37 @@ namespace WonderGather
             hands.Adopt(lying);
             float asks = lying.Tool.Mass * lying.Weight * Physics.gravity.magnitude / Mathf.Max(1e-3f, physical.HoldOf(0));
             fetching = lying; fetchHand = asks > Carries ? 1 : 0; walked = false; arrived = false; fetchClock = 0; nearer = 0;
+            NotTaken = ""; shortFor = 0; kneesHeld = false; bentAll = false; beyond = false; beyondFor = 0;
             laying = false; Lies = null; stoop = 0;
         }
 
         // The body bends down until a shoulder is near enough a place for its hand to reach it: from the back, then
-        // from the knees.
-        private float BendTo(Vector3 shoulder, Vector3 place, float dt)
+        // from the knees, as deep as one of them could hold it alone (PhysicalBalance), then from the back again.
+        // kneesToo: whether its feet are set for it. Until they are it only bows: a foot that is still to be set down,
+        // lifted while the knees are bent, leaves the other knee the whole body.
+        private float BendTo(Vector3 shoulder, Vector3 place, float dt, bool kneesToo = true)
         {
             float lacks = Vector3.Distance(shoulder, place) - Stretches * body.ArmReach;
             float deepest = GroundSink * body.StandingHipHeight;
+            float asked = KneesAsked;
+            bool may = asked < PhysicalBalance.Raises;
+            if (!may) kneesHeld = true;
             if (lacks > 0)
             {
                 if (stoop < FirstBow) stoop = Mathf.Min(FirstBow, stoop + lacks * 320 * dt);
-                else if (body.SinkNow < deepest - .004f) body.Sink(Mathf.Min(deepest, body.SinkNow + lacks * .6f));
-                else stoop = Mathf.Min(GroundBow, stoop + lacks * 320 * dt);
+                else if (!kneesToo) body.Sink(0);
+                else if (may && body.SinkNow < deepest - .004f) body.Sink(Mathf.Min(deepest, body.SinkNow + lacks * .6f));
+                else
+                {
+                    // Its knees stopped well short of the deepest bend, and what is still lacking is more than all the
+                    // bowing left could give: it is out of this body's reach, and it does not bow down to make sure.
+                    float bowLeft = (Mathf.Cos(stoop * Mathf.Deg2Rad) - Mathf.Cos(GroundBow * Mathf.Deg2Rad)) * body.ShoulderFromHips.y;
+                    beyondFor = !may && body.SinkNow < WellShort * deepest && lacks > bowLeft + OutOfReach ? beyondFor + dt : 0;
+                    if (beyondFor > .3f) beyond = true;
+                    else if (beyondFor <= 0) stoop = Mathf.Min(GroundBow, stoop + lacks * 320 * dt);
+                    // (Bowing further takes the hips back, which bends the knees more: they come up by as much.)
+                    body.Sink(asked > PhysicalBalance.Raises + KneesOver ? Mathf.Max(0, body.SinkNow - KneesComeUp * dt) : body.SinkNow);
+                }
             }
             else
             {
@@ -112,8 +131,33 @@ namespace WonderGather
                 if (stoop > FirstBow) stoop = Mathf.Max(FirstBow, stoop + lacks * 320 * dt);
                 else body.Sink(Mathf.Max(0, body.SinkNow + lacks * .6f));
             }
+            bentAll = lacks >= .01f && stoop >= GroundBow - .5f && (!may || body.SinkNow >= deepest - .006f);
             return lacks;
         }
+
+        // What its knees are asked now, as a share of what they have, with the tool it has or is taking up; and
+        // whether they may bend deeper, of its own accord.
+        private float KneesAsked => balance != null ? balance.KneesAsked(hands != null ? hands.ToolMass : 0) : 0;
+        // Asked this much more than they may be, the knees come up, at this pace (metres a second).
+        private const float KneesOver = .02f, KneesComeUp = .3f;
+        // It has stood up when its knees are bent less than this share of its hips' height and it bows less than this
+        // (degrees). With its knees bent more than the third share, it is bent to the ground.
+        private const float StoodUpSink = .05f, StoodUpBow = 15, KeepsFeetBelow = .25f;
+        // Bent as far as it can bend and still short of the tool, for this long (seconds), it gives it up. So it does
+        // if its knees give way under it as it reaches, by this share of its hips' height.
+        private const float GivesUpShort = 1.2f, GivesUnder = .12f;
+        private float shortFor;
+        // Whether it is bent all it can; whether its knees held it short of the deepest bend, going for this tool;
+        // and whether the tool is beyond what bending all it can would reach (by more than this, metres).
+        private bool bentAll, kneesHeld, beyond;
+        private float beyondFor;
+        // Going for a tool: whether its feet are set for the bend; for how long they have stood still together
+        // (seconds), and how long it has been setting them. They are set when they have stood so for this long, the
+        // body facing within this many degrees of the way it means to; it waits for that no longer than this.
+        private bool feetSet, wasDown;
+        private float setFor, settling;
+        private const float SetsFor = .12f, SetsAtMost = 2.5f, FacesWithin = 3;
+        private const float OutOfReach = .03f, WellShort = .7f;
 
         private void Awake()
         {
@@ -125,6 +169,8 @@ namespace WonderGather
 
         private void OnDisable()
         {
+            if (balance != null) balance.KeepsFeet = false;
+            wasDown = false;
             Walks();
             if (motor != null) motor.SetMovementRate(1);
             Pace = 1; Pull = 0;
@@ -157,7 +203,17 @@ namespace WonderGather
         {
             // A body that is down, or getting up, is not the carry's to stand up.
             if (fall == null && !lookedForFall) { fall = GetComponent<PhysicalFall>(); lookedForFall = true; }
-            if (fall != null && fall.Now != PhysicalFall.State.Up) return;
+            if (balance == null) balance = GetComponent<PhysicalBalance>();
+            if (fall != null && fall.Now != PhysicalFall.State.Up) { if (balance != null) balance.KeepsFeet = false; return; }
+            // Bent to the ground (for a tool it takes up or lays down), its feet stay where they are, until it has
+            // stood up again (or is sent somewhere).
+            if (balance != null && body != null)
+            {
+                float hipsUp = body.StandingHipHeight;
+                if (body.SinkNow > KeepsFeetBelow * hipsUp) wasDown = true;
+                else if ((body.SinkNow < StoodUpSink * hipsUp && Mathf.Abs(body.BowNow) < StoodUpBow) || (motor != null && motor.IsMoving)) wasDown = false;
+                balance.KeepsFeet = wasDown;
+            }
             if (hands == null || hands.Held == null || body == null)
             {
                 // The tool has slipped from its hand: it lies where it fell.
@@ -170,9 +226,10 @@ namespace WonderGather
                 return;
             }
             float dt = Time.fixedDeltaTime, g = Physics.gravity.magnitude;
-            // It is not set for work: its feet come together.
+            // It is not set for work: its feet come together, once it stands up. (Coming from its work it is still
+            // bowed and its knees bent, the tool out before it: its feet stay set apart under that until it is up.)
             if (balance == null) balance = GetComponent<PhysicalBalance>();
-            if (balance != null) balance.Ease();
+            if (balance != null && (body.SinkNow < StoodUpSink * body.StandingHipHeight && Mathf.Abs(body.BowNow) < StoodUpBow)) balance.Ease();
             // (The first two of these are the shoulders, the left then the right.)
             System.Span<Vector3> joints = stackalloc Vector3[4];
             body.StandsAt(Time.time, out Vector3 hips, out Quaternion posture, joints.Slice(0, 2), joints.Slice(2, 2));
@@ -271,7 +328,9 @@ namespace WonderGather
             // The stoop grows while the arm is short of that, and eases when it has length to spare.
             float lacks = joints[1].y - up - .93f * reach;
             stoop = Mathf.Clamp(stoop + lacks * 320 * dt, 0, DragBow);
-            body.Sink(Mathf.Clamp(body.SinkNow + (stoop >= DragBow - .5f || lacks < 0 ? lacks * .5f : 0), 0, DragSink * body.StandingHipHeight));
+            float knees = Mathf.Clamp(body.SinkNow + (stoop >= DragBow - .5f || lacks < 0 ? lacks * .5f : 0), 0, DragSink * body.StandingHipHeight);
+            // (Its knees bend no deeper than one of them could hold alone.)
+            body.Sink(balance == null ? knees : balance.KneesBendTo(knees, hands.ToolMass, dt));
             hands.WantEnd(1, Vector3.Lerp(endFrom, place, Mathf.SmoothStep(0, 1, endClock / .9f)));
 
             // What it pulls with: what the hand gives the tool along the ground, the way the body is going.
@@ -325,17 +384,33 @@ namespace WonderGather
                 body.Sink(0);
                 return;
             }
-            // There: it stays, turns the way it came, goes down, and reaches.
-            if (!arrived) { arrived = true; if (motor != null) motor.Stop(); }
-            if (motor != null) motor.Face(transform.position + faces, dt);
-            if (back != null) back.Want(stoop);
-            float lacks = BendTo(joints[fetchHand], grip, dt);
-            if (!hands.Holds(fetchHand) && !hands.Reaching(fetchHand) && lacks < .01f) hands.Grasp(fetchHand, along);
-            // Down as far as it bows at first, and the place is not under its shoulder: it steps nearer, and goes down
-            // again.
+            // There: it stays, turns the way it came, and bows; with its feet set (both down, none still to be put in
+            // its place, and the turning done) it bends its knees too, and reaches. It does not turn again while it is
+            // down: turning lifts its feet.
+            if (!arrived) { arrived = true; if (motor != null) motor.Stop(); feetSet = false; setFor = 0; settling = 0; }
             Vector3 off = grip - joints[fetchHand];
             off.y = 0;
-            if (!hands.Holds(fetchHand) && !hands.Reaching(fetchHand) && nearer < 3 && fetchClock > .9f && lacks > .02f && off.magnitude > .09f
+            if (!feetSet)
+            {
+                if (motor != null) motor.Face(transform.position + faces, dt);
+                settling += dt;
+                bool turned = Vector3.Angle(Vector3.ProjectOnPlane(transform.forward, Vector3.up), faces) < FacesWithin;
+                // Bowed as far as it bows at first, its knees still straight, and the place is not under its shoulder:
+                // it steps nearer before it goes down.
+                if (turned && stoop >= FirstBow - 1 && settling > .3f && nearer < 3 && off.magnitude > .09f && motor != null && motor.TryMove(transform.position + off))
+                {
+                    nearer++; arrived = false; fetchClock = 0;
+                    return;
+                }
+                setFor = turned && stoop >= FirstBow - 1 && body.FootPlanted(0) && body.FootPlanted(1) && body.LiftDue < 0 ? setFor + dt : 0;
+                if (setFor > SetsFor || settling > SetsAtMost) { feetSet = true; fetchClock = 0; }
+            }
+            if (back != null) back.Want(stoop);
+            float lacks = BendTo(joints[fetchHand], grip, dt, feetSet);
+            if (!hands.Holds(fetchHand) && !hands.Reaching(fetchHand) && lacks < .01f) hands.Grasp(fetchHand, along);
+            // Down, a good while, and still the place is not under its shoulder: it stands up, steps nearer, and goes
+            // down again.
+            if (feetSet && !hands.Holds(fetchHand) && !hands.Reaching(fetchHand) && nearer < 3 && fetchClock > 1.8f && lacks > .02f && off.magnitude > .09f
                 && motor != null && motor.TryMove(transform.position + off))
             {
                 nearer++; arrived = false; fetchClock = 0;
@@ -350,9 +425,13 @@ namespace WonderGather
                 if (fetchHand == 1) { endFrom = hands.GripPlace(1); endClock = 0; hands.WantEnd(1, endFrom); }
                 return;
             }
-            // It cannot get to it: it leaves it.
-            if (fetchClock > 6)
+            // It cannot get to it: it leaves it. (Bent all it can and still short of it, it does not wait long.)
+            bool giving = balance != null && balance.GaveNow > GivesUnder * body.StandingHipHeight;
+            shortFor = !hands.Reaching(fetchHand) && bentAll ? shortFor + dt : 0;
+            if ((feetSet && fetchClock > 6) || shortFor > GivesUpShort || giving || (beyond && !hands.Reaching(fetchHand)))
             {
+                NotTaken = giving ? "Its knees gave under it as it reached for the pickaxe"
+                    : kneesHeld ? "Its legs would not raise it again from as far down as the pickaxe lies" : "It could not reach the pickaxe";
                 var lying = fetching;
                 fetching = null;
                 Walks();

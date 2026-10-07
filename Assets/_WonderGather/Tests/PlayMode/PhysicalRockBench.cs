@@ -115,6 +115,27 @@ namespace WonderGather.Tests
                             shot++;
                         };
                         look.SetStrength(Numbers("-rockStrength", 1)[0]);
+                        // A pickaxe is put on the ground beside it, as the panel puts it: its own at a share of its
+                        // weight (-rockWeight), or another miner's own (-rockPickaxeOf).
+                        if (!look.Showing)
+                        {
+                            string of = CaptureTools.Argument("-rockPickaxeOf");
+                            if (!string.IsNullOrEmpty(of))
+                                for (int other = 0; other < choice.Count; other++)
+                                {
+                                    if (!string.Equals(of, choice.NameOf(other), StringComparison.OrdinalIgnoreCase)) continue;
+                                    choice.Choose(other);
+                                    yield return null;
+                                    break;
+                                }
+                            var put = look.LayPickaxe(Numbers("-rockWeight", 1)[0]);
+                            if (choice.Chosen != index) { choice.Choose(index); yield return null; }
+                            Assert.That(put, Is.Not.Null, "No pickaxe was put on the ground beside " + name);
+                            for (float until = Time.time + 1; Time.time < until;) yield return null;
+                            Debug.Log(string.Format(culture, "ROCK {0} has a pickaxe of {1:0.00} kg ({2}) on the ground {3:0.00} m from it, {4:0.000} m over the ground",
+                                name, put.GetComponent<Rigidbody>().mass, put.Tool.name, Vector3.ProjectOnPlane(put.GetComponent<Rigidbody>().worldCenterOfMass - unit.transform.position, Vector3.up).magnitude,
+                                put.GetComponent<Rigidbody>().worldCenterOfMass.y - ground.Height(put.transform.position.x, put.transform.position.z)));
+                        }
                         Assert.That(click.OpenOn(boulder) && click.Choose("Mine"), Is.True, name + " was not offered to mine boulder " + which);
                         float began = Time.time, said = Time.time;
                         int stones = boulder.Stones.Count, blows = boulder.Blows;
@@ -123,14 +144,14 @@ namespace WonderGather.Tests
                             if (Time.time - said > 2)
                             {
                                 said = Time.time;
-                                Debug.Log(string.Format(culture, "ROCK {0} at boulder {1} {2:0.0}s: showing {3}, swinging {4}, carrying {5}, moving {6}, off the walked ground {10}, blows on it {7}, stones {8}, {9:0.00} m from where it means to stand; the swing {11}{17}, spent {12:0}%, its last blow on {19}; gave it up: {13}; right arm gives {18}; left arm gives {14} (shoulder, elbow, wrist, hold), its hand at {15:0.000} on a handle whose weight is at {16:0.000}",
+                                Debug.Log(string.Format(culture, "ROCK {0} at boulder {1} {2:0.0}s: {20}; showing {3}, swinging {4}, carrying {5}, moving {6}, off the walked ground {10}, blows on it {7}, stones {8}, {9:0.00} m from where it means to stand; the swing {11}{17}, spent {12:0}%, its last blow on {19}; gave it up: {13}; right arm gives {18}; left arm gives {14} (shoulder, elbow, wrist, hold), its hand at {15:0.000} on a handle whose weight is at {16:0.000}",
                                     name, which, Time.time - began, look.Showing, look.Swinging, look.Carrying, unit.Motor.IsMoving, boulder.Blows - blows, boulder.Stones.Count - stones,
                                     look.Mining != null ? Vector3.ProjectOnPlane(unit.transform.position - look.MiningPlan.stand, Vector3.up).magnitude : -1, unit.Motor.IsOff,
                                     look.Swing != null ? look.Swing.phase.ToString() : "-", look.Swing != null ? look.Swing.Spent * 100 : 0, look.Mining == null ? look.LeftRock : "no",
                                     unit.GetComponent<PhysicalHands>() != null ? unit.GetComponent<PhysicalHands>().EffortOf(0).ToString("F2") : "-",
                                     unit.GetComponent<PhysicalHands>() != null ? unit.GetComponent<PhysicalHands>().GripAlong(0) : 0, miner.Pickaxe.Centre.y,
                                     look.Swing != null && look.Swing.phase == PhysicalSwing.Phase.Rest && look.Swing.RestsOnGround ? " (the head on the ground)" : "",
-                                    unit.GetComponent<PhysicalHands>() != null ? unit.GetComponent<PhysicalHands>().EffortOf(1).ToString("F2") : "-", look.StruckLast));
+                                    unit.GetComponent<PhysicalHands>() != null ? unit.GetComponent<PhysicalHands>().EffortOf(1).ToString("F2") : "-", look.StruckLast, look.Status().Replace("\n", " / ")));
                             }
                             yield return null;
                         }

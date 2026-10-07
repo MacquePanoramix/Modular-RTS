@@ -9,7 +9,7 @@ using UnityEngine.TestTools;
 
 namespace WonderGather.Tests
 {
-    // Pictures of the look at the work as it is met in play (MinerWorkPreview, the K key): each miner where the place
+    // Pictures of the look at the work as it is met in play (MinerWorkPreview's block of the bench): each miner where the place
     // puts it, the look begun as the key begins it, from its side and from the game's own camera.
     //
     // Run on its own: -runTests -testPlatform PlayMode -testFilter WonderGather.Tests.PhysicalLookCapture -lookOut <folder>

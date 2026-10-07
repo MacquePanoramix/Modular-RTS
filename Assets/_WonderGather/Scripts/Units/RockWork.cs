@@ -36,7 +36,10 @@ namespace WonderGather
         // far over the ground, faces up at least this much, and the rock does not rise before it (towards the body)
         // by more than this. The boots stay this far clear of the rock's foot. A miss of more than this is no place
         // to work from.
-        private const float Feels = .03f, Tries = .09f, Low = .08f, FacesUp = .3f, Rises = .03f, Clear = .06f, Misses = .03f;
+        // (How low: nearer the ground than this, a spot is struck with the knees bent so deep that the blows ask them
+        // more than they have, at a body's ordinary strength: Small's 128% at 8 cm, where they are asked 46% at
+        // 14 cm. It was 8 cm until step 11; every spot step 9 was tried at was 14 cm up or more.)
+        private const float Feels = .03f, Tries = .09f, Low = .14f, FacesUp = .3f, Rises = .03f, Clear = .06f, Misses = .03f;
         private const int Ground = 1 << 6;
         // Why the last search found what it found, on the side the body came from: for the bench.
         public static string Last = "";

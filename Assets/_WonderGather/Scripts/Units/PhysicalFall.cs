@@ -491,6 +491,8 @@ namespace WonderGather
         // The unit's own place goes with its hips.
         private void Follow()
         {
+            // (When the place itself is being put away, its parts may be gone before it.)
+            if (parts[Hips] == null) return;
             Vector3 at = parts[Hips].position;
             float ground = Physics.Raycast(new Vector3(at.x, at.y + 2, at.z), Vector3.down, out var under, 8, Ground) ? under.point.y : transform.position.y - ridesUp;
             transform.position = new Vector3(at.x, ground + ridesUp, at.z);

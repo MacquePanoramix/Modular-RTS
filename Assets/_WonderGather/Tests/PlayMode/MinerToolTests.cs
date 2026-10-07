@@ -68,7 +68,7 @@ namespace WonderGather.Tests
             }
         }
 
-        // The look at the work, in play: K puts a plain block before the chosen miner, which swings its own pickaxe
+        // The look at the work, in play (the bench's block; the key K did this until step 11): it puts a plain block before the chosen miner, which swings its own pickaxe
         // down on it with real weight, by its own strength (the comma and the full stop change that; minus and
         // equals, the pickaxe's weight); K again, or walking away, puts the block and the pickaxe away and leaves
         // the miner as it was.
@@ -104,7 +104,7 @@ namespace WonderGather.Tests
                 Assert.That(unit.Motor.IsMoving, Is.False, name + " did not arrive with its pickaxe.");
                 Assert.That(unit.GetComponent<PhysicalHands>().Held, Is.Not.Null, name + " lost its pickaxe on the way.");
                 Assert.That(look.Carry.way, Is.EqualTo(PhysicalCarry.Way.OneHand), name + " should carry its own pickaxe in one hand.");
-                // K there: it sets itself to work again, on a block where it stands.
+                // Set to work there: it sets itself to work again, on a block where it stands.
                 int struckBefore = swing.results.Count;
                 look.Toggle();
                 began = Time.time;

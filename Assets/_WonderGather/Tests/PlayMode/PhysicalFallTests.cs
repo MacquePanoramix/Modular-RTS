@@ -258,7 +258,10 @@ namespace WonderGather.Tests
         {
             Time.captureFramerate = 50;
             int index = -1;
-            for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == "Small") index = i;
+            // (Round: since step 11 a body rests with its knees bent no further than they can hold, and Small, as weak
+            // and as laden, no longer falls in a minute and a half. Round's legs still give way, later than Small's
+            // did.)
+            for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == "Round") index = i;
             choice.Choose(index);
             yield return Wait(.3f);
             var unit = choice.Current;
@@ -269,22 +272,35 @@ namespace WonderGather.Tests
             look.Toggle();
             float began = Time.time, fellAt = -1;
             string why = "";
-            while (Time.time - began < 60)
+            while (Time.time - began < 100)
             {
                 if (look.Fall != null && look.Fall.Now != PhysicalFall.State.Up) { fellAt = Time.time - began; why = unit.GetComponent<PhysicalBalance>() != null ? unit.GetComponent<PhysicalBalance>().Fell : ""; break; }
                 yield return null;
             }
-            Assert.That(fellAt, Is.GreaterThan(0), "It did not fall in a minute.");
+            Assert.That(fellAt, Is.GreaterThan(0), "It did not fall in a hundred seconds.");
             Assert.That(why, Is.EqualTo("its legs cannot bear it"));
             var fall = look.Fall;
             began = Time.time;
             while ((fall.Now != PhysicalFall.State.Up || biped.SinkNow > .02f) && Time.time - began < 40) yield return null;
             float upAfter = Time.time - began;
             yield return Wait(2);
-            Debug.Log($"FALL_WEAK Small, at half its strength with a pickaxe three times its weight: its legs gave way after {fellAt:F1} s of work; it was up again {upAfter:F1} s later, from a crouch {fall.RoseFrom:F2} m deep, having lain down again {fall.LayDownAgain} time(s); it fell {fall.Falls} time(s)");
+            Debug.Log($"FALL_WEAK Round, at half its strength with a pickaxe three times its weight: its legs gave way after {fellAt:F1} s of work; it was up again {upAfter:F1} s later, from a crouch {fall.RoseFrom:F2} m deep, having lain down again {fall.LayDownAgain} time(s); it fell {fall.Falls} time(s)");
             Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Up), "It did not get up.");
             Assert.That(fall.Falls, Is.LessThanOrEqualTo(2), "It went on falling.");
-            Assert.That(look.Showing, Is.False, "The look did not end when it was up again.");
+            // Up, its hands empty, the look ends by itself when it stands straight. A body this weak, its back spent by
+            // the work, may not get its trunk up again: it stands bent, and the panel says so. Made as strong as it was
+            // built, it straightens, and the look ends.
+            if (look.Showing)
+            {
+                Assert.That(biped.BowNow, Is.GreaterThan(30), $"The look did not end when it was up again, and it does not stand bent: it bows {biped.BowNow:F1} degrees, its knees are bent {biped.SinkNow:F3} m; the panel says: {look.Status()}");
+                Assert.That(look.Status(), Does.Contain("its back does not raise it"), "The panel does not say why it stands bent.");
+                Debug.Log($"FALL_WEAK up again, it stands bent {biped.BowNow:F0} degrees: its back, at half its strength and spent, does not raise it. The panel says: {look.Status()}");
+                look.SetStrength(1);
+                began = Time.time;
+                while (look.Showing && Time.time - began < 30) yield return null;
+                Debug.Log($"FALL_WEAK as strong as it was built again, it stood straight and the look ended {Time.time - began:F1} s later");
+            }
+            Assert.That(look.Showing, Is.False, $"The look did not end when it was up again: it bows {biped.BowNow:F1} degrees, its knees are bent {biped.SinkNow:F3} m; the panel says: {look.Status()}");
             Assert.That(look.Lying, Is.Not.Null, "Its pickaxe does not lie in the world.");
             look.SetStrength(1); look.SetWeight(1);
         }

@@ -118,8 +118,21 @@ namespace WonderGather.Tests
                 }
                 Assert.That(hands != null && hands.Held == lies && hands.Holds(0), Is.True, name + " did not take its pickaxe up.");
                 float took = Time.time - began;
-                yield return Wait(2.2f);
-                Debug.Log($"INTERACTION_TAKEN {name}: taken up {took:F1} s after the order; then carried {look.Carry.way}, the pickaxe {Over(thing):F2} m over the ground; the miner bows {biped.BowNow:F1} degrees; hands {Mathf.Max(hands.Miss(0), hands.Miss(1)) * 1000:F0} mm off");
+                // It stands up with it (how long that takes is told, and is no more than a few seconds).
+                float tookHold = Time.time, mostLegs = 0;
+                while ((Mathf.Abs(biped.BowNow) >= 3 || biped.SinkNow >= .02f) && Time.time - tookHold < 8)
+                {
+                    var legs = unit.GetComponent<PhysicalBalance>();
+                    if (legs != null) mostLegs = Mathf.Max(mostLegs, legs.LegEffort);
+                    if (!look.Showing || hands == null || hands.Held == null) break;
+                    yield return null;
+                }
+                float stoodUp = Time.time - tookHold;
+                var fallen = unit.GetComponent<PhysicalFall>();
+                Assert.That(look.Showing && hands != null && hands.Held == lies, Is.True, $"{name} did not keep its pickaxe as it stood up ({stoodUp:F1} s after it took hold): its legs were asked {mostLegs * 100:F0}% at most; it fell {(fallen != null ? fallen.Falls : 0)} time(s) ({(unit.GetComponent<PhysicalBalance>() != null ? unit.GetComponent<PhysicalBalance>().Fell : "")}); it stands {Vector3.ProjectOnPlane(lies.worldCenterOfMass - unit.transform.position, Vector3.up).magnitude:F2} m from the pickaxe; the panel says: {look.Status()}");
+                yield return Wait(.6f);
+                Debug.Log($"INTERACTION_TAKEN {name}: taken up {took:F1} s after the order, and standing with it {stoodUp:F1} s later (its legs asked {mostLegs * 100:F0}% at most as it rose); then carried {look.Carry.way}, the pickaxe {Over(thing):F2} m over the ground; the miner bows {biped.BowNow:F1} degrees; hands {Mathf.Max(hands.Miss(0), hands.Miss(1)) * 1000:F0} mm off");
+                Assert.That(stoodUp, Is.LessThan(5), name + " was slow to stand up with its pickaxe.");
                 Assert.That(look.Carry.way, Is.EqualTo(PhysicalCarry.Way.OneHand));
                 Assert.That(Over(thing), Is.GreaterThan(.12f), name + " did not lift its pickaxe.");
                 Assert.That(Mathf.Abs(biped.BowNow), Is.LessThan(3.5f), name + " did not stand up with it.");
@@ -157,11 +170,11 @@ namespace WonderGather.Tests
             Assert.That(hands.Held, Is.Not.Null, "It should keep its pickaxe while it rests.");
             Assert.That(GameObject.Find("Block (a look at the work)"), Is.Null);
             Assert.That(Mathf.Abs(unit.GetComponent<ProceduralBiped>().BowNow), Is.LessThan(3.5f), "Resting, it should stand up.");
-            // And back to work.
-            Assert.That(click.OpenOn(unit), Is.True);
-            Assert.That(Offers("Work here"), Is.True);
+            // With no boulder of its own it has nothing to go back to by the click: no block is made for it in play.
+            Assert.That(click.OpenOn(unit), Is.False, "A resting miner with no boulder was offered work.");
+            // (The bench's block, for the tests: back to work.)
             int before = look.Swing.results.Count;
-            Assert.That(click.Choose("Work here"), Is.True);
+            look.Toggle();
             float began = Time.time;
             while ((!look.Swinging || look.Swing.results.Count <= before) && Time.time - began < 30) yield return null;
             Assert.That(look.Swing.results.Count, Is.GreaterThan(before), "It did not go back to its work.");

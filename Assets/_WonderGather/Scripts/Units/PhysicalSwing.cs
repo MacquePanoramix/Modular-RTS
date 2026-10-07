@@ -385,9 +385,11 @@ namespace WonderGather
                         Vector3 shoulder = unused[1];
                         Vector3 place = shoulder + body.FacingNow * Vector3.right * (.1f * body.ArmReach);
                         place.y = (body.FootPosition(0).y + body.FootPosition(1).y) * .5f + StoodUp * length;
-                        // The knees give what the arm lacks to hold it there (a tall body with a short tool).
+                        // The knees give what the arm lacks to hold it there (a tall body with a short tool), as
+                        // far as they can raise it from again: this is its rest.
                         float lacks = shoulder.y - place.y - .93f * body.ArmReach;
-                        body.Sink(Mathf.Clamp(body.SinkNow + lacks * .5f, 0, .2f * body.StandingHipHeight));
+                        float knees = Mathf.Clamp(body.SinkNow + lacks * .5f, 0, .2f * body.StandingHipHeight);
+                        body.Sink(balance == null ? knees : balance.KneesBendTo(knees, hands.ToolMass, dt));
                         hands.WantEnd(1, Vector3.Lerp(endFrom, place, Mathf.SmoothStep(0, 1, groundClock / .9f)));
                     }
                     else

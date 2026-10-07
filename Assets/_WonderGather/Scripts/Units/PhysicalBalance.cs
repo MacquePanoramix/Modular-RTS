@@ -64,6 +64,47 @@ namespace WonderGather
         // have, for this long, cannot bear it.
         private const int Stumbles = 2;
         private const float Hopeless = 2.5f, FallsAfter = 2.2f, Collapses = .3f;
+        // A body does not bend its knees, of its own accord, deeper than one of them could hold it alone. What they
+        // are asked is read from the body as it is posed now, by the measure it gets up from a fall by: each knee
+        // holding half of what the body weighs and carries, by how far it stands out beyond a straight leg's knee, as
+        // a share of what it has now. A bend the body chooses (to the ground for a tool, to rest, to drag) goes no
+        // deeper once each is asked half of what it has (Raises): reaching puts nearly all the weight on one knee,
+        // which is then asked all it has, and no more. What the bend was for is then left to its back and its arm, or
+        // is out of its reach. (What a load or a blow does to its knees is another matter: they give way.)
+        // It has to stop beforehand: once a knee is asked more than it has, the body cannot come up at all.
+        public const float Raises = .5f;
+        // At its work the blows ask a knee two to four times what the same bend asks standing still. Bent to its work
+        // and ready to swing, a knee asked more than this share (holding half the body) would be asked more than all
+        // it has by the blows: the body does not work so low. (Measured at the place's ten boulders: 0.18 and less
+        // where the work goes well, 0.37 where a knee is asked all it has, 0.40 to 0.71 where the body falls.)
+        public const float WorkRaises = .33f;
+        public float KneesAsked(float carried = 0)
+        {
+            if (body == null || physical == null || !physical.Ready) return 0;
+            // (A foot in the air holds nothing up, however its knee is bent.)
+            float stands = 0;
+            for (int i = 0; i < 2; i++) if (body.FootPlanted(i)) stands = Mathf.Max(stands, body.KneeOut(i) - body.KneeOutStraight);
+            return .5f * (physical.Mass + carried) * Physics.gravity.magnitude * stands / Mathf.Max(1e-3f, physical.KneeNow);
+        }
+        // Whether its knees may bend deeper, of its own accord.
+        public bool KneesMayBend(float carried = 0) => KneesAsked(carried) < Raises;
+        // How deep the knees may be bent now (metres the hips come down), for a bend the body chooses that would be
+        // this deep: no deeper than they are while they are asked all they may be, and coming up, at this pace
+        // (metres a second), while they are asked more.
+        private const float KneesOver = .02f, KneesComeUp = .3f;
+        public float KneesBendTo(float wanted, float carried, float dt)
+        {
+            float asked = KneesAsked(carried);
+            if (asked < Raises) return wanted;
+            return Mathf.Min(wanted, asked > Raises + KneesOver ? Mathf.Max(0, body.SinkNow - KneesComeUp * dt) : body.SinkNow);
+        }
+        // The share of what the legs bear that is on the left one (the rest is on the right).
+        public float OnLeft { get; private set; }
+        // Set while the body is bent to the ground by its own doing (PhysicalCarry: taking a tool up, laying it down):
+        // it takes no step to catch itself then. If its weight stays outside its feet, it still falls.
+        public bool KeepsFeet;
+        // How far its knees have given way under it (metres).
+        public float GaveNow => gave;
 
         // When it does not act it only measures: the body stands as it is posed.
         public bool Acts = true;
@@ -444,7 +485,9 @@ namespace WonderGather
                 {
                     // Near the edge and not coming back from it.
                     near = Margin < Near * around && Margin <= marginBefore + 1e-5f ? near + dt : 0;
-                    if (near >= Answers && Step(point, pace, right, ahead)) near = 0;
+                    // (Bent to the ground it does not step: a step from there reaches nowhere, and its own straightening
+                    // up moves its weight as a loss of balance would.)
+                    if (near >= Answers && !KeepsFeet && Step(point, pace, right, ahead)) near = 0;
                 }
                 else if (!both) near = 0;
 
@@ -461,6 +504,7 @@ namespace WonderGather
                 Vector2 leftOn = OnSole(0, press, 0), rightOn = OnSole(1, press, 0);
                 float toLeft = (press - leftOn).magnitude, toRight = (press - rightOn).magnitude;
                 float onLeft = !body.FootPlanted(1) ? 1 : !body.FootPlanted(0) ? 0 : toLeft + toRight > 1e-5f ? toRight / (toLeft + toRight) : .5f;
+                OnLeft = onLeft;
                 float knees = physical.KneeNow, straight = body.KneeOutStraight;
                 LegEffort = Mathf.Max(bears * onLeft * Mathf.Max(0, body.KneeOut(0) - straight), bears * (1 - onLeft) * Mathf.Max(0, body.KneeOut(1) - straight)) / knees;
                 physical.Worked(PhysicalBody.Muscles.Legs, LegEffort, dt);

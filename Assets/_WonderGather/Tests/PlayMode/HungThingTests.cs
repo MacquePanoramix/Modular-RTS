@@ -202,7 +202,7 @@ namespace WonderGather.Tests
             while (has.Now != ThingsInHand.Phase.Carried && Time.time - began < 5) yield return null;
             Assert.That(has.Has, Is.EqualTo(thing));
 
-            // K, with the lantern in its hand: it hangs the lantern back first, and only then takes up its pickaxe.
+            // Set to work (the bench's block), with the lantern in its hand: it hangs the lantern back first, and only then takes up its pickaxe.
             look.Toggle();
             Assert.That(look.Showing, Is.False, "It took up its pickaxe with the lantern still in its hand.");
             began = Time.time;

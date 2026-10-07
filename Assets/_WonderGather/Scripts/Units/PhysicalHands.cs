@@ -125,18 +125,15 @@ namespace WonderGather
             physical = GetComponent<PhysicalBody>();
         }
 
-        // Takes a tool into the free hands, at a place and a turn (the tool's own origin). weight: a share of its own
-        // weight, for trying the same tool lighter or heavier.
-        public Rigidbody Take(ToolDefinition definition, Vector3 position, Quaternion rotation, float weight = 1)
+        // A tool made as a real body in the world, at a place and a turn (the tool's own origin), in no hand: its
+        // solid, its own weight, and what it is. weight: a share of its own weight, for trying the same tool lighter or
+        // heavier.
+        public static HeldThing Make(ToolDefinition definition, Vector3 position, Quaternion rotation, float weight = 1)
         {
-            Drop();
-            Slipped = null;
-            if (definition == null || !definition.HasWeight) throw new ArgumentException("Only a tool that has been weighed can be held.");
-            if (holds == null || physical == null || !physical.Ready) throw new InvalidOperationException("This body has no hands of its own, or has not been weighed.");
-            if (!holds.HandFree(0) && !holds.HandFree(1)) throw new InvalidOperationException("This body has no free hand.");
+            if (definition == null || !definition.HasWeight) throw new ArgumentException("Only a tool that has been weighed can be made.");
             var go = new GameObject(definition.DisplayName + " (held)");
             go.transform.SetPositionAndRotation(position, rotation);
-            model = Instantiate(definition.Prefab, go.transform).transform;
+            var model = Instantiate(definition.Prefab, go.transform).transform;
             model.localPosition = Vector3.zero;
             model.localRotation = Quaternion.identity;
             // Its solid: the handle from foot to top, and the head from point to point.
@@ -155,24 +152,46 @@ namespace WonderGather
             head.height = point.z - back;
             head.center = new Vector3(0, point.y, (point.z + back) * .5f);
             head.sharedMaterial = surface;
-            held = go.AddComponent<Rigidbody>();
+            var solid = go.AddComponent<Rigidbody>();
+            solid.interpolation = RigidbodyInterpolation.Interpolate;
+            // A pick's head moves fast by the tool's turning, not by its travelling: it is watched for ahead of each
+            // step, so it is stopped at a surface and not found inside it afterwards.
+            solid.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            solid.linearDamping = 0;
+            solid.angularDamping = .05f;
+            solid.maxAngularVelocity = 60;
+            // On its own it weighs what it weighs.
+            solid.mass = definition.Mass * weight;
+            solid.centerOfMass = definition.Centre;
+            solid.inertiaTensor = definition.Inertia * weight;
+            solid.inertiaTensorRotation = definition.InertiaTurn;
+            var made = go.AddComponent<HeldThing>();
+            made.Head = head;
+            made.Tool = definition; made.Weight = weight;
+            return made;
+        }
+
+        // Takes a tool into the free hands, at a place and a turn (the tool's own origin). weight: a share of its own
+        // weight, for trying the same tool lighter or heavier.
+        public Rigidbody Take(ToolDefinition definition, Vector3 position, Quaternion rotation, float weight = 1)
+        {
+            Drop();
+            Slipped = null;
+            if (definition == null || !definition.HasWeight) throw new ArgumentException("Only a tool that has been weighed can be held.");
+            if (holds == null || physical == null || !physical.Ready) throw new InvalidOperationException("This body has no hands of its own, or has not been weighed.");
+            if (!holds.HandFree(0) && !holds.HandFree(1)) throw new InvalidOperationException("This body has no free hand.");
+            thing = Make(definition, position, rotation, weight);
+            var go = thing.gameObject;
+            held = go.GetComponent<Rigidbody>();
+            model = go.transform.GetChild(0);
             toolMass = definition.Mass * weight;
             ofItsWeight = weight;
             fist = Mathf.Max(definition.GripRadius(0), definition.GripRadius(1)) * 2.5f;
             lowest = definition.Foot + fist + .01f;
             highest = definition.Top - .07f * (definition.Top - definition.Foot) - fist;
-            held.interpolation = RigidbodyInterpolation.Interpolate;
-            // A pick's head moves fast by the tool's turning, not by its travelling: it is watched for ahead of each
-            // step, so it is stopped at a surface and not found inside it afterwards.
-            held.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-            held.linearDamping = 0;
-            held.angularDamping = .05f;
-            held.maxAngularVelocity = 60;
             foreach (var mine in GetComponentsInChildren<Collider>(true))
                 foreach (var its in go.GetComponents<Collider>()) Physics.IgnoreCollision(mine, its);
-            thing = go.AddComponent<HeldThing>();
-            thing.Head = head;
-            thing.Tool = definition; thing.Weight = weight; thing.Holder = this;
+            thing.Holder = this;
             tool = definition;
             for (int i = 0; i < 2; i++)
             {
