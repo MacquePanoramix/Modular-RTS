@@ -186,20 +186,23 @@ namespace WonderGather.Tests
             Assert.That(ordinary.first.reached, Is.GreaterThan(.98f), "The ordinary swing did not raise the pickaxe all the way.");
             Assert.That(ordinary.first.liftEffort, Is.InRange(.2f, .7f), "Raising its own pickaxe should be work an ordinary body has to spare.");
             Assert.That(ordinary.first.speed, Is.InRange(4f, 10f), "The ordinary blow's speed.");
-            Assert.That(ordinary.second.speed, Is.EqualTo(ordinary.first.speed).Within(.5f), "Two swings alike should strike alike.");
+            // Swings are compared by how fast the tool comes down through upright: its speed as it strikes is read at the
+            // last step before the blow, and moves by what the head gains in a step with when the contact is found.
+            Assert.That(ordinary.second.upright, Is.EqualTo(ordinary.first.upright).Within(.3f), "Two swings alike should come down alike.");
+            Assert.That(ordinary.second.speed, Is.EqualTo(ordinary.first.speed).Within(.9f), "Two swings alike should strike alike.");
             // The tool stays square in the hands, and the hands on it.
             Assert.That(ordinary.aside, Is.LessThan(45f), "The pickaxe turned aside in the hands.");
             Assert.That(Mathf.Max(ordinary.miss, strong.miss, heavy.miss), Is.LessThan(.035f), "A hand came off the handle.");
             // Heavier: harder to raise, and it arrives slower, with more behind it.
             Assert.That(heavy.first.liftEffort, Is.GreaterThan(ordinary.first.liftEffort * 1.3f));
-            Assert.That(heavy.first.speed, Is.LessThan(ordinary.first.speed));
+            Assert.That(heavy.first.upright, Is.LessThan(ordinary.first.upright));
             // Stronger: easier to raise, and it arrives faster.
             Assert.That(strong.first.liftEffort, Is.LessThan(ordinary.first.liftEffort * .7f));
-            Assert.That(strong.first.speed, Is.GreaterThan(ordinary.first.speed * 1.1f));
+            Assert.That(strong.first.upright, Is.GreaterThan(ordinary.first.upright * 1.1f));
             // Too weak for it: slow to raise, at all it has, and a feeble blow.
             Assert.That(feeble.first.liftTime, Is.GreaterThan(ordinary.first.liftTime * 1.2f));
             Assert.That(feeble.first.liftEffort, Is.GreaterThan(.8f));
-            Assert.That(feeble.first.speed, Is.LessThan(ordinary.first.speed * .7f));
+            Assert.That(feeble.first.upright, Is.LessThan(ordinary.first.upright * .7f));
         }
 
         // Each miner swings the pickaxe made for it, with both hands, by its own strength.
@@ -288,14 +291,14 @@ namespace WonderGather.Tests
             var first = tried.all[0];
             var last = tried.all[rested - 1];
             var after = tried.all[rested];
-            Debug.Log($"PHYSICAL_TIRED first: {first.speed:F1} m/s, upper hand {first.choked:P0}, arms {first.liftEffort:P0}; swing {rested}, before its rest: {last.spent:P0} spent, {last.speed:F1} m/s, upper hand {last.choked:P0}, arms {last.liftEffort:P0}; "
+            Debug.Log($"PHYSICAL_TIRED first: {first.speed:F1} m/s, upper hand {first.choked:P0}, arms {first.liftEffort:P0}; swing {rested}, before its rest: {last.spent:P0} spent, {last.speed:F1} m/s (through upright at {last.upright:F2}; the first {first.upright:F2}, the one after {after.upright:F2}), upper hand {last.choked:P0}, arms {last.liftEffort:P0}; "
                 + $"after it: {after.spent:P0} spent, {after.speed:F1} m/s");
             Assert.That(last.spent, Is.InRange(PhysicalSwing.RestsAt - .06f, PhysicalSwing.RestsAt + .03f));
-            Assert.That(last.speed, Is.LessThan(first.speed * .9f), "A tired blow should land more weakly.");
+            Assert.That(last.upright, Is.LessThan(first.upright * .9f), "A tired blow should come down more weakly.");
             Assert.That(last.choked, Is.GreaterThan(first.choked + .2f), "Tired, it should take the tool nearer the head.");
             Assert.That(last.liftEffort, Is.GreaterThan(first.liftEffort + .1f), "Tired, the same lift should take more of what is left.");
             Assert.That(after.spent, Is.LessThan(PhysicalSwing.GoesOnAt + .06f), "It went on before it was rested.");
-            Assert.That(after.speed, Is.GreaterThan(last.speed + .2f), "Rested, it should strike harder again.");
+            Assert.That(after.upright, Is.GreaterThan(last.upright + .15f), "Rested, it should come down harder again.");
             Assert.That(tried.all.TrueForAll(r => r.struck), Is.True, "A swing did not strike.");
             Assert.That(tried.miss, Is.LessThan(.04f), "A hand came off the handle.");
         }

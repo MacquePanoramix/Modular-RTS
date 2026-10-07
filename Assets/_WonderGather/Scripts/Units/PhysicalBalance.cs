@@ -332,9 +332,11 @@ namespace WonderGather
             bool holds = Acts && standing;
             if (!holds)
             {
-                // Walking, the walk carries the body: the lean lets go and the feet are the walk's.
+                // Walking, the walk carries the body and the feet are the walk's. The hips still go against a load
+                // that lasts (a tool carried at one side, a thing dragged behind), by half of what it shifts the weight.
                 going = intent;
-                lean *= Mathf.Exp(-5 * dt);
+                Vector2 carried = Acts ? Vector2.ClampMagnitude(-steady * .5f, ProceduralBiped.LeanAside * body.StandingHipHeight) : Vector2.zero;
+                lean = Vector2.Lerp(lean, carried, 1 - Mathf.Exp(-4 * dt));
                 stands = posedNow + lean * Follows;
                 near = 0; shiftTime = 0; calm = 0; stepped = false;
             }
@@ -438,11 +440,15 @@ namespace WonderGather
             {
                 body.SetLean(new Vector2(Vector2.Dot(lean, right), Vector2.Dot(lean, ahead)), 1);
                 body.LeanIs(new Vector2(float.NaN, 0));
-                body.SetTilt(Vector2.zero, 40);
+                // Walking, it inclines against a load that lasts as it does standing.
+                float asks = Mathf.Min(Mathf.Atan2(steady.magnitude, height) * Mathf.Rad2Deg * Inclines, MostInclined);
+                Vector2 against = steady.sqrMagnitude > 1e-8f ? -steady.normalized * asks : Vector2.zero;
+                Inclined = new Vector2(Vector2.Dot(against, right), Vector2.Dot(against, ahead));
+                body.SetTilt(Inclined, 40);
                 body.Crouch(0);
                 body.SetRise(1);
                 body.SetStance(0, 0);
-                Inclined = Vector2.zero; LegEffort = 0; gave = 0;
+                LegEffort = 0; gave = 0;
             }
 
             marginBefore = Margin; posedBefore = posedNow;

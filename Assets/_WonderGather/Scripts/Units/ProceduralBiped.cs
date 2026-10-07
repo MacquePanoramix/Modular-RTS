@@ -184,6 +184,8 @@ namespace WonderGather
             {
                 Vector3 shift=leanKnown?facing*new Vector3(leanIs.x-leanPosed.x,0,leanIs.y-leanPosed.y):Vector3.zero;
                 Quaternion turn=bowKnown?Quaternion.AngleAxis(bowIs-bowPosed,postureNow*Vector3.right):Quaternion.identity;
+                // Walking, the whole body goes on as it was going since it was last drawn.
+                shift+=velocity*Mathf.Clamp(time-posedAt,0,.1f);
                 hips=hipsNow+shift;posture=turn*postureNow;
                 for(int i=0;i<2;i++)
                 {
@@ -237,6 +239,8 @@ namespace WonderGather
         private Vector2 leanPosed;
         public Vector2 LeanPosed=>leanPosed;
         public Quaternion FacingNow=>facing;
+        // How fast the body is going over the ground, as it measures it.
+        public Vector3 VelocityNow=>velocity;
         // When the body was last posed.
         public float PosedAt=>posedAt;
         // The stance: how much further apart than the hips the feet stand (each side), and how far the left foot

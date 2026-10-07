@@ -171,6 +171,8 @@ namespace WonderGather
         public float ShoulderOf(int side) => ShoulderCapacity * Fresh(Arm(side));
         public float ElbowOf(int side) => ElbowCapacity * Fresh(Arm(side));
         public float WristOf(int side) => WristCapacity * Fresh(Arm(side));
+        // The most this hand's hold gives now, in newtons.
+        public float HoldOf(int side) => HoldCapacity * Fresh(Arm(side));
 
         // One arm's own weight: each of its three parts' mass and where it is now.
         public void ArmParts(int side, Span<Vector3> at, Span<float> kilograms)

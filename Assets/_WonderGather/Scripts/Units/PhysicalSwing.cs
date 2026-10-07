@@ -105,6 +105,8 @@ namespace WonderGather
         private float feels;
         private int feelSteps;
         private bool chose;
+        // A swing has been begun since the last was recorded.
+        private bool swung;
 
         private void Go(Phase next)
         {
@@ -168,17 +170,16 @@ namespace WonderGather
             angle = rest;
         }
 
-        // The tool carried at the side in the upper hand alone: level, its head ahead and its point down, the arm
-        // hanging, the hand out past the hip and whatever hangs there.
+        // The tool carried at the side in the upper hand alone (PhysicalCarry.AtSide).
         private void AtSide(Vector3 hips, Quaternion posture, out Vector3 position, out Quaternion rotation)
+            => PhysicalCarry.AtSide(body, hands, hips, posture, out position, out rotation);
+
+        // It takes up to its work a tool it was carrying: from however it is held now.
+        public void TakeUp()
         {
-            float reach = body.ArmReach;
-            Vector3 shoulder = body.ShoulderFromHips;
-            float aside = .2f * reach + body.BodyProportions.armCarry.x, ahead = .06f * reach;
-            float drop = Mathf.Sqrt(Mathf.Max(.01f, .94f * reach * .94f * reach - aside * aside - ahead * ahead));
-            rotation = posture * Quaternion.LookRotation(Vector3.down, Vector3.forward);
-            Vector3 hand = hips + posture * new Vector3(-(shoulder.x + aside), shoulder.y - drop, shoulder.z + ahead);
-            position = hand - rotation * new Vector3(0, hands.GripAlong(0), 0);
+            if (hands == null || hands.Held == null) return;
+            from = hands.Held.position; fromTurn = hands.Held.rotation;
+            Go(Phase.Recover);
         }
 
         // How the tool leans now against the body's own upright, in degrees: forward is positive.
@@ -231,6 +232,7 @@ namespace WonderGather
                     {
                         low = high = headUp; worked = 0; bent = 0; steps = 0; now = default;
                         now.spent = Spent;
+                        swung = true;
                         now.choked = hands.Holds(0) ? Mathf.InverseLerp(tool.SecondaryGrip.y, hands.HighestGrip, hands.GripAlong(0)) : 0;
                         if (trace != null)
                             trace.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -321,9 +323,10 @@ namespace WonderGather
                     body.Sink(sink);
                     // After a rest the lower hand takes hold again, once the tool is back before the body.
                     if (!hands.Holds(1) && !hands.Reaching(1) && clock > .45f) hands.Grasp(1, tool.PrimaryGrip.y);
-                    // With both hands on it again, the upper hand goes back to its own place.
-                    if (hands.Holds(0) && hands.Holds(1)) hands.Slide(0, tool.SecondaryGrip.y);
-                    if (clock >= .85f && hands.Holds(1)) { results.Add(now); angle = rest; settle = .3f; Go(Phase.Ready); }
+                    if (!hands.Holds(0) && !hands.Reaching(0) && clock > .45f) hands.Grasp(0, tool.SecondaryGrip.y);
+                    // With both hands on it again, each goes back to its own place.
+                    if (hands.Holds(0) && hands.Holds(1)) { hands.Slide(0, tool.SecondaryGrip.y); hands.Slide(1, tool.PrimaryGrip.y); }
+                    if (clock >= .85f && hands.Holds(0) && hands.Holds(1) && !hands.Sliding(1)) { if (swung) results.Add(now); swung = false; angle = rest; settle = .3f; Go(Phase.Ready); }
                     break;
             }
             float bears = 1;

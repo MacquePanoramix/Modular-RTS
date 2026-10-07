@@ -88,6 +88,14 @@ namespace WonderGather
         public float Effort(int hand) => effort[hand];
         // What this hand pushed the object with at the last step, in newtons.
         public Vector3 Push(int hand) => push[hand];
+        // The share of its hold this hand gave at the last step (1: all it has).
+        public float Hold(int hand) => hold[hand];
+        private readonly float[] hold = new float[2];
+        // A hold asked for more than it has (even braced against a pull) for longer than this is overcome: the thing
+        // slips from that hand. From its last hand, it falls, and lies where it falls.
+        private const float SlipsAfter = .3f;
+        private readonly float[] slips = new float[2];
+        public Rigidbody Slipped { get; private set; }
         // All this arm gave the object at the last step: its push, and what the arm's own length held it back with
         // (an object hanging from a straight arm is held by the arm's bones, not by a push).
         public Vector3 Gives(int hand) => held != null && on[hand] ? push[hand] + (links[hand] != null ? links[hand].currentForce * LinkGives : Vector3.zero) : Vector3.zero;
@@ -119,6 +127,7 @@ namespace WonderGather
         public Rigidbody Take(ToolDefinition definition, Vector3 position, Quaternion rotation, float weight = 1)
         {
             Drop();
+            Slipped = null;
             if (definition == null || !definition.HasWeight) throw new ArgumentException("Only a tool that has been weighed can be held.");
             if (holds == null || physical == null || !physical.Ready) throw new InvalidOperationException("This body has no hands of its own, or has not been weighed.");
             if (!holds.HandFree(0) && !holds.HandFree(1)) throw new InvalidOperationException("This body has no free hand.");
@@ -304,7 +313,7 @@ namespace WonderGather
                 if (anchors[i] != null) Destroy(anchors[i].gameObject);
                 on[i] = false; links[i] = null; anchors[i] = null; effort[i] = 0; push[i] = Vector3.zero; miss[i] = 0; reach[i] = 0;
             }
-            held = null; model = null; thing = null; tool = null; wanting = false;
+            held = null; model = null; thing = null; tool = null; wanting = false; trailing = false;
             if (body != null) body.GuideArms(null);
             return was;
         }
@@ -322,10 +331,25 @@ namespace WonderGather
         public void Want(Vector3 position, Quaternion rotation, bool all = false, float bears = 1)
         {
             wantPosition = position; wantRotation = rotation; wanting = true; hard = all; carry = Mathf.Clamp01(bears);
+            trailing = false;
         }
 
+        // One hand holds the thing by where it grips, and means that place to be here. It does not turn the thing: the
+        // rest of it hangs, trails or lies as it will (a tool dragged by its handle's end). The other hand lets go.
+        public void WantEnd(int hand, Vector3 place)
+        {
+            if (held == null || !on[hand]) return;
+            if (on[1 - hand]) Release(1 - hand);
+            if (!trailing || trailHand != hand) endBefore = false;
+            trailing = true; trailHand = hand; endWanted = place; wanting = false; wantedBefore = false;
+        }
+        public bool Trailing => held != null && trailing;
+        private bool trailing, endBefore;
+        private int trailHand;
+        private Vector3 endWanted, endLast;
+
         // The hands stop pushing: they only keep hold.
-        public void Slacken() { wanting = wantedBefore = false; }
+        public void Slacken() { wanting = wantedBefore = false; trailing = false; }
 
         public void Stands(Vector3 hips, Quaternion posture, Vector3 leftShoulder, Vector3 rightShoulder) => stood = true;
         public bool Guides(int hand) => held != null && (on[hand] || reach[hand] > 0);
@@ -390,10 +414,11 @@ namespace WonderGather
                 slid = true;
             }
             if (slid) Weigh(ofItsWeight);
-            // The body as it stands at this step's own moment.
+            // The body as it will stand when this step is over: that is where the arms' links must have the thing by
+            // then (a body that walks is a step further on).
             Span<Vector3> shoulders = stackalloc Vector3[2];
             Span<Vector3> elbows = stackalloc Vector3[2];
-            body.StandsAt(Time.time, out _, out _, shoulders, elbows);
+            body.StandsAt(Time.time + dt, out _, out _, shoulders, elbows);
             for (int i = 0; i < 2; i++)
             {
                 if (anchors[i] == null) continue;
@@ -405,7 +430,8 @@ namespace WonderGather
             }
             effort[0] = effort[1] = 0;
             push[0] = push[1] = Vector3.zero;
-            if (!wanting) return;
+            if (trailing && !on[trailHand]) trailing = false;
+            if (!wanting && !trailing) return;
             Vector3 centre = held.worldCenterOfMass, velocity = held.linearVelocity, spin = held.angularVelocity;
             Vector3 wantCentre = wantPosition + wantRotation * held.centerOfMass;
             // How the place it is meant to be is itself moving: nothing is held back from following that.
@@ -439,7 +465,23 @@ namespace WonderGather
                 at[i] = held.position + held.rotation * grip[i];
                 count++; only = i;
             }
-            if (count == 2)
+            if (trailing)
+            {
+                // Held by one end: the hand brings its end to where it means it, and holds up that end's share of the
+                // weight (all of it while the thing hangs; less when its far end lies on the ground).
+                int h = trailHand;
+                Vector3 far = held.position + held.rotation * tool.Head;
+                Vector3 toCentre = centre - far, toHand = at[h] - far;
+                toCentre.y = 0; toHand.y = 0;
+                float span = toHand.magnitude;
+                float bears = span > .08f ? Mathf.Clamp01(Vector3.Dot(toCentre, toHand) / (span * span)) : 1;
+                Vector3 endVelocity = endBefore ? Vector3.ClampMagnitude((endWanted - endLast) / dt, 8) : Vector3.zero;
+                endLast = endWanted; endBefore = true;
+                f[h] = held.mass * .5f * (Quick * Quick * (endWanted - at[h]) + 2 * Quick * (endVelocity - held.GetPointVelocity(at[h]))) - Physics.gravity * (held.mass * bears);
+                t[h] = Vector3.zero;
+                f[1 - h] = Vector3.zero; t[1 - h] = Vector3.zero;
+            }
+            else if (count == 2)
             {
                 Vector3 between = at[0] - at[1];
                 Vector3 need = torque - Vector3.Cross((at[0] + at[1]) * .5f - centre, force);
@@ -455,7 +497,7 @@ namespace WonderGather
             }
 
             // A sliding hand holds loosely: what it would have pulled along the handle is the other hand's to give.
-            if (count == 2)
+            if (count == 2 && !trailing)
             {
                 Vector3 handle = held.rotation * Vector3.up;
                 for (int i = 0; i < 2; i++)
@@ -476,6 +518,7 @@ namespace WonderGather
             Span<float> bends = stackalloc float[2];
             Span<float> ownBend = stackalloc float[2];
             Span<float> gain = stackalloc float[2];
+            Span<float> grips = stackalloc float[2];
             float share = 1;
             for (int i = 0; i < 2; i++)
             {
@@ -507,6 +550,9 @@ namespace WonderGather
                 float bend = physical.ElbowOf(i) * gain[i];
                 if (Mathf.Abs(bends[i]) > 1e-6f) can = Mathf.Min(can, Mathf.Clamp01(bends[i] > 0 ? (bend - ownBend[i]) / bends[i] : (-bend - ownBend[i]) / bends[i]));
                 if (gives) can *= 1 - Mathf.Clamp01(moving.magnitude / (Fastest * body.ArmReach));
+                // A hand holds no harder than its hold.
+                grips[i] = f[i].magnitude;
+                if (grips[i] > 1e-4f) can = Mathf.Min(can, physical.HoldOf(i) * gain[i] / grips[i]);
                 share = Mathf.Min(share, can);
             }
             for (int i = 0; i < 2; i++)
@@ -514,13 +560,23 @@ namespace WonderGather
                 if (!on[i]) continue;
                 f[i] *= share;
                 t[i] = Vector3.ClampMagnitude(t[i] * share, physical.WristOf(i));
-                effort[i] = Mathf.Max((asked[i] * share + ownShoulder[i]).magnitude / physical.ShoulderOf(i), Mathf.Abs(bends[i] * share + ownBend[i]) / physical.ElbowOf(i),
-                    t[i].magnitude / physical.WristOf(i));
+                effort[i] = Mathf.Max(Mathf.Max((asked[i] * share + ownShoulder[i]).magnitude / physical.ShoulderOf(i), Mathf.Abs(bends[i] * share + ownBend[i]) / physical.ElbowOf(i)),
+                    Mathf.Max(t[i].magnitude / physical.WristOf(i), grips[i] * share / physical.HoldOf(i)));
+                hold[i] = grips[i] * share / physical.HoldOf(i);
                 // Work tires: the arm is told what it gave.
                 physical.Worked(PhysicalBody.Arm(i), effort[i], dt);
                 push[i] = f[i];
                 held.AddForceAtPosition(f[i], at[i]);
                 held.AddTorque(t[i]);
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                if (!on[i]) { slips[i] = 0; continue; }
+                slips[i] = Gives(i).magnitude > physical.HoldOf(i) * Braking ? slips[i] + dt : 0;
+                if (slips[i] < SlipsAfter) continue;
+                slips[i] = 0;
+                if (on[1 - i]) Release(i);
+                else { Slipped = Drop(); return; }
             }
         }
 

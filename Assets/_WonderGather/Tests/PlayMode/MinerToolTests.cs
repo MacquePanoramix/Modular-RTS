@@ -92,6 +92,27 @@ namespace WonderGather.Tests
                 while (swing.results.Count < 1 && Time.time - began < 30) yield return null;
                 Assert.That(swing.results.Count, Is.GreaterThanOrEqualTo(1), name + " did not finish a swing in the look at its work.");
                 Assert.That(swing.results[0].struck, Is.True, name + " did not strike the block in the look at its work.");
+                // Sent somewhere, it takes its pickaxe with it, and the block is put away.
+                Assert.That(unit.Motor.TryMove(OnGround(unit.transform.position + unit.transform.right * 2f)), Is.True);
+                began = Time.time;
+                while (!look.Carrying && Time.time - began < 2) yield return null;
+                Assert.That(look.Carrying, Is.True, name + " did not take its pickaxe along.");
+                Assert.That(look.Showing, Is.True);
+                Assert.That(GameObject.Find("Block (a look at the work)"), Is.Null, "The block stayed when the miner left.");
+                began = Time.time;
+                while (unit.Motor.IsMoving && Time.time - began < 15) yield return null;
+                Assert.That(unit.Motor.IsMoving, Is.False, name + " did not arrive with its pickaxe.");
+                Assert.That(unit.GetComponent<PhysicalHands>().Held, Is.Not.Null, name + " lost its pickaxe on the way.");
+                Assert.That(look.Carry.way, Is.EqualTo(PhysicalCarry.Way.OneHand), name + " should carry its own pickaxe in one hand.");
+                // K there: it sets itself to work again, on a block where it stands.
+                int struckBefore = swing.results.Count;
+                look.Toggle();
+                began = Time.time;
+                while ((!look.Swinging || swing.results.Count <= struckBefore) && Time.time - began < 30) yield return null;
+                Assert.That(look.Swinging, Is.True, name + " did not go back to work.");
+                Assert.That(swing.results.Count, Is.GreaterThan(struckBefore), name + " did not swing again where it came to.");
+                Assert.That(swing.results[swing.results.Count - 1].struck, Is.True, name + " did not strike the block where it came to.");
+                Assert.That(GameObject.Find("Block (a look at the work)"), Is.Not.Null);
                 // Stronger at a key: it takes effect at once.
                 look.SetStrength(2);
                 Assert.That(physical.Strength, Is.EqualTo(2).Within(1e-4f));
@@ -111,6 +132,7 @@ namespace WonderGather.Tests
                 Assert.That(unit.GetComponent<PhysicalSwing>(), Is.Null, name + " kept a swing after the look.");
                 Assert.That(unit.GetComponent<PhysicalBack>(), Is.Null, name + " kept its back's work after the look.");
                 Assert.That(unit.GetComponent<PhysicalBalance>(), Is.Null, name + " kept its balance's work after the look.");
+                Assert.That(unit.GetComponent<PhysicalCarry>(), Is.Null, name + " kept its carrying after the look.");
                 Assert.That(physical.Strength, Is.EqualTo(1).Within(1e-4f), name + " was left stronger or weaker than it was.");
                 Assert.That(Object.FindObjectsByType<HeldThing>(FindObjectsSortMode.None).Length, Is.EqualTo(0), "The pickaxe was left behind.");
                 Assert.That(GameObject.Find("Block (a look at the work)"), Is.Null, "The block was left behind.");
