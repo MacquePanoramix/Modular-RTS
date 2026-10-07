@@ -86,6 +86,9 @@ namespace WonderGather
         }
         // The share of its capacity the hardest-worked joint of this arm gave at the last step (1: all it has).
         public float Effort(int hand) => effort[hand];
+        // What that effort was made of: the shares its shoulder, its elbow, its wrist and its hold gave.
+        public Vector4 EffortOf(int hand) => efforts[hand];
+        private readonly Vector4[] efforts = new Vector4[2];
         // What this hand pushed the object with at the last step, in newtons.
         public Vector3 Push(int hand) => push[hand];
         // The share of its hold this hand gave at the last step (1: all it has).
@@ -600,8 +603,9 @@ namespace WonderGather
                 if (!on[i]) continue;
                 f[i] *= share;
                 t[i] = Vector3.ClampMagnitude(t[i] * share, physical.WristOf(i));
-                effort[i] = Mathf.Max(Mathf.Max((asked[i] * share + ownShoulder[i]).magnitude / physical.ShoulderOf(i), Mathf.Abs(bends[i] * share + ownBend[i]) / physical.ElbowOf(i)),
-                    Mathf.Max(t[i].magnitude / physical.WristOf(i), grips[i] * share / physical.HoldOf(i)));
+                efforts[i] = new Vector4((asked[i] * share + ownShoulder[i]).magnitude / physical.ShoulderOf(i), Mathf.Abs(bends[i] * share + ownBend[i]) / physical.ElbowOf(i),
+                    t[i].magnitude / physical.WristOf(i), grips[i] * share / physical.HoldOf(i));
+                effort[i] = Mathf.Max(Mathf.Max(efforts[i].x, efforts[i].y), Mathf.Max(efforts[i].z, efforts[i].w));
                 hold[i] = grips[i] * share / physical.HoldOf(i);
                 // Work tires: the arm is told what it gave.
                 physical.Worked(PhysicalBody.Arm(i), effort[i], dt);

@@ -78,7 +78,7 @@ namespace WonderGather
         public void Arm(bool on) { latched = on; }
 
         // What can be interacted with now: the pickaxes in the world (held or lying), what hangs on the chosen miner
-        // by a handle (its lantern, its mug), and the chosen miner.
+        // by a handle (its lantern, its mug), the chosen miner, and the boulders of the place.
         public IReadOnlyList<Component> Things()
         {
             things.Clear();
@@ -88,6 +88,7 @@ namespace WonderGather
                 var has = ThingsInHand.Of(choice.Current);
                 for (int i = 0; has != null && i < has.Count; i++) things.Add(has.Thing(i));
                 things.Add(choice.Current);
+                foreach (var boulder in Boulder.All()) things.Add(boulder);
             }
             return things;
         }
@@ -97,6 +98,7 @@ namespace WonderGather
         {
             if (thing is HeldThing held && held.TryGetComponent<Rigidbody>(out var body)) return body.worldCenterOfMass;
             if (thing is HungThing hung) return hung.Place;
+            if (thing is Boulder boulder && boulder.Rock != null) return boulder.Rock.bounds.center;
             if (thing is SelectableUnit unit && unit.TryGetComponent<ProceduralBiped>(out var biped) && biped.Ready) return biped.HipsNow;
             return thing.transform.position;
         }
@@ -105,11 +107,13 @@ namespace WonderGather
         {
             if (thing is HeldThing held) return held.Tool != null ? held.Tool.DisplayName.ToLowerInvariant() : "tool";
             if (thing is HungThing) return thing.name.ToLowerInvariant();
+            if (thing is Boulder) return "boulder";
             if (thing is SelectableUnit && choice != null) return choice.NameOf(choice.Chosen);
             return thing.name;
         }
 
         // The thing nearest a point of the screen, if one is near enough. A thing is preferred to the miner that holds it.
+        // A boulder is large: it is the one the pointer is on, if nothing small is near the pointer.
         public Component Pick(Vector2 screen)
         {
             if (view == null) view = Camera.main;
@@ -118,11 +122,14 @@ namespace WonderGather
             float nearest = Near;
             foreach (var thing in Things())
             {
+                if (thing is Boulder) continue;
                 Vector3 at = view.WorldToScreenPoint(Place(thing));
                 if (at.z <= 0) continue;
                 float away = Vector2.Distance(new Vector2(at.x, at.y), screen) * (thing is SelectableUnit ? 1 : .7f);
                 if (away < nearest) { nearest = away; best = thing; }
             }
+            if (best == null && choice != null && choice.Current != null && Physics.Raycast(view.ScreenPointToRay(screen), out var under, 500))
+                best = Boulder.Of(under.collider);
             return best;
         }
 
@@ -134,6 +141,7 @@ namespace WonderGather
             options.Clear();
             if (thing is HeldThing held) look.OptionsFor(held, options);
             else if (thing is HungThing hung) look.OptionsForHung(hung, options);
+            else if (thing is Boulder boulder) look.OptionsForBoulder(boulder, options);
             else if (thing is SelectableUnit unit && unit == choice.Current) look.OptionsForMiner(options);
             if (options.Count == 0) return false;
             target = thing;

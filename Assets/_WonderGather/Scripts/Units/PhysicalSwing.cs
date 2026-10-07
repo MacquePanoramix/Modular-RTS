@@ -54,6 +54,28 @@ namespace WonderGather
         // It rests after a blow when its arms or its back are this spent, and goes on when they are this fresh
         // again. Resting, it stands up straight with the tool held at ease across its thighs, and gets its breath.
         public const float RestsAt = .4f, GoesOnAt = .15f;
+        // Held at the side in one hand, the arm hangs a little out from the body, and the shoulder holds the tool out
+        // there. When that asks more than this share of what the shoulder has now, the arm does not get its strength
+        // back so (what holding spends is more than rest gives back, before it is fresh enough to go on): the tool is
+        // put down instead. Its head lies on the ground, and the lower hand keeps the end of the handle, hanging at
+        // the side this share of the tool's length up; the knees give what the arm lacks.
+        public const float RestsOnlyBelow = .27f, StoodUp = .97f;
+        // The share of what its shoulder has now that holding the tool at its side would ask.
+        public float HoldAsks
+        {
+            get
+            {
+                if (physical == null) physical = GetComponent<PhysicalBody>();
+                float mass = hands != null && hands.Held != null ? hands.ToolMass : tool.Mass;
+                float lever = .2f * body.ArmReach + body.BodyProportions.armCarry.x;
+                return mass * Physics.gravity.magnitude * lever / Mathf.Max(1e-3f, physical.ShoulderOf(0));
+            }
+        }
+        // It rests with the tool's head on the ground (it is too heavy for it to rest holding it).
+        public bool RestsOnGround => grounded;
+        private bool grounded;
+        private float groundClock;
+        private Vector3 endFrom;
         // The stance it takes for the work (PhysicalBalance.Brace): the feet so much further apart than the hips (a
         // share of their width, each side), and the left so far ahead of the right (a share of the hips' height).
         public const float StanceWider = .6f, StanceStagger = .1f;
@@ -140,34 +162,76 @@ namespace WonderGather
         // Aims the swing at a point in the world: the blow is to land there. The body finds how far to bow, how far
         // to bend its knees and how the tool must lean for the pick's head to be at that point with the hands where
         // they hold at rest, standing where it stands. It prefers to stand tall and to bow moderately.
-        public void Aim(Vector3 point)
+        // leansUpTo: how far forward the tool may lean when its head is at the point. Up to where the tool rests
+        // (RestsUpTo), the head waits just over the point and the blow lands as it comes to rest. Further, the blow
+        // lands later in its arc, with the head below the hands: that is how a low spot is struck, and the tool then
+        // waits well above it.
+        public void Aim(Vector3 point, float leansUpTo = RestsUpTo)
         {
-            Vector3 feet = transform.position;
-            Quaternion facing = Quaternion.LookRotation(Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized);
+            var aimed = AimFrom(transform.position, Quaternion.LookRotation(Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized), point, leansUpTo);
+            AimMiss = aimed.miss;
+            // At rest the head waits above the point; the blow means to go through it.
+            restBow = blowBow = aimed.bow; sink = aimed.sink;
+            rest = Mathf.Min(aimed.lean, RestsUpTo) - 6; through = Mathf.Min(aimed.lean + 38, ThroughAtMost);
+            angle = rest;
+        }
+
+        // The tool rests leaning no further forward than this (the hands reach no further with the handle between
+        // them); and a blow is never meant to go further through than this.
+        public const float RestsUpTo = 46, ThroughAtMost = 104;
+
+        // How a blow at a point would be taken: the bow, the tool's lean and how far the hips sink; how far from the
+        // point the pick's head could be brought; and what the stance costs (that miss, and a little for bent knees and
+        // for a bow far from an easy one).
+        public struct Aimed
+        {
+            public float bow, lean, sink, miss, cost;
+        }
+
+        // The swing being made now, as far as it has got (whether it has struck, and how fast the head was going).
+        public Result Current => now;
+
+        // Where the pick's head (its striking ball's middle) would be with the tool at a lean, for a body standing
+        // somewhere that takes a blow as aimed: the path the head comes down.
+        public Vector3 HeadAt(Vector3 feet, Quaternion facing, Aimed aimed, float lean)
+        {
+            float hip = body.StandingHipHeight;
+            Vector3 hips = feet + Vector3.up * (hip - aimed.sink) - facing * Vector3.forward * (.2f * hip * Mathf.Sin(Mathf.Max(0, aimed.bow) * Mathf.Deg2Rad));
+            Place(lean, Mathf.Min(aimed.lean, RestsUpTo) - 6, hips, facing * Quaternion.Euler(aimed.bow, 0, 0), out var position, out var rotation);
+            return position + rotation * tool.Head;
+        }
+
+        // The same, for a body standing somewhere, facing some way: so that a place to stand can be chosen for a point.
+        // roughly: looked for in wide steps only, for choosing among many places (about a tenth of the work).
+        public Aimed AimFrom(Vector3 feet, Quaternion facing, Vector3 point, float leansUpTo = RestsUpTo, bool roughly = false)
+        {
             float hip = body.StandingHipHeight;
             float best = float.MaxValue, bow = RestBow, lean = Rest, down = 0, miss = 0;
             void Try(float s, float b, float l)
             {
                 // The hips go back as the body bows (PhysicalBack): about a fifth of their height at a deep bow.
                 Vector3 hips = feet + Vector3.up * (hip - s) - facing * Vector3.forward * (.2f * hip * Mathf.Sin(Mathf.Max(0, b) * Mathf.Deg2Rad));
-                Place(l, l, hips, facing * Quaternion.Euler(b, 0, 0), out var position, out var rotation);
+                Place(l, Mathf.Min(l, RestsUpTo), hips, facing * Quaternion.Euler(b, 0, 0), out var position, out var rotation);
                 float off = Vector3.Distance(position + rotation * tool.Head, point);
                 float cost = off + .03f * (s / hip) + .0003f * Mathf.Abs(b - 28);
                 if (cost < best) { best = cost; bow = b; lean = l; down = s; miss = off; }
             }
+            if (roughly)
+            {
+                for (int s = 0; s <= 3; s++)
+                    for (float b = 0; b <= 56; b += 8)
+                        for (float l = 12; l <= leansUpTo; l += 6) Try(s * .1f * hip, b, l);
+                return new Aimed { bow = bow, lean = lean, sink = down, miss = miss, cost = best };
+            }
             for (int s = 0; s <= 6; s++)
                 for (float b = 0; b <= 56; b += 4)
-                    for (float l = 12; l <= 46; l += 2) Try(s * .05f * hip, b, l);
+                    for (float l = 12; l <= leansUpTo; l += 2) Try(s * .05f * hip, b, l);
             float b0 = bow, l0 = lean, s0 = down;
             best = float.MaxValue;
             for (float s = Mathf.Max(0, s0 - .04f * hip); s <= s0 + .04f * hip; s += .01f * hip)
                 for (float b = b0 - 4; b <= b0 + 4; b += 1)
                     for (float l = l0 - 2; l <= l0 + 2; l += .5f) Try(s, b, l);
-            AimMiss = miss;
-            // At rest the head waits a little above the point; the blow means to go through it.
-            restBow = blowBow = bow; sink = down;
-            rest = lean - 6; through = lean + 38;
-            angle = rest;
+            return new Aimed { bow = bow, lean = lean, sink = down, miss = miss, cost = best };
         }
 
         // The tool carried at the side in the upper hand alone (PhysicalCarry.AtSide).
@@ -296,7 +360,7 @@ namespace WonderGather
                 case Phase.Struck:
                     if (clock >= .35f)
                     {
-                        if (Spent >= RestsAt) { rests++; Go(Phase.Rest); }
+                        if (Spent >= RestsAt) { rests++; grounded = HoldAsks > RestsOnlyBelow; Go(Phase.Rest); }
                         else Go(Phase.Recover);
                     }
                     break;
@@ -305,11 +369,35 @@ namespace WonderGather
                     // in one hand at the side, held near its head where its weight is, the arm hanging.
                     // It straightens as the tool comes up with it: arms do not reach a tool on the block from upright.
                     back.Want(Mathf.Lerp(restBow, Mathf.Sin(clock * 2.4f) * 1.5f, Mathf.SmoothStep(0, 1, clock / 1.1f)));
-                    body.Sink(0);
-                    if (hands.Holds(1))
+                    if (grounded)
                     {
-                        hands.Slide(0, hands.HighestGrip);
-                        if (clock > .25f && !hands.Sliding(0)) hands.Release(1);
+                        // Too heavy to rest holding: the lower hand goes to the end of the handle, the upper lets go,
+                        // and the end is brought to hang at the side with the head left lying where it is, on the
+                        // ground or on what it struck. The ground carries the tool; the arm only keeps it standing.
+                        if (!hands.Trailing)
+                        {
+                            hands.Slide(1, hands.LowestGrip);
+                            if (hands.Holds(0) && (hands.Sliding(1) || clock < .3f)) break;
+                            endFrom = hands.GripPlace(1); groundClock = 0;
+                        }
+                        groundClock += dt;
+                        float length = Vector3.Distance(tool.Head, new Vector3(0, hands.LowestGrip, 0));
+                        Vector3 shoulder = unused[1];
+                        Vector3 place = shoulder + body.FacingNow * Vector3.right * (.1f * body.ArmReach);
+                        place.y = (body.FootPosition(0).y + body.FootPosition(1).y) * .5f + StoodUp * length;
+                        // The knees give what the arm lacks to hold it there (a tall body with a short tool).
+                        float lacks = shoulder.y - place.y - .93f * body.ArmReach;
+                        body.Sink(Mathf.Clamp(body.SinkNow + lacks * .5f, 0, .2f * body.StandingHipHeight));
+                        hands.WantEnd(1, Vector3.Lerp(endFrom, place, Mathf.SmoothStep(0, 1, groundClock / .9f)));
+                    }
+                    else
+                    {
+                        body.Sink(0);
+                        if (hands.Holds(1))
+                        {
+                            hands.Slide(0, hands.HighestGrip);
+                            if (clock > .25f && !hands.Sliding(0)) hands.Release(1);
+                        }
                     }
                     if (clock >= 2.5f && Spent <= GoesOnAt)
                     {
@@ -331,6 +419,13 @@ namespace WonderGather
             }
             float bears = 1;
             if (phase == Phase.Struck) { position = from; rotation = fromTurn; }
+            else if (phase == Phase.Rest && grounded)
+            {
+                // Until the lower hand has the end of the handle, the tool stays where the blow left it; after that it
+                // is held by its end only.
+                if (!hands.Trailing) hands.Want(from, fromTurn);
+                return;
+            }
             else if (phase == Phase.Rest)
             {
                 AtSide(hips, posture, out var to, out var toTurn);
