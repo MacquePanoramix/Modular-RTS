@@ -1076,6 +1076,11 @@ MonoBehaviour:
     rideShares:
     - 0.9155357
     - 0.08446433
+    bar: {x: 0, y: 0, z: 0}
+    grip: 0
+    deep: 0
+    wide: 0
+    clear: 0
   flaps:
   - bone: {fileID: 3454867160072140588}
     leg: 0

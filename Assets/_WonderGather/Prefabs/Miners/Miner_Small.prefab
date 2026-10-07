@@ -506,6 +506,11 @@ MonoBehaviour:
     riders: []
     ridePoints: []
     rideShares: []
+    bar: {x: 0, y: 0, z: 0}
+    grip: 0
+    deep: 0
+    wide: 0
+    clear: 0
   - bone: {fileID: 1291110265047679240}
     length: 0.12
     aim: {x: 0.017807944, y: 0.9988129, z: 0.04533698}
@@ -526,6 +531,11 @@ MonoBehaviour:
     - {x: 0.05799582, y: 0.03839989, z: -0.1431896}
     rideShares:
     - 1
+    bar: {x: 0.9072443, y: 0.031561, z: -0.41941792}
+    grip: 0.0070035737
+    deep: 0.17542365
+    wide: 0.04359116
+    clear: 0.25756934
   flaps:
   - bone: {fileID: 7217227207423496299}
     leg: 0

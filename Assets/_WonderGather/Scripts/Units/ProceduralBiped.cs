@@ -93,6 +93,8 @@ namespace WonderGather
         private float HipHeight=1.43f,HipWidth=.21f,LegReach=1.33f,LegLimit=1.359f,NarrowStance=.14f,ClosedTolerance=.15f,SettleTolerance=.3f;
         private float AnkleHeight=.13f,HeelLength=.07f,BallLength=.19f,ToeLength=.11f;
         public Proportions BodyProportions=>P;
+        // As they are saved with the body. (Until the body wakes, the active ones are still the first body's.)
+        public Proportions SavedProportions=>customProportions?proportions:Proportions.Default;
         // For tools. The first body (2.2 m) and its pickaxe set the pattern: its arms reach 0.87 m, its lower hand
         // works 3 cm below the hips and 24 cm in front of them, and a wrist that holds a tool is between 2.5 and
         // 86.5 cm from its shoulder. A body with its own measurements keeps those proportions of its own arm; the
@@ -152,10 +154,19 @@ namespace WonderGather
         private IHandHolds holds;
         private bool holdsLooked;
         private IHandHolds Holds { get { if(!holdsLooked) { holds=GetComponent<IHandHolds>(); holdsLooked=true; } return holds; } }
-        private IArmGuide guide;
+        private IArmGuide guide,also;
         // Set by what guides the arms when it begins and ends.
         public void GuideArms(IArmGuide value)=>guide=value;
         public bool Guided=>guide!=null;
+        // A second guide, for a hand the first does not guide (something small taken in one hand).
+        public void GuideAlso(IArmGuide value)=>also=value;
+        // Where a hand's wrist would be with nothing to guide it, as the body was last posed.
+        private readonly Vector3[] freeWrist=new Vector3[2];
+        public Vector3 FreeWrist(int index)=>freeWrist[index];
+        // An arm that carries something hanging from its hand (a lantern, a mug): it hangs this much further out
+        // (metres), so that the thing clears the clothes, and keeps this share of its swing. (0 and 1: a free arm.)
+        private readonly float[] carriesOut=new float[2],carriesKeep={1,1},carriedOut=new float[2],carriedKeep={1,1};
+        public void CarryAtSide(int index,float metres,float keep){carriesOut[index]=Mathf.Max(0,metres);carriesKeep[index]=Mathf.Clamp01(keep);}
         // How the body stood when it was last posed: for what works on the physics' own clock.
         private Vector3 hipsNow;
         private Quaternion postureNow=Quaternion.identity;
@@ -882,6 +893,7 @@ namespace WonderGather
             else posedBefore=-1;
             hipsNow=hips;postureNow=posture;shoulderNow[0]=leftShoulder;shoulderNow[1]=rightShoulder;
             if(guide!=null) guide.Stands(hips,posture,leftShoulder,rightShoulder);
+            if(also!=null) also.Stands(hips,posture,leftShoulder,rightShoulder);
             float armAmplitude=Mathf.Lerp(Mathf.Lerp(.05f,.22f,Mathf.Clamp01(speed/2.2f)),.16f,jogWeight)*gaitWeight*(P.armHang.y/.83f)*P.armSwing;
             bool hasToes=Pair(toes);
             for(int i=0;i<2;i++)
@@ -905,6 +917,12 @@ namespace WonderGather
                 Segment(thighs[i],hip,knee,.19f*P.scale);Segment(shins[i],knee,ankle,.15f*P.scale);
                 // Each arm swings against its own leg: back as that foot reaches forward.
                 float carryOut=i==0?P.armCarry.x:P.armCarry.y,swingSide=i==0?P.armSwingSide.x:P.armSwingSide.y;
+                if(dt>0)
+                {
+                    carriedOut[i]=Mathf.MoveTowards(carriedOut[i],carriesOut[i],dt*.3f);
+                    carriedKeep[i]=Mathf.MoveTowards(carriedKeep[i],carriesKeep[i],dt*2.5f);
+                }
+                carryOut+=carriedOut[i];swingSide*=carriedKeep[i];
                 float swing=-armAmplitude*swingSide*Mathf.Cos(cycle+Mathf.PI*i);
                 Vector3 shoulder=i==0?leftShoulder:rightShoulder;
                 // A relaxed arm hangs nearly straight and swings as a pendulum from the shoulder;
@@ -939,10 +957,12 @@ namespace WonderGather
                         handLocal[i]=Quaternion.Inverse(posture)*(wrist-hips);
                     }
                 }
+                freeWrist[i]=wrist;
                 // A hand on a real object goes where the object is.
-                if(guide!=null && guide.Guides(i))
+                IArmGuide leads=guide!=null&&guide.Guides(i)?guide:also!=null&&also.Guides(i)?also:null;
+                if(leads!=null)
                 {
-                    wrist=guide.Wrist(i,shoulder);
+                    wrist=leads.Wrist(i,shoulder);
                     handLocal[i]=Quaternion.Inverse(posture)*(wrist-hips);
                     busy=true;
                 }

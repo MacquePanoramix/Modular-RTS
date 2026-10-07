@@ -77,12 +77,18 @@ namespace WonderGather
         // For the next click, as a tap of the key does.
         public void Arm(bool on) { latched = on; }
 
-        // What can be interacted with now: the pickaxes in the world (held or lying), and the chosen miner.
+        // What can be interacted with now: the pickaxes in the world (held or lying), what hangs on the chosen miner
+        // by a handle (its lantern, its mug), and the chosen miner.
         public IReadOnlyList<Component> Things()
         {
             things.Clear();
             foreach (var thing in FindObjectsByType<HeldThing>(FindObjectsSortMode.None)) if (thing.Tool != null) things.Add(thing);
-            if (choice != null && choice.Current != null) things.Add(choice.Current);
+            if (choice != null && choice.Current != null)
+            {
+                var has = ThingsInHand.Of(choice.Current);
+                for (int i = 0; has != null && i < has.Count; i++) things.Add(has.Thing(i));
+                things.Add(choice.Current);
+            }
             return things;
         }
 
@@ -90,6 +96,7 @@ namespace WonderGather
         public static Vector3 Place(Component thing)
         {
             if (thing is HeldThing held && held.TryGetComponent<Rigidbody>(out var body)) return body.worldCenterOfMass;
+            if (thing is HungThing hung) return hung.Place;
             if (thing is SelectableUnit unit && unit.TryGetComponent<ProceduralBiped>(out var biped) && biped.Ready) return biped.HipsNow;
             return thing.transform.position;
         }
@@ -97,6 +104,7 @@ namespace WonderGather
         public string Named(Component thing)
         {
             if (thing is HeldThing held) return held.Tool != null ? held.Tool.DisplayName.ToLowerInvariant() : "tool";
+            if (thing is HungThing) return thing.name.ToLowerInvariant();
             if (thing is SelectableUnit && choice != null) return choice.NameOf(choice.Chosen);
             return thing.name;
         }
@@ -112,7 +120,7 @@ namespace WonderGather
             {
                 Vector3 at = view.WorldToScreenPoint(Place(thing));
                 if (at.z <= 0) continue;
-                float away = Vector2.Distance(new Vector2(at.x, at.y), screen) * (thing is HeldThing ? .7f : 1);
+                float away = Vector2.Distance(new Vector2(at.x, at.y), screen) * (thing is SelectableUnit ? 1 : .7f);
                 if (away < nearest) { nearest = away; best = thing; }
             }
             return best;
@@ -125,6 +133,7 @@ namespace WonderGather
             if (thing == null) return false;
             options.Clear();
             if (thing is HeldThing held) look.OptionsFor(held, options);
+            else if (thing is HungThing hung) look.OptionsForHung(hung, options);
             else if (thing is SelectableUnit unit && unit == choice.Current) look.OptionsForMiner(options);
             if (options.Count == 0) return false;
             target = thing;

@@ -37,6 +37,9 @@ namespace WonderGather
         private HeldThing lying;
         public HeldThing Lying => lying;
         private Coroutine setting;
+        // What a miner with something in its hand was told to do with its pickaxe: done once that is hung back.
+        private System.Action then;
+        private SelectableUnit thenFor;
         private float strength = 1, weight = 1;
         private GUIStyle note;
         public bool Showing => working != null || again != null;
@@ -109,6 +112,12 @@ namespace WonderGather
                 if (choice.Current == unit) Begin(unit);
             }
             if (toggle != null && toggle.WasPressedThisFrame()) Toggle();
+            if (then != null)
+            {
+                var has = thenFor != null ? thenFor.GetComponent<ThingsInHand>() : null;
+                if (choice.Current != thenFor) then = null;
+                else if (has == null || (has.Has == null && !has.Busy)) { var act = then; then = null; act(); }
+            }
             if (!Showing) return;
             // Chosen another: the look is over.
             if (choice.Current != working || !working.gameObject.activeInHierarchy) { End(); return; }
@@ -158,6 +167,28 @@ namespace WonderGather
                 into.Add(new InteractionClick.Option { label = "Pick it up", act = () => PickUp(thing) });
         }
 
+        // What a thing that hangs on the miner by a handle offers (its lantern, its mug): on its hook, to be taken in
+        // the hand on its side, if that hand is free; in the hand, to be hung back. With its pickaxe the miner's hands
+        // are not free for it.
+        public void OptionsForHung(HungThing thing, System.Collections.Generic.List<InteractionClick.Option> into)
+        {
+            var has = thing != null ? thing.Owner : null;
+            if (has == null || choice == null || choice.Current == null || has.gameObject != choice.Current.gameObject || has.Busy) return;
+            if (has.Has == thing) into.Add(new InteractionClick.Option { label = "Hang it back", act = () => has.HangBack() });
+            else if (!Showing && has.CanTake(thing)) into.Add(new InteractionClick.Option { label = "Take in hand", act = () => has.Take(thing) });
+        }
+
+        // A miner with something in its hand hangs it back before it takes up its pickaxe: its hands are for the tool.
+        // What it was told is done when the thing hangs again.
+        private bool HangsBackFirst(SelectableUnit unit, System.Action after)
+        {
+            var has = unit != null ? unit.GetComponent<ThingsInHand>() : null;
+            if (has == null || (has.Has == null && !has.Busy)) return false;
+            has.HangBack();
+            then = after; thenFor = unit;
+            return true;
+        }
+
         // What the miner itself offers: to rest from its work; to go back to it.
         public void OptionsForMiner(System.Collections.Generic.List<InteractionClick.Option> into)
         {
@@ -188,6 +219,7 @@ namespace WonderGather
             if (!Showing)
             {
                 var unit = choice != null ? choice.Current : null;
+                if (HangsBackFirst(unit, () => PickUp(thing))) return;
                 if (unit == null || !unit.TryGetComponent<MinerBody>(out var body) || !unit.TryGetComponent<ProceduralBiped>(out var biped)
                     || !unit.TryGetComponent<PhysicalBody>(out var weighed) || !weighed.Ready || unit.GetComponent<PhysicalHands>() != null
                     || unit.GetComponent<EquippedTool>() != null) return;
@@ -241,6 +273,7 @@ namespace WonderGather
             if (unit == null || !unit.TryGetComponent<MinerBody>(out var body) || body.Pickaxe == null || !body.Pickaxe.HasWeight
                 || !unit.TryGetComponent<ProceduralBiped>(out var biped) || !unit.TryGetComponent<PhysicalBody>(out var weighed) || !weighed.Ready
                 || unit.GetComponent<PhysicalHands>() != null || unit.GetComponent<EquippedTool>() != null) return;
+            if (HangsBackFirst(unit, () => Begin(unit))) return;
             if (unit.Motor != null) unit.Motor.Stop();
             // K makes a pickaxe for it: one that lay somewhere is put away.
             ClearLying();
@@ -295,7 +328,7 @@ namespace WonderGather
 
         public void End()
         {
-            again = null;
+            again = null; then = null;
             if (setting != null) { StopCoroutine(setting); setting = null; }
             if (hands != null)
             {

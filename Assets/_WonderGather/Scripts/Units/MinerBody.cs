@@ -61,6 +61,15 @@ namespace WonderGather
             public Transform[] riders;
             public Vector3[] ridePoints;
             public float[] rideShares;
+            // Optional: made to be taken off its hook by a hand (a lantern's bail, a mug's handle). The bar the
+            // fingers close round: its direction in the bone's own space, and its radius. How far the thing reaches
+            // below the place it hangs from, and to either side of the line it hangs along, square to its bar
+            // (metres). No radius: it is not made to be taken.
+            public Vector3 bar;
+            public float grip, deep, wide;
+            // Carried in a hand at the body's side: how far from the pelvis, to that side, the body stops its weight's
+            // middle (the clothes' reach there, and the thing's own width).
+            public float clear;
         }
 
         // A coat's or smock's skirt hangs from the hips in four flaps (front and back of each leg), each on a bone
@@ -100,6 +109,8 @@ namespace WonderGather
 
         // How far a relaxed wrist turns with a swinging weight, in degrees.
         private const float WristGive = 32;
+        // How long a thing takes to pass from its hook to the fingers that have closed on it, and back (seconds).
+        private const float TakeTime = .12f;
         // How long a hand takes to open and close round a handle (seconds), and how much of that is the opening.
         private const float GripTime = .3f, GripOpening = .35f;
 
@@ -137,6 +148,15 @@ namespace WonderGather
         private Vector3[] hangWay = new Vector3[0];
         private float[] hangInto = new float[0], hangAskew = new float[0];
         private bool[] hangReady = new bool[0];
+        // A hung thing taken off its hook: the hand that has it (-1: it hangs where it was hung), the hand that had it
+        // last, how far it has passed from the hook to the hand, and which way round its bar lies in the fingers.
+        private int[] hangHand = new int[0], hangLast = new int[0];
+        private float[] hangTaken = new float[0], hangTurned = new float[0], hangClear = new float[0];
+        // Where its hook is (the place it hangs from when nothing has taken it) and how its bar lies there; where the
+        // hook was modelled, in the pelvis' space; and how its bar lies now.
+        private Vector3[] hangHook = new Vector3[0], hangHookBar = new Vector3[0], hangHome = new Vector3[0], hangBar = new Vector3[0];
+        // The thing being hung now is in a hand at this side of the body (-1 the left, 1 the right; 0: on its hook).
+        private float stopSide;
         private bool ready;
         // Rest: each bone's rotation relative to the being's root, and for limbs the rest aim of the bone, in root space.
         private Quaternion pelvisRest, spineRest, chestRest, neckRest, headRest;
@@ -169,6 +189,45 @@ namespace WonderGather
         public Vector3 HangingWay(int index) => hangWay[index];
         public float HangingIntoBody(int index) => hangInto[index];
         public float HangingAskew(int index) => hangAskew[index];
+        public void ConfigureThings(Hanging[] things) { hanging = things ?? new Hanging[0]; ready = false; CaptureRest(); }
+
+        // Whether a hung thing is made to be taken in a hand.
+        public bool Takes(int index) => index >= 0 && index < hanging.Length && hanging[index].grip > 0 && hanging[index].bone != null
+                                        && hanging[index].bar != Vector3.zero;
+        // Where its hook is now (it goes with the cloth it is sewn to), and how the thing's bar lies on it.
+        public Vector3 Hook(int index) => hangHook[index];
+        public Vector3 HookBar(int index) => hangHookBar[index];
+        // Where its hook was modelled, as the hips are now: the cloth's own movement left out.
+        public Vector3 HookHome(int index) => bones.pelvis.position + bones.pelvis.rotation * hangHome[index];
+        // The way out from the body where it hangs (level), and how far out from its hook, that way, its handle must be
+        // held for it to hang straight down, clear of the body.
+        public Vector3 HookOut(int index) => bones.pelvis.rotation * hanging[index].stopNormal;
+        public float HookClear(int index) => hangClear[index];
+        // The place it hangs from now (its handle), and how its bar lies now.
+        public Vector3 HangsFrom(int index) => hanging[index].bone.position;
+        public Vector3 HangingBar(int index) => hangBar[index];
+        // The hand that has it (0 the left, 1 the right), or -1: it hangs where it was hung. How far it has passed
+        // into that hand (1: it hangs from the closed fingers).
+        public int InHand(int index) => index >= 0 && index < hangHand.Length ? hangHand[index] : -1;
+        public float Taken(int index) => hangTaken[index];
+        public bool Carries(int hand)
+        {
+            for (int k = 0; k < hangHand.Length; k++) if (hangHand[k] == hand) return true;
+            return false;
+        }
+        // A hand has closed on its handle and has it; or (-1) it is back on its hook, and the hand may let go. The arm
+        // that brings the hand there is not this body's business (ThingsInHand).
+        public void Carry(int index, int hand)
+        {
+            if (!Takes(index) || hand > 1 || (hand >= 0 && !CanHold(hand))) return;
+            if (hand >= 0)
+            {
+                hangLast[index] = hand;
+                Vector3 fingers = bones.hands[hand].TransformDirection(grips[hand].axis);
+                hangTurned[index] = Vector3.Dot(fingers, hangBar[index]) < 0 ? -1 : 1;
+            }
+            hangHand[index] = hand;
+        }
         public System.Collections.Generic.IReadOnlyList<Flap> Skirt => flaps;
 
         // Whether a hand can close round a handle (a hand that carries something is modelled closed, and cannot).
@@ -198,7 +257,7 @@ namespace WonderGather
         }
 
         // IHandHolds: a hand that closes is free to hold a tool; one that carries something is not.
-        public bool HandFree(int hand) => CanHold(hand);
+        public bool HandFree(int hand) => CanHold(hand) && !Carries(hand);
 
         // How the hand's bone must be turned, in the world, to hold a handle: the handle runs through the closed
         // fingers with the tool's head on the thumb's side, and the fingers leave the wrist as nearly as may be the
@@ -293,7 +352,28 @@ namespace WonderGather
             hangInto = new float[count];
             hangAskew = new float[count];
             hangRest = new Quaternion[count];
-            for (int k = 0; k < count; k++) hangRest[k] = hanging[k].bone != null ? hanging[k].bone.localRotation : Quaternion.identity;
+            hangHand = new int[count];
+            hangLast = new int[count];
+            hangTaken = new float[count];
+            hangTurned = new float[count];
+            hangClear = new float[count];
+            hangHook = new Vector3[count];
+            hangHookBar = new Vector3[count];
+            hangHome = new Vector3[count];
+            hangBar = new Vector3[count];
+            for (int k = 0; k < count; k++)
+            {
+                var thing = hanging[k];
+                hangHand[k] = hangLast[k] = -1;
+                hangTurned[k] = 1;
+                if (thing.bone == null) continue;
+                hangRest[k] = thing.bone.localRotation;
+                hangHook[k] = thing.bone.position;
+                hangHookBar[k] = hangBar[k] = thing.bone.rotation * thing.bar;
+                hangHome[k] = Quaternion.Inverse(bones.pelvis.rotation) * (thing.bone.position - bones.pelvis.position);
+                // Hanging straight down from its hook, its weight would be this far inside where the body stops it.
+                hangClear[k] = thing.stopDistance > 0 ? thing.stopDistance - Vector3.Dot(hangHome[k], thing.stopNormal) : 0;
+            }
             // The skirt's flaps as modelled, and the being's own directions in the pelvis' frame (the legs' swing is
             // measured there, so the hips' sway and roll do not count as a stride).
             Quaternion toPelvis = Quaternion.Inverse(bones.pelvis.rotation);
@@ -482,6 +562,19 @@ namespace WonderGather
                 }
                 if (shares > 1e-4f) thing.bone.position = place / shares;
             }
+            // Its hook, and how its bar lies on it. Taken in a hand, the thing hangs from its handle's place in the
+            // closed fingers instead: it passes from the one to the other as the fingers close on it, and back.
+            hangHook[k] = thing.bone.position;
+            hangHookBar[k] = thing.bone.rotation * thing.bar;
+            int by = hangHand[k] >= 0 ? hangHand[k] : hangLast[k];
+            hangTaken[k] = Mathf.MoveTowards(hangTaken[k], hangHand[k] >= 0 ? 1 : 0, dt / TakeTime);
+            Vector3 fingers = Vector3.zero, inFingers = Vector3.zero;
+            bool taken = hangTaken[k] > 0 && by >= 0 && HandleIn(by, thing.grip, out inFingers, out fingers);
+            if (taken) thing.bone.position = Vector3.Lerp(hangHook[k], inFingers, Mathf.SmoothStep(0, 1, hangTaken[k]));
+            stopSide = taken ? (by == 0 ? -1 : 1) : 0;
+            // Once the fingers have it, it is a thing carried in a hand: the wrist gives with its swing (below).
+            bool inHand = taken && hangTaken[k] >= 1;
+            if (inHand) { thing.hand = bones.hands[by]; thing.handle = grips[by].axis * hangTurned[k]; }
             // Where the arm carries it. The pendulum hangs under this place, before the wrist gives: the give is the
             // hand answering the weight, and must not be fed back to the weight as if the arm had moved it.
             Vector3 pivot = thing.bone.position;
@@ -526,6 +619,7 @@ namespace WonderGather
                 // The hand has turned about the wrist, and what it holds with it: the thing is shown hanging the same
                 // way from where the handle now is, square to it (past what a wrist can give, it swings no further
                 // that way), and outside the body.
+                if (inHand && HandleIn(by, thing.grip, out inFingers, out fingers)) thing.bone.position = inFingers;
                 pivot = thing.bone.position;
                 Vector3 held = thing.hand.rotation * thing.handle;
                 Vector3 hang = Vector3.ProjectOnPlane(way, held);
@@ -534,8 +628,22 @@ namespace WonderGather
             hangShown[k] = shown;
             hangWay[k] = shown - pivot;
             hangInto[k] = thing.stopDistance > 0 ? thing.stopDistance - Vector3.Dot(shown - bones.pelvis.position, bones.pelvis.rotation * thing.stopNormal) : 0;
+            // In a hand, the body is where both its front and its side would stop the thing.
+            if (stopSide != 0 && thing.clear > 0)
+                hangInto[k] = Mathf.Min(hangInto[k], thing.clear - Vector3.Dot(shown - bones.pelvis.position, bones.pelvis.rotation * pelvisAcross * stopSide));
             hangAskew[k] = thing.hand != null ? Mathf.Abs(Vector3.Dot(hangWay[k].normalized, thing.hand.rotation * thing.handle)) : 0;
             thing.bone.rotation = Quaternion.FromToRotation(thing.bone.rotation * thing.aim, (shown - pivot).normalized) * thing.bone.rotation;
+            if (taken)
+            {
+                // Its bar lies in the fingers: it turns, about the way it hangs, until it does.
+                Vector3 way = (shown - pivot).normalized;
+                Vector3 has = Vector3.ProjectOnPlane(thing.bone.rotation * thing.bar, way), wants = Vector3.ProjectOnPlane(fingers * hangTurned[k], way);
+                if (has.sqrMagnitude > 1e-6f && wants.sqrMagnitude > 1e-6f)
+                    thing.bone.rotation = Quaternion.Slerp(Quaternion.identity, Quaternion.FromToRotation(has.normalized, wants.normalized),
+                        Mathf.SmoothStep(0, 1, hangTaken[k])) * thing.bone.rotation;
+            }
+            hangBar[k] = thing.bone.rotation * thing.bar;
+            stopSide = 0;
         }
 
         // Where a hanging thing's weight comes to rest near a place: outside the body, within its swing and, given a
@@ -575,13 +683,25 @@ namespace WonderGather
         {
             float stop = Allowed(thing);
             Vector3 normal = stop > 0 ? bones.pelvis.rotation * thing.stopNormal : Vector3.zero;
+            // In a hand it may be at the body's side as well as where it hung. There the body's side stops it: the body
+            // is where both would stop it, and it is pushed out the nearer way.
+            Vector3 aside = stop > 0 && stopSide != 0 && thing.clear > 0 ? bones.pelvis.rotation * pelvisAcross * stopSide : Vector3.zero;
             against = Vector3.zero;
             for (int pass = 0; pass < 2; pass++)
             {
                 if (stop > 0)
                 {
                     float clear = Vector3.Dot(tip - bones.pelvis.position, normal);
-                    if (clear < stop) { tip += normal * (stop - clear); against = normal; }
+                    if (aside != Vector3.zero)
+                    {
+                        float beside = Vector3.Dot(tip - bones.pelvis.position, aside);
+                        if (clear < stop && beside < thing.clear)
+                        {
+                            if (stop - clear < thing.clear - beside) { tip += normal * (stop - clear); against = normal; }
+                            else { tip += aside * (thing.clear - beside); against = aside; }
+                        }
+                    }
+                    else if (clear < stop) { tip += normal * (stop - clear); against = normal; }
                 }
                 Vector3 hang = tip - pivot;
                 if (hang.sqrMagnitude < 1e-8f) hang = Vector3.down;

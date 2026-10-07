@@ -150,6 +150,143 @@ namespace WonderGather.Editor
 
         public static string PrefabPath(string name) => PrefabFolder + "/Miner_" + name + ".prefab";
 
+        // A thing that hangs by its handle from a hook or a loop sewn to the cloth (not in a hand, and not hinged in a
+        // loop by its head, as a hammer is) can be taken off it by a hand.
+        private static bool Taken(Hung h) => h.rides && !h.hinged && string.IsNullOrEmpty(h.hand) && h.handle != null && h.handle.Length == 3;
+
+        // What a hand needs to know to take a hanging thing, read from the thing's own skin (which is wholly its
+        // bone's): its handle's radius (the bar the fingers close round, at the place it hangs from), how far it
+        // reaches below that place along the way it hangs, and how far to either side of that line, square to its bar.
+        private static void Measure(SkinnedMeshRenderer renderer, Transform thing, Vector3 aim, Vector3 bar, out float grip, out float deep, out float wide)
+        {
+            grip = deep = wide = 0;
+            var mesh = renderer.sharedMesh;
+            var vertices = mesh.vertices;
+            var weights = mesh.boneWeights;
+            int own = Array.IndexOf(renderer.bones, thing);
+            float scale = renderer.transform.lossyScale.x;
+            Vector3 place = renderer.transform.InverseTransformPoint(thing.position);
+            Vector3 down = renderer.transform.InverseTransformDirection(thing.rotation * aim).normalized;
+            Vector3 along = renderer.transform.InverseTransformDirection(thing.rotation * bar).normalized;
+            Vector3 square = Vector3.Cross(down, along).normalized;
+            bool Mine(int v)
+            {
+                var w = weights[v];
+                return (w.boneIndex0 == own ? w.weight0 : 0) + (w.boneIndex1 == own ? w.weight1 : 0)
+                       + (w.boneIndex2 == own ? w.weight2 : 0) + (w.boneIndex3 == own ? w.weight3 : 0) >= .5f;
+            }
+            Vector3 From(int v) => (vertices[v] - place) * scale;
+            for (int v = 0; v < vertices.Length; v++)
+            {
+                if (!Mine(v)) continue;
+                Vector3 p = From(v);
+                float below = Vector3.Dot(p, down);
+                deep = Mathf.Max(deep, below);
+                // Below the handle and what carries it, the thing itself.
+                if (below > .04f) wide = Mathf.Max(wide, Mathf.Abs(Vector3.Dot(p, square)));
+            }
+            // The bar, cut across at the place the thing hangs from: its skin crosses that cut at the bar's radius.
+            // (A bar's own points are at its ends; near the cut there is nothing else of the thing.)
+            var corners = mesh.triangles;
+            for (int c = 0; c + 2 < corners.Length; c += 3)
+            {
+                if (!Mine(corners[c]) || !Mine(corners[c + 1]) || !Mine(corners[c + 2])) continue;
+                for (int side = 0; side < 3; side++)
+                {
+                    Vector3 a = From(corners[c + side]), b = From(corners[c + (side + 1) % 3]);
+                    float fromA = Vector3.Dot(a, along), fromB = Vector3.Dot(b, along);
+                    if (fromA * fromB > 0 || Mathf.Approximately(fromA, fromB)) continue;
+                    float round = Vector3.Lerp(a, b, fromA / (fromA - fromB)).magnitude;
+                    if (round < .02f) grip = Mathf.Max(grip, round);
+                }
+            }
+            Debug.Log($"MINER_TAKEN {thing.name}: its handle {grip * 1000:F1} mm round, {deep * 1000:F0} mm deep, {wide * 1000:F0} mm to each side");
+        }
+
+        // How far the body's clothes reach to one side (from the pelvis), over the heights at which a thing so deep
+        // hangs from the hand of a relaxed arm: where the body's side would stop it. Read from the body's own skin,
+        // leaving out the arms and whatever hangs on it.
+        private static float Beside(SkinnedMeshRenderer renderer, Transform root, Transform pelvis, int side, float top, float deep, HashSet<Transform> notBody)
+        {
+            var mesh = renderer.sharedMesh;
+            var vertices = mesh.vertices;
+            var weights = mesh.boneWeights;
+            var bones = renderer.bones;
+            Vector3 right = root.right, forward = root.forward;
+            float reach = 0;
+            for (int v = 0; v < vertices.Length; v++)
+            {
+                var w = weights[v];
+                int most = w.boneIndex0;
+                float share = w.weight0;
+                if (w.weight1 > share) { most = w.boneIndex1; share = w.weight1; }
+                if (w.weight2 > share) { most = w.boneIndex2; share = w.weight2; }
+                if (w.weight3 > share) { most = w.boneIndex3; }
+                if (notBody.Contains(bones[most])) continue;
+                Vector3 p = renderer.transform.TransformPoint(vertices[v]);
+                if (p.y > top + .03f || p.y < top - deep) continue;
+                float ahead = Vector3.Dot(p - pelvis.position, forward);
+                if (ahead < -.09f || ahead > .14f) continue;
+                reach = Mathf.Max(reach, Vector3.Dot(p - pelvis.position, right) * side);
+            }
+            return reach;
+        }
+
+        // What a hand needs to know of each thing that hangs on a miner by a handle, measured on the finished miner.
+        private static void MeasureThings(GameObject root, Entry e)
+        {
+            var miner = root.GetComponent<MinerBody>();
+            var biped = root.GetComponent<ProceduralBiped>();
+            var renderer = root.GetComponentsInChildren<SkinnedMeshRenderer>(true).OrderBy(r => r.name).First();
+            var things = miner.Things.ToArray();
+            var rig = miner.Rig;
+            var notBody = new HashSet<Transform>(rig.upperArms.SelectMany(a => a.GetComponentsInChildren<Transform>(true)));
+            foreach (var t in things) if (t.bone != null) notBody.Add(t.bone);
+            var P = biped.SavedProportions;
+            foreach (var h in e.hanging ?? new Hung[0])
+            {
+                int k = Array.FindIndex(things, t => t.bone != null && t.bone.name == h.bone);
+                if (k < 0) continue;
+                things[k].bar = Vector3.zero; things[k].grip = things[k].deep = things[k].wide = things[k].clear = 0;
+                if (!Taken(h)) continue;
+                var bone = things[k].bone;
+                Vector3 bar = Quaternion.Inverse(bone.rotation) * (root.transform.rotation * new Vector3(h.handle[0], h.handle[1], h.handle[2]).normalized);
+                Measure(renderer, bone, things[k].aim, bar, out float grip, out float deep, out float wide);
+                // The hand on its own side carries it. Its handle hangs where a handle lies in the hand of that arm,
+                // relaxed: below the wrist by the hand's own measure.
+                int side = Vector3.Dot(bone.position - rig.pelvis.position, root.transform.right) < 0 ? -1 : 1, hand = side < 0 ? 0 : 1;
+                float below = miner.CanHold(hand) ? Vector3.Scale(miner.Fingers(hand).centres[0], rig.hands[hand].lossyScale).magnitude : 0;
+                float top = root.transform.position.y + P.hipHeight + P.waistRise + P.shoulder.y - P.armHang.y - below;
+                float reach = Beside(renderer, root.transform, rig.pelvis, side, top, deep, notBody);
+                things[k].bar = bar; things[k].grip = grip; things[k].deep = deep; things[k].wide = wide;
+                things[k].clear = reach + wide + .012f;
+                Debug.Log($"MINER_CARRIED {root.name} {bone.name}: its handle hangs {top:F3} m up in the {(hand == 0 ? "left" : "right")} hand; the body reaches {reach:F3} m to that side there; it is stopped at {things[k].clear:F3} m");
+            }
+            miner.ConfigureThings(things);
+        }
+
+        // The miners' prefabs as they are, with what a hand needs to take the things that hang on them measured from
+        // their models. The rest of each prefab is left as it is. (Creating the prefabs measures the same.)
+        [MenuItem("Wonder Gather/Measure What Hangs On The Miners")]
+        public static void MeasureHanging()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Leave Play mode first.");
+            var manifest = JsonUtility.FromJson<Manifest>(File.ReadAllText(Folder + "/miners.json"));
+            foreach (string name in Names)
+            {
+                var e = manifest.miners.FirstOrDefault(x => x.name == name) ?? throw new InvalidOperationException("miners.json has no " + name);
+                var root = PrefabUtility.LoadPrefabContents(PrefabPath(name));
+                try
+                {
+                    MeasureThings(root, e);
+                    PrefabUtility.SaveAsPrefabAsset(root, PrefabPath(name));
+                }
+                finally { PrefabUtility.UnloadPrefabContents(root); }
+            }
+            AssetDatabase.SaveAssets();
+            Debug.Log("MINERS_HANGING_MEASURED");
+        }
+
         private static void Create(string name, Entry e)
         {
             var body = Material(name);
@@ -335,6 +472,7 @@ namespace WonderGather.Editor
                 e.skirtSlack != null && e.skirtSlack.Length == 2 ? new Vector2(e.skirtSlack[0], e.skirtSlack[1]) : Vector2.zero,
                 Grips(e, root.transform, Bone));
             miner.ConfigureTool(Pickaxe(name, outline));
+            MeasureThings(root, e);
             Weigh(root, name, e, Bone);
             Debug.Log($"MINER_HANGING {name} " + string.Join(", ", hanging.Select(h => $"{h.bone.name} {h.length:F3} m stop {h.stopDistance:F3}")));
             Debug.Log($"MINER_GRIPS {name} " + string.Join(", ", (e.grips ?? new Gripped[0]).Select(g => $"{g.hand} {g.bones.Length} joints, {g.radii.Length} handles")));
