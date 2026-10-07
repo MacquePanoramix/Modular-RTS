@@ -169,6 +169,7 @@ namespace WonderGather
                 foreach (var its in go.GetComponents<Collider>()) Physics.IgnoreCollision(mine, its);
             thing = go.AddComponent<HeldThing>();
             thing.Head = head;
+            thing.Tool = definition; thing.Weight = weight; thing.Holder = this;
             tool = definition;
             for (int i = 0; i < 2; i++)
             {
@@ -185,6 +186,39 @@ namespace WonderGather
             body.GuideArms(this);
             return held;
         }
+
+        // A tool that lies in the world (let go, or laid down) is to be taken up: no hand has it yet. A hand then
+        // reaches for it (Grasp), and holds it once it is there.
+        public void Adopt(HeldThing lying)
+        {
+            Drop();
+            Slipped = null;
+            if (lying == null || lying.Tool == null) throw new ArgumentException("Only a tool that knows what it is can be taken up.");
+            if (holds == null || physical == null || !physical.Ready) throw new InvalidOperationException("This body has no hands of its own, or has not been weighed.");
+            held = lying.GetComponent<Rigidbody>();
+            model = held.transform.GetChild(0);
+            thing = lying; tool = lying.Tool;
+            thing.Holder = this;
+            toolMass = tool.Mass * lying.Weight;
+            ofItsWeight = lying.Weight;
+            fist = Mathf.Max(tool.GripRadius(0), tool.GripRadius(1)) * 2.5f;
+            lowest = tool.Foot + fist + .01f;
+            highest = tool.Top - .07f * (tool.Top - tool.Foot) - fist;
+            foreach (var mine in GetComponentsInChildren<Collider>(true))
+                foreach (var its in held.GetComponents<Collider>()) Physics.IgnoreCollision(mine, its);
+            for (int i = 0; i < 2; i++)
+            {
+                on[i] = false;
+                grip[i] = i == 0 ? tool.SecondaryGrip : tool.PrimaryGrip;
+                slideTo[i] = grip[i].y;
+                rides[i] = 0; reach[i] = 0;
+            }
+            Weigh(ofItsWeight);
+            wanting = wantedBefore = false; trailing = false;
+            body.GuideArms(this);
+        }
+        // Where a hand would hold it, along its handle, in the world (whether or not a hand is there).
+        public Vector3 PlaceAlong(float along) => held != null ? held.position + held.rotation * new Vector3(0, along, 0) : transform.position;
 
         // A hand that holds: the arm's mass that rides on the handle with it, and the link from its shoulder (an arm's
         // length is the one thing the object cannot get past).
@@ -226,6 +260,8 @@ namespace WonderGather
         public void Grasp(int hand, float along)
         {
             if (held == null || on[hand] || reach[hand] > 0 || !holds.HandFree(hand)) return;
+            // The first hand to take a thing that lies: until it is there the thing is no one's to push.
+            if (!on[1 - hand]) { wanting = wantedBefore = false; trailing = false; }
             grip[hand] = new Vector3(0, Mathf.Clamp(along, lowest, highest), 0);
             slideTo[hand] = grip[hand].y;
             reachFrom[hand] = body.HandPosition(hand);
@@ -308,11 +344,15 @@ namespace WonderGather
             var was = held;
             for (int i = 0; i < 2; i++)
             {
-                if (on[i] && holds != null) holds.HoldHandle(i, false, Vector3.zero, Vector3.up, 0, Vector3.zero);
+                if ((on[i] || reach[i] > 0) && holds != null) holds.HoldHandle(i, false, Vector3.zero, Vector3.up, 0, Vector3.zero);
                 if (links[i] != null) Destroy(links[i]);
                 if (anchors[i] != null) Destroy(anchors[i].gameObject);
                 on[i] = false; links[i] = null; anchors[i] = null; effort[i] = 0; push[i] = Vector3.zero; miss[i] = 0; reach[i] = 0;
+                rides[i] = 0;
             }
+            // On its own it weighs what it weighs: no arm rides on it any more.
+            if (held != null && tool != null) Weigh(ofItsWeight);
+            if (thing != null) thing.Holder = null;
             held = null; model = null; thing = null; tool = null; wanting = false; trailing = false;
             if (body != null) body.GuideArms(null);
             return was;

@@ -36,7 +36,7 @@ namespace WonderGather
         public float Ahead { get; private set; }
         public float BowNow => angle;
         // How far the body means to bow from the hips, in degrees (forward is positive). It gets there as its back can.
-        public void Want(float degrees) => wanted = Mathf.Clamp(degrees, -15, 60);
+        public void Want(float degrees) => wanted = Mathf.Clamp(degrees, -15, ProceduralBiped.MostBowed);
 
         private void Awake()
         {
@@ -85,7 +85,7 @@ namespace WonderGather
             rate += (given + weighs + load) / inertia * Mathf.Rad2Deg * dt;
             angle += rate * dt;
             if (angle < -15) { angle = -15; rate = Mathf.Max(rate, 0); }
-            if (angle > 60) { angle = 60; rate = Mathf.Min(rate, 0); }
+            if (angle > ProceduralBiped.MostBowed) { angle = ProceduralBiped.MostBowed; rate = Mathf.Min(rate, 0); }
             // The body is drawn between the steps: it goes on to where the bow will be at the next one. What works on
             // the physics' clock is told where the bow is now.
             body.Bow(angle + rate * dt, Mathf.Abs(rate) + 30);

@@ -30,9 +30,9 @@ namespace WonderGather
         // An ordinary back holds up about this many times its own upper body bent level (a grown person's upper body
         // bent level asks about 130 N m of a back that can give about 300).
         private const float BackHolds = 2.4f;
-        // An ordinary grown person's leg, as the models measure a limb, and what its knee can give at most, in newton
-        // metres. A first setting, like the arm's.
-        private const float LegReference = .06f, KneeReference = 200;
+        // An ordinary knee holds up this many times its share of its own body with the thigh level: legs are as strong
+        // as the body they carry needs, whatever their thickness (as the back is). A first setting.
+        private const float KneeHolds = 1.6f;
 
         [SerializeField] private Part[] parts = new Part[0];
         // The arms' parts (upper arm, forearm, hand; left then right), as indices into parts.
@@ -165,7 +165,15 @@ namespace WonderGather
         public float WristCapacity => WristReference * Build * strength;
         public float HoldCapacity => HoldReference * Mathf.Pow(armRadius / ArmReference, 2) * strength;
         // The most a knee gives, in newton metres: fresh, and now.
-        public float KneeCapacity => KneeReference * Mathf.Pow(legRadius / LegReference, 3) * strength;
+        public float KneeCapacity
+        {
+            get
+            {
+                if (stance == null) TryGetComponent(out stance);
+                float thigh = stance != null ? stance.BodyProportions.legSegment : .4f;
+                return KneeHolds * mass * Physics.gravity.magnitude * .5f * thigh * strength;
+            }
+        }
         public float KneeNow => KneeCapacity * Fresh(Muscles.Legs);
         // What an arm's joints give now, as tired as that arm is.
         public float ShoulderOf(int side) => ShoulderCapacity * Fresh(Arm(side));

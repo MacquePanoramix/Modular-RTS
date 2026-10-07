@@ -13,6 +13,11 @@ namespace WonderGather
         }
         // The part of it that strikes (a pick's head).
         public Collider Head { get; set; }
+        // What it is, and the share of its own weight it was made at (for trying the same tool lighter or heavier).
+        public ToolDefinition Tool { get; set; }
+        public float Weight { get; set; } = 1;
+        // The hands that hold it now, if any.
+        public PhysicalHands Holder { get; set; }
         public Blow Last { get; private set; }
         public int Blows { get; private set; }
         // Blows given with the striking part.

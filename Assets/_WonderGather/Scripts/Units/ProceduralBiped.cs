@@ -210,14 +210,18 @@ namespace WonderGather
         private const float BowPace=150;
         public void Bow(float degrees)=>Bow(degrees,BowPace);
         // pace: degrees a second (a back that moves by its own strength says how fast it is going).
-        public void Bow(float degrees,float pace){bowWanted=Mathf.Clamp(degrees,-15,60);bowPace=Mathf.Max(1,pace);}
+        public void Bow(float degrees,float pace){bowWanted=Mathf.Clamp(degrees,-15,MostBowed);bowPace=Mathf.Max(1,pace);}
+        // A body bends over no further than this (to reach the ground).
+        public const float MostBowed=80;
         public float BowNow=>bow;
         // The hips go back behind the feet by so much (forward is negative), and sink by so much (the knees bend),
         // each at its own pace: to keep the body's weight over its feet when it bows, and to reach low.
         private float backWanted,back,sinkWanted,sink;
         private const float BackPace=.5f,SinkPace=.6f;
         public void SetBack(float metres)=>backWanted=Mathf.Clamp(metres,-.08f*HipHeight,.28f*HipHeight);
-        public void Sink(float metres)=>sinkWanted=Mathf.Clamp(metres,0,.35f*HipHeight);
+        public void Sink(float metres)=>sinkWanted=Mathf.Clamp(metres,0,DeepestSink*HipHeight);
+        // The hips sink no further than this share of their height (a deep squat, to reach the ground).
+        public const float DeepestSink=.6f;
         public float BackWanted=>backWanted;
         public float BackNow=>back;
         public float SinkNow=>sink;

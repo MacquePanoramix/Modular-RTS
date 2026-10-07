@@ -14,6 +14,10 @@ namespace WonderGather
     // hand at its side, or dragged. K there puts it to work again, on a block where it stands. K at work (or choosing
     // another miner) puts the block and the pickaxe away.
     //
+    // With the interaction click (InteractionClick: the space bar and a click) the pickaxe can be laid down on the
+    // ground and picked up again, and the miner told to rest: each done by its body. A pickaxe that lies (laid down,
+    // or left because it was too heavy) stays in the world.
+    //
     // It is the bench, brought into the place so that it can be watched and tried. It is not the game's mining yet:
     // nothing is mined, and any boulder by a click is a later step.
     [RequireComponent(typeof(MinerChoice))]
@@ -29,6 +33,9 @@ namespace WonderGather
         private PhysicalSwing swing;
         private PhysicalCarry carry;
         private GameObject rock;
+        // The miner's pickaxe, lying in the world: laid down, or left.
+        private HeldThing lying;
+        public HeldThing Lying => lying;
         private Coroutine setting;
         private float strength = 1, weight = 1;
         private GUIStyle note;
@@ -45,6 +52,8 @@ namespace WonderGather
         private void Awake()
         {
             choice = GetComponent<MinerChoice>();
+            // The interaction click lives beside the look until the place is set up with it (step 11).
+            if (GetComponent<InteractionClick>() == null) gameObject.AddComponent<InteractionClick>();
             toggle = new InputAction("Watch the miner work", InputActionType.Button, "<Keyboard>/k");
             weaker = new InputAction("Weaker", InputActionType.Button, "<Keyboard>/comma");
             stronger = new InputAction("Stronger", InputActionType.Button, "<Keyboard>/period");
@@ -52,7 +61,7 @@ namespace WonderGather
             heavier = new InputAction("Heavier pickaxe", InputActionType.Button, "<Keyboard>/equals");
         }
         private void OnEnable() { toggle?.Enable(); weaker?.Enable(); stronger?.Enable(); lighter?.Enable(); heavier?.Enable(); }
-        private void OnDisable() { toggle?.Disable(); weaker?.Disable(); stronger?.Disable(); lighter?.Disable(); heavier?.Disable(); End(); }
+        private void OnDisable() { toggle?.Disable(); weaker?.Disable(); stronger?.Disable(); lighter?.Disable(); heavier?.Disable(); End(); ClearLying(); }
         private void OnDestroy() { toggle?.Dispose(); weaker?.Dispose(); stronger?.Dispose(); lighter?.Dispose(); heavier?.Dispose(); }
 
         // A rock face to mine, for the first swing's tests and captures: a block whose near face stands `reach` in
@@ -106,6 +115,10 @@ namespace WonderGather
             // Sent somewhere while it works: it takes its pickaxe with it. (A step it takes to keep its feet is not
             // being sent anywhere.)
             if (!Carrying && working.Motor != null && working.Motor.IsMoving) { TakeAlong(); if (!Showing) return; }
+            // Its pickaxe lies on the ground (laid down, left, or not reached), and it has stood up: it has nothing
+            // more to do with it until it is told to pick it up.
+            if (Carrying && hands != null && hands.Held == null && !carry.Fetching && !carry.Laying
+                && working.TryGetComponent<ProceduralBiped>(out var stands) && Mathf.Abs(stands.BowNow) < 3 && stands.SinkNow < .01f) { End(); return; }
             if (weaker.WasPressedThisFrame()) SetStrength(strength / 1.25f);
             if (stronger.WasPressedThisFrame()) SetStrength(strength * 1.25f);
             if (lighter.WasPressedThisFrame()) SetWeight(weight / 1.25f);
@@ -130,6 +143,67 @@ namespace WonderGather
             rock = null;
             swing.enabled = false;
             carry.enabled = true;
+        }
+
+        // What a pickaxe offers the interaction click: in this miner's hands, to be laid down; lying, to be picked up.
+        public void OptionsFor(HeldThing thing, System.Collections.Generic.List<InteractionClick.Option> into)
+        {
+            if (thing == null || choice == null || choice.Current == null) return;
+            if (thing.Holder != null)
+            {
+                if (hands != null && thing.Holder == hands && hands.Held != null && !(Carrying && (carry.Laying || carry.Fetching)))
+                    into.Add(new InteractionClick.Option { label = "Lay it down", act = LayDown });
+            }
+            else if (!Showing || (hands != null && hands.Held == null))
+                into.Add(new InteractionClick.Option { label = "Pick it up", act = () => PickUp(thing) });
+        }
+
+        // What the miner itself offers: to rest from its work; to go back to it.
+        public void OptionsForMiner(System.Collections.Generic.List<InteractionClick.Option> into)
+        {
+            if (Swinging) into.Add(new InteractionClick.Option { label = "Rest", act = Rest });
+            else if (Carrying && hands != null && hands.Held != null && !carry.Laying && !carry.Fetching
+                && !(working.Motor != null && working.Motor.IsMoving)) into.Add(new InteractionClick.Option { label = "Work here", act = WorkHere });
+        }
+
+        // It stops its work and stands at ease, its pickaxe held as its strength allows.
+        public void Rest()
+        {
+            if (!Showing || hands == null || hands.Held == null || Carrying) return;
+            TakeAlong();
+        }
+
+        // It lays its pickaxe down on the ground beside it, and stands up without it.
+        public void LayDown()
+        {
+            if (!Showing || hands == null || hands.Held == null) return;
+            if (!Carrying) TakeAlong();
+            if (Carrying) carry.LayDown();
+        }
+
+        // It goes to a pickaxe that lies in the world, bends down, and takes it up.
+        public void PickUp(HeldThing thing)
+        {
+            if (thing == null || thing.Tool == null || thing.Holder != null) return;
+            if (!Showing)
+            {
+                var unit = choice != null ? choice.Current : null;
+                if (unit == null || !unit.TryGetComponent<MinerBody>(out var body) || !unit.TryGetComponent<ProceduralBiped>(out var biped)
+                    || !unit.TryGetComponent<PhysicalBody>(out var weighed) || !weighed.Ready || unit.GetComponent<PhysicalHands>() != null
+                    || unit.GetComponent<EquippedTool>() != null) return;
+                Equip(unit, biped, weighed, thing.Tool);
+                swing.enabled = false;
+                carry.enabled = true;
+            }
+            else if (hands == null || hands.Held != null || !Carrying) return;
+            if (lying == thing) lying = null;
+            carry.Fetch(thing);
+        }
+
+        private void ClearLying()
+        {
+            if (lying != null) Destroy(lying.gameObject);
+            lying = null;
         }
 
         // Where it has come to, it sets itself to work again: a block before it, and the pickaxe taken up from however
@@ -168,19 +242,28 @@ namespace WonderGather
                 || !unit.TryGetComponent<ProceduralBiped>(out var biped) || !unit.TryGetComponent<PhysicalBody>(out var weighed) || !weighed.Ready
                 || unit.GetComponent<PhysicalHands>() != null || unit.GetComponent<EquippedTool>() != null) return;
             if (unit.Motor != null) unit.Motor.Stop();
+            // K makes a pickaxe for it: one that lay somewhere is put away.
+            ClearLying();
+            Equip(unit, biped, weighed, body.Pickaxe);
+            physical.Refresh();
+            setting = StartCoroutine(Set(unit, body.Pickaxe, false));
+        }
+
+        // The miner is given what its physical work needs: hands, a back and a balance that work by its strength, and
+        // the two plans of what to do with a tool (the swing, and the carry: one of them at a time).
+        private void Equip(SelectableUnit unit, ProceduralBiped biped, PhysicalBody weighed, ToolDefinition pickaxe)
+        {
             working = unit;
             physical = weighed;
             physical.Strength = strength;
-            physical.Refresh();
             hands = unit.gameObject.AddComponent<PhysicalHands>();
             back = unit.gameObject.AddComponent<PhysicalBack>();
             balance = unit.gameObject.AddComponent<PhysicalBalance>();
             swing = unit.gameObject.AddComponent<PhysicalSwing>();
-            swing.hands = hands; swing.back = back; swing.body = biped; swing.tool = body.Pickaxe;
+            swing.hands = hands; swing.back = back; swing.body = biped; swing.tool = pickaxe;
             carry = unit.gameObject.AddComponent<PhysicalCarry>();
             carry.enabled = false;
-            carry.hands = hands; carry.back = back; carry.body = biped; carry.tool = body.Pickaxe;
-            setting = StartCoroutine(Set(unit, body.Pickaxe, false));
+            carry.hands = hands; carry.back = back; carry.body = biped; carry.tool = pickaxe;
         }
 
         // The miner bows to its work; the block is put under where the pick's head then rests; it takes up the pickaxe
@@ -216,12 +299,19 @@ namespace WonderGather
             if (setting != null) { StopCoroutine(setting); setting = null; }
             if (hands != null)
             {
+                // A pickaxe it was only reaching for is not its own yet: it stays where it lies.
+                bool reaching = carry != null && carry.Fetching;
                 var was = hands.Drop();
-                if (was != null) Destroy(was.gameObject);
+                if (was != null)
+                {
+                    if (reaching) lying = was.GetComponent<HeldThing>();
+                    else Destroy(was.gameObject);
+                }
             }
             if (carry != null)
             {
-                if (carry.Lies != null) Destroy(carry.Lies.gameObject);
+                // A pickaxe that lies stays in the world.
+                if (carry.Lies != null) lying = carry.Lies.GetComponent<HeldThing>();
                 Destroy(carry);
             }
             if (swing != null) Destroy(swing);
@@ -239,8 +329,13 @@ namespace WonderGather
             if (!Application.isPlaying || choice == null || choice.Open || choice.Count == 0) return;
             note ??= new GUIStyle(GUI.skin.label) { fontSize = 11, alignment = TextAnchor.UpperCenter };
             var place = new Rect(Screen.width * .5f - 330, Screen.height - 48, 660, 20);
-            if (!Showing) { GUI.Label(place, "K: watch it work, with real weight", note); return; }
-            string line = $"{(Carrying && hands != null && hands.Held != null ? "K: work here" : "K: put the pickaxe away")}   , . strength {strength:0.00}   - = pickaxe x{weight:0.00}";
+            if (!Showing)
+            {
+                GUI.Label(place, lying != null ? "K: watch it work, with real weight   ·   its pickaxe lies on the ground: Space and a click on it, to pick it up"
+                    : "K: watch it work, with real weight", note);
+                return;
+            }
+            string line = $"{(Carrying && hands != null && hands.Held != null ? "K: work here" : "K: put the pickaxe away")}   Space + click: its options   , . strength {strength:0.00}   - = pickaxe x{weight:0.00}";
             if (Carrying)
             {
                 line += carry.way == PhysicalCarry.Way.Left ? "   it left the pickaxe where it lay: too heavy to move"
