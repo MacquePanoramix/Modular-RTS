@@ -64,7 +64,10 @@
       [clip](Images/PhysicalBody/Look_InThePlace.gif)). It is still the
       bench, not mining: nothing is mined, and a boulder by a click is
       step 9.
-    - **Step 6, balance: built** (October 7). The body keeps its own
+    - **Step 6, balance: built; Luis finds its clips "looking pretty
+      good"**
+      ([message](Correspondence/2026-10-07_THE_BALANCE_LOOKS_PRETTY_GOOD.md)).
+      (October 7.) The body keeps its own
       balance by its real weights. At ease nothing moves. Pulled a
       little, it leans against the pull; pulled hard, it steps and stands
       set against it; a heavier miner takes more pulling. The miners set

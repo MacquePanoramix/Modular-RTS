@@ -658,6 +658,11 @@ the more it is bent.
 - **The pickaxe does not stop at the miner's own body,** as before.
 - **What it costs** has not been measured again.
 
+**Luis's look (October 7):** "those balance tests were looking pretty
+good", and to go on
+([message](../Correspondence/2026-10-07_THE_BALANCE_LOOKS_PRETTY_GOOD.md)).
+Luis saw the clips; the build has not been tried.
+
 **Open:**
 
 - How firmly it holds itself, and how soon it steps (first settings).
