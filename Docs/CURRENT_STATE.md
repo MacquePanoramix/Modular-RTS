@@ -56,9 +56,10 @@
       pick's head. It then stands up and rests, the pickaxe carried in one
       hand at its side, and goes back to work in under half a minute
       ([clip and figures](Design/ThePhysicalBody.md#step-5-tiredness-october-6)).
-    - **It can be tried in the build** (October 6): in the Ordinary Place
-      `K` now shows this swing on a block, in place of the old swing; `,`
-      and `.` make the miner weaker and stronger, `-` and `=` make its
+    - **It could be tried in the build with keys** (October 6 to 8; since
+      step 11 a panel takes their place, below): in the Ordinary Place
+      `K` showed this swing on a block, in place of the old swing; `,`
+      and `.` made the miner weaker and stronger, `-` and `=` made its
       pickaxe lighter and heavier
       ([how to try it](Playtests/MinersPlaytest.md#a-first-look-at-the-work-october-6);
       [clip](Images/PhysicalBody/Look_InThePlace.gif)). It is still the
@@ -80,9 +81,8 @@
       Each miner walks with its own pickaxe in one hand at its side. One
       too heavy for its hand's hold is dragged by the end of its handle,
       the body stooping and walking slower; one it cannot move, it
-      leaves. A tired arm drags what it carried. In the look with `K`, a
-      miner sent somewhere takes its pickaxe along, and `K` there puts it
-      to work again
+      leaves. A tired arm drags what it carried. A miner sent somewhere
+      takes its pickaxe along
       ([clips and figures](Design/ThePhysicalBody.md#step-7-holding-and-walking-with-the-tool-october-7)).
     - **Step 8, first half: built** (October 7). The interaction click:
       the space bar and a click open a thing's options beside it. The
@@ -116,8 +116,27 @@
       weight, or legs that give way under work far too heavy. At its
       work, a miner that falls lets its pickaxe go. Luis has seen clips
       only.
-    - **Next:** step 11 (the panel in the Ordinary Place), then step 12
-      (evidence).
+    - **Step 11: built; Luis has not seen it** (October 7 and 8). The
+      keys (`K`, `,` `.`, `-` `=`) are gone. A plain panel at the lower
+      left sets the chosen miner's strength and puts a light, its own or
+      a heavy pickaxe on the ground beside it; the miner picks it up
+      itself, by the interaction click, and nothing is made in its hands
+      ([pictures and figures](Design/ThePhysicalBody.md#step-11-the-panel-in-the-ordinary-place-october-7)).
+      - **What trying the whole slider found, and changed:** the squat
+        for a pickaxe asked one knee 93 to 96% of what it has even at
+        ordinary strength, and below it a miner fell or not by tenths of
+        a second. Now a body bends its knees no deeper than one could
+        hold alone; it places itself and sets its feet first; bent to
+        the ground it keeps its feet where they are; and bent to its
+        work at a rock, its knees are read before the first blow.
+      - **What that leaves:** below about nine tenths of its strength a
+        miner does not get down to a pickaxe (it stands up again, and
+        the panel says why); Small and Long do not mine the two lowest
+        boulders of the place (they say why); the weakest bodies at
+        their work are not designed.
+    - **Next:** step 12 (evidence: the cost of one miner and of a crowd,
+      the evidence tests, the model quality method across strengths),
+      the playtest guide as a whole, and the documents.
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

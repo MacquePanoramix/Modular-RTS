@@ -1768,3 +1768,101 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   `-fallOut`, `-fallMiner`, `-fallShoves`, `-fallWays`, `-fallFor`,
   `-fallView`, `-fallSize`, `-fallLook strength,weight`.
   `PhysicalBalanceBench` takes `-balanceFall 1`.
+
+## The physical body, step 11: the panel in the Ordinary Place — October 7
+
+- **`MinerPanel`** (new; IMGUI, beside `MinerChoice` and
+  `MinerWorkPreview`, which adds it where it is, as it adds
+  `InteractionClick`; the scene file is unchanged). Lower left, 400 by
+  176, shown while a miner is chosen and the choice is closed.
+  - The strength slider (`Weakest` 0.3 to `Strongest` 3, in steps of
+    0.05) and a button back to 1: `MinerWorkPreview.SetStrength`.
+  - Three buttons, `Weights` 0.6, 1 and 1.8 of the miner's own pickaxe
+    (`Names`: Light, Its own, Heavy), each with its kilograms
+    (`PickaxeWeighs`): `MinerWorkPreview.LayPickaxe(share)`.
+  - "Take away": `ClearLaid()`.
+  - The line of words: `MinerWorkPreview.Status()`.
+  - `Over(screen)`: whether a point of the screen is on it.
+    `InteractionClick` asks it, for its own click and for the input's
+    blocker (`RtsInput.SetInterfaceBlocker`).
+- **`MinerWorkPreview`:**
+  - **The keys are gone** (`K`, `,` `.`, `-` `=`), and its own line at the
+    foot of the screen (`OnGUI`).
+  - **`Toggle()`, `SetWeight()`:** the bench's block and a pickaxe made in
+    the hands, kept for the tests and the captures only.
+  - **`LayPickaxe(share)`:** `PhysicalHands.Make` at a place beside the
+    chosen miner: 0.6 m off, then 0.9 m, to its right first and then
+    round it (`LaidRound`), where a ray finds the ground (layer 6), the
+    walked ground is within 0.25 m (first pass), and a box the size of
+    the lying pickaxe touches nothing but the ground. Flat, its head away
+    from the miner.
+  - **`Mine(boulder)`** with no pickaxe in the hands: `NearestLying`,
+    `PickUp`, and the order goes on when the miner holds it and stands up
+    (`StandsUp`: bowed less than 5 degrees, knees less than 2 cm). None
+    lying: `Say(...)`, and nothing is made. (`Given` is removed.)
+  - **`OptionsForMiner`:** "Rest" at work; "Back to work" resting at its
+    boulder. ("Work here", the block, is no longer offered.)
+  - **Strength** is the chosen miner's at all times (`Strengthen`, when
+    the choice changes; a miner no longer chosen is at 1 again).
+  - **`Status()`**, made once a frame; `Say(what)` for 5 s.
+- **`PhysicalHands.Make(definition, position, rotation, weight)`**
+  (static): a tool as a body in the world, in no hand, with its own
+  weight. `Take` makes one so and takes it.
+- **`InteractionClick.Named`:** a tool says its kilograms.
+- **Knees** (`PhysicalBalance`):
+  - `KneesAsked(carried)`: what the knees are asked, read from the posed
+    body: the further-out knee of the feet that are down, holding half of
+    what the body weighs and carries, as a share of `PhysicalBody.KneeNow`
+    (the measure `PhysicalFall` gets up by).
+  - `Raises` 0.5: a bend the body chooses goes no deeper once each knee is
+    asked half of what it has. `KneesMayBend(carried)`;
+    `KneesBendTo(wanted, carried, dt)` (no deeper than it is; coming up at
+    0.3 m/s while asked 0.02 more).
+  - `WorkRaises` 0.33: bent to its work at a rock and ready to swing, a
+    knee asked more than this is not worked with (`MinerWorkPreview`).
+  - `KeepsFeet` (set by `PhysicalCarry`): no step is taken to catch the
+    body while it is bent to the ground. `GaveNow` (how far the knees
+    have given way), `OnLeft` (the share of the weight on the left leg).
+- **`MinerWorkPreview`, at a rock:** once for each order to mine, the
+  first time the swing stands ready there for 0.3 s (`kneesJudged`), it
+  reads `KneesAsked`; over `WorkRaises`, it leaves the rock
+  (`LeftRock`: "its knees would be bent too deep for the work"), stands
+  at ease with its pickaxe, and says so.
+- **`RockWork.Low`** is 0.14 m (it was 0.08): no spot nearer the ground
+  is struck.
+- **`PhysicalCarry`**, in all it does: its feet come together
+  (`PhysicalBalance.Ease`) only once it stands up (knees bent less than
+  0.05 of its hips' height, bowed less than 15 degrees); and it sets
+  `KeepsFeet` from when its knees are bent more than a quarter of its
+  hips' height until it has stood up again or is sent somewhere.
+- **`PhysicalCarry`**, going for a tool (`Take`):
+  - Arrived, it turns and bows (`FirstBow` 42) with its knees straight.
+    Bowed and turned (within 3 degrees), if the grip is more than 9 cm
+    from under its shoulder it steps nearer. `feetSet` when both feet
+    have been down, none due to be put in its place, for 0.12 s (or after
+    2.5 s). Only then do the knees bend (`BendTo(..., kneesToo)`), and it
+    turns no more.
+  - `BendTo`: the knees bend while `KneesAsked` is under `Raises`; then
+    the back bows on, and the knees come up if the bowing asks more of
+    them.
+  - It gives the tool up: bent all it can and 1 cm short for 1.2 s
+    (`GivesUpShort`); its knees stopped under 0.7 of the deepest bend and
+    what lacks is more than the bowing left could give, for 0.3 s
+    (`beyond`); its knees giving way under it by 0.12 of its hips' height
+    (`GivesUnder`); or 6 s. `NotTaken` says which; `MinerWorkPreview`
+    says it when the look ends.
+  - Dragging: the knees by `KneesBendTo`.
+- **`PhysicalSwing`**, resting with the head on the ground: the knees by
+  `KneesBendTo`.
+- **`PhysicalFall.Follow`:** nothing, if its parts are gone (the place
+  being put away while a miner is down).
+- **Tests:** `MinerPanelTests` (five). `MinerPanelPicture` (explicit; the
+  screen itself, so it is run with a window, without `-batchmode`).
+  `MinerPanelBench` (explicit):
+  `-panelOut`, `-panelMiner`, `-panelStrengths`, `-panelWeights`,
+  `-panelPickaxeOf`, `-panelBoulder`, `-panelFor`, `-panelBlows`,
+  `-panelSize`, `-panelView`, `-panelOrder pick`, `-panelPickAt`,
+  `-panelSend seconds`, `-panelTrace n`. `PhysicalRockBench` takes `-rockWeight` and
+  `-rockPickaxeOf`, and puts the pickaxe on the ground as the panel does.
+  `BoulderTests`, `InteractionTests` and `PhysicalFallTests` changed with
+  the step (below, in Validation).

@@ -499,6 +499,11 @@ setting); whether there is a longer tiredness; what the player is shown.
 
 ### In the place, to try (October 6)
 
+> **Since step 11 (October 7)** the keys below do nothing: a panel has
+> taken their place, and no pickaxe is made in a miner's hands
+> ([below](#step-11-the-panel-in-the-ordinary-place-october-7)). What follows is as it was
+> on October 6 and 7.
+
 The bench could only be seen in clips. So that Luis can watch the work and
 try it, this swing is now what the `K` key shows in the Ordinary Place, in
 place of the old swing.
@@ -1275,6 +1280,207 @@ left of it, tired as it is), and no harder:
 **Open:** when it should fall (every figure in the first two tables);
 how hard it holds itself; how long it lies; whether a fall should cost
 it something; the getting up.
+
+### Step 11: the panel in the Ordinary Place (October 7)
+
+The plan: "A plain panel: the strength slider, and a light, a middling and
+a heavy pickaxe. The look with `K` is retired." Luis has not seen it yet.
+Nothing here is Locked.
+
+![The panel, with Round chosen and its three pickaxes on the ground](../Images/PhysicalBody/Panel_InThePlace.png)
+
+![Round picks up the pickaxe put beside it, goes to a boulder and strikes it](../Images/PhysicalBody/Panel_Round_PicksUpAndMines.gif)
+
+*Round, as strong as it was built, with its own pickaxe: put on the
+ground beside it, picked up, carried to a boulder, and put to work.*
+
+![The same order at six tenths of its strength: it does not get down to the pickaxe](../Images/PhysicalBody/Panel_Weak_DoesNotReach.gif)
+
+*Round at six tenths of its strength: it bows, bends its knees as far as
+one of them could hold it alone, does not reach, and stands up again.*
+
+**What the panel is** (lower left of the screen, while the choice of
+miner is closed):
+
+| On it | What it does |
+|---|---|
+| **Strength** | A slider from 0.30 to 3.00 times what the miner's build gives it, and a button back to 1.00. It is the chosen miner's strength at once, whatever it is doing, with or without a pickaxe |
+| **Light, Its own, Heavy** | Puts a pickaxe of the miner's own kind on the ground beside it: 0.6 of its own pickaxe's weight, its own, or 1.8 times it. Each button says the kilograms |
+| **Take away** | Takes away the pickaxes that lie on the ground, in no hand |
+| **A line of words** | What the miner is doing; and, for a few seconds, why it did not do what it was told |
+
+**What went with the keys:**
+
+- **`K`, `,` `.`, `-` `=` do nothing any more.** The block of rock that `K`
+  put before the miner is gone from the build. (The tests and the
+  benches still use it.)
+- **Nothing appears in a miner's hands.** A pickaxe is put on the ground;
+  the miner picks it up itself, by the interaction click.
+- **"Mine" with empty hands:** the miner first goes to the nearest pickaxe
+  that lies anywhere, picks it up, and stands up with it. If none lies,
+  it does nothing, and the panel says why. None is made for it.
+- **"Work here" (a block where it stands) is no longer offered.** A miner
+  resting at its boulder is offered "Back to work".
+- **A pickaxe says what it weighs** when the space bar shows its name.
+
+**The three pickaxes** (kilograms):
+
+| | Light (0.6) | Its own | Heavy (1.8) |
+|---|---|---|---|
+| Small | 0.90 | 1.50 | 2.70 |
+| Long | 1.93 | 3.21 | 5.78 |
+| Round | 1.43 | 2.39 | 4.30 |
+
+**Along the slider: picking a pickaxe up** (each miner, each of its
+three pickaxes, at eight strengths: 72 tries, none of which fell; the
+times are from the order to the pickaxe in the hand; "knee" is the most
+one knee was asked, of what it has, through the whole try):
+
+| Strength | Small | Long | Round |
+|---|---|---|---|
+| 0.30 to 0.70 | Does not get down to it | Does not get down to it | Does not get down to it |
+| 0.80 | The light and its own (3.8 and 4.0 s), not the heavy | Does not get down to it | Does not get down to it |
+| 0.90 | All three, 3.6 to 3.8 s; knee 89% | All three, 3.8 to 3.9 s; knee 103% | All three, 3.7 to 4.0 s; knee 71% |
+| 1.00 | All three, 3.8 s; knee 79% | All three, 4.0 s; knee 81, 90 and 102% (light, its own, heavy) | All three, 3.8 s; knee 55 to 66% |
+| 2.00 | 3.8 s; knee 40% | 4.0 s; knee 50% | 3.8 s; knee 32% |
+| 3.00 | 3.8 s; knee 26% | 4.0 s; knee 33% | 3.8 s; knee 22% |
+
+- **Where it does not get down:** it bows, bends its knees as far as the
+  rule below lets it (at six tenths of its strength: 0.15 to 0.20 m,
+  where the deepest bend is 0.36 to 0.56 m), stands up again about three
+  seconds after the order, and the panel says "Its legs would not raise
+  it again from as far down as the pickaxe lies".
+- **Standing up with it** takes 1.3 s more (all three).
+
+**Along the slider: at its work** (a boulder of ordinary height, its spot
+0.57 m over the ground; six blows; how fast the head lands, the tool's
+energy then, and the pieces off the rock):
+
+| | Light | Its own | Heavy |
+|---|---|---|---|
+| Small, 1.00 | 6.4 m/s, 19 J; 1 piece | 5.2 m/s, 20 J; 1 | 3.9 m/s, 20 J; 1 |
+| Small, 2.00 | 7.9 m/s, 28 J; 1 | 6.9 m/s, 36 J; 2 | 5.3 m/s, 38 J; 2 |
+| Small, 3.00 | 8.8 m/s, 35 J; 2 | 7.8 m/s, 45 J; 3 | 6.0 m/s, 49 J; 3 |
+| Long, 1.00 | 6.3 m/s, 38 J; 2 | 5.3 m/s, 45 J; 2 | 3.3 m/s, 35 J; three blows in 45 s, then it rests with the head down; none |
+| Long, 2.00 | 8.7 m/s, 73 J; 4 | 7.0 m/s, 78 J; 5 | **Thrown off its feet by its own swing** after one blow ("its steps are not catching it") |
+| Long, 3.00 | 9.7 m/s, 90 J; 6 | 8.3 m/s, 111 J; 6 | 6.2 m/s, 111 J; 6 |
+| Round, 1.00 | 7.8 m/s, 43 J; 2 | 6.3 m/s, 48 J; 3 | 4.7 m/s, 47 J; 3 |
+| Round, 2.00 | 9.2 m/s, 61 J; 4 | 8.2 m/s, 81 J; 5 | 6.8 m/s, 100 J; 6 |
+| Round, 3.00 | 9.8 m/s, 69 J; 4 | 9.1 m/s, 99 J; 6 | 7.9 m/s, 133 J; 6 |
+
+- **A heavier pickaxe lands slower and no harder, on the same body:**
+  what a blow carries is set by the body, and a piece costs 90 J. A
+  stronger body lands the same pickaxe faster and harder.
+- **A knee at this work** is asked 5 to 23% (Small, Round) and 13 to 91%
+  (Long, most with the heavy pickaxe, resting with its head down).
+
+**Along the slider: a weak miner at its work** (it picked its pickaxe up
+as strong as it was built, and was made weaker once it stood with it; the
+same boulder; 70 s or eight blows):
+
+| | Light | Its own | Heavy |
+|---|---|---|---|
+| Small, 0.70 | 5.4 m/s, 13 J; 8 blows, 1 piece | 4.3 m/s, 14 J; 7 blows, 1 | 3.0 m/s, 12 J; 4 blows, none |
+| Small, 0.50 | 4.5 m/s, 9 J; 8 blows, none | 3.7 m/s, 10 J; 4 blows (one swing in four did not strike), none | One blow, a rest with its head down, and **its legs gave way** after 34 s |
+| Long, 0.70 | 5.4 m/s, 28 J; 8 blows, 2 | 3.8 m/s, 25 J; 7 blows, 1 | Four blows, a rest with its head down, and **its legs gave way** after 50 s |
+| Long, 0.50 | Does not work there (all three): bent to its work, its knees are asked too much, and it stands up again | | |
+| Round, 0.70 | 6.4 m/s, 30 J; 8 blows, 2 | 5.2 m/s, 32 J; 8 blows, 2 | 4.0 m/s, 34 J; 6 blows, 2 |
+| Round, 0.50 | 5.4 m/s, 21 J; 8 blows, 1 | 4.3 m/s, 22 J; 6 blows, 1 | 3.0 m/s, 20 J; 4 blows, none |
+
+- **A weaker body lands the same pickaxe slower and softer,** and rests
+  sooner. At half its strength Small's blows no longer break a piece off
+  in eight (9 to 10 J, where a piece costs 90).
+- **Long at seven tenths of its strength** works with the light pickaxe
+  and its own, but resting with its head down asks a knee 1.4 times what
+  it has (it did not fall in 70 s). Its knees were asked 33 to 35% when
+  they were read: at the edge of what is let through.
+
+**The two lowest boulders** (domes 0.18 and 0.20 m high; twelve tries at
+ordinary strength, none of which fell):
+
+- **Small and Long do not work there.** They go to the rock and bend to
+  their work; before the first blow their knees are read (asked more
+  than a third of what they have, each holding half the body: Long's
+  41%); they stand up again with the pickaxe, and the panel says "It
+  would have to bend its knees too deep to work at that boulder". (See
+  N9 and N10.)
+- **Round works at both.** At the lower one a knee is asked 39% in the
+  blows; at the other, all it has (101 to 102%), without falling in the
+  two tries.
+
+**What the step found.** The panel is the first thing that lets a miner
+be weaker or stronger while it does everything else, so every order was
+tried along the whole slider, on all three miners. Most of what that
+found was there before the panel.
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| N1 | Round, at half its strength, picked its pickaxe up, could not stand up with it, and fell ("its legs cannot bear it", a knee asked 2.2 times what it had). Sent walking at once it did not fall: the same order ended one way or the other by tenths of a second | A body went down for a pickaxe as deep as ever, whatever its legs had. Once a knee is asked more than it has, the body cannot come up at all, and its knees give way | A body bends its knees, of its own accord, no deeper than one of them could hold it alone: each asked half of what it has, holding half the body (the measure it gets up from a fall by, read from the body as it is posed). What the bend was for is left to its back and its arm, or is out of its reach |
+| N2 | As strong as it was built, the same squat asked one knee 93 to 96% of what it has; and Long, lifting its own pickaxe from where the panel had put it, fell | It was still turning to face the pickaxe and putting its feet in their places as it went down. A foot in the air leaves the other knee the whole body. On both feet the same squat asks a knee half as much | It places itself first, bowed, its knees straight: it turns, steps nearer if the pickaxe is not under its shoulder, and waits for both feet to be down. Then it goes down, once, and does not turn while it is down |
+| N3 | A weak miner hung bowed over a pickaxe it could not reach, stepped nearer and went down again three times, and gave it up after six seconds or more | It found out only by trying, to the end | If its knees stop well short and what is lacking is more than all the bowing left could give, it does not bow down to make sure. Bent all it can and still short for 1.2 s, it gives it up. It stands up again, and the panel says why |
+| N4 | Told to mine with its pickaxe just in its hand, Small went to a boulder, could not strike it from where it stood, went round and round, and fell | The place to stand and the spot to strike were found for a body still bent to the ground | It stands up with its pickaxe first; then the rock is looked at |
+| N5 | Long, at half its strength, fell every time it rested with its pickaxe's head on the ground | Resting so, its knees bent by as much as its arm lacked, whatever they had | Resting, and dragging, its knees bend no further than the same rule lets them |
+| N6 | Sent somewhere from its work at a low spot, in the middle of a swing, Small fell (two of four moments tried): "its weight has been outside its feet too long" | Leaving its work it brought its feet together at once, still bowed, its knees bent, the pickaxe out before it | Its feet stay set apart until it has stood up (twelve of twelve then arrived) |
+| N7 | Standing up with its pickaxe (one it had laid down itself), Small took two steps that landed short, and fell: "its steps are not catching it" | The balance read the body's own straightening as a loss of balance; and a step from a deep squat reaches nowhere | Bent to the ground for a tool, it takes no step to catch itself until it has stood up. If its weight stays outside its feet, it still falls |
+| N8 | At a boulder, a spot 8 or 9 cm over the ground was chosen, and struck with the knees bent so deep that the blows asked them 121 to 128% of what they have | The lowest spot allowed was 8 cm. Every spot step 9 had been tried at was 14 cm up or more; coming from where it picked its pickaxe up, a miner found the lower ones | No spot nearer the ground than 14 cm is struck |
+| N9 | At the two lowest boulders (domes a fifth of a metre high) Small fell within a minute, in four tries of four in one batch and none of four in another; Long's knees were asked 118 to 181% in the blows, and it fell once in twelve tries | Even at 14 cm the swing bends the knees 0.16 to 0.31 m there, and the blows ask a knee two to four times what the same bend asks standing still. Whether Small kept its place depended on its first swing | See N10 |
+| N10 | (the same) | How far the swing bends the knees was chosen for the reach alone | Bent to its work at a boulder, before its first blow there, a miner's knees are read. Asked more than a third of what they have (each holding half the body), it does not work there: it stands up with its pickaxe, and the panel says why. Where the work went well they were asked 18% or less; where the body fell, 40 to 71% |
+| N11 | With N5, Small (at half its strength, a pickaxe three times its weight) no longer falls at the block within a minute and a half: step 10's own example | Its rest no longer asks its knees more than they have | Left so. On the bench, at half their strength, Long's legs gave way after 30 s and Round's after 43 s; the test of it is Round's |
+| N12 | A miner that was down when the place was put away stopped the next place from loading (in the tests) | Its let-go body's parts were gone before it was | It does nothing with parts that are gone |
+
+**Known, and not put right in this step:**
+
+- **Small and Long do not mine the two lowest boulders** (above). A body
+  has no way to work at rock lower than it can strike standing: on one
+  knee, say.
+- **Round, at the lowest boulder but one, is asked all its knees have**
+  in the blows. It did not fall in four tries of 40 to 60 s.
+- **Long, at twice its strength with the heavy pickaxe** (5.8 kg), was
+  thrown off its feet by its own swing after one blow, in the one try. At
+  three times its strength it works.
+- **Up again after a fall, a weak miner may stand bent double and stay
+  so.** Its back, weak and spent by the work, does not raise its trunk,
+  and holding it there is no rest. The panel says so ("its back does not
+  raise it"); made stronger, it straightens in about a second.
+- **Weakened at the bottom of its squat, a miner cannot come up:** its
+  legs give way, and it falls (nine tries of nine at half its strength).
+  The slider takes effect at once, whatever the miner is doing.
+
+**What is not there yet:**
+
+- **A weak miner does not pick a pickaxe up.** Below about nine tenths of
+  its strength its knees do not let it down as far as the ground, and it
+  has no other way down (kneeling, a hand on its knee). To see a weak
+  miner work, let it pick the pickaxe up as strong as it was built, and
+  then bring the slider down.
+- **How careful a body is with its knees is two numbers** (a knee asked
+  no more than half of what it has for a bend it chooses standing still;
+  no more than a third, bent to its work). With both feet down, a body at
+  about six tenths of its strength could hold the deepest squat; it does
+  not try, because a foot that comes off the ground would leave the
+  other knee twice that.
+- **Where to stand and strike at a rock is still chosen for the reach
+  alone.** The knees are read only when the body is there and bent to
+  its work; it does not then look for a better spot on the same rock.
+- **The pick-up takes longer:** 3.6 to 4.0 s from the order to the
+  pickaxe in the hand (it was 2.7 to 3.6 s), and 1.3 s more to stand up
+  with it.
+- **The three pickaxes are the miner's own, lighter and heavier:** they
+  look the same and weigh differently. A miner can also pick up another
+  miner's pickaxe (laid down, and the miner changed): that has not been
+  tried.
+- **Changing the miner while it holds a pickaxe** takes the pickaxe away
+  with it.
+- **The panel is the engine's plain boxes,** and has only been pressed by
+  the tests' own calls: nobody has used the mouse on it.
+- **The interaction click and the panel are added where the miners'
+  physical work is** (the scene's own file was not changed).
+
+**Open:** whether the keys should stay beside the panel; where the panel
+stands and what is on it; the three pickaxes (shares of its own, or the
+three miners' own); what a body too weak to get down should do; how
+careful it is with its knees; work at rock lower than a body can strike
+standing; everything about the weakest bodies.
 
 **What is not there yet** (of the bench, step 2):
 

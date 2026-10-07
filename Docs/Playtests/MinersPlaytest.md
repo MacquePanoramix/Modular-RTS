@@ -103,117 +103,141 @@ Luis asked for. The round's log, with before and after images, is in
 
 ## A first look at the work (October 6)
 
-> **Changed later on October 6.** `K` now shows the swing with real weight
-> ([design](../Design/ThePhysicalBody.md#in-the-place-to-try-october-6)).
-> What it showed before was the first swing: all three miners at the same
-> instant, in 0.8 s, only the arm moving, nothing with weight
+> **This is how it was until October 8.** `K` put a plain block before
+> the chosen miner and made its pickaxe in its hands; `,` `.` made it
+> weaker and stronger, `-` `=` its pickaxe lighter and heavier
+> ([design](../Design/ThePhysicalBody.md#in-the-place-to-try-october-6);
+> [clip](../Images/PhysicalBody/Look_InThePlace.gif)). Those keys do
+> nothing any more: the next section is how the work is tried now.
+
+## The physical work, with the panel (October 7)
+
+> **Changed on October 7 and 8 (S3, step 11).** The keys are gone: `K` (the
+> block and a pickaxe made in the hands), `,` `.` (strength) and `-` `=`
+> (the pickaxe's weight). A plain panel takes their place
+> ([design](../Design/ThePhysicalBody.md#step-11-the-panel-in-the-ordinary-place-october-7)).
+> Nothing appears in a miner's hands any more: the panel puts a pickaxe
+> on the ground beside it, and it picks it up itself. What `K` showed
+> before October 6 was the first swing
 > ([clip](../Images/Miners/Work_Clip_Side.gif);
 > [review](../Reviews/2026-10-06_SamePageReview.md#what-the-swing-is-today)).
-> Luis's message of October 6 asked for real weight and real strength in
-> its place, and that swing is no longer shown.
 
-![The three miners at the block, in the place](../Images/PhysicalBody/Look_InThePlace.gif)
+![The panel, with Round chosen](../Images/PhysicalBody/Panel_InThePlace.png)
+
+![Round picks up the pickaxe put beside it, goes to a boulder and strikes it](../Images/PhysicalBody/Panel_Round_PicksUpAndMines.gif)
+
+**The panel** (lower left, while the choice of miner is closed):
+
+| On it | What it does |
+|---|---|
+| **Strength** | A slider from 0.30 to 3.00 times what the miner's build gives it, and a button back to 1.00. It takes effect at once, whatever the miner is doing |
+| **Light, Its own, Heavy** | Puts a pickaxe of the miner's own kind on the ground beside it: 0.6 of its own pickaxe's weight, its own, or 1.8 times it. Each button says the kilograms |
+| **Take away** | Takes away the pickaxes that lie on the ground, in no hand |
+| **A line of words** | What the miner is doing: how it holds its pickaxe and what that asks of its hand, how spent it is, how fast and with how much energy its last blow landed, the stones off its boulder; and, for a few seconds, why it did not do what it was told |
 
 **To try** (run `Builds/WindowsOrdinaryPlace/WonderGather.exe`):
-1. Choose a miner in the choice that opens (`M` opens it again) and walk
-   it somewhere open and level.
-2. Press `K`. It bows, a plain block stands before it, and it takes up the
-   pickaxe made for it and works on the block. `K` again (or walking it
-   away, or choosing another miner) puts the block and the pickaxe away.
-3. Go close with the Explore camera, and round it.
-4. `,` and `.` (the two keys right of `M`) make it weaker and stronger.
-   `-` and `=` (the two keys right of `0`) make its pickaxe lighter and
-   heavier (it takes it up afresh). A line at the foot of the
-   screen says the strength, the weight, how spent it is and how fast the
-   last blow landed.
-5. Leave it working. After a while it tires: it stands up, rests with the
-   pickaxe in one hand at its side, and goes on.
-6. Send it somewhere while it works (a right click on the ground). It
-   takes its pickaxe with it, in one hand at its side. `K` where it stops
-   puts it to work again, on a block there.
-7. **The interaction click.** Hold the space bar: the pickaxe and the
-   miner show their names. Click the pickaxe and choose **Lay it down**:
-   the miner squats, lays it on the ground and stands up. Walk it away.
-   Hold Space, click the pickaxe on the ground and choose **Pick it up**:
-   it goes back, goes down and takes it. On the miner itself, at work:
-   **Rest**.
-8. **The lantern and the mug.** Choose Small or Long, without `K`. Hold
-   the space bar, click the lantern (or the mug) and choose **Take in
-   hand**: the hand takes it off its hook and carries it at the side. Walk
-   the miner about. Hold Space, click it again, and choose **Hang it
-   back**. With it in the hand, press `K`: the miner hangs it back first,
-   then takes up its pickaxe.
-9. **A boulder.** Hold the space bar, click any boulder in the grass, and
-   choose **Mine**. The miner goes to it with its pickaxe, takes the last
-   steps to the rock's foot, and strikes it. Pieces break off and lie.
-   Send it somewhere else to stop it. Try the three miners, and a low
-   boulder and a big one. Long rests after a few blows, with the head of
-   its pickaxe on the rock or the ground.
-10. **A fall.** With `K`, make the miner as weak as it goes (`,` several
-    times, to about 0.50) and its pickaxe as heavy as it goes (`=`
-    several times, to x3.00). After twenty seconds or so of work its
-    legs give way: it lets the pickaxe go, falls, lies, and gets up.
-11. Make it weak and its pickaxe heavy (`,` and `=` a few times each) and
-   send it somewhere again. When the pickaxe asks more than half of its
-   hand's hold, it drags it by the end of the handle, bent over, and walks
-   slower. The line at the foot of the screen says which.
+1. Choose a miner in the choice that opens (`M` opens it again). The
+   panel is at the lower left.
+2. **A pickaxe.** Press **Its own**. A pickaxe lies on the ground beside
+   the miner. Nothing is in its hands.
+3. **Pick it up.** Hold the space bar: the pickaxe, the miner, what hangs
+   on it and the boulders show their names (the pickaxe with its
+   kilograms). Click the pickaxe and choose **Pick it up**. The miner
+   places itself by it, sets its feet, goes down, takes it, and stands up
+   with it in one hand.
+4. **A boulder.** Hold the space bar, click any boulder in the grass, and
+   choose **Mine**. The miner goes to it, takes the last steps to the
+   rock's foot, and strikes it. Pieces break off and lie. (With no
+   pickaxe in its hands it first goes to the nearest one on the ground
+   and picks it up. If none lies anywhere, it does nothing, and the panel
+   says why.)
+   - **The two lowest boulders** are small domes in the grass, a fifth of
+     a metre high. Small and Long go to them, bend to their work, stand
+     up again, and the panel says why: their knees would be bent too
+     deep. Round works at them.
+5. Go close with the Explore camera (`V`), and round it.
+6. **Stronger and weaker.** Move the slider while it works. Stronger: the
+   lift is quicker, the blow lands harder, more pieces come off. Weaker:
+   the upper hand goes up the handle towards the head, the blows land
+   softer, it rests sooner.
+7. **Lighter and heavier.** Hold Space, click the pickaxe in its hands,
+   **Lay it down**. Press **Heavy** (or **Light**), and have it pick that
+   one up and mine with it.
+8. Leave it working. After a while it tires and gets its breath: it
+   stands up with the pickaxe in one hand at its side (Long puts the head
+   down on the rock or the ground), and goes on.
+9. **Rest, and back to work.** Hold Space and click the miner itself at
+   its boulder: **Rest**. It stands at ease by its rock. Click it again:
+   **Back to work**.
+10. Send it somewhere while it works (a right click on the ground). It
+    takes its pickaxe with it.
+11. **Too weak to get down.** With nothing in its hands, bring the slider
+    down to about 0.60, and tell it to pick a pickaxe up. It bows, bends
+    its knees a little, does not reach, and stands up again; the panel
+    says why. At 1.00 it picks the same pickaxe up.
+12. **Weak at its work.** Let it pick the pickaxe up at 1.00 and send it
+    to a tall boulder; once it stands with the pickaxe, bring the slider
+    down to 0.70, then 0.50. Its blows land slower and softer, and it
+    rests sooner. (Long at 0.50 does not work at all: it stands up from
+    the rock, and the panel says why.) Do not bring the slider down
+    while it is down in its squat for a pickaxe: weakened there, its
+    legs give way.
+13. **The lantern and the mug.** Choose Small or Long, with nothing in the
+    hands. Hold the space bar, click the lantern (or the mug) and choose
+    **Take in hand**. Walk the miner about. Click it again: **Hang it
+    back**. With it in the hand, tell the miner to pick a pickaxe up: it
+    hangs it back first.
+14. **A fall.** Choose Small. Let it pick up the **Heavy** pickaxe at
+    1.00 and send it to a tall boulder; on its way, bring the slider down
+    to 0.50, and leave it. After half a minute or so, as it rests with
+    its pickaxe's head down, its legs give way: it lets the pickaxe go,
+    falls, lies, and gets up. (Long does the same at 0.70, after about
+    fifty seconds. Round does not fall so.)
 
 **What to look at:**
-- **Weight.** Does the pickaxe look as if it weighs something, going up and
-  coming down?
-- **Strength.** Weaker, or with a heavier pickaxe: the upper hand goes up
-  the handle towards the head, the lift is slower, the blow lands softer.
-  Stronger, or lighter: the other way. Is the difference enough to read,
-  and does it read as strength?
+- **Weight.** Does the pickaxe look as if it weighs something, lying,
+  picked up, going up and coming down?
+- **Strength.** Is the difference along the slider enough to read, and
+  does it read as strength?
 - **Each body.** The three do not swing alike. Long's pickaxe is heavy for
   Long: its upper hand is right up at the head.
+- **Picking up.** Does the body place itself and go down to the ground as
+  a body would? It takes about four seconds: too deliberate?
+- **Too weak to get down.** Is "it does not reach, and stands up again"
+  right for a weak body? Or should it kneel, put a hand on its knee, or
+  fall?
 - **Tiring and resting.** Does the rest read as a rest?
-- **Its feet.** It sets them apart before the first swing and brings them
-  together to rest. With a much heavier pickaxe (`=` several times) it
-  steps to keep its feet. Does it look steady, and never wobbly?
-- **The hands on the handle,** sliding, letting go and taking hold again.
+- **Its feet.** Does it look steady, and never wobbly?
 - **Walking with it.** Does the pickaxe look carried, with a weight of its
-  own? Does the drag read as a body with a tool too heavy for it?
-- **Laying down and picking up.** Does the body go down to the ground as
-  a body would? Is the space bar the right key for the click?
+  own?
 - **The fall.** Does it fall like a body, and not like a doll? Does the
   getting up read? Is it rare enough? Should it cost the miner something?
 - **At a boulder.** Does it stand where a miner would, and strike where
   one would? Do the pieces look and fall like stone? Should the boulder
-  get smaller, and run out? Does Long's rest, with the pickaxe's head
-  down, read as a rest?
-- **The lantern and the mug in the hand.** Does the hand take the handle,
-  and does the thing hang from it as it did when it was carried before?
-  Should it be possible to set them down on the ground?
+  get smaller, and run out?
+- **The panel.** Is it in the right place, and plain enough? Are three
+  pickaxes of the miner's own kind right, or should they be the three
+  miners' own pickaxes (1.5, 2.4 and 3.2 kg)?
+- **The space bar.** Is it the right key for the click?
 
 **What is not there:**
-- **It is not mining.** Nothing is mined, the block is put where the miner
-  stands, and with `K` the pickaxe appears in the hands from nowhere (it
-  can be laid down and picked up since step 8). At a boulder (step 9)
-  pieces break off, but the boulder stays whole and nothing is brought
-  home. The panel in place of the keys (step 11) is still to come
-  ([the plan](../NextMilestonePlan.md#steps)).
+- **It is not the game's mining yet.** Pieces break off a boulder, but the
+  boulder stays whole and nothing is brought home (S4).
+- **A weak miner does not pick a pickaxe up** (below about nine tenths of
+  its strength): it has no other way down to the ground than the squat.
+- **Small and Long do not mine the two lowest boulders:** a body has no
+  way to work at rock lower than it can strike standing.
+- **Known:** Long at twice its strength with the heavy pickaxe was
+  thrown off its feet by its own swing, once; a weak miner up from a fall
+  may stand bent double until the slider is raised (the panel says so).
 - **Setting the lantern or the mug down** on the ground, and a pickaxe in
   one hand with the lantern in the other.
-- **Something that pushes a miner over.** The body keeps its own balance
-  ([step 6](../Design/ThePhysicalBody.md#step-6-balance-october-7)), and
-  since step 10 it can fall and get up
-  ([clips](../Design/ThePhysicalBody.md#step-10-the-fall-and-getting-up-october-7)). But
-  nothing in the build pulls or pushes a miner: a fall comes only from
-  work far too heavy for it (the step above).
+- **Something that pushes a miner over.** Nothing in the build pulls or
+  pushes a miner: a fall comes only from work far too heavy for it.
 - **The pickaxe does not stop at the miner's own body,** nor at the
   lantern or the mug at the hip.
-
-**At the ends of the keys** (all three miners, the look begun as the key
-begins it, with their balance; measured again on October 7; nothing breaks
-at any of them):
-
-| Strength | Pickaxe | What is seen |
-|---|---|---|
-| 3 | 0.4 of its weight | Fast, easy swings. The blows land at 10 to 11 m/s (6 to 7 at ordinary strength with its own pickaxe), the hands stay at the end of the handle, the arms give 8 to 16% of what they have |
-| 3 | 3 times its weight | Small and Round swing it much as an ordinary miner swings its own (5.9 and 6.5 to 6.9 m/s). **Long is thrown about by its own swing:** its upper hand is at the head, it steps to keep its feet, ends a step back from the block, and goes on swinging from there (5.1 m/s). Bringing itself back to its work is step 9 |
-| 0.3 | 0.4 of its weight | A weak body. The upper hand is right at the head, the back gives all it has and hardly straightens, and the blows land at 4.0 to 5.7 m/s |
-| 0.3 | 3 times its weight | **It cannot swing it, and what it then does is not designed yet.** Small and Round hold the head on the block and cannot raise it. Long's pickaxe slips off the block and hangs from its hands, where nothing stops it passing through its legs. What a body does with a tool too heavy for it (drag it, or leave it) is step 7 |
+- **The block of rock that `K` put before the miner** is gone from the
+  build (the tests and the benches still use it).
 
 ## What changed for the game
 
@@ -284,10 +308,10 @@ The benchmark is in the build: run it with `-wgcrowd`. It writes
 
 ## Not yet
 
-- **Mining as part of the game.** The miners can be watched working on a
-  block with `K` (October 6, [above](#a-first-look-at-the-work-october-6)).
-  A boulder to mine, walking up to it, taking up the pickaxe and hauling
-  are not built: they are the later steps of S3 and S4
+- **Mining as part of the game.** A miner picks a pickaxe up, goes to a
+  boulder and strikes pieces off it
+  ([above](#the-physical-work-with-the-panel-october-7)). The boulder
+  stays whole, and nothing is hauled home: that is S4
   ([the plan](../NextMilestonePlan.md#steps)). The equipment scene still
   uses the 2.2 m test body and the first swing.
 - **Faces.** One expression each. The hands that carry something keep one

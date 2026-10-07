@@ -2469,3 +2469,131 @@ Built to be shown as clips before it is trusted
   - **Frame rates other than 50 a second.**
   - **What it costs,** the crowd benchmark.
   - **Luis's eye.**
+
+## S3, step 11 — the panel in the Ordinary Place (October 7 and 8)
+
+The keys' place taken by a plain panel; nothing made in a hand any more.
+Trying every order along the whole slider found defects that were there
+before it, and most of this step's work went into them
+([design](Design/ThePhysicalBody.md#step-11-the-panel-in-the-ordinary-place-october-7)).
+
+- **The panel's tests** (`MinerPanelTests`, five): 5 of 5.
+  - **The panel is with the miners, and a click on it is not a click in
+    the world:** it is not shown under the choice of miner; with a miner
+    chosen it is at the screen's lower left; a point on it is refused to
+    the ordinary clicks (what the input asks before a click), and a
+    point away from it is not.
+  - **A pickaxe is put on the ground and the miner picks it up itself**
+    (each miner, each of the three pickaxes: nine): it lies in no hand
+    from the first moment, 0.60 m from the miner, within 3 cm of the
+    ground, at the weight the panel says; the miner has nothing; the
+    click names it with its kilograms and offers "Pick it up"; the miner
+    stands with it 4.4 to 5.1 s after the order (in one hand: 4 to 25% of
+    its hold); no second pickaxe is made; laid down again, it lies; "Take
+    away" takes it away.
+  - **A weak miner does not get down to its pickaxe, and stands up
+    again** (each miner at 0.6 of its strength): it bent its knees 0.15,
+    0.20 and 0.17 m (the deepest bend is 0.36, 0.56 and 0.42 m), each
+    asked 51 to 52% of what it has holding half the body; it stood up
+    3.0 to 3.1 s after the order; the pickaxe lay where it lay; it did
+    not fall; the panel said why. At its own strength it then picked the
+    same pickaxe up.
+  - **The panel's strength is the chosen miner's, with or without a
+    pickaxe:** with empty hands it takes effect at once, and is held to
+    0.3 and 3. Round with the heavy pickaxe (4.30 kg) in one hand: 12% of
+    its hold at its own strength, 23% at half, 6% at twice; it did not
+    fall. Another miner chosen: the new one has the panel's strength, and
+    the one that left is as it was built.
+  - **With no pickaxe anywhere, a miner told to mine is given none:** it
+    does nothing, none is made, and the panel says why.
+- **Tests changed with the step:**
+  - **`BoulderTests`** (five now): the pickaxe is put on the ground as
+    the panel puts it, and "Mine" has the miner pick it up first (5.0 to
+    5.1 s), go, and strike. Told to rest at its boulder and to go back,
+    each struck it again 2.6 to 3.1 s later. Small's boulder is now one
+    of ordinary height (it was the lowest of the place).
+    **New:** a body does not work where its knees would be bent too
+    deep. Long at the lowest boulder (its top 0.18 m over the ground):
+    it came to its place, bent to its work with each knee asked 41%,
+    struck nothing, left the rock 8.9 s after the order, stood up with
+    its pickaxe, did not fall, and the panel said why.
+  - **`InteractionTests`:** a resting miner with no boulder is offered
+    nothing (it was "Work here", a block). Picked up, the pickaxe is in
+    the hand 5.5 to 5.9 s after the order, and the miner stands with it
+    1.3 s later (a knee asked 57 to 96% at most as it rose).
+  - **`PhysicalFallTests`:** the weak miner whose legs give way at the
+    block is Round (it was Small, which no longer falls there in a minute
+    and a half). Its legs gave way after 23 to 27 s. Up again, it either
+    stands straight, or stands bent with a back that does not raise it;
+    then the panel says so, and at its own strength it straightens in
+    0.8 s.
+- **The bench** (`MinerPanelBench`), by its figures:
+  - **Picking up, along the slider** (three miners, three pickaxes, eight
+    strengths from 0.3 to 3: 72 tries): no fall. From 0.9 up, all picked
+    up in 3.6 to 4.0 s; Small also at 0.8 (not the heavy one); below
+    that, none. The most a knee was asked at ordinary strength: 79%
+    (Small), 81 to 102% (Long; most lifting the heavy one), 55 to 66%
+    (Round). Before the step it was 95 to 96% for all three.
+  - **At work at a boulder of ordinary height, strengths 1, 2 and 3**
+    (27 tries of six blows): 26 worked (the table in the design). Long at
+    twice its strength with the heavy pickaxe was thrown off its feet by
+    its own swing after one blow.
+  - **A weak miner at its work** (picked up at its own strength, made
+    weaker once it stood with the pickaxe; 0.5 and 0.7; 18 tries of 70 s
+    or eight blows): 13 worked, landing slower and softer (the table in
+    the design). Long at half its strength left the rock before its
+    first blow, each time (its knees). Two fell, their legs giving way
+    while they rested with the head down: Small at 0.5 with the heavy
+    pickaxe (after 34 s) and Long at 0.7 with the heavy one (after 50 s).
+    Long at 0.7 with the lighter two worked for 70 s with a knee asked
+    144 to 146% at its rests.
+  - **Weakened at the bottom of its squat** (the same bench, the
+    strength lowered to 0.5 at the moment it took hold: nine tries): all
+    nine fell 5.5 to 6.4 s after the order ("its legs cannot bear it").
+    At 0.7 one of nine did (Long, with the heavy pickaxe).
+  - **The two lowest boulders, ordinary strength** (twelve tries): no
+    fall. Small and Long left the rock before their first blow, each
+    time; Round worked at both (ten blows; at one of them a knee asked
+    101 to 102% in the blows).
+  - **Sent away from a low spot at four moments of the swing** (three
+    miners: twelve): all arrived on the walked ground. Before: Small fell
+    at two of the four.
+  - **Long at ordinary strength, five minutes at a boulder:** 35 blows,
+    15 pieces, 7 rests with its head down, no fall; its legs between 72
+    and 88% fresh throughout (resting so tires them a little, and the
+    work between rests them).
+- **Full PlayMode suite.** Five runs, each alone.
+  - **The first three** (before the changes N6 to N10): 153, 154 and
+    154 of 155 passed. Every failure was Small at the place's lowest
+    boulder in `BoulderTests` (it fell, or was still off the walked
+    ground after a fall), a different one each run.
+  - **The fourth** (with N6 to N8, and Small's boulder tests moved to a
+    boulder of ordinary height): 167 tests; 155 passed, none failed, 12
+    skipped as explicit (1,319 s).
+  - **The fifth** (with N9 and N10, and the new test of it): 169 tests;
+    156 passed, none failed, 13 skipped as explicit (1,329 s).
+  - **After it:** the numbers on the panel and in a pickaxe's name were
+    made to follow the machine's decimal sign, and the picture test's
+    and the bench's cameras moved. `MinerPanelTests` and
+    `InteractionTests` were run again: 8 of 8. The suite was not.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Read in pictures:** the panel on the screen itself, with the three
+  pickaxes on the ground and the names the space bar shows; Round
+  picking its pickaxe up, going to a boulder and striking it; Round at
+  six tenths of its strength not getting down to it; Small at the lowest
+  boulder before the changes (going round, and falling).
+- **What failed on the way** (N1 to N12 in the design).
+- **Not tested:**
+  - **The mouse on the panel.** Its buttons and slider were called, not
+    pressed. Nobody has played the build.
+  - **Another miner's pickaxe** (picked up after the miner is changed).
+  - **A weak miner's whole work for longer than 70 s.**
+  - **Picking up on a slope, beside a rock, or with something in the
+    way.**
+  - **Laying down along the slider** (only at ordinary strength).
+  - **Low rock other than the place's two domes.**
+  - **Round at the lowest boulder but one for longer than a minute**
+    (its knees are asked all they have).
+  - **Frame rates other than 50 a second.**
+  - **What it costs,** the crowd benchmark (step 12).
+  - **Luis's eye.**
