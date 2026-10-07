@@ -139,6 +139,9 @@ Luis asked for. The round's log, with before and after images, is in
 - **Each body.** The three do not swing alike. Long's pickaxe is heavy for
   Long: its upper hand is right up at the head.
 - **Tiring and resting.** Does the rest read as a rest?
+- **Its feet.** It sets them apart before the first swing and brings them
+  together to rest. With a much heavier pickaxe (`=` several times) it
+  steps to keep its feet. Does it look steady, and never wobbly?
 - **The hands on the handle,** sliding, letting go and taking hold again.
 
 **What is not there:**
@@ -147,21 +150,24 @@ Luis asked for. The round's log, with before and after images, is in
   and laying it down (step 8), any boulder by a click (step 9) and the
   panel in place of the keys (step 11) are still to come
   ([the plan](../NextMilestonePlan.md#steps)).
-- **Balance.** The hips go back to keep the weight over the feet, and that
-  is all so far: the body does not brace, step or fall yet (steps 6
-  and 10).
+- **The fall.** The body keeps its own balance: it sets its feet apart for
+  the work, leans, and steps if it must
+  ([step 6](../Design/ThePhysicalBody.md#step-6-balance-october-7)). It
+  does not fall yet (step 10). Nothing in the build pulls a miner; only a
+  pickaxe far too heavy makes it step.
 - **The pickaxe does not stop at the miner's own body,** nor at the
   lantern or the mug at the hip.
 
 **At the ends of the keys** (all three miners, the look begun as the key
-begins it; nothing breaks at any of them):
+begins it, with their balance; measured again on October 7; nothing breaks
+at any of them):
 
 | Strength | Pickaxe | What is seen |
 |---|---|---|
-| 3 | 0.4 of its weight | Fast, easy swings. The blows land at about 10 m/s (6 to 7 at ordinary strength with its own pickaxe), the hands stay at the end of the handle, the arms give 8 to 16% of what they have |
-| 3 | 3 times its weight | Much like an ordinary miner with its own pickaxe: 5.7 to 6.7 m/s; Small's and Long's upper hand a quarter of the way up the handle |
-| 0.3 | 0.4 of its weight | A weak body. The upper hand is right at the head, the back gives all it has and hardly straightens, and the blows land at 4 to 5.6 m/s |
-| 0.3 | 3 times its weight | **It cannot swing it, and what it then does is not designed yet.** Round holds the head on the block and cannot raise it. Small's and Long's pickaxe slips off the block and hangs head down from their hands in front of their legs, where nothing stops it passing through them. What a body does with a tool too heavy for it (drag it, or leave it) is step 7 |
+| 3 | 0.4 of its weight | Fast, easy swings. The blows land at 10 to 11 m/s (6 to 7 at ordinary strength with its own pickaxe), the hands stay at the end of the handle, the arms give 8 to 16% of what they have |
+| 3 | 3 times its weight | Small and Round swing it much as an ordinary miner swings its own (5.9 and 6.5 to 6.9 m/s). **Long is thrown about by its own swing:** its upper hand is at the head, it steps to keep its feet, ends a step back from the block, and goes on swinging from there (5.1 m/s). Bringing itself back to its work is step 9 |
+| 0.3 | 0.4 of its weight | A weak body. The upper hand is right at the head, the back gives all it has and hardly straightens, and the blows land at 4.0 to 5.7 m/s |
+| 0.3 | 3 times its weight | **It cannot swing it, and what it then does is not designed yet.** Small and Round hold the head on the block and cannot raise it. Long's pickaxe slips off the block and hangs from its hands, where nothing stops it passing through its legs. What a body does with a tool too heavy for it (drag it, or leave it) is step 7 |
 
 ## What changed for the game
 

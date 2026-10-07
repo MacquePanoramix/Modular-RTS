@@ -64,7 +64,16 @@
       [clip](Images/PhysicalBody/Look_InThePlace.gif)). It is still the
       bench, not mining: nothing is mined, and a boulder by a click is
       step 9.
-    - **Next:** step 6 (balance: lean, brace and step).
+    - **Step 6, balance: built** (October 7). The body keeps its own
+      balance by its real weights. At ease nothing moves. Pulled a
+      little, it leans against the pull; pulled hard, it steps and stands
+      set against it; a heavier miner takes more pulling. The miners set
+      their feet apart for the work. The knees have a strength of their
+      own. Very stable: with its own pickaxe no miner steps
+      ([clips and figures](Design/ThePhysicalBody.md#step-6-balance-october-7);
+      [the clip](Images/PhysicalBody/Balance_Round_Pulled.gif)). The fall
+      is step 10.
+    - **Next:** step 7 (holding and walking with the tool).
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

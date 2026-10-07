@@ -1419,3 +1419,89 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   the look as the key begins it, for each miner, from its side and from
   the game's camera; `-lookOut`, `-lookFrames`, `-lookStrength`,
   `-lookWeight`.
+
+## The physical body, step 6: balance — October 7
+
+- **`PhysicalBalance`** (new; `[DefaultExecutionOrder(520)]`, after the
+  hands and the back). At each step of the physics:
+  - **The body's weight:** `PhysicalBody.CentreOfMass()`, less what rides
+    on a held thing with the hands (`PhysicalHands.Rides`).
+  - **Loads:** what each arm gives the held thing, given back to the body
+    (`PhysicalHands.Gives`: its push and its link's force), and whatever
+    `Push(force, at)` was told for this step.
+  - **Where the feet must press** for the body not to be turned over
+    (moments about the ground, with what the feet bear), and from how fast
+    the weight is going, **the weight's point** (weight + speed / the
+    body's own falling rate, sqrt(g / its height)).
+  - **What it stands on:** the planted boots' lines (`ProceduralBiped.Sole`),
+    their shape from above, reaching a boot's half-width round it.
+  - **Holding:** the feet press at the weight's point plus `Firm` (2)
+    times how far it is from where it should rest, kept inside what it
+    stands on. The weight then falls away from where they press. The
+    hips' lean is whatever puts the weight where that has it.
+  - **At ease:** it rests anywhere within 12% of a boot's length of where
+    this body carries its weight (`PhysicalBody.StandsOn`, measured once
+    when it has stood still with nothing asked of it). It leans no more
+    than it needs, and under a load that lasts keeps its own weight over
+    its feet too.
+  - **Inclining:** against a load that lasts (smoothed over 0.12 s), by
+    60% of the angle the load asks, 12 degrees at most.
+  - **Stepping:** when the point has been within 40% of a boot's
+    half-width of the edge, and not coming back, for 0.06 s. Past a
+    foot's own side, that foot; between the feet, the one behind. It lands
+    where the point will be after the step (1.1 falling times), on its own
+    side of it, no further than 0.75 hip heights from the other foot. The
+    stance becomes where the feet are and the root goes to its middle
+    (`ProceduralBiped.Shift`). The feet come together when no load has
+    lasted for 1.2 s.
+  - **A foot due to step to its place** waits (`ProceduralBiped.MayLift`)
+    until the weight is over the other foot, 0.8 s at most.
+  - **The legs:** each knee's share of what the feet bear times how far it
+    stands out beyond a straight leg's knee, against
+    `PhysicalBody.KneeNow`. Told to tiredness (`Muscles.Legs`); sets how
+    fast the hips rise (`SetRise`); over all it has, the body sinks
+    (`GaveWay`).
+  - **`Brace(wider, stagger)` and `Ease()`:** a planner's stance.
+    `Margin`, `LeastMargin`, `MostLean`, `Steps`, `Lean`, `Inclined`,
+    `LegEffort`, `Weight`, `WeightPoint`, `Presses`, `Outline`, `Mark()`.
+    `Acts = false` only measures.
+- **`ProceduralBiped`:**
+  - **`SetLean(metres, pace)`** (hips to the right and ahead),
+    **`SetTilt(degrees, pace)`**, **`Crouch(metres)`**, **`SetRise(share)`**.
+  - **`SetStance(wider, stagger)`** (the feet step to it, one at a time),
+    `StanceTaken`, `StanceMiddle`, `FootHome`.
+  - **`StepTo(foot, point, duration, out lands)`:** a step of the body's
+    own choosing; it stays where it lands.
+  - **`Shift(delta)`:** the root moves without starting a gait, and the
+    hips stay where they are.
+  - **`BowIs(degrees)` and `LeanIs(metres)`:** what moves the body on the
+    physics' clock says where it has it now. `StandsAt` then gives the
+    body as last drawn, moved by what they have done since, in place of
+    carrying the last movement forward. This is what makes the tool's
+    physics the same at any frame rate.
+  - `Sole`, `KneeOut`, `KneeOutStraight`, `LiftDue`, `Guided`, `PosedAt`,
+    `LeanPosed`, `FacingNow`.
+- **`PhysicalBody`:** `KneeCapacity`, `KneeNow` (200 N m for an ordinary
+  leg of radius 0.06, by the cube of the leg's own); `StandsOn`.
+- **`PhysicalHands`:** `Gives(hand)`, `Rides(hand)`. A link's force is
+  reported as it acts on the held thing (measured with a weight hanging
+  from such a link).
+- **`PhysicalBack`:** leaves the hips to the balance when there is one;
+  tells the body where the bow is (`BowIs`).
+- **`PhysicalSwing`:** braces for the work (`StanceWider` 0.6 of the hips'
+  width each side, `StanceStagger` 0.1 of their height) and eases for a
+  rest. The tool's heaviness is the arms' effort over twelve steps with
+  the hands where they hold at rest (thresholds 0.28 to 0.62). The arms
+  follow the back by the back's own bow. Resting, it straightens as the
+  tool comes up; after a rest the upper hand goes back to its own place.
+  `Result.upright`: the head's speed as the tool comes down through
+  upright, read between steps.
+- **`MinerWorkPreview`:** the look with `K` gives the miner its balance.
+- **Tests:** `PhysicalBalanceTests` (four). `PhysicalBalanceBench`
+  (explicit): pulls a standing miner (`-balanceMiner`, `-balancePulls`,
+  `-balanceWay`, `-balanceFor`, `-balanceAfter`, `-balanceFrames`,
+  `-balanceView`). `PhysicalBench` takes `-benchBalance on|measure`. Both
+  write a `BALANCE` line for every pictured frame (the feet, the weight's
+  point, where the feet press), which `Art/Review/balance_clip.py` draws
+  from above under the pictures. `BalancePull` gives a pull to a balance
+  at every step.

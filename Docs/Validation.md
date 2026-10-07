@@ -2016,3 +2016,98 @@ An early part of step 11
     miner rests.
   - **A second run of the suite,** the crowd benchmark, the cost.
   - **Luis's eye.**
+
+## S3, step 6 — balance (October 7)
+
+Built on the bench and in the look with `K`
+([design](Design/ThePhysicalBody.md#step-6-balance-october-7)).
+
+- **The balance's own tests** (`PhysicalBalanceTests`, four): 4 of 4.
+  - **At ease it stands as it did:** with its balance, each miner's hips
+    move 0.0 mm in over three seconds, it takes no step, and its feet do
+    not move. Its weight's point is 109 (Small), 113 (Long) and 119 mm
+    (Round) inside its feet.
+  - **A light pull is leaned against and a hard one stepped for** (Round,
+    at the chest, two and a half seconds each):
+    - 100 N forwards: no step; hips 61 mm back against the pull; the
+      weight's point never outside its feet; standing as before within
+      10 mm some seconds after.
+    - 200 N forwards: one step, 0.09 m the way it is pulled; feet 0.26 m
+      apart while it lasts (0.19 at ease); together again after.
+    - 180 N to its right: one step, 0.17 m; feet 0.52 m apart; together
+      again after.
+  - **A heavier body is steadier:** 110 N forwards takes Small (40.7 kg)
+    three steps and 0.39 m; Round (87.6 kg) holds it with its feet where
+    they are.
+  - **The legs:** Round's knees give 3% of what they have standing, 44%
+    with the hips 0.21 m lower, 91% at half strength; it rises from that
+    in 0.34 s, and in 0.78 s at half strength; its legs were 8% spent.
+- **The physical tests** (`PhysicalBodyTests`, seven): 7 of 7, with the
+  balance in every one.
+  - **Each with its own pickaxe:** Small, upper hand 40% of the way to
+    the head, arms 42%, back 28%, 5.9 m/s; Long 100%, 69%, 31%, 5.6 m/s;
+    Round 16%, 38%, 30%, 7.0 m/s.
+  - **A miner that goes on** (Round, 32 swings): it rests once, after its
+    19th swing (39% spent, 5.5 m/s, hand 85% of the way up); then 6.0 m/s
+    at 15% spent. Its weight's point is never nearer the edge of its feet
+    than 65 mm, and it takes no step.
+  - **Frame rate:** running free, the tool comes down through upright at
+    5.81 m/s and strikes at 6.99 m/s; at 25 frames a second, 5.80 and
+    6.44 m/s. The second blows: 5.76 and 5.75 m/s through upright. The
+    speed as it strikes is read at the last step before the blow and
+    moves with when the contact is found (K3 in the design); the test now
+    holds the speed on the way down to 0.25 m/s and the speed at the blow
+    to 0.8 m/s.
+- **The tools' and the miners' tests:** the look with `K` begins, strikes,
+  takes a heavier pickaxe and ends leaving no balance on the miner.
+- **Full PlayMode suite:** 139 tests; 133 passed, none failed, 6 skipped
+  as explicit (1,212 s). This was the second run: see what failed on the
+  way.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`). After the
+  suite one more change was made, to the look with `K` alone (it ended
+  itself when a miner stepped to keep its feet; it now ends only when the
+  miner is sent somewhere). The tools' tests (3 of 3) and the build were
+  run again after it; the suite was not.
+- **The look with `K`, pictured again** (`PhysicalLookCapture`): each miner
+  where the place puts it, with its balance. Small's first blow lands at
+  5.8 m/s, Long's at 5.6 m/s, Round's at 7.0 m/s. At the four ends of the
+  keys' ranges nothing breaks
+  ([the table](Design/ThePhysicalBody.md#in-the-place-to-try-october-6)).
+  With its own pickaxe on the bench, Small's and Round's weight's point
+  stays 89 mm inside their feet. Long's goes 16 mm outside for an
+  instant, and it does not step.
+- **On the bench** (`PhysicalBalanceBench`, `PhysicalBench`):
+  - Round pulled forwards with 100, 200 and 350 N: no step; one step;
+    two steps and 0.56 m. Small with 60 N: no step, hips 80 mm; with
+    110 N: three steps. Long with 110 N: one step.
+  - Round with a pickaxe three times its weight (7.17 kg), ordinary
+    strength: upper hand at the head, arms 71 to 77%, blows at 4.1 and
+    4.2 m/s, three steps in two swings, its weight's point 57 mm outside
+    its feet at worst. At 0.6 of its strength: raised in 1.24 s at 93%,
+    a blow at 2.6 m/s; the second swing got 19% of the way up and did
+    not strike, the tool turned 109 degrees aside; no step.
+  - 21 swings with a rest: hands at most 7 mm off the handle.
+- **One fact measured:** a weight of 2 kg hanging from a link like the
+  arms' reports 19.62 N upwards: the engine gives a link's force as it
+  acts on the hanging thing. (A probe test, not kept.)
+- **Read in pictures:** each pull from the side or the front; the three
+  miners' swings from the side, with what each stands on drawn from above;
+  the look with `K` for each miner; the too-heavy pickaxe.
+- **What failed on the way** (K1 to K9 in the design). Also:
+  - The first full run of the suite failed two walking tests ("ankle
+    strayed 0.273 m", "retain at least one supporting foot"). I was
+    encoding clips on the same machine while it ran. Both classes passed
+    alone (15 of 15), and the suite was run again with nothing beside it.
+  - With the link's force taken with the wrong sign, a heavy pickaxe sent
+    the miner off in ten steps; the probe settled the sign.
+- **Not tested:**
+  - **The keys in the built game,** as before.
+  - **A slope.** Every pull and swing was on the level path.
+  - **Small and Long** pulled sideways or backwards, aimed, or tiring.
+  - **Pulls from behind** in the tests (seen once on the bench: it steps
+    back and stands set against it).
+  - **A push or pull while the miner swings.**
+  - **Balance while walking:** it lets go when the miner walks.
+  - **What it costs,** a second run of the suite on this code, the crowd
+    benchmark.
+  - **Luis's eye.**

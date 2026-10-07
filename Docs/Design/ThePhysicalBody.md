@@ -419,8 +419,8 @@ chest's.*
 
 **What is not there yet:**
 
-- **The legs have no strength of their own.** They bend and straighten at
-  a set pace, whatever they carry. Step 6.
+- **The legs' own strength** came with step 6
+  ([below](#step-6-balance-october-7)).
 - **It is not in the game's mining.** Since later on October 6 the look
   with `K` shows this swing on a block
   ([below](#in-the-place-to-try-october-6)); a boulder is step 9.
@@ -524,20 +524,151 @@ how spent the miner is and how fast the last blow landed.
   replaces the game's mining.
 
 **At the ends of the keys** (all three miners, the look begun as the key
-begins it; nothing breaks at any of them):
+begins it, with their balance; measured again on October 7; nothing breaks
+at any of them):
 
 | Strength | Pickaxe | What is seen |
 |---|---|---|
-| 3 | 0.4 of its weight | Fast, easy swings. The blows land at about 10 m/s (6 to 7 at ordinary strength with its own pickaxe), the hands stay at the end of the handle, the arms give 8 to 16% of what they have |
-| 3 | 3 times its weight | Much like an ordinary miner with its own pickaxe: 5.7 to 6.7 m/s; Small's and Long's upper hand a quarter of the way up the handle |
-| 0.3 | 0.4 of its weight | A weak body. The upper hand is right at the head, the back gives all it has and hardly straightens, and the blows land at 4 to 5.6 m/s |
-| 0.3 | 3 times its weight | **It cannot swing it, and what it then does is not designed yet.** Round holds the head on the block and cannot raise it. Small's and Long's pickaxe slips off the block and hangs head down from their hands in front of their legs, where nothing stops it passing through them. What a body does with a tool too heavy for it (drag it, or leave it) is step 7 |
+| 3 | 0.4 of its weight | Fast, easy swings. The blows land at 10 to 11 m/s (6 to 7 at ordinary strength with its own pickaxe), the hands stay at the end of the handle, the arms give 8 to 16% of what they have |
+| 3 | 3 times its weight | Small and Round swing it much as an ordinary miner swings its own (5.9 and 6.5 to 6.9 m/s). **Long is thrown about by its own swing:** its upper hand is at the head, it steps to keep its feet, ends a step back from the block, and goes on swinging from there (5.1 m/s). Bringing itself back to its work is step 9 |
+| 0.3 | 0.4 of its weight | A weak body. The upper hand is right at the head, the back gives all it has and hardly straightens, and the blows land at 4.0 to 5.7 m/s |
+| 0.3 | 3 times its weight | **It cannot swing it, and what it then does is not designed yet.** Small and Round hold the head on the block and cannot raise it. Long's pickaxe slips off the block and hangs from its hands, where nothing stops it passing through its legs. What a body does with a tool too heavy for it (drag it, or leave it) is step 7 |
+
+### Step 6: balance (October 7)
+
+Luis: "very stable", not "naturally wobbly", and yet able to trip or fall
+"if it's an extreme situation". This step is the stable part: the body now
+keeps its own balance, by its real weights. The fall is step 10.
+
+![Round pulled at the chest, at three strengths](../Images/PhysicalBody/Balance_Round_Pulled.gif)
+
+*Round stands and a rope pulls it forwards at the chest. Under each
+picture, the same moment from above: its boots, where they press on the
+ground (the ring), and its weight's point (the dot; red when it is outside
+the boots).*
+
+**How it works.** At every step of the physics the body works out:
+
+- **where its weight is,** from its own parts as they are posed;
+- **what loads it:** what its hands give a held thing, and whatever pulls
+  or pushes it;
+- **the weight's point:** the place on the ground its feet must be able to
+  press on to stop it, going as it is.
+
+**What it then does** is the ladder of [section 2](#the-design-stable-until-the-physics-says-otherwise),
+each rung only when the one before is not enough:
+
+| Rung | What is seen | When |
+|---|---|---|
+| **At ease** | Nothing. It stands exactly as it did | The weight's point is where this body carries its weight |
+| **Lean** | The hips move and the whole body inclines against the load. The feet stay | The point is inside the feet, but not at ease |
+| **Brace** | The feet go apart for the work (the left a little ahead), before the first swing | A planner says an effort is coming |
+| **Step** | A foot goes to where the weight's point will be when it lands, and the body goes over it. The feet stay apart while the load lasts, then come together | The point reaches the edge of the feet and is not coming back |
+
+**Round (87.6 kg), pulled at the chest for two and a half seconds:**
+
+| Pull | What it does | Its weight's point |
+|---|---|---|
+| None | Nothing: its hips move 0.0 mm | 119 mm inside its feet |
+| 100 N forwards | Leans back against it; hips 6 to 8 cm back; no step | Never nearer the edge than 77 mm |
+| 200 N forwards | One step (9 cm on), then holds with its feet apart, leaning back. Its feet come together when the rope lets go | 13 mm outside, for a moment |
+| 350 N forwards | Dragged two steps (0.56 m), into a long stride | 24 cm outside |
+| 180 N to its right | One step out to that side (17 cm); stands wide (52 cm between its feet, 19 at ease) | |
+
+![Pulled to its right](../Images/PhysicalBody/Balance_Round_PulledAside.gif)
+
+**What makes one body steadier than another is real.** The same pull, 110 N
+forwards:
+
+| | Weighs | What it does |
+|---|---|---|
+| Small | 40.7 kg | Three steps, 0.39 m |
+| Long | 58.5 kg | One step, 0.09 m |
+| Round | 87.6 kg | Leans; no step |
+
+![The same pull on the three](../Images/PhysicalBody/Balance_ThreeMiners.gif)
+
+**At the work.** The miners now set their feet apart before the first
+swing, and keep their own balance through it.
+
+![The swing, with what each stands on](../Images/PhysicalBody/Swing_ThreeMiners_Balance.gif)
+
+- **With its own pickaxe** no miner steps. Round's and Small's weight's
+  point stays 65 mm or more inside their feet. Long's, whose pickaxe is
+  heavy for it, goes 16 mm outside for an instant and comes back. The
+  hips go back as the body bows, by the same physics, where a rule put
+  them before.
+- **With a pickaxe three times its weight** (7.2 kg) Round swings it, the
+  upper hand right at the head, and takes three steps in two swings to
+  keep its feet.
+- **When it has stepped, it goes on swinging from where it stands.** The
+  block does not follow it, and it does not go back to the block. Finding
+  its place at the rock again is step 9.
+
+![A pickaxe three times too heavy](../Images/PhysicalBody/Balance_Round_Heavy.gif)
+
+**The legs have a strength of their own** (a first setting, like the
+arms'). A knee holds up its share of what the feet bear, and works harder
+the more it is bent.
+
+| Round | Its knees give |
+|---|---|
+| Standing | 3% of what they have |
+| Knees bent, hips 21 cm lower | 44% |
+| The same at half strength | 91% |
+
+- **Bent knees tire the legs;** straight ones do not.
+- **Weaker legs raise the body more slowly:** 0.34 s from that bend at
+  ordinary strength, 0.78 s at half.
+- **Knees asked for more than they have give way,** and the body sinks
+  until they can hold it.
+
+**What changed in what Luis has seen:**
+
+- **The stance at work:** feet apart and the left a little ahead, where
+  they stood together.
+- **Small's upper hand** is now 40% of the way to the head (it was 26%).
+  Round's and Long's are as they were (16% and 100%). See K1 below.
+- **Round rests sooner:** after its 19th swing, where it was its 26th. At
+  rest the pick's head used to lie on the block, which carried some of
+  its weight; the arms now carry all of it.
+
+**What the step found:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| K1 | With the balance in, Round's upper hand went to 85% of the way up the handle, where it had been 19% | The hand's place came from how heavy the tool felt, and that was measured with the hand already moved: it fed on itself. A centimetre's change in how the body stood tipped it | The heaviness is taken with the hands where they hold at rest, before the upper hand moves |
+| K2 | At 25 frames a second the blow landed up to 0.9 m/s slower | The tool's physics saw the body as it was last drawn: in 40 ms stairs | The back and the balance tell the physics where they have the body at each step. The tool now comes down at the same speed at any frame rate (5.80 and 5.81 m/s through upright) |
+| K3 | The blow's speed still differs by up to 0.6 m/s between runs | It is read at the last step before the blow, and the head gains about 0.7 m/s in a step. Whether the engine finds the contact a step sooner or later is a matter of millimetres | The speed on the way down is measured between steps as well, and that is what is compared |
+| K4 | Bringing its feet together, the body lurched 10 cm towards the lifted foot | A foot was lifted with weight on it | The weight goes over the other foot first; then the foot lifts |
+| K5 | Pulled sideways, it crossed its legs and ended with its feet together | The foot that was behind stepped across | Going out past a foot's own side, that foot steps out, and the body ends set wide |
+| K6 | When a rope it leaned against let go, it lurched back and to the side | It had leaned its own weight outside its feet, trusting the rope | It keeps its own weight over its feet too, where it can |
+| K7 | Given its balance, Long shifted 2 cm forwards standing still | Long stands with its weight further back on its feet than the others | Each body's own way of standing is measured, and that is where it is at ease. All three now move 0.0 mm |
+| K8 | Dragged, it shuffled in half steps and drifted sideways | A step's reach was counted from where the foot was, so the foot behind only came level | A step lands as far as it reaches from the other foot |
+| K9 | Standing up to rest, the upper hand came 54 mm off the handle | The back straightened before the tool had come up, and arms do not reach a tool on the block from upright | It straightens as the tool comes up (7 mm) |
+
+**What is not there yet:**
+
+- **The fall.** When no step can catch it, it goes on stepping. Step 10.
+- **Balance while walking.** Walking, the walk carries the body as before.
+  Step 7.
+- **The legs' strength is a first version:** the knees' effort, their
+  tiredness, how fast they raise the body, and giving way. Hips and ankles
+  have no strength of their own.
+- **The pickaxe does not stop at the miner's own body,** as before.
+- **What it costs** has not been measured again.
+
+**Open:**
+
+- How firmly it holds itself, and how soon it steps (first settings).
+- The stance for the work: how far apart, and which foot ahead.
+- How far the body inclines against a load.
 
 **What is not there yet** (of the bench, step 2):
 
 - **The swing's plan was rough,** the back as strong as it liked, and only
   Round had been tried. Steps 3 and 4 answered these (above).
-- **Balance is measured only as far as the hips going back.** Step 6.
+- **Balance** came with step 6 ([above](#step-6-balance-october-7)).
 - **The pickaxe does not yet stop at the miner's own body.**
 - **It is not in the game's mining:** it can be tried on a block with `K`
   ([above](#in-the-place-to-try-october-6)).
