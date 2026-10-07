@@ -1505,3 +1505,55 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   point, where the feet press), which `Art/Review/balance_clip.py` draws
   from above under the pictures. `BalancePull` gives a pull to a balance
   at every step.
+
+## The physical body, step 7: holding and walking with the tool — October 7
+
+- **`PhysicalCarry`** (new): how a body holds a tool it is not working
+  with. Enabled in place of `PhysicalSwing` (one of the two plans at a
+  time).
+  - **`Asks`:** the tool's weight over `PhysicalBody.HoldOf(0)`.
+  - **`Way.OneHand`** (while `Asks` is at most 0.5): the upper hand goes to
+    the head's end of the handle, the lower lets go, and the tool is held
+    at `AtSide` (the same place as the swing's rest, now a static helper
+    here). The back stands up as the tool comes.
+  - **`Way.Dragged`** (above 0.5; back to one hand under 0.3): the right
+    hand goes to the lowest grip and holds the tool by that end
+    (`PhysicalHands.WantEnd`), 0.8 of the tool's length above the ground
+    walking (0.97 standing), under its shoulder. `stoop` grows while the
+    arm is short of that (to 52 degrees), then the knees bend (to 0.12 of
+    the hips' height). `Pull`: what the hand gives the tool along the
+    way it walks, smoothed. `Pace` = 1 - pull / (0.3 x its weight x its
+    strength x how fresh its legs are), given to `UnitMotor.SetMovementRate`.
+  - **`Way.Left`:** under 0.12 of its pace for 2 s while it means to walk,
+    or the tool slipped from its hand: `Leave()` drops it; `Lies` is the
+    tool on the ground.
+- **`PhysicalHands`:**
+  - **A hand's hold has a most** (`PhysicalBody.HoldOf`): a push is scaled
+    to it like the other joints, and it is part of the arm's effort
+    (`Hold(hand)`).
+  - **`WantEnd(hand, place)`:** one hand holds the thing by its grip and
+    means that point to be at a place; no turning; the other hand lets
+    go. The hand holds up its end's share of the weight (by where the
+    head and the centre are, taken as resting on the ground).
+    `Trailing`.
+  - **Slipping:** a hand that gives more than 1.5 times its hold (its
+    push and its link together) for 0.3 s lets go; from its last hand the
+    thing falls (`Slipped`).
+  - The arms' links are placed for where the body will be at the end of
+    the step.
+- **`ProceduralBiped.StandsAt`:** when the back or the balance says where
+  it has the body, the body also goes on with its measured walking speed
+  (`VelocityNow`).
+- **`PhysicalBalance`, walking:** the hips go against a load that lasts
+  by half of what it shifts the weight, and the body inclines against it
+  as it does standing. It does not step while the miner walks.
+- **`PhysicalSwing.TakeUp()`:** from however the tool is held, the hands
+  go back to their places and the swing begins at its recovery. A swing
+  is recorded only when one was made.
+- **`MinerWorkPreview`:** `Carrying`, `Carry`. Sent somewhere while at
+  work, the block goes, the swing is disabled and the carry enabled. `K`
+  while carrying: `WorkHere()` (a block where it stands, `TakeUp`).
+- **Tests:** `PhysicalCarryTests` (four); the look's test walks each
+  miner with its pickaxe and puts it to work again. `PhysicalCarryBench`
+  (explicit): `-carryMiner`, `-carryStrengths`, `-carryWeights`,
+  `-carryWalk`, `-carryFrames`, `-carryView`.

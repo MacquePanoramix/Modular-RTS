@@ -128,6 +128,13 @@ Luis asked for. The round's log, with before and after images, is in
    last blow landed.
 5. Leave it working. After a while it tires: it stands up, rests with the
    pickaxe in one hand at its side, and goes on.
+6. Send it somewhere while it works (a right click on the ground). It
+   takes its pickaxe with it, in one hand at its side. `K` where it stops
+   puts it to work again, on a block there.
+7. Make it weak and its pickaxe heavy (`,` and `=` a few times each) and
+   send it somewhere again. When the pickaxe asks more than half of its
+   hand's hold, it drags it by the end of the handle, bent over, and walks
+   slower. The line at the foot of the screen says which.
 
 **What to look at:**
 - **Weight.** Does the pickaxe look as if it weighs something, going up and
@@ -143,6 +150,8 @@ Luis asked for. The round's log, with before and after images, is in
   together to rest. With a much heavier pickaxe (`=` several times) it
   steps to keep its feet. Does it look steady, and never wobbly?
 - **The hands on the handle,** sliding, letting go and taking hold again.
+- **Walking with it.** Does the pickaxe look carried, with a weight of its
+  own? Does the drag read as a body with a tool too heavy for it?
 
 **What is not there:**
 - **It is not mining.** Nothing is mined, the block is put where the miner

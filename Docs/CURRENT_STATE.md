@@ -76,7 +76,15 @@
       ([clips and figures](Design/ThePhysicalBody.md#step-6-balance-october-7);
       [the clip](Images/PhysicalBody/Balance_Round_Pulled.gif)). The fall
       is step 10.
-    - **Next:** step 7 (holding and walking with the tool).
+    - **Step 7, holding and walking with the tool: built** (October 7).
+      Each miner walks with its own pickaxe in one hand at its side. One
+      too heavy for its hand's hold is dragged by the end of its handle,
+      the body stooping and walking slower; one it cannot move, it
+      leaves. A tired arm drags what it carried. In the look with `K`, a
+      miner sent somewhere takes its pickaxe along, and `K` there puts it
+      to work again
+      ([clips and figures](Design/ThePhysicalBody.md#step-7-holding-and-walking-with-the-tool-october-7)).
+    - **Next:** step 8 (the interaction click and the small actions).
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

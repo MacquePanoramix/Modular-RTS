@@ -2111,3 +2111,78 @@ Built on the bench and in the look with `K`
   - **What it costs,** a second run of the suite on this code, the crowd
     benchmark.
   - **Luis's eye.**
+
+## S3, step 7 — holding and walking with the tool (October 7)
+
+Built on the bench and in the look with `K`
+([design](Design/ThePhysicalBody.md#step-7-holding-and-walking-with-the-tool-october-7)).
+
+- **The carry's own tests** (`PhysicalCarryTests`, four): 4 of 4.
+  - **Each miner walks with its own pickaxe in one hand** (3.5 m): held
+    in the left hand alone; at its own pace; a hand never more than 1 mm
+    off the handle; the hand gives 15% (Small), 24% (Long) and 14%
+    (Round) of its hold on average; the tool's lowest part never lower
+    than 0.44, 0.66 and 0.59 m over the ground.
+  - **A tool too heavy for its hand is dragged** (Round at 0.35 of its
+    strength, its pickaxe three times as heavy): dragged from the start,
+    by the right hand alone; the tool's lowest part 0.00 m over the
+    ground on average as it walks; it pulls with 30 N at most and keeps
+    66% of its pace at its slowest; it gets there, later.
+  - **A tired arm drags what it carried** (Long, its pickaxe 2.9 times as
+    heavy, 6 m): one hand at first, dragged by the end.
+  - **What it cannot move it leaves** (Long at 0.12 of its strength, its
+    pickaxe three times as heavy): dragged, then left; the pickaxe lies
+    on the ground; the miner walks on to where it was sent.
+- **The look's test** (`MinerToolTests.TheLookAtTheWorkBeginsAndEndsCleanly`):
+  for each miner, after its first blow it is sent 2 m off: the block
+  goes, it arrives with its pickaxe in one hand, `K` there sets a new
+  block and it strikes it; the look then ends leaving nothing on the
+  miner (no carry either).
+- **The physical and balance tests:** 7 of 7 and 4 of 4. Swings are now
+  compared by the speed on the way down (K3, C6): the tired miner comes
+  down through upright at 5.81 m/s fresh, 4.82 m/s before its rest and
+  5.57 m/s after it.
+- **Full PlayMode suite:** 144 tests; 137 passed, none failed, 7 skipped
+  as explicit (1,283 s). This was the third run: see what failed on the
+  way.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **On the bench** (`PhysicalCarryBench`, 4 m along the path):
+  - **Their own pickaxes:** in one hand; 1.16 (Small), 1.26 (Long) and
+    1.18 m/s (Round) over the 3.84 m, setting off and stopping included
+    (their paces are 1.27, 1.38 and 1.28 m/s); the hand gives 12%, 21%
+    and 11% of its hold on average; hands at most 1 mm off the handle;
+    the hips lean 24 to 25 mm at most.
+  - **Round at 0.35 of its strength, 7.17 kg:** dragged; 0.82 m/s; at its
+    slowest 47% of its pace, pulling 47 N; the hand gives 68% of its hold
+    and the arm 86% of what it has, on average; the tool's lowest part
+    19 mm over the ground and the hand 0.35 m up, on average; its right
+    arm 20% spent after the 4 m.
+  - **Small at 0.3, 4.51 kg:** dragged; 0.68 m/s; slowest 22% of its
+    pace, pulling 28 N; the tool's lowest part 19 mm over the ground.
+- **Read in pictures:** each miner walking with its own pickaxe, from its
+  left; Round, Small and Long dragging, from low at the side.
+- **What failed on the way** (C1 to C6 in the design). Also:
+  - The first drag bent the knees and the miner squatted along; the tool
+    held by its end with the arm hanging did not reach the ground and
+    swung like a pendulum (its lowest part 0.11 m up on average).
+  - **A walking test that was not this step's.** The laptop was shut
+    down during the first full run. In the second,
+    `MinerTests.EachMinerWalksToTheDoorOnItsOwnBones` failed ("Round's
+    modelled ankle strayed 0.469 m"), and again alone (0.429 m, then
+    Small 0.158 m). On step 6's code, which had passed that morning, the
+    same class passed once and failed once (Small, 0.455 m): the laptop
+    was in use, and the test compared the bones with the solved feet
+    before the frame's pose, when the root has already walked on. A
+    stalled frame then reads as feet that stray: 0.43 m is Round's pace
+    times Unity's longest frame (0.333 s). The test now reads after the
+    body is posed; the class passed three runs in three (8 of 8). Its
+    limit (0.09 m) is unchanged.
+- **Not tested:**
+  - **The keys and move orders in the built game,** as before: the look
+    was driven through the same calls in the editor.
+  - **A slope,** a turn while dragging, a long walk (more than 6 m).
+  - **Going back from dragging to carrying** when strength returns.
+  - **The moment a heavy tool is taken to drag:** the hand is 25 to 46 mm
+    off the handle for an instant (measured, left: C4).
+  - **What it costs,** the crowd benchmark.
+  - **Luis's eye.**

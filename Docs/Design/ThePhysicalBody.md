@@ -504,7 +504,8 @@ strength.*
 
 | Key | What it does |
 |---|---|
-| `K` | The chosen miner bows, a block stands before it, and it takes up its pickaxe and works on the block. `K` again (or walking it away, or choosing another miner) puts the block and the pickaxe away |
+| `K` | The chosen miner bows, a block stands before it, and it takes up its pickaxe and works on the block. `K` again (or choosing another miner) puts the block and the pickaxe away |
+| A move order while it works | It takes its pickaxe with it, held as its strength allows (since October 7). `K` where it comes to puts it to work again there |
 | `,` and `.` (the two keys right of `M`) | Weaker and stronger, a quarter at a time, from 0.3 to 3 times ordinary. It takes effect at once |
 | `-` and `=` (the two keys right of `0`) | A lighter and a heavier pickaxe, from 0.4 to 3 times its own weight. The miner takes it up afresh |
 
@@ -650,8 +651,8 @@ the more it is bent.
 **What is not there yet:**
 
 - **The fall.** When no step can catch it, it goes on stepping. Step 10.
-- **Balance while walking.** Walking, the walk carries the body as before.
-  Step 7.
+- **Balance while walking** came with step 7 (below): the body leans and
+  inclines against a load; it does not step for its balance while it walks.
 - **The legs' strength is a first version:** the knees' effort, their
   tiredness, how fast they raise the body, and giving way. Hips and ankles
   have no strength of their own.
@@ -668,6 +669,84 @@ Luis saw the clips; the build has not been tried.
 - How firmly it holds itself, and how soon it steps (first settings).
 - The stance for the work: how far apart, and which foot ahead.
 - How far the body inclines against a load.
+
+### Step 7: holding and walking with the tool (October 7)
+
+A tool has weight when it is carried too. How a miner holds its pickaxe
+when it is not working, and whether it can walk off with it at all, now
+comes from its strength.
+
+![The three miners walking with their own pickaxes](../Images/PhysicalBody/Carry_ThreeMiners.gif)
+
+*Each with its own pickaxe, at ordinary strength: in one hand at its side.*
+
+**What decides it is the hand's hold.** A hand's grip has a most it can
+give, like every other joint (an ordinary grown hand: 400 N, by the arm's
+own thickness and the body's strength, less what the arm has spent).
+
+| How it is held | When | What is seen |
+|---|---|---|
+| **Carried in one hand** | Holding the tool's weight asks no more than half of the hand's hold | At the body's side, held at its balance point, level, the arm hanging. It walks at its own pace |
+| **Dragged** | It asks more than half | The hand takes the end of the handle. The body stoops from the back until its hand is low enough for the pick's head to lie on the ground, and pulls it along. It walks slower, by how hard the pull is for it |
+| **Left** | It cannot move it, or it slips from its hand | It lets go. The pickaxe lies where it fell, and the miner walks on |
+
+![Round and Small, weak, with pickaxes three times as heavy](../Images/PhysicalBody/Carry_Round_Dragged.gif)
+
+*Round and Small at about a third of their strength, their pickaxes three
+times as heavy (7.2 and 4.5 kg): too much for a hand, so they are
+dragged.*
+
+**Walking four metres along the path:**
+
+| | Holding it asks | How | Pace |
+|---|---|---|---|
+| Small, its own pickaxe (1.5 kg) | 8% of its hand's hold | One hand | Its own (1.27 m/s) |
+| Long, its own (3.2 kg) | 15% | One hand | Its own (1.38 m/s) |
+| Round, its own (2.4 kg) | 6% | One hand | Its own (1.28 m/s) |
+| Round at 0.35 of its strength, 7.2 kg | 55% | Dragged | 0.82 m/s; at its slowest 46% of its pace, pulling 47 N |
+| Small at 0.3, 4.5 kg | 75% | Dragged | 0.68 m/s; slowest 22% |
+| Long, 9.3 kg, ordinary strength | 39% fresh, more as its arm tires | One hand, then dragged | |
+| Long at 0.12, 9.6 kg | far more than it has | Dragged, then left | Walks on without it |
+
+- **A tired arm drags what it carried.** Nothing was added for that: a
+  spent arm holds less, so the same weight asks more of it.
+- **Balance while walking.** The hips go against a load that lasts and the
+  body inclines against it, walking as standing (2.4 cm with its own
+  pickaxe at one side).
+- **A hold can be overcome.** A hand asked for more than its hold for a
+  third of a second loses what it holds.
+
+**In the build.** In the look with `K`, a miner sent somewhere while it
+works now takes its pickaxe with it. `K` where it comes to puts it to work
+again, on a block there. `K` at work puts everything away, as before.
+
+**What the step found:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| C1 | The plan had "in two hands" between one hand and dragging | A pickaxe's weight is at its head. The hand under the head carries all of it, and a second hand further down the handle can only steady it | Not built. A tool too heavy for one hand is dragged |
+| C2 | Held by the end of its handle with the arm hanging, the tool swung under the hand and did not drag | The miners' pickaxes are about as long as their hands hang high: the head did not reach the ground | The body stoops until its hand is low enough. (A first try bent the knees instead, and the miner squatted along: not how a person drags) |
+| C3 | A grip had no limit: any weight could be held | Only the shoulder, the elbow and the wrist had one | The hand's hold has its most, and is part of the arm's effort and tiredness |
+| C4 | Taking a heavy tool to drag it, the hand is 25 to 46 mm off the handle for a moment | When the other hand lets go, the head drops, and the handle turns fast in the one hand | Left, and measured. Step 8 lays a tool down under control, and this will use that |
+| C5 | Standing with a tool it drags, Round stays a little stooped | Its pickaxe is shorter than its hand hangs high, so the hand must come down to keep the head on the ground | Left: setting it down and standing up is step 8 |
+| C6 | Two swings alike differed by 0.55 m/s in a test | K3 again: the speed at the blow moves with when the contact is found | The tests compare swings by the speed on the way down |
+
+**What is not there yet:**
+
+- **Over the shoulder.** It is how a heavy pickaxe is really carried: the
+  shoulder's bones bear it and a hand only steadies it. It needs the tool
+  to rest on the body, and tools do not touch the body yet. Not in the
+  plan; a proposal for Luis.
+- **Taking a left tool up again,** and laying one down on purpose: step 8.
+- **The legs' effort while walking** (stooped, or loaded): it is counted
+  standing only.
+- **A slope,** and sharp turns while dragging.
+
+**Open:**
+
+- The share of a hand's hold at which a tool is dragged (a half).
+- How hard a body can pull, walking (three tenths of its weight).
+- Whether a heavy pickaxe goes over the shoulder.
 
 **What is not there yet** (of the bench, step 2):
 
