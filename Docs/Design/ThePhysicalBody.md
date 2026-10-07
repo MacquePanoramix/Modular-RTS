@@ -545,7 +545,8 @@ at any of them):
 
 Luis: "very stable", not "naturally wobbly", and yet able to trip or fall
 "if it's an extreme situation". This step is the stable part: the body now
-keeps its own balance, by its real weights. The fall is step 10.
+keeps its own balance, by its real weights. The fall came with step 10
+([below](#step-10-the-fall-and-getting-up-october-7)).
 
 ![Round pulled at the chest, at three strengths](../Images/PhysicalBody/Balance_Round_Pulled.gif)
 
@@ -660,7 +661,8 @@ the more it is bent.
 
 **What is not there yet:**
 
-- **The fall.** When no step can catch it, it goes on stepping. Step 10.
+- **The fall** came with step 10 (below): when its steps do not catch
+  it, it is let go.
 - **Balance while walking** came with step 7 (below): the body leans and
   inclines against a load; it does not step for its balance while it walks.
 - **The legs' strength is a first version:** the knees' effort, their
@@ -1119,6 +1121,160 @@ Then it takes the pickaxe up again.*
 boulder should get smaller and run out; whether "Mine" should end by
 itself; the rest with the head down (new, and also seen with `K` at the
 block when Long works there).
+
+### Step 10: the fall, and getting up (October 7)
+
+Luis: "I want characters to be very stable, but for them to still
+technically have these possibilities of tripping in this, like,
+ragdoll-ish way if it's an extreme situation that calls for it." The
+plan called this the riskiest step, to be "shown as clips before it is
+trusted". Nothing here is Locked.
+
+![The three miners shoved over: they fall, lie, and get up](../Images/PhysicalBody/Fall_ThreeMiners.gif)
+
+*Small and Long shoved backwards, Round forwards: each goes down into a
+crouch as it falls, lies, gathers itself, and gets up.*
+
+![Round pulled off its feet by a rope](../Images/PhysicalBody/Fall_Round_Pulled.gif)
+
+*Round pulled at the chest with four fifths of its own weight: its steps
+do not catch it, and it goes down. The rope drags it on until it lets go;
+then it lies, and gets up.*
+
+![Small, weak, with a pickaxe far too heavy: its legs give way](../Images/PhysicalBody/Fall_Small_AtWork.gif)
+
+*Small at half its strength, with a pickaxe three times its weight, in
+the look with `K`: after about twenty seconds of work its legs give way.
+It lets the pickaxe go, lies, and gets up.*
+
+**When it falls** (rung 4 of the ladder of balance; never by chance):
+
+| | What decides it |
+|---|---|
+| **Its steps are not catching it** | Two steps in a row have had to land further from the other foot than a step reaches (a stumble, then another) |
+| **No step reaches** | One step would have to land two and a half times a step's reach away |
+| **Its weight has been outside its feet too long** | 2.2 s at a stretch, whatever it did |
+| **Its legs cannot bear it** | Its knees have given way as far as they go and are still asked for more than they have, for 0.3 s |
+
+**How much it takes.** A pull at the chest, coming on in a third of a
+second and held for a second and a half:
+
+| | Small (41 kg) | Long (58 kg) | Round (88 kg) |
+|---|---|---|---|
+| It only steps | 100 N | 100 to 150 N | up to 250 N |
+| It stumbles, and keeps its feet | 150 N | 250 N | |
+| It falls | from 250 N | from 350 N | from 350 N (as the rope lets go), at once from 700 N |
+
+So each keeps its feet against a pull of a quarter of its own weight, and
+goes down under four fifths of it (the tests hold it to both). In
+between it depends on the body: Small and Long go down from about three
+fifths; Round, heavier and lower, is dragged along stepping and goes
+over when the rope lets go. In ordinary work, with a pickaxe a miner can
+manage, none of this is reached.
+
+**What falls.** While a body can keep its feet it is posed, as before.
+Let go, it is eleven solid parts with the weights it was weighed at
+(step 1), jointed where a body is jointed, each joint turning only as
+far as that joint turns: the hips, the trunk, the head, and on each side
+an upper arm, a forearm with its hand, a thigh, and a shin with its
+boot. They are made where the posed body is at that moment, moving as
+it was moving. From then on the posed body's own segments are put where
+those parts are, so the model, its coat and what hangs on it follow the
+fall.
+
+**It holds itself as it falls.** Each joint is held towards a pose that
+protects the body, as hard as that joint's own strength allows (what is
+left of it, tired as it is), and no harder:
+
+- **It goes down into a crouch** (knees, hips and trunk bent), which
+  brings its weight low before it lands.
+- **Its arms go out** towards the ground it is falling to.
+- **Its head is kept from the ground:** back when it falls on its front,
+  forward when it falls on its back.
+- **Lying still, it lets go** (a twentieth of its strength), and lies
+  easy.
+
+| Shoved over (250 N for 0.3 s) | Limp, as first built | Holding itself |
+|---|---|---|
+| The fastest any part moved | 4.4 to 6.2 m/s | 2.8 to 4.8 m/s |
+| Its head came down at | 3.0 to 5.5 m/s | 1.3 to 3.9 m/s |
+
+**Getting up:**
+
+1. **It lies** at least 1.2 s.
+2. **It gathers itself:** the same crouch, with its own strength, where
+   it lies (still in the physics). On its front it draws its knees under
+   it; on its back it curls.
+3. **The posed body takes over** from there in 0.9 s, crouched at that
+   place: each part goes from where the physics left it to where the
+   posed crouch has it. It comes up facing the way a body would: towards
+   its head if it lay on its front, towards its feet if on its back.
+4. **It stands up at its legs' own pace.**
+
+- **Only from a crouch its legs can raise it from.** The crouch is found
+  on the posed body itself: the deepest in which its knees would give no
+  more than 55% of what they have now (no deeper than half its hips'
+  height). If there is none of even a tenth of its hips' height, it lies
+  down again and its legs rest 2.5 s before it tries again.
+- **Where it was thrown, it is off the walked ground,** and comes back
+  to it before it goes anywhere (step 9's last steps).
+
+| Let go and shoved | Small | Long | Round |
+|---|---|---|---|
+| Down (falling, lying, gathering itself) | 3.3 to 4.7 s | 3.4 to 4.5 s | 3.3 to 3.7 s |
+| Then up and standing | 1.4 s | 1.7 s | 1.5 s |
+| From where it lay | 0 to 0.19 m | 0.02 to 0.06 m | 0.02 to 0.05 m |
+| It rose from a crouch | 0.30 m deep | 0.46 m | 0.35 m |
+
+**At its work** (the look with `K`, and at a boulder):
+
+- **A miner given its physical work can fall.** When it does, its pickaxe
+  leaves its hands and lies where it falls, and its work is over. Up
+  again with its hands empty, the look ends by itself, as when a pickaxe
+  is laid down. The pickaxe can be picked up with the click.
+- **What makes it fall there:** only something extreme. At half strength
+  with a pickaxe three times its weight, Small's and Round's legs gave
+  way after about 22 s of work. Each lay, got up 6 to 7 s later from a
+  crouch 0.14 and 0.15 m deep (its legs spent), and stood.
+
+**What the step found:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| F1 | It fell like a plank, its arms hanging | The joints' bending limits were the wrong way round (the engine measures a joint's bending opposite to the part's own turn), so knees, hips and elbows were pinned straight, and the hold could not bend them | The limits are the right way round |
+| F2 | Limp, it crumpled into a heap, its legs through its trunk | No part struck another, and nothing held the joints | Its joints are held with its own strength; a shin, a thigh and a forearm strike the trunk and the head |
+| F3 | Lying on its back, its legs went up and down, without end | Lying, it let go and its legs dropped; a dropping leg counted as falling again, so it held itself again | Once it lies, only its hips, trunk or head moving fast is a fall. Lying is judged by those too |
+| F4 | It fell at the moment a rope let go, where it used to step back and stand | One step's reach was judged by where the weight was predicted to go, which jumps when a load vanishes | A fall takes two short steps in a row, or one hopelessly short |
+| F5 | It got up facing the wrong way: on its back, towards its head | It faced the way its hips faced, and hips tilt with the knees up | It comes up towards its feet from its back, towards its head from its front |
+| F6 | Weak, with its legs spent, it fell, got up, and fell again, over and over | It was stood in a deep crouch whatever its legs had left | It gets up only from a crouch its legs can raise it from, and rests them until there is one |
+| F7 | That crouch was still too deep (Long's knees were asked for 1.2 times what they had) | Worked out from the legs' lengths, it was wrong by half; and the knees' giving way from before the fall was still counted | It is found on the posed body itself; what the balance had done before the fall is forgotten |
+| F8 | A pull on a body that was getting up broke the game's step | The parts were gone, and the pull still went to them | A force on a rising body is lost on it |
+
+**What is not there yet:**
+
+- **How it gets from lying to its crouch is not all physics.** It curls
+  by its own strength, in the physics; then, for 0.9 s, its parts are
+  moved to the posed crouch. Its hands pushing it off the ground are not
+  forces.
+- **A body too weak to raise itself stays down,** trying every few
+  seconds.
+- **What it holds in its hand** (the lantern, the mug) goes back to its
+  hook at once when it falls. It is not dropped.
+- **Its own parts mostly pass through each other** (only the shins,
+  thighs and forearms strike the trunk and the head). The pickaxe it
+  dropped can strike it.
+- **Nothing in the build pushes or pulls a miner.** A fall comes only
+  from its own work, when that is far too much for it; the rope is the
+  bench's.
+- **Tripping over something** (a stone, another miner, a step in the
+  ground), **being struck,** and **falling while walking** are not built.
+- **It is not hurt,** and getting up costs it nothing.
+- **Falls on a slope, against a rock, or from a height** have not been
+  tried.
+
+**Open:** when it should fall (every figure in the first two tables);
+how hard it holds itself; how long it lies; whether a fall should cost
+it something; the getting up.
 
 **What is not there yet** (of the bench, step 2):
 

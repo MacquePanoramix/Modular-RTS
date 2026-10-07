@@ -1710,3 +1710,61 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
 - **Tests:** `BoulderTests` (four). `PhysicalRockBench` (explicit):
   `-rockOut`, `-rockMiner`, `-rockMine`, `-rockBlows`, `-rockFor`,
   `-rockView`, `-rockSize`, `-rockStrength`.
+
+## The physical body, step 10: the fall, and getting up — October 7
+
+- **`PhysicalFall`** (new; order 40: after `ProceduralBiped` poses, before
+  `MinerBody` turns the bones). States: Up, Falling, Lying, Gathering,
+  Rising.
+  - **`LetGo()`:** what it holds is dropped (`PhysicalHands.Drop`,
+    `ThingsInHand` off); the balance stops acting; eleven `Rigidbody`
+    parts are made from the posed body's own segments
+    (`MinerBody.Solved`) with the masses of `PhysicalBody`'s parts
+    (hips, trunk, head, upper arms, forearms with hands, thighs, shins
+    with boots), each moving as its segment was. Capsules, a sphere for
+    the head, a box for each boot.
+  - **Joints** (`ConfigurableJoint`): each is made with its part put as
+    the body stands straight, so the joint's own rest is standing; then
+    the part is put back. Limits per joint (waist, neck, shoulder, elbow,
+    hip, knee). The engine measures a joint's bending the other way round
+    from the part's own turn: the X limits are given negated.
+  - **The hold** (`Holds`, every step): a slerp drive on each joint
+    towards a pose, its spring giving all the joint's strength at 35
+    degrees from the pose, its damper 12% of that for each radian a
+    second, never more than the strength. The strengths are
+    `PhysicalBody`'s (knee, back, shoulder, elbow: what is left of
+    them), a hip 1.5 knees, a neck 3 times the head's own turning weight.
+    `Tone`: 1 falling and gathering, 0.05 lying.
+  - **Lying:** hips, trunk and head slower than 0.2 m/s for 0.5 s.
+    Falling again only if one of those moves faster than 1.5 m/s.
+  - **Getting up:** after 1.2 s lying it gathers (tone 1) for 0.8 to
+    2.2 s; `GiveBack` puts the unit under its hips, facing as a body
+    would come up, finds the crouch (`Crouch`: the posed body is posed at
+    depths, and its knees' standing out read, as `PhysicalBalance` reads
+    it), destroys the parts, and poses the body crouched; for 0.9 s each
+    segment is between where the physics left it and the posed crouch;
+    `StandUp` then lets it rise. `RoseFrom`, `LayDownAgain`, `Falls`,
+    `GotUp`, `GetsUp`.
+  - While let go the unit's own collider is off, it is off the walked
+    ground (`UnitMotor.CarriedOff`), and its place follows its hips.
+  - `Push(force, at)`: a force on the nearest part. `TakeBack()`: stood
+    up at once (when the component is switched off).
+- **`ProceduralBiped.LetGo`:** the body is not posed while it is set.
+  **`MinerBody.Solved`:** the segments. **`PhysicalBack.Is(degrees)`:**
+  the back is bowed so, now.
+- **`PhysicalBalance`:** `Falls(why)` lets the body go if it has a
+  `PhysicalFall`; called when two steps in a row needed more than a
+  step's reach (`MostShort`), when one needed 2.5 times it
+  (`MostNeeded`), when the weight's point has been outside the feet
+  2.2 s (`LongestOutside`), or when the knees have given way all they can
+  and are still overloaded 0.3 s. `Fell` (why). `Afresh()`: begun again.
+  A push on a body that is down goes to `PhysicalFall.Push`.
+- **`PhysicalCarry`** does not stand a body up while it is down.
+- **`MinerWorkPreview`** gives a miner a `PhysicalFall` with its physical
+  work (`Fall`). When it is down: the pickaxe it had is `Lying`, the
+  block and the boulder work are left, and the look ends when it is up
+  with empty hands.
+- **Tests:** `PhysicalFallTests` (four). `PhysicalFallBench` (explicit):
+  `-fallOut`, `-fallMiner`, `-fallShoves`, `-fallWays`, `-fallFor`,
+  `-fallView`, `-fallSize`, `-fallLook strength,weight`.
+  `PhysicalBalanceBench` takes `-balanceFall 1`.

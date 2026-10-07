@@ -108,7 +108,16 @@
       to rest, its head on the ground: Long used to stop after four
       blows. The boulder does not get smaller or run out, and the stones
       cannot be picked up yet (S4).
-    - **Next:** step 10 (the fall, and getting up).
+    - **Step 10: built, not yet trusted** (October 7). A miner that cannot
+      keep its feet falls: its whole body follows the physics, holding
+      itself with what strength it has; it lies, gathers itself, and gets
+      up ([clips and figures](Design/ThePhysicalBody.md#step-10-the-fall-and-getting-up-october-7)).
+      It takes something extreme: a pull of about three fifths of its
+      weight, or legs that give way under work far too heavy. At its
+      work, a miner that falls lets its pickaxe go. Luis has seen clips
+      only.
+    - **Next:** step 11 (the panel in the Ordinary Place), then step 12
+      (evidence).
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

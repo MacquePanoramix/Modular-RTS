@@ -149,7 +149,11 @@ Luis asked for. The round's log, with before and after images, is in
    Send it somewhere else to stop it. Try the three miners, and a low
    boulder and a big one. Long rests after a few blows, with the head of
    its pickaxe on the rock or the ground.
-10. Make it weak and its pickaxe heavy (`,` and `=` a few times each) and
+10. **A fall.** With `K`, make the miner as weak as it goes (`,` several
+    times, to about 0.50) and its pickaxe as heavy as it goes (`=`
+    several times, to x3.00). After twenty seconds or so of work its
+    legs give way: it lets the pickaxe go, falls, lies, and gets up.
+11. Make it weak and its pickaxe heavy (`,` and `=` a few times each) and
    send it somewhere again. When the pickaxe asks more than half of its
    hand's hold, it drags it by the end of the handle, bent over, and walks
    slower. The line at the foot of the screen says which.
@@ -172,6 +176,8 @@ Luis asked for. The round's log, with before and after images, is in
   own? Does the drag read as a body with a tool too heavy for it?
 - **Laying down and picking up.** Does the body go down to the ground as
   a body would? Is the space bar the right key for the click?
+- **The fall.** Does it fall like a body, and not like a doll? Does the
+  getting up read? Is it rare enough? Should it cost the miner something?
 - **At a boulder.** Does it stand where a miner would, and strike where
   one would? Do the pieces look and fall like stone? Should the boulder
   get smaller, and run out? Does Long's rest, with the pickaxe's head
@@ -189,11 +195,12 @@ Luis asked for. The round's log, with before and after images, is in
   ([the plan](../NextMilestonePlan.md#steps)).
 - **Setting the lantern or the mug down** on the ground, and a pickaxe in
   one hand with the lantern in the other.
-- **The fall.** The body keeps its own balance: it sets its feet apart for
-  the work, leans, and steps if it must
-  ([step 6](../Design/ThePhysicalBody.md#step-6-balance-october-7)). It
-  does not fall yet (step 10). Nothing in the build pulls a miner; only a
-  pickaxe far too heavy makes it step.
+- **Something that pushes a miner over.** The body keeps its own balance
+  ([step 6](../Design/ThePhysicalBody.md#step-6-balance-october-7)), and
+  since step 10 it can fall and get up
+  ([clips](../Design/ThePhysicalBody.md#step-10-the-fall-and-getting-up-october-7)). But
+  nothing in the build pulls or pushes a miner: a fall comes only from
+  work far too heavy for it (the step above).
 - **The pickaxe does not stop at the miner's own body,** nor at the
   lantern or the mug at the hip.
 

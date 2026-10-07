@@ -2393,3 +2393,79 @@ Built for the chosen miner, with the interaction click
     pieces lying about a miner's feet.
   - **What it costs,** the crowd benchmark.
   - **Luis's eye.**
+
+## S3, step 10 — the fall, and getting up (October 7)
+
+Built to be shown as clips before it is trusted
+([design](Design/ThePhysicalBody.md#step-10-the-fall-and-getting-up-october-7)).
+
+- **The fall tests** (`PhysicalFallTests`, four): 4 of 4.
+  - **A miner let go falls, lies and gets up** (each miner, shoved for
+    0.3 s with three newtons for each of its kilograms, forwards and then
+    backwards: six falls). For each: its let-go body weighs what the body
+    weighs (within 5%); no part's place is ever not a number; it comes to
+    lie; no part goes more than 3 cm into the ground (0 mm in all six);
+    its parts stay within its own height of its hips; its head comes
+    down below 45% of its height (to 0.09 to 0.20 m over the ground).
+    Down for 3.3 to 4.7 s (falling, lying, gathering itself). Up and
+    standing 1.4 to 1.7 s after that: its head at its standing height
+    (within 5%), 0.00 to 0.19 m from where it lay (less than 0.4 m). It
+    rose from a crouch 0.30 (Small), 0.46 (Long) and 0.35 m (Round) deep.
+    One fall and one getting up are counted each time. Sent 2 m off, it
+    comes back to the walked ground and goes there.
+  - **A hard pull throws it down and a light one does not** (each miner,
+    pulled at the chest for 1.85 s):
+    - **A quarter of its weight** (100, 143 and 215 N): none fell; each
+      took 1 to 3 steps, none landing short, and stood.
+    - **Four fifths of its weight** (319, 459 and 688 N): each fell 0.64
+      to 0.70 s after the pull began ("its steps are not catching it",
+      "no step reaches where its weight is going"), and got up again.
+  - **A miner that falls at its work lets its pickaxe go** (Round, let
+    go by the test while it swung): the pickaxe left its hands, lay
+    still in the world, and the look knew where; the block was gone; the
+    look ended by itself when Round was up; "Pick it up" then had Round
+    take the same pickaxe up, 5.0 s after the order.
+  - **A weak miner with a pickaxe too heavy goes down and gets up**
+    (Small at half its strength, a pickaxe three times its weight, in
+    the look): its legs gave way after 21.7 s of work ("its legs cannot
+    bear it"); it was up again 5.3 s later, from a crouch 0.14 m deep; it
+    fell once; the look ended, and the pickaxe lay in the world.
+- **The bench** (`PhysicalFallBench`, `PhysicalBalanceBench` with a body
+  that can fall), by its figures and by eye:
+  - **Nine falls** (three miners; forwards, to the side, backwards; 250 N
+    for 0.3 s): all lie 1.2 to 2.6 s after the shove and stay lying;
+    with getting up, all stand again 4.6 to 6.7 s after the shove, within
+    9 cm of where they lay.
+  - **Limp against holding itself:** the fastest part 4.4 to 6.2 m/s
+    limp, 2.8 to 4.8 m/s holding; the head's coming down 3.0 to 5.5 m/s
+    limp, 1.3 to 3.9 m/s holding.
+  - **Pulls from 100 to 700 N:** Small steps at 100 N, stumbles at 150,
+    falls from 250; Long steps to 150, stumbles at 250, falls from 350;
+    Round steps to 250, falls at 350 and 500 as the rope lets go, and at
+    700 while it pulls.
+  - **In the look, weak with a heavy pickaxe, for 75 s:** Small and
+    Round fell once (at 21.7 and 23.9 s) and got up (7 and 6 s later).
+    Long, in different runs, fell once, fell twice, or did not fall at
+    all in 75 s.
+- **Full PlayMode suite, one run:** 161 tests; 150 passed, none failed,
+  11 skipped as explicit (1,287 s). After it, only a bench's camera was
+  changed (it follows a fallen body, for the clip).
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Read in pictures:** each miner falling three ways, limp and then
+  holding itself; lying; getting up from its back and from its front;
+  Round pulled off its feet; Small's legs giving way at its work.
+- **What failed on the way** (F1 to F8 in the design).
+- **Not tested:**
+  - **Anything Luis has seen in the build:** only clips.
+  - **A fall on a slope, against or onto a rock, from a height, or onto
+    a lying pickaxe or another miner.**
+  - **A fall while walking,** while carrying or dragging, while picking
+    a pickaxe up or laying it down, or with the lantern in the hand (the
+    code puts it back on its hook; not run).
+  - **A fall at a boulder** (the code leaves the boulder; not run).
+  - **A very weak miner** (below half strength): whether it ever gets up.
+  - **Long's fall at its work,** which differs from run to run.
+  - **Many falls one after another,** and a fall as it is getting up.
+  - **Frame rates other than 50 a second.**
+  - **What it costs,** the crowd benchmark.
+  - **Luis's eye.**
