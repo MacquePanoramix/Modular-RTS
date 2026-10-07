@@ -1652,3 +1652,61 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
 - **Tests:** `HungThingTests` (two). `HungThingCapture` (explicit):
   `-hungOut`, `-hungMiner`, `-hungView`, `-hungAim`, `-hungSize`,
   `-hungEvery`, `-hungHour`.
+
+## The physical body, step 9: any boulder, by a click — October 7
+
+- **`Boulder`** (new). The place's boulders are marked when first asked
+  for (`Boulder.All()`: every solid rock under an object called
+  "Boulder"; in one order, from the west), until the place is set up with
+  them (step 11). `Strike(point, outward, energy)` takes a blow: `Blows`,
+  `Struck` (where each landed), `Taken` (energy since the last piece).
+  When it has taken `Breaks` (90 J) a piece comes off: a `LooseStone`
+  (the rock's own mesh at 9 to 14 cm, a box to lie on, 2,600 kg a cubic
+  metre at half the box), thrown a little out and up; it does not touch
+  the rock it came from until it is clear of it. `Stones`.
+- **`RockWork.Find(boulder, swing, body, tall, from)`** gives a `Plan`:
+  `spot`, `outward`, `lands` (where the head first meets the rock's
+  outline on its way down), `stand`, `approach` (the place on the walked
+  ground it steps from), `facing`, `height`, `away`, `aimed`. The rock is
+  felt with rays from above along 12 directions (the side the body comes
+  from first); spots every 9 cm inwards from its foot; six distances for
+  each, aimed roughly, the best aimed in full. `RockWork.Last` says why
+  the side it came from gave what it gave.
+- **`PhysicalSwing`:** `AimFrom(feet, facing, point, leansUpTo, roughly)`
+  gives how a blow would be taken from a place (`Aimed`: bow, lean, sink,
+  miss, cost) without taking it; `Aim(point, leansUpTo)` takes it.
+  `RestsUpTo` 46 (the block's limit, unchanged), `RockWork.LeansUpTo` 78,
+  `ThroughAtMost` 104. `HeadAt(...)`: the head's path. `Current`: the
+  swing being made. **The rest:** `HoldAsks` (what holding the tool at
+  the side would ask of the shoulder now); above `RestsOnlyBelow` (0.27)
+  the rest is taken with the head on the ground (`RestsOnGround`): the
+  lower hand goes to the lowest grip, `PhysicalHands.WantEnd` brings the
+  handle's end to hang at the side `StoodUp` (0.97) of the tool's length
+  up, and the knees give what the arm lacks.
+- **`UnitMotor`: off the walked ground.** `StepOff(place)` (within
+  `OffAtMost`, 0.9 m, of where it leaves the walked ground): the agent is
+  switched off and the unit walks there itself at `OffPace` (0.6) of its
+  pace, riding as high over the ground as it did. `IsOff`, `StandsOff`.
+  A move order while it is off plans from where it left the walked
+  ground, brings it back there first, switches the agent on, and goes.
+  `IsMoving` is true through all of it. (Why: the place's navmesh is
+  baked for the default agent, radius 0.5 m, from physics colliders.)
+- **`MinerWorkPreview`:** `Mine(boulder)`, `OptionsForBoulder`, `Mining`,
+  `MiningPlan`, `AtRock`, `LeftRock` (why it last gave a boulder up).
+  What must come first is queued (`After`): a thing hung back, the
+  pickaxe picked up. Each frame at a rock (`AtTheRock`): it comes to its
+  place, turns, aims and takes the pickaxe up; each swing that struck
+  gives the rock its energy once; before a swing, if it has moved, it
+  aims again, and goes back to its place if the spot is more than 5 cm
+  out of reach.
+- **`InteractionClick`** lists the boulders; a boulder is picked by the
+  pointer being on it (a ray), when nothing small is near the pointer.
+- **`PhysicalHands.EffortOf(hand)`:** what an arm's effort is made of
+  (shoulder, elbow, wrist, hold).
+- **`LooseStone.Knocked(outward, energy)`:** a blow landed on a piece
+  where it lay; `Takes` (0.3) of its energy sends it off, mostly to one
+  side, at `Fastest` (3 m/s) at most. `MinerWorkPreview.StruckLast` says
+  what the last blow at a rock landed on.
+- **Tests:** `BoulderTests` (four). `PhysicalRockBench` (explicit):
+  `-rockOut`, `-rockMiner`, `-rockMine`, `-rockBlows`, `-rockFor`,
+  `-rockView`, `-rockSize`, `-rockStrength`.

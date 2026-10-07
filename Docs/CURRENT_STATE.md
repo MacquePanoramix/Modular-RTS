@@ -98,19 +98,17 @@
       Setting them down on the ground is not built: each would have to be
       made an object of its own. A pickaxe in one hand with the lantern in
       the other is not built either.
-    - **Step 9 (any boulder by a click): being built, not validated**
-      (October 7). The unfinished work is on the branch
-      `claude/wip-step9`, not on this one. So far, on the bench only: a
-      click on a boulder offers "Mine"; each miner finds where to stand
-      and where to strike at each of the place's ten boulders, from the
-      rock's own shape; it takes the last steps off the walked ground to
-      the rock's foot; Small and Round strike their boulders, and stones
-      break off, fall and lie. No test of the step, the full suite or the
-      build has been run. Found and still open: Long strikes four times,
-      rests, and does not get its strength back while it holds its
-      pickaxe (its shoulder gives 35% holding it out at its side); blows
-      land 4 to 12 cm from where the plan puts them.
-    - **Next:** finish step 9.
+    - **Step 9: built** (October 7). A click on any boulder of the place
+      offers "Mine". The miner finds where to stand and where to strike
+      from the rock's own shape, goes there (the last steps off the
+      walked ground, which stops half a metre short of every rock),
+      strikes it, and pieces break off and lie
+      ([clips and figures](Design/ThePhysicalBody.md#step-9-any-boulder-by-a-click-october-7)).
+      A tool too heavy to rest holding (Long's pickaxe) is now put down
+      to rest, its head on the ground: Long used to stop after four
+      blows. The boulder does not get smaller or run out, and the stones
+      cannot be picked up yet (S4).
+    - **Next:** step 10 (the fall, and getting up).
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

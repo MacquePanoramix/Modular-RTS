@@ -31,6 +31,10 @@ Later the same day, while step 9 (any boulder by a click) was being built:
 
 > I need to turn off my laptop. So save the current progress and you can continue later.
 
+After the laptop was on again:
+
+> okay please continue now.
+
 ## How it was recorded
 
 - **The balance (step 6):** "looking pretty good". It stays Implemented,
@@ -43,6 +47,8 @@ Later the same day, while step 9 (any boulder by a click) was being built:
   (e5c0ceb, 279e517). Step 9's unfinished work was saved on its own
   branch (`claude/wip-step9`, commit ad86a70), with what had and had not
   been run written in the commit. The bench run in progress was stopped.
+  When Luis said to continue, step 9 was finished from that branch
+  (c779e5e).
 - **Not said, so not assumed:**
   - Luis did not answer the proposal to carry a heavy pickaxe over the
     shoulder (step 7 found that two hands do not share a pickaxe's

@@ -143,7 +143,13 @@ Luis asked for. The round's log, with before and after images, is in
    the miner about. Hold Space, click it again, and choose **Hang it
    back**. With it in the hand, press `K`: the miner hangs it back first,
    then takes up its pickaxe.
-9. Make it weak and its pickaxe heavy (`,` and `=` a few times each) and
+9. **A boulder.** Hold the space bar, click any boulder in the grass, and
+   choose **Mine**. The miner goes to it with its pickaxe, takes the last
+   steps to the rock's foot, and strikes it. Pieces break off and lie.
+   Send it somewhere else to stop it. Try the three miners, and a low
+   boulder and a big one. Long rests after a few blows, with the head of
+   its pickaxe on the rock or the ground.
+10. Make it weak and its pickaxe heavy (`,` and `=` a few times each) and
    send it somewhere again. When the pickaxe asks more than half of its
    hand's hold, it drags it by the end of the handle, bent over, and walks
    slower. The line at the foot of the screen says which.
@@ -166,6 +172,10 @@ Luis asked for. The round's log, with before and after images, is in
   own? Does the drag read as a body with a tool too heavy for it?
 - **Laying down and picking up.** Does the body go down to the ground as
   a body would? Is the space bar the right key for the click?
+- **At a boulder.** Does it stand where a miner would, and strike where
+  one would? Do the pieces look and fall like stone? Should the boulder
+  get smaller, and run out? Does Long's rest, with the pickaxe's head
+  down, read as a rest?
 - **The lantern and the mug in the hand.** Does the hand take the handle,
   and does the thing hang from it as it did when it was carried before?
   Should it be possible to set them down on the ground?
@@ -173,8 +183,9 @@ Luis asked for. The round's log, with before and after images, is in
 **What is not there:**
 - **It is not mining.** Nothing is mined, the block is put where the miner
   stands, and with `K` the pickaxe appears in the hands from nowhere (it
-  can be laid down and picked up since step 8). Any boulder by a click
-  (step 9) and the panel in place of the keys (step 11) are still to come
+  can be laid down and picked up since step 8). At a boulder (step 9)
+  pieces break off, but the boulder stays whole and nothing is brought
+  home. The panel in place of the keys (step 11) is still to come
   ([the plan](../NextMilestonePlan.md#steps)).
 - **Setting the lantern or the mug down** on the ground, and a pickaxe in
   one hand with the lantern in the other.

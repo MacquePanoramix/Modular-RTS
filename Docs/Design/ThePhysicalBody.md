@@ -423,7 +423,8 @@ chest's.*
   ([below](#step-6-balance-october-7)).
 - **It is not in the game's mining.** Since later on October 6 the look
   with `K` shows this swing on a block
-  ([below](#in-the-place-to-try-october-6)); a boulder is step 9.
+  ([below](#in-the-place-to-try-october-6)); a boulder came with step 9
+  ([below](#step-9-any-boulder-by-a-click-october-7)).
 - **The pickaxe does not yet stop at the miner's own body,** nor at what
   hangs at the hip.
 - **Tiredness** came with step 5 (below).
@@ -472,6 +473,11 @@ tool is carried. That costs the arm less than a fifth of what it has, so
 the arm rests too. When it is down to 15% spent (under half a minute), the lower hand reaches for the handle and takes hold again, and
 it goes back to work.
 
+(This was measured on Round. For Long it is not so: holding its pickaxe
+at its side costs its shoulder far more, and since step 9 it rests with
+the head of the pickaxe on the ground:
+[a rest that rests](#step-9-any-boulder-by-a-click-october-7).)
+
 **What the step found:**
 
 | ID | Seen | Why | Done |
@@ -518,8 +524,8 @@ how spent the miner is and how fast the last blow landed.
   and what it shows is replaced.
 - **It is the bench, not mining.** Nothing is mined, the block is put
   where the miner stands, and the pickaxe appears in the hands. Any
-  boulder by a click is step 9; taking up and laying down the pickaxe is
-  step 8.
+  boulder by a click came with step 9, and taking up and laying down the
+  pickaxe with step 8.
 - **The old swing is no longer shown in the Ordinary Place.** Its code is
   still there (the equipment scene and its tests use it) until step 9
   replaces the game's mining.
@@ -834,7 +840,7 @@ as the swing, on the same real pickaxe:
 
 - **The lantern and the mug** came with the second half of this step
   (below).
-- **A boulder's "Mine":** step 9.
+- **A boulder's "Mine"** came with step 9 (below).
 - **It always lays the pickaxe at its left,** flat, wherever it stands.
 - **It goes down very low** (a deep squat with the back bowed right over;
   Round's head comes near the ground). Kneeling on one knee, which a
@@ -942,6 +948,177 @@ hangs it back.*
 
 **Open:** which hand carries what; whether these two are to be set down
 (the lantern on the ground by the work, giving its light there).
+
+### Step 9: any boulder, by a click (October 7)
+
+The plan's words: "A click on any boulder of the Ordinary Place sends the
+miner to mine it. A place to stand is found from the rock's own shape and
+the ground. A spot to strike is found on its surface within this body's
+reach. The swing adapts to the spot. What is struck off falls as real
+stones and lies where it falls."
+
+![The three miners, each at a different boulder](../Images/PhysicalBody/Mine_ThreeBoulders.gif)
+
+*Small, Long and Round, each at a boulder of the place: each stands where
+its own swing reaches the rock, and strikes it.*
+
+![Round is sent to a boulder: it goes, strikes, and a stone comes off](../Images/PhysicalBody/Mine_Round_GoesAndStrikes.gif)
+
+*Round is told to mine a boulder: it walks to it with its pickaxe, takes
+the last steps to the rock's foot, turns to its spot and strikes. Pieces
+break off and lie.*
+
+**What happens:**
+
+1. **Hold the space bar and click a boulder:** it offers **Mine**.
+2. **The miner gets ready.** With something in its hand, it hangs that
+   back. If its pickaxe lies somewhere, it goes and picks it up. With no
+   pickaxe at all it is given its own, as `K` gives it one.
+3. **It finds its place** from the rock's shape (below), walks there, and
+   takes the last steps off the walked ground to the rock's foot.
+4. **It turns to its spot, takes its stance, and swings** at it, with the
+   same swing as at the block, aimed.
+5. **Each blow's energy goes into the rock.** When the rock has taken
+   what a piece costs, a piece comes off where the pick landed: a stone
+   with its own weight, thrown a little out, that falls and lies. A piece
+   that lies where the pick lands is knocked aside by the next blow.
+6. **It goes on** until it is told something else. It rests when it is
+   spent, as at the block. If its own swing has made it step, it aims
+   again from where it stands, and goes back to its place if the spot is
+   out of its reach from there.
+
+**How the place and the spot are found** (`RockWork`):
+
+- **The rock is felt from above** along a line from its middle towards
+  the miner, every 3 cm: that gives its outline on that side, and where
+  it first stands out of the ground (its foot). The ground is felt under
+  each place, because it slopes.
+- **Spots are tried along that outline,** from the foot inwards: where
+  the rock faces up, where nothing of it stands higher on the miner's
+  side, and no higher than half the miner's own height.
+- **For each spot, places to stand are tried,** from as near as the
+  boots may come to the rock's foot (6 cm clear, with room for the
+  forward foot of its stance) outwards. Each is asked of the swing
+  itself: how far must it bow, bend its knees and lean the pickaxe to
+  bring the head there, and how far short would it be?
+- **The spot and the place that cost the swing least are taken.** A place
+  where the swing would miss by more than 3 cm is no place.
+- **It looks first on the side the miner comes from,** then round the
+  rock, 30 degrees at a time to either side.
+
+**A low spot is struck late in the blow.** The place's boulders are low
+domes: their tops are 0.2 to 0.9 m over the ground. At the block, the
+blow lands with the handle about level, the head at the height of the
+hands. A spot lower than that is struck with the blow going further
+through its arc: the handle pointing down and forward, the head below the
+hands, as a pick is swung at the ground. The swing may now lean the tool
+up to 78 degrees for a rock (46 at the block, which is unchanged).
+
+**The last steps off the walked ground.** The ground that can be walked
+keeps half a metre from anything solid, so it stops short of every
+boulder: no miner could come near enough to strike one. A unit now takes
+the last short way (0.9 m at most) on its own feet, in a straight line,
+at 60% of its pace, and takes it back to where it left the walked ground
+before it goes anywhere else. This is in the motor every unit has; only
+the rock work uses it so far.
+
+**The place's ten boulders, and each miner at each** (30 of 30 have a
+place, on the side the miner comes from):
+
+| | Small | Long | Round |
+|---|---|---|---|
+| Its spots, over the ground | 0.14 to 0.57 m | 0.14 to 0.62 m | 0.14 to 0.53 m |
+| Its places, off the walked ground | up to 0.53 m | up to 0.55 m | up to 0.42 m |
+| The swing short of its spot, at most | 1 mm | 2 mm | 1 mm |
+| Found in, at most | 39 ms | 23 ms | 20 ms |
+
+**Mining, each at a different boulder:**
+
+| | Small, a small low rock | Long, a middling one | Round, a large one |
+|---|---|---|---|
+| Its spot, over the ground | 0.09 m | 0.34 m | 0.51 m |
+| It stands, from the spot | 0.38 m | 0.68 m | 0.64 m |
+| At its place | to the millimetre | to the millimetre | to the millimetre |
+| A blow | 5.4 m/s, 22 J | 4.9 to 6.2 m/s, 39 to 62 J | 5.8 to 6.7 m/s, 40 to 53 J |
+| The pick lands, from where the plan put it | 5 cm at most | 12 cm at most | 7 cm at most |
+| The first piece comes off at | the 5th blow | the 2nd | the 2nd |
+| The pieces | 1.5 kg | 0.7 and 0.7 kg | 0.6 and 0.5 kg |
+
+- **A piece costs 90 joules of blows** (a first setting). So a weaker
+  blow takes more of them: Small's five, where Long and Round take two.
+- **A piece is 9 to 14 cm across** and weighs what stone of that size
+  weighs (0.4 to 1.5 kg). It is the rock's own shape, small.
+
+**A rest that rests** (this changes step 5's rest, for a tool too heavy
+to hold):
+
+![Long rests with the head of its pickaxe on the rock](../Images/PhysicalBody/Rest_Long_HeadDown.gif)
+
+*Long, spent, lets the head of its pickaxe lie where it struck, keeps
+the end of the handle in one hand, stands up, and gets its strength back.
+Then it takes the pickaxe up again.*
+
+- **Long struck four times, rested, and never went on.** Resting, a miner
+  carries its pickaxe in one hand at its side. For Small and Round that
+  costs the shoulder little (5% and 4% of it, fresh). For Long, whose
+  arms are thin and whose left arm hangs out past its mug, it cost 59% of
+  what the shoulder had left, and more as it tired: the rest spent
+  strength instead of giving it back. Step 5 measured the rest on Round
+  only.
+- **A tool that heavy is now put down to rest.** The lower hand keeps
+  the end of the handle and hangs at the side; the upper hand lets go;
+  the head lies where it is, on the ground or on the rock. The knees give
+  what the arm lacks (a tall body with a short pickaxe). The ground
+  carries the tool.
+- **When:** if holding it at the side would ask more than 27% of what
+  the shoulder has now. Above that, an arm does not come back to 15%
+  spent while it holds.
+- **Long now comes down from 40% spent to 15% in about half a minute,**
+  takes its pickaxe up and goes on: eight blows in a minute and a half,
+  where it had stopped at four. Small and Round rest as before.
+
+**What the step found:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| R1 | No place at most boulders | They are low domes. A spot a fifth of the body's height up, the lowest the aimed swing reached, lies far in from the rock's foot | A low spot is struck late in the blow's arc, the head below the hands |
+| R2 | Still no place at most: nowhere to stand | The walked ground keeps half a metre from anything solid | The last steps off the walked ground, and back |
+| R3 | The ground's height at the rock was taken a few metres out, where it is not the same | The ground slopes | The ground is felt under each place |
+| R4 | Finding a place took up to 0.6 s | Every 3 cm of outline was tried from every distance, each aimed in full | Spots every 9 cm; distances first tried roughly: 8 to 39 ms |
+| R5 | Five blows, and no piece | The engine finds a fast blow a step ahead and gives it a small speed | The rock takes the energy the swing itself measured |
+| R6 | Blows were placed 6 to 19 cm above the rock | For such a blow the engine gives the place the head was at, a step before | Where the head comes to rest is where it landed |
+| R7 | Moving the aim by what each blow taught made the blows wander (3 to 19 cm) | A moved aim changes the whole stance, in jumps | Taken out. The blows land 4 to 12 cm from where the plan puts them, short and to the miner's right (the swing comes over the right shoulder), and the same within a centimetre or two each time |
+| R8 | Long struck four times and stood there | Its rest spent strength (above) | The tool is put down to rest |
+| R9 | Long gave a boulder up after its first blow | Its own swing threw it a step off its place; it stepped back, and that was taken for being sent somewhere else | Its own way back to its place is known for what it is |
+| R10 | After its second piece, Small's blows no longer counted: it swung and struck, and the rock took nothing | The piece lay where the pick lands, and every blow landed on it | A blow that lands on a loose piece knocks it aside (a third of the blow's energy sends it off, to one side); the rock takes nothing of that blow |
+
+**Left at a boulder for more than three minutes** (the bench):
+
+| | Small | Long | Round |
+|---|---|---|---|
+| Blows before it rests | 8 or 9 | 4 | 16 |
+| How it rests | holding its pickaxe at its side | the head put down | holding it at its side |
+| A rest lasts (40% spent down to 15%) | about half a minute | about half a minute | about half a minute |
+| In 200 s | 29 blows, 6 pieces | (8 blows and 3 pieces in 90 s) | 36 blows, 16 pieces |
+
+**What is not there yet:**
+
+- **The boulder does not change.** However many pieces come off, it
+  stays whole, and it never runs out.
+- **A level blow at a face.** A spot is no higher than half the miner's
+  height and is struck from above (step 4's S4 stays open).
+- **The pick lands 4 to 12 cm from its spot,** not on it.
+- **The stones only lie.** They cannot be picked up or carried (S4), and
+  a miner walking through them pushes them.
+- **With no pickaxe, one still appears in its hands.**
+- **Two miners at one rock, or a miner in another's place:** not tried.
+- **Units do not walk round a unit that stands off the walked ground.**
+- **It mines until it is told something else.**
+
+**Open:** what a piece costs, and how big the pieces are; whether a
+boulder should get smaller and run out; whether "Mine" should end by
+itself; the rest with the head down (new, and also seen with `K` at the
+block when Long works there).
 
 **What is not there yet** (of the bench, step 2):
 

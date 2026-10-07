@@ -2295,3 +2295,101 @@ Built for the chosen miner, with the interaction click
     handle.
   - **What it costs,** the crowd benchmark.
   - **Luis's eye.**
+
+## S3, step 9 — any boulder, by a click (October 7)
+
+Built for the chosen miner, with the interaction click
+([design](Design/ThePhysicalBody.md#step-9-any-boulder-by-a-click-october-7)).
+
+- **The boulder tests** (`BoulderTests`, four): 4 of 4.
+  - **Every miner finds its place at every boulder** (3 miners, the
+    place's 10 boulders: 30 of 30, each on the side the miner comes
+    from). For each: the swing would miss its spot by less than 3 cm
+    (1, 2 and 1 mm at most for Small, Long and Round); the spot is rock
+    between 0.08 m over the ground and half the miner's height (0.14 to
+    0.57 m, 0.14 to 0.62 m, 0.14 to 0.53 m); the place is more than
+    0.3 m from the spot, off the walked ground by less than 0.9 m (0.53,
+    0.55 and 0.42 m at most), and the way to it begins on the walked
+    ground; the miner would face its spot; the pick's head is to land
+    within 0.2 m of the spot. Holding its pickaxe at its side would ask
+    5%, 18% and 4% of a fresh shoulder.
+  - **A miner mines a boulder by a click** (Small at a small low rock,
+    Long at a middling one, Round at a large one; each put a few steps
+    from its boulder first):
+    - The boulder shows itself to the click and offers "Mine". The miner
+      sets out at once with its pickaxe in its hand.
+    - **At its place:** 2.7, 2.7 and 4.5 s after the order; 0 mm from the
+      place planned; facing its spot within 0.0, 0.3 and 0.0 degrees; off
+      the walked ground (0.43, 0.45 and 0.71 m).
+    - **Striking, until a piece breaks off:** Small 5 blows in 14.4 s,
+      Long 4 in 12.3 s, Round 4 in 11.3 s; landing at most 50, 120 and
+      65 mm from where the plan put them. At least three recorded swings
+      struck.
+    - **Pieces:** Small 1 (1.49 kg), Long 2 (0.74 and 0.66 kg), Round 2
+      (0.61 and 0.54 kg): each between 0.2 and 4 kg, lying still, within
+      2.5 m of the spot, on the ground or on the rock.
+    - **Sent somewhere else:** it comes back to the walked ground, goes
+      where it was sent (within 0.6 m), with its pickaxe; it is no longer
+      mining, and its agent is on the walked ground again.
+  - **A loose piece that is struck is knocked aside:** a blow of less
+    than a piece's cost breaks nothing off; the next does, and what it
+    gave beyond the cost counts towards the next piece. The piece (0.61
+    kg) came to lie; struck with 20 J where it lay, it went 1.02 m and
+    lay again.
+  - **To mine, it hangs its lantern back and picks its pickaxe up**
+    (Small, with its pickaxe laid on the ground and its lantern in its
+    hand): told to mine, it hung the lantern back, picked the same
+    pickaxe up, went to the boulder and struck it 9.5 s after the
+    order. It never had its pickaxe with the lantern still in its hand.
+- **The bench** (`PhysicalRockBench`), by its figures and by eye:
+  - **Long's rest.** Before: after four blows it rested holding its
+    pickaxe at its side; its shoulder gave 59% of what it had left, and
+    its spent share rose from 42% to 71% in a minute, with no end. With
+    the head put down: 40% to 15% spent in about half a minute, then it
+    took the pickaxe up and went on (8 blows and 3 pieces in 90 s at one
+    boulder).
+  - **Left at a boulder for 200 s:** Round struck 16 times, rested
+    holding its pickaxe at its side (40% spent to 15% in about half a
+    minute), and went on: 36 blows, 16 pieces. Small struck 8 or 9
+    times between rests of the same kind: 29 blows, 6 pieces, three
+    rests. Before pieces were knocked aside, Small's blows stopped
+    counting after its second piece (10 in 220 s).
+  - **Blows' energy:** Small 16 to 26 J, Long 39 to 62 J, Round 39 to
+    53 J. A piece costs 90 J.
+  - **Where blows land:** Small at one boulder, six blows within 1 cm of
+    each other, 5.5 cm to the right of the plan and 7 cm short of it.
+- **Full PlayMode suite, three runs** (each alone, about 21 minutes):
+  1. **155 tests; 144 passed, 1 failed, 10 skipped as explicit.** The
+     failure: `EquippedWorkerTests.ProducedWorkerReceivesTheBlueprintPickaxeAndMinesThroughTheSameAction`,
+     "the worker must retain a supporting foot" (the older equipment
+     scene, which this step does not touch but for the unit's motor). Its
+     class then passed 3 times of 3 on its own (12 of 12 each).
+  2. **155 tests; 145 passed, none failed, 10 skipped.** The same code.
+  3. **156 tests; 146 passed, none failed, 10 skipped** (1,274 s). The
+     finished code but for one last change: with pieces knocked aside,
+     and the test of that.
+  - **After the third run** the loose stone was given a file of its own,
+    and a piece is solid to its rock again after two seconds at most.
+    For that, the boulder tests were run again (4 of 4) and the build;
+    not the whole suite.
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Read in pictures:** each miner at a boulder, going there, striking;
+  Long resting with the head of its pickaxe on the rock.
+- **What failed on the way** (R1 to R10 in the design). Also: a test
+  asked for a piece after four blows (Small's take five); a test took
+  the lantern in the frame the look ended (the hands were still being
+  removed); the first search stopped at once on a number too small to
+  subtract from.
+- **Not tested:**
+  - **The space bar and the mouse themselves,** and the pointer on a
+    boulder (the ray): the orders were given as the box gives them.
+  - **A long walk to a boulder** in a test (the bench walked 12 to 37 m).
+  - **A weak miner, a heavy pickaxe, a dragged pickaxe** at a boulder.
+  - **Two miners at one boulder;** another unit in the place planned.
+  - **The rest with the head down at the block with `K`** (Long): only
+    at a boulder.
+  - **A move order to a group** with a unit off the walked ground.
+  - **A boulder struck hundreds of times** (it never runs out), and many
+    pieces lying about a miner's feet.
+  - **What it costs,** the crowd benchmark.
+  - **Luis's eye.**
