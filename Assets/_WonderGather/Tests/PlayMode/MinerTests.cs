@@ -106,18 +106,23 @@ namespace WonderGather.Tests
                 Assert.That(unit.Motor.TryMove(hit.position), Is.True);
                 float end = Time.time + 40, worst = 0;
                 int frames = 0;
-                while (Vector3.Distance(unit.transform.position, hit.position) > .6f && Time.time < end)
+                // The modelled ankles stay on the body's solved feet: the rig and the solution agree. They are compared
+                // when the frame's body has been posed. (Read before that, the bones are the last frame's and the
+                // root has already walked on: a frame that stalls then looks like feet that stray.)
+                var after = new GameObject("After everything").AddComponent<AfterEverything>();
+                after.Then = () =>
                 {
-                    yield return null;
-                    if (!biped.Ready || !body.Ready) continue;
+                    if (!biped.Ready || !body.Ready) return;
                     frames++;
-                    // The modelled ankles stay on the body's solved feet: the rig and the solution agree.
                     for (int i = 0; i < 2; i++)
                     {
                         var solvedAnkle = biped.FootPosition(i) + biped.FootNormal(i) * ankle;
                         if (biped.FootPlanted(i)) worst = Mathf.Max(worst, Vector3.Distance(body.Rig.feet[i].position, solvedAnkle));
                     }
-                }
+                };
+                while (Vector3.Distance(unit.transform.position, hit.position) > .6f && Time.time < end) yield return null;
+                after.Then = null;
+                Object.Destroy(after.gameObject);
                 Assert.That(Vector3.Distance(unit.transform.position, hit.position), Is.LessThan(.6f), $"{choice.NameOf(index)} did not reach the door.");
                 Assert.That(frames, Is.GreaterThan(30));
                 Assert.That(worst, Is.LessThan(.09f), $"{choice.NameOf(index)}'s modelled ankle strayed {worst:F3} m from the planted foot.");
