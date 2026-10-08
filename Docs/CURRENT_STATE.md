@@ -131,12 +131,30 @@
         work at a rock, its knees are read before the first blow.
       - **What that leaves:** below about nine tenths of its strength a
         miner does not get down to a pickaxe (it stands up again, and
-        the panel says why); Small and Long do not mine the two lowest
-        boulders of the place (they say why); the weakest bodies at
-        their work are not designed.
-    - **Next:** step 12 (evidence: the cost of one miner and of a crowd,
-      the evidence tests, the model quality method across strengths),
-      the playtest guide as a whole, and the documents.
+        the panel says why); the weakest bodies at their work are not
+        designed.
+    - **Step 12: the evidence is gathered; Luis has not played the build**
+      (October 8;
+      [the plan's list, item by item](Design/ThePhysicalBody.md#step-12-evidence-october-8)).
+      - **Shown:** ten of the twelve things the tests were to show; one
+        in part; one not (nothing stops the pickaxe at its bearer's own
+        body).
+      - **Cost, in the release build:** one miner at its physical work
+        costs nothing that shows in the frame (4.5 to 4.8 ms working, 4.6
+        to 4.7 ms standing); a hundred walking miners add about 2.5 ms
+        (2.1 on October 4).
+      - **Found by running the build, and put right:** Small fell five
+        seconds into any long walk with its pickaxe (the fall's rule was
+        counted while walking). Tried at every boulder, eight of thirty
+        miners and boulders gave their rock up for their knees: a miner
+        now looks for a way to stand that bends them less, and each
+        miner mines each of the ten boulders.
+    - **S3's twelve steps are built.** What it needs now is Luis's play of
+      the build ([the guide](Playtests/MinersPlaytest.md#the-physical-work-with-the-panel-october-7)).
+      Nothing of S3 is merged into `main`, and nothing in it is Locked.
+    - **Next, by the approved order:** S4 (hauling), then S2, then S5. S4's
+      plan begins by saying which of the prototype's own questions it
+      answers; it is not begun.
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

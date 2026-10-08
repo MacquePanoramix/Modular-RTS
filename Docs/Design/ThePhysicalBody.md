@@ -1408,6 +1408,11 @@ ordinary strength, none of which fell):
   blows; at the other, all it has (101 to 102%), without falling in the
   two tries.
 
+> **Since step 12** Small and Long work at them too. Where a stance asks
+> its knees too much, a miner now looks for a way to stand that bends
+> them less, and gives the rock up only if there is none
+> ([below](#step-12-evidence-october-8)).
+
 **What the step found.** The panel is the first thing that lets a miner
 be weaker or stronger while it does everything else, so every order was
 tried along the whole slider, on all three miners. Most of what that
@@ -1430,9 +1435,10 @@ found was there before the panel.
 
 **Known, and not put right in this step:**
 
-- **Small and Long do not mine the two lowest boulders** (above). A body
-  has no way to work at rock lower than it can strike standing: on one
-  knee, say.
+- **Small and Long did not mine the two lowest boulders** (above), until
+  step 12 gave a miner another way to stand to a rock. A body still has
+  no way to work at rock lower than it can strike standing: on one knee,
+  say.
 - **Round, at the lowest boulder but one, is asked all its knees have**
   in the blows. It did not fall in four tries of 40 to 60 s.
 - **Long, at twice its strength with the heavy pickaxe** (5.8 kg), was
@@ -1461,7 +1467,8 @@ found was there before the panel.
   other knee twice that.
 - **Where to stand and strike at a rock is still chosen for the reach
   alone.** The knees are read only when the body is there and bent to
-  its work; it does not then look for a better spot on the same rock.
+  its work. (Since step 12 it then looks for a way to stand that bends
+  them less.)
 - **The pick-up takes longer:** 3.6 to 4.0 s from the order to the
   pickaxe in the hand (it was 2.7 to 3.6 s), and 1.3 s more to stand up
   with it.
@@ -1481,6 +1488,100 @@ stands and what is on it; the three pickaxes (shares of its own, or the
 three miners' own); what a body too weak to get down should do; how
 careful it is with its knees; work at rock lower than a body can strike
 standing; everything about the weakest bodies.
+
+### Step 12: evidence (October 8)
+
+What the plan's list of evidence asked for, and what there is to show for
+each ([the list](../NextMilestonePlan.md#evidence)). Nothing here is
+Locked, and none of it is Luis's eye on the build.
+
+**The tests the plan named:**
+
+| What was to be shown | Where it is shown | Shown? |
+|---|---|---|
+| A heavier pickaxe is lifted lower and arrives slower, on the same body | `StrengthAndWeightDecideTheSwing` (raising it asks 1.3 times more and more, and it comes down slower); the step 11 table (Small's lands at 6.4, 5.2 and 3.9 m/s) | **Yes** for slower and harder to raise. "Lower" only where it is too heavy to raise all the way |
+| A stronger body lifts the same pickaxe higher and it arrives faster | The same test (raising it asks under 0.7 of what it did, and it comes down more than 1.1 times as fast); the step 11 table (5.2, 6.9 and 7.8 m/s at 1, 2 and 3) | **Yes** |
+| A body too weak for its pickaxe does not strike, and nothing is mined | The same test (a feeble blow, the arms giving more than 0.8 of what they have); the step 11 bench: Small at half its strength lands 9 to 10 J where a piece costs 90, and one swing in four does not strike; Long at half its strength does not work at all | **In part.** A weak body strikes feebly, or not, and breaks nothing off for a long while. Enough feeble blows still break a piece off: the rock adds them up |
+| A tired body is weaker, and recovers with rest | `HardWorkTiresAMuscleAndRestBringsItBack`, `ATiredMinerWeakensRestsAndGoesOn` | **Yes** |
+| The head's speed and energy at each strike are measured and shown | Every swing's result; `NothingAppearsInAHandOrVanishesFromOne` reads the last blow's and finds them in the panel's line | **Yes** |
+| The pickaxe never passes through its bearer, at any strength | Nothing stops the pickaxe at the miner's own body | **No.** Not built |
+| The hands stay on the handle, and let go only when the plan says so or their hold is overcome | The swing tests (never more than 35 mm off), the carry and pick-up tests (0 mm); `WhatItCannotMoveItLeaves` | **Yes,** in what was tried |
+| A body within its balance does not step or fall; pulled hard enough it steps; pulled harder it falls, and gets up | `PhysicalBalanceTests` (four), `AHardPullThrowsItDownAndALightOneDoesNot`, `AMinerLetGoFallsLiesAndGetsUp` | **Yes** |
+| Nothing appears in a hand or vanishes from one: every object is at every moment held, hanging, or lying | `NothingAppearsInAHandOrVanishesFromOne` (new): one pickaxe and one lantern followed through 1,120 frames of everything a miner does with them | **Yes,** in play. Outside it: the panel puts pickaxes on the ground and takes them away; changing the miner takes its pickaxe with it |
+| Only a real touch of the head on the rock yields anything | The old body's tests (`EquippedWorkerTests`); at a boulder, only the head's own contact with that rock is counted, and a blow that lands on a loose piece gives the rock nothing (`ALoosePieceThatIsStruckIsKnockedAside`) | **Yes** |
+| Any boulder of the place can be mined, by each of the three bodies | The bench: each miner at each of the place's ten boulders, as strong as it was built, with its own pickaxe (thirty tries). Each struck five blows within 33 s and broke one or two pieces off; none fell, and none gave its rock up | **Yes,** each from the one side it was tried from. At eight of the thirty the miner had to find a way to stand that its knees bear (E2) |
+| The old test body and its maps work as before | The rest of the suite | **Yes** |
+
+**What it costs** (the release build, 1920 by 1080, full screen, the
+machine otherwise idle; RTX 4060 Laptop, i9-14900HX; milliseconds a
+frame, the 95th percentile in brackets):
+
+| | Standing | At its work | The hands, each step of the physics |
+|---|---|---|---|
+| Small | 4.72 (5.17) | 4.51 (5.01) | 32 millionths of a second |
+| Long | 4.59 (5.11) | 4.83 (5.08) | 33 |
+| Round | 4.57 (5.06) | 4.56 (5.05) | 31 |
+
+- **One miner at its physical work costs nothing that shows in the
+  frame.** (Standing is measured where the place puts the miner, the work
+  at the rock: what differs between the two columns is the view.) The
+  hands' own step was 26 millionths of a second on the bench in step 2.
+
+| Miners walking | Strategy view, October 8 | Close view, October 8 | Strategy view, October 4 | Close view, October 4 |
+|---|---|---|---|---|
+| 0 | 4.84 (5.35) | 4.92 (5.27) | 4.8 (5.2) | 4.7 (5.1) |
+| 25 | 5.62 (5.95) | 5.33 (5.64) | 5.5 (5.8) | 5.2 (5.4) |
+| 50 | 6.08 (6.88) | 5.81 (6.54) | 5.9 (6.7) | 5.5 (6.0) |
+| 100 | 7.31 (8.70) | 7.00 (8.33) | 6.9 (7.8) | 6.4 (7.1) |
+
+- **A hundred walking miners add about 2.5 ms** (2.1 on October 4): about
+  0.025 ms each. What S3 put on every miner (its weights, fingers that
+  close, things that hang from a hand) costs about 0.4 ms in a hundred.
+- **A crowd at physical work was not measured:** only the chosen miner
+  is given its physical work.
+
+**What the step found:**
+
+| ID | Seen | Why | Done |
+|---|---|---|---|
+| E1 | In the build's own measure, Small fell on its way to its work. On the bench: five seconds into any long walk with its pickaxe in its hand ("its weight has been outside its feet too long"), at 50 frames a second as at 200 | The rule that lets a body go when its weight has been outside its feet for 2.2 s was counted while it walked, where the walk carries the weight ahead of the feet. A light body with a tool at its side walked "outside" all the way. No test had walked further than a few metres with a pickaxe | It is counted only standing. All nine miners and pickaxes then walked 17 m to their work and worked |
+| E2 | Tried at every boulder, eight of the thirty miners and boulders gave their rock up for their knees (step 11's N10): at the two low domes, and at three boulders of ordinary height | The stance at a rock is chosen for the reach alone. Where that bent the knees deep, the miner could only refuse the rock | Asked too much, it looks for a way to stand that bends its knees less (to 0.65 of what the last one did, up to three times for an order), and gives the rock up only if there is none. All thirty then mined. Long, at the lowest boulder: its knees asked 39% as it first stood to it, 23% as it struck |
+
+**The model quality method, across strengths.** The plan asked for the
+audit in motion "run across a range of strengths, since the motion is no
+longer the same every time". What was done is coarser than that method:
+
+- **Captured:** each miner at its work at a boulder of ordinary height, at
+  0.7 and at 3 times its strength (six captures of 22 to 28 s), from close
+  by at the miners' size in play (a miner about a hundred pixels tall).
+- **Read:** four of the six, forty frames each, a quarter of a second
+  apart (Long at both strengths, Small at 0.7, Round at 3).
+- **Seen:** nothing breaks. The hands stay on the handle; the feet stay
+  where they are put; the body bows and straightens with the swing; the
+  weaker body raises its pickaxe to its shoulder, the stronger over it.
+  - **Long, resting at 0.7 with its pickaxe low at its side:** the
+    pickaxe's head lies in the skirt of its coat. Nothing stops a pickaxe
+    at its bearer (the list above).
+  - **At the top of the lift** (Long and Round at 3) the pickaxe's head
+    comes close by the face. Whether it touches cannot be told at this
+    size.
+- **Not done:** the close audit, part by part and from several sides,
+  that the method asks of a model; the two captures not read (Small at 3,
+  Round at 0.7); strengths in between; the low boulders; a tired body.
+
+**What is not shown:**
+
+- **Nothing Luis has seen or played.**
+- **The pickaxe through its bearer** (above).
+- **A crowd at physical work,** and what many falling bodies cost.
+- **Other machines.** Only the RTX 4060 Laptop.
+- **A knee asked more than it has, at moments, in the blows:** Long's at
+  three of the ten boulders (103 to 124%), without a fall in five blows.
+- **Each boulder from more than one side.**
+- **Frame rates:** the build ran at about 210 frames a second and the
+  tests at 50; the long walk and work at a boulder were also run at 200
+  on the bench. Slow frames (under the physics' 50) were tried only for
+  the bench's swing, in step 2.
 
 **What is not there yet** (of the bench, step 2):
 

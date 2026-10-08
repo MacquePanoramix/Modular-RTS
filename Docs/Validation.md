@@ -2597,3 +2597,67 @@ before it, and most of this step's work went into them
   - **Frame rates other than 50 a second.**
   - **What it costs,** the crowd benchmark (step 12).
   - **Luis's eye.**
+
+## S3, step 12 — evidence (October 8)
+
+What the plan's list of evidence asked for, gathered and set against it
+([the table](Design/ThePhysicalBody.md#step-12-evidence-october-8)). The
+build was run for the first time (by its own measures, not by a person),
+and that found one more defect.
+
+- **The evidence test** (`EvidenceTests`, one): 1 of 1. Small with its
+  lantern and one pickaxe put on the ground: the lantern taken in hand;
+  told to mine, the lantern hung back, the pickaxe picked up, carried to
+  a boulder and worked with; a rest; the pickaxe laid down. Through 1,120
+  frames (22 s) there was the one pickaxe: in the miner's hands for 814
+  frames, in none for 306; it never moved more than 7 cm in a frame. The
+  lantern was in the hand for 129 frames and never more than 0.37 m from
+  the miner's hips. The last blow's speed and energy were measured, and
+  were in the panel's line.
+- **The build's own measures** (the release build, 1920 by 1080, full
+  screen, the machine otherwise idle):
+  - **One miner at its work** (`-wgwork`, the final code): 4.51 to
+    4.83 ms a frame at its work, 4.57 to 4.72 ms standing (the tables in
+    the design). The hands' step: 31 to 33 millionths of a second.
+  - **The walking crowd** (`-wgcrowd`): 4.84, 5.62, 6.08 and 7.31 ms with
+    0, 25, 50 and 100 miners in the strategy view (4.8, 5.5, 5.9 and 6.9
+    on October 4).
+  - **What the first run found:** Small "did not come to its work: it
+    fell". On the bench, from where the place puts it to the nearest
+    boulder of ordinary height (17 m): it fell five seconds into the
+    walk, at 50 frames a second and at 200 ("its weight has been outside
+    its feet too long"); Long and Round did not. With that counted only
+    standing: all three, with each of their three pickaxes (nine), walked
+    there and worked, and the build's measure ran through.
+- **Every miner at every boulder** (`MinerPanelBench`, ordinary strength,
+  its own pickaxe, from a few steps off: thirty tries).
+  - **Before the change E2:** 22 mined; 8 gave the rock up for their
+    knees (Small at three boulders, Long at four, Round at one); none
+    fell.
+  - **After it:** all thirty struck five blows (in 22 to 33 s) and broke
+    one or two pieces off; none fell; none gave its rock up. The most a
+    knee was asked at its work: 89% or less at 26 of them; 91% at one of
+    Round's; 103 to 124% at three of Long's.
+- **`BoulderTests`** (five): 5 of 5. Long at the lowest boulder: its
+  knees asked 39% as it first stood to it; it found a way to stand that
+  asks them 23%, and struck the rock three times within 18.2 s.
+- **The captures read for the model's quality** (each miner at its work
+  at 0.7 and at 3 times its strength; four of the six read, forty frames
+  each): nothing breaks; Long's resting pickaxe lies in the skirt of its
+  coat (the design).
+- **Full PlayMode suite.** Two runs, each alone.
+  - **With E1** (the long walk): 170 tests; 157 passed, none failed, 13
+    skipped as explicit (1,342 s).
+  - **With E2 as well** (the final code): 170 tests; 157 passed, none
+    failed, 13 skipped as explicit (1,327 s).
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`).
+- **Not tested:**
+  - **Anything Luis has seen or played.**
+  - **The pickaxe through its bearer:** not built, and not measured.
+  - **A crowd at physical work.**
+  - **Frame rates under 50 a second** for anything but the bench's swing
+    (step 2).
+  - **Every boulder from more than one side.**
+  - **The close audit of the model quality method** (the captures were
+    read at the miners' size in play).
+  - **Other hardware.**

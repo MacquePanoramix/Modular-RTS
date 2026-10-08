@@ -152,9 +152,10 @@ Luis asked for. The round's log, with before and after images, is in
    and picks it up. If none lies anywhere, it does nothing, and the panel
    says why.)
    - **The two lowest boulders** are small domes in the grass, a fifth of
-     a metre high. Small and Long go to them, bend to their work, stand
-     up again, and the panel says why: their knees would be bent too
-     deep. Round works at them.
+     a metre high. A miner whose knees would be bent too deep there (Small,
+     Long) bends to its work, stands up, and takes the blow another way,
+     its knees bent less. If it finds no such way at a rock, it stands up
+     with its pickaxe, and the panel says why.
 5. Go close with the Explore camera (`V`), and round it.
 6. **Stronger and weaker.** Move the slider while it works. Stronger: the
    lift is quicker, the blow lands harder, more pieces come off. Weaker:
@@ -225,8 +226,9 @@ Luis asked for. The round's log, with before and after images, is in
   boulder stays whole and nothing is brought home (S4).
 - **A weak miner does not pick a pickaxe up** (below about nine tenths of
   its strength): it has no other way down to the ground than the squat.
-- **Small and Long do not mine the two lowest boulders:** a body has no
-  way to work at rock lower than it can strike standing.
+- **A way to work at rock lower than a body can strike standing** (on
+  one knee, say): at a low boulder a miner stands as it can, or leaves
+  the rock.
 - **Known:** Long at twice its strength with the heavy pickaxe was
   thrown off its feet by its own swing, once; a weak miner up from a fall
   may stand bent double until the slider is raised (the panel says so).
@@ -266,6 +268,23 @@ miner walking between random places in the meadow:
 
 A hundred miners add about 2.1 ms: about 0.02 ms each. (Measured again on October 4, with the hanging things and the skirts' flaps.)
 
+**With all of S3 on each miner (measured October 8,** the machine
+otherwise idle, full screen):
+
+| Miners walking | Strategy view, frame ms (p95) | Close view, frame ms (p95) |
+|---|---|---|
+| 0 | 4.84 (5.35) | 4.92 (5.27) |
+| 25 | 5.62 (5.95) | 5.33 (5.64) |
+| 50 | 6.08 (6.88) | 5.81 (6.54) |
+| 100 | 7.31 (8.70) | 7.00 (8.33) |
+
+A hundred miners add about 2.5 ms: about 0.025 ms each.
+
+**One miner at its physical work** (the same build, `-wgwork`): 4.51 to
+4.83 ms a frame at its work at a boulder, 4.57 to 4.72 ms standing. Its
+hands cost 31 to 33 millionths of a second for each step of the physics
+([the tables](../Design/ThePhysicalBody.md#step-12-evidence-october-8)).
+
 **With the finger bones (measured October 6).** The computer was in use and
 the game's window in the background, so every figure is higher than the
 table above and the two are not comparable. The builds without and with the
@@ -291,8 +310,10 @@ with them: no more than two runs of the same build differ by.
   each hanging thing, four for the skirt's flaps, and fifteen for each hand
   that closes.
 
-The benchmark is in the build: run it with `-wgcrowd`. It writes
-`miner-crowd-benchmark.csv` beside the player log.
+The benchmarks are in the build: run it with `-wgcrowd` (the walking
+crowd) or `-wgwork` (one miner at its work). They write
+`miner-crowd-benchmark.csv` and `miner-work-benchmark.csv` beside the
+player log.
 
 ## What to judge
 

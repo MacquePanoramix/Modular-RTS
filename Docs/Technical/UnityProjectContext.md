@@ -1866,3 +1866,29 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   `-rockPickaxeOf`, and puts the pickaxe on the ground as the panel does.
   `BoulderTests`, `InteractionTests` and `PhysicalFallTests` changed with
   the step (below, in Validation).
+
+## The physical body, step 12: evidence — October 8
+
+- **`MinerWorkBenchmark`** (new; added where the miners' physical work is,
+  as the panel is). Started with `-wgwork`: each miner in turn is
+  measured standing (6 s), has its own pickaxe put on the ground, is told
+  to mine the nearest boulder whose top is 0.5 m or more over it, and is
+  measured at its work (12 s) from the same close view; `PhysicalHands`
+  times its own step meanwhile. It writes `miner-work-benchmark.csv`
+  beside the player log, and quits. (`-wgcrowd`, the walking crowd, is
+  `MinerCrowdBenchmark`'s, as before.)
+- **`PhysicalBalance`:** how long the weight has been outside the feet
+  (`outside`, which lets the body go after 2.2 s) is counted only while
+  it stands.
+- **`PhysicalSwing.KneesAtMost`:** no way of taking a blow that bends the
+  knees further is considered (`AimFrom`, and so `RockWork.Find`).
+  **`MinerWorkPreview`:** where the knees are asked too much at a rock
+  (`WorkRaises`), it sets `KneesAtMost` to 0.65 of what the plan bent
+  them, finds a plan again, and goes to it; up to three times for an
+  order; then it gives the rock up.
+- **Tests:** `EvidenceTests` (one: a pickaxe and a lantern followed frame
+  by frame). `BoulderTests.ABodyDoesNotWorkWhereItsKneesWouldBeBentTooDeep`
+  now takes either end: a way to stand that the knees bear, or the rock
+  given up. `MinerPanelBench` takes `-panelFrames` (the frames a second
+  it runs at) and `-panelBoulder -1` (from where the place puts the
+  miner, the nearest boulder of ordinary height).
