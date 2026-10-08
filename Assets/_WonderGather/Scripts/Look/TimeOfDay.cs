@@ -46,11 +46,14 @@ namespace WonderGather
         [Tooltip("The fire inside: house lights flicker gently and the windows breathe with them.")]
         [SerializeField] private bool hearth;
         [Range(0, .6f)] [SerializeField] private float hearthFlicker = .3f;
+        [Tooltip("The lamplight at the door and the windows. Off: it spreads over the ground before the house, as it looked from far away (the look Luis liked, now at every distance). On: the door's frame, the bench and whoever stands there shade it. The fire inside stays behind its walls either way.")]
+        [SerializeField] private bool lampShadows;
 
         public float Hour { get => hour; set { hour = Mathf.Repeat(value, 24); Apply(); } }
         public Color GlowEmission => glowColor * glowIntensity;
         public float MinutesPerSecond { get => minutesPerSecond; set => minutesPerSecond = value; }
         public bool Hearth { get => hearth; set => hearth = value; }
+        public bool LampShadows { get => lampShadows; set { lampShadows = value; Apply(); } }
 
         // A fire's unsteady brightness around 1: a slow swell with a quicker flutter on top.
         private static float Flicker(float seed, float speed, float amount)
@@ -122,7 +125,12 @@ namespace WonderGather
             return new[] { night, blueHour, sunrise, day, noon, golden, dusk, evening, lateNight, midnight };
         }
 
-        private void OnEnable() => Apply();
+        private void OnEnable()
+        {
+            Apply();
+            // The lamps' shadows reach as far as the lamps are seen from (see ShadowReach).
+            if (Application.isPlaying && !TryGetComponent<ShadowReach>(out _)) gameObject.AddComponent<ShadowReach>();
+        }
         private void OnValidate() => Apply();
 
         private void Update()
@@ -238,6 +246,7 @@ namespace WonderGather
                 float flicker = !hearth ? 1 : houseLights[i].name.StartsWith("Lantern") ? Flicker(9.7f + i, 3.1f, hearthFlicker * 1.2f) : fire;
                 houseLights[i].intensity = baseIntensity * p.HouseLights * flicker;
                 houseLights[i].enabled = p.HouseLights > .01f;
+                if (houseLights[i].type == LightType.Spot && houseLights[i].shadows != LightShadows.None) houseLights[i].shadowStrength = lampShadows ? 1 : 0;
             }
             // The glow material keeps a fixed emission (GlowEmission); the time of day only scales it.
             // The 2.2 power matches what scaling the colour before its sRGB conversion used to do.
