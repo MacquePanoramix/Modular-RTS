@@ -220,14 +220,16 @@ namespace WonderGather
         public bool Guides(int which) => phase != Phase.Hung && which == hand;
 
         // Where the wrist is, carrying: under the shoulder by the upper arm's length and what the raised forearm
-        // adds, ahead by what the forearm reaches forward, and as far out to the side as the free arm hangs.
+        // adds, ahead by what the forearm reaches forward, and as far out to the side as the free arm hangs, and
+        // as much further as lets the thing hang straight down clear of the body's side (the forearm turns out
+        // by that much; the upper arm still hangs).
         private Vector3 Carries(int which, Vector3 shoulder, Vector3 ahead)
         {
             var p = body.BodyProportions;
             float raised = ForearmRaised * Mathf.Deg2Rad;
             Vector3 aside = Vector3.Cross(Vector3.up, ahead) * (which == 0 ? -1 : 1);
             return shoulder + Vector3.down * (p.upperArm * UpperHangs + p.forearm * Mathf.Cos(raised)) + ahead * (p.forearm * Mathf.Sin(raised))
-                   + aside * (p.armHang.x + (which == 0 ? p.armCarry.x : p.armCarry.y));
+                   + aside * (p.armHang.x + (which == 0 ? p.armCarry.x : p.armCarry.y) + HangsOut);
         }
 
         public Vector3 Wrist(int which, Vector3 shoulder)
