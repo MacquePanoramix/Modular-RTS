@@ -1,8 +1,36 @@
 # Wonder Gather — Current State
 
-**Updated:** October 6, 2026.
+**Updated:** October 8, 2026.
 
-- **Now: S3, weight and strength at the rock.** Approved by Luis on
+- **Now: the playtest round.** Luis played the build of S3 and sent ten
+  notes ([the message](Correspondence/2026-10-08_THE_PLAYTEST_NO_FAKE_ANIMATIONS.md));
+  they come before S4 ("this polishing run and the fixing run" first).
+  Each is kept track of in
+  [the round's page](Reviews/2026-10-08_ThePlaytestRound.md).
+  - **The rule Luis gave:** "I don't want any fake animations." Every
+    movement is the body, with its weight, acting on the world, and must
+    read as real to someone watching ("fantasy media realistic"). Recorded
+    as a Direction, in Luis's words.
+  - **Done, and for Luis to see:** the fireflies (each has a home in the
+    meadow; fewer, and fainter from far); the cabin's light (it no longer
+    jumps as the camera pulls back; one choice of look is Luis's, key 0);
+    the stutter after each step of the walk (the hips fell 5 to 13 cm in
+    one frame at every footfall; now 2 to 3 mm); Long's rest that never
+    ended.
+  - **Much done, not finished:** turning round on the spot (the head
+    looks round first; the body turns no further than its feet let it, in
+    three steps; no foot jumps).
+  - **Not begun:** the clothes in a kneel; the kneeling itself; getting
+    up after a fall by the body's own forces; taking and holding the
+    lantern or the mug.
+  - **How movements are checked now**
+    ([the judging of movement](ArtDirection/MotionJudging.md)): traced
+    frame by frame at the rate Luis plays at and read for breaks; then
+    judges who did not make them; then Luis. What real bodies do, with
+    sources, is in
+    [the research](Research/2026-10-08_RealBodiesAndHowToJudgeThem.md).
+  - Nothing of it is merged into `main`, and nothing in it is Locked.
+- **Before it: S3, weight and strength at the rock.** Approved by Luis on
   October 6 ([the plan](NextMilestonePlan.md);
   [the design](Design/ThePhysicalBody.md)).
   - **What it is for:** a body with real strength moving a tool with real
@@ -152,9 +180,9 @@
     - **S3's twelve steps are built.** What it needs now is Luis's play of
       the build ([the guide](Playtests/MinersPlaytest.md#the-physical-work-with-the-panel-october-7)).
       Nothing of S3 is merged into `main`, and nothing in it is Locked.
-    - **Next, by the approved order:** S4 (hauling), then S2, then S5. S4's
-      plan begins by saying which of the prototype's own questions it
-      answers; it is not begun.
+    - **Next, by the approved order, after the playtest round:** S4
+      (hauling), then S2, then S5. S4's plan begins by saying which of the
+      prototype's own questions it answers; it is not begun.
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.

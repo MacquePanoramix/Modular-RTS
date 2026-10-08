@@ -12,6 +12,14 @@ Blender 4.4/4.5.
 archived in
 [Plans/S1_OrdinaryPlaceCamerasAndMiners.md](Plans/S1_OrdinaryPlaceCamerasAndMiners.md).
 
+**After Luis's play of it (October 8):** ten notes, to be put right before
+S4 is begun ("this polishing run and the fixing run" first). They are
+kept track of, one by one, in
+[the playtest round's page](Reviews/2026-10-08_ThePlaytestRound.md). The
+twelve steps below are as they were built; what the round changes in how a
+body walks, turns and rests is in
+[the design](Design/ThePhysicalBody.md#after-luiss-play-the-walk-the-turn-and-the-rest-october-8).
+
 ## Which of the prototype's questions it answers
 
 The first of them: does a body with real strength, moving a tool with real

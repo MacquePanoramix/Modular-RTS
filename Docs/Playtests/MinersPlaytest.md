@@ -241,6 +241,38 @@ Luis asked for. The round's log, with before and after images, is in
 - **The block of rock that `K` put before the miner** is gone from the
   build (the tests and the benches still use it).
 
+## After Luis's play of S3: what to look at now (October 8)
+
+Luis's ten notes, and what was found and done for each, are in
+[the playtest round's page](../Reviews/2026-10-08_ThePlaytestRound.md).
+The build in `Builds/WindowsOrdinaryPlace` has the first five. To see
+them:
+
+1. **The fireflies** (key `4` for dusk, `6` for night). Pull the camera
+   back and push it in: each stays where it is in the meadow; from
+   further there are fewer, and fainter. *Is this few enough? Is it too
+   few from far?*
+2. **The cabin's light.** Pull the camera all the way back, with the
+   house in the middle of the screen and at its edge: the light should
+   not change at any point. **Key `0`** switches the lamplight between
+   *spreading* (the look from far that Luis liked, now at every
+   distance; the place starts with it) and *shaded* (the door's frame,
+   the bench and whoever stands there shade it). *Which is it to be?*
+3. **The walk.** Send a miner down the slope by the path and watch its
+   head and hips against the far hills. *Is the stutter gone?*
+4. **Turning round.** Send a standing miner straight behind it. Its head
+   looks round first; it turns in three steps; then it walks. *Does it
+   read as a body turning? This one is not finished:* a miner sent back
+   while it is walking still has a bad frame or two.
+5. **Long's rest.** Have Long mine with its own pickaxe for a few
+   minutes: it rests with the pickaxe at its side and goes back to work.
+   With the heavy pickaxe it strikes twice, puts it down, and the panel
+   says why.
+
+**Not in this build yet:** the clothes in a kneel, the kneeling itself,
+getting up after a fall by the body's own forces, taking and holding the
+lantern or the mug.
+
 ## What changed for the game
 
 - **Carried things are carried.**

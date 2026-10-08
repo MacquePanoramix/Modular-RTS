@@ -1598,6 +1598,93 @@ longer the same every time". What was done is coarser than that method:
   adapting to its strength and to the rock, is what is wanted next
   ([message](../Correspondence/2026-10-06_THE_BENCH_IS_PROMISING.md)).
 
+### After Luis's play: the walk, the turn and the rest (October 8)
+
+Luis played S3 and sent ten notes
+([the message](../Correspondence/2026-10-08_THE_PLAYTEST_NO_FAKE_ANIMATIONS.md));
+what was found and done for each, with the figures and pictures, is in
+[the round's page](../Reviews/2026-10-08_ThePlaytestRound.md). This
+section keeps what changed in *how a body works*, so that it can be
+built on. All of it is **Implemented, not Locked**.
+
+**The rule Luis gave** (a Direction, in Luis's words): "I don't want any
+fake animations." "I want them to be more general animations that the
+character can adapt to any situation." It sharpens "every action is
+physical" of October 6: a movement that is done by the body and still
+reads as played back is also wrong.
+
+#### The walk: the hips come down to a landing
+
+- **What was wrong.** Only the legs of feet *on the ground* held the hips
+  down. Through a swing the hips stayed up; in the frame the foot landed,
+  its leg had to reach it and the hips were put down at once: 5 to 13 cm
+  in one frame, at every step.
+- **The rule now.** A foot in the air is on its way down. From a third of
+  the way through its swing the hips are brought to where both legs will
+  reach once it has landed: from where they are and as fast as they are
+  moving, along one line with no corner, by the very reach that will hold
+  them afterwards. Nothing is left to change in the landing frame.
+- **A landing is reckoned to the frame it happens in,** not to the moment
+  between two frames (the foot's landing place moved in its last frame in
+  the air).
+- **The hips rise with a pace that is kept** from frame to frame; and a
+  foot leaves the ground from rest.
+- **A foot in the air changes where it is going at a pace.** Where it
+  will land moves as the body turns and as its walk changes; followed at
+  once, the foot jumped in mid-air.
+
+#### The turn: paced by the feet
+
+- **The head looks where the body is about to go:** up to 62 degrees
+  round, at once; the chest a third of that; the hips after them.
+- **A leg turns only so far in its hip.** The body's place is turned no
+  further than 62 degrees round from a foot on the ground: it waits there
+  until that foot has stepped. This holds however the body is turned (to
+  go somewhere, to face its work, off the walked ground).
+- **The foot on the side it turns to steps first,** and lands turned on
+  towards the way the body means to face (by up to 34 degrees ahead of
+  it), opening the way; the other comes round after. Half a turn is three
+  steps.
+- **A boot never lands across the standing one.** It lands as far round
+  as leaves them clear, with a little room made beside the standing boot
+  if that is enough, and turned less if it is not.
+- **It turns, then walks.** Turned further than 58 degrees from the way
+  it is to go, the body all but stands; it walks as it comes round, at
+  its whole pace once within 22 degrees. The turn itself gathers pace and
+  loses it (no faster than 250 degrees a second).
+- These are in `UnitMotor` (the turn of the body's place) and
+  `ProceduralBiped` (what the feet allow, and where they step).
+
+#### The rest: nothing works harder than it can go on working
+
+- **What was wrong.** A rest was a pose. Nobody had asked what it cost to
+  hold: for Long, an arm at full strain for as long as the rest lasted.
+- **The carry at the side, and the rest, hang.** The arm is as near to
+  straight down as the body lets it, and all but straight (0.995 of its
+  length): a bent elbow holds a tool up by strength, a straight arm by
+  its bones.
+- **There is one way to rest holding a tool:** in one hand at the side.
+  The rest with the head on the ground and the handle's end in hand is
+  gone (it asked for a place the handle could not be at). Two hands were
+  tried and do not share a tool whose weight is at one end.
+- **A rest ends.** It is looked back on every eight seconds, once the
+  body has stood up: when the last eight gave back less than 0.4% of
+  what was spent, it has given what it can. The body goes on if it is
+  then under 30% spent; if not, holding this tool is no rest for it: it
+  puts the tool down and the panel says why.
+- **A tool that slips from the hands at work ends the work,** and the
+  panel says so.
+- `PhysicalBody.Effort(muscles)` gives what each group of muscles gave
+  at the last step: a rest can be checked by it.
+
+#### How it is checked
+
+A movement is traced frame by frame at 100 frames a second and read for
+breaks (`MotionTraceBench`, `Art/Review/motion_breaks.py`); a work and
+its rests are run for five minutes with each group of muscles' effort
+written down (`MinerPanelBench -panelMuscles`). The whole method is in
+[the judging of movement](../ArtDirection/MotionJudging.md).
+
 ## Sources
 
 - The ladder of balance (ankle, hip, step):

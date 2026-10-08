@@ -1892,3 +1892,72 @@ Nothing here is in the game's mining yet: it is a bench, run as a test.
   given up. `MinerPanelBench` takes `-panelFrames` (the frames a second
   it runs at) and `-panelBoulder -1` (from where the place puts the
   miner, the nearest boulder of ordinary height).
+
+## The playtest round, first part: the look at every distance; how a body walks, turns and rests — October 8
+
+What Luis's ten notes changed so far
+([the round's page](../Reviews/2026-10-08_ThePlaytestRound.md); the rules
+themselves are in
+[the design](../Design/ThePhysicalBody.md#after-luiss-play-the-walk-the-turn-and-the-rest-october-8)).
+
+- **`Fireflies` (Scripts/Look) and `WGFireflies.shader`.**
+  - Each firefly has a home (`Homes`: xyz on the ground, w the number it
+    is told apart by), found once from `OrdinaryGround.GrassDensity` and
+    `Height`, one to `meadowEach` square metres. They go to the shader
+    in a `GraphicsBuffer` (`_WG_FireflyHomes`).
+  - The shader roams each round its home and decides what is seen from
+    the eye's distance (`_WG_FireflySight`, `_WG_FireflyOut`).
+    `ShareSeen(distance)` and `Brightness(distance)` give the same in
+    code, for tests.
+  - The scene still carries the old fields (`count`, `extent`,
+    `farExtent`, `floor`); Unity ignores them.
+- **`ShadowReach` (Scripts/Look),** added by `TimeOfDay` when it plays.
+  - Before each camera draws, it sets the pipeline's shadow distance
+    beyond all that a lit, shadow-casting lamp lights (`Needed(eye,
+    border)`), scales the cascade splits so the nearer cascades keep
+    their metres, and puts everything back after the camera has drawn.
+    It looks for the place's lamps once a second.
+  - `TimeOfDay.LampShadows` (key `0` in `LookDevControls`): the spot
+    lamps of the house are shaded or not (their `shadowStrength` 1 or
+    0). Point lamps (the fire inside) keep their shadows.
+- **`ProceduralBiped`.**
+  - **The hips' height** is one line: `Reachable(...)` for any two
+    ankles; `LandingAnkle(foot)`; `LandsIn(foot)` (to the frame the foot
+    lands in); from `ComesDownFrom` of a swing the hips come down along
+    `Comes(from, pace, to, lasts, u)` to where both legs will reach;
+    they rise by `SmoothDamp` with a pace that is kept (`hipPace`).
+  - **A foot in the air:** where it is going (`foot.to`) follows its
+    target by `SmoothDamp` (`AimsIn`); the way round the standing boot
+    is looked for along the rest of its path (`LooksAlong`) and reached
+    at a pace (`foot.round`), with a hard clear after it; the lift
+    gathers pace over `LeavesOver` of the swing.
+  - **Turning:** `MayFace(from, to)` (no further than `MostTwist` round
+    from a planted foot); `MeansToFace(degrees)` and `LandsFacing(foot)`
+    (a stepping foot lands turned on by up to `OpensBy`); in `Settle`
+    the foot on the side of the turn steps first, quicker
+    (`TurningStep`); a landing boot is turned less, or set a little
+    aside (`StepsAside`), before it is ever laid across the other.
+  - **The head** looks along `agent.desiredVelocity` (`LooksRound`,
+    `LooksIn`); the chest turns `ChestLooks` of that.
+- **`UnitMotor`.** The agent no longer turns the body
+  (`updateRotation = false`). `Steer` turns it towards
+  `agent.desiredVelocity` by `SmoothDampAngle`, through `Turned(...)`
+  (which tells the body where it means to face and takes what its feet
+  allow), and holds its going back while it is turned from its way
+  (`agent.velocity` clamped; `agent.speed` is left alone). `Face` and
+  the way off the walked ground turn through `Turned` as well.
+- **`PhysicalBody.Effort(muscles)`:** what each group gave at the last
+  step.
+- **`PhysicalSwing`:** one rest (the tool at the side); `NoRest`;
+  `HoldAsks` counts the hold as well as the shoulder. **`PhysicalCarry`:**
+  `Aside(body)`, and the arm hangs at 0.995 of its length; a tool it can
+  only hold by its end, told to be laid down, is let go.
+  **`MinerWorkPreview`:** ends the work when the tool cannot be rested
+  with or has slipped from the hands, and says why.
+- **Benches** (explicit tests): `DuskZoomCapture` (`-zoomOut`, `-zoomDark
+  1`, `-zoomShaded 1`, `-zoomFlies name=value`); `MotionTraceBench`
+  (`-traceOut`, `-traceWhat walk,turn,turns`, `-traceSize`,
+  `-traceEvery`, `-traceView`); `MinerPanelBench -panelMuscles n`.
+  **`Art/Review/motion_breaks.py`** reads the traces;
+  **`Art/Review/judges/`** holds the judges' briefs.
+

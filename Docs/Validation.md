@@ -2661,3 +2661,88 @@ and that found one more defect.
   - **The close audit of the model quality method** (the captures were
     read at the miners' size in play).
   - **Other hardware.**
+
+## The playtest round, first part — the fireflies, the cabin's light, the walk, the turn, the rest (October 8)
+
+Luis played S3 and sent ten notes
+([the round's page](Reviews/2026-10-08_ThePlaytestRound.md) has what was
+found and done for each, with the tables and pictures). This is what was
+run.
+
+- **The dusk at every step of the zoom** (`DuskZoomCapture`, time
+  standing still; forty steps from 5 to 80 m; each step also without the
+  fireflies):
+  - **The light round the door, before:** it fell by 0.2 to 1% a step
+    to 45 m, then **rose 7.3% and 2.8%** over the next two steps (45 to
+    52 m), the bright ground from 23% to 33%.
+  - **After, spreading** (the place's own setting): it never rises by
+    more than 0.3% a step, from 5 to 80 m. **After, shaded** (key `0`):
+    the same.
+  - **Fireflies lit on the screen, before:** 9 from 5 m, 137 from 28 m,
+    126 from 42 m. **After:** 0 to 25; 10 from 42 m; 6 from 80 m.
+- **`DuskDetailsTests`** (eight, five of them new): 8 of 8.
+- **The walk, the turn, and being sent back while walking**
+  (`MotionTraceBench`, each miner, 100 frames a second; read by
+  `Art/Review/motion_breaks.py`):
+  - **Before:** none of the nine passed. The hips jolted 83 to 128 mm
+    in one frame at every step of a walk; a foot jumped 289 to 403 mm in
+    the air in a turn.
+  - **After:** the three walks pass every limit (hips 2.0 to 2.7 mm).
+    The three turns from standing fail on two to four frames each (hips
+    5.4 to 11.6 mm up or down); the three reversals fail (a foot 48 mm
+    once for Long and 122 mm once for Round; the hips 12 to 14 mm along).
+- **Five minutes of work and rest, each miner with each pickaxe**
+  (`MinerPanelBench -panelMuscles`, ordinary strength, from where the
+  place puts the miner):
+  - **Before:** four of nine did not work for five minutes (Long rested
+    for ever with the light pickaxe, stuck at 77% spent with its own and
+    with the heavy one, or fell; Small fell with the heavy one).
+  - **After:** none fell and none stood for ever. Eight worked
+    throughout (11 to 87 blows); Long with the heavy pickaxe struck
+    twice, put it down, and the panel said why.
+- **Full PlayMode suite,** alone.
+  - **The first whole run after the walk and the turn were changed:**
+    176 tests; 143 passed, **18 failed**, 15 skipped as explicit
+    (1,614 s). Their causes, each put right:
+    - Legs stretched 1 to 5 cm past their length (the hips were brought
+      sideways to a landing and not held within reach afterwards).
+    - The pelvis fell to the ground after a navigation correction (it
+      went on down at the pace it had been put down at).
+    - A stopped worker never came to face its work (the turn's pace was
+      taken away each frame it was not travelling): eight tests of the
+      older worker.
+    - Boots overlapped by 23 to 43 mm in a sharp turn (the way round the
+      standing boot was now reached at a pace, and came late).
+    - A jog was not reached, and a body "travelling at its pace" counted
+      as standing (the turn held the agent's own pace down; it holds its
+      going back instead, and leaves the pace alone).
+    - Three tests whose premises the new rest changed, rewritten and
+      said so in them: a tired arm drags what it carried (the pickaxe is
+      3.4 times as heavy now, not 2.9: a hanging arm tires more slowly);
+      a weak miner with a pickaxe too heavy goes down and gets up (it
+      may now give the pickaxe up before its legs give way: the test
+      takes either, and asks that the panel said why).
+  - **The final code:** 176 tests; **161 passed, none failed**, 15
+    skipped as explicit (1,373 s).
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`), and its
+  own measures were run in it:
+  - **One miner:** standing 4.63 to 4.73 ms a frame; at its work 4.62 to
+    4.67 ms (hands 31 to 32 microseconds a step); four blows each in
+    twelve seconds.
+  - **A walking crowd:** 4.95, 5.73, 6.24 and 7.82 ms for none, 25, 50
+    and 100 miners (before the round, the same day: 4.84, 5.62, 6.08,
+    7.31).
+  - Nothing was thrown in its log.
+- **The judges:** six were called for the walk and the turn (three
+  each); all six were cut off by the account's usage limit before they
+  answered. Nothing came back.
+- **Not tested:**
+  - **Anything Luis has seen or played** of this.
+  - **The turn and the walk in the build,** at Luis's frame rate and on
+    Luis's screen (the traces are the editor's, at 100 frames a second).
+  - **What the longer shadow distance costs** at night with the camera
+    far from the house.
+  - **The clothes, the kneeling, the getting up, the lantern** (not
+    begun).
+  - **Frame rates under 50 a second.** Other hardware.
+
