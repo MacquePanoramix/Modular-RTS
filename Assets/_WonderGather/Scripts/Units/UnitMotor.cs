@@ -95,6 +95,8 @@ namespace WonderGather
         private const int Ground = 1 << 6;
         // It is off the walked ground (going, standing there, or coming back); it stands there.
         public bool IsOff => away != Away.No;
+        // How it is moving now, in words (for what reports why a thing was given up).
+        public string MovingHow => away != Away.No ? "off the walked ground: " + away : hasPending ? "waiting to go" : agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh ? (agent.pathPending ? "finding its way" : $"{agent.remainingDistance:0.00} m to go, stopping within {agent.stoppingDistance:0.00}") : "not on the walked ground";
         public bool StandsOff => away == Away.There;
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
