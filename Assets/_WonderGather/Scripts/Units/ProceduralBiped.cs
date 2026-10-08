@@ -427,7 +427,7 @@ namespace WonderGather
         // How far round the head is looking (degrees from the way the body faces), and how fast that is changing;
         // how far it may look round, how long it takes to, and the share of it the chest turns with it.
         private float looks,looksPace;
-        private const float LooksRound=62,LooksIn=.13f,ChestLooks=.35f;
+        private const float LooksRound=62,LooksIn=.2f,ChestLooks=.35f;
         private Quaternion FacesIn(float seconds)=>facing*Quaternion.Euler(0,Mathf.Clamp(turning*seconds,-TurnsAhead,TurnsAhead),0);
         private const float TurnsAhead=50;
         // The furthest a foot lands from under its hip to keep clear of the standing boot (m).
@@ -474,6 +474,29 @@ namespace WonderGather
         private const float TurnsFor=25;
         // The share of a standing step's time that a step round in a turn takes.
         private const float TurningStep=.76f;
+        // What the first judges of the turn said (October 8): the steps could not be seen as steps, the body's
+        // weight did not move, and a tall body and a small one turned on one clock.
+        // A step taken standing lifts the foot by this share of the hips' height (it was 5 cm for every body), and
+        // takes as much longer as the body is larger (as a longer pendulum swings more slowly): 1 for hips 0.7 m up.
+        private const float StepLifts=.11f;
+        public float StepSize=>customProportions?Mathf.Sqrt(Mathf.Max(.2f,HipHeight)/.7f):1;
+        // Turning, a foot steps once the body has turned this far on from it (degrees): before the hips have
+        // twisted far over it, not when they can twist no further.
+        private const float StepsWhenBehind=24;
+        // The body's weight goes over the foot it will stand on before the other leaves the ground, and stays
+        // there while that one is in the air: the hips go this share of the way to over that foot, in this long
+        // (seconds), and the foot lifts once they have gone this share of that. (Walking, the hips' sway does
+        // this; a body that keeps its balance by PhysicalBalance does it there.)
+        private const float ShiftShare=.55f,ShiftsIn=.09f,ShiftedEnough=.6f;
+        private float shift,shiftPace;
+        private float StandsAside(int index)=>(Quaternion.Inverse(facing)*(support[index].position-transform.position)).x;
+        private bool Unloaded(int index)
+        {
+            float want=StandsAside(1-index)*ShiftShare;
+            return Mathf.Abs(want)<.005f||(shift*want>0&&Mathf.Abs(shift)>=Mathf.Abs(want)*ShiftedEnough);
+        }
+        // A step taken standing is in the air (the walk waits for it to land).
+        public bool StepsStanding=>(support[0].swinging&&!support[0].gaitSwing)||(support[1].swinging&&!support[1].gaitSwing);
         private Vector3 Home(int index,Quaternion faces)=>transform.position+faces*new Vector3(index==0?-HipWidth-stanceWider:HipWidth+stanceWider,0,.02f+(index==0?.5f:-.5f)*stanceStagger);
         // A foot in the air changes where it is going at a pace, in this long (the place it goes to moves as the
         // body turns and as its walk changes: followed at once, the foot jumped in the air, by 30 cm in a turn).
@@ -494,7 +517,7 @@ namespace WonderGather
             }
             previousPosition=transform.position;previousVelocity=velocity=acceleration=Vector3.zero;
             CurrentGait=Gait.Standing;stopping=false;gaitWeight=jogWeight=phase=FlightTime=0;
-            pelvisY=pelvisWas=transform.position.y+HipHeight;pelvisPace=0;hipLift=HipHeight;hipPace=0;comingDown=-1;nextFoot=0;initialized=true;
+            pelvisY=pelvisWas=transform.position.y+HipHeight;pelvisPace=0;hipLift=HipHeight;hipPace=0;shift=shiftPace=0;comingDown=-1;nextFoot=0;initialized=true;
             handsInitialized=false;
             UpdateAnkles();
             Pose(0);
@@ -668,8 +691,8 @@ namespace WonderGather
             foot.toPace=foot.round=foot.roundPace=Vector3.zero;
             foot.from=foot.to=foot.position;foot.fromNormal=foot.toNormal=foot.normal;foot.fromRotation=foot.toRotation=foot.rotation;
             foot.liftPitch=foot.pitch;
-            foot.clearance=gaitSwing?footLift*Mathf.Lerp(.55f,.9f,jogWeight):.05f;
-            foot.rate=gaitSwing?cadence/Mathf.Max(.05f,1-duty):1/stepDuration;
+            foot.clearance=gaitSwing?footLift*Mathf.Lerp(.55f,.9f,jogWeight):Mathf.Max(.05f,StepLifts*HipHeight*(customProportions?1:0));
+            foot.rate=gaitSwing?cadence/Mathf.Max(.05f,1-duty):1/(stepDuration*StepSize);
         }
         private void Retarget(int index)
         {
@@ -870,14 +893,16 @@ namespace WonderGather
             for(int order=0;order<2;order++)
             {
                 int i=(first+order)%2;var foot=support[i];
-                if(HomeError(i)<tolerance&&Turn(i)<40&&!narrow) continue;
+                // (Turning: how far the body has turned on from this foot, the way it is turning.)
+                bool behind=Mathf.Abs(turning)>TurnsFor&&Mathf.DeltaAngle(foot.rotation.eulerAngles.y,facing.eulerAngles.y)*Mathf.Sign(turning)>=StepsWhenBehind;
+                if(HomeError(i)<tolerance&&Turn(i)<40&&!narrow&&!behind) continue;
                 if(!Ground(Home(i),out var point,out var normal)||Mathf.Abs(point.y-transform.position.y)>.8f) return;
                 // The body's weight comes off a foot before it lifts.
-                if(MayLift!=null&&!MayLift(i)){liftDue=i;return;}
+                if(MayLift!=null?!MayLift(i):!Unloaded(i)){liftDue=i;return;}
                 // (It leaves for where it stands; where it is going comes to it as it goes: Retarget.)
                 Lift(i,false);
                 // A step that brings a foot round in a turn is a quick one.
-                if(Mathf.Abs(turning)>TurnsFor||Turn(i)>=40) foot.rate=1/(stepDuration*TurningStep);
+                if(Mathf.Abs(turning)>TurnsFor||Turn(i)>=40) foot.rate=1/(stepDuration*StepSize*TurningStep);
                 return;
             }
             stanceDue=false;
@@ -1053,12 +1078,16 @@ namespace WonderGather
             }
             // (Told to go straight behind it, it looks round the way it has begun to turn, not back and forth.)
             if(Mathf.Abs(look)>=LooksRound-.01f&&Mathf.Abs(turning)>20) look=Mathf.Sign(turning)*LooksRound;
-            looks=dt>0?Mathf.SmoothDamp(looks,look,ref looksPace,LooksIn,float.MaxValue,dt):look;
+            looks=dt>0?Mathf.SmoothDamp(looks,look,ref looksPace,LooksIn*StepSize,float.MaxValue,dt):look;
             Quaternion chest=posture*Quaternion.Euler(jog*3,-yaw*.8f+looks*ChestLooks,0);
             // pelvisY is the smoothed target height. The reach projection is solved from it every
             // frame and never written back: feeding the projected height into the next target
             // ratchets the pelvis toward the ground whenever both feet are out of reach.
-            Vector3 wanted=transform.position+facing*new Vector3(sway+lean.x,0,lean.y-back)+Vector3.up*(pelvisY-transform.position.y-sink-crouch);
+            // A step taken standing: the weight over the other foot before it lifts and while it is in the air.
+            int steps=liftDue>=0?liftDue:support[0].swinging&&!support[0].gaitSwing?0:support[1].swinging&&!support[1].gaitSwing?1:-1;
+            float shiftWanted=steps>=0&&MayLift==null&&CurrentGait==Gait.Standing?StandsAside(1-steps)*ShiftShare:0;
+            shift=dt>0?Mathf.SmoothDamp(shift,shiftWanted,ref shiftPace,ShiftsIn*StepSize,float.MaxValue,dt):shiftWanted;
+            Vector3 wanted=transform.position+facing*new Vector3(sway+lean.x+shift,0,lean.y-back)+Vector3.up*(pelvisY-transform.position.y-sink-crouch);
             Vector3 hips=ReachableHips(wanted);
             // How high the hips may stand over the body's place: no higher than the legs on the ground reach.
             float may=hips.y-transform.position.y,held=float.MaxValue;
