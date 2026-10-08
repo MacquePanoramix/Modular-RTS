@@ -539,8 +539,8 @@ namespace WonderGather
         // body turns and as its walk changes: followed at once, the foot jumped in the air, by 30 cm in a turn).
         private const float AimsIn=.05f;
         // Going round the standing boot: how far aside a foot must be comes on over this share of a boot's length,
-        // before and after that boot; and over this share of its swing at either end.
-        private const float GoesRoundOver=.6f,GoesRoundFrom=.35f,GoesRoundTo=.12f;
+        // before and after that boot; and over this share of its swing, from where it left the ground.
+        private const float GoesRoundOver=.6f,GoesRoundFrom=.35f;
         public void ResetPose()
         {
             if(TryGetComponent<EquippedTool>(out var equipment)) equipment.CancelAttempt();
@@ -779,14 +779,19 @@ namespace WonderGather
                     if(aside>=0){point+=side*aside;break;}
                 }
             }
-            // (And clear of the standing boot by the measure its way round keeps: SwingPose.)
-            if(!other.swinging) point+=GoesRound(point,other,stands*new Vector3(index==0?-1:1,0,0));
             if(!Ground(point,out var ground,out var normal)||Mathf.Abs(ground.y-transform.position.y)>.8f) return;
             // It changes where it is going at a pace; close to landing it is there.
             foot.to=frame>0?Vector3.SmoothDamp(foot.to,ground,ref foot.toPace,AimsIn,float.MaxValue,frame):ground;
             foot.toNormal=normal;foot.toRotation=SoleRotation(normal,faces);
-            // (On its way to there, the place it is going to may pass over the standing boot: the foot's own way
-            // round keeps it clear, in SwingPose. Pushed off that boot here, the place jumped, and the foot with it.)
+            // The place it is going to is itself clear of the standing boot, by the measures its way there keeps
+            // (SwingPose): so it lands where it was going, the hips come down to the place it lands on, and there
+            // is nothing to take back as it comes down.
+            if(!other.swinging)
+            {
+                Vector3 own=stands*new Vector3(index==0?-1:1,0,0);
+                foot.to+=GoesRound(foot.to,foot.toRotation,other,own);
+                foot.to=NotTouching(foot.to,foot.toRotation,other,own);
+            }
         }
         // A boot on the ground, seen from above: a line from heel to toe with half a boot's width round it.
         private float BootHalfWidth=>(HeelLength+BallLength+ToeLength)*.2f;
@@ -849,18 +854,32 @@ namespace WonderGather
         }
         // How far apart the two boots are now, less the room they need: negative when they overlap.
         public float BootClearance=>BootGap(support[0].position,support[0].rotation,support[1].position,support[1].rotation,out _)-BootHalfWidth*2;
-        // How far a boot at a place has to be moved, to its own side, to be clear of the standing boot there.
-        private Vector3 GoesRound(Vector3 at,Foot other,Vector3 ownSide)
+        // How far a boot at a place, turned so, has to be moved to its own side to be clear of the standing boot
+        // while it is alongside it. Measured the way the body faces, not the way that boot points: a left foot is to
+        // the left of the right as the body stands, whichever way a turn has left the boots pointing. (Measured
+        // from the standing boot's own line, a place straight ahead of a body that had turned on from that boot
+        // lay "across" it, and the foot was dragged a third of a metre off its way to get round.)
+        private Vector3 NotTouching(Vector3 at,Quaternion turned,Foot other,Vector3 ownSide)
         {
-            Vector3 heading=Vector3.ProjectOnPlane(other.rotation*Vector3.forward,Vector3.up).normalized;
-            Vector3 beside=Vector3.Cross(Vector3.up,heading);
-            if(Vector3.Dot(beside,ownSide)<0) beside=-beside;
-            Vector3 off=at-other.position;off.y=0;
-            float ahead=Mathf.Abs(Vector3.Dot(off,heading)),out_=Vector3.Dot(off,beside);
+            for(int k=0;k<2;k++)
+            {
+                float near=BootGap(at,turned,other.position,other.rotation,out var outwards);
+                if(near>=BootHalfWidth*2) break;
+                at+=(outwards!=Vector3.zero?outwards:Vector3.ProjectOnPlane(ownSide,Vector3.up).normalized)*(BootHalfWidth*2+.002f-near);
+            }
+            return at;
+        }
+        private Vector3 GoesRound(Vector3 at,Quaternion turned,Foot other,Vector3 ownSide)
+        {
+            ownSide=Vector3.ProjectOnPlane(ownSide,Vector3.up).normalized;
+            Vector3 ahead=Vector3.Cross(ownSide,Vector3.up),off=at-other.position;off.y=0;
             float boot=HeelLength+BallLength+ToeLength,clearOf=boot+BootHalfWidth*2;
-            float alongside=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(clearOf,clearOf+GoesRoundOver*boot,ahead));
-            float lacks=BootRoom-out_;
-            return beside*(alongside*.5f*(lacks+Mathf.Sqrt(lacks*lacks+.0002f)));
+            float alongside=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(clearOf,clearOf+GoesRoundOver*boot,Mathf.Abs(Vector3.Dot(off,ahead))));
+            // (Boots that point different ways take more room side by side: each end of the one stands out to the
+            // side of the other.)
+            float askew=Mathf.Abs(Mathf.Sin(Mathf.DeltaAngle(turned.eulerAngles.y,other.rotation.eulerAngles.y)*Mathf.Deg2Rad));
+            float lacks=BootRoom+.5f*boot*askew-Vector3.Dot(off,ownSide);
+            return ownSide*(alongside*.5f*(lacks+Mathf.Sqrt(lacks*lacks+.00002f)));
         }
         private void SwingPose(Foot foot,Foot other,Vector3 ownSide)
         {
@@ -878,11 +897,14 @@ namespace WonderGather
                 // (It went round by a bow worked out from the rest of its way and held by a pace, with a last
                 // push where that was not enough. Sent back while it walked, the two pulled a foot a quarter of a
                 // metre, and half a metre, aside in one frame. October 8.)
-                // (Where it lands is clear by the same measure, so there is nothing left to take back as it comes
-                // down; where it left from may not be, after a turn that left its feet crossed: it goes out over
-                // the first part of its swing.)
-                float ends=Mathf.SmoothStep(0,1,s/GoesRoundFrom)*Mathf.SmoothStep(0,1,(1-s)/GoesRoundTo);
-                along+=GoesRound(along,other,ownSide)*ends;
+                // (It lands where that has it: there is nothing to take back as it comes down. Where it left from
+                // may be nearer, after a turn that left its feet close or crossed: it goes out over the first part
+                // of its swing.)
+                Quaternion turned=Quaternion.Slerp(foot.fromRotation,foot.toRotation,e);
+                along+=GoesRound(along,turned,other,ownSide)*Mathf.SmoothStep(0,1,s/GoesRoundFrom);
+                // And whatever that leaves, the two boots never touch: seen from above, heel to toe, the one in
+                // the air is moved the shortest way out from the standing one by what it lacks.
+                along=NotTouching(along,turned,other,ownSide);
             }
             // It leaves the ground from rest: its rise begins gently (it rose by a quarter of its whole lift in the
             // first frame off the ground, and half of it within a tenth of the swing: a pop at every step).
@@ -970,10 +992,13 @@ namespace WonderGather
         // when the foot left the ground. October 8.)
         // (With both feet down a walk's own stride stretches the leg behind further than that, most of all down a
         // slope: there the measure is this share, which a steady walk does not come to.)
-        private const float DipsAtMost=.07f,DipsBothDown=.17f,CreepsAtLeast=.2f;
+        private const float DipsAtMost=.07f,DipsBothDown=.17f,CreepsAtLeast=.2f,StopsUnder=.06f;
         public float PaceItsLegsAllow(Vector3 way)
         {
-            if(!initialized||CurrentGait!=Gait.Walking||stopping) return float.MaxValue;
+            // (Bringing its feet together after it has stopped, it does not set off again until it has: sent back
+            // while it walked, it set off from wherever the stop had left its feet, some of the time crossed.)
+            if(initialized&&stopping) return StopsUnder;
+            if(!initialized||CurrentGait!=Gait.Walking) return float.MaxValue;
             way=Vector3.ProjectOnPlane(way,Vector3.up).normalized;
             // (Measured over the ankle itself: the body's own place rides over the ground by more in some places
             // than in others.)

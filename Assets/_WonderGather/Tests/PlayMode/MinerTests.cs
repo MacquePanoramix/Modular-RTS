@@ -223,15 +223,21 @@ namespace WonderGather.Tests
                 unit.Motor.TryMove(back);
                 began = Time.time;
                 float closest = float.MaxValue;
+                string when = "";
                 int steps = biped.StepCount;
                 while (Time.time - began < 3.5f)
                 {
                     yield return null;
                     // Boots seen from above, heel to toe: how much room is left between them (negative: they overlap).
-                    if (biped.FootPlanted(0) || biped.FootPlanted(1)) closest = Mathf.Min(closest, biped.BootClearance);
+                    if ((biped.FootPlanted(0) || biped.FootPlanted(1)) && biped.BootClearance < closest)
+                    {
+                        closest = biped.BootClearance;
+                        // (When, and with which foot how far through its swing: to find it by.)
+                        when = $"{Time.time - began:F2} s after it was sent back, the left foot {(biped.FootPlanted(0) ? "down" : $"{biped.SwingProgress(0):F2} through its swing")}, the right {(biped.FootPlanted(1) ? "down" : $"{biped.SwingProgress(1):F2} through its swing")}, going at {biped.VelocityNow.magnitude:F2} m/s";
+                    }
                 }
                 Assert.That(biped.StepCount - steps, Is.GreaterThan(3), $"{choice.NameOf(index)} did not step through the turn.");
-                Assert.That(closest, Is.GreaterThan(-.004f), $"{choice.NameOf(index)}'s boots overlapped by {-closest * 1000:F0} mm in the turn.");
+                Assert.That(closest, Is.GreaterThan(-.004f), $"{choice.NameOf(index)}'s boots overlapped by {-closest * 1000:F0} mm in the turn ({when}).");
                 unit.Motor.Stop();
             }
         }
