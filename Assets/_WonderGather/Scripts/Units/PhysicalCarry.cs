@@ -246,6 +246,8 @@ namespace WonderGather
             if (clock < 0) Go(Asks > Carries ? Way.Dragged : Way.OneHand);
             else if (way == Way.OneHand && Asks > Carries) Go(Way.Dragged);
             else if (way == Way.Dragged && Asks < CarriesAgain) Go(Way.OneHand);
+            // Told to lay down a tool it can only hold by its handle's end: that one lies already. It lets go.
+            if (laying && way == Way.Dragged) { laying = false; Leave(); return; }
             clock += dt;
             // Carrying, it stands up as the tool comes with it; dragging, it stoops to it.
             drags = Mathf.MoveTowards(drags, way == Way.Dragged && motor != null && motor.IsMoving ? 1 : 0, dt / .5f);

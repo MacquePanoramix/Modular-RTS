@@ -183,8 +183,10 @@ namespace WonderGather.Tests
         {
             Time.captureFramerate = 50;
             Carried c = default;
-            yield return Carry("Long", 1, 2.9f, 6, r => c = r);
-            Debug.Log($"CARRY_TIRED Long, its pickaxe 2.9 times as heavy: {c.first}, then {c.last}; walked {c.covered:F2} m in {c.took:F1} s");
+            // (3.4 times, since October 8: the arm that carries hangs straight now, and tires more slowly: at 2.9
+            // times it carried the six metres without needing to drag.)
+            yield return Carry("Long", 1, 3.4f, 6, r => c = r);
+            Debug.Log($"CARRY_TIRED Long, its pickaxe 3.4 times as heavy: {c.first}, then {c.last}; walked {c.covered:F2} m in {c.took:F1} s");
             Assert.That(c.first, Is.EqualTo(PhysicalCarry.Way.OneHand), "Fresh, it should carry it.");
             Assert.That(c.last, Is.EqualTo(PhysicalCarry.Way.Dragged), "Its arm tired, it should drag it.");
             Assert.That(c.has, Is.True);
