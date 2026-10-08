@@ -32,10 +32,10 @@ against how a real body does the same thing, not by whether it works.
 | L3 | The walk: a slight stutter after each step, as if set down a little | **Cause found and removed; measured. For Luis to see.** [Below](#l3-the-stutter-after-each-step) |
 | L4 | Turning round on the spot: the legs teleport a little, and it does not look human | **Made again twice; measured; one round of judges. For Luis to see.** [Below](#l4-turning-round-on-the-spot) |
 | L5 | The clothes "explode" when a character kneels | **Cause found and removed; for Luis to see.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
-| L6 | The kneeling reads as an animation in parts, and most of it is off | **Made again as one movement; measured; judges not yet.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
+| L6 | The kneeling reads as an animation in parts, and most of it is off | **Made again as one movement; measured; one round of judges. For Luis to see.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
 | L7 | Getting up after a fall is an animation, not the body | To be looked into |
 | L8 | Long stopped recovering at 77% spent, and stood still | **Cause found and removed; measured.** [Below](#l8-long-stops-recovering) |
-| L9 | Taking the lantern or the mug: uncanny once it is held | To be looked into |
+| L9 | Taking the lantern or the mug: uncanny once it is held | **A cause found and removed; for Luis to see.** [Below](#l9-the-lantern-and-the-mug-once-they-are-held) |
 | L10 | In general: uncanny movements; some look built in, and do not answer to the world | Under way with each of the above |
 
 ## How each movement is checked
@@ -701,9 +701,64 @@ traced for.
 - **A tool only gone for, still lying on the ground, was counted as
   carried** by the back.
 
+### What the judges of the pick-up said (first round)
+
+Three judges (the body, the animator, the sceptic; each a separate agent
+on the smaller model, none of which had seen the movement or been told
+what was changed) were given sheets of Small's and Long's pick-up from
+the side and from the front, and the figures of the trace.
+
+All three: **reads as real, with a flaw.** And all three named the same
+flaw first, which was not in the going down at all.
+
+| What they found | Who | Checked against the trace | |
+|---|---|---|---|
+| **The pickaxe, once it is up, is held dead level and does not move.** "Held out rigid, not hung... To keep the handle dead level behind the hip, the wrist must carry the whole lever"; "a placed carry pose, not a weight in a hand" | All three | It was level by design (carried "level, its head ahead"), and where the hand holds it never changes once it is up | **Stands** |
+| **The arm that carries it has its elbow out,** "like a hand on the hip" | All three | The arm of a hand on a tool was turned out as for work with both hands | **Stands** |
+| **Standing up, the back comes upright first and the legs last** (Long: "the chest rises 75 degrees while the hips do almost nothing") | The animator. The body called the same order right ("it happens in stages... it reads as legs pushing on the ground") | Small's back and knees rose together within a tenth. Long's knees were behind: the back a third of the way up when the knees were a quarter, and the knees done 0.2 s after the back. Its legs' strength sets how fast its knees go, and the back did not wait | **Stands for Long** |
+| **A stiff sheet of Long's coat stands out to one side** as its knees open, and again as it rises | The sceptic. The animator called the coat right ("secondary motion that arrives and settles") | A front flap lay along its thigh's own line, and so out to the side when the knee opened outwards | **Stands** |
+| After it stands, Long's body turns 45 degrees from the camera | The sceptic ("cannot tell" whether the feet pivot) | The body does not turn by a tenth of a degree after it stands | **Struck** |
+| The pace of standing up is nearly even | The animator ("may be the picture"; a mild fault) | The hips go from 0.05 to 0.6 and back to 0.1 m/s | **Struck as measured** |
+| It does not get ready before it goes down | The animator, who did not count it a fault | | **Not a fault** |
+| Long has a second pickaxe on its back | The body; the animator | It has: the pickaxe modelled on its back, and "its own" in its hand | **True, and Luis's to decide** (below) |
+
+What they said was right: the head goes first and looks at the pickaxe;
+the hips go back as the chest goes forward; the bow and the knees go
+together; the hand's pace swells and shrinks; the feet do not move; the
+free arm hangs; the pickaxe stays on the ground until the hand is on it;
+the things that hang read as weight on a strap; Long reads heavier than
+Small.
+
+**What was done about what stood.**
+
+- **A pickaxe carried in one hand hangs from the hand:** its head at the
+  hand, its handle down behind, as steep as leaves its end clear of the
+  ground (58 degrees at most). It was held level.
+- **A hand that carries at the side keeps its elbow back,** as a hanging
+  arm does.
+- **Standing up from the ground, the back waits for the knees:** it
+  straightens no further ahead of them than a little.
+- **A coat's front is held up only by how far its thigh comes forward
+  under it,** not by how far the knee opens to the side: it hangs
+  between open knees.
+
+![Long standing up with its pickaxe, after the judges](../Images/Playtest_2026-10-08/L6_Carry_Long_AfterJudges.jpg)
+
+*Long standing up with its pickaxe, after the judges: its back still
+bowed while its legs raise it; the pickaxe hanging from its hand, the
+handle down behind.*
+
+**For Luis to decide: Long has two pickaxes.** Long was modelled with a
+pickaxe slung on its back (October 3). Since S3 it also takes "its own
+pickaxe" in its hands, which is a second one. Two of three judges
+noticed. Whether the one on its back is the one it works with (taken
+off by its hands, which is carrying and equipment: S4), or is hidden
+while one is in hand, or stays, is not for me to choose; nothing was
+changed.
+
 **Not done, and what is not known.**
 
-- **No judge has looked at it yet.**
+- **No second round of judges** has looked at it as it is now.
 - **The pickaxe comes up in front of the legs,** its head before the
   knees, before it goes to the side. It does not pass through them in
   the pictures read, but it is close.
@@ -810,6 +865,57 @@ fell, and none stood for ever.)
 
 ---
 
+## L9. The lantern and the mug, once they are held
+
+**What Luis said.** "When the character goes to pick up either the
+lantern or the mug, the animation feels okay until the part to hold,
+then it looks a bit uncanny."
+
+**What was found.** Once the lantern was in the hand, it was carried on
+**a straight arm held out to the side**, far enough out for the lantern
+to hang clear of the coat (5 cm further out than a free arm, for Small).
+The arm was 7 mm short of straight, and stayed so. No arm keeps that up:
+it is the shoulder holding the arm and the lantern out, for as long as
+the lantern is carried. And the body did not look at what it reached
+for.
+
+![Small taking its lantern in hand, as it was](../Images/Playtest_2026-10-08/L9_Lantern_Small_Before.jpg)
+
+*As it was (Small, from behind, a picture every fifth of a second): the
+hand goes to the hook and takes the lantern off; then the arm goes out
+straight to the side and stays there.*
+
+**What was done.**
+
+- **It is carried as a lantern is carried by its bail:** the upper arm
+  hanging, the forearm raised forward (52 degrees) and turned out by as
+  much as lets the lantern hang straight clear of the coat, the hand a
+  little before the hip, the elbow back. The lantern hangs from the hand
+  and swings there as it did.
+- **The body looks at the thing it reaches for,** as it takes it and as
+  it hangs it back.
+
+![Small taking its lantern in hand, as it is](../Images/Playtest_2026-10-08/L9_Lantern_Small_After.jpg)
+
+*As it is (from behind, as above): it looks down at the lantern, takes
+it off its hook, and carries it before its hip.*
+
+![Small walking with its lantern](../Images/Playtest_2026-10-08/L9_Lantern_Small_Carried.jpg)
+
+*Walking with it, from the front.*
+
+**Not done, and what is not known.**
+
+- **No judge has looked at it.**
+- **The mug** is carried the same way (Long's mug hangs from the hand
+  by its handle). Whether a mug should be carried upright, as a mug
+  with something in it is, is a question about what the mug *is*, and
+  Luis's.
+- **The taking itself** (the hand's way to the hook, the lift off it)
+  was not changed: Luis called it "okay".
+- The trace has no fingers and no things that hang: this was read in
+  pictures only.
+
 ## What was run
 
 ### For the first part (L1 to L4 and L8)
@@ -868,7 +974,29 @@ fell, and none stood for ever.)
   the editor's); a pickaxe too heavy to carry, or on a slope, or against
   a rock, in pictures; frame rates under 50; other hardware.
 
+### For the third part (after the judges of the pick-up; L9)
+
+- **The traces of the pick-up:** all three miners pass every limit of
+  the numbers with the changes.
+- **The whole PlayMode suite,** alone: 176 tests; 160 passed, **one
+  failed**, 15 are run only when asked (1,405 s). The one: the lantern,
+  carried the new way, hung 14 degrees from straight down against the
+  coat (the test allows 12). The hand now holds it far enough out, and
+  the tests that touch it were run again: 20 of 20 (the lantern and the
+  mug, the boulders, the miners, the click, the fall, the evidence).
+  **The whole suite was not run again after that last change.**
+- **The release build** was made from the final code. **Its own
+  measures were not run again** in this part.
+- **Not tested:** anything by Luis's eye; a second round of judges; the
+  lantern and the mug by any judge.
+
 ## What was learnt in this round, so far
+
+- **Fresh eyes look at everything, not at what they were shown for.**
+  The three judges of the pick-up were shown a going-down and a
+  standing-up. All three named, first, the way the pickaxe was carried
+  afterwards: level, and still. It had been carried so since S3, and I
+  had stopped seeing it.
 
 - **Trace everything a body does, not only what was complained of.**
   The pick-up was not traced in the first part. Traced, it showed that

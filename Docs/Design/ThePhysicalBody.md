@@ -1817,6 +1817,30 @@ half of one.
 | `DipsAtMost`, `DipsBothDown`, `CreepsAtLeast`, `StopsUnder` | `ProceduralBiped` | 0.07, 0.17, 0.2 m/s, 0.06 m/s | The pace the legs allow; the pace while the feet come together after a stop |
 | `Slows`, `CarriedOn` | `UnitMotor` | 4 m/s each second, 0.12 m/s | A walker held back loses its pace; it still "has pace the other way" above this |
 
+**After the judges of the pick-up** (the third part; what they said is
+in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md#what-the-judges-of-the-pick-up-said-first-round)):
+
+- **A tool carried in one hand hangs from the hand**
+  (`PhysicalCarry.AtSide`): its head at the hand, its handle down behind
+  as steep as leaves its end 10 cm clear of the ground, 58 degrees at
+  most. (It was held level: the step 7 rule "level, its head ahead" is
+  replaced.) The swing's rest uses the same hold.
+- **A hand that carries at the side keeps its elbow back**
+  (`ProceduralBiped.HangsAtSide`), as a hanging arm does. An arm on a
+  tool for work is still turned out.
+- **Standing up from the ground, the back straightens no further ahead
+  of the knees than a little** (`BackLeads`): legs that are slow to
+  raise the body are waited for.
+- **A coat's front flap is held up only by how far its thigh comes
+  forward under it** (`MinerBody.Drape`), not by how far the knee opens
+  to the side.
+
+**The lantern and the mug in the hand** (`ThingsInHand.Carries`): the
+upper arm hangs, the forearm is raised forward by 52 degrees and turned
+out by as much as lets the thing hang straight clear of the coat. (It
+was a straight arm held out to the side.) The body looks at the thing as
+it takes it and as it hangs it back.
+
 **The trace** (`MotionTraceBench`) now also takes a pickaxe picked up
 and laid down (`-traceWhat pick`), and writes the hands, the shoulders,
 the tool, the bow, the lean as it is drawn and as the balance has it,

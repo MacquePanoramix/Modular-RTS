@@ -245,7 +245,7 @@ Luis asked for. The round's log, with before and after images, is in
 
 Luis's ten notes, and what was found and done for each, are in
 [the playtest round's page](../Reviews/2026-10-08_ThePlaytestRound.md).
-The build in `Builds/WindowsOrdinaryPlace` has seven of them. To see
+The build in `Builds/WindowsOrdinaryPlace` has eight of them. To see
 them:
 
 1. **The fireflies** (key `4` for dusk, `6` for night). Pull the camera
@@ -278,9 +278,15 @@ them:
    or fly?*
 7. **The start of a walk.** A miner now takes about a second to reach
    its whole pace. *Does it feel slow to answer?*
+8. **The pickaxe in one hand.** Have a miner rest, or walk with its
+   pickaxe: it hangs from the hand, the handle down behind (it was held
+   level). *Is this the carry Luis wants?*
+9. **The lantern** (`Space`, click it, "Take in hand"). The miner looks
+   at it, takes it off its hook, and carries it before its hip, the
+   forearm raised. *Is the hold still uncanny?*
 
 **Not in this build yet:** getting up after a fall by the body's own
-forces, taking and holding the lantern or the mug.
+forces.
 
 ## What changed for the game
 

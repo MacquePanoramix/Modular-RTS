@@ -2802,3 +2802,30 @@ was run.
   - **The clothes of all three in every bend,** beyond the pick-up
     pictures in the round's page.
   - **Frame rates under 50 a second.** Other hardware.
+
+## The playtest round, third part — after the judges of the pick-up; the lantern in the hand (October 8)
+
+- **Three judges of the pick-up** (separate agents on the smaller
+  model; sheets of Small and Long from the side and from the front; the
+  trace's figures). All three: "reads as real, with a flaw". Of eight
+  things they said, four stood and were put right, two were struck
+  against the trace, one was not a fault, one is Luis's to decide
+  ([the table](Reviews/2026-10-08_ThePlaytestRound.md#what-the-judges-of-the-pick-up-said-first-round)).
+- **The traces of the pick-up** (`MotionTraceBench -traceWhat pick`),
+  with the changes: all three miners pass every limit.
+- **`HungThingCapture`** from behind and from the front, before and
+  after: read in pictures.
+- **Full PlayMode suite,** alone: 176 tests; **160 passed, 1 failed**,
+  15 skipped as explicit (1,405 s). The one:
+  `HungThingTests.WhatHangsByAHandleIsTakenInHandAndHungBack`, "In the
+  hand, standing, it should hang down": 14.2 degrees, for 12 allowed.
+  Carried before the hip, the lantern leaned on the coat. The hand now
+  holds it as much further out as lets it hang straight.
+- **After that one change:** `HungThingTests`, `BoulderTests`,
+  `MinerTests`, `InteractionClickTests`, `PhysicalFallTests` and
+  `EvidenceTests`: 20 of 20. **The whole suite was not run again.**
+- **Release build:** made from the final code. **Its own measures were
+  not run again.**
+- **Not tested:** anything Luis has seen or played of this; a second
+  round of judges; the lantern and the mug by any judge; the mug in
+  pictures (only Small's lantern was pictured).

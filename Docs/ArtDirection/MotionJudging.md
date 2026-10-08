@@ -162,10 +162,10 @@ Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)
 | Walking | **Passes** (all three miners) | Not yet (the first call was cut off before it answered) | Not yet |
 | Turning round on the spot | **Passes** for Small, **Passes** for Long, fails for Round (5.4 mm on 3 frames) | **One round:** reads as real, with flaws; five stood and four were put right. Not looked at since | Not yet |
 | Sent back the way it came, walking | **Passes** for Small; fails for Long (a foot 17 mm once); fails for Round (hips 9.4 mm) | Not yet | Not yet |
-| Going down for a pickaxe, standing up with it, and laying it down | **Traced.** Hips over the limit on 0, 0 and 0 frames (Small, Long, Round); it was 41, 50 and 32 | Not yet | Not yet |
+| Going down for a pickaxe, standing up with it, and laying it down | **Passes** (all three miners), since the judges' changes | **One round:** reads as real, with a flaw; four things stood and were put right (the pickaxe carried level and still; the elbow out; Long's back up before its legs; its coat's front out to the side) | Not yet |
 | The blow, and the rest from it | Efforts of each muscle group measured over five minutes | Not yet | Not yet |
 | Falling, and getting up | Not traced yet | Not yet | Not yet |
-| Taking the lantern or the mug, and holding it | Not traced yet | Not yet | Not yet |
+| Taking the lantern or the mug, and holding it | Not traced (the trace has no fingers, and nothing that hangs); read in pictures; the hold changed | Not yet | Not yet |
 | Clothes in the deepest bend | Not measured yet | Not yet | Not yet |
 
 ## What was learnt setting it up
@@ -191,6 +191,13 @@ Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)
   pixels high.** Two of three said they could not tell a step from a
   slide. Sheets for the feet are to be drawn closer, and from the side.
 
+- **Judges find what the maker has stopped seeing.** All three judges
+  of the pick-up named the same flaw first, and it was not in the
+  pick-up: the pickaxe carried level and still afterwards, as it had
+  been since S3. And two noticed that Long had two pickaxes.
+- **Judges disagree, and the trace settles it.** One called the order
+  of standing up wrong (back first, legs last), another called the same
+  order right. The trace said: together for Small, legs behind for Long.
 - **A trace is only as good as what is in it.** The pick-up was not
   traced in the first part (the trace had no hands). Traced, it showed
   at once that the whole upper body shook fifty times a second whenever

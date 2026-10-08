@@ -2017,3 +2017,12 @@ with the settings, are in
   when the boots were closest.
 - **`Art/Review`.** `motion_jolts.py`, `motion_frames.py`,
   `motion_dips.py`.
+- **After the judges of the pick-up (the third part).**
+  `PhysicalCarry.AtSide` pitches the tool by `HandleHangs` or as the
+  ground allows (`HandleClears`); `BackLeads`; `ProceduralBiped.
+  HangsAtSide(hand, on)` (set by `PhysicalCarry`, `PhysicalSwing` at
+  rest, and `ThingsInHand` carrying); `MinerBody.Drape` takes the
+  thigh's line in the pelvis' own fore-and-aft plane (the outer-side
+  stop is gone); `ThingsInHand.Carries` (`ForearmRaised`, `UpperHangs`,
+  plus `HangsOut`), and it calls `Regard`. `HungThingTests` asks for the
+  new hold.

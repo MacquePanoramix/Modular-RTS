@@ -33,10 +33,20 @@
     - **Found by the trace, not by a note:** the upper body shook fifty
       times a second whenever the back moved (drawn in jumps between the
       physics' steps). Gone.
-  - **Not begun:** getting up after a fall by the body's own forces;
-    taking and holding the lantern or the mug.
-  - **Judges:** one round, of the turn as it was after the first part.
-    None since.
+    - **The lantern, once it is held** (the third part): it was
+      carried on a straight arm held out to the side; it is carried now
+      on a hanging upper arm with the forearm raised, and the body looks
+      at what it reaches for.
+    - **After the judges of the pick-up:** a pickaxe carried in one
+      hand hangs from the hand (it was held level and still); the elbow
+      of the carrying arm is back; the back waits for the knees in
+      standing up; a coat's front hangs between open knees.
+  - **Not begun:** getting up after a fall by the body's own forces.
+  - **Judges:** one round of the turn (after the first part), one of
+    the pick-up (after the second). Both: "reads as real, with a flaw";
+    what stood was put right. No second round of either yet.
+  - **For Luis to decide:** Long has two pickaxes (the one modelled on
+    its back, and its own in its hands).
   - **How movements are checked now**
     ([the judging of movement](ArtDirection/MotionJudging.md)): traced
     frame by frame at the rate Luis plays at and read for breaks; then
