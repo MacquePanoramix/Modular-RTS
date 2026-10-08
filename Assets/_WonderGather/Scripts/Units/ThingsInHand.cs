@@ -30,6 +30,9 @@ namespace WonderGather
         // towards the hips, as it swings, by about a tenth of the arm's drop times that; the arm hangs far enough out
         // for the thing to stay clear all through a stride, with this much to spare (metres).
         private const float Keeps = .45f, Spare = .012f;
+        // Carrying, the forearm is raised forward by this much from hanging (degrees), and the upper arm hangs at
+        // this share of its length (a little short of straight down: the elbow is not locked).
+        private const float ForearmRaised = 52, UpperHangs = .97f;
         // At the hook the hand is brought onto the handle by what it sees: each frame it makes up this share of how
         // far the handle's place in its fingers is from the handle, for this long before it closes or lets go
         // (seconds); never by more than this (metres).
@@ -105,6 +108,7 @@ namespace WonderGather
                 if (body != null) body.CarryAtSide(hand, 0, 1);
             }
             phase = Phase.Hung; index = hand = -1; back = false;
+            if (body != null) body.RegardNothing();
         }
 
         private void OnDestroy()
@@ -154,7 +158,7 @@ namespace WonderGather
         {
             phase = next; clock = 0;
             // The arm carries from the moment the thing is off its hook until it is over it again.
-            if (next == Phase.Lifting) body.CarryAtSide(hand, HangsOut, Keeps);
+            if (next == Phase.Lifting) body.CarryAtSide(hand, 0, Keeps);
             if (next == Phase.Lowering) body.CarryAtSide(hand, 0, 1);
         }
 
@@ -215,14 +219,30 @@ namespace WonderGather
 
         public bool Guides(int which) => phase != Phase.Hung && which == hand;
 
+        // Where the wrist is, carrying: under the shoulder by the upper arm's length and what the raised forearm
+        // adds, ahead by what the forearm reaches forward, and as far out to the side as the free arm hangs.
+        private Vector3 Carries(int which, Vector3 shoulder, Vector3 ahead)
+        {
+            var p = body.BodyProportions;
+            float raised = ForearmRaised * Mathf.Deg2Rad;
+            Vector3 aside = Vector3.Cross(Vector3.up, ahead) * (which == 0 ? -1 : 1);
+            return shoulder + Vector3.down * (p.upperArm * UpperHangs + p.forearm * Mathf.Cos(raised)) + ahead * (p.forearm * Mathf.Sin(raised))
+                   + aside * (p.armHang.x + (which == 0 ? p.armCarry.x : p.armCarry.y));
+        }
+
         public Vector3 Wrist(int which, Vector3 shoulder)
         {
             float radius = miner.Things[index].grip;
             Vector3 hook = hips + posture * hookLocal, bar = posture * barLocal;
             Vector3 above = hook + Vector3.up * Over + posture * outLocal * Off;
-            // Carried, the arm hangs as the body hangs it, and the bar lies ahead in the fingers (the thumb forward).
+            // Where the arm hangs with nothing to guide it: the hand goes out from there, and comes back to it.
             Vector3 free = body.FreeWrist(which);
             Vector3 ahead = Vector3.ProjectOnPlane(posture * Vector3.forward, Vector3.up).normalized;
+            // Carried, the thing hangs from a hand held a little before the hip: the upper arm hanging, the forearm
+            // raised forward, as a lantern is carried by its bail, and the bar lying ahead in the fingers (the thumb
+            // forward). (It was carried on a straight arm held out to the side, far enough for the thing to hang
+            // clear of the coat: a hold no arm keeps up, and Luis's "a bit uncanny", October 8.)
+            Vector3 carried = Carries(which, shoulder, ahead);
             // The wrist's place for the handle to be somewhere, lying as it lies on its hook.
             Vector3 On(Vector3 handle)
             {
@@ -235,6 +255,8 @@ namespace WonderGather
             switch (phase)
             {
                 case Phase.Reaching:
+                    // (It looks at what it reaches for.)
+                    body.Regard(hook);
                     wrist = Vector3.Lerp(free, On(hook), Mathf.SmoothStep(0, 1, clock / (Reaches - Settles)));
                     closes = clock > Reaches - Closes;
                     settling = clock >= Reaches - Settles;
@@ -244,19 +266,21 @@ namespace WonderGather
                     else
                     {
                         float brought = Mathf.SmoothStep(0, 1, (clock - Lifts) / Brings);
-                        wrist = Vector3.Lerp(On(above), free, brought);
+                        wrist = Vector3.Lerp(On(above), carried, brought);
                         way = Vector3.Slerp(bar, ahead, brought);
                     }
                     break;
                 case Phase.Carried:
+                    wrist = carried;
                     way = ahead;
                     break;
                 case Phase.Returning:
                     float returned = Mathf.SmoothStep(0, 1, clock / Returns);
-                    wrist = Vector3.Lerp(free, On(above), returned);
+                    wrist = Vector3.Lerp(carried, On(above), returned);
                     way = Vector3.Slerp(ahead, bar, returned);
                     break;
                 case Phase.Lowering:
+                    body.Regard(hook);
                     wrist = On(Vector3.Lerp(above, hook, Mathf.SmoothStep(0, 1, clock / Lowers)));
                     settling = true;
                     break;
@@ -265,6 +289,8 @@ namespace WonderGather
                     closes = false;
                     break;
             }
+            if (phase != Phase.Reaching && phase != Phase.Lowering && !(phase == Phase.Returning && clock > Returns * .5f)) body.RegardNothing();
+            else if (phase == Phase.Returning) body.Regard(hook);
             WristAsked = wrist;
             miner.HoldHandle(which, closes, wrist, way, radius, shoulder);
             return wrist;

@@ -550,7 +550,7 @@ namespace WonderGather
         {
             if (flaps.Length == 0) return;
             float dt = Mathf.Clamp(Time.deltaTime, 0, 1 / 20f);
-            float falls = 1 - Mathf.Exp(-9 * dt);
+            float falls = 1 - Mathf.Exp(-12 * dt);
             float ground = Mathf.Min(bones.feet[0].position.y, bones.feet[1].position.y) - ankleUp;
             Vector3 ahead = Vector3.ProjectOnPlane(bones.pelvis.rotation * pelvisForward, Vector3.up);
             ahead = ahead.sqrMagnitude > 1e-4f ? ahead.normalized : transform.forward;
@@ -560,13 +560,18 @@ namespace WonderGather
                 if (flap.bone == null) continue;
                 // By its own weight, a little late.
                 Vector3 hangs = Vector3.Slerp(flapHangs[k], Vector3.down, falls);
-                // Stopped by its thigh: by the thigh's front (a front flap) or its back, and by its outer side.
-                Vector3 along = ThighAlong(flap.leg);
-                Vector3 front = Vector3.ProjectOnPlane(bones.thighs[flap.leg].rotation * thighFront[flap.leg], along);
-                front = front.sqrMagnitude > 1e-6f ? front.normalized : ahead;
+                // Stopped by its thigh: by the thigh's front (a front flap) or its back. The thigh counts by how far
+                // it comes forward or goes back under the flap, not by how far it goes out to the side: a knee that
+                // opens outwards goes out from under the cloth, which then hangs between the knees. (Laid along a
+                // thigh that pointed out to the side, a long coat's front stood out there as a board: the sceptic,
+                // October 8, "a stiff sheet of coat standing out on Long's right side".)
+                Vector3 across = bones.pelvis.rotation * pelvisAcross;
+                Vector3 along = Vector3.ProjectOnPlane(ThighAlong(flap.leg), across);
+                along = along.sqrMagnitude > 1e-4f ? along.normalized : Vector3.down;
+                Vector3 front = Vector3.Cross(across, along);
+                if (Vector3.Dot(front, bones.pelvis.rotation * pelvisForward) < 0) front = -front;
                 float slack = (flap.front ? flapSlack.x : flapSlack.y) * Mathf.Deg2Rad;
                 hangs = Stopped(hangs, flap.front ? front : -front, -Mathf.Sin(slack), along);
-                hangs = Stopped(hangs, ThighOut(flap.leg), flapInside[k], along);
                 // Stopped by the ground: its hem lies on it, out the way it hangs (or the way it is worn).
                 flap.bone.localRotation = flapRest[k];
                 float room = (flap.bone.position.y - ground) / Mathf.Max(.01f, flapLong);

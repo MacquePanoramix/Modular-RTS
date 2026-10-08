@@ -57,7 +57,7 @@ namespace WonderGather
         private const float GroundBow = 78, GroundSink = .6f;
         // Standing up with what it took, its knees and its back straighten through the same stretch of time: this
         // long (seconds) for a body with its hips 0.7 m up, longer for a larger one.
-        private const float StandsUpIn = 1.1f;
+        private const float StandsUpIn = 1.1f, BackLeads = .06f;
         private float sinkFrom;
         // Reaching the ground, the arm stretches to this share of its length.
         private const float Stretches = .96f;
@@ -230,16 +230,25 @@ namespace WonderGather
         // How much of its length the arm hangs at, carrying at the side.
         private const float Hangs = .995f;
 
-        // The tool carried at the side in one hand (the left): level, its head ahead and its point down, the arm
+        // The tool carried at the side in one hand (the left): its head ahead at the hand and its point down, its
+        // handle hanging down behind as far as the ground lets it (and no steeper than HandleHangs), the arm
         // hanging, and all but straight: a bent elbow holds the tool up by its own strength, a straight arm by its bones.
+        // (Until October 8 it was held level. The judges of the pick-up: "held out rigid, not hung... To keep the
+        // handle dead level behind the hip, the wrist must carry the whole lever"; "a placed carry pose, not a
+        // weight in a hand".)
+        private const float HandleHangs = 58, HandleClears = .1f;
         public static void AtSide(ProceduralBiped body, PhysicalHands hands, Vector3 hips, Quaternion posture, out Vector3 position, out Quaternion rotation)
         {
             float reach = body.ArmReach;
             Vector3 shoulder = body.ShoulderFromHips;
             float aside = Aside(body), ahead = .06f * reach;
             float drop = Mathf.Sqrt(Mathf.Max(.01f, Hangs * reach * Hangs * reach - aside * aside - ahead * ahead));
-            rotation = posture * Quaternion.LookRotation(Vector3.down, Vector3.forward);
             Vector3 hand = hips + posture * new Vector3(-(shoulder.x + aside), shoulder.y - drop, shoulder.z + ahead);
+            // How steeply the handle may hang, behind the hand, and still be clear of the ground.
+            float below = Mathf.Max(.05f, hands.GripAlong(0) - hands.LowestGrip + .08f);
+            float over = hand.y - Mathf.Min(body.FootPosition(0).y, body.FootPosition(1).y) - HandleClears;
+            float hangs = Mathf.Min(HandleHangs, Mathf.Asin(Mathf.Clamp(over / below, 0, 1)) * Mathf.Rad2Deg);
+            rotation = posture * Quaternion.Euler(-hangs, 0, 0) * Quaternion.LookRotation(Vector3.down, Vector3.forward);
             position = hand - rotation * new Vector3(0, hands.GripAlong(0), 0);
         }
 
@@ -278,7 +287,8 @@ namespace WonderGather
                     risen = Mathf.SmoothStep(0, 1, rising / (StandsUpIn * body.StepSize));
                     if (risen >= 1) rising = -1;
                 }
-                if (back != null) back.Want(Mathf.Lerp(risesFromBow, 0, risen));
+                float legsUp = body != null && risesFromSink > .02f ? 1 - body.SinkNow / risesFromSink + BackLeads : 1;
+                if (back != null) back.Want(Mathf.Lerp(risesFromBow, 0, Mathf.Clamp01(Mathf.Min(risen, legsUp))));
                 if (body != null) body.Sink(Mathf.Lerp(risesFromSink, 0, risen));
                 return;
             }
@@ -304,7 +314,12 @@ namespace WonderGather
             bool lays = laying && way == Way.OneHand && hands.Holds(0) && !hands.Holds(1);
             if (way != Way.Dragged && !lays) stoop = 0;
             float stood = Mathf.SmoothStep(0, 1, clock / (StandsUpIn * body.StepSize));
-            if (back != null) back.Want(Mathf.Lerp(bowFrom, stoop, stood));
+            // Standing up from the ground, the back straightens no further ahead of the knees than a little: legs
+            // that are slow to raise the body (their strength says how fast) are waited for. (The back came
+            // upright while the seat was still near the heels. The animator, October 8: "back and head first,
+            // legs last".)
+            float backUp = way == Way.OneHand && sinkFrom > .02f ? Mathf.Min(stood, 1 - body.SinkNow / sinkFrom + BackLeads) : stood;
+            if (back != null) back.Want(Mathf.Lerp(bowFrom, stoop, Mathf.Clamp01(backUp)));
 
             if (lays)
             {

@@ -121,8 +121,13 @@ namespace WonderGather.Tests
                 Debug.Log($"HUNG_TAKEN {name}'s {thing.name}: in its {(hand == 0 ? "left" : "right")} hand {took:F2} s after the order; the fingers closed {closedAt * 1000:F1} mm from where its handle hung, the arm {spare * 1000:F0} mm short of straight at most; carried, the handle {off * 1000:F1} mm from its place in the fingers, its bar {askew:F1} degrees from lying along them; {fromHook * 1000:F0} mm from its hook; it hangs {lean:F1} degrees from straight down, {-miner.HangingIntoBody(k) * 1000:F0} mm clear of the body; the arm hangs {has.HangsOut * 1000:F0} mm further out than a free arm (the hand is {carriedAt.ToString("F3")} m from where it hung free)");
                 Assert.That(spare, Is.GreaterThan(.003f), name + "'s arm is stretched straight to reach the handle.");
                 Assert.That(closedAt, Is.InRange(0, .004f), name + "'s fingers did not close on the handle where it hung.");
-                Assert.That(Mathf.Abs(carriedAt.y), Is.LessThan(.04f), "Carried, the arm should hang.");
-                Assert.That(Mathf.Abs(carriedAt.z), Is.LessThan(.05f), "Carried, the arm should hang at the side.");
+                // (Until October 8 it was carried on a straight arm held out to the side, and this asked that the hand
+                // be where it hung free. It is carried now as a lantern is: the upper arm hanging, the forearm raised
+                // forward, the hand a little before the hip and higher than it hangs free.)
+                var measures = biped.BodyProportions;
+                Assert.That(carriedAt.y, Is.InRange(.1f * measures.forearm, .9f * measures.forearm), "Carried, the forearm should be raised, and the upper arm hang.");
+                Assert.That(carriedAt.z, Is.InRange(.4f * measures.forearm, 1.05f * measures.forearm), "Carried, the hand should be before the hip.");
+                Assert.That(Mathf.Abs(carriedAt.x), Is.LessThan(.06f), "Carried, the hand should be no further out than it hangs free.");
                 Assert.That(has.Has, Is.EqualTo(thing));
                 Assert.That(miner.InHand(k), Is.EqualTo(hand));
                 Assert.That(miner.Held(hand), Is.GreaterThan(.99f), name + "'s hand is not closed on the handle.");
