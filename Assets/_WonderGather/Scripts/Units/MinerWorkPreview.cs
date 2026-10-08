@@ -307,6 +307,8 @@ namespace WonderGather
             var found = RockWork.Find(boulder, swing, biped, tall, working.transform.position);
             if (!found.found) { Say("It finds no place to stand and strike at that boulder"); return; }
             mining = boulder; plan = found; tries = 0;
+            // (Why an earlier rock was given up is not why this one will be.)
+            LeftRock = "";
             // (Its knees are read once for the order, the first time it bends to its work there: not again when it
             // goes back to the same rock after a rest, its legs a little spent.)
             kneesJudged = false; readyFor = 0;
@@ -477,7 +479,7 @@ namespace WonderGather
             // Resting from it, it is still its rock; sent somewhere, it is not.
             if (Carrying)
             {
-                if (motor.IsMoving) LeaveRock("it was sent somewhere");
+                if (motor.IsMoving) LeaveRock("it was sent somewhere (" + motor.MovingHow + ")");
                 return;
             }
             // Bent to its work for the first time at this boulder, before its first blow, its knees are read: asked too much

@@ -70,7 +70,8 @@ namespace WonderGather
             physical.UpperBody(hips, out float mass, out Vector3 centre, out float inertia);
             float weighs = Vector3.Dot(Vector3.Cross(centre - hips, Physics.gravity * mass), across);
             float load = 0;
-            bool holding = hands != null && hands.Held != null;
+            // (A tool it has only gone to take up, lying on the ground still, is not held.)
+            bool holding = hands != null && hands.Held != null && (hands.Holds(0) || hands.Holds(1));
             if (holding)
                 for (int i = 0; i < 2; i++)
                     if (hands.Holds(i)) load += Vector3.Dot(Vector3.Cross(hands.GripPlace(i) - hips, -hands.Push(i)), across);
@@ -90,7 +91,7 @@ namespace WonderGather
             if (angle > ProceduralBiped.MostBowed) { angle = ProceduralBiped.MostBowed; rate = Mathf.Min(rate, 0); }
             // The body is drawn between the steps: it goes on to where the bow will be at the next one. What works on
             // the physics' clock is told where the bow is now.
-            body.Bow(angle + rate * dt, Mathf.Abs(rate) + 30);
+            body.BowBy(angle + rate * dt, dt);
             body.BowIs(angle);
 
             // Its weight over its feet: the hips go back by a share of how far ahead of the feet the weight stands.

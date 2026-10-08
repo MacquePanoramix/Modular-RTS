@@ -116,6 +116,30 @@ namespace WonderGather
         // Where the body's own weight is and how fast it is going, on the ground's plane (world x and z); and the hips'
         // place from where the stance alone would have them, which is what puts the weight there.
         private Vector2 stands, going, lean, posedBefore;
+        // How fast the lean is going (walking, it goes on from there to where a walk has it).
+        private Vector2 leanGoes, leanWas;
+        // Bent to the ground of its own accord, its hips come to where they are wanted in about this long (seconds),
+        // and no faster than this (metres a second).
+        private const float HipsComeIn = .22f, HipsGoAtMost = .7f;
+        // The hips come to the end of how far the legs let them go over this share of their height.
+        private const float EasesOver = .05f;
+        // A length going towards one of its two ends: within `over` of that end, it goes no further in a step than
+        // would bring it there in ComesIn seconds at that pace. (Where it was at the step before says which way it goes.)
+        private const float ComesIn = .1f;
+        private static float Slowing(float value, float was, float least, float most, float over, float dt)
+        {
+            if (value > was && value > most - over)
+            {
+                float from = Mathf.Max(was, most - over);
+                return Mathf.Min(value, from + Mathf.Max(0, most - from) * (dt / ComesIn));
+            }
+            if (value < was && value < least + over)
+            {
+                float from = Mathf.Min(was, least + over);
+                return Mathf.Max(value, from - Mathf.Max(0, from - least) * (dt / ComesIn));
+            }
+            return value;
+        }
         private bool began;
         // How the pose itself is moving the weight (a bow, an arm thrown out), measured from pose to pose.
         private Vector2 intent, ownBefore, movedSince;
@@ -419,7 +443,8 @@ namespace WonderGather
                 // that lasts (a tool carried at one side, a thing dragged behind), by half of what it shifts the weight.
                 going = intent;
                 Vector2 carried = Acts ? Vector2.ClampMagnitude(-steady * .5f, ProceduralBiped.LeanAside * body.StandingHipHeight) : Vector2.zero;
-                lean = Vector2.Lerp(lean, carried, 1 - Mathf.Exp(-4 * dt));
+                // (From the pace it had standing: it does not change its pace at once when the walk begins.)
+                lean = Vector2.SmoothDamp(lean, carried, ref leanGoes, .3f, float.MaxValue, dt);
                 stands = posedNow + lean * Follows;
                 near = 0; shiftTime = 0; calm = 0; stepped = false;
             }
@@ -456,16 +481,41 @@ namespace WonderGather
             Inside(point + Firm * (point - rest), both ? around : around + Throws * boot, out Vector2 press);
             if (holds)
             {
-                // The weight falls away from where the feet press, as fast as its height makes it.
-                going += pace * pace * (weight - press) * dt;
-                stands += going * dt;
-                lean = (stands - posedNow) / Follows;
+                if (KeepsFeet)
+                {
+                    // Bent to the ground of its own accord (PhysicalCarry: taking a tool up, laying one down), it is
+                    // not catching itself: it puts its hips where its weight is at ease over its feet, and takes
+                    // them there as a body moves its hips when it means to, beginning and ending little by little.
+                    // (Left to fall and be caught, they went back as far as they go in the first third of a second
+                    // of going down, and came forward a hand's length in a quarter of a second as it rose. October 8.)
+                    float tall = body.StandingHipHeight;
+                    Vector2 to = (rest - steady - posedNow) / Follows;
+                    to = right * Mathf.Clamp(Vector2.Dot(to, right), -ProceduralBiped.LeanAside * tall, ProceduralBiped.LeanAside * tall)
+                         + ahead * Mathf.Clamp(Vector2.Dot(to, ahead), -ProceduralBiped.LeanBack * tall, ProceduralBiped.LeanAhead * tall);
+                    lean = Vector2.SmoothDamp(leanWas, to, ref leanGoes, HipsComeIn, HipsGoAtMost, dt);
+                    stands = posedNow + lean * Follows;
+                    // (Its weight goes as its pose takes it and as its hips do.)
+                    going = intent + (lean - leanWas) * (Follows / dt);
+                }
+                else
+                {
+                    // The weight falls away from where the feet press, as fast as its height makes it.
+                    going += pace * pace * (weight - press) * dt;
+                    stands += going * dt;
+                    lean = (stands - posedNow) / Follows;
+                }
                 // The hips go no further than the legs allow. Held there, the weight is where that has it, and goes as
                 // the pose takes it and no faster that way.
                 float hip = body.StandingHipHeight;
                 float aside = Vector2.Dot(lean, right), forth = Vector2.Dot(lean, ahead);
-                float asideKept = Mathf.Clamp(aside, -ProceduralBiped.LeanAside * hip, ProceduralBiped.LeanAside * hip);
-                float forthKept = Mathf.Clamp(forth, -ProceduralBiped.LeanBack * hip, ProceduralBiped.LeanAhead * hip);
+                float asideMost = ProceduralBiped.LeanAside * hip, backMost = ProceduralBiped.LeanBack * hip, aheadMost = ProceduralBiped.LeanAhead * hip;
+                float asideKept = Mathf.Clamp(aside, -asideMost, asideMost);
+                float forthKept = Mathf.Clamp(forth, -backMost, aheadMost);
+                // (They come to that end little by little: over the last part of the way they go no faster than would
+                // bring them there in a moment. They went at their whole pace until they were there, and stopped in
+                // one step of the physics. October 8.)
+                asideKept = Slowing(asideKept, Vector2.Dot(leanWas, right), -asideMost, asideMost, EasesOver * hip, dt);
+                forthKept = Slowing(forthKept, Vector2.Dot(leanWas, ahead), -backMost, aheadMost, EasesOver * hip, dt);
                 if (asideKept != aside || forthKept != forth)
                 {
                     lean = right * asideKept + ahead * forthKept;
@@ -527,12 +577,14 @@ namespace WonderGather
 
                 // The body is drawn before the next step: it goes on to where the lean will be then.
                 Vector2 soon = lean + moves * (dt / Follows);
-                body.SetLean(new Vector2(Vector2.Dot(soon, right), Vector2.Dot(soon, ahead)), moves.magnitude / Follows + .02f);
+                body.SetLeanAt(new Vector2(Vector2.Dot(soon, right), Vector2.Dot(soon, ahead)), moves.magnitude / Follows + .02f);
                 // What works on the physics' clock is told where the lean is now.
                 body.LeanIs(new Vector2(Vector2.Dot(lean, right), Vector2.Dot(lean, ahead)));
             }
             else if (Acts)
             {
+                // (The body comes to that lean little by little: standing, it is drawn a little behind the lean
+                // it is given, and would catch up in one step as the walk begins.)
                 body.SetLean(new Vector2(Vector2.Dot(lean, right), Vector2.Dot(lean, ahead)), 1);
                 body.LeanIs(new Vector2(float.NaN, 0));
                 // Walking, it inclines against a load that lasts as it does standing.
@@ -546,6 +598,8 @@ namespace WonderGather
                 LegEffort = 0; gave = 0;
             }
 
+            if (holds) leanGoes = (lean - leanWas) / dt;
+            leanWas = lean;
             marginBefore = Margin; posedBefore = posedNow;
             Weight = Raised(stands + steady); WeightPoint = Raised(point); Presses = Raised(press);
             Lean = new Vector2(Vector2.Dot(lean, right), Vector2.Dot(lean, ahead));

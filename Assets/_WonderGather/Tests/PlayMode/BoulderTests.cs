@@ -196,7 +196,10 @@ namespace WonderGather.Tests
                     began = Time.time;
                     while (look.Swing != null && look.Swing.phase == PhysicalSwing.Phase.Rest && Time.time - began < 60) yield return null;
                 }
-                Assert.That(click.OpenOn(unit) && click.Choose("Rest"), Is.True, who + " was not offered a rest at its boulder.");
+                // (Between two blows it may have taken a step to keep its feet, and be on its way back to its place:
+                // it is offered a rest once it is at its work again.)
+                for (float until = Time.time + 12; Time.time < until && look.Mining == boulder && !look.Swinging;) yield return null;
+                Assert.That(click.OpenOn(unit) && click.Choose("Rest"), Is.True, $"{who} was not offered a rest at its boulder (its boulder {(look.Mining == boulder ? "is still its own" : "was given up: " + look.LeftRock)}; carrying {look.Carrying}; at work {look.Swinging}; the panel: {look.Status()}).");
                 yield return Wait(2.5f);
                 Assert.That(look.Carrying && look.Mining == boulder && !look.Swinging, Is.True, who + " did not rest at its boulder.");
                 Assert.That(click.OpenOn(unit), Is.True, who + ", resting at its boulder, offered nothing.");
@@ -204,9 +207,19 @@ namespace WonderGather.Tests
                 int blowsAtRest = boulder.Blows;
                 Assert.That(click.Choose("Back to work"), Is.True);
                 began = Time.time;
-                while (boulder.Blows == blowsAtRest && look.Mining == boulder && Time.time - began < 40) yield return null;
-                Assert.That(boulder.Blows, Is.GreaterThan(blowsAtRest), $"{who} did not go back to its work: {look.LeftRock}");
-                Debug.Log($"BOULDER_BACK {who} rested at its boulder when told, and struck it again {Time.time - began:F1} s after it was told to go back");
+                // (Back at its work, a body its blows have spent may first rest from them of its own accord: that is
+                // its work too. The wait is for its next blow, not counting such a rest. October 8: Long, in one run
+                // of the whole suite, rested so for longer than the forty seconds this waited, and the failure then
+                // gave a reason left over from another miner.)
+                float restedThere = 0;
+                while (boulder.Blows == blowsAtRest && look.Mining == boulder && Time.time - began - restedThere < 40 && Time.time - began < 240)
+                {
+                    if (look.Swinging && look.Swing.phase == PhysicalSwing.Phase.Rest) restedThere += Time.deltaTime;
+                    yield return null;
+                }
+                Assert.That(look.Mining, Is.EqualTo(boulder), $"{who} gave its boulder up when it was told to go back to its work: {look.LeftRock}");
+                Assert.That(boulder.Blows, Is.GreaterThan(blowsAtRest), $"{who} did not strike again when it was told to go back to its work ({Time.time - began:F0} s, {restedThere:F0} s of them resting of its own accord)");
+                Debug.Log($"BOULDER_BACK {who} rested at its boulder when told, and struck it again {Time.time - began:F1} s after it was told to go back ({restedThere:F1} s of that resting of its own accord)");
 
                 // Sent somewhere, it comes back to the walked ground, and walks there with its pickaxe.
                 Vector3 to = plan.approach + Flat(plan.approach - boulder.Rock.bounds.center).normalized * 3;

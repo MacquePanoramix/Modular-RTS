@@ -25,17 +25,29 @@ namespace WonderGather
         // and turns; it walks as it comes round, at its whole pace once within WalksWithin. Half a turn takes it
         // about a second and a quarter. (People take about a second and a half, in two or three steps.) Its pace
         // itself is not changed for this (others set it, and read it): its going is held back.
-        private const float TurnsIn = .2f, TurnsAtMost = 250, WaitsBeyond = 58, WalksWithin = 22, Creeps = .05f;
+        private const float TurnsIn = .2f, TurnsAtMost = 250, WaitsBeyond = 58, WalksWithin = 22, Creeps = .05f, WaitsForAStep = .14f;
+        // Held back while it turns, it loses the pace it has along its way no faster than this (metres a second, each
+        // second).
+        private const float Slows = 4;
+        // It still has pace the other way while it goes faster than this (metres a second).
+        private const float CarriedOn = .12f;
+        private float mayGo = float.MaxValue;
         // How far it is turned from the way it means to go (degrees).
         public float TurnedFromItsWay { get; private set; }
 
         // The turn as its legs let it be: the body is told the way it means to face, and turns no further than its
         // feet on the ground allow (ProceduralBiped.MayFace); stopped by them, its turn has no pace to go on with.
-        private float Turned(float now, float wanted, float next, float dt)
+        private float Turned(float now, float wanted, float dt)
         {
             turnedAt = Time.frameCount;
-            if (body == null) return next;
+            if (body == null) return Mathf.SmoothDampAngle(now, wanted, ref turnPace, TurnsIn, TurnsAtMost, dt);
             body.MeansToFace(wanted);
+            // As far towards the way it means to face as its feet let it go now: it eases up to that (it turned at
+            // its whole pace until its feet stopped it, and stood so: "a pose held", the judges said).
+            float aim = body.MayFace(now, now + Mathf.Clamp(Mathf.DeltaAngle(now, wanted), -90, 90));
+            // A larger body turns more slowly, as it steps more slowly.
+            float size = body.StepSize;
+            float next = Mathf.SmoothDampAngle(now, aim, ref turnPace, TurnsIn * size, TurnsAtMost / size, dt);
             float may = body.MayFace(now, next);
             if (Mathf.Abs(Mathf.DeltaAngle(may, next)) > .001f) turnPace = dt > 0 ? Mathf.DeltaAngle(now, may) / dt : 0;
             return may;
@@ -56,9 +68,26 @@ namespace WonderGather
             }
             float wanted = Mathf.Atan2(way.x, way.z) * Mathf.Rad2Deg, now = transform.eulerAngles.y;
             TurnedFromItsWay = Mathf.Abs(Mathf.DeltaAngle(now, wanted));
-            transform.rotation = Quaternion.Euler(0, Turned(now, wanted, Mathf.SmoothDampAngle(now, wanted, ref turnPace, TurnsIn, TurnsAtMost, dt), dt), 0);
+            // Sent back, or sharply aside, while it walks: it does not turn while it still has pace the other way,
+            // nor while it brings its feet together from the stop. It stops, and then turns as a body turns from
+            // standing. (It turned as it slid on, its feet under it wherever the stop left them: they were set
+            // down far apart and across each other, and the hips sank between them.)
+            bool carriedOn = Vector3.Dot(agent.velocity, way) < 0 && agent.velocity.sqrMagnitude > CarriedOn * CarriedOn;
+            if (carriedOn || (body != null && body.Stopping)) turnPace = 0;
+            else transform.rotation = Quaternion.Euler(0, Turned(now, wanted, dt), 0);
             float share = Mathf.Lerp(Creeps, 1, Mathf.SmoothStep(0, 1, Mathf.InverseLerp(WaitsBeyond, WalksWithin, TurnedFromItsWay)));
-            if (share < 1) agent.velocity = Vector3.ClampMagnitude(agent.velocity, agent.speed * share);
+            // And it does not walk out from under a foot that is in the air in a step taken standing.
+            if (body != null && body.StepsStanding) share = Mathf.Min(share, WaitsForAStep);
+            // (That holds the pace it has along its way, and brings it down to what it may be little by little.
+            // The pace it still has another way, sent back or sent aside while it walks, it loses as a walker
+            // does. Held to a creep at once, it stopped dead in one frame.)
+            Vector3 along = way.normalized;
+            float has = Vector3.Dot(agent.velocity, along), most = agent.speed * share;
+            // (Nor faster than its legs carry it: the foot in the air has to land before the other leg is spent.)
+            float legs = body != null ? body.PaceItsLegsAllow(along) : float.MaxValue;
+            most = Mathf.Min(most, legs);
+            mayGo = most >= agent.speed ? agent.speed : Mathf.Max(most, Mathf.Min(mayGo, Mathf.Max(has, most)) - Slows * dt);
+            if (has > mayGo) agent.velocity -= along * (has - mayGo);
         }
         public Vector3 Destination { get; private set; }
         public bool IsMoving => away == Away.Going || away == Away.Coming || hasPending
@@ -87,6 +116,8 @@ namespace WonderGather
         private const int Ground = 1 << 6;
         // It is off the walked ground (going, standing there, or coming back); it stands there.
         public bool IsOff => away != Away.No;
+        // How it is moving now, in words (for what reports why a thing was given up).
+        public string MovingHow => away != Away.No ? "off the walked ground: " + away : hasPending ? "waiting to go" : agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh ? (agent.pathPending ? "finding its way" : $"{agent.remainingDistance:0.00} m to go, stopping within {agent.stoppingDistance:0.00}") : "not on the walked ground";
         public bool StandsOff => away == Away.There;
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
@@ -149,7 +180,7 @@ namespace WonderGather
                 // It turns the way it goes, then goes.
                 Quaternion heading = Quaternion.LookRotation(to.normalized);
                 float yaw = transform.eulerAngles.y, wanted = heading.eulerAngles.y;
-                transform.rotation = Quaternion.Euler(0, Turned(yaw, wanted, Mathf.SmoothDampAngle(yaw, wanted, ref turnPace, TurnsIn, TurnsAtMost, dt), dt), 0);
+                transform.rotation = Quaternion.Euler(0, Turned(yaw, wanted, dt), 0);
                 if (Quaternion.Angle(transform.rotation, heading) > 50) return;
                 Vector3 next = transform.position + Vector3.ClampMagnitude(to, agent.speed * OffPace * dt);
                 if (GroundAt(next, out float under)) next.y = under + ridesUp;
@@ -218,6 +249,15 @@ namespace WonderGather
             hasPending = false;
             Destination = transform.position;
         }
+        // It stops walking and comes to rest as a walker does, losing its pace, not in one frame. True once it stands.
+        public bool ComeToRest()
+        {
+            if (agent == null || !agent.isActiveAndEnabled || !agent.isOnNavMesh || away != Away.No) { Stop(); return true; }
+            agent.isStopped = true;
+            if (agent.velocity.sqrMagnitude > .0016f) return false;
+            Stop();
+            return true;
+        }
         private static bool IsFinite(Vector3 value) => float.IsFinite(value.x) && float.IsFinite(value.y) && float.IsFinite(value.z);
         // Work orders turn a stopped root; normal navigation owns rotation again on departure.
         public bool Face(Vector3 point, float deltaTime)
@@ -227,7 +267,7 @@ namespace WonderGather
             if (direction.sqrMagnitude < .0001f) return true;
             Quaternion target = Quaternion.LookRotation(direction);
             float yaw = transform.eulerAngles.y, wanted = target.eulerAngles.y;
-            transform.rotation = Quaternion.Euler(0, Turned(yaw, wanted, Mathf.SmoothDampAngle(yaw, wanted, ref turnPace, TurnsIn, TurnsAtMost, deltaTime), deltaTime), 0);
+            transform.rotation = Quaternion.Euler(0, Turned(yaw, wanted, deltaTime), 0);
             return Quaternion.Angle(transform.rotation, target) < 8;
         }
         private void OnDisable()
