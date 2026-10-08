@@ -85,7 +85,7 @@ namespace WonderGather
         {
             if (hands == null || hands.Held == null || laying) return;
             if (way == Way.Dragged) { Leave(); return; }
-            laying = true; layClock = 0;
+            laying = true; layClock = 0; laid = 0; laidFrom = -1; opened = 0;
         }
 
         // It goes to a tool that lies in the world, bends down, and takes it up: under its head, to carry it; by the
@@ -97,7 +97,7 @@ namespace WonderGather
             float asks = lying.Tool.Mass * lying.Weight * Physics.gravity.magnitude / Mathf.Max(1e-3f, physical.HoldOf(0));
             fetching = lying; fetchHand = asks > Carries ? 1 : 0; walked = false; arrived = false; fetchClock = 0; nearer = 0;
             NotTaken = ""; shortFor = 0; kneesHeld = false; bentAll = false; beyond = false; beyondFor = 0;
-            laying = false; Lies = null; stoop = 0; down = 0; downPace = 0;
+            laying = false; Lies = null; stoop = 0; down = 0; downPace = 0; rising = -1;
         }
 
         // The body bends down until a shoulder is near enough a place for its hand to reach it. It is one movement:
@@ -200,7 +200,7 @@ namespace WonderGather
             motor = GetComponent<UnitMotor>();
         }
 
-        private void OnEnable() { clock = -1; stuck = 0; Pull = 0; Pace = 1; drags = 0; stoop = 0; down = 0; downPace = 0; laying = false; fetching = null; }
+        private void OnEnable() { clock = -1; stuck = 0; Pull = 0; Pace = 1; drags = 0; stoop = 0; down = 0; downPace = 0; laying = false; fetching = null; rising = -1; }
 
         private void OnDisable()
         {
@@ -267,10 +267,19 @@ namespace WonderGather
                 // The tool has slipped from its hand: it lies where it fell.
                 if (hands != null && hands.Slipped != null && way != Way.Left && clock >= 0) { Lies = hands.Slipped; way = Way.Left; Pull = 0; Pace = 1; }
                 if (motor != null) motor.SetMovementRate(1);
-                // With nothing in its hands it stands up.
+                // With nothing in its hands it stands up: its knees and its back straighten through the same stretch
+                // of time, as they do with a tool. (Its back sprang up and its knees straightened in a third of a
+                // second, from as deep as a body bends.)
                 laying = false; fetching = null; stoop = 0; down = 0; downPace = 0;
-                if (back != null) back.Want(0);
-                if (body != null) body.Sink(0);
+                float risen = 1;
+                if (rising >= 0 && body != null)
+                {
+                    rising += Time.fixedDeltaTime;
+                    risen = Mathf.SmoothStep(0, 1, rising / (StandsUpIn * body.StepSize));
+                    if (risen >= 1) rising = -1;
+                }
+                if (back != null) back.Want(Mathf.Lerp(risesFromBow, 0, risen));
+                if (body != null) body.Sink(Mathf.Lerp(risesFromSink, 0, risen));
                 return;
             }
             float dt = Time.fixedDeltaTime, g = Physics.gravity.magnitude;
@@ -309,14 +318,17 @@ namespace WonderGather
                 hand.y = Ground + rests;
                 Quaternion flat = facing * Quaternion.LookRotation(Vector3.left, Vector3.forward);
                 Vector3 lies = hand - flat * new Vector3(0, hands.GripAlong(0), 0);
-                BendTo(hips, posture, joints[0], hand, dt);
+                float short_ = BendTo(hips, posture, joints[0], hand, dt);
                 body.Regard(hand);
                 KeepsItsFeet();
                 AtSide(body, hands, hips, posture, out var carried, out var carriedTurn);
-                float down = Mathf.SmoothStep(0, 1, layClock / 1.5f);
-                hands.Want(Vector3.Lerp(carried, lies, down), Quaternion.Slerp(carriedTurn, flat, down));
+                // The tool goes down as the body does: as far on its way as the body has come down (and no faster
+                // than a hand lowers a thing). (It went down on a clock of its own, and the body waited, bent, for it.)
+                if (laidFrom < 0) laidFrom = Mathf.Max(short_, .05f);
+                laid = Mathf.Max(laid, Mathf.MoveTowards(laid, Mathf.Clamp01(1 - short_ / laidFrom), dt / LaysInAtLeast));
+                hands.Want(Vector3.Lerp(carried, lies, laid), Quaternion.Slerp(carriedTurn, flat, laid));
                 bool there = hands.GripPlace(0).y - hand.y < .03f && hands.Held.linearVelocity.sqrMagnitude < .02f;
-                if (layClock > 1.5f && (there || layClock > 5))
+                if ((laid > .98f && there) || layClock > 5)
                 {
                     // It lies: the hand opens, and then the arm takes it away.
                     hands.Open(0);
@@ -325,6 +337,8 @@ namespace WonderGather
                     {
                         Lies = hands.Drop();
                         way = Way.Left; laying = false;
+                        // And it stands up from there.
+                        risesFromBow = back != null ? back.BowNow : body.BowNow; risesFromSink = body.SinkNow; rising = 0;
                     }
                 }
                 else opened = 0;
@@ -413,7 +427,9 @@ namespace WonderGather
         // Taking up a tool that lies: it walks to stand with the place its hand will take a little ahead of it and to
         // that hand's side, looking at it; goes down, its hand going out to it as it does; takes hold, and then carries
         // it (or drags it).
-        private float lacksFrom, opened, rolled;
+        private float lacksFrom, opened, rolled, laid, laidFrom = -1, risesFromBow, risesFromSink, rising = -1;
+        // A tool is laid down in no less than this long (seconds).
+        private const float LaysInAtLeast = .5f;
         private const float OpensIn = .16f;
         private void Take(float dt, System.Span<Vector3> joints, Vector3 hips, Quaternion posture)
         {
@@ -533,6 +549,7 @@ namespace WonderGather
                 hands.Drop();
                 Lies = lying != null ? lying.GetComponent<Rigidbody>() : null;
                 way = Way.Left;
+                risesFromBow = back != null ? back.BowNow : body.BowNow; risesFromSink = body.SinkNow; rising = 0;
             }
         }
 

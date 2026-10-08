@@ -196,7 +196,10 @@ namespace WonderGather.Tests
                     began = Time.time;
                     while (look.Swing != null && look.Swing.phase == PhysicalSwing.Phase.Rest && Time.time - began < 60) yield return null;
                 }
-                Assert.That(click.OpenOn(unit) && click.Choose("Rest"), Is.True, who + " was not offered a rest at its boulder.");
+                // (Between two blows it may have taken a step to keep its feet, and be on its way back to its place:
+                // it is offered a rest once it is at its work again.)
+                for (float until = Time.time + 12; Time.time < until && look.Mining == boulder && !look.Swinging;) yield return null;
+                Assert.That(click.OpenOn(unit) && click.Choose("Rest"), Is.True, $"{who} was not offered a rest at its boulder (its boulder {(look.Mining == boulder ? "is still its own" : "was given up: " + look.LeftRock)}; carrying {look.Carrying}; at work {look.Swinging}; the panel: {look.Status()}).");
                 yield return Wait(2.5f);
                 Assert.That(look.Carrying && look.Mining == boulder && !look.Swinging, Is.True, who + " did not rest at its boulder.");
                 Assert.That(click.OpenOn(unit), Is.True, who + ", resting at its boulder, offered nothing.");

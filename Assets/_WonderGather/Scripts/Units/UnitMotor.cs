@@ -26,6 +26,10 @@ namespace WonderGather
         // about a second and a quarter. (People take about a second and a half, in two or three steps.) Its pace
         // itself is not changed for this (others set it, and read it): its going is held back.
         private const float TurnsIn = .2f, TurnsAtMost = 250, WaitsBeyond = 58, WalksWithin = 22, Creeps = .05f, WaitsForAStep = .14f;
+        // Held back while it turns, it loses the pace it has along its way no faster than this (metres a second, each
+        // second).
+        private const float Slows = 4;
+        private float mayGo = float.MaxValue;
         // How far it is turned from the way it means to go (degrees).
         public float TurnedFromItsWay { get; private set; }
 
@@ -66,7 +70,16 @@ namespace WonderGather
             float share = Mathf.Lerp(Creeps, 1, Mathf.SmoothStep(0, 1, Mathf.InverseLerp(WaitsBeyond, WalksWithin, TurnedFromItsWay)));
             // And it does not walk out from under a foot that is in the air in a step taken standing.
             if (body != null && body.StepsStanding) share = Mathf.Min(share, WaitsForAStep);
-            if (share < 1) agent.velocity = Vector3.ClampMagnitude(agent.velocity, agent.speed * share);
+            // (That holds the pace it has along its way, and brings it down to what it may be little by little.
+            // The pace it still has another way, sent back or sent aside while it walks, it loses as a walker
+            // does. Held to a creep at once, it stopped dead in one frame.)
+            Vector3 along = way.normalized;
+            float has = Vector3.Dot(agent.velocity, along), most = agent.speed * share;
+            // (Nor faster than its legs carry it: the foot in the air has to land before the other leg is spent.)
+            float legs = body != null ? body.PaceItsLegsAllow(along) : float.MaxValue;
+            most = Mathf.Min(most, legs);
+            mayGo = most >= agent.speed ? agent.speed : Mathf.Max(most, Mathf.Min(mayGo, Mathf.Max(has, most)) - Slows * dt);
+            if (has > mayGo) agent.velocity -= along * (has - mayGo);
         }
         public Vector3 Destination { get; private set; }
         public bool IsMoving => away == Away.Going || away == Away.Coming || hasPending
