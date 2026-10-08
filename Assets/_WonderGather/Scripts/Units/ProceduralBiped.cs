@@ -134,6 +134,9 @@ namespace WonderGather
         }
         // Froude number v²/(g·h): walking bipeds switch to running near 0.5.
         private const float JogAbove=.55f,WalkBelow=.45f,StartSpeed=.18f;
+        // The body faces the way its place faces, as fast as this at most (degrees a second). (The turn itself
+        // gathers and loses its pace where the place is turned: UnitMotor.)
+        private const float FacesAtMost=420;
         private const float HeelStrike=-12,WalkToeOff=30,JogToeOff=38;
         private sealed class Foot
         {
@@ -145,6 +148,9 @@ namespace WonderGather
             public bool own;
             // Which side of the standing boot this swing bows round (0 until it needs to).
             public float bow;
+            // How fast the place it is going to is moving (it changes its mind at a pace, not at once), and how
+            // far out of its straight way it is going round the standing boot, and how fast that is changing.
+            public Vector3 toPace,round,roundPace;
         }
         private readonly Foot[] support={new Foot(),new Foot()};
         private readonly Vector3[] handPositions=new Vector3[2];
@@ -412,7 +418,64 @@ namespace WonderGather
             {position=hit.point;normal=hit.normal;return true;}
             position=point;normal=Vector3.up;return false;
         }
-        private Quaternion SoleRotation(Vector3 normal)=>Quaternion.LookRotation(Vector3.ProjectOnPlane(facing*Vector3.forward,normal).normalized,normal);
+        private Quaternion SoleRotation(Vector3 normal)=>SoleRotation(normal,facing);
+        private Quaternion SoleRotation(Vector3 normal,Quaternion faces)=>Quaternion.LookRotation(Vector3.ProjectOnPlane(faces*Vector3.forward,normal).normalized,normal);
+        // How fast the body is turning (degrees a second, to its right is more than nothing), and the way it will
+        // face in a while if it goes on turning so: a foot lands for the way the body will face then, not the way it
+        // faces as the foot leaves the ground (it would land already a step behind the turn).
+        private float turning;
+        // How far round the head is looking (degrees from the way the body faces), and how fast that is changing;
+        // how far it may look round, how long it takes to, and the share of it the chest turns with it.
+        private float looks,looksPace;
+        private const float LooksRound=62,LooksIn=.13f,ChestLooks=.35f;
+        private Quaternion FacesIn(float seconds)=>facing*Quaternion.Euler(0,Mathf.Clamp(turning*seconds,-TurnsAhead,TurnsAhead),0);
+        private const float TurnsAhead=50;
+        // The furthest a foot lands from under its hip to keep clear of the standing boot (m).
+        private float StepsAside=>HipWidth*1.2f;
+        // A leg turns only so far in its hip. The body faces no further round from a foot on the ground than this
+        // (degrees): it waits there until that foot has stepped round. (It turned as far and as fast as it was
+        // told, over feet that stayed where they were: a leg was twisted by 140 degrees in a turn right round.)
+        public const float MostTwist=62;
+        // The way nearest to the one it would turn to that its feet on the ground let it face (degrees round). It
+        // is never turned back by this: a foot already further round than a leg turns only stops it going on.
+        public float MayFace(float from,float to)
+        {
+            if(!initialized) return to;
+            for(int i=0;i<2;i++)
+            {
+                if(support[i].swinging) continue;
+                float foot=support[i].rotation.eulerAngles.y,was=Mathf.DeltaAngle(foot,from),would=Mathf.DeltaAngle(foot,to);
+                if(Mathf.Abs(would)<=MostTwist||Mathf.Abs(would)<=Mathf.Abs(was)) continue;
+                to=Mathf.Abs(was)>=MostTwist?from:foot+Mathf.Sign(would)*MostTwist;
+            }
+            return to;
+        }
+        // The way the body means to face in the end (told by what turns it, each frame it does), and when it was
+        // last told. A foot that steps in a turn lands turned on towards that way, ahead of the body by up to this
+        // much: it opens the way for the body to follow (so half a turn is three steps, as a person takes it).
+        private float meansToFace;
+        private int meansSince=-10;
+        private const float OpensBy=42;
+        public void MeansToFace(float degrees){meansToFace=degrees;meansSince=Time.frameCount;}
+        private Quaternion LandsFacing(Foot foot)
+        {
+            float now=facing.eulerAngles.y,ahead=Mathf.Clamp(turning*LandsIn(foot),-TurnsAhead,TurnsAhead);
+            if(Time.frameCount-meansSince<=2)
+            {
+                float left=Mathf.DeltaAngle(now,meansToFace),opens=Mathf.Clamp(left,-OpensBy,OpensBy);
+                // On towards the way it means to face, by the more of the two; never past it.
+                if(Mathf.Abs(left)>1) ahead=Mathf.Sign(left)*Mathf.Min(Mathf.Abs(left),Mathf.Max(Mathf.Abs(opens),Mathf.Sign(left)*ahead));
+            }
+            return Quaternion.Euler(0,now+ahead,0);
+        }
+        // The body is turning, when it turns faster than this (degrees a second).
+        private const float TurnsFor=25;
+        // The share of a standing step's time that a step round in a turn takes.
+        private const float TurningStep=.76f;
+        private Vector3 Home(int index,Quaternion faces)=>transform.position+faces*new Vector3(index==0?-HipWidth-stanceWider:HipWidth+stanceWider,0,.02f+(index==0?.5f:-.5f)*stanceStagger);
+        // A foot in the air changes where it is going at a pace, in this long (the place it goes to moves as the
+        // body turns and as its walk changes: followed at once, the foot jumped in the air, by 30 cm in a turn).
+        private const float AimsIn=.05f,RoundsIn=.05f;
         public void ResetPose()
         {
             if(TryGetComponent<EquippedTool>(out var equipment)) equipment.CancelAttempt();
@@ -457,7 +520,9 @@ namespace WonderGather
                 var direction=Vector3.ProjectOnPlane(worker.WorkContact-transform.position,Vector3.up);
                 if(direction.sqrMagnitude>.001f) desiredFacing=Quaternion.LookRotation(direction);
             }
-            facing=Quaternion.RotateTowards(facing,desiredFacing,220*dt);
+            float faced=facing.eulerAngles.y;
+            facing=Quaternion.RotateTowards(facing,desiredFacing,FacesAtMost*dt);
+            turning=Mathf.Lerp(turning,Mathf.DeltaAngle(faced,facing.eulerAngles.y)/dt,1-Mathf.Exp(-14*dt));
             UpdateGait(dt);
             UpdateFeet(dt);
             // Mutually unreachable contacts indicate a presentation discontinuity,
@@ -596,6 +661,7 @@ namespace WonderGather
         {
             var foot=support[index];
             foot.swinging=true;foot.gaitSwing=gaitSwing;foot.progress=0;foot.liftedThisCycle=true;foot.bow=0;foot.own=false;
+            foot.toPace=foot.round=foot.roundPace=Vector3.zero;
             foot.from=foot.to=foot.position;foot.fromNormal=foot.toNormal=foot.normal;foot.fromRotation=foot.toRotation=foot.rotation;
             foot.liftPitch=foot.pitch;
             foot.clearance=gaitSwing?footLift*Mathf.Lerp(.55f,.9f,jogWeight):.05f;
@@ -605,7 +671,10 @@ namespace WonderGather
         {
             var foot=support[index];
             if(foot.own) return;
-            Vector3 point=Home(index);
+            // It lands under its hip as the body will stand when it lands, turned the way the body means to face.
+            Quaternion stands=FacesIn(LandsIn(foot)),faces=LandsFacing(foot);
+            var other=support[1-index];
+            Vector3 point=Home(index,stands);
             if(foot.gaitSwing&&CurrentGait!=Gait.Standing&&!stopping)
             {
                 // Land where the hips will pass over the foot at mid-stance.
@@ -620,23 +689,32 @@ namespace WonderGather
                     point-=travel*Mathf.Max(0,Vector3.Dot(point-end,travel));
                 }
             }
-            // A foot never lands on the standing one: where its boot would overlap that boot (in a turn the two
-            // point different ways), it lands beside it.
-            var other=support[1-index];
+            // A foot never lands on the standing one. Where its boot would lie across that boot (in a turn the two
+            // point different ways), it lands turned less: as far round, from the way the standing boot points, as
+            // leaves them clear. The body turns the rest of the way over its next steps. Only if they would touch
+            // even side by side does it land a little further off (and no more than a little: a foot put far out
+            // to the side to get past the other left the body standing wide, and falling between its feet).
             if(!other.swinging)
             {
-                Quaternion landing=SoleRotation(Vector3.up);
-                if(BootGap(point,landing,other.position,other.rotation,out var away)<BootRoom)
+                float from=other.rotation.eulerAngles.y,round=Mathf.DeltaAngle(from,faces.eulerAngles.y);
+                Vector3 side=stands*new Vector3(index==0?-1:1,0,0);
+                for(int k=0;k<=5;k++)
                 {
+                    // As far round as it means to be, if a little room beside the standing boot is enough; if
+                    // not, less far round.
+                    faces=Quaternion.Euler(0,from+round*(1-k*.2f),0);
+                    Quaternion landing=SoleRotation(Vector3.up,faces);
+                    if(BootGap(point,landing,other.position,other.rotation,out var away)>=BootRoom) break;
                     // The shorter way clear: straight away from the other boot, or out to its own side.
-                    Vector3 side=facing*new Vector3(index==0?-1:1,0,0);
-                    float straight=away!=Vector3.zero?StepClear(point,landing,other,away,BootRoom):-1,aside=StepClear(point,landing,other,side,BootRoom);
-                    if(straight>=0&&(aside<0||straight<=aside)) point+=away*straight;
-                    else if(aside>=0) point+=side*aside;
+                    float straight=away!=Vector3.zero?StepClear(point,landing,other,away,BootRoom,StepsAside):-1,aside=StepClear(point,landing,other,side,BootRoom,StepsAside);
+                    if(straight>=0&&(aside<0||straight<=aside)){point+=away*straight;break;}
+                    if(aside>=0){point+=side*aside;break;}
                 }
             }
             if(!Ground(point,out var ground,out var normal)||Mathf.Abs(ground.y-transform.position.y)>.8f) return;
-            foot.to=ground;foot.toNormal=normal;foot.toRotation=SoleRotation(normal);
+            // It changes where it is going at a pace; close to landing it is there.
+            foot.to=frame>0?Vector3.SmoothDamp(foot.to,ground,ref foot.toPace,AimsIn,float.MaxValue,frame):ground;
+            foot.toNormal=normal;foot.toRotation=SoleRotation(normal,faces);
         }
         // A boot on the ground, seen from above: a line from heel to toe with half a boot's width round it.
         private float BootHalfWidth=>(HeelLength+BallLength+ToeLength)*.2f;
@@ -715,6 +793,7 @@ namespace WonderGather
                 // Never more room than its own ends have: it leaves and lands exactly where its feet are.
                 float room=Mathf.Min(BootRoom,Mathf.Min(BootGap(foot.from,foot.fromRotation,other.position,other.rotation,out _),
                     BootGap(foot.to,foot.toRotation,other.position,other.rotation,out _)));
+                Vector3 out_=Vector3.zero;
                 if(BootGap(along,turned,other.position,other.rotation,out _)<room)
                 {
                     if(foot.bow==0)
@@ -725,10 +804,16 @@ namespace WonderGather
                         foot.bow=one<0&&two<0?own:two<0?1:one<0?-1:Mathf.Abs(one-two)<.02f?own:one<two?1:-1;
                     }
                     float round=StepClear(along,turned,other,aside*foot.bow,room);
-                    if(round>0) along+=aside*(foot.bow*round);
+                    if(round>0) out_=aside*(foot.bow*round);
                 }
+                // How far out of its way it goes changes at a pace (the way itself turns as the body does: taken
+                // at once, the foot jumped from one side of its way to the other).
+                foot.round=frame>0?Vector3.SmoothDamp(foot.round,out_,ref foot.roundPace,RoundsIn,float.MaxValue,frame):out_;
+                along+=foot.round*(1-Mathf.SmoothStep(0,1,(s-.8f)/.2f));
             }
-            foot.position=along+Vector3.up*(foot.clearance*Mathf.Sin(Mathf.PI*Mathf.Pow(s,.75f)));
+            // It leaves the ground from rest: its rise begins gently (it rose by a quarter of its whole lift in the
+            // first frame off the ground, and half of it within a tenth of the swing: a pop at every step).
+            foot.position=along+Vector3.up*(foot.clearance*Mathf.Sin(Mathf.PI*Mathf.Pow(s,.75f))*Mathf.SmoothStep(0,1,s/LeavesOver));
             foot.normal=Vector3.Slerp(foot.fromNormal,foot.toNormal,e).normalized;
             foot.rotation=Quaternion.Slerp(foot.fromRotation,foot.toRotation,e);
             if(foot.gaitSwing)
@@ -755,14 +840,20 @@ namespace WonderGather
             bool narrow=StanceNarrow();
             // A stance that was asked for is taken exactly; one that is only held tolerates drift.
             float tolerance=stanceDue?SettleTolerance*.12f:SettleTolerance;
+            // Turning, the foot on the side the body turns to steps first: it opens the way, and the other comes
+            // round after it. (The other way about, the first foot has to go round the one it will end up beside.)
+            int first=Mathf.Abs(turning)>TurnsFor?(turning>0?1:0):nextFoot;
             for(int order=0;order<2;order++)
             {
-                int i=(nextFoot+order)%2;var foot=support[i];
+                int i=(first+order)%2;var foot=support[i];
                 if(HomeError(i)<tolerance&&Turn(i)<40&&!narrow) continue;
                 if(!Ground(Home(i),out var point,out var normal)||Mathf.Abs(point.y-transform.position.y)>.8f) return;
                 // The body's weight comes off a foot before it lifts.
                 if(MayLift!=null&&!MayLift(i)){liftDue=i;return;}
-                Lift(i,false);foot.to=point;foot.toNormal=normal;foot.toRotation=SoleRotation(normal);
+                // (It leaves for where it stands; where it is going comes to it as it goes: Retarget.)
+                Lift(i,false);
+                // A step that brings a foot round in a turn is a quick one.
+                if(Mathf.Abs(turning)>TurnsFor||Turn(i)>=40) foot.rate=1/(stepDuration*TurningStep);
                 return;
             }
             stanceDue=false;
@@ -787,6 +878,8 @@ namespace WonderGather
         // 5 to 13 cm going down a slope. Luis: "a slight stutter after each step", "teleported a little bit, like
         // to the ground".)
         private const float ComesDownFrom=.35f;
+        // The share of its swing over which a foot's rise from the ground gathers pace.
+        private const float LeavesOver=.3f;
         // How long until a foot in the air lands. It lands in a frame, not between two: the first in which its swing
         // is done. Reckoned to that frame, where it will land does not move in its last frame in the air, and the
         // hips are where they were expected when it does. (Reckoned to the moment between, the foot jumped ahead
@@ -924,7 +1017,18 @@ namespace WonderGather
             // posture: the steady body frame used by tools and carried loads.
             Quaternion posture=facing*Quaternion.Euler(pitch,0,roll);
             Quaternion hipFrame=posture*Quaternion.Euler(0,yaw,list);
-            Quaternion chest=posture*Quaternion.Euler(jog*3,-yaw*.8f,0);
+            // The head looks where the body is about to go: it turns that way first, the chest after it by a
+            // part, and the hips come round under them (a body that turns all of a piece reads as a thing turned).
+            float look=0;
+            if(agent!=null&&agent.isActiveAndEnabled&&agent.isOnNavMesh&&agent.hasPath&&!agent.isStopped)
+            {
+                Vector3 way=agent.desiredVelocity;way.y=0;
+                if(way.sqrMagnitude>1e-5f) look=Mathf.Clamp(Mathf.DeltaAngle(facing.eulerAngles.y,Mathf.Atan2(way.x,way.z)*Mathf.Rad2Deg),-LooksRound,LooksRound);
+            }
+            // (Told to go straight behind it, it looks round the way it has begun to turn, not back and forth.)
+            if(Mathf.Abs(look)>=LooksRound-.01f&&Mathf.Abs(turning)>20) look=Mathf.Sign(turning)*LooksRound;
+            looks=dt>0?Mathf.SmoothDamp(looks,look,ref looksPace,LooksIn,float.MaxValue,dt):look;
+            Quaternion chest=posture*Quaternion.Euler(jog*3,-yaw*.8f+looks*ChestLooks,0);
             // pelvisY is the smoothed target height. The reach projection is solved from it every
             // frame and never written back: feeding the projected height into the next target
             // ratchets the pelvis toward the ground whenever both feet are out of reach.
@@ -957,7 +1061,7 @@ namespace WonderGather
             pelvis.SetPositionAndRotation(hips,hipFrame);
             torso.SetPositionAndRotation(waist+chest*new Vector3(0,P.torsoRise,0),chest);
             // The head stays level and looks along the path while the chest twists beneath it.
-            head.SetPositionAndRotation(waist+chest*new Vector3(0,P.headRise,0),Quaternion.Slerp(facing,posture,.4f));
+            head.SetPositionAndRotation(waist+chest*new Vector3(0,P.headRise,0),Quaternion.Slerp(facing,posture,.4f)*Quaternion.Euler(0,looks,0));
             if(carriedBundle!=null)
             {
                 bool stockpile=worker!=null && worker.MiningTarget!=null && worker.State==Gatherer.Activity.Gathering;
