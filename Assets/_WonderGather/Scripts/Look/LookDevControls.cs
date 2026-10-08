@@ -40,7 +40,7 @@ namespace WonderGather
         private InputActionMap map;
         private InputAction next, scrub, lapse, hide;
         private readonly InputAction[] presets = new InputAction[6];
-        private InputAction toggleFireflies, toggleHearth, toggleGlow;
+        private InputAction toggleFireflies, toggleHearth, toggleGlow, toggleLampShadows;
         private float smoothedFrame = 16, timeLapse;
         private readonly FrameTiming[] timings = new FrameTiming[1];
         private double gpuMilliseconds;
@@ -64,6 +64,8 @@ namespace WonderGather
         public bool FirefliesOn => fireflies != null && fireflies.enabled;
         public bool HearthOn => time != null && time.Hearth;
         public bool WindowGlowOn => windowGlow != null && windowGlow.enabled;
+        // The lamplight at the door and windows: shaded by what stands in it, or spreading over the ground (see TimeOfDay).
+        public bool LampShadowsOn { get => time != null && time.LampShadows; set { if (time != null) time.LampShadows = value; } }
 
         // The dusk details, each a small switchable step over the hand-painted look.
         public void SetDusk(bool flies, bool hearth, bool glow)
@@ -104,6 +106,7 @@ namespace WonderGather
             toggleFireflies = map.AddAction("Fireflies", InputActionType.Button, "<Keyboard>/7");
             toggleHearth = map.AddAction("Hearth", InputActionType.Button, "<Keyboard>/8");
             toggleGlow = map.AddAction("Window glow", InputActionType.Button, "<Keyboard>/9");
+            toggleLampShadows = map.AddAction("Lamplight shaded", InputActionType.Button, "<Keyboard>/0");
             map.Enable();
         }
 
@@ -124,6 +127,7 @@ namespace WonderGather
             if (toggleFireflies.WasPressedThisFrame()) SetDusk(!FirefliesOn, HearthOn, WindowGlowOn);
             if (toggleHearth.WasPressedThisFrame()) SetDusk(FirefliesOn, !HearthOn, WindowGlowOn);
             if (toggleGlow.WasPressedThisFrame()) SetDusk(FirefliesOn, HearthOn, !WindowGlowOn);
+            if (toggleLampShadows.WasPressedThisFrame()) LampShadowsOn = !LampShadowsOn;
             if (time != null)
             {
                 for (int i = 0; i < presets.Length; i++)
@@ -156,7 +160,7 @@ namespace WonderGather
                           $"Time: {hour}   (1–6: morning, midday, golden, dusk, blue hour, night;  [ ]: scrub;  L: time-lapse{(timeLapse > 0 ? " on" : "")})\n" +
                           $"Frame {smoothedFrame:F1} ms ({1000 / Mathf.Max(smoothedFrame, .01f):F0} fps){gpu}" +
                           (grass != null ? $"   grass drawn {grass.DrawnLastFrame / 1000}k of {grass.BladeCount / 1000}k" : "") +
-                          $"\nDusk: 7 fireflies {(FirefliesOn ? "on" : "off")}, 8 hearth {(HearthOn ? "on" : "off")}, 9 window glow {(WindowGlowOn ? "on" : "off")}" +
+                          $"\nDusk: 7 fireflies {(FirefliesOn ? "on" : "off")}, 8 hearth {(HearthOn ? "on" : "off")}, 9 window glow {(WindowGlowOn ? "on" : "off")}, 0 lamplight {(LampShadowsOn ? "shaded" : "spreading")}" +
                           "\nH: hide this panel";
             var style = new GUIStyle(GUI.skin.box) { alignment = TextAnchor.UpperLeft, wordWrap = true, fontSize = 13, padding = new RectOffset(10, 10, 8, 8) };
             float width = Mathf.Min(560, Screen.width - 36);

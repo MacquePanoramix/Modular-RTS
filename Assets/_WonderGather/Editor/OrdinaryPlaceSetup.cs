@@ -444,12 +444,10 @@ namespace WonderGather.Editor
             var house = GameObject.Find("The lit house") ?? throw new InvalidOperationException("The scene has no house.");
 
             var flies = time.GetComponent<Fireflies>() ?? time.gameObject.AddComponent<Fireflies>();
-            flies.Configure(MaterialFor("Fireflies", "Wonder Gather/Fireflies"), time);
+            // Each has its own home in the meadow (one to every 20 m2 of grass): fewer than there were,
+            // twice (Luis, October 2 and 8), and no longer a patch that follows the camera.
+            flies.Configure(MaterialFor("Fireflies", "Wonder Gather/Fireflies"), time, UnityEngine.Object.FindAnyObjectByType<OrdinaryGround>());
             flies.enabled = true;
-            // Gentler than at first: Luis found them a little many near the ground.
-            var swarm = new SerializedObject(flies);
-            swarm.FindProperty("count").intValue = 600;
-            swarm.ApplyModifiedPropertiesWithoutUndo();
 
             var windows = house.GetComponentsInChildren<Light>(true)
                 .Where(x => x.name.StartsWith("Door") || x.name.Contains("Window")).ToList();
