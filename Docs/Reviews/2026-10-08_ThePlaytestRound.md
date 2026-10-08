@@ -30,9 +30,9 @@ against how a real body does the same thing, not by whether it works.
 | L1 | Fireflies: too many at night; they follow the camera when it zooms out. They are to be their own things in the world, seen by the distance from them: fewer and fainter from far | **Done; for Luis to see.** [Below](#l1-the-fireflies) |
 | L2 | The cabin's light gets suddenly much stronger at some point of zooming out | **Cause found and removed. One choice is Luis's.** [Below](#l2-the-cabins-light) |
 | L3 | The walk: a slight stutter after each step, as if set down a little | **Cause found and removed; measured. For Luis to see.** [Below](#l3-the-stutter-after-each-step) |
-| L4 | Turning round on the spot: the legs teleport a little, and it does not look human | **Much done; not finished.** [Below](#l4-turning-round-on-the-spot) |
-| L5 | The clothes "explode" when a character kneels | To be looked into |
-| L6 | The kneeling reads as an animation in parts, and most of it is off | To be looked into |
+| L4 | Turning round on the spot: the legs teleport a little, and it does not look human | **Made again twice; measured; one round of judges. For Luis to see.** [Below](#l4-turning-round-on-the-spot) |
+| L5 | The clothes "explode" when a character kneels | **Cause found and removed; for Luis to see.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
+| L6 | The kneeling reads as an animation in parts, and most of it is off | **Made again as one movement; measured; judges not yet.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
 | L7 | Getting up after a fall is an animation, not the body | To be looked into |
 | L8 | Long stopped recovering at 77% spent, and stood still | **Cause found and removed; measured.** [Below](#l8-long-stops-recovering) |
 | L9 | Taking the lantern or the mug: uncanny once it is held | To be looked into |
@@ -417,9 +417,304 @@ steps and opens the way; the left comes round; it walks.*
   hips jolt along by 12 to 14 mm in one frame, the head by 24 to 28 mm,
   **as they did before** (that one is not from the turn: the body's lean
   answers its slowing down at once).
-- **No judge has looked at it yet.** A first round of six judges was
-  called and all six were cut off before they answered (the account's
-  usage limit); nothing came back from them.
+- **Judges have looked at the turn from standing** (below). They have
+  not yet looked at a body sent back while walking.
+
+### What the judges of the turn said (first round)
+
+Three judges, each a separate agent that had not seen the turn before
+and was not told what had been changed, were given sheets of Small's and
+Long's turn (a picture every 0.04 s, from the side and from above) and
+the figures of the trace. (A first call of six judges on the largest
+model was cut off by the account's usage limit before any answered;
+these three ran on a smaller model, which is also a different pair of
+eyes from the one that made the turn.)
+
+All three: **reads as real, with a flaw.**
+
+| What they found | Who | Checked against the trace | |
+|---|---|---|---|
+| **A pose held, then the feet re-aimed.** For about 0.2 s in the middle "both characters sit square to the camera... It reads as a pose placed on the character, not a body mid-turn"; then the feet are somewhere else | The sceptic; the body; the animator | The body's place ran to the 62 degrees its feet allowed at its whole pace and stood there from 0.82 to 1.00 s while a foot stepped | **Stands** |
+| **The steps cannot be seen as steps.** "I cannot catch a foot clearly in the air in any picture" | The body; the sceptic | A turning foot was lifted 56 to 65 mm, the same for Long (hips 0.93 m up) as for Small (0.61 m) | **Stands** |
+| **No weight moves.** "A stack rotating on a wide base... more set than pushed"; no getting ready before the turn | The body; the animator | The hips moved less than 1 mm to either side through the whole turn | **Stands** |
+| **The head whips round, then stops dead** | The animator | 62 degrees in about 0.12 s (538 degrees a second at its fastest) | **Stands** |
+| **Small and Long turn on one clock,** to the hundredth of a second: "a schedule played on both, not two weights" | The body | 0.63 to 1.49 s and 0.62 to 1.48 s | **Stands** |
+| Both arms hang out at one angle through the turn, matching | The sceptic; the animator ("may be the picture") | Not traced (the trace has no hands) | **Stands as seen by two; not acted on yet** |
+| "Two feet re-aiming together" between two pictures | The sceptic | One foot at a time: the right from 0.74 to 0.98 s, the left from 1.00 to 1.25 s. What stands is that it *reads* so (the first row) | **Struck as said** |
+| Feet moving at 5.9 m/s in a turn on the spot | The body; the animator | **My fault in what they were given:** that figure was over the whole trace, the walk away included. In its turning steps a foot's fastest was 1.1 to 2.3 m/s | **Struck** |
+| Long's head near the limit of a neck (80 to 90 degrees) | The body ("may be perspective") | 62 degrees from the hips, 40 from the chest | **Struck** |
+| It answers the order in 0.06 s; a person takes 0.2 | The body ("minor") | True | **Left as it is:** a game answers at once. Luis's to say otherwise |
+| Long's coat becomes two stiff shapes over the spread legs | The sceptic ("may be the picture") | | **Kept for L5** (the clothes) |
+| Long's mug "sits fixed, not held" beside the hand as it walks off | The sceptic | It hangs on its thong at the hip, beside the hand, not in it. Whether it swings as it should cannot be told at this size | **Kept for L9** |
+
+What they said was right: the order (head, chest, hips); that nothing
+slides while it turns; three steps; the walk away, leaning the way it
+goes; and the things that hang, swinging out and settling.
+
+**What was done about what stood.**
+
+- **The weight goes over the foot it will stand on** before the other
+  leaves the ground, and stays there while that one is in the air: the
+  hips now go 3 to 7 cm to that side at each turning step (they went
+  less than 1 mm).
+- **A turning step is lifted by the body's size:** 7 to 8 cm for Small,
+  8 to 9 for Round, 11 to 12 for Long.
+- **A foot steps before the hips have twisted far over it** (once the
+  body has turned 24 degrees on from it, not 40), **and the turn eases
+  up to what the feet allow** instead of running to it and stopping.
+- **The head turns less suddenly** (385 to 475 degrees a second at its
+  fastest, from 538).
+- **A larger body turns and steps more slowly:** from a tenth of the way
+  round to nine tenths, Small 1.00 s, Round 1.07 s, Long 1.21 s.
+- **The walk waits for a step that is in the air.**
+
+| A turn right round from standing, after the judges | Small | Round | Long |
+|---|---|---|---|
+| The whole turn, from the order to walking away | about 1.3 s | about 1.4 s | about 1.5 s |
+| The hips, to the side over the standing foot | 3 to 6 cm | 6 to 7 cm | 6 to 7 cm |
+| A turning foot is lifted | 7 to 8 cm | 8 to 9 cm | 11 to 12 cm |
+| The hips' largest jolt up or down (the limit is 4 mm) | 5.3 mm, one frame | 5.1 mm, two frames | 11.0 mm, four frames |
+
+**Still not finished then:** the numbers failed each turn on one to
+four frames (where the walk begins); the arms; and a body sent back
+while it is walking. The next part is about those.
+
+### Sent back while it walks, and the first step of a walk (second part)
+
+The numbers that were left all pointed at two moments: a walker being
+sent back, and the first step of the walk that follows any turn. Traced
+again with more in the trace (where each foot means to land, and how
+far it goes out of its way), each had a plain cause.
+
+- **A walker sent back was stopped dead in one frame, and turned as it
+  slid.** While it turned it was held to a creep, and "held" meant its
+  pace was cut to a twentieth at once: 1.3 m/s to nothing between two
+  frames. And it began to turn at once, its feet under it wherever the
+  stop left them: they were set down far apart and across each other.
+  **It now stops first, and then turns as a body turns from standing:**
+  it loses its pace as a walker does (in about a third of a second),
+  brings its feet together, turns round in its three steps, and walks.
+- **A foot in the air was pulled a quarter of a metre aside in one
+  frame, and back in another.** A foot goes round the standing boot,
+  never through it. It did that by a bow in its path, worked out from
+  the rest of its way and reached "at a pace"; where the pace came late,
+  a last push made sure. Sent back, the path turns under the foot faster
+  than the pace follows, and the last push went along the side of the
+  foot's own path, which may run *along* the standing boot. It now goes
+  round by **where it is**: while it is alongside the standing boot it
+  is a boot's room out to its own side of it, the way the body faces (a
+  left foot passes to the left of the right), and how far out it must be
+  comes on and goes off along the boot. The place it lands is kept clear
+  the same way. Nothing in that depends on a clock, so nothing can come
+  late.
+- **The first step out of a turn sank the body.** A walk gathered its
+  whole pace in half a second, with its first step still in the air; the foot it stood on was left behind, and the hips were pulled
+  down after it. Out of a turn, which leaves that foot behind to begin
+  with, Long's hips went down **336 mm** (a third of its
+  leg) and sprang up when the foot left the ground. **The body now goes
+  no faster than its legs carry it:** its place may go on only as far as
+  the leg it stands on reaches, in the time until the other foot lands.
+  A walk gathers its pace over its first step or two.
+
+| Sent back the way it came while walking | Small | Long | Round |
+|---|---|---|---|
+| A foot's largest jolt in the air: before the round | 308 mm | 388 mm | 275 mm |
+| ... after the first part | 15 mm | 48 mm | 122 mm |
+| ... **now** | 8 mm | 17 mm | 10 mm |
+| The hips' largest jolt, any way: before the round | 81 mm | 128 mm | 92 mm |
+| ... after the first part | 12.2 mm | 13.8 mm | 13.0 mm |
+| ... **now** | 3.9 mm | 3.4 mm | 9.4 mm |
+| Frames with a jolt of the hips over the limit (4 mm): before the round | 49 | 43 | 46 |
+| ... after the first part | 4 | 9 | 4 |
+| ... **now** | 0 | 0 | 4 |
+| The head's largest jolt: now | 3.9 mm | 3.4 mm | 9.7 mm |
+
+| A turn right round from standing, and the walk away | Small | Long | Round |
+|---|---|---|---|
+| The hips' largest jolt: after the judges' round | 5.3 mm | 11.0 mm | 5.1 mm |
+| ... **now** | 3.8 mm | 3.9 mm | 5.4 mm |
+| Frames over the limit: after the judges' round | 1 | 4 | 2 |
+| ... **now** | 0 | 0 | 3 |
+| How far the hips sink under their standing height on the first step: before | 89 mm | 336 mm | 99 mm |
+| ... **now** | 64 mm | 98 mm | 65 mm |
+| By the numbers | passes | passes | fails |
+
+| An ordinary walk of seven metres | Small | Long | Round |
+|---|---|---|---|
+| At its whole pace after: before | 0.5 s | 0.5 s | 0.5 s |
+| ... **now** | 1.0 s | 0.8 s | 0.9 s |
+| There after: before | 5.7 s | 5.2 s | 5.6 s |
+| ... **now** | 5.9 s | 5.3 s | 5.8 s |
+| By the numbers | passes | passes | passes |
+
+**For Luis to know.**
+
+- **A miner now takes about a second to reach its whole pace,** not
+  half of one. That is what its legs can do; it also means an order to
+  walk is answered a little less sharply. Its steady pace is what it
+  was. If it feels sluggish in play, the measure can be loosened.
+- **The trace of a reversal used to end by stopping the miner where it
+  was,** in one frame, which nothing in the game does to a walker; that
+  alone was a jolt of 12 to 14 mm in every one of those traces. It now
+  ends with the miner sent two steps on.
+
+**By the numbers now:** the three walks pass; a turn from standing
+passes for Small, passes for Long and
+fails for Round; sent back while walking, it
+passes for Small, fails for Long and
+fails for Round.
+
+**Not finished.**
+
+- **What still fails the numbers:** Round's hips, by 5.4 mm
+  on 3 frames of its turn and 9.4 mm on
+  4 frames sent back; a foot of Long's in the air,
+  by 17 mm once (the limit is 12 mm).
+- **Sent back is slower than it was:** it stops, brings its feet
+  together, turns, and walks, about two seconds in all before it is
+  walking back. It turned as it slid before, which was quicker and
+  looked like nothing a body does. Whether two seconds reads as right
+  is for Luis's eye.
+- **Going down a slope the hips ride lower** (101 mm to
+  149 mm under standing at the lowest, and the same when it is
+  sent back there). Part of that is the slope itself (the foot ahead
+  lands lower); how much is right has not been judged.
+- **The arms** (two judges saw them held out at one angle in the turn).
+- **No second round of judges** has looked at the turn as it is now.
+
+## L5 and L6. Going down for the pickaxe, and the clothes
+
+**What Luis said.** "The clothes when the characters kneel... start
+exploding and moving in very unnatural ways." And: "the kneeling
+animation feels very off and weird for the most part... It feels more
+like an animation also in parts, not a real physical thing."
+
+**What was found.** Luis was right on both, and each had a plain cause.
+
+![Small going down for its pickaxe, as it was](../Images/Playtest_2026-10-08/L6_Pick_Small_Before.jpg)
+
+*As it was (Small, from its side, a picture about every third of a
+second, the time counted from its first bend): it bows with its knees
+straight, its arms held back along its body and the tail of its coat
+standing out behind; squats, the arms still out like wings; bows again
+and waits there; only then does a hand go out. Five and a half seconds
+from the first bend to standing.*
+
+- **It went down in parts, because it was built in parts.** Bow to 42
+  degrees with straight knees; wait for the feet; bend the knees as deep
+  as they go; then bow the rest. Each part ran until it was done and the
+  next began. The hand did not move until the whole body was down, and
+  then went out in a third of a second.
+- **The arms were wings because an arm "hung" along the chest,** not
+  down. Bowed to the ground, both stood out behind the body.
+- **The clothes: a coat's flap hung along the pelvis,** and was turned
+  by two angles of the thigh. Bowed, the back of a coat stood out behind
+  like a tail. Squatting, one of those angles runs away as the thigh
+  comes level (it is an angle about a line the thigh is then lying
+  along), and the flaps flew out to the sides.
+- **It walked at the pickaxe and then turned back** to face the way it
+  had started from, because it stood beside the place and faced the line
+  it had first drawn to it.
+- **And 6.6 seconds from the order to standing with the pickaxe,**
+  of which over a second was standing or crouching still.
+
+**What was done.**
+
+- **Going down is one movement.** How far down the body has to go is
+  worked out from how it stands: the least that brings the shoulder
+  within the arm's reach of the handle. The back, the knees and the hand
+  then go there through the same stretch of time, beginning and ending
+  little by little, the bow a little ahead of the knees (hips back
+  before knees forward). Its knees still go no deeper than one of them
+  could hold the body alone; what that leaves is the back's.
+- **The hand goes out as the body comes down,** as far along its way as
+  the body has come, opens on the way, and closes as it arrives.
+- **It looks at what it goes for,** from the order until it has it: the
+  head turns to the pickaxe as far as a neck goes.
+- **It walks the way it will face,** and goes down from its last stride:
+  it does not bring its feet together first, and does not shift them
+  while it is down.
+- **A free arm hangs by its own weight:** straight down from the
+  shoulder, whichever way the chest is turned. It is stopped by its own
+  leg and by the ground.
+- **Standing up with the pickaxe, the knees and the back straighten
+  together.**
+- **A flap of a coat hangs by its own weight,** straight down, whichever
+  way the hips are turned. Its thigh stops it: a front flap lies on the
+  thigh that comes up under it; a back flap is pushed back by a thigh
+  that swings back; the ground stops them too.
+- **Laying the pickaxe down is the same movement,** and the hand now
+  opens before the arm takes it away.
+
+![Small going down for its pickaxe, as it is](../Images/Playtest_2026-10-08/L6_Pick_Small_After.jpg)
+
+*As it is (Small, from the same side, the time counted the same way):
+it looks at the pickaxe; its hips go back and down as its back bows and
+its hand goes out; it takes hold; it stands up with it. Two and a
+quarter seconds.*
+
+![Long, as it is](../Images/Playtest_2026-10-08/L6_Pick_Long_After.jpg)
+
+![Round, as it is](../Images/Playtest_2026-10-08/L6_Pick_Round_After.jpg)
+
+*Long and Round, the same.*
+
+| Taking a pickaxe up from the ground | Small, before | Small, now | Long, before | Long, now | Round, before | Round, now |
+|---|---|---|---|---|---|---|
+| From the order to standing with it | 6.6 s | 4.2 s | 6.9 s | 4.6 s | 6.0 s | 4.7 s |
+| Going down, from the first bend to the hand on the handle | 4.0 s | 1.0 s | 3.9 s | 1.1 s | 3.2 s | 1.3 s |
+| Standing up with it | 1.3 s | 1.2 s | 1.3 s | 1.5 s | 1.3 s | 1.3 s |
+| Frames in which the head jolts more than 4 mm | 411 | 0 | 461 | 2 | 450 | 0 |
+| Frames in which the hips jolt more than 4 mm | 41 | 0 | 50 | 0 | 32 | 0 |
+| Frames in which the reaching hand jolts more than 4 mm | 77 | 1 | 103 | 1 | 97 | 0 |
+
+(Before and after by the same trace: a pickaxe of its own laid 0.6 m
+from the miner, a hundred frames a second, the whole of taking it up and
+laying it down again. A jolt: how much the change of place from one
+frame to the next itself changes.)
+
+### What the trace found that Luis had not named
+
+Taking the pickaxe up was not traced before this round (the trace had
+no hands or tool). Traced, it showed four things besides the one it was
+traced for.
+
+- **The whole upper body shook, fifty times a second, whenever the back
+  moved.** The back moves on the physics' clock, fifty steps a second;
+  the body is drawn about a hundred times. Between steps the bow was
+  drawn going to where it would be at the next step "at the back's own
+  pace and a little more, to catch up". At a hundred frames a second
+  that is more in one frame and less in the next: 0.6 of a degree, which
+  is half a centimetre at the head. **In 411 frames of the one
+  pick-up the head jolted by more than the limit.** It is now drawn
+  steadily, to be there at the next step.
+- **Bent to the ground, the hips were thrown about.** The body keeps its
+  balance by letting its weight fall and catching it. Going down of its
+  own accord that put the hips as far back as they go in the first third
+  of a second, and brought them forward a hand's length in a quarter of
+  a second as it rose. Bent to the ground by its own doing, it now puts
+  its hips where its weight is at ease, as a body does when it means to.
+- **The hand left the pickaxe at once, in one frame,** when it let go
+  (362 mm in a frame), and through the handle, its fingers still
+  closed. The hand now opens first, and the arm then goes to where it
+  hangs little by little.
+- **A tool only gone for, still lying on the ground, was counted as
+  carried** by the back.
+
+**Not done, and what is not known.**
+
+- **No judge has looked at it yet.**
+- **The pickaxe comes up in front of the legs,** its head before the
+  knees, before it goes to the side. It does not pass through them in
+  the pictures read, but it is close.
+- **The body is a plank from hips to shoulders.** The back bows from
+  the hips only; a real back also bends along its length. That is how
+  the body is built (its chest and its hips turn as one), and it is why
+  the bend reads stiff at its deepest.
+- **The trace jolts that are left:** Small: the head 4 mm at most (0 frames over the limit), the hips 3 mm (0); Long: the head 4 mm at most (2 frames over the limit), the hips 2 mm (0); Round: the head 3 mm at most (0 frames over the limit), the hips 2 mm (0).
+- Not tried: a pickaxe too heavy to carry (taken by the end of its
+  handle and dragged) in pictures; a pickaxe on a slope; one lying
+  against a rock.
 
 ## L8. Long stops recovering
 
@@ -515,7 +810,9 @@ fell, and none stood for ever.)
 
 ---
 
-## What was run, for all of the above
+## What was run
+
+### For the first part (L1 to L4 and L8)
 
 - **The whole PlayMode suite,** alone: 176 tests; 161 passed, none
   failed, 15 are run only when asked (1,373 s). The first whole run
@@ -542,7 +839,54 @@ fell, and none stood for ever.)
   costs at night from far (the measures above are at the place's own
   hour, 18:36); frame rates under 50; other hardware.
 
+### For the second part (L4 again, L5 and L6)
+
+- **The traces:** each miner walking, turning round from standing,
+  sent back while walking, and taking a pickaxe up and laying it down,
+  at a hundred frames a second. **Nine of the twelve pass every limit**
+  of the numbers. Before the round none of the nine that there were
+  did.
+- **The whole PlayMode suite,** alone: 176 tests; **161 passed, none
+  failed**, 15 are run only when asked (1,393 s). Three whole runs
+  before it failed one or two tests each; every one was looked into
+  ([what each was](../Validation.md#the-playtest-round-second-part--going-down-for-the-pickaxe-the-clothes-a-walker-sent-back-october-8)).
+- **The release build,** and its own measures run in it:
+
+| The build's own measure | After the first part | Now |
+|---|---|---|
+| One miner standing | 4.63 to 4.73 ms | 4.73 to 5.21 ms (two runs) |
+| One miner at its work | 4.62 to 4.67 ms | 4.79 to 5.12 ms (two runs) |
+| No miners walking, 25, 50, 100 | 4.95, 5.73, 6.24, 7.82 ms | 5.05, 6.14, 6.78, 8.36 ms |
+
+  The two runs with one miner differ from each other by as much as they
+  differ from before. A hundred walking miners cost about half a
+  millisecond more: each works out, every frame, what pace its legs
+  allow and how its feet clear each other. Nothing was thrown in the
+  build's log.
+- **Not tested:** anything by Luis's eye; any judge on this part; the
+  movements in the build at Luis's frame rate and screen (the traces are
+  the editor's); a pickaxe too heavy to carry, or on a slope, or against
+  a rock, in pictures; frame rates under 50; other hardware.
+
 ## What was learnt in this round, so far
+
+- **Trace everything a body does, not only what was complained of.**
+  The pick-up was not traced in the first part. Traced, it showed that
+  the whole upper body shook fifty times a second whenever the back
+  moved. That was in the work at the rock too, and had been since the
+  back was built.
+- **Follow a break to its cause in the trace before changing
+  anything.** Three ways of keeping a foot off the standing boot were
+  tried on the totals alone; each moved the jump somewhere else. Reading
+  frame by frame where the foot was, where it meant to land and which
+  rule had moved it found the cause in a quarter of an hour.
+- **Smooth is not right.** With every break gone, a walker sent back
+  still sank by a third of its hips' height as it turned, smoothly, and
+  the numbers passed it. The question that put it right was not about
+  numbers: what does a body do when it is sent back? It stops, and then
+  it turns.
+- **The bench can be the fault.** The trace of a reversal ended by
+  stopping the miner in one frame, which nothing in the game does.
 
 - **What I checked was whether a thing worked. Luis looks at how it
   moves.** Every one of the ten notes passes "it worked".

@@ -245,7 +245,7 @@ Luis asked for. The round's log, with before and after images, is in
 
 Luis's ten notes, and what was found and done for each, are in
 [the playtest round's page](../Reviews/2026-10-08_ThePlaytestRound.md).
-The build in `Builds/WindowsOrdinaryPlace` has the first five. To see
+The build in `Builds/WindowsOrdinaryPlace` has seven of them. To see
 them:
 
 1. **The fireflies** (key `4` for dusk, `6` for night). Pull the camera
@@ -261,17 +261,26 @@ them:
 3. **The walk.** Send a miner down the slope by the path and watch its
    head and hips against the far hills. *Is the stutter gone?*
 4. **Turning round.** Send a standing miner straight behind it. Its head
-   looks round first; it turns in three steps; then it walks. *Does it
-   read as a body turning? This one is not finished:* a miner sent back
-   while it is walking still has a bad frame or two.
+   looks round first; it turns in three steps; then it walks. **Send a
+   walking miner back the way it came:** it stops, turns the same way,
+   and walks (about two seconds). *Does it read as a body turning? Is
+   two seconds too long to answer an order?*
 5. **Long's rest.** Have Long mine with its own pickaxe for a few
    minutes: it rests with the pickaxe at its side and goes back to work.
    With the heavy pickaxe it strikes twice, puts it down, and the panel
    says why.
 
-**Not in this build yet:** the clothes in a kneel, the kneeling itself,
-getting up after a fall by the body's own forces, taking and holding the
-lantern or the mug.
+6. **Going down for the pickaxe.** Lay a miner's pickaxe down (`Space`,
+   click it, "Lay it down") and have it picked up again. It looks at the
+   pickaxe, goes down in one movement with its hand going out, takes
+   hold, and stands up. *Does it read as a body picking a thing up?
+   Watch the coat as it goes down and comes up: does anything stand out
+   or fly?*
+7. **The start of a walk.** A miner now takes about a second to reach
+   its whole pace. *Does it feel slow to answer?*
+
+**Not in this build yet:** getting up after a fall by the body's own
+forces, taking and holding the lantern or the mug.
 
 ## What changed for the game
 

@@ -1685,6 +1685,144 @@ its rests are run for five minutes with each group of muscles' effort
 written down (`MinerPanelBench -panelMuscles`). The whole method is in
 [the judging of movement](../ArtDirection/MotionJudging.md).
 
+### After Luis's play, second part: going down for a tool, a walker sent back, and what is drawn between the physics' steps (October 8)
+
+What was found and done, with the figures and pictures, is in
+[the round's page](../Reviews/2026-10-08_ThePlaytestRound.md#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes).
+This section keeps what changed in *how a body works*. All of it is
+**Implemented, not Locked**.
+
+**Going down to the ground is one movement** (`PhysicalCarry.BendTo`).
+
+- How far down the body is, is one number, from standing (0) to bent
+  all a body bends (1). The bow and the bend of the knees are both read
+  from it: the bow a little ahead (hips back before knees forward).
+- How far down it has to go is **worked out from how it stands**: the
+  least that brings the shoulder within the arm's reach of the place
+  (found by halving, twelve times, on a plain model of the body: the
+  hips lower by the bend, the shoulder turned about the hips by the
+  bow). The body goes there little by little (`GoesDownIn`), and the
+  target is worked out again at every step, so it follows what the
+  balance does with the hips meanwhile.
+- **Its knees go no deeper than one of them could hold the body alone**
+  (as before); what that leaves is the back's, or is out of reach, and
+  the body does not bow down to make sure.
+- Until the hand is there the body aims a little further down than it
+  need (`GoesFurther`), so that the hand arrives while the body still
+  moves and not at the end of a long slowing.
+
+**The hand goes out as the body comes down** (`PhysicalHands.GraspLed`,
+`Lead`). A reach can be *led*: the body says how far along its way the
+hand is (by how much the shoulder still lacks), never back, and no
+faster than a hand reaches. The fingers open on the way and close as it
+arrives; it holds once they have closed. A hand that lets go *opens
+first* (`Open`), and the arm then leaves.
+
+**It looks at what it goes for** (`ProceduralBiped.Regard`): the head
+turns to a place, as far as a neck goes from the chest (50 degrees
+down, 35 up, 60 round), in about a sixth of a second.
+
+**It keeps its feet where its last stride left them** (`StaysPut`, and
+`PhysicalBalance.KeepsFeet`): it does not bring them together before it
+goes down, takes no step while it is down, and brings them together
+once it has stood up. **It walks the way it will face there**, so that
+it need not turn again; and it **comes to rest** before it goes down
+(`UnitMotor.ComeToRest`), where it was stopped in one frame.
+
+**Standing up, the knees and the back straighten through the same
+stretch of time** (`StandsUpIn`, longer for a larger body), with a tool
+or with nothing in its hands. The legs' own strength still says how
+fast the knees can go.
+
+**A free arm hangs by its own weight** (`ProceduralBiped.Pose`): from
+its shoulder, straight down in the world, whichever way the chest is
+turned. It is stopped by its own leg and by the ground. Let go of a
+thing, it goes to where it hangs little by little, from the pace it had.
+
+**A coat's flap hangs by its own weight** (`MinerBody.Drape`): each of
+the four flaps is a direction in the world that falls towards straight
+down, a little late, and is stopped at once by its thigh (the front of
+the thigh for a front flap, the back for a back flap, and the thigh's
+outer side for both) and by the ground. A flap that is stopped slides
+down the slope of what stops it.
+
+**Bent to the ground of its own accord, the body places its hips**
+(`PhysicalBalance`, while `KeepsFeet`). Everywhere else it keeps its
+balance by letting its weight fall and catching it. Doing that while it
+bent down threw the hips about. It now puts them where its weight is at
+ease over its feet, and takes them there as a body moves its hips when
+it means to. If its weight still ends outside its feet, it falls, as
+before.
+
+**The hips come to the end of how far the legs let them go little by
+little** (`PhysicalBalance.Slowing`): over the last twentieth of their
+height they go no faster than would bring them there in a tenth of a
+second.
+
+**What moves on the physics' clock is drawn steadily between its
+steps.** The back bows fifty times a second; the body is drawn about a
+hundred times. The back now says where the bow will be at its next step
+and in how long (`ProceduralBiped.BowBy`), and the drawn bow goes there
+steadily. (It went there "at the back's own pace and a little more", and
+so by more in one frame and less in the next.) The lean, walking, eases
+to where the balance has it (`SetLean`); standing, it follows at the
+balance's own pace as it did (`SetLeanAt`), because the balance reads
+the lean it was drawn with. A led reach is drawn between the steps too.
+
+**The knees begin and stop bending little by little** (`Sink`): they
+went at their whole pace at once.
+
+**A foot in the air goes round the standing boot by where it is**
+(`ProceduralBiped.GoesRound`, `NotTouching`). While it is alongside the
+standing boot it is at least a boot's room out to *its own side* of it,
+measured the way the body faces (a left foot passes to the left of the
+right, whichever way a turn has left the boots pointing); boots that
+point different ways are given more room. How far out it must be comes
+on and goes off along the boot, and over the first part of the swing.
+Whatever that leaves, the two boots never touch. The place the foot
+lands is kept clear by the same two rules, so it lands where it was
+going, and the hips come down to the place it lands on. Nothing in it
+depends on a clock, so nothing in it can lag and be caught up in one
+frame.
+
+**A walker sent back stops first, and then turns as a body turns from
+standing** (`UnitMotor.Steer`). It does not turn while it still has pace
+the other way, nor while it brings its feet together from the stop
+(`ProceduralBiped.Stopping`); and it does not set off again until its
+feet are together (`StopsUnder`). The pace it has along its way it
+gives up at 4 m/s each second at most; the pace it has the other way it
+loses by its own slowing. (It was held to a creep at once, and turned as
+it slid on.) A stopping body that is turning steps the foot on the side
+it turns to first.
+
+**The body goes no faster than its legs carry it**
+(`ProceduralBiped.PaceItsLegsAllow`). Its place may go on only as far
+as the leg it stands on reaches without pulling the hips down by more
+than a walk does (7% of their height with a foot in the air, 17% with
+both down), in the time until that leg is relieved. A walk therefore
+gathers its pace over its first step or two (about a second) and not in
+half of one.
+
+| Setting | Where | Value | What it does |
+|---|---|---|---|
+| `GoesDownIn` | `PhysicalCarry` | 0.45 s | How quickly the body goes down (about three times this in all, for hips 0.7 m up; longer for a larger body) |
+| `GoesFurther` | `PhysicalCarry` | 0.1 | How much further down it aims until the hand is there |
+| `StandsUpIn` | `PhysicalCarry` | 1.1 s | Standing up, knees and back together |
+| `GroundBow`, `GroundSink` | `PhysicalCarry` | 78 degrees, 0.6 | Bent all a body bends |
+| `LedCloses`, `LedHolds` | `PhysicalHands` | 0.7, 0.12 s | A led reach: the fingers close from this share of the way; it holds this long after it is there |
+| `HipsComeIn`, `HipsGoAtMost` | `PhysicalBalance` | 0.22 s, 0.7 m/s | The hips placed, bent to the ground |
+| `EasesOver`, `ComesIn` | `PhysicalBalance` | 0.05, 0.1 s | The hips coming to the end of their way |
+| `SinksIn`, `SinkFalls` | `ProceduralBiped` | 0.1 s, 1.6 m/s | The knees easing; the most the hips come down at |
+| `GoesRoundOver`, `GoesRoundFrom` | `ProceduralBiped` | 0.6, 0.35 | Going round the standing boot |
+| `DipsAtMost`, `DipsBothDown`, `CreepsAtLeast`, `StopsUnder` | `ProceduralBiped` | 0.07, 0.17, 0.2 m/s, 0.06 m/s | The pace the legs allow; the pace while the feet come together after a stop |
+| `Slows`, `CarriedOn` | `UnitMotor` | 4 m/s each second, 0.12 m/s | A walker held back loses its pace; it still "has pace the other way" above this |
+
+**The trace** (`MotionTraceBench`) now also takes a pickaxe picked up
+and laid down (`-traceWhat pick`), and writes the hands, the shoulders,
+the tool, the bow, the lean as it is drawn and as the balance has it,
+and where each foot means to land. The reversal ends with a stop as a
+walk stops.
+
 ## Sources
 
 - The ladder of balance (ankle, hip, step):

@@ -1961,3 +1961,59 @@ themselves are in
   **`Art/Review/motion_breaks.py`** reads the traces;
   **`Art/Review/judges/`** holds the judges' briefs.
 
+## The playtest round, second part: going down for a tool; a walker sent back; drawn between the physics' steps — October 8
+
+What changed in the code
+([the round's page](../Reviews/2026-10-08_ThePlaytestRound.md); the rules,
+with the settings, are in
+[the design](../Design/ThePhysicalBody.md#after-luiss-play-second-part-going-down-for-a-tool-a-walker-sent-back-and-what-is-drawn-between-the-physics-steps-october-8)).
+
+- **`PhysicalCarry`.** `BendTo(hips, posture, shoulder, place, dt,
+  further)` is one movement on one number (`down`), aimed by a model of
+  the body (`ShoulderAt`); `Take` no longer bows to look; the reach is
+  led (`lacksFrom`); `KeepsItsFeet()`; `Stands()`; the lay-down follows
+  the body (`laid`), opens the hand (`OpensIn`) and stands up eased
+  (`rising`). The stand place is 0.6 of the trunk's height ahead (was
+  0.8), and the miner walks the way it will face.
+- **`PhysicalHands`.** `GraspLed`, `Lead`, `Withdraw`, `Open`; a reach is
+  drawn between the physics' steps (`reachWas`, `reachStepped`).
+- **`ProceduralBiped`.**
+  - `Regard(point)` / `RegardNothing()`; `StaysPut`; `Stopping`;
+    `StepSize`; `PaceItsLegsAllow(way)`; `BowBy(degrees, seconds)`;
+    `SetLeanAt(metres, pace)` (the balance's own pace) beside `SetLean`
+    (now eased).
+  - `Sink` is eased (`SinksIn`, `SinkFalls`); a bow told only where to
+    go is eased (`BowsIn`).
+  - A free arm: `hangs` (the level frame under the chest), `KeptOut`,
+    and for a body with no worker `handHang` (eased from its shoulder).
+    `freeWrist` is where it would hang, before any easing.
+  - The swing: `GoesRound` and `NotTouching` replace the bow
+    (`foot.round`, `foot.bow` are left unused); `Retarget` keeps the
+    landing place clear by both.
+  - A stopping body that turns lifts its inside foot first; a body that
+    `StaysPut` stands as its last stride left it.
+- **`PhysicalBalance`.** While `KeepsFeet` the hips are placed
+  (`HipsComeIn`, `HipsGoAtMost`), not let fall and caught; `Slowing`
+  eases the lean to the end of its way; walking, the lean eases from the
+  pace it had (`leanGoes`).
+- **`PhysicalBack`.** `BowBy` in place of a pace; a tool only gone for
+  is not counted as held.
+- **`UnitMotor`.** `Steer`: no turn while it has pace the other way or
+  is `Stopping`; `mayGo` (the pace along its way comes down at `Slows`);
+  the legs' pace; `ComeToRest()`; `MovingHow`.
+- **`MinerBody`.** `Drape` is by weight (`flapHangs`, `flapDown`,
+  `flapInside`, `thighFront`, `Stopped`, `ThighAlong`, `ThighOut`);
+  `Swing` and `Out` (the two angles) are gone.
+- **`MinerWorkPreview`.** Why a rock was given up is cleared when a rock
+  is taken up; "sent somewhere" says how the miner was moving.
+- **Tests.** `MotionTraceBench`: `-traceWhat pick`; columns for the bow,
+  hands, shoulders, tool, head and chest pitch, lean (drawn and the
+  balance's), where each foot means to land, its true place and where it
+  left from; a reversal ends with a stop as a walk stops.
+  `BoulderTests.AMinerMinesABoulderByAClick` waits for the miner to be
+  back at its work before it offers a rest, and for its next blow not
+  counting a rest it takes of its own accord.
+  `MinerTests.InASharpTurnTheSwingingFootGoesRoundTheStandingOne` says
+  when the boots were closest.
+- **`Art/Review`.** `motion_jolts.py`, `motion_frames.py`,
+  `motion_dips.py`.

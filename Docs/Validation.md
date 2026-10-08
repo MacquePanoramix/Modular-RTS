@@ -2746,3 +2746,59 @@ run.
     begun).
   - **Frame rates under 50 a second.** Other hardware.
 
+## The playtest round, second part — going down for the pickaxe, the clothes, a walker sent back (October 8)
+
+What was found and done is in
+[the round's page](Reviews/2026-10-08_ThePlaytestRound.md). This is what
+was run.
+
+- **The walk, the turn, and being sent back while walking**
+  (`MotionTraceBench`, each miner, 100 frames a second; read by
+  `Art/Review/motion_breaks.py`):
+  - **After the first part:** the three walks passed; the three turns
+    failed on two to four frames each; the three reversals failed (a
+    foot 15 to 122 mm; the hips 12 to 14 mm).
+  - **Now:** the three walks pass. A turn from standing passes for Small,
+    passes for Long, fails for Round (hips 5.4 mm on 3 frames). Sent
+    back, it passes for Small, fails for Long (a foot 17 mm once), fails for
+    Round (hips 9.4 mm on 4 frames).
+  - **The hips' sinking on the first step out of a turn**
+    (`Art/Review/motion_dips.py`): 89 mm, 336 mm and 99 mm under standing
+    before; 64 mm, 98 mm and 65 mm now.
+- **Taking a pickaxe up and laying it down** (`MotionTraceBench
+  -traceWhat pick`, new):
+  - **Before** (the code of the first part, by the same trace): from the
+    order to standing with it 6.6 s, 6.9 s and 6.0 s; the head over
+    the limit on 411, 461 and 450 frames.
+  - **Now:** 4.2 s, 4.6 s and 4.7 s; the head over the limit on
+    0, 2 and 0 frames; the hips on 0, 0 and
+    0.
+- **Full PlayMode suite,** alone.
+  - **Runs on the way** (each alone, each looked into):
+    - 160 of 161: Long, told to go back to its work, did not strike
+      again within the forty seconds the test waited (it rested of its
+      own accord), and the failure gave a reason left over from another
+      miner. The test waits for the blow, not counting such a rest, and
+      the reason is cleared with each new rock.
+    - 159 of 161: a hand carrying the lantern crept to its place for two
+      seconds (the easing of a free hand was applied to a hand that is
+      led); and Long was offered no rest while it stepped back to its
+      place between two blows (the test now waits for it to be at its
+      work).
+    - 160 of 161: the boots overlapped by 85 mm in a sharp turn (the new
+      way round the standing boot let a foot land across it).
+  - **The final code:** 176 tests; **161 passed, none failed**, 15 skipped as explicit (1,393 s).
+- **Release build.** It passed (`Builds/WindowsOrdinaryPlace`), and its own measures were run in it:
+  - **One miner** (two runs): standing 4.73 to 5.21 ms a frame; at its work 4.79 to 5.12 ms (hands 35 to 41 microseconds a step); three or four blows each in twelve seconds. Before this part: 4.63 to 4.73 and 4.62 to 4.67. The two runs differ from each other by as much as they differ from before.
+  - **A walking crowd** (one run): 5.05, 6.14, 6.78 and 8.36 ms for none, 25, 50 and 100 miners (before this part: 4.95, 5.73, 6.24, 7.82). A hundred walking miners cost about half a millisecond more: each now works out what pace its legs allow, and how its feet clear each other, at every frame.
+  - Nothing was thrown in its log.
+- **The judges:** none called in this part.
+- **Not tested:**
+  - **Anything Luis has seen or played** of this.
+  - **The pick-up, the turn and the walk in the build at Luis's frame
+    rate** (the traces are the editor's, at 100 frames a second).
+  - **A pickaxe too heavy to carry** (taken by its end and dragged), one
+    on a slope, one against a rock: in pictures.
+  - **The clothes of all three in every bend,** beyond the pick-up
+    pictures in the round's page.
+  - **Frame rates under 50 a second.** Other hardware.

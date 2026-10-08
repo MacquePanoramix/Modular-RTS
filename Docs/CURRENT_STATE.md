@@ -17,12 +17,26 @@
     the stutter after each step of the walk (the hips fell 5 to 13 cm in
     one frame at every footfall; now 2 to 3 mm); Long's rest that never
     ended.
-  - **Much done, not finished:** turning round on the spot (the head
-    looks round first; the body turns no further than its feet let it, in
-    three steps; no foot jumps).
-  - **Not begun:** the clothes in a kneel; the kneeling itself; getting
-    up after a fall by the body's own forces; taking and holding the
-    lantern or the mug.
+  - **Made again, and for Luis to see** (the second part, October 8):
+    - **Going down for the pickaxe** is one movement now: the back, the
+      knees and the hand through the same stretch of time, the body
+      looking at what it goes for; it stands up with knees and back
+      together. It was built in parts and went in parts.
+    - **The clothes:** a coat's flap hangs by its own weight and lies on
+      the thigh; free arms hang by their own weight (bowed, they stood
+      out like wings).
+    - **Turning round, and being sent back while walking:** a walker
+      sent back stops, turns as from standing, and walks; a foot goes
+      round the standing boot by where it is; the body goes no faster
+      than its legs carry it. By the numbers, six of the nine traced
+      walks and turns pass every limit (none did before the round).
+    - **Found by the trace, not by a note:** the upper body shook fifty
+      times a second whenever the back moved (drawn in jumps between the
+      physics' steps). Gone.
+  - **Not begun:** getting up after a fall by the body's own forces;
+    taking and holding the lantern or the mug.
+  - **Judges:** one round, of the turn as it was after the first part.
+    None since.
   - **How movements are checked now**
     ([the judging of movement](ArtDirection/MotionJudging.md)): traced
     frame by frame at the rate Luis plays at and read for breaks; then

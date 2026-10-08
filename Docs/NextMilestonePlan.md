@@ -17,8 +17,9 @@ S4 is begun ("this polishing run and the fixing run" first). They are
 kept track of, one by one, in
 [the playtest round's page](Reviews/2026-10-08_ThePlaytestRound.md). The
 twelve steps below are as they were built; what the round changes in how a
-body walks, turns and rests is in
-[the design](Design/ThePhysicalBody.md#after-luiss-play-the-walk-the-turn-and-the-rest-october-8).
+body walks, turns, rests, goes down for a tool and is drawn is in
+[the design](Design/ThePhysicalBody.md#after-luiss-play-the-walk-the-turn-and-the-rest-october-8)
+(and [its second part](Design/ThePhysicalBody.md#after-luiss-play-second-part-going-down-for-a-tool-a-walker-sent-back-and-what-is-drawn-between-the-physics-steps-october-8)).
 
 ## Which of the prototype's questions it answers
 

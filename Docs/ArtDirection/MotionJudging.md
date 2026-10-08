@@ -62,11 +62,18 @@ blow.
 
 - `Assets/_WonderGather/Tests/PlayMode/MotionTraceBench.cs` takes the
   traces: each miner walking seven metres, turning round from standing,
-  and being sent back the way it came in mid-stride. It writes one CSV a
-  movement, and pictures of every frame if asked.
+  being sent back the way it came in mid-stride, and (asked for by
+  `-traceWhat pick`) taking a pickaxe up from the ground and laying it
+  down again. It writes one CSV a movement, and pictures of every frame
+  if asked.
 - `Art/Review/motion_breaks.py` reads them, prints what it finds for
   each, says PASS or FAIL, and can draw the heights of hips and feet as
   lines over time.
+- `Art/Review/motion_jolts.py` says *when* each part jolts (any part the
+  trace has: the hands too), in runs of frames; `motion_frames.py` shows
+  a stretch of a trace frame by frame; `motion_dips.py` says how far the
+  hips ride under their standing height over the feet (a dip may be
+  smooth, and is then no break: the first tool does not find it).
 
 ```bash
 Unity -batchmode -projectPath . -runTests -testPlatform PlayMode -testFilter WonderGather.Tests.MotionTraceBench -traceOut Captures/Trace
@@ -78,8 +85,11 @@ python Art/Review/motion_breaks.py Captures/Trace/*.csv --plot Captures/Trace/he
 
 **What it does not do.** It finds what is *wrong*; it cannot say a
 movement is *right*. A body that glided with no breaks at all would pass,
-and read as a ghost. And it reads only what it is given: the trace has
-the hips, head and feet, not yet the hands, the tool, or the clothes.
+and read as a ghost. And it reads only what it is given. Since the second
+part of the round the trace has the hands, the shoulders, the tool, the
+bow, the lean (as it is drawn and as the balance has it) and where each
+foot means to land; it does not have the clothes, the fingers, or the
+things that hang.
 
 ## 2. The judges: people who did not make it
 
@@ -149,10 +159,10 @@ Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)
 
 | Movement | Numbers | Judges | Luis |
 |---|---|---|---|
-| Walking | **Passes** (all three miners) | Called once; cut off before they answered | Not yet |
-| Turning round on the spot | Fails on two to four frames | Called once; cut off before they answered | Not yet |
-| Sent back the way it came, walking | Fails (a foot jumps once for Long and for Round) | Not yet | Not yet |
-| Going down for a pickaxe, and standing up with it | Not traced yet (the trace has no hands or tool) | Not yet | Not yet |
+| Walking | **Passes** (all three miners) | Not yet (the first call was cut off before it answered) | Not yet |
+| Turning round on the spot | **Passes** for Small, **Passes** for Long, fails for Round (5.4 mm on 3 frames) | **One round:** reads as real, with flaws; five stood and four were put right. Not looked at since | Not yet |
+| Sent back the way it came, walking | **Passes** for Small; fails for Long (a foot 17 mm once); fails for Round (hips 9.4 mm) | Not yet | Not yet |
+| Going down for a pickaxe, standing up with it, and laying it down | **Traced.** Hips over the limit on 0, 0 and 0 frames (Small, Long, Round); it was 41, 50 and 32 | Not yet | Not yet |
 | The blow, and the rest from it | Efforts of each muscle group measured over five minutes | Not yet | Not yet |
 | Falling, and getting up | Not traced yet | Not yet | Not yet |
 | Taking the lantern or the mug, and holding it | Not traced yet | Not yet | Not yet |
@@ -167,7 +177,42 @@ Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)
   off with nothing said. Judges are to be called fewer at a time, on a
   smaller model (which is also a different pair of eyes from the one
   that made the movement), and only after the work in hand is committed.
+- **Three judges on the smaller model did answer, and were worth it.**
+  All three found, each in its own words, the one thing the numbers
+  could not: that the body ran to the limit of its turn and stood there
+  while a foot stepped ("a pose placed on the character"). Nothing was
+  broken in that; it only read as false.
+- **The referee's check is not a formality.** Of twelve things the
+  judges said, five stood, three were struck against the trace, one was
+  the judges reasoning from a wrong figure that I had given them, and
+  three were kept for other notes. What a judge is given has to be as
+  carefully measured as what it is asked.
+- **A judge cannot see a foot leave the ground in a picture a hundred
+  pixels high.** Two of three said they could not tell a step from a
+  slide. Sheets for the feet are to be drawn closer, and from the side.
 
+- **A trace is only as good as what is in it.** The pick-up was not
+  traced in the first part (the trace had no hands). Traced, it showed
+  at once that the whole upper body shook fifty times a second whenever
+  the back moved: what moved on the physics' clock was drawn in jumps
+  between its steps. Nobody had asked the head how it moved while the
+  back bowed.
+- **A break that is found has to be followed to its cause in the
+  trace.** Three ways of keeping a foot off the standing boot were
+  tried on the numbers alone in an afternoon; each moved the jump
+  somewhere else. What ended it was writing down, frame by frame, where
+  the foot was, where it meant to land and which rule had moved it, and
+  reading that: the foot was being asked to be on "its own side" of a
+  boot that pointed another way than the body.
+- **Smooth is not the same as right.** With every break gone, a walker
+  sent back still sank by a third of its hips' height while it turned:
+  smoothly. The numbers passed it. Only measuring the dip itself showed
+  it, and only asking what a body does (it stops, then turns) put it
+  right.
+- **The bench itself can be the fault.** Every trace of a reversal
+  ended by stopping the miner where it was, in one frame, which nothing
+  in the game does to a walker: a jolt of 12 to 14 mm in each, counted
+  against the walk for a day.
 - **The trace found in a minute what weeks of clips had not.** Read
   frame by frame at 100 a second, the hips' height in a walk was a
   sawtooth. It had been a sawtooth since the walk was made.
