@@ -699,7 +699,16 @@ namespace WonderGather
             else if(stopping)
             {
                 if(!support[0].swinging&&!support[1].swinging&&!StanceClosed()&&!StaysPut)
-                    Lift(HomeError(0)+Turn(0)*.01f>=HomeError(1)+Turn(1)*.01f?0:1,true);
+                {
+                    // The foot that is furthest from its place steps first; unless the body is turning, when the
+                    // foot on the side it turns to does (it opens the way, and the other comes round after it: the
+                    // other way about, sent back while it walked, the first foot was set down far out to the side
+                    // of the one it had to get round, and the hips sank by a third of their height between them).
+                    int further=HomeError(0)+Turn(0)*.01f>=HomeError(1)+Turn(1)*.01f?0:1;
+                    int inside=turning>0?1:0;
+                    bool turns=Mathf.Abs(turning)>TurnsFor&&(HomeError(inside)>=ClosedTolerance||Turn(inside)>=20);
+                    Lift(turns?inside:further,true);
+                }
             }
             // Adjustment steps are for standing. Once the root moves, let the current step land
             // and hand over to the gait; chaining new adjustments would chase the body forever.
@@ -993,10 +1002,12 @@ namespace WonderGather
         // (With both feet down a walk's own stride stretches the leg behind further than that, most of all down a
         // slope: there the measure is this share, which a steady walk does not come to.)
         private const float DipsAtMost=.07f,DipsBothDown=.17f,CreepsAtLeast=.2f,StopsUnder=.06f;
+        // It has stopped walking and is bringing its feet together.
+        public bool Stopping=>stopping;
         public float PaceItsLegsAllow(Vector3 way)
         {
             // (Bringing its feet together after it has stopped, it does not set off again until it has: sent back
-            // while it walked, it set off from wherever the stop had left its feet, some of the time crossed.)
+            // while it walked, it set off from wherever the stop had left its feet.)
             if(initialized&&stopping) return StopsUnder;
             if(!initialized||CurrentGait!=Gait.Walking) return float.MaxValue;
             way=Vector3.ProjectOnPlane(way,Vector3.up).normalized;

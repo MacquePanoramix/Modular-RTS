@@ -29,6 +29,8 @@ namespace WonderGather
         // Held back while it turns, it loses the pace it has along its way no faster than this (metres a second, each
         // second).
         private const float Slows = 4;
+        // It still has pace the other way while it goes faster than this (metres a second).
+        private const float CarriedOn = .12f;
         private float mayGo = float.MaxValue;
         // How far it is turned from the way it means to go (degrees).
         public float TurnedFromItsWay { get; private set; }
@@ -66,7 +68,13 @@ namespace WonderGather
             }
             float wanted = Mathf.Atan2(way.x, way.z) * Mathf.Rad2Deg, now = transform.eulerAngles.y;
             TurnedFromItsWay = Mathf.Abs(Mathf.DeltaAngle(now, wanted));
-            transform.rotation = Quaternion.Euler(0, Turned(now, wanted, dt), 0);
+            // Sent back, or sharply aside, while it walks: it does not turn while it still has pace the other way,
+            // nor while it brings its feet together from the stop. It stops, and then turns as a body turns from
+            // standing. (It turned as it slid on, its feet under it wherever the stop left them: they were set
+            // down far apart and across each other, and the hips sank between them.)
+            bool carriedOn = Vector3.Dot(agent.velocity, way) < 0 && agent.velocity.sqrMagnitude > CarriedOn * CarriedOn;
+            if (carriedOn || (body != null && body.Stopping)) turnPace = 0;
+            else transform.rotation = Quaternion.Euler(0, Turned(now, wanted, dt), 0);
             float share = Mathf.Lerp(Creeps, 1, Mathf.SmoothStep(0, 1, Mathf.InverseLerp(WaitsBeyond, WalksWithin, TurnedFromItsWay)));
             // And it does not walk out from under a foot that is in the air in a step taken standing.
             if (body != null && body.StepsStanding) share = Mathf.Min(share, WaitsForAStep);
