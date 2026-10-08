@@ -960,29 +960,38 @@ namespace WonderGather
         // hips are where they were expected when it does. (Reckoned to the moment between, the foot jumped ahead
         // by up to a frame's walking as it landed, about a centimetre.)
         private float frame;
-        // The body goes no faster than its legs carry it. With a foot in the air, its place may go on, before that
-        // foot lands, only as far as the leg it stands on reaches without pulling the hips down by more than a walk
-        // does (this share of their height): so much, in the time until the landing, is the most its pace may be,
-        // the way it is going (metres a second; no limit when both feet are down or it is not walking). Never less
-        // than a creep. (A walk gathered its whole pace in a third of a second, its first step still in the air.
-        // Out of a turn that had left the standing foot behind, Long's hips went down by a third of its leg, and
-        // sprang up again when the foot left the ground. October 8.)
-        private const float DipsAtMost=.07f,CreepsAtLeast=.2f;
+        // The body goes no faster than its legs carry it. Its place may go on only as far as each leg it stands on
+        // reaches without pulling the hips down by more than a walk does (this share of their height), in the time
+        // until that leg is relieved: until the foot in the air lands, or, with both feet down, until the foot
+        // behind takes its turn to leave the ground. So much, in that time, is the most its pace may be, the way it
+        // is going (metres a second; no limit when it is not walking). Never less than a creep.
+        // (A walk gathered its whole pace in a third of a second, its first step still in the air. Out of a turn
+        // that had left the standing foot behind, Long's hips went down by a third of its leg, and sprang up again
+        // when the foot left the ground. October 8.)
+        // (With both feet down a walk's own stride stretches the leg behind further than that, most of all down a
+        // slope: there the measure is this share, which a steady walk does not come to.)
+        private const float DipsAtMost=.07f,DipsBothDown=.17f,CreepsAtLeast=.2f;
         public float PaceItsLegsAllow(Vector3 way)
         {
             if(!initialized||CurrentGait!=Gait.Walking||stopping) return float.MaxValue;
-            if(support[0].swinging==support[1].swinging) return float.MaxValue;
-            int air=support[0].swinging?0:1;
-            Vector3 hip=HipOver(1-air),ankle=support[1-air].ankle;
-            // (Measured over the ankle itself: the body's own place rides over the ground by more in some places than in others.)
-            float tall=(HipHeight-AnkleHeight)*(1-DipsAtMost);
-            float reaches=Mathf.Sqrt(Mathf.Max(0,LegReach*LegReach-tall*tall));
-            Vector3 from=Vector3.ProjectOnPlane(hip-ankle,Vector3.up);
             way=Vector3.ProjectOnPlane(way,Vector3.up).normalized;
-            // How far on, that way, before the hip is as far from the ankle as the leg reaches.
-            float on=Vector3.Dot(from,way),aside=from.sqrMagnitude-on*on;
-            float room=Mathf.Sqrt(Mathf.Max(0,reaches*reaches-aside))-on;
-            return Mathf.Max(CreepsAtLeast,room/Mathf.Max(.02f,LandsIn(support[air])));
+            // (Measured over the ankle itself: the body's own place rides over the ground by more in some places
+            // than in others.)
+            float most=float.MaxValue;
+            for(int i=0;i<2;i++)
+            {
+                Foot foot=support[i],other=support[1-i];
+                // (A foot that has just landed is not the one that is spent: it is the other's turn to leave.)
+                if(foot.swinging||(!other.swinging&&foot.liftedThisCycle)) continue;
+                float tall=(HipHeight-AnkleHeight)*(1-(other.swinging?DipsAtMost:DipsBothDown)),reaches=Mathf.Sqrt(Mathf.Max(0,LegReach*LegReach-tall*tall));
+                Vector3 from=Vector3.ProjectOnPlane(HipOver(i)-foot.ankle,Vector3.up);
+                // How far on, that way, before the hip is as far from the ankle as the leg reaches.
+                float on=Vector3.Dot(from,way),aside=from.sqrMagnitude-on*on;
+                float room=Mathf.Sqrt(Mathf.Max(0,reaches*reaches-aside))-on;
+                float until=other.swinging?LandsIn(other):Mathf.Max(0,duty-foot.lastPhase)/Mathf.Max(.2f,cadence);
+                most=Mathf.Min(most,room/Mathf.Max(.04f,until));
+            }
+            return Mathf.Max(CreepsAtLeast,most);
         }
         private float LandsIn(Foot foot)
         {
