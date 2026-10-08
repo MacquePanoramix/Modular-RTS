@@ -78,7 +78,7 @@ namespace WonderGather.Tests
                     var plans = unit.gameObject.AddComponent<PhysicalSwing>();
                     plans.enabled = false; plans.body = biped; plans.tool = miner.Pickaxe;
                     Debug.Log(string.Format(culture, "ROCK {0}: holding its pickaxe at its side asks {1:0}% of its shoulder, fresh ({2:0}% when 40% spent): it rests {3}",
-                        name, plans.HoldAsks * 100, plans.HoldAsks / .6f * 100, plans.HoldAsks / .6f > PhysicalSwing.RestsOnlyBelow ? "with the head on the ground" : "holding it"));
+                        name, plans.HoldAsks * 100, plans.HoldAsks / .6f * 100, "in one hand"));
                     for (int b = 0; b < boulders.Count; b++)
                     {
                         var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -150,7 +150,7 @@ namespace WonderGather.Tests
                                     look.Swing != null ? look.Swing.phase.ToString() : "-", look.Swing != null ? look.Swing.Spent * 100 : 0, look.Mining == null ? look.LeftRock : "no",
                                     unit.GetComponent<PhysicalHands>() != null ? unit.GetComponent<PhysicalHands>().EffortOf(0).ToString("F2") : "-",
                                     unit.GetComponent<PhysicalHands>() != null ? unit.GetComponent<PhysicalHands>().GripAlong(0) : 0, miner.Pickaxe.Centre.y,
-                                    look.Swing != null && look.Swing.phase == PhysicalSwing.Phase.Rest && look.Swing.RestsOnGround ? " (the head on the ground)" : "",
+                                    "",
                                     unit.GetComponent<PhysicalHands>() != null ? unit.GetComponent<PhysicalHands>().EffortOf(1).ToString("F2") : "-", look.StruckLast, look.Status().Replace("\n", " / ")));
                             }
                             yield return null;

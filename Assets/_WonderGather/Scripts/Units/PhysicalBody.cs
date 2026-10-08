@@ -60,16 +60,20 @@ namespace WonderGather
         private const float Sustains = .18f;
         private readonly float[] spent = new float[4];
         private readonly bool[] worked = new bool[4];
+        private readonly float[] gave = new float[4];
         public static Muscles Arm(int side) => side == 0 ? Muscles.LeftArm : Muscles.RightArm;
         // The share of a group that is spent (0: fresh), and the share that is not.
         public float Spent(Muscles muscles) => spent[(int)muscles];
         public float Fresh(Muscles muscles) => 1 - spent[(int)muscles];
+        // The share of what it has now that a group gave at the last step (0: it rested).
+        public float Effort(Muscles muscles) => gave[(int)muscles];
         // Said once a physics step by whatever works a group: the share of what it has now that it gave.
         public void Worked(Muscles muscles, float effort, float dt)
         {
             int i = (int)muscles;
             worked[i] = true;
-            Tire(i, Mathf.Clamp01(effort), dt);
+            gave[i] = Mathf.Clamp01(effort);
+            Tire(i, gave[i], dt);
         }
         private void Tire(int i, float effort, float dt)
         {
@@ -108,7 +112,7 @@ namespace WonderGather
             // Muscles nothing worked at the last step are resting.
             for (int i = 0; i < spent.Length; i++)
             {
-                if (!worked[i]) Tire(i, 0, Time.fixedDeltaTime);
+                if (!worked[i]) { gave[i] = 0; Tire(i, 0, Time.fixedDeltaTime); }
                 worked[i] = false;
             }
         }

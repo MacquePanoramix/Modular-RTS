@@ -459,6 +459,15 @@ namespace WonderGather
                 if (motor.IsMoving) LeaveRock("it was sent somewhere");
                 return;
             }
+            // Holding its tool is no rest for it (too heavy for this body, or the body too weak): it cannot get its
+            // strength back with it in its hands. It lays the tool down, and says why.
+            if (swing.NoRest)
+            {
+                Say("It cannot get its strength back holding that pickaxe: it lays it down");
+                LeaveRock("holding its pickaxe was no rest for it");
+                LayDown();
+                return;
+            }
             // Bent to its work for the first time at this boulder, before its first blow, its knees are read: asked too much
             // already, the blows would ask them more than they have (the lowest boulders, for the taller and the
             // lighter bodies). It does not work there, stands up with its pickaxe, and says why.

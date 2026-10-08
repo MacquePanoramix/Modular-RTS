@@ -427,7 +427,7 @@ namespace WonderGather
             }
             previousPosition=transform.position;previousVelocity=velocity=acceleration=Vector3.zero;
             CurrentGait=Gait.Standing;stopping=false;gaitWeight=jogWeight=phase=FlightTime=0;
-            pelvisY=transform.position.y+HipHeight;hipLift=HipHeight;nextFoot=0;initialized=true;
+            pelvisY=pelvisWas=transform.position.y+HipHeight;pelvisPace=0;hipLift=HipHeight;hipPace=0;comingDown=-1;nextFoot=0;initialized=true;
             handsInitialized=false;
             UpdateAnkles();
             Pose(0);
@@ -441,6 +441,7 @@ namespace WonderGather
             if(LetGo){previousPosition=transform.position;return;}
             if(!initialized){ResetPose();return;}
             float dt=Time.deltaTime;if(dt<=0) return;
+            frame=dt;
             if((transform.position-previousPosition).sqrMagnitude>4){ResetPose();return;}
             // Actual displacement includes avoidance and stopping, rather than the requested destination.
             Vector3 measured=(transform.position-previousPosition)/dt;previousPosition=transform.position;
@@ -608,7 +609,7 @@ namespace WonderGather
             if(foot.gaitSwing&&CurrentGait!=Gait.Standing&&!stopping)
             {
                 // Land where the hips will pass over the foot at mid-stance.
-                float remaining=(1-foot.progress)/Mathf.Max(foot.rate,.01f),stance=duty/cadence;
+                float remaining=LandsIn(foot),stance=duty/cadence;
                 point+=velocity*remaining+Vector3.ClampMagnitude(velocity*stance*.5f,stepReach*HipHeight*.55f);
                 // Near the end of the path, never step past where the body will stop.
                 if(agent!=null&&agent.isActiveAndEnabled&&agent.isOnNavMesh&&agent.hasPath&&!agent.pathPending
@@ -773,6 +774,47 @@ namespace WonderGather
             return foot.position+foot.rotation*(pivot+Quaternion.Euler(foot.pitch,0,0)*(local-pivot));
         }
         private void UpdateAnkles(){for(int i=0;i<2;i++) support[i].ankle=FootPoint(support[i],new Vector3(0,AnkleHeight,0));}
+        // Where the ankle of a foot in the air will be when it lands (as FootPoint will have it then).
+        private Vector3 LandingAnkle(Foot foot)
+        {
+            float pitch=foot.gaitSwing?HeelStrike:0;
+            var pivot=new Vector3(0,0,pitch>0?BallLength:-HeelLength);
+            return foot.to+foot.toRotation*(pivot+Quaternion.Euler(pitch,0,0)*(new Vector3(0,AnkleHeight,0)-pivot));
+        }
+        // A foot in the air is on its way down. From this share of its swing on, the pelvis comes down to where
+        // that leg will reach its landing, and is there when the foot lands. (Until October 8 only planted feet
+        // held the pelvis down: it stayed up through the swing and fell onto the foot in the frame it landed, by
+        // 5 to 13 cm going down a slope. Luis: "a slight stutter after each step", "teleported a little bit, like
+        // to the ground".)
+        private const float ComesDownFrom=.35f;
+        // How long until a foot in the air lands. It lands in a frame, not between two: the first in which its swing
+        // is done. Reckoned to that frame, where it will land does not move in its last frame in the air, and the
+        // hips are where they were expected when it does. (Reckoned to the moment between, the foot jumped ahead
+        // by up to a frame's walking as it landed, about a centimetre.)
+        private float frame;
+        private float LandsIn(Foot foot)
+        {
+            float left=(1-foot.progress)/Mathf.Max(foot.rate,.01f);
+            return frame>0?Mathf.Max(0,Mathf.Ceil(left/frame-.001f))*frame:left;
+        }
+        // When the foot in the air began to come down: which foot it is, how far through its swing it was, how high
+        // the hips stood over the body's place and how fast they were rising or falling (they come down from there,
+        // at that pace to begin with), and how high the pelvis was meant to be.
+        private int comingDown=-1;
+        private float cameWhen,cameFrom,camePace,pelvisFrom,pelvisRose;
+        // How fast the pelvis's meant height is rising (m/s), and what it was a frame ago.
+        private float pelvisPace,pelvisWas;
+        // How fast the hips are rising (m/s; falling is less than nothing), over the body's place; and how long they
+        // take to come up to where they may be. They rise with a pace that is kept from frame to frame: let go by a
+        // leg, they do not start up at once. (They did: a corner in their line at each foot's leaving the ground.)
+        private float hipPace;
+        private const float RisesIn=.09f;
+        // From one height and pace to another, along a line without a corner: u from 0 to 1 over a time that lasts.
+        private static float Comes(float from,float pace,float to,float lasts,float u)
+        {
+            float uu=u*u,uuu=uu*u;
+            return (2*uuu-3*uu+1)*from+(uuu-2*uu+u)*pace*lasts+(3*uu-2*uuu)*to;
+        }
         private bool Working=>worker!=null&&worker.isActiveAndEnabled&&worker.HasWorkContact
             &&(worker.State==Gatherer.Activity.Gathering||worker.State==Gatherer.Activity.Depositing);
         private void RefreshCargo()
@@ -789,16 +831,17 @@ namespace WonderGather
         }
         private Vector3 ReachCenter(int index)=>support[index].ankle-facing*new Vector3(index==0?-HipWidth:HipWidth,0,0);
         // Only planted feet support the pelvis. A swinging foot is carried by its leg instead.
-        private Vector3 ReachableHips(Vector3 desired)
+        private Vector3 ReachableHips(Vector3 desired)=>Reachable(desired,!support[0].swinging,!support[1].swinging,ReachCenter(0),ReachCenter(1));
+        // The nearest place to the one wanted from which the legs reach: a and b are where the pelvis would be
+        // with the left or the right leg straight down to its ankle; first and second, whether each counts.
+        private Vector3 Reachable(Vector3 desired,bool first,bool second,Vector3 a,Vector3 b)
         {
-            bool first=!support[0].swinging,second=!support[1].swinging;
             if(!first&&!second) return desired;
             if(first!=second)
             {
-                Vector3 only=ReachCenter(first?0:1);
+                Vector3 only=first?a:b;
                 return only+Vector3.ClampMagnitude(desired-only,LegReach);
             }
-            Vector3 a=ReachCenter(0),b=ReachCenter(1);
             float radiusSquared=LegReach*LegReach;
             Vector3 onA=a+Vector3.ClampMagnitude(desired-a,LegReach);
             if((onA-b).sqrMagnitude<=radiusSquared) return onA;
@@ -845,9 +888,28 @@ namespace WonderGather
             // Lowering alone cannot repair horizontal overreach after a correction.
             // Let the full reach constraint shift the body back from standing height.
             if(horizontalOverreach) height=standingHeight;
+            // The one foot in the air: where it will land, seen from where the hips will be then.
+            int air=support[0].swinging==support[1].swinging?-1:support[0].swinging?0:1;
+            float arrives=0,comesTo=float.MaxValue;
+            Vector3 landing=default;
+            if(air>=0&&support[air].progress>=ComesDownFrom)
+            {
+                var coming=support[air];
+                landing=LandingAnkle(coming)-velocity*LandsIn(coming);
+                // (Where they stood and how fast they moved are a frame old: the way down begins a frame back.)
+                if(comingDown!=air){comingDown=air;cameWhen=Mathf.Max(0,coming.progress-coming.rate*dt);cameFrom=hipLift;camePace=hipPace;pelvisFrom=pelvisY;pelvisRose=pelvisPace;}
+                arrives=Mathf.SmoothStep(0,1,Mathf.InverseLerp(cameWhen,1,coming.progress));
+                float horizontal=Vector3.ProjectOnPlane(HipOver(air)-landing,Vector3.up).sqrMagnitude;
+                // The pelvis is meant no higher than this leg will let it be, by the time the foot lands.
+                if(!horizontalOverreach&&horizontal<LegReach*LegReach)
+                    comesTo=Comes(pelvisFrom,pelvisRose,landing.y+Mathf.Sqrt(Mathf.Max(.01f,LegReach*LegReach-horizontal)),(1-cameWhen)/Mathf.Max(coming.rate,.01f),Mathf.InverseLerp(cameWhen,1,coming.progress));
+            }
+            else comingDown=-1;
             pelvisY=dt>0?Mathf.Lerp(pelvisY,height,1-Mathf.Exp(-16*dt)):height;
             // Reach is a hard constraint on lowering; only the upward recovery is smoothed.
-            pelvisY=Mathf.Min(pelvisY,height);
+            pelvisY=Mathf.Min(pelvisY,Mathf.Min(height,comesTo));
+            if(dt>0) pelvisPace=(pelvisY-pelvisWas)/dt;
+            pelvisWas=pelvisY;
             Vector3 localAcceleration=Quaternion.Inverse(facing)*acceleration;
             float pitch=Mathf.Clamp(localAcceleration.z*1.8f+speed*1.2f+jog*3,-7,12),roll=Mathf.Clamp(-localAcceleration.x*1.6f,-6,6);
             if(equipment!=null && equipment.Busy) pitch+=Mathf.Sin(equipment.Progress*Mathf.PI)*4;
@@ -866,12 +928,31 @@ namespace WonderGather
             // pelvisY is the smoothed target height. The reach projection is solved from it every
             // frame and never written back: feeding the projected height into the next target
             // ratchets the pelvis toward the ground whenever both feet are out of reach.
-            Vector3 hips=ReachableHips(transform.position+facing*new Vector3(sway+lean.x,0,lean.y-back)+Vector3.up*(pelvisY-transform.position.y-sink-crouch));
-            // When support passes to a foot that allows a higher pelvis, rise smoothly. This filters
-            // the output only; lowering stays immediate so planted legs always reach.
-            float lift=hips.y-transform.position.y;
-            if(dt>0&&lift>hipLift) {lift=Mathf.Lerp(hipLift,lift,1-Mathf.Exp(-12*dt));hips.y=transform.position.y+lift;}
-            hipLift=lift;
+            Vector3 wanted=transform.position+facing*new Vector3(sway+lean.x,0,lean.y-back)+Vector3.up*(pelvisY-transform.position.y-sink-crouch);
+            Vector3 hips=ReachableHips(wanted);
+            // How high the hips may stand over the body's place: no higher than the legs on the ground reach.
+            float may=hips.y-transform.position.y,held=float.MaxValue;
+            if(air>=0&&comingDown==air)
+            {
+                // And they come within reach of both legs as the foot comes down: by the same reach that will hold
+                // them once it has landed, so that nothing is left to change in the frame it lands. To the side and
+                // along, little by little; in height, down from where they stood and at the pace they had, along
+                // a line with no corner in it.
+                var coming=support[air];
+                Vector3 over=landing-facing*new Vector3(air==0?-HipWidth:HipWidth,0,0);
+                Vector3 both=air==0?Reachable(wanted,true,true,over,ReachCenter(1)):Reachable(wanted,true,true,ReachCenter(0),over);
+                hips.x=Mathf.Lerp(hips.x,both.x,arrives);hips.z=Mathf.Lerp(hips.z,both.z,arrives);
+                held=Comes(cameFrom,camePace,both.y-transform.position.y,(1-cameWhen)/Mathf.Max(coming.rate,.01f),Mathf.InverseLerp(cameWhen,1,coming.progress));
+            }
+            // They come up to where they may be with a pace that is kept; they are never higher than they may be
+            // (legs on the ground always reach), nor than the way down to a landing.
+            float lift=may;
+            if(dt>0)
+            {
+                lift=Mathf.Min(Mathf.SmoothDamp(hipLift,may,ref hipPace,RisesIn,float.MaxValue,dt),Mathf.Min(may,held));
+                hipPace=(lift-hipLift)/dt;
+            }
+            hips.y=transform.position.y+lift;hipLift=lift;
             Vector3 waist=hips+hipFrame*new Vector3(0,P.waistRise,0);
             pelvis.SetPositionAndRotation(hips,hipFrame);
             torso.SetPositionAndRotation(waist+chest*new Vector3(0,P.torsoRise,0),chest);
