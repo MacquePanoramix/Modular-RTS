@@ -233,7 +233,7 @@ namespace WonderGather
                 on[i] = false;
                 grip[i] = i == 0 ? tool.SecondaryGrip : tool.PrimaryGrip;
                 slideTo[i] = grip[i].y;
-                rides[i] = 0; reach[i] = 0;
+                rides[i] = 0; reach[i] = 0; led[i] = false;
             }
             Weigh(ofItsWeight);
             wanting = wantedBefore = false; trailing = false;
@@ -287,9 +287,39 @@ namespace WonderGather
             grip[hand] = new Vector3(0, Mathf.Clamp(along, lowest, highest), 0);
             slideTo[hand] = grip[hand].y;
             reachFrom[hand] = body.HandPosition(hand);
-            reach[hand] = 1e-4f;
+            reach[hand] = 1e-4f; reachWas[hand] = 0; reachStepped = Time.time;
+            led[hand] = false; opening[hand] = false;
         }
         public bool Reaching(int hand) => reach[hand] > 0;
+
+        // A reach the body leads. Bending down to a thing, the hand goes out to it as the body comes down: as far
+        // along its way as the body says (Lead: 0 to 1), never back, and no faster than a hand reaches. Its fingers
+        // open on the way and close as it arrives (from this share of the way), and it holds once they have closed
+        // (this long after it is there, seconds). (The hand waited until the body was all the way down, and then
+        // went out: Luis, October 8.)
+        private readonly bool[] led = new bool[2];
+        private readonly float[] reachWas = new float[2];
+        private float reachStepped;
+        // A hand that holds opens, to let go: its fingers open while it is still where it held. (What lets go then
+        // drops the thing: Drop.)
+        private readonly bool[] opening = new bool[2];
+        public void Open(int hand) { if (on[hand]) opening[hand] = true; }
+        private readonly float[] ledTo = new float[2];
+        private const float LedCloses = .7f, LedHolds = .12f;
+        public void GraspLed(int hand, float along)
+        {
+            Grasp(hand, along);
+            if (reach[hand] <= 0) return;
+            led[hand] = true; ledTo[hand] = 0;
+        }
+        public void Lead(int hand, float share) { if (led[hand]) ledTo[hand] = Mathf.Max(ledTo[hand], Mathf.Clamp01(share)); }
+        // A hand that was reaching gives it up.
+        public void Withdraw(int hand)
+        {
+            if (reach[hand] <= 0) return;
+            reach[hand] = 0; led[hand] = false;
+            if (holds != null) holds.HoldHandle(hand, false, Vector3.zero, Vector3.up, 0, Vector3.zero);
+        }
 
         // What is held weighs what the tool does and what rides on it with each hand: one mass, one centre, and its
         // resistance to turning about that centre.
@@ -369,7 +399,7 @@ namespace WonderGather
                 if ((on[i] || reach[i] > 0) && holds != null) holds.HoldHandle(i, false, Vector3.zero, Vector3.up, 0, Vector3.zero);
                 if (links[i] != null) Destroy(links[i]);
                 if (anchors[i] != null) Destroy(anchors[i].gameObject);
-                on[i] = false; links[i] = null; anchors[i] = null; effort[i] = 0; push[i] = Vector3.zero; miss[i] = 0; reach[i] = 0;
+                on[i] = false; links[i] = null; anchors[i] = null; effort[i] = 0; push[i] = Vector3.zero; miss[i] = 0; reach[i] = 0; led[i] = false; opening[i] = false;
                 rides[i] = 0;
             }
             // On its own it weighs what it weighs: no arm rides on it any more.
@@ -422,11 +452,15 @@ namespace WonderGather
             if (reach[hand] > 0)
             {
                 // Reaching: the wrist goes from where it was to where it will hold; the fingers close as it arrives.
-                float t = Mathf.Clamp01(reach[hand] / ReachTime);
-                holds.HoldHandle(hand, t > .6f, place, way, radius, shoulder);
-                return Vector3.Lerp(reachFrom[hand], holds.WristFor(hand, place, way, radius, shoulder), Mathf.SmoothStep(0, 1, t));
+                // (Drawn between the physics' steps: from how far along it was at the step before to how far it is.)
+                float along = Mathf.Lerp(reachWas[hand], reach[hand], Mathf.Clamp01((Time.time - reachStepped) / Mathf.Max(1e-4f, Time.fixedDeltaTime)));
+                float t = Mathf.Clamp01(along / ReachTime);
+                holds.HoldHandle(hand, t > (led[hand] ? LedCloses : .6f), place, way, radius, shoulder);
+                // (Led, it is as far along as the body has brought it: the body's own going down has the ease in it.)
+                return Vector3.Lerp(reachFrom[hand], holds.WristFor(hand, place, way, radius, shoulder), led[hand] ? t : Mathf.SmoothStep(0, 1, t));
             }
-            holds.HoldHandle(hand, true, place, way, radius, shoulder);
+            // (A hand that is opening to let go stays where it held while its fingers open.)
+            holds.HoldHandle(hand, !opening[hand], place, way, radius, shoulder);
             return holds.WristFor(hand, place, way, radius, shoulder);
         }
 
@@ -455,9 +489,17 @@ namespace WonderGather
             for (int i = 0; i < 2; i++)
             {
                 if (reach[i] <= 0) continue;
-                reach[i] += dt;
-                if (reach[i] < ReachTime) continue;
-                reach[i] = 0;
+                reachWas[i] = reach[i]; reachStepped = Time.time;
+                float there = ReachTime;
+                if (led[i])
+                {
+                    there = ReachTime + LedHolds;
+                    float until = ledTo[i] >= 1 ? there : ledTo[i] * ReachTime;
+                    reach[i] = Mathf.Max(reach[i], Mathf.Min(reach[i] + dt, until));
+                }
+                else reach[i] += dt;
+                if (reach[i] < there) continue;
+                reach[i] = 0; led[i] = false;
                 on[i] = true;
                 Link(i, body.ShoulderNow(i));
                 Weigh(ofItsWeight);

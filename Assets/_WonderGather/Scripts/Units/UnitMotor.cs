@@ -228,6 +228,15 @@ namespace WonderGather
             hasPending = false;
             Destination = transform.position;
         }
+        // It stops walking and comes to rest as a walker does, losing its pace, not in one frame. True once it stands.
+        public bool ComeToRest()
+        {
+            if (agent == null || !agent.isActiveAndEnabled || !agent.isOnNavMesh || away != Away.No) { Stop(); return true; }
+            agent.isStopped = true;
+            if (agent.velocity.sqrMagnitude > .0016f) return false;
+            Stop();
+            return true;
+        }
         private static bool IsFinite(Vector3 value) => float.IsFinite(value.x) && float.IsFinite(value.y) && float.IsFinite(value.z);
         // Work orders turn a stopped root; normal navigation owns rotation again on departure.
         public bool Face(Vector3 point, float deltaTime)

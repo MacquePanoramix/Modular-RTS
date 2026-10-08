@@ -17,7 +17,8 @@ namespace WonderGather.Tests
     // sees as a stutter or a teleport is a break in these lines, and can be found in them (Art/Review/motion_breaks.py).
     //
     // Run on its own: -runTests -testPlatform PlayMode -testFilter WonderGather.Tests.MotionTraceBench -traceOut <folder>
-    //   [-traceMiner Small|Long|Round (all)] [-traceWhat walk,turn,turns (all)] [-traceFrames 100] [-traceTool 1]
+    //   [-traceMiner Small|Long|Round (all)] [-traceWhat walk,turn,turns (all; also pick: a pickaxe taken up from the ground, and laid down again)]
+    //   [-traceFrames 100] [-traceTool 1]
     //   [-traceSize 0: pictures this many pixels square] [-traceEvery 4: a picture every so many frames] [-traceView 90,8,3.4: the way round from ahead of it, the way up, how far]
     public sealed class MotionTraceBench
     {
@@ -32,6 +33,8 @@ namespace WonderGather.Tests
         }
 
         private static float Yaw(Quaternion turn) => Mathf.Atan2((turn * Vector3.forward).x, (turn * Vector3.forward).z) * Mathf.Rad2Deg;
+        // How far a part looks or leans downwards (degrees; up is negative).
+        private static float Pitch(Quaternion turn) => -Mathf.Asin(Mathf.Clamp((turn * Vector3.forward).y, -1, 1)) * Mathf.Rad2Deg;
 
         [UnityTest, Explicit, Timeout(7200000)]
         public IEnumerator Trace()
@@ -82,8 +85,9 @@ namespace WonderGather.Tests
                         string label = $"{name.ToLowerInvariant()}_{movement}{(tool ? "_tool" : "")}";
                         var lines = new StringBuilder();
                         lines.AppendLine("t,dt,order,root_x,root_y,root_z,root_yaw,hips_x,hips_y,hips_z,hips_yaw,chest_yaw,head_x,head_y,head_z,head_yaw,"
-                            + "footL_x,footL_y,footL_z,footL_yaw,footR_x,footR_y,footR_z,footR_yaw,plantedL,plantedR,kneeL_x,kneeL_y,kneeL_z,kneeR_x,kneeR_y,kneeR_z,gait,steps,sink,speed,swingL,swingR,cadence,pitchL,pitchR");
+                            + "footL_x,footL_y,footL_z,footL_yaw,footR_x,footR_y,footR_z,footR_yaw,plantedL,plantedR,kneeL_x,kneeL_y,kneeL_z,kneeR_x,kneeR_y,kneeR_z,gait,steps,sink,speed,swingL,swingR,cadence,pitchL,pitchR,bow,handL_x,handL_y,handL_z,handR_x,handR_y,handR_z,tool_x,tool_y,tool_z,holdsL,holdsR,head_pitch,chest_pitch,lean_x,lean_y,leans_x,leans_y,shoulderL_x,shoulderL_y,shoulderL_z,shoulderR_x,shoulderR_y,shoulderR_z");
                         int order = 0, shot = 0, frame = 0;
+                        HeldThing thing = null;
                         Vector3 began = unit.transform.forward;
                         bool tracing = false;
                         Vector3 centre = unit.transform.position;
@@ -92,14 +96,23 @@ namespace WonderGather.Tests
                         {
                             if (!tracing) return;
                             Vector3 r = unit.transform.position, h = pelvis.position, k = head.position, l = feet[0].position, f = feet[1].position, a = shins[0].position, b = shins[1].position;
+                            // (Its hands, and what they hold or go for: where that thing's weight is.)
+                            Vector3 hl = body.HandPosition(0), hr = body.HandPosition(1), sl = body.ShoulderNow(0), sr = body.ShoulderNow(1);
+                            var held = unit.GetComponent<PhysicalHands>();
+                            // (The lean as it is drawn, to its right and ahead; and as what keeps its balance has it.)
+                            var keeps = unit.GetComponent<PhysicalBalance>();
+                            Vector3 at = held != null && held.Held != null ? held.Held.worldCenterOfMass : thing != null ? thing.GetComponent<Rigidbody>().worldCenterOfMass : Vector3.zero;
                             lines.AppendLine(string.Format(culture,
                                 "{0:0.0000},{1:0.00000},{2},{3:0.00000},{4:0.00000},{5:0.00000},{6:0.000},{7:0.00000},{8:0.00000},{9:0.00000},{10:0.000},{11:0.000},{12:0.00000},{13:0.00000},{14:0.00000},{15:0.000},"
-                                + "{16:0.00000},{17:0.00000},{18:0.00000},{19:0.000},{20:0.00000},{21:0.00000},{22:0.00000},{23:0.000},{24},{25},{26:0.00000},{27:0.00000},{28:0.00000},{29:0.00000},{30:0.00000},{31:0.00000},{32},{33},{34:0.00000},{35:0.0000},{36:0.000},{37:0.000},{38:0.000},{39:0.00},{40:0.00}",
+                                + "{16:0.00000},{17:0.00000},{18:0.00000},{19:0.000},{20:0.00000},{21:0.00000},{22:0.00000},{23:0.000},{24},{25},{26:0.00000},{27:0.00000},{28:0.00000},{29:0.00000},{30:0.00000},{31:0.00000},{32},{33},{34:0.00000},{35:0.0000},{36:0.000},{37:0.000},{38:0.000},{39:0.00},{40:0.00},{41:0.00},{42:0.00000},{43:0.00000},{44:0.00000},{45:0.00000},{46:0.00000},{47:0.00000},{48:0.00000},{49:0.00000},{50:0.00000},{51},{52},{53:0.00},{54:0.00},{55:0.00000},{56:0.00000},{57:0.00000},{58:0.00000},{59:0.00000},{60:0.00000},{61:0.00000},{62:0.00000},{63:0.00000},{64:0.00000}",
                                 Time.time, Time.deltaTime, order, r.x, r.y, r.z, Yaw(unit.transform.rotation), h.x, h.y, h.z, Yaw(pelvis.rotation), Yaw(torso.rotation), k.x, k.y, k.z, Yaw(head.rotation),
                                 l.x, l.y, l.z, Yaw(feet[0].rotation), f.x, f.y, f.z, Yaw(feet[1].rotation), body.FootPlanted(0) ? 1 : 0, body.FootPlanted(1) ? 1 : 0, a.x, a.y, a.z, b.x, b.y, b.z,
-                                (int)body.CurrentGait, body.StepCount, body.SinkNow, body.VelocityNow.magnitude, body.SwingProgress(0), body.SwingProgress(1), body.Cadence, body.FootPitch(0), body.FootPitch(1)));
+                                (int)body.CurrentGait, body.StepCount, body.SinkNow, body.VelocityNow.magnitude, body.SwingProgress(0), body.SwingProgress(1), body.Cadence, body.FootPitch(0), body.FootPitch(1),
+                                body.BowNow, hl.x, hl.y, hl.z, hr.x, hr.y, hr.z, at.x, at.y, at.z, held != null && held.Holds(0) ? 1 : 0, held != null && held.Holds(1) ? 1 : 0, Pitch(head.rotation), Pitch(torso.rotation),
+                                body.LeanNow.x, body.LeanNow.y, keeps != null ? keeps.Lean.x : 0, keeps != null ? keeps.Lean.y : 0,
+                                sl.x, sl.y, sl.z, sr.x, sr.y, sr.z));
                             if (size <= 0 || frame++ % every != 0) return;
-                            Vector3 target = unit.transform.position + Vector3.up * body.StandingHipHeight * .95f;
+                            Vector3 target = unit.transform.position + Vector3.up * body.StandingHipHeight * (movement == "pick" ? .55f : .95f);
                             // (Seen from a side that is fixed in the world: the way it faced when the movement began.)
                             Vector3 dir = Quaternion.AngleAxis(view[0], Vector3.up) * began;
                             dir = dir * Mathf.Cos(view[1] * Mathf.Deg2Rad) + Vector3.up * Mathf.Sin(view[1] * Mathf.Deg2Rad);
@@ -132,6 +145,28 @@ namespace WonderGather.Tests
                             for (float until = Time.time + 10; Time.time < until && (unit.Motor.IsMoving || Time.time < until - 9);) yield return null;
                             order = 2;
                             for (float until = Time.time + 1.5f; Time.time < until;) yield return null;
+                        }
+                        else if (movement == "pick")
+                        {
+                            // A pickaxe of its own lies on the ground near it: it is told to take it up, stands with
+                            // it, and is told to lay it down again.
+                            thing = look.LayPickaxe(1);
+                            Assert.That(thing, Is.Not.Null, "No pickaxe was put on the ground beside " + name);
+                            // (Seen from a side of the way it will face, going down for it.)
+                            began = Vector3.ProjectOnPlane(thing.transform.position - unit.transform.position, Vector3.up).normalized;
+                            for (float until = Time.time + .8f; Time.time < until;) yield return null;
+                            order = 1;
+                            look.PickUp(thing);
+                            bool Stood() => body.SinkNow < .01f && Mathf.Abs(body.BowNow) < 3;
+                            bool Has() { var hands = unit.GetComponent<PhysicalHands>(); return hands != null && hands.Held != null && (hands.Holds(0) || hands.Holds(1)); }
+                            for (float until = Time.time + 12; Time.time < until && !(Has() && Stood());) yield return null;
+                            order = 2;
+                            for (float until = Time.time + 2; Time.time < until;) yield return null;
+                            order = 3;
+                            look.LayDown();
+                            for (float until = Time.time + 10; Time.time < until && (Has() || !Stood());) yield return null;
+                            order = 4;
+                            for (float until = Time.time + 1.2f; Time.time < until;) yield return null;
                         }
                         else
                         {

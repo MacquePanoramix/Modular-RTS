@@ -73,10 +73,14 @@ namespace WonderGather
         }
 
         // A coat's or smock's skirt hangs from the hips in four flaps (front and back of each leg), each on a bone
-        // of its own at its hip. A flap is pushed by its thigh when the thigh moves into it (a front flap as the leg
-        // swings forward, a back flap as it swings back), and hangs when the thigh moves away, falling back a
-        // little late, as cloth does. So the leg never comes through the cloth, and the cloth is never dragged
-        // after a leg that has left it.
+        // of its own at its hip. A flap hangs by its own weight: straight down, whichever way the hips are turned
+        // over it. Its thigh stops it: a front flap lies on the thigh that comes up under it (and slides down its
+        // slope), a back flap is pushed back by a thigh that swings back; and both go out with a thigh that goes
+        // out. When the thigh leaves it, it falls back a little late, as cloth does. So the leg never comes through
+        // the cloth, and the cloth is never dragged after a leg that has left it.
+        // (Until October 8 a flap hung along the pelvis and was turned by two angles of the thigh. Bowed, the back
+        // of a coat stood out behind like a tail; squatting, the angles ran away as the thigh came level, and the
+        // flaps stood out like wings. Luis: the clothes "start exploding and moving in very unnatural ways".)
         [System.Serializable]
         public struct Flap
         {
@@ -140,8 +144,12 @@ namespace WonderGather
         // each stride moves it; cloth that is not touched hangs still.
         [SerializeField] private Vector2 flapSlack = Vector2.zero;
         private Quaternion[] flapRest = new Quaternion[0];
-        private float[] flapTurn = new float[0], flapOut = new float[0];
-        private readonly float[] thighRestSwing = new float[2], thighRestOut = new float[2];
+        // Which way each flap hangs now, in the world; which way of its bone points down it, as modelled; and how
+        // far inside its thigh's outer side it hangs as modelled. The front of each thigh, in its bone's frame.
+        private Vector3[] flapHangs = new Vector3[0], flapDown = new Vector3[0];
+        private float[] flapInside = new float[0];
+        private readonly Vector3[] thighFront = new Vector3[2];
+        private float ankleUp, flapLong;
         private Vector3 pelvisForward, pelvisUp, pelvisAcross;
         private Vector3[] hangOffset = new Vector3[0], hangSpeed = new Vector3[0], hangFrom = new Vector3[0], hangShown = new Vector3[0];
         private Quaternion[] hangRest = new Quaternion[0];
@@ -384,10 +392,20 @@ namespace WonderGather
             pelvisAcross = toPelvis * transform.right;
             int flapCount = flaps != null ? flaps.Length : 0;
             flapRest = new Quaternion[flapCount];
-            flapTurn = new float[flapCount];
-            flapOut = new float[flapCount];
-            for (int k = 0; k < flapCount; k++) flapRest[k] = flaps[k].bone != null ? flaps[k].bone.localRotation : Quaternion.identity;
-            for (int i = 0; i < 2; i++) { thighRestSwing[i] = Swing(i); thighRestOut[i] = Out(i); }
+            flapHangs = new Vector3[flapCount];
+            flapDown = new Vector3[flapCount];
+            flapInside = new float[flapCount];
+            for (int i = 0; i < 2; i++) thighFront[i] = Quaternion.Inverse(bones.thighs[i].rotation) * transform.forward;
+            for (int k = 0; k < flapCount; k++)
+            {
+                flapRest[k] = flaps[k].bone != null ? flaps[k].bone.localRotation : Quaternion.identity;
+                flapHangs[k] = -transform.up;
+                flapDown[k] = flaps[k].bone != null ? Quaternion.Inverse(flaps[k].bone.rotation) * -transform.up : Vector3.down;
+                flapInside[k] = Mathf.Min(0, Vector3.Dot(-transform.up, ThighOut(flaps[k].leg)));
+            }
+            // How high an ankle stands over the ground, and how long a flap is taken to be (most of a thigh).
+            ankleUp = Mathf.Max(0, Mathf.Min(bones.feet[0].position.y, bones.feet[1].position.y) - transform.position.y);
+            flapLong = .7f * Vector3.Distance(bones.thighs[0].position, bones.shins[0].position);
             // The fingers as modelled: each is turned from there.
             gripRest = new Quaternion[grips != null ? grips.Length : 0][];
             for (int h = 0; h < gripRest.Length; h++)
@@ -503,43 +521,64 @@ namespace WonderGather
             }
         }
 
-        // How far forward a thigh points, as an angle from straight down in the pelvis' own frame (degrees).
-        private float Swing(int leg)
+        // A thigh's line from hip to knee, and its outer side (square to that line), in the world.
+        private Vector3 ThighAlong(int leg) => (bones.shins[leg].position - bones.thighs[leg].position).normalized;
+        private Vector3 ThighOut(int leg)
         {
-            Vector3 thigh = Quaternion.Inverse(bones.pelvis.rotation) * (bones.shins[leg].position - bones.thighs[leg].position);
-            return Mathf.Atan2(Vector3.Dot(thigh, pelvisForward), -Vector3.Dot(thigh, pelvisUp)) * Mathf.Rad2Deg;
+            Vector3 along = ThighAlong(leg);
+            Vector3 side = Vector3.ProjectOnPlane(bones.pelvis.rotation * pelvisAcross * (leg == 0 ? -1 : 1), along);
+            return side.sqrMagnitude > 1e-6f ? side.normalized : bones.pelvis.rotation * pelvisAcross * (leg == 0 ? -1 : 1);
         }
 
-        // How far out to its own side a thigh points, as an angle from straight down in the pelvis' frame (degrees).
-        private float Out(int leg)
+        // A direction kept on one side of a face (its component along the face no less than `least`): turned onto
+        // it, down the face's slope, if it is not; and where there is no slope (the face lies level), along `lies`.
+        private static Vector3 Stopped(Vector3 hangs, Vector3 face, float least, Vector3 lies)
         {
-            Vector3 thigh = Quaternion.Inverse(bones.pelvis.rotation) * (bones.shins[leg].position - bones.thighs[leg].position);
-            return Mathf.Atan2(Vector3.Dot(thigh, pelvisAcross) * (leg == 0 ? -1 : 1), -Vector3.Dot(thigh, pelvisUp)) * Mathf.Rad2Deg;
+            float into = Vector3.Dot(hangs, face);
+            if (into >= least) return hangs;
+            Vector3 slides = hangs - into * face;
+            // (Never back up the limb it lies on.)
+            float backUp = Vector3.Dot(slides, lies);
+            if (backUp < 0) slides -= backUp * lies;
+            slides = slides.sqrMagnitude > 1e-4f ? slides.normalized : lies;
+            return (slides * Mathf.Sqrt(Mathf.Max(0, 1 - least * least)) + face * least).normalized;
         }
 
-        // The skirt's flaps: pushed at once by the thigh that moves into them, falling back after it leaves.
+        // The skirt's flaps: hanging by their own weight, stopped at once by the thigh that moves into them and by
+        // the ground, and falling back after the thigh leaves.
         private void Drape()
         {
             if (flaps.Length == 0) return;
             float dt = Mathf.Clamp(Time.deltaTime, 0, 1 / 20f);
-            Vector3 across = bones.pelvis.rotation * pelvisAcross, forward = bones.pelvis.rotation * pelvisForward;
+            float falls = 1 - Mathf.Exp(-9 * dt);
+            float ground = Mathf.Min(bones.feet[0].position.y, bones.feet[1].position.y) - ankleUp;
+            Vector3 ahead = Vector3.ProjectOnPlane(bones.pelvis.rotation * pelvisForward, Vector3.up);
+            ahead = ahead.sqrMagnitude > 1e-4f ? ahead.normalized : transform.forward;
             for (int k = 0; k < flaps.Length; k++)
             {
                 var flap = flaps[k];
                 if (flap.bone == null) continue;
-                float swing = Swing(flap.leg) - thighRestSwing[flap.leg];
-                float pushed = flap.front ? Mathf.Max(0, swing - flapSlack.x) : Mathf.Min(0, swing + flapSlack.y);
-                // Pushed, the cloth goes with the leg at once; left, it falls back under its own weight.
-                bool pushing = Mathf.Abs(pushed) > Mathf.Abs(flapTurn[k]);
-                flapTurn[k] = pushing ? pushed : Mathf.Lerp(flapTurn[k], pushed, 1 - Mathf.Exp(-9 * dt));
-                // A thigh that swings out to its side (in a turn, a sidestep) pushes both its flaps out.
-                float outward = Mathf.Max(0, Out(flap.leg) - thighRestOut[flap.leg]);
-                flapOut[k] = outward > flapOut[k] ? outward : Mathf.Lerp(flapOut[k], outward, 1 - Mathf.Exp(-9 * dt));
+                // By its own weight, a little late.
+                Vector3 hangs = Vector3.Slerp(flapHangs[k], Vector3.down, falls);
+                // Stopped by its thigh: by the thigh's front (a front flap) or its back, and by its outer side.
+                Vector3 along = ThighAlong(flap.leg);
+                Vector3 front = Vector3.ProjectOnPlane(bones.thighs[flap.leg].rotation * thighFront[flap.leg], along);
+                front = front.sqrMagnitude > 1e-6f ? front.normalized : ahead;
+                float slack = (flap.front ? flapSlack.x : flapSlack.y) * Mathf.Deg2Rad;
+                hangs = Stopped(hangs, flap.front ? front : -front, -Mathf.Sin(slack), along);
+                hangs = Stopped(hangs, ThighOut(flap.leg), flapInside[k], along);
+                // Stopped by the ground: its hem lies on it, out the way it hangs (or the way it is worn).
                 flap.bone.localRotation = flapRest[k];
-                // Forward is a turn about the being's right that carries down towards forward; out to the left is a
-                // turn about forward that carries down towards the left.
-                flap.bone.rotation = Quaternion.AngleAxis(flapOut[k] * (flap.leg == 0 ? -1 : 1), forward)
-                                     * Quaternion.AngleAxis(-flapTurn[k], across) * flap.bone.rotation;
+                float room = (flap.bone.position.y - ground) / Mathf.Max(.01f, flapLong);
+                if (-hangs.y > room && room < 1)
+                {
+                    Vector3 level = Vector3.ProjectOnPlane(hangs, Vector3.up);
+                    level = level.sqrMagnitude > 1e-4f ? level.normalized : flap.front ? ahead : -ahead;
+                    float drops = Mathf.Clamp(room, -.2f, 1);
+                    hangs = (level * Mathf.Sqrt(1 - drops * drops) + Vector3.down * drops).normalized;
+                }
+                flapHangs[k] = hangs;
+                flap.bone.rotation = Quaternion.FromToRotation(flap.bone.rotation * flapDown[k], hangs) * flap.bone.rotation;
             }
         }
 
