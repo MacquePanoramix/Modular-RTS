@@ -18,7 +18,7 @@ namespace WonderGather.Tests
     //
     // Run on its own: -runTests -testPlatform PlayMode -testFilter WonderGather.Tests.MotionTraceBench -traceOut <folder>
     //   [-traceMiner Small|Long|Round (all)] [-traceWhat walk,turn,turns (all)] [-traceFrames 100] [-traceTool 1]
-    //   [-traceSize 0: pictures this many pixels square, every frame] [-traceView 90,8,3.4]
+    //   [-traceSize 0: pictures this many pixels square] [-traceEvery 4: a picture every so many frames] [-traceView 90,8,3.4: the way round from ahead of it, the way up, how far]
     public sealed class MotionTraceBench
     {
         private static float[] Numbers(string argument, params float[] otherwise)
@@ -41,6 +41,7 @@ namespace WonderGather.Tests
             string what = CaptureTools.Argument("-traceWhat") ?? "walk,turn,turns";
             int frames = (int)Numbers("-traceFrames", 100)[0], size = (int)Numbers("-traceSize", 0)[0];
             bool tool = Numbers("-traceTool", 0)[0] > 0;
+            int every = Mathf.Max(1, (int)Numbers("-traceEvery", 4)[0]);
             float[] view = Numbers("-traceView", 90, 8, 3.4f);
             var culture = CultureInfo.InvariantCulture;
             Directory.CreateDirectory(folder);
@@ -82,7 +83,8 @@ namespace WonderGather.Tests
                         var lines = new StringBuilder();
                         lines.AppendLine("t,dt,order,root_x,root_y,root_z,root_yaw,hips_x,hips_y,hips_z,hips_yaw,chest_yaw,head_x,head_y,head_z,head_yaw,"
                             + "footL_x,footL_y,footL_z,footL_yaw,footR_x,footR_y,footR_z,footR_yaw,plantedL,plantedR,kneeL_x,kneeL_y,kneeL_z,kneeR_x,kneeR_y,kneeR_z,gait,steps,sink,speed,swingL,swingR,cadence,pitchL,pitchR");
-                        int order = 0, shot = 0;
+                        int order = 0, shot = 0, frame = 0;
+                        Vector3 began = unit.transform.forward;
                         bool tracing = false;
                         Vector3 centre = unit.transform.position;
                         var after = new GameObject("After everything").AddComponent<AfterEverything>();
@@ -96,9 +98,10 @@ namespace WonderGather.Tests
                                 Time.time, Time.deltaTime, order, r.x, r.y, r.z, Yaw(unit.transform.rotation), h.x, h.y, h.z, Yaw(pelvis.rotation), Yaw(torso.rotation), k.x, k.y, k.z, Yaw(head.rotation),
                                 l.x, l.y, l.z, Yaw(feet[0].rotation), f.x, f.y, f.z, Yaw(feet[1].rotation), body.FootPlanted(0) ? 1 : 0, body.FootPlanted(1) ? 1 : 0, a.x, a.y, a.z, b.x, b.y, b.z,
                                 (int)body.CurrentGait, body.StepCount, body.SinkNow, body.VelocityNow.magnitude, body.SwingProgress(0), body.SwingProgress(1), body.Cadence, body.FootPitch(0), body.FootPitch(1)));
-                            if (size <= 0) return;
+                            if (size <= 0 || frame++ % every != 0) return;
                             Vector3 target = unit.transform.position + Vector3.up * body.StandingHipHeight * .95f;
-                            Vector3 dir = Quaternion.AngleAxis(view[0], Vector3.up) * Vector3.forward;
+                            // (Seen from a side that is fixed in the world: the way it faced when the movement began.)
+                            Vector3 dir = Quaternion.AngleAxis(view[0], Vector3.up) * began;
                             dir = dir * Mathf.Cos(view[1] * Mathf.Deg2Rad) + Vector3.up * Mathf.Sin(view[1] * Mathf.Deg2Rad);
                             camera.transform.SetPositionAndRotation(target + dir * view[2], Quaternion.LookRotation(-dir));
                             CaptureTools.Render(camera, Path.Combine(folder, $"{label}_{shot:0000}"), size, size);
