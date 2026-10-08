@@ -52,30 +52,29 @@ namespace WonderGather
         // the tool at rest takes less than this share of what the arms have, all the way to the head at this share.
         private const float ChokeFrom = .28f, ChokeFull = .62f;
         // It rests after a blow when its arms or its back are this spent, and goes on when they are this fresh
-        // again. Resting, it stands up straight with the tool held at ease across its thighs, and gets its breath.
+        // again. Resting, it stands up straight with the tool in one hand at its side, the arm hanging.
         public const float RestsAt = .4f, GoesOnAt = .15f;
-        // Held at the side in one hand, the arm hangs a little out from the body, and the shoulder holds the tool out
-        // there. When that asks more than this share of what the shoulder has now, the arm does not get its strength
-        // back so (what holding spends is more than rest gives back, before it is fresh enough to go on): the tool is
-        // put down instead. Its head lies on the ground, and the lower hand keeps the end of the handle, hanging at
-        // the side this share of the tool's length up; the knees give what the arm lacks.
-        public const float RestsOnlyBelow = .27f, StoodUp = .97f;
-        // The share of what its shoulder has now that holding the tool at its side would ask.
+        // A rest is a way of standing in which nothing works harder than it can go on working. Holding a tool is
+        // still work for the hand that holds it, and a heavy one is given back its strength slowly, and not all of
+        // it. So the rest is looked back on every so many seconds, once the body has stood up (after the first of
+        // them): when the last stretch gave back less than this, the rest has given what it can. It then goes on,
+        // if it is at least this far under the tiredness that made it stop; if not, holding this tool is no rest
+        // for this body, and it says so (NoRest).
+        private const float StoodUpAfter = 3, LooksBackEvery = 8, GaveBackLittle = .004f, WorthGoingOn = .1f;
+        // The share of what its arm has now that holding the tool at its side asks: the hold on it, and the
+        // shoulder's share of keeping it a little out from the body.
         public float HoldAsks
         {
             get
             {
                 if (physical == null) physical = GetComponent<PhysicalBody>();
-                float mass = hands != null && hands.Held != null ? hands.ToolMass : tool.Mass;
-                float lever = .2f * body.ArmReach + body.BodyProportions.armCarry.x;
-                return mass * Physics.gravity.magnitude * lever / Mathf.Max(1e-3f, physical.ShoulderOf(0));
+                float weight = (hands != null && hands.Held != null ? hands.ToolMass : tool.Mass) * Physics.gravity.magnitude;
+                return Mathf.Max(weight * PhysicalCarry.Aside(body) / Mathf.Max(1e-3f, physical.ShoulderOf(0)), weight / Mathf.Max(1e-3f, physical.HoldOf(0)));
             }
         }
-        // It rests with the tool's head on the ground (it is too heavy for it to rest holding it).
-        public bool RestsOnGround => grounded;
-        private bool grounded;
-        private float groundClock;
-        private Vector3 endFrom;
+        // Holding this tool is no rest for this body: it cannot get its strength back with it in its hands.
+        public bool NoRest { get; private set; }
+        private float lookedBackAt, spentThen;
         // The stance it takes for the work (PhysicalBalance.Brace): the feet so much further apart than the hips (a
         // share of their width, each side), and the left so far ahead of the right (a share of the hips' height).
         public const float StanceWider = .6f, StanceStagger = .1f;
@@ -366,54 +365,39 @@ namespace WonderGather
                 case Phase.Struck:
                     if (clock >= .35f)
                     {
-                        if (Spent >= RestsAt) { rests++; grounded = HoldAsks > RestsOnlyBelow; Go(Phase.Rest); }
+                        if (Spent >= RestsAt) { rests++; lookedBackAt = -1; NoRest = false; Go(Phase.Rest); }
                         else Go(Phase.Recover);
                     }
                     break;
                 case Phase.Rest:
-                    // It stands up straight, which is what rests a back, and carries the tool as a tool is carried:
-                    // in one hand at the side, held near its head where its weight is, the arm hanging.
+                {
+                    // It stands up straight, which is what rests a back and legs, and carries the tool as a tool is
+                    // carried: in one hand at the side, held near its head where its weight is, the arm hanging.
                     // It straightens as the tool comes up with it: arms do not reach a tool on the block from upright.
                     back.Want(Mathf.Lerp(restBow, Mathf.Sin(clock * 2.4f) * 1.5f, Mathf.SmoothStep(0, 1, clock / 1.1f)));
-                    if (grounded)
+                    body.Sink(0);
+                    if (hands.Holds(1))
                     {
-                        // Too heavy to rest holding: the lower hand goes to the end of the handle, the upper lets go,
-                        // and the end is brought to hang at the side with the head left lying where it is, on the
-                        // ground or on what it struck. The ground carries the tool; the arm only keeps it standing.
-                        if (!hands.Trailing)
-                        {
-                            hands.Slide(1, hands.LowestGrip);
-                            if (hands.Holds(0) && (hands.Sliding(1) || clock < .3f)) break;
-                            endFrom = hands.GripPlace(1); groundClock = 0;
-                        }
-                        groundClock += dt;
-                        float length = Vector3.Distance(tool.Head, new Vector3(0, hands.LowestGrip, 0));
-                        Vector3 shoulder = unused[1];
-                        Vector3 place = shoulder + body.FacingNow * Vector3.right * (.1f * body.ArmReach);
-                        place.y = (body.FootPosition(0).y + body.FootPosition(1).y) * .5f + StoodUp * length;
-                        // The knees give what the arm lacks to hold it there (a tall body with a short tool), as
-                        // far as they can raise it from again: this is its rest.
-                        float lacks = shoulder.y - place.y - .93f * body.ArmReach;
-                        float knees = Mathf.Clamp(body.SinkNow + lacks * .5f, 0, .2f * body.StandingHipHeight);
-                        body.Sink(balance == null ? knees : balance.KneesBendTo(knees, hands.ToolMass, dt));
-                        hands.WantEnd(1, Vector3.Lerp(endFrom, place, Mathf.SmoothStep(0, 1, groundClock / .9f)));
+                        hands.Slide(0, hands.HighestGrip);
+                        if (clock > .25f && !hands.Sliding(0)) hands.Release(1);
                     }
-                    else
+                    // Has the rest given what it can?
+                    bool given = false;
+                    if (clock >= StoodUpAfter && lookedBackAt < 0) { lookedBackAt = clock; spentThen = Spent; }
+                    else if (lookedBackAt >= 0 && clock - lookedBackAt >= LooksBackEvery)
                     {
-                        body.Sink(0);
-                        if (hands.Holds(1))
-                        {
-                            hands.Slide(0, hands.HighestGrip);
-                            if (clock > .25f && !hands.Sliding(0)) hands.Release(1);
-                        }
+                        given = spentThen - Spent < GaveBackLittle;
+                        lookedBackAt = clock; spentThen = Spent;
                     }
-                    if (clock >= 2.5f && Spent <= GoesOnAt)
+                    if (clock >= 2.5f && (Spent <= GoesOnAt || (given && Spent <= RestsAt - WorthGoingOn)))
                     {
                         // It takes the tool up to its work again from where it holds it.
                         from = hands.Held.position; fromTurn = hands.Held.rotation;
                         Go(Phase.Recover);
                     }
+                    else if (given) NoRest = true;
                     break;
+                }
                 case Phase.Recover:
                     back.Want(restBow);
                     body.Sink(sink);
@@ -427,13 +411,6 @@ namespace WonderGather
             }
             float bears = 1;
             if (phase == Phase.Struck) { position = from; rotation = fromTurn; }
-            else if (phase == Phase.Rest && grounded)
-            {
-                // Until the lower hand has the end of the handle, the tool stays where the blow left it; after that it
-                // is held by its end only.
-                if (!hands.Trailing) hands.Want(from, fromTurn);
-                return;
-            }
             else if (phase == Phase.Rest)
             {
                 AtSide(hips, posture, out var to, out var toTurn);

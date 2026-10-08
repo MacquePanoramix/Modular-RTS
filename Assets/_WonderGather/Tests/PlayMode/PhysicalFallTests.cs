@@ -272,12 +272,28 @@ namespace WonderGather.Tests
             look.Toggle();
             float began = Time.time, fellAt = -1;
             string why = "";
-            while (Time.time - began < 100)
+            float said = 0;
+            string gaveUp = "";
+            while (Time.time - began < 100 && look.Showing)
             {
                 if (look.Fall != null && look.Fall.Now != PhysicalFall.State.Up) { fellAt = Time.time - began; why = unit.GetComponent<PhysicalBalance>() != null ? unit.GetComponent<PhysicalBalance>().Fell : ""; break; }
+                string says = look.Status();
+                if (says.Contains("slipped from its hands") || says.Contains("cannot get its strength back")) gaveUp = says;
+                if (Time.time - began > said + 10) { said = Time.time - began; Debug.Log($"FALL_WEAK {said:F0} s: {says}"); }
                 yield return null;
             }
-            Assert.That(fellAt, Is.GreaterThan(0), "It did not fall in a hundred seconds.");
+            if (fellAt < 0)
+            {
+                // It did not go down. Since October 8 a body knows when holding its tool is no rest for it, and a tool
+                // too heavy for the hold its hands have left slips from them: its work ends by itself before its
+                // legs give way, its pickaxe lies in the world, and the panel has said why.
+                Assert.That(look.Showing, Is.False, $"In a hundred seconds it neither fell nor gave its work up; the panel says: {look.Status()}");
+                Assert.That(gaveUp, Is.Not.Empty, "Its work ended, and the panel did not say why.");
+                Assert.That(look.Lying, Is.Not.Null, "Its pickaxe does not lie in the world.");
+                Debug.Log($"FALL_WEAK Round, at half its strength with a pickaxe three times its weight: it did not fall; its work ended after {Time.time - began:F1} s, the pickaxe lying in the world. The panel said: {gaveUp}");
+                look.SetStrength(1); look.SetWeight(1);
+                yield break;
+            }
             Assert.That(why, Is.EqualTo("its legs cannot bear it"));
             var fall = look.Fall;
             began = Time.time;

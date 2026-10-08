@@ -171,6 +171,27 @@ namespace WonderGather
             down = false;
             // Chosen another: the look is over.
             if (choice.Current != working || !working.gameObject.activeInHierarchy) { End(); return; }
+            if (!Carrying && swing != null && swing.enabled && hands != null)
+            {
+                // At its work its pickaxe has left its hands (too heavy for the hold they had left): it lies where
+                // it fell, and the work is over.
+                if (hands.Held == null && hands.Slipped != null)
+                {
+                    Say("Its pickaxe slipped from its hands: it was too heavy for the hold they had left");
+                    LeaveRock("its pickaxe slipped from its hands");
+                    End();
+                    return;
+                }
+                // Holding its tool is no rest for it (too heavy for this body, or the body too weak): it cannot get
+                // its strength back with it in its hands. It puts the tool down, and says why.
+                if (hands.Held != null && swing.NoRest)
+                {
+                    Say("It cannot get its strength back holding that pickaxe: it puts it down");
+                    LeaveRock("holding its pickaxe was no rest for it");
+                    LayDown();
+                    return;
+                }
+            }
             // Sent somewhere while it works: it takes its pickaxe with it. (A step it takes to keep its feet is not
             // being sent anywhere.)
             if (!Carrying && working.Motor != null && working.Motor.IsMoving) { TakeAlong(); if (!Showing) return; }

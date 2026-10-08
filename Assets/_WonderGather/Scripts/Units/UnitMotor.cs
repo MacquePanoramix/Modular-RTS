@@ -7,7 +7,9 @@ namespace WonderGather
     public sealed class UnitMotor : MonoBehaviour
     {
         private NavMeshAgent agent;
-        private float baseSpeed;
+        private ProceduralBiped body;
+        private float baseSpeed,turnPace;
+        private int turnedAt=-10;
         private bool speedCaptured;
         public void SetMovementRate(float rate)
         {
@@ -16,11 +18,59 @@ namespace WonderGather
             if(!speedCaptured){baseSpeed=agent.speed;speedCaptured=true;}
             agent.speed=baseSpeed*rate;
         }
+        // How a body turns to go somewhere (Luis, October 8: sent the opposite way, "the movement is not very human
+        // or natural"). It turns with a turn that gathers pace and loses it (in this long, no faster than this many
+        // degrees a second), not at one pace from the first frame. And it does not set off across its own feet:
+        // turned further from its way than WaitsBeyond it all but stands (it creeps, at this share of its pace)
+        // and turns; it walks as it comes round, at its whole pace once within WalksWithin. Half a turn takes it
+        // about a second and a quarter. (People take about a second and a half, in two or three steps.) Its pace
+        // itself is not changed for this (others set it, and read it): its going is held back.
+        private const float TurnsIn = .2f, TurnsAtMost = 250, WaitsBeyond = 58, WalksWithin = 22, Creeps = .05f;
+        // How far it is turned from the way it means to go (degrees).
+        public float TurnedFromItsWay { get; private set; }
+
+        // The turn as its legs let it be: the body is told the way it means to face, and turns no further than its
+        // feet on the ground allow (ProceduralBiped.MayFace); stopped by them, its turn has no pace to go on with.
+        private float Turned(float now, float wanted, float next, float dt)
+        {
+            turnedAt = Time.frameCount;
+            if (body == null) return next;
+            body.MeansToFace(wanted);
+            float may = body.MayFace(now, next);
+            if (Mathf.Abs(Mathf.DeltaAngle(may, next)) > .001f) turnPace = dt > 0 ? Mathf.DeltaAngle(now, may) / dt : 0;
+            return may;
+        }
+
+        private void Steer(float dt)
+        {
+            if (agent == null || !agent.isActiveAndEnabled || !agent.isOnNavMesh || dt <= 0) return;
+            Vector3 way = Flat(agent.desiredVelocity);
+            bool going = !agent.isStopped && agent.hasPath && way.sqrMagnitude > 1e-5f;
+            if (!going)
+            {
+                TurnedFromItsWay = 0;
+                // Not going anywhere, and not being turned to face anything either: its turn has no pace left.
+                // (Turned to face its work by another, it keeps the pace of that turn.)
+                if (Time.frameCount - turnedAt > 1) turnPace = 0;
+                return;
+            }
+            float wanted = Mathf.Atan2(way.x, way.z) * Mathf.Rad2Deg, now = transform.eulerAngles.y;
+            TurnedFromItsWay = Mathf.Abs(Mathf.DeltaAngle(now, wanted));
+            transform.rotation = Quaternion.Euler(0, Turned(now, wanted, Mathf.SmoothDampAngle(now, wanted, ref turnPace, TurnsIn, TurnsAtMost, dt), dt), 0);
+            float share = Mathf.Lerp(Creeps, 1, Mathf.SmoothStep(0, 1, Mathf.InverseLerp(WaitsBeyond, WalksWithin, TurnedFromItsWay)));
+            if (share < 1) agent.velocity = Vector3.ClampMagnitude(agent.velocity, agent.speed * share);
+        }
         public Vector3 Destination { get; private set; }
         public bool IsMoving => away == Away.Going || away == Away.Coming || hasPending
             || (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh
                 && (agent.pathPending || agent.remainingDistance > agent.stoppingDistance + .05f));
-        private void Awake() { agent = GetComponent<NavMeshAgent>(); }
+        private void Awake()
+        {
+            agent = GetComponent<NavMeshAgent>();
+            body = GetComponent<ProceduralBiped>();
+            // It is turned here (Steer), not by the agent.
+            agent.updateRotation = false;
+        }
 
         // Off the walked ground. The ground that can be walked keeps its distance from anything solid (half a metre
         // in the Ordinary Place), so it stops short of places a body can well stand: at the foot of a rock it is to
@@ -88,6 +138,7 @@ namespace WonderGather
             {
                 // Just back on the walked ground with somewhere to go: it goes as soon as it can.
                 if (hasPending && (TryMove(pending) || ++pendingTries > 10)) hasPending = false;
+                Steer(Time.deltaTime);
                 return;
             }
             if (away == Away.There) return;
@@ -97,7 +148,8 @@ namespace WonderGather
             {
                 // It turns the way it goes, then goes.
                 Quaternion heading = Quaternion.LookRotation(to.normalized);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, heading, agent.angularSpeed * dt);
+                float yaw = transform.eulerAngles.y, wanted = heading.eulerAngles.y;
+                transform.rotation = Quaternion.Euler(0, Turned(yaw, wanted, Mathf.SmoothDampAngle(yaw, wanted, ref turnPace, TurnsIn, TurnsAtMost, dt), dt), 0);
                 if (Quaternion.Angle(transform.rotation, heading) > 50) return;
                 Vector3 next = transform.position + Vector3.ClampMagnitude(to, agent.speed * OffPace * dt);
                 if (GroundAt(next, out float under)) next.y = under + ridesUp;
@@ -174,7 +226,8 @@ namespace WonderGather
             direction.y = 0;
             if (direction.sqrMagnitude < .0001f) return true;
             Quaternion target = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, target, agent.angularSpeed * deltaTime);
+            float yaw = transform.eulerAngles.y, wanted = target.eulerAngles.y;
+            transform.rotation = Quaternion.Euler(0, Turned(yaw, wanted, Mathf.SmoothDampAngle(yaw, wanted, ref turnPace, TurnsIn, TurnsAtMost, deltaTime), deltaTime), 0);
             return Quaternion.Angle(transform.rotation, target) < 8;
         }
         private void OnDisable()

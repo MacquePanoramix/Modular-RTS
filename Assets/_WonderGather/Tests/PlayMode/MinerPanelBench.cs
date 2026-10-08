@@ -166,6 +166,20 @@ namespace WonderGather.Tests
                                 }
                                 if (CaptureTools.Argument("-panelTrace") != null && balance != null && Time.frameCount % (int)Numbers("-panelTrace", 25)[0] == 0)
                                     Debug.Log(string.Format(culture, "PANEL_TRACE {0} {1:0.00}s {2}: sink {3:0.000}, its knees asked {4:0.00} (each holding half), legs {5:0}%, bow {6:0}, moving {7}, its legs {8:0}% fresh, its arms and back {9:0}% spent, {10} blows; on its left leg {11:0.00}; keeps its feet {12}, braced {13}, steps {14}, carrying {15}", label, now, doing, unit.GetComponent<ProceduralBiped>().SinkNow, balance.KneesAsked(hands != null ? hands.ToolMass : 0), balance.LegEffort * 100, unit.GetComponent<ProceduralBiped>().BowNow, unit.Motor.IsMoving, unit.GetComponent<PhysicalBody>().Fresh(PhysicalBody.Muscles.Legs) * 100, look.Swing != null ? look.Swing.Spent * 100 : 0, boulder.Blows - blows, balance.OnLeft, balance.KeepsFeet, balance.Braced, balance.Steps, look.Carrying));
+                                // -panelMuscles n: every n frames, how spent each group of muscles is and what it is giving.
+                                if (CaptureTools.Argument("-panelMuscles") != null && Time.frameCount % (int)Numbers("-panelMuscles", 50)[0] == 0)
+                                {
+                                    var physical = unit.GetComponent<PhysicalBody>();
+                                    var swinging = unit.GetComponent<PhysicalSwing>();
+                                    var stands = unit.GetComponent<ProceduralBiped>();
+                                    Debug.Log(string.Format(culture, "PANEL_MUSCLES {0} {1:0.0}s {2}: spent: left arm {3:0}%, right arm {4:0}%, back {5:0}%, legs {6:0}%; giving: left arm {7:0}%, right arm {8:0}%, back {9:0}%, legs {10:0}%; bow {11:0}, sink {12:0.00}, its tool {13}, holding it at its side would ask {14:0.00}, {15} blows, {16} rests; of what each has, the left arm's shoulder, elbow, wrist and hold give {17:0}% {18:0}% {19:0}% {20:0}%, the right arm's {21:0}% {22:0}% {23:0}% {24:0}%",
+                                        label, now, swinging != null && swinging.enabled ? swinging.phase.ToString() : "-",
+                                        physical.Spent(PhysicalBody.Muscles.LeftArm) * 100, physical.Spent(PhysicalBody.Muscles.RightArm) * 100, physical.Spent(PhysicalBody.Muscles.Back) * 100, physical.Spent(PhysicalBody.Muscles.Legs) * 100,
+                                        physical.Effort(PhysicalBody.Muscles.LeftArm) * 100, physical.Effort(PhysicalBody.Muscles.RightArm) * 100, physical.Effort(PhysicalBody.Muscles.Back) * 100, physical.Effort(PhysicalBody.Muscles.Legs) * 100,
+                                        stands.BowNow, stands.SinkNow, "in one hand", swinging != null && swinging.enabled ? swinging.HoldAsks : 0, boulder.Blows - blows, swinging != null ? swinging.rests : 0,
+                                        hands != null && hands.Holds(0) ? hands.EffortOf(0).x * 100 : 0, hands != null && hands.Holds(0) ? hands.EffortOf(0).y * 100 : 0, hands != null && hands.Holds(0) ? hands.EffortOf(0).z * 100 : 0, hands != null && hands.Holds(0) ? hands.EffortOf(0).w * 100 : 0,
+                                        hands != null && hands.Holds(1) ? hands.EffortOf(1).x * 100 : 0, hands != null && hands.Holds(1) ? hands.EffortOf(1).y * 100 : 0, hands != null && hands.Holds(1) ? hands.EffortOf(1).z * 100 : 0, hands != null && hands.Holds(1) ? hands.EffortOf(1).w * 100 : 0));
+                                }
                                 if (picked < 0 && look.Showing && look.Carrying && !fetching && hands != null && hands.Held != null && (hands.Holds(0) || hands.Holds(1))) { picked = now; wayAt = now + 1.5f; }
                                 // (As strong as the try says once it has stood up with its pickaxe: a body made weaker
                                 // at the bottom of its squat cannot come up.)
@@ -189,7 +203,7 @@ namespace WonderGather.Tests
                                 }
                                 if (down != null) ups = down.GotUp;
                                 bool rest = look.Swinging && look.Swing.phase == PhysicalSwing.Phase.Rest;
-                                if (rest && !resting) { rests++; restedGrounded |= look.Swing.RestsOnGround; }
+                                if (rest && !resting) { rests++;  }
                                 resting = rest;
                                 doing = fetching ? "picking the pickaxe up" : look.Swinging ? "at its work" : look.Carrying ? (unit.Motor.IsMoving ? "walking with it" : "standing with it") : "with nothing";
                                 string says = look.Status().Replace("\n", " / ");
@@ -240,7 +254,7 @@ namespace WonderGather.Tests
                                 "PANEL_GRID {0}, strength {1:0.00}, pickaxe {2:0.00} kg (x{3:0.00}{4}): picked up {5}; held {6} ({7:0}% of its hold); legs at most {8:0}% picking it up, {9:0}% in all, {25:0}% at its work (each knee holding half: {30:0.00} at most, {31:0.00} ready to swing); at the rock {10} (its spot {26:0.00} m over the ground: knees bent {27:0.000} m, bow {28:0}, the tool leaning {29:0}); {11} blows on the rock in {12:0.0} s ({13} swings, {14} struck, {15:0.0} m/s and {16:0} J on average); {17} stones; rested {18} times{19}; fell {20} times{21}, got up {22}; at the end: {23} ({24} pictures)",
                                 name, strength, kilograms, weight, string.IsNullOrEmpty(of) ? "" : ", " + of + "'s", picked < 0 ? "never" : picked.ToString("0.0", culture) + " s after the order", way, asks * 100,
                                 legsFetching * 100, mostLegs * 100, atRock < 0 ? "never" : atRock.ToString("0.0", culture) + " s", boulder.Blows - blows, took, swung, struck,
-                                struck > 0 ? speed / struck : 0, struck > 0 ? energy / struck : 0, boulder.Stones.Count - stones, rests, restedGrounded ? " (the head on the ground)" : "", falls, fell, ups,
+                                struck > 0 ? speed / struck : 0, struck > 0 ? energy / struck : 0, boulder.Stones.Count - stones, rests, restedGrounded ? " (in both hands)" : "", falls, fell, ups,
                                 look.Status().Replace("\n", " / "), shot, legsWorking * 100, spotUp, kneesPlanned, bowPlanned, leanPlanned, kneesWorking, kneesReady));
                             Debug.Log("PANEL_SAID " + label + ": " + string.Join(" | ", words.Count > 14 ? words.GetRange(words.Count - 14, 14) : words));
                             if (!string.IsNullOrEmpty(look.LeftRock)) Debug.Log("PANEL_LEFT " + label + ": " + look.LeftRock);

@@ -186,14 +186,21 @@ namespace WonderGather
             if (body != null) bowFrom = body.BowNow;
         }
 
+        // How far out from under its shoulder the hand carries a tool at the side (m): the arm hangs, as near to
+        // straight down as the hip and whatever hangs there let it. (It was held a fifth of the arm's length out:
+        // a long arm then held itself and the tool up all the while, and did not rest so. October 8.)
+        public static float Aside(ProceduralBiped body) => .05f * body.ArmReach + body.BodyProportions.armCarry.x;
+        // How much of its length the arm hangs at, carrying at the side.
+        private const float Hangs = .995f;
+
         // The tool carried at the side in one hand (the left): level, its head ahead and its point down, the arm
-        // hanging, the hand out past the hip and whatever hangs there.
+        // hanging, and all but straight: a bent elbow holds the tool up by its own strength, a straight arm by its bones.
         public static void AtSide(ProceduralBiped body, PhysicalHands hands, Vector3 hips, Quaternion posture, out Vector3 position, out Quaternion rotation)
         {
             float reach = body.ArmReach;
             Vector3 shoulder = body.ShoulderFromHips;
-            float aside = .2f * reach + body.BodyProportions.armCarry.x, ahead = .06f * reach;
-            float drop = Mathf.Sqrt(Mathf.Max(.01f, .94f * reach * .94f * reach - aside * aside - ahead * ahead));
+            float aside = Aside(body), ahead = .06f * reach;
+            float drop = Mathf.Sqrt(Mathf.Max(.01f, Hangs * reach * Hangs * reach - aside * aside - ahead * ahead));
             rotation = posture * Quaternion.LookRotation(Vector3.down, Vector3.forward);
             Vector3 hand = hips + posture * new Vector3(-(shoulder.x + aside), shoulder.y - drop, shoulder.z + ahead);
             position = hand - rotation * new Vector3(0, hands.GripAlong(0), 0);
@@ -239,6 +246,8 @@ namespace WonderGather
             if (clock < 0) Go(Asks > Carries ? Way.Dragged : Way.OneHand);
             else if (way == Way.OneHand && Asks > Carries) Go(Way.Dragged);
             else if (way == Way.Dragged && Asks < CarriesAgain) Go(Way.OneHand);
+            // Told to lay down a tool it can only hold by its handle's end: that one lies already. It lets go.
+            if (laying && way == Way.Dragged) { laying = false; Leave(); return; }
             clock += dt;
             // Carrying, it stands up as the tool comes with it; dragging, it stoops to it.
             drags = Mathf.MoveTowards(drags, way == Way.Dragged && motor != null && motor.IsMoving ? 1 : 0, dt / .5f);
