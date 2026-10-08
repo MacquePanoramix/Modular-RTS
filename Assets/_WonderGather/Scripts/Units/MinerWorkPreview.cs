@@ -61,6 +61,11 @@ namespace WonderGather
         private Boulder mining;
         private RockWork.Plan plan;
         private bool atRock, tookThisSwing, kneesJudged;
+        // How often, for this order, it has looked for a place where its knees bend less; it does so this often, each
+        // time for a place that bends them to no more than this share of what the last one did.
+        private int kneeTries;
+        private const int LooksAgain = 3;
+        private const float BendsLess = .65f;
         // For how long it has stood bent to its work, ready to swing, since it came to its place (seconds), and after
         // how long its knees are read.
         private float readyFor;
@@ -92,6 +97,8 @@ namespace WonderGather
             // The interaction click and the panel live beside it: where it is, they are.
             if (GetComponent<InteractionClick>() == null) gameObject.AddComponent<InteractionClick>();
             if (GetComponent<MinerPanel>() == null) gameObject.AddComponent<MinerPanel>();
+            // (What the work costs is measured from here when the build is started for that: -wgwork.)
+            if (GetComponent<MinerWorkBenchmark>() == null) gameObject.AddComponent<MinerWorkBenchmark>();
         }
 
         private void OnDisable()
@@ -275,6 +282,7 @@ namespace WonderGather
             }
             if (hands == null || hands.Held == null || working != unit || (carry != null && (carry.Laying || carry.Fetching))) return;
             if (!working.TryGetComponent<ProceduralBiped>(out var biped)) return;
+            swing.KneesAtMost = float.MaxValue; kneeTries = 0;
             var found = RockWork.Find(boulder, swing, biped, tall, working.transform.position);
             if (!found.found) { Say("It finds no place to stand and strike at that boulder"); return; }
             mining = boulder; plan = found; tries = 0;
@@ -462,6 +470,19 @@ namespace WonderGather
                     kneesJudged = true;
                     if (balance != null && balance.KneesAsked(hands.ToolMass) > PhysicalBalance.WorkRaises)
                     {
+                        // It looks for a place at this rock where it need not bend them so deep, a few times; and
+                        // gives the rock up if it finds none.
+                        if (kneeTries++ < LooksAgain && working.TryGetComponent<ProceduralBiped>(out var stands))
+                        {
+                            swing.KneesAtMost = Mathf.Min(swing.KneesAtMost, plan.aimed.sink) * BendsLess;
+                            var other = RockWork.Find(mining, swing, stands, tall, working.transform.position);
+                            if (other.found)
+                            {
+                                plan = other; tries = 0; kneesJudged = false; readyFor = 0;
+                                GoToRock();
+                                return;
+                            }
+                        }
                         Say("It would have to bend its knees too deep to work at that boulder");
                         LeaveRock("its knees would be bent too deep for the work");
                         TakeAlong();

@@ -228,9 +228,11 @@ namespace WonderGather.Tests
 
         // The place's lowest boulders are domes a fifth of a metre high. To strike one, a tall body bends its knees a
         // quarter of a metre and more, and the blows would ask them more than they have (Long's: 118 to 181%; it fell).
-        // Bent to its work there, before its first blow, its knees are read: it does not work so low, stands up with
-        // its pickaxe, and the panel says why. At a boulder of ordinary height it works.
-        [UnityTest, Timeout(600000)]
+        // Bent to its work there, before its first blow, its knees are read. Asked too much, it looks for a place at the
+        // same rock where it need not bend them so deep; and if there is none, it does not work there, stands up with
+        // its pickaxe, and the panel says why. Either way it does not strike with its knees asked too much, and does
+        // not fall.
+        [UnityTest, Timeout(900000)]
         public IEnumerator ABodyDoesNotWorkWhereItsKneesWouldBeBentTooDeep()
         {
             Time.captureFramerate = 50;
@@ -252,30 +254,53 @@ namespace WonderGather.Tests
             Assert.That(pickaxe, Is.Not.Null);
             yield return Wait(1);
             Assert.That(click.OpenOn(boulders[low]) && click.Choose("Mine"), Is.True);
-            float began = Time.time, mostAsked = 0;
+            float began = Time.time, firstAsked = -1, askedAtFirstBlow = -1;
             bool cameThere = false;
-            while (Time.time - began < 40)
+            int places = 0;
+            Vector3 lastStand = Vector3.positiveInfinity;
+            while (Time.time - began < 120)
             {
-                if (look.AtRock) cameThere = true;
                 var legs = unit.GetComponent<PhysicalBalance>();
                 var hands = unit.GetComponent<PhysicalHands>();
-                if (legs != null && look.AtRock && look.Swinging) mostAsked = Mathf.Max(mostAsked, legs.KneesAsked(hands != null ? hands.ToolMass : 0));
+                if (look.AtRock)
+                {
+                    cameThere = true;
+                    if ((look.MiningPlan.stand - lastStand).sqrMagnitude > .01f) { places++; lastStand = look.MiningPlan.stand; }
+                    if (legs != null && look.Swinging && look.Swing.phase == PhysicalSwing.Phase.Ready)
+                    {
+                        float asked = legs.KneesAsked(hands != null ? hands.ToolMass : 0);
+                        if (firstAsked < 0 && asked > .05f) firstAsked = asked;
+                        if (boulders[low].Blows == 0) askedAtFirstBlow = asked;
+                    }
+                }
                 if (cameThere && look.Mining == null) break;
+                if (boulders[low].Blows >= 3) break;
                 yield return null;
             }
             float took = Time.time - began;
             var fall = unit.GetComponent<PhysicalFall>();
-            Debug.Log($"BOULDER_LOW Long at boulder {low} (its top {lowest:F2} m over the ground): came to its place, bent to its work with each knee asked {mostAsked * 100:F0}% of what it has (holding half), and left it {took:F1} s after the order with {boulders[low].Blows} blows struck: {look.LeftRock}. The panel says: {look.Status().Replace("\n", " / ")}");
+            bool left = look.Mining == null;
+            Debug.Log($"BOULDER_LOW Long at boulder {low} (its top {lowest:F2} m over the ground): bent to its work standing at {places} place(s); at first each knee was asked {firstAsked * 100:F0}% of what it has (holding half); "
+                + (left ? $"it left the rock {took:F1} s after the order with {boulders[low].Blows} blows struck: {look.LeftRock}. The panel says: {look.Status().Replace("\n", " / ")}"
+                        : $"it found a way to stand to it where they are asked {askedAtFirstBlow * 100:F0}%, and struck the rock {boulders[low].Blows} times within {took:F1} s"));
             Assert.That(cameThere, Is.True, "Long did not come to its place at the lowest boulder: " + look.LeftRock);
-            Assert.That(look.Mining, Is.Null, "Long went on working where its knees are asked too much.");
-            Assert.That(look.LeftRock, Does.Contain("knees"), "It left the boulder for another reason: " + look.LeftRock);
-            Assert.That(look.Status(), Does.Contain("knees"), "The panel does not say why it left the boulder.");
-            Assert.That(boulders[low].Blows, Is.EqualTo(0), "It struck the boulder before it judged its knees.");
             Assert.That(fall == null || fall.Falls == 0, Is.True, "Long fell.");
-            Assert.That(mostAsked, Is.GreaterThan(PhysicalBalance.WorkRaises));
-            yield return Wait(2.5f);
-            Assert.That(look.Showing && look.Carrying && unit.GetComponent<PhysicalHands>().Thing == pickaxe, Is.True, "It did not stand up with its pickaxe.");
-            Assert.That(unit.GetComponent<ProceduralBiped>().SinkNow, Is.LessThan(.03f), "It did not stand up.");
+            Assert.That(firstAsked, Is.GreaterThan(PhysicalBalance.WorkRaises), "At the lowest boulder, from where it came, its knees were not asked too much: this is not the case the test is for.");
+            if (left)
+            {
+                Assert.That(look.LeftRock, Does.Contain("knees"), "It left the boulder for another reason: " + look.LeftRock);
+                Assert.That(look.Status(), Does.Contain("knees"), "The panel does not say why it left the boulder.");
+                Assert.That(boulders[low].Blows, Is.EqualTo(0), "It struck the boulder with its knees asked too much.");
+                yield return Wait(2.5f);
+                Assert.That(look.Showing && look.Carrying && unit.GetComponent<PhysicalHands>().Thing == pickaxe, Is.True, "It did not stand up with its pickaxe.");
+                Assert.That(unit.GetComponent<ProceduralBiped>().SinkNow, Is.LessThan(.03f), "It did not stand up.");
+            }
+            else
+            {
+                // (The other place may be the same spot, taken with its knees bent less and its back bowed more.)
+                Assert.That(askedAtFirstBlow, Is.LessThan(PhysicalBalance.WorkRaises + .05f), "It struck the boulder with its knees asked too much.");
+                Assert.That(askedAtFirstBlow, Is.LessThan(firstAsked), "It struck the boulder as it first stood to it.");
+            }
             look.End();
             look.ClearLaid();
         }

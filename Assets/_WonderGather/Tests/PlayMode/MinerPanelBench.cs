@@ -18,7 +18,7 @@ namespace WonderGather.Tests
     //
     // Run on its own: -runTests -testPlatform PlayMode -testFilter WonderGather.Tests.MinerPanelBench -panelOut <folder>
     //   [-panelMiner Round] [-panelStrengths 0.5,1,2] [-panelWeights 0.6,1,1.8] [-panelPickaxeOf Long] [-panelBoulder 4]
-    //   [-panelFor 60] [-panelBlows 6] [-panelSize 0] [-panelView 250,12,3.2] [-panelOrder pick] [-panelPickAt 1] [-panelTrace 1] [-panelSend 0.4]
+    //   [-panelFor 60] [-panelBlows 6] [-panelSize 0] [-panelView 250,12,3.2] [-panelOrder pick] [-panelPickAt 1] [-panelTrace 1] [-panelSend 0.4] [-panelFrames 200]
     public sealed class MinerPanelBench
     {
         private static float[] Numbers(string argument, params float[] otherwise)
@@ -57,7 +57,8 @@ namespace WonderGather.Tests
                             Time.captureFramerate = 0;
                             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
                             yield return null;
-                            Time.captureFramerate = 50;
+                            // -panelFrames: the frames a second it is run at (50, the physics' own rate, unless it is said).
+                            Time.captureFramerate = (int)Numbers("-panelFrames", 50)[0];
                             var choice = UnityEngine.Object.FindAnyObjectByType<MinerChoice>();
                             string name = choice.NameOf(index);
                             if (!string.IsNullOrEmpty(who) && !string.Equals(who, name, StringComparison.OrdinalIgnoreCase)) continue;
@@ -70,16 +71,30 @@ namespace WonderGather.Tests
                             if (rig != null) rig.enabled = false;
                             camera.nearClipPlane = .01f;
                             time.Hour = 13;
-                            var boulder = Boulder.All()[which];
+                            var boulder = Boulder.All()[Mathf.Max(0, which)];
                             choice.Choose(index);
                             yield return null;
                             var unit = choice.Current;
                             var miner = unit.GetComponent<MinerBody>();
                             for (float until = Time.time + .5f; Time.time < until;) yield return null;
                             float tall = miner.Rig.head.position.y - unit.transform.position.y;
+                            // -panelBoulder -1: from where the place puts the miner, the nearest boulder of ordinary height (as
+                            // the build's own measure of the work has it).
+                            if (which < 0)
+                            {
+                                float nearest = float.MaxValue;
+                                var all = Boulder.All();
+                                for (int b = 0; b < all.Count; b++)
+                                {
+                                    var bounds = all[b].Rock.bounds;
+                                    float away = Vector3.ProjectOnPlane(bounds.center - unit.transform.position, Vector3.up).sqrMagnitude;
+                                    if (bounds.max.y - unit.transform.position.y >= .5f && away < nearest) { nearest = away; boulder = all[b]; }
+                                }
+                                Debug.Log(string.Format(culture, "PANEL_FROM {0} stands at ({1:0.0}, {2:0.0}); the nearest boulder of ordinary height is {3:0.0} m off, at ({4:0.0}, {5:0.0})", name, unit.transform.position.x, unit.transform.position.z, Mathf.Sqrt(nearest), boulder.Rock.bounds.center.x, boulder.Rock.bounds.center.z));
+                            }
                             // A few steps from the boulder, on ground that can be walked.
                             Vector3 centre = boulder.Rock.bounds.center;
-                            for (int k = 0; k < 12; k++)
+                            for (int k = 0; k < 12 && which >= 0; k++)
                             {
                                 Vector3 at = centre + Quaternion.Euler(0, k * 30, 0) * Vector3.forward * (Mathf.Max(boulder.Rock.bounds.extents.x, boulder.Rock.bounds.extents.z) + 2.5f);
                                 if (!NavMesh.SamplePosition(at, out var walked, 1, NavMesh.AllAreas)) continue;
@@ -115,7 +130,7 @@ namespace WonderGather.Tests
                             var after = new GameObject("After everything").AddComponent<AfterEverything>();
                             after.Then = () =>
                             {
-                                if (!taking || frame++ % 2 != 0) return;
+                                if (!taking || frame++ % Mathf.Max(1, Time.captureFramerate / 25) != 0) return;
                                 var fallen = unit.GetComponent<PhysicalFall>();
                                 Vector3 body = fallen != null && fallen.Now != PhysicalFall.State.Up ? fallen.HipsAt : unit.transform.position + Vector3.up * tall * .5f;
                                 // (Told only to pick the pickaxe up, the miner itself is what is looked at.)

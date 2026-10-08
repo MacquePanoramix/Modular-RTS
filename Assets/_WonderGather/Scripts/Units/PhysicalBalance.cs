@@ -425,7 +425,10 @@ namespace WonderGather
             }
             Vector2 point = stands + steady + going / pace;
             Margin = Inside(point, out _);
-            outside = Margin < 0 ? outside + dt : 0;
+            // (Only standing: walking, the walk carries the body from foot to foot, its weight ahead of its feet as a
+            // walk has it. A light body with a tool at its side walked with its weight "outside" all the way, and was
+            // let go five seconds into any long walk. Falling while walking is not built.)
+            outside = holds && Margin < 0 ? outside + dt : 0;
             LongestOutside = Mathf.Max(LongestOutside, outside);
             if (outside > FallsAfter && Falls("its weight has been outside its feet too long")) return;
             if (!stepped) shortSteps = 0;

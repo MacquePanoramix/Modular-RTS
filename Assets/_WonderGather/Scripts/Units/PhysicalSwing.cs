@@ -203,12 +203,18 @@ namespace WonderGather
 
         // The same, for a body standing somewhere, facing some way: so that a place to stand can be chosen for a point.
         // roughly: looked for in wide steps only, for choosing among many places (about a tenth of the work).
+        // The most its knees may bend for a blow (metres the hips come down): no way of taking a blow that bends them
+        // further is considered. (Where its knees were asked too much at a rock, it looks for a place where it need
+        // not bend them so deep: MinerWorkPreview.)
+        public float KneesAtMost = float.MaxValue;
+
         public Aimed AimFrom(Vector3 feet, Quaternion facing, Vector3 point, float leansUpTo = RestsUpTo, bool roughly = false)
         {
             float hip = body.StandingHipHeight;
-            float best = float.MaxValue, bow = RestBow, lean = Rest, down = 0, miss = 0;
+            float best = float.MaxValue, bow = RestBow, lean = Rest, down = 0, miss = float.MaxValue;
             void Try(float s, float b, float l)
             {
+                if (s > KneesAtMost + 1e-4f) return;
                 // The hips go back as the body bows (PhysicalBack): about a fifth of their height at a deep bow.
                 Vector3 hips = feet + Vector3.up * (hip - s) - facing * Vector3.forward * (.2f * hip * Mathf.Sin(Mathf.Max(0, b) * Mathf.Deg2Rad));
                 Place(l, Mathf.Min(l, RestsUpTo), hips, facing * Quaternion.Euler(b, 0, 0), out var position, out var rotation);
