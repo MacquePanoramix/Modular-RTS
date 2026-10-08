@@ -205,7 +205,7 @@ namespace WonderGather
         private void OnDisable()
         {
             if (balance != null) balance.KeepsFeet = false;
-            if (body != null) { body.StaysPut = false; body.RegardNothing(); }
+            if (body != null) { body.StaysPut = false; body.RegardNothing(); body.HangsAtSide(0, false); }
             wasDown = false;
             Walks();
             if (motor != null) motor.SetMovementRate(1);
@@ -258,7 +258,7 @@ namespace WonderGather
             if (fall == null && !lookedForFall) { fall = GetComponent<PhysicalFall>(); lookedForFall = true; }
             if (balance == null) balance = GetComponent<PhysicalBalance>();
             // (It looks at what it goes down for, and only then: below.)
-            if (body != null) body.RegardNothing();
+            if (body != null) { body.RegardNothing(); body.HangsAtSide(0, false); }
             if (fall != null && fall.Now != PhysicalFall.State.Up) { if (balance != null) balance.KeepsFeet = false; if (body != null) body.StaysPut = false; return; }
             // Bent to the ground (for a tool it takes up or lays down), its feet stay where they are, until it has
             // stood up again (or is sent somewhere).
@@ -380,6 +380,7 @@ namespace WonderGather
                     if (clock > .25f && !hands.Sliding(0)) hands.Release(1);
                 }
                 AtSide(body, hands, hips, posture, out var to, out var toTurn);
+                body.HangsAtSide(0, !hands.Holds(1));
                 float t = Mathf.SmoothStep(0, 1, clock / 1.3f);
                 hands.Want(Vector3.Lerp(from, to, t), Quaternion.Slerp(fromTurn, toTurn, t));
                 return;

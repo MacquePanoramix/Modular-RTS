@@ -410,10 +410,12 @@ namespace WonderGather
                     break;
             }
             float bears = 1;
+            if (phase != Phase.Rest) body.HangsAtSide(0, false);
             if (phase == Phase.Struck) { position = from; rotation = fromTurn; }
             else if (phase == Phase.Rest)
             {
                 AtSide(hips, posture, out var to, out var toTurn);
+                body.HangsAtSide(0, !hands.Holds(1));
                 float t = Mathf.SmoothStep(0, 1, clock / 1.3f);
                 position = Vector3.Lerp(from, to, t); rotation = Quaternion.Slerp(fromTurn, toTurn, t);
             }

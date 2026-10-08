@@ -161,6 +161,10 @@ namespace WonderGather
         private readonly Vector3[] handHang=new Vector3[2],handHangPace=new Vector3[2],handHungWas=new Vector3[2];
         private readonly float[] handEases={.06f,.06f};
         private const float HandHangsIn=.06f,HandLetGoIn=.2f;
+        // A hand that carries a thing at the body's side: its arm hangs, its elbow back.
+        private readonly bool[] atSideWanted=new bool[2];
+        private readonly float[] hangsAtSide=new float[2];
+        public void HangsAtSide(int hand,bool on){if(hand>=0&&hand<2) atSideWanted[hand]=on;}
         private readonly float[] handsBusy=new float[2];
         private NavMeshAgent agent;
         private IHandHolds holds;
@@ -1375,7 +1379,11 @@ namespace WonderGather
                 }
                 // Free arms point their elbows back; carrying and gripping turn them out and down.
                 handsBusy[i]=dt>0&&handsInitialized?Mathf.MoveTowards(handsBusy[i],busy?1:0,dt*4):busy?1:0;
-                SolveArm(i,Vector3.Lerp(new Vector3(side*.2f,-.1f,-1),new Vector3(side*.55f,-.6f,-.25f),handsBusy[i]),Quaternion.Slerp(hangs,chest,handsBusy[i]),shoulder,wrist);
+                // (A hand that carries a thing at the body's side keeps its elbow back, as a hanging arm does: turned
+                // out, as for work with both hands, it read as a hand set on the hip.)
+                hangsAtSide[i]=dt>0&&handsInitialized?Mathf.MoveTowards(hangsAtSide[i],atSideWanted[i]?1:0,dt*3):atSideWanted[i]?1:0;
+                float turnedOut=handsBusy[i]*(1-hangsAtSide[i]);
+                SolveArm(i,Vector3.Lerp(new Vector3(side*.2f,-.1f,-1),new Vector3(side*.55f,-.6f,-.25f),turnedOut),Quaternion.Slerp(hangs,chest,turnedOut),shoulder,wrist);
             }
             handsInitialized=true;
         }

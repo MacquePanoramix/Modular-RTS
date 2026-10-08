@@ -107,8 +107,8 @@ namespace WonderGather
                 miner.HoldHandle(hand, false, Vector3.zero, Vector3.up, 0, Vector3.zero);
                 if (body != null) body.CarryAtSide(hand, 0, 1);
             }
+            if (body != null) { body.RegardNothing(); if (hand >= 0) body.HangsAtSide(hand, false); }
             phase = Phase.Hung; index = hand = -1; back = false;
-            if (body != null) body.RegardNothing();
         }
 
         private void OnDestroy()
@@ -273,6 +273,7 @@ namespace WonderGather
                 case Phase.Carried:
                     wrist = carried;
                     way = ahead;
+                    body.HangsAtSide(which, true);
                     break;
                 case Phase.Returning:
                     float returned = Mathf.SmoothStep(0, 1, clock / Returns);
@@ -289,6 +290,7 @@ namespace WonderGather
                     closes = false;
                     break;
             }
+            if (phase != Phase.Carried) body.HangsAtSide(which, false);
             if (phase != Phase.Reaching && phase != Phase.Lowering && !(phase == Phase.Returning && clock > Returns * .5f)) body.RegardNothing();
             else if (phase == Phase.Returning) body.Regard(hook);
             WristAsked = wrist;
