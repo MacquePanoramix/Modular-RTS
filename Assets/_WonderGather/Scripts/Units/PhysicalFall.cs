@@ -108,18 +108,39 @@ namespace WonderGather
             if (gives)
             {
                 stage.within = kept + 1.2f;
-                stage.through = new[]
-                {
-                    new Asked { what = Asks.Front, least = OnItsKnees, most = float.PositiveInfinity },
-                    new Asked { what = Asks.Steep, least = ShinsUnder, most = float.PositiveInfinity },
-                    new Asked { what = Asks.Still, least = .15f, most = float.PositiveInfinity },
-                };
+                stage.through = Kneeling;
             }
             return stage;
         }
-        // On its knees and its feet: its chest faces the ground by at least this much, and its shins stand at least
-        // this steep (their feet under it, not in the air behind it).
-        private const float OnItsKnees = .2f, ShinsUnder = -.3f;
+        // On its knees and its feet: its chest faces the ground by at least this much, its shins stand at least this
+        // steep (their feet under it, not in the air behind it), and it has been still this long. (KneesUnder: its
+        // hips no further than this from over its feet, a share of their standing height; lying flat they are
+        // further. Asked only of a body that would end its way early.)
+        private const float OnItsKnees = .2f, ShinsUnder = -.3f, KneesUnder = .65f, KneelsStill = .15f;
+        private static readonly Asked[] Kneeling =
+        {
+            new Asked { what = Asks.Front, least = OnItsKnees, most = float.PositiveInfinity },
+            new Asked { what = Asks.Steep, least = ShinsUnder, most = float.PositiveInfinity },
+            new Asked { what = Asks.Still, least = KneelsStill, most = float.PositiveInfinity },
+        };
+        // A way ends as soon as the body is where the way was taking it, whatever is left of its poses and their
+        // seconds (the judges of October 9: it "sits folded for a second and a half with nothing changing, then
+        // rises"; "parked, then released"). Turning over, it is there when its chest faces the ground by this much
+        // more than the way that follows asks.
+        private const float TurnedWell = .2f;
+        private bool There()
+        {
+            if (got < stage.over) return false;
+            if (!way.gives) return at == way.stages.Length - 1 && Measure(Asks.Front) >= Mathf.Min(.95f, way.frontMost + TurnedWell);
+            // (Before its poses are through, only if its feet are well under it already.)
+            if (Measure(Asks.Off) > KneesUnder) return false;
+            foreach (var asked in Kneeling)
+            {
+                float it = Measure(asked.what);
+                if (it < asked.least || it > asked.most) return false;
+            }
+            return true;
+        }
 
         private static Way[] Usual() => new[]
         {
@@ -791,7 +812,10 @@ namespace WonderGather
                     float it = Measure(stage.through[k].what);
                     through = it >= stage.through[k].least && it <= stage.through[k].most;
                 }
-                if (through)
+                // (Or it is already where the way was taking it.)
+                bool there = There();
+                if (there) at = way.stages.Length - 1;
+                if (through || there)
                 {
                     if (at + 1 < way.stages.Length) Begin(at + 1);
                     else if (way.gives)
