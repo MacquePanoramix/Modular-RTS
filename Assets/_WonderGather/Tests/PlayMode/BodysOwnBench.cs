@@ -29,6 +29,8 @@ namespace WonderGather.Tests
         private static readonly int[] From = { -1, Hips, Trunk, Trunk, Trunk, UpperArm, UpperArm + 1, Hips, Hips, Thigh, Thigh + 1, Shin, Shin + 1 };
         private static float Step = .02f;
         private static int Iterations = 14, VelocityIterations = 4;
+        // (A boot's turning weight, so many times what its shape gives it; and its weight, if it is set.)
+        private static float BootTurns = 1, BootWeighs = 0;
 
         private struct Solid
         {
@@ -282,6 +284,12 @@ namespace WonderGather.Tests
                     joint.targetRotation = Quaternion.identity;
                     built.joint[i] = joint;
                 }
+            if (BootTurns != 1)
+                for (int i = Foot; i < Count; i++)
+                {
+                    if (articulated) built.link[i].inertiaTensor = built.link[i].inertiaTensor * BootTurns;
+                    else built.solid[i].inertiaTensor = built.solid[i].inertiaTensor * BootTurns;
+                }
             // Its own parts do not strike one another (it only stands here).
             var solids = built.root.GetComponentsInChildren<Collider>();
             for (int a = 0; a < solids.Length; a++)
@@ -381,7 +389,8 @@ namespace WonderGather.Tests
             }
         }
 
-        private static string Called(bool articulated, float fullAt) => (articulated ? "articulation" : "joints") + string.Format(CultureInfo.InvariantCulture, ", full at {0:0} degrees, {1:0} steps a second", fullAt, 1 / Step);
+        private static string Called(bool articulated, float fullAt) => (articulated ? "articulation" : "joints") + string.Format(CultureInfo.InvariantCulture, ", full at {0:0} degrees, {1:0} steps a second", fullAt, 1 / Step)
+            + (BootTurns != 1 ? string.Format(CultureInfo.InvariantCulture, ", a boot's turning weight {0:0} times its own", BootTurns) : "") + (BootWeighs > 0 ? string.Format(CultureInfo.InvariantCulture, ", a boot of {0:0.0} kg", BootWeighs) : "");
 
         // What the engine's numbers mean: one arm, a kilogram with its weight half a metre from a hinge, held out level
         // from a post that does not move. With a spring of S newton metres a radian it should sag 4.9 / S radians.
@@ -433,7 +442,7 @@ namespace WonderGather.Tests
                             float after = 0, most = 0;
                             for (int k = 0; k < 500; k++)
                             {
-                                Physics.Simulate(Step);
+                                Physics.Simulate(.02f);
                                 float sag = Vector3.Angle(Vector3.forward, arm.transform.forward);
                                 most = Mathf.Max(most, sag);
                                 if (k == 9) after = sag;
@@ -519,9 +528,10 @@ namespace WonderGather.Tests
             float[] fulls = Numbers("-ownFullAt", 35, 5), pulls = Numbers("-ownPulls", 50, 100, 200), crowds = Numbers("-ownCrowd", 1, 25, 100), view = Numbers("-ownView", 100, 8, 3.2f);
             float slows = Numbers("-ownSlows", .08f)[0], lasts = Numbers("-ownFor", 30)[0], ankleGives = Numbers("-ownAnkle", .7f)[0], stronger = Numbers("-ownStrong", 1)[0];
             int size = (int)Numbers("-ownSize", 400)[0];
-            float quick = Numbers("-ownQuick", 5)[0];
+            float quick = Numbers("-ownQuick", 5)[0], crowdFor = Mathf.Max(6, Numbers("-ownCrowdFor", 6)[0]);
             Iterations = (int)Numbers("-ownIterations", 14, 4)[0]; VelocityIterations = (int)Numbers("-ownIterations", 14, 4)[1];
             Step = Numbers("-ownStep", .02f)[0];
+            BootTurns = Numbers("-ownBootTurns", 1)[0]; BootWeighs = Numbers("-ownBootWeighs", 0)[0];
             bool said = Numbers("-ownSay", 0)[0] > 0;
             string kinds = CaptureTools.Argument("-ownKinds") ?? "joints,articulation";
             var culture = CultureInfo.InvariantCulture;
@@ -577,6 +587,7 @@ namespace WonderGather.Tests
                     Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Falling), name + " was not let go.");
                     var plan = Plan(fall, physical, ankleGives);
                     foreach (var planned in plan) planned.strength *= stronger;
+                    if (BootWeighs > 0) { plan[Foot].mass = BootWeighs; plan[Foot + 1].mass = BootWeighs; }
                     fall.TakeBack();
                     yield return null;
                     unit.gameObject.SetActive(false);
@@ -615,6 +626,7 @@ namespace WonderGather.Tests
                             float furthest = 0, fastest = 0, speeds = 0, most = 0;
                             int counted = 0, crossings = 0;
                             float before = 0;
+                            Vector3 headWas = headBegan;
                             bool fell = false;
                             float fellAt = -1;
                             Vector3 mean = Vector3.zero;
@@ -673,12 +685,15 @@ namespace WonderGather.Tests
                                 if (k >= settle)
                                 {
                                     seen.Add(head); mean += head; counted++;
-                                    Vector3 goes = body.Goes(Head);
+                                    // (From where it is, step to step: the engine's own reading of a resting part's speed
+                                    // did not agree with how far the part went.)
+                                    Vector3 goes = (head - headWas) / Step;
                                     speeds += goes.magnitude; fastest = Mathf.Max(fastest, goes.magnitude);
                                     float ahead = Vector3.Dot(goes, away);
                                     if (counted > 1 && Mathf.Sign(ahead) != Mathf.Sign(before)) crossings++;
                                     before = ahead;
                                 }
+                                headWas = head;
                                 furthest = Mathf.Max(furthest, Vector3.ProjectOnPlane(head - headBegan, Vector3.up).magnitude);
                                 if (k == settle || k == steps / 2) Picture(body);
                             }
@@ -710,6 +725,11 @@ namespace WonderGather.Tests
                                     if (k < pulled) body.Push(Trunk, away * pull, body.Centre(Trunk));
                                     if (keeps) Keep(body, plan, quick, fullAt, slows);
                                     Physics.Simulate(Step);
+                                    if (said && keeps && k % Mathf.RoundToInt(.25f / Step) == 0)
+                                        Debug.Log(string.Format(culture, "OWN   {0} pulled {1:0} N, {2:0.00} s: its weight {3:0} mm ahead of where it began and going {4:0} mm/s; the push it wants is {5:0} mm outside its soles; its trunk leans {6:0.0} degrees; boots tipped {7:0.0} and {8:0.0}; an ankle gives {9:0} and {10:0}, a knee {11:0} and {12:0}, a hip {13:0} and {14:0}",
+                                            name, pull, k * Step, Vector3.Dot(body.Weight() - body.centre, away) * 1000, Vector3.Dot(body.WeightGoes(), away) * 1000, body.outside * 1000,
+                                            Quaternion.Angle(body.upright, body.Of(Hips).rotation), Quaternion.Angle(plan[Foot].turned, body.Of(Foot).rotation), Quaternion.Angle(plan[Foot + 1].turned, body.Of(Foot + 1).rotation),
+                                            body.gave[Foot], body.gave[Foot + 1], body.gave[Shin], body.gave[Shin + 1], body.gave[Thigh], body.gave[Thigh + 1]));
                                     Vector3 head = body.Of(Head).position;
                                     if (head.y - spot.y < .7f * (headBefore.y - spot.y)) { down = true; break; }
                                     leant = Mathf.Max(leant, Vector3.Dot(head - headBefore, away));
@@ -776,10 +796,15 @@ namespace WonderGather.Tests
                                 var watch = System.Diagnostics.Stopwatch.StartNew();
                                 for (int k = 0; k < Mathf.RoundToInt(5 / Step); k++) { if (keeps) foreach (var one in crowd) Keep(one, plan, quick, fullAt, slows); Physics.Simulate(Step); }
                                 float each = (float)watch.Elapsed.TotalMilliseconds / 250;
+                                watch.Stop();
+                                // (And on to twenty seconds in all, to count who still stands.)
+                                int atSix = 0;
+                                foreach (var one in crowd) if (one.Of(Head).position.y - floorTop > .7f * tall) atSix++;
+                                for (int k = 0; k < Mathf.RoundToInt((crowdFor - 6) / Step); k++) { if (keeps) foreach (var one in crowd) Keep(one, plan, quick, fullAt, slows); Physics.Simulate(Step); }
                                 int standing = 0;
                                 foreach (var one in crowd) if (one.Of(Head).position.y - floorTop > .7f * tall) standing++;
-                                Debug.Log(string.Format(culture, "OWN {0} cost, {1}: {2:0} of it standing on a level floor take {3:0.000} ms more than the place alone ({4:0.000} ms) for each fiftieth of a second, in the Editor; {5} of them still stand after six seconds",
-                                    name, called, many, each - empty, empty, standing));
+                                Debug.Log(string.Format(culture, "OWN {0} cost, {1}: {2:0} of it standing on a level floor take {3:0.000} ms more than the place alone ({4:0.000} ms) for each fiftieth of a second, in the Editor; {5} of them still stand after six seconds and {6} after {7:0}",
+                                    name, called, many, each - empty, empty, atSix, standing, crowdFor));
                                 foreach (var one in crowd) UnityEngine.Object.Destroy(one.root);
                                 yield return null;
                             }
