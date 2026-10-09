@@ -22,7 +22,14 @@ namespace WonderGather
         // How long the hand takes to reach the handle; to lift it off its hook, and to bring it to the side; to bring
         // it back over its hook, and to lower it on; to let go, and to hang at the side again (seconds). The fingers
         // begin to close this long before the hand is there.
-        private const float Reaches = .55f, Lifts = .3f, Brings = .9f, Returns = .9f, Lowers = .3f, LetsGo = .25f, Hangs = .45f, Closes = .3f;
+        private const float Reaches = .55f, Lifts = .3f, Brings = .65f, Returns = .9f, Lowers = .3f, LetsGo = .25f, Hangs = .45f, Closes = .3f;
+        // It looks at the thing this long before its hand sets off (seconds): a body looks first, and then reaches.
+        // (The judges of October 9: "the head seems to follow the hand".) And the hand that carries goes with the
+        // walk, forwards and back, by the share of its swing the arm keeps, and no further than this (metres): it was
+        // held still at its place ("a pose that was chosen and then carried, not an arm answering the walk").
+        // (Of that share, this much: about two centimetres either way for Small at a walk. A lantern on a short
+        // bail swings nearly in time with a stride.)
+        private const float LooksFirst = .18f, SwingsAtMost = .12f, SwingsBy = .7f;
         // The hook holds the handle from below: it is lifted this far to come off, and this far out from the cloth
         // (metres).
         private const float Over = .03f, Off = .015f;
@@ -182,7 +189,7 @@ namespace WonderGather
             switch (phase)
             {
                 case Phase.Reaching:
-                    if (clock >= Reaches && miner.Held(hand) >= 1) { miner.Carry(index, hand); Go(Phase.Lifting); }
+                    if (clock >= LooksFirst + Reaches && miner.Held(hand) >= 1) { miner.Carry(index, hand); Go(Phase.Lifting); }
                     break;
                 case Phase.Lifting:
                     if (clock >= Lifts + Brings) Go(Phase.Carried);
@@ -245,6 +252,9 @@ namespace WonderGather
             // forward). (It was carried on a straight arm held out to the side, far enough for the thing to hang
             // clear of the coat: a hold no arm keeps up, and Luis's "a bit uncanny", October 8.)
             Vector3 carried = Carries(which, shoulder, ahead);
+            // (With the walk: as far ahead of where it hangs, or behind it, as the free hand would be with the share
+            // of its swing a carrying arm keeps.)
+            carried += ahead * Mathf.Clamp(SwingsBy * (Vector3.Dot(free - shoulder, ahead) - body.BodyProportions.armHang.z), -SwingsAtMost, SwingsAtMost);
             // The wrist's place for the handle to be somewhere, lying as it lies on its hook.
             Vector3 On(Vector3 handle)
             {
@@ -259,9 +269,10 @@ namespace WonderGather
                 case Phase.Reaching:
                     // (It looks at what it reaches for.)
                     body.Regard(hook);
-                    wrist = Vector3.Lerp(free, On(hook), Mathf.SmoothStep(0, 1, clock / (Reaches - Settles)));
-                    closes = clock > Reaches - Closes;
-                    settling = clock >= Reaches - Settles;
+                    float reached = clock - LooksFirst;
+                    wrist = Vector3.Lerp(free, On(hook), Mathf.SmoothStep(0, 1, reached / (Reaches - Settles)));
+                    closes = reached > Reaches - Closes;
+                    settling = reached >= Reaches - Settles;
                     break;
                 case Phase.Lifting:
                     if (clock < Lifts) wrist = On(Vector3.Lerp(hook, above, Mathf.SmoothStep(0, 1, clock / Lifts)));
@@ -293,7 +304,8 @@ namespace WonderGather
                     break;
             }
             if (phase != Phase.Carried) body.HangsAtSide(which, false);
-            if (phase != Phase.Reaching && phase != Phase.Lowering && !(phase == Phase.Returning && clock > Returns * .5f)) body.RegardNothing();
+            // (Hanging it back, it looks at the hook from the moment its hand sets off.)
+            if (phase != Phase.Reaching && phase != Phase.Lowering && phase != Phase.Returning) body.RegardNothing();
             else if (phase == Phase.Returning) body.Regard(hook);
             WristAsked = wrist;
             miner.HoldHandle(which, closes, wrist, way, radius, shoulder);

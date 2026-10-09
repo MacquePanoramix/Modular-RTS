@@ -147,9 +147,12 @@ namespace WonderGather.Tests
                 // It walks with it: the handle stays in the fingers, the thing swings, and the body stops it.
                 Assert.That(unit.Motor.TryMove(OnGround(unit.transform.position + unit.transform.right * 2.5f)), Is.True);
                 began = Time.time;
-                float worstOff = 0, worstInto = -1, mostLean = 0;
+                float worstOff = 0, worstInto = -1, mostLean = 0, handBack = float.MaxValue, handAhead = float.MinValue;
                 while ((unit.Motor.IsMoving || Time.time - began < .5f) && Time.time - began < 15)
                 {
+                    // (How far ahead of the hips the carrying hand is: it goes with the walk.)
+                    float ahead = HandFromHips(biped, miner, hand).z;
+                    handBack = Mathf.Min(handBack, ahead); handAhead = Mathf.Max(handAhead, ahead);
                     InFingers(miner, k, hand, out off, out _);
                     worstOff = Mathf.Max(worstOff, off);
                     worstInto = Mathf.Max(worstInto, miner.HangingIntoBody(k));
@@ -163,6 +166,9 @@ namespace WonderGather.Tests
                 Assert.That(worstOff, Is.LessThan(.004f), "The handle left the fingers as it walked.");
                 Assert.That(worstInto, Is.LessThan(.002f), "The thing went into the body as it walked.");
                 Assert.That(mostLean, Is.GreaterThan(1.5f), "A thing carried by its handle should swing as the miner walks.");
+                // (Until October 9 the hand that carried was held at one place before the hip while the body walked.)
+                Debug.Log($"HUNG_WALKED {name}'s {thing.name}: walking, the hand that carries it went {(handAhead - handBack) * 1000:F0} mm forwards and back with the walk");
+                Assert.That(handAhead - handBack, Is.InRange(.012f, .3f), "The hand that carries should go with the walk, a little: it is not held still.");
                 Assert.That(lean, Is.LessThan(12));
 
                 // It hangs it back, and its arm hangs at its side again.
