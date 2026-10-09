@@ -11,6 +11,28 @@ using UnityEngine.TestTools;
 
 namespace WonderGather.Tests
 {
+    // What the ground does to a boot in a step of the physics: how hard it pushes (newton seconds, summed), and where
+    // (the middle of that push). Cleared by whoever reads it.
+    public sealed class Touching : MonoBehaviour
+    {
+        public Vector3 pushed, where;
+        public float up;
+        public void Clear() { pushed = Vector3.zero; where = Vector3.zero; up = 0; }
+        private void Take(Collision touch)
+        {
+            for (int k = 0; k < touch.contactCount; k++)
+            {
+                var point = touch.GetContact(k);
+                Vector3 gave = point.impulse;
+                pushed += gave;
+                float lifts = Mathf.Max(0, gave.y);
+                where += point.point * lifts; up += lifts;
+            }
+        }
+        private void OnCollisionEnter(Collision touch) => Take(touch);
+        private void OnCollisionStay(Collision touch) => Take(touch);
+    }
+
     // The bench of S3b's step 0 (Docs/NextMilestonePlan.md): what the body's own body is to be made of.
     //
     // A miner's body is made again as thirteen weighted parts (the eleven of the let-go body, and its two boots as
@@ -34,6 +56,11 @@ namespace WonderGather.Tests
         // (A joint's spring set by rule: no stiffer than makes its own rate, times the step, this much, by the turning
         // weight of the lighter side of the joint; and damped this share of what just stops that side swinging. 0: not.)
         private static float Rule = 0, Damped = 1;
+        // (Which law keeps it: 1, back to where its weight was; 2, from where its weight is going, feeling what
+        // pushes it (over this long, seconds; 0: not) and leaning against it (this fast, a second; no further than
+        // this, metres).)
+        private static int Law = 2;
+        private static float Feels = .1f, Leans = 3, LeansBy = 1, LeansAtMost = .1f, Tracks = 8, Comfort = .03f, KeepsBehind = .035f;
 
         private struct Solid
         {
@@ -72,10 +99,28 @@ namespace WonderGather.Tests
             // Kept by its own torques: where its weight was and how high, when it began; and what each joint gave last.
             public bool keeps, begun;
             public Vector3 centre;
+            // (The second law: where its weight is at ease, over the ground; the place it holds its weight now, which
+            // drifts when it leans; what it feels pushing it from outside (m/s2); and the step before.)
+            public Vector3 rest, held, felt, wentBefore, weightBefore, actedBefore;
+            public bool hasBefore;
             public Quaternion upright;
             public float height;
             public readonly float[] gave = new float[Count];
             public float outside;
+            public readonly Touching[] touches = new Touching[2];
+            public Vector3 acted;
+            // What the ground really gave it in the last step: how hard it bore the body up (newtons), where that
+            // acted, and whether it bore it at all. And how far the real push has been falling short of the meant one.
+            public Vector3 realAt, short_;
+            public float realUp;
+            public bool realKnown, atItsEdge;
+            public void Ground()
+            {
+                Vector3 at = Vector3.zero; float up = 0;
+                for (int i = 0; i < 2; i++) if (touches[i] != null) { at += touches[i].where; up += touches[i].up; touches[i].Clear(); }
+                realUp = up / Step; realKnown = up > 1e-6f;
+                if (realKnown) realAt = at / up;
+            }
             public float Whole() { float m = 0; for (int i = 0; i < Count; i++) m += Mass(i); return m; }
             public Vector3 Weight() { Vector3 c = Vector3.zero; float m = 0; for (int i = 0; i < Count; i++) { c += Centre(i) * Mass(i); m += Mass(i); } return c / m; }
             public Vector3 WeightGoes() { Vector3 v = Vector3.zero; float m = 0; for (int i = 0; i < Count; i++) { v += Goes(i) * Mass(i); m += Mass(i); } return v / m; }
@@ -323,6 +368,7 @@ namespace WonderGather.Tests
                     if (articulated) built.link[i].inertiaTensor = built.link[i].inertiaTensor * BootTurns;
                     else built.solid[i].inertiaTensor = built.solid[i].inertiaTensor * BootTurns;
                 }
+            for (int i = 0; i < 2; i++) built.touches[i] = made[Foot + i].AddComponent<Touching>();
             // Its own parts do not strike one another (it only stands here).
             var solids = built.root.GetComponentsInChildren<Collider>();
             for (int a = 0; a < solids.Length; a++)
@@ -357,6 +403,7 @@ namespace WonderGather.Tests
         {
             float g = Physics.gravity.magnitude, whole = body.Whole();
             Vector3 weight = body.Weight(), goes = body.WeightGoes();
+            body.Ground();
             var sole = new Vector3[2];
             for (int i = 0; i < 2; i++)
             {
@@ -364,22 +411,66 @@ namespace WonderGather.Tests
                 sole[i] = body.Of(Foot + i).TransformPoint(s.at + s.turned * new Vector3(0, -.5f * s.size.y, 0));
             }
             float ground = .5f * (sole[0].y + sole[1].y), high = weight.y - ground;
-            if (!body.begun) { body.begun = true; body.centre = weight; body.height = high; body.upright = body.Of(Hips).rotation; }
+            if (!body.begun)
+            {
+                body.begun = true; body.centre = weight; body.height = high; body.upright = body.Of(Hips).rotation;
+                body.rest = Vector3.ProjectOnPlane(weight, Vector3.up); body.held = body.rest;
+            }
             // (A body that is down does not push as if it stood: below six tenths of its height it gives nothing here.
             // In the game that is where it is let go into the fall.)
             if (float.IsNaN(high) || high < .6f * body.height) { for (int j = 0; j < Count; j++) body.gave[j] = 0; body.outside = 0; return; }
-            Vector3 back = quick * quick * Vector3.ProjectOnPlane(body.centre - weight, Vector3.up) - 2 * quick * Vector3.ProjectOnPlane(goes, Vector3.up);
             float rise = Mathf.Clamp(100 * (body.height - high) - 20 * goes.y, -.5f * g, g);
-            Vector3 push = scaled * whole * (back + Vector3.up * (g + rise));
-            // Where the push must act, on the ground under its weight.
-            Vector3 acts = weight - Vector3.up * high - back * (high / (g + rise));
+            Vector3 back, push, acts;
+            if (Law < 2)
+            {
+                // The first law: back to where its weight was, as quick as `quick`, without swinging past.
+                back = quick * quick * Vector3.ProjectOnPlane(body.centre - weight, Vector3.up) - 2 * quick * Vector3.ProjectOnPlane(goes, Vector3.up);
+                // Where the push must act, on the ground under its weight.
+                acts = weight - Vector3.up * high - back * (high / (g + rise));
+            }
+            else
+            {
+                // The second law. A standing body falls away from where the ground pushes it, at a rate of its own
+                // (the root of gravity over its height). So what matters is where its weight is *going*: its place
+                // and its speed over that rate. The push must act beyond that point to bring it back.
+                float falls = Mathf.Sqrt((g + rise) / Mathf.Max(.1f, high));
+                // What pushes it from outside: how its weight really went in the last step, beyond what its own
+                // push from the ground gave it. Felt over a tenth of a second, not at once.
+                // (Where the ground's push really acted in that step is known from what touched the boots; where it
+                // was only meant to act is used when nothing is known.)
+                if (body.hasBefore && Feels > 0)
+                {
+                    Vector3 pushedAt = body.realKnown && Tracks > 0 ? body.realAt : body.actedBefore;
+                    Vector3 seen = Vector3.ProjectOnPlane(goes - body.wentBefore, Vector3.up) / Step - falls * falls * Vector3.ProjectOnPlane(body.weightBefore - pushedAt, Vector3.up);
+                    body.felt = Vector3.ClampMagnitude(Vector3.Lerp(body.felt, seen, Mathf.Clamp01(Step / Feels)), 4);
+                }
+                // The real push falls short of the meant one (by a fifth or so: the legs are not weightless rods): it
+                // means its push further by how far, learnt at Tracks a second, and not while the push is at the
+                // edge of its soles (where the real one cannot follow).
+                // (Where it wants the push is kept within its soles; what its legs are then asked for is reckoned as if
+                // the push were to act further out by the shortfall, so that the real one comes to where it is wanted.)
+                if (body.hasBefore && body.realKnown && Tracks > 0)
+                    body.short_ = Vector3.ClampMagnitude(body.short_ + Tracks * Step * Vector3.ProjectOnPlane(body.actedBefore - body.realAt, Vector3.up), .05f);
+                Vector3 going = Vector3.ProjectOnPlane(weight, Vector3.up) + Vector3.ProjectOnPlane(goes, Vector3.up) / falls;
+                Vector3 wants = going + quick / falls * (going - body.held) + body.felt / (falls * falls);
+                acts = new Vector3(wants.x, weight.y - high, wants.z);
+            }
             var at = new Vector3[2];
             body.outside = 0;
+            // (The push is shared between the two boots by how far across it lies, from one boot's middle to the
+            // other's; and each boot carries its share along its own middle line, as far forward or back as the push
+            // is wanted. Only a push wanted outside both boots is taken to a boot's outer side. Asked to carry it at
+            // the point of its sole nearest the wanted place, each boot bore on its inner front corner, and tipped.)
+            Vector3 over = Vector3.ProjectOnPlane(sole[1] - sole[0], Vector3.up);
+            Vector3 side = over.sqrMagnitude > 1e-8f ? over.normalized : Vector3.right;
             for (int i = 0; i < 2; i++)
             {
                 var s = plan[Foot + i].solids[0];
                 Transform foot = body.Of(Foot + i);
-                Vector3 local = Quaternion.Inverse(s.turned) * (foot.InverseTransformPoint(acts) - s.at);
+                float beside = Vector3.Dot(Vector3.ProjectOnPlane(acts - sole[i], Vector3.up), side);
+                float outward = i == 0 ? Mathf.Min(beside, 0) : Mathf.Max(beside, 0);
+                Vector3 aimed = acts - side * (beside - outward);
+                Vector3 local = Quaternion.Inverse(s.turned) * (foot.InverseTransformPoint(aimed) - s.at);
                 Vector3 within = new Vector3(Mathf.Clamp(local.x, -.5f * s.size.x + .01f, .5f * s.size.x - .01f), -.5f * s.size.y, Mathf.Clamp(local.z, -.5f * s.size.z + .01f, .5f * s.size.z - .01f));
                 at[i] = foot.TransformPoint(s.at + s.turned * within);
             }
@@ -387,16 +478,51 @@ namespace WonderGather.Tests
             float share = Mathf.Clamp01(Vector3.Dot(acts - sole[0], across) / Mathf.Max(1e-6f, across.sqrMagnitude));
             Vector3 acted = Vector3.Lerp(at[0], at[1], share);
             body.outside = Vector3.ProjectOnPlane(acts - acted, Vector3.up).magnitude;
+            body.acted = acted;
+            body.atItsEdge = body.outside > .002f;
             // The push can only act where the soles are: so it pushes sideways only as much as a push from there,
             // through its weight, does. (Asked for more, its legs paw at the ground and throw its trunk the other way.)
             back = Vector3.ProjectOnPlane(weight - acted, Vector3.up) * ((g + rise) / Mathf.Max(.1f, high));
             push = scaled * whole * (back + Vector3.up * (g + rise));
+            if (Law >= 2)
+            {
+                // It leans against what it feels: the place it holds its weight goes the other way from the push, by
+                // this share of what would bring its own push back to where it acts at ease, and no further than
+                // LeansAtMost (so that, let go, it still has ground behind its weight). It comes to that, and back
+                // from it, at Leans a second. (A first way, the held place drifting until the push acted at ease,
+                // took Round's weight to the edge of its heels against 30 N, ran away when the pull ended, and it
+                // fell over backwards.)
+                // It leans only for what it cannot take standing as it is (its push may act Comfort from where it
+                // does at ease before it leans at all), and never so far that less than KeepsBehind of sole is left
+                // behind its weight: pulled with 50 N and then let go at once, Round, leaning 40 mm, went over
+                // backwards with 17 mm of heel behind its weight.
+                float fallsAt = Mathf.Sqrt((g + rise) / Mathf.Max(.1f, high));
+                Vector3 asked = body.felt / (fallsAt * fallsAt);
+                Vector3 leansTo = body.rest;
+                if (asked.magnitude > Comfort)
+                {
+                    Vector3 way = -asked.normalized;
+                    float reach = 0;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        var s = plan[Foot + i].solids[0];
+                        for (int c = 0; c < 4; c++)
+                        {
+                            Vector3 corner = body.Of(Foot + i).TransformPoint(s.at + s.turned * new Vector3((c & 1) == 0 ? -.5f * s.size.x : .5f * s.size.x, -.5f * s.size.y, (c & 2) == 0 ? -.5f * s.size.z : .5f * s.size.z));
+                            reach = Mathf.Max(reach, Vector3.Dot(Vector3.ProjectOnPlane(corner, Vector3.up) - body.rest, way));
+                        }
+                    }
+                    leansTo = body.rest + way * Mathf.Min(LeansBy * (asked.magnitude - Comfort), Mathf.Min(LeansAtMost, Mathf.Max(0, reach - KeepsBehind)));
+                }
+                body.held = Vector3.Lerp(body.held, leansTo, Mathf.Clamp01(Leans * Step));
+                body.wentBefore = goes; body.weightBefore = weight; body.actedBefore = acted; body.hasBefore = true;
+            }
             var torque = new Vector3[Count];
             for (int i = 0; i < 2; i++)
             {
                 Vector3 pushes = (i == 0 ? 1 - share : share) * push;
                 foreach (int j in new[] { Thigh + i, Shin + i, Foot + i })
-                    torque[j] -= Vector3.Cross(at[i] - body.Of(j).TransformPoint(plan[j].anchor), pushes);
+                    torque[j] -= Vector3.Cross(at[i] + (Law >= 2 ? body.short_ : Vector3.zero) - body.Of(j).TransformPoint(plan[j].anchor), pushes);
             }
             // Its hips keep its trunk as upright as it began: what turns the hips back is taken from the two thighs,
             // by how much each leg bears. (Nothing else holds the trunk over the legs: the push above passes
@@ -428,6 +554,7 @@ namespace WonderGather.Tests
 
         private static string Called(bool articulated, float fullAt) => (articulated ? "articulation" : "joints") + string.Format(CultureInfo.InvariantCulture, ", full at {0:0} degrees, {1:0} steps a second", fullAt, 1 / Step)
             + (Rule > 0 ? string.Format(CultureInfo.InvariantCulture, ", springs by rule {0:0.00} damped {1:0.0}", Rule, Damped) : "")
+            + (Law >= 2 ? string.Format(CultureInfo.InvariantCulture, ", second law (feels over {0:0.00} s, leans {1:0.0} a second)", Feels, Leans) : "")
             + (BootTurns != 1 ? string.Format(CultureInfo.InvariantCulture, ", a boot's turning weight {0:0} times its own", BootTurns) : "") + (BootWeighs > 0 ? string.Format(CultureInfo.InvariantCulture, ", a boot of {0:0.0} kg", BootWeighs) : "");
 
         // What the engine's numbers mean: one arm, a kilogram with its weight half a metre from a hinge, held out level
@@ -574,6 +701,7 @@ namespace WonderGather.Tests
             Step = Numbers("-ownStep", .02f)[0];
             BootTurns = Numbers("-ownBootTurns", 1)[0]; BootWeighs = Numbers("-ownBootWeighs", 0)[0];
             Rule = Numbers("-ownRule", 0)[0]; Damped = Numbers("-ownDamped", 1)[0];
+            Law = (int)Numbers("-ownLaw", 2)[0]; Feels = Numbers("-ownFeels", .1f)[0]; Leans = Numbers("-ownLeans", 3)[0]; LeansAtMost = Numbers("-ownLeansAtMost", .1f)[0]; LeansBy = Numbers("-ownLeansBy", 1)[0]; Comfort = Numbers("-ownComfort", .03f)[0]; KeepsBehind = Numbers("-ownKeepsBehind", .035f)[0]; Tracks = Numbers("-ownTracks", 8)[0];
             bool said = Numbers("-ownSay", 0)[0] > 0;
             string kinds = CaptureTools.Argument("-ownKinds") ?? "joints,articulation";
             var culture = CultureInfo.InvariantCulture;
@@ -763,6 +891,15 @@ namespace WonderGather.Tests
                             UnityEngine.Object.Destroy(body.root);
                             yield return null;
 
+                            // (How far its boots reach, ahead of where it stands and behind.)
+                            float toes = float.MinValue, heels = float.MaxValue;
+                            for (int i = 0; i < 2; i++)
+                                foreach (var s in plan[Foot + i].solids)
+                                    for (int c = 0; c < 8; c++)
+                                    {
+                                        Vector3 corner = plan[Foot + i].at + plan[Foot + i].turned * (s.at + s.turned * Vector3.Scale(s.size * .5f, new Vector3((c & 1) == 0 ? -1 : 1, (c & 2) == 0 ? -1 : 1, (c & 4) == 0 ? -1 : 1)));
+                                        toes = Mathf.Max(toes, Vector3.Dot(corner - spot, away)); heels = Mathf.Min(heels, Vector3.Dot(corner - spot, away));
+                                    }
                             // ---- 2. It is pulled at the chest, forwards, for two and a half seconds, and left three.
                             foreach (float pull in fell ? new float[0] : pulls)
                             {
@@ -778,10 +915,15 @@ namespace WonderGather.Tests
                                     if (keeps) Keep(body, plan, quick, fullAt, slows);
                                     Physics.Simulate(Step);
                                     if (said && keeps && k % Mathf.RoundToInt(.25f / Step) == 0)
-                                        Debug.Log(string.Format(culture, "OWN   {0} pulled {1:0} N, {2:0.00} s: its weight {3:0} mm ahead of where it began and going {4:0} mm/s; the push it wants is {5:0} mm outside its soles; its trunk leans {6:0.0} degrees; boots tipped {7:0.0} and {8:0.0}; an ankle gives {9:0} and {10:0}, a knee {11:0} and {12:0}, a hip {13:0} and {14:0}",
+                                        Debug.Log(string.Format(culture, "OWN   {0} pulled {1:0} N, {2:0.00} s ground: it bore {3:0} N a step ago, {4:0} mm ahead of where the body stands (the keeper meant {5:0}; it has learnt the real one falls {6:0} mm short); its weight is {7:0} mm ahead of where it stands; its toes reach {8:0} and its heels {9:0} mm",
+                                            name, pull, k * Step, body.realUp, Vector3.Dot(body.realAt - spot, away) * 1000, Vector3.Dot(body.actedBefore - spot, away) * 1000, Vector3.Dot(body.short_, away) * 1000,
+                                            Vector3.Dot(body.Weight() - spot, away) * 1000, toes * 1000, heels * 1000));
+                                    if (said && keeps && k % Mathf.RoundToInt(.25f / Step) == 0)
+                                        Debug.Log(string.Format(culture, "OWN   {0} pulled {1:0} N, {2:0.00} s: its weight {3:0} mm ahead of where it began and going {4:0} mm/s; the push it wants is {5:0} mm outside its soles; its trunk leans {6:0.0} degrees; boots tipped {7:0.0} and {8:0.0}; an ankle gives {9:0} and {10:0}, a knee {11:0} and {12:0}, a hip {13:0} and {14:0}; it feels {15:0.00} m/s2 from outside and holds its weight {16:0} mm from where it rests",
                                             name, pull, k * Step, Vector3.Dot(body.Weight() - body.centre, away) * 1000, Vector3.Dot(body.WeightGoes(), away) * 1000, body.outside * 1000,
                                             Quaternion.Angle(body.upright, body.Of(Hips).rotation), Quaternion.Angle(plan[Foot].turned, body.Of(Foot).rotation), Quaternion.Angle(plan[Foot + 1].turned, body.Of(Foot + 1).rotation),
-                                            body.gave[Foot], body.gave[Foot + 1], body.gave[Shin], body.gave[Shin + 1], body.gave[Thigh], body.gave[Thigh + 1]));
+                                            body.gave[Foot], body.gave[Foot + 1], body.gave[Shin], body.gave[Shin + 1], body.gave[Thigh], body.gave[Thigh + 1],
+                                            Vector3.Dot(body.felt, away), Vector3.Dot(body.held - body.rest, away) * 1000));
                                     Vector3 head = body.Of(Head).position;
                                     if (head.y - spot.y < .7f * (headBefore.y - spot.y)) { down = true; break; }
                                     leant = Mathf.Max(leant, Vector3.Dot(head - headBefore, away));
