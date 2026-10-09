@@ -2050,6 +2050,28 @@ with the settings, are in
   wrist takes the free wrist's swing (which `CarryAtSide` reduces to
   `Keeps`). `HungThingTests` asks that the carrying hand goes with the
   walk (12 mm to 30 cm, from the hips).
+- **S3b step 0 (October 9): `Tests/PlayMode/BodysOwnBench.cs`** (run
+  only when asked; nothing of the game uses it). It reads the let-go
+  body as `PhysicalFall.LetGo()` makes it, takes the boots off the shins
+  (thirteen parts), and builds it as rigid bodies with
+  `ConfigurableJoint`s or as `ArticulationBody`s; `Keep(...)` is the
+  first keeper (the legs' torques from the push wanted from the ground,
+  put on the two parts of each joint, equal and opposite). It steps the
+  physics itself (`SimulationMode.Script`). `-ownOut`, `-ownMiner`,
+  `-ownKinds joints,articulation,joints+torques,articulation+torques`,
+  `-ownFullAt`, `-ownSlows`, `-ownStep`, `-ownFor`, `-ownPulls`,
+  `-ownCrowd`, `-ownCrowdFor`, `-ownIterations`, `-ownAnkle`,
+  `-ownStrong`, `-ownQuick`, `-ownBootTurns`, `-ownBootWeighs`,
+  `-ownSay 1` (a trace of every joint, and of a pull). `OneJoint` and
+  `OneAnkle` are two plain tests of what the engine's springs do.
+  **Learnt:** an `ArticulationDrive`'s stiffness is newton metres a
+  radian and exact, and `ArticulationBody.driveForce` is true newton
+  metres; a stiff drive between a heavy part and a light one that lies
+  on the ground does not hold at large steps, and heavy damping there
+  makes it worse (soften it, or step finer); the engine's reading of a
+  resting articulation part's speed is not to be trusted (take it from
+  positions); a part's `linearDamping`/`angularDamping` is a push from
+  nowhere; a reviewer's check is worth its cost.
 - **How long a fallen miner lies (October 9).** `PhysicalFall`:
   `Blow`, `HeadStruck`, `LiesFor`, `Lain`, `Shaken`, `Dazed`,
   `OutOfBreath`, `HowLongItLies()`; the speed lost by the hips, trunk

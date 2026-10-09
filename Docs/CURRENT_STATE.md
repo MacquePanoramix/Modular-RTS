@@ -3,8 +3,34 @@
 **Updated:** October 9, 2026.
 
 - **Now: S3b, the body's own. Approved by Luis on October 9; step 0 is
-  begun** ([the plan](NextMilestonePlan.md);
+  done, and step 1 is next** ([the plan](NextMilestonePlan.md);
+  [the design as it is built](Design/TheBodysOwn.md);
   [Luis's answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
+  - **Step 0 found** ([figures](Design/TheBodysOwn.md#step-0-the-ground-for-it-october-9)):
+    - **A body can stand by its own joints as still as Luis asked:**
+      all three miners, twenty seconds, their heads within 0.1 to
+      0.35 mm once settled; twenty-five of twenty-five of each on a
+      level floor.
+    - **That was at 200 steps of physics a second; the game takes 50.**
+      At 100, Long and Round stood and Small did not. How few will do
+      is not settled.
+    - **Not by the engine's joint springs alone:** by torques worked
+      out for its legs each step, with soft springs holding the pose.
+    - **It does not lean yet:** Round took a pull of 30 N; Small and
+      Long fell at it. Today's posed body leans at 50 to 150 N.
+    - **Cost:** a tenth to a fifth of a millisecond of each fiftieth of
+      a second for one worker (in the Editor). A crowd cannot have it.
+    - **Nothing in the game is changed:** it is a bench and figures.
+  - **Three reviewers changed its conclusion.** The first writing said
+    the physics must step four to ten times as fast. They showed the
+    figures did not carry that; two of their trials, run the same day,
+    brought it down
+    ([what they said](Design/TheBodysOwn.md#what-the-reviewers-said)).
+  - **What it changes:** standing is a keeper to be designed; the
+    physics' step is to be settled first in step 1, and whatever it
+    becomes, what is built on the physics (the fall, the getting up,
+    what hangs, the pickaxe in the hands) has to be checked at it.
+    Step 1 is larger than the plan said.
   - **Decided by Luis:** the body moved by its own joints replaces "no
     active ragdoll"; it comes before S4 ("we will probably end up doing a
     big rework I imagine for it").
@@ -12,10 +38,6 @@
     ("they looked pretty good for me").
   - **Breathing:** wanted, "following the visual aesthetic of the game";
     drawn on the chest if that reads well, another way if not. Open.
-  - **Step 0, the ground for it:** ankles (the boot a part of its own);
-    the test that nothing pushes the body from nowhere; today's body
-    measured for the table of "stable"; what a body's own costs in the
-    frame. It gives figures, and nothing in the game changes by it.
 - **Before it: Luis's direction of October 9, and what was built on it**
   ([the message](Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md);
   [the round's page](Reviews/2026-10-09_TheBodysOwn_Round.md)).
@@ -745,8 +767,10 @@ Still valid from September 30:
    [what to look at](Playtests/MinersPlaytest.md#after-luiss-play-of-s3-what-to-look-at-now-october-8)).
    If it does not open, what happens when it is tried is the first
    thing to know.
-2. **Step 0 of [the body's own](NextMilestonePlan.md#steps)** (begun
-   October 9): figures, shown to Luis before step 1 is built on them.
+2. **Step 1 of [the body's own](NextMilestonePlan.md#what-step-0-changed-october-9):**
+   how often the physics steps; the body's own body in the game beside
+   the posed one; standing still and leaning against a pull, all three
+   miners; then life in it.
 
 The items below are still open from before (October 6 and earlier).
 

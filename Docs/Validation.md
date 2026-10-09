@@ -2912,3 +2912,49 @@ the whole of it in [the round's page](Reviews/2026-10-09_TheBodysOwn_Round.md).
   with a tool in the hands, on a slope, or against something; a third
   round of judges. Long's blows at a boulder (one failure in five runs
   on October 9) passed here and are still not looked into.
+
+## S3b step 0 — the ground for the body's own (October 9)
+
+The whole of it, with its tables: [Design/TheBodysOwn.md](Design/TheBodysOwn.md#step-0-the-ground-for-it-october-9).
+No code of the game was changed; the bench is run only when asked.
+
+- **`PhysicalBalanceBench`,** the three miners, seven pulls each (50 to
+  550 N at the chest for 2.5 s): today's posed body leans without
+  stepping up to about a sixth of its weight, steps at about a quarter,
+  and falls from about a third (Long) to three quarters (Small). The
+  bar for the body's own.
+- **`BodysOwnBench.OneJoint`** (new): one arm on one spring. An
+  articulation sags as reckoned (2.83 degrees for 2.81).
+- **`BodysOwnBench.OneAnkle`** (new): 86 kg on one stiffly sprung ankle
+  and a boot of 1.55 kg, leaning a degree: falls at 50 steps a second
+  in all four ways it was made; stands in all four at 500; in two or
+  three between.
+- **`BodysOwnBench.Bench`** (new), each miner in thirteen parts,
+  standing twenty seconds on the path, and twenty-five on a level
+  floor. Held by the engine's springs alone (stiff): all fall within
+  3 s at 50 steps a second and stand swaying 5 to 15 mm at 500. Kept by
+  torques worked out for its legs, its joints sprung softly: at 200
+  steps a second all three stand (heads within 0.08 to 0.35 mm; 25 of
+  25 after twenty seconds); at 100, Long and Round (0.11 and 0.13 mm;
+  25 of 25) and not Small (14 of 25); at 50, 14 of 25 of Small and none
+  of Long. Pulled with 30 N for 2.5 s at 200: Round stands and comes
+  back to 0.1 mm; Small and Long fall.
+- **In the air** (a second and a half, swinging its limbs): an
+  articulation's weight leaves its course by 0.004 m/s at 500 steps a
+  second and 0.03 to 0.08 at 50; with its parts slowed as the let-go
+  body's are today, by 0.54 to 0.62 m/s.
+- **Cost,** in the Editor, for each fiftieth of a second: twenty-five
+  standing articulations kept by their own torques, 5.2 to 5.8 ms at
+  200 steps a second and 2.6 to 2.8 ms at 100.
+- **Three reviewers** who did not make it (separate agents: the
+  physicist, the sceptic, the builder) read the first write-up, the
+  bench and the results. They showed that the first write-up's largest
+  claim (the physics must step four to ten times as fast) was not
+  carried by its figures; two of their trials were run and the write-up
+  rewritten
+  ([what they said](Design/TheBodysOwn.md#what-the-reviewers-said)).
+- **Not run:** the whole suite and the build (nothing of the game
+  changed); the built player; a slope; a body carrying anything;
+  torques with no springs; the plain tests near the ground. **Not
+  confirmed:** that the engine's other solver was in force when it was
+  tried.

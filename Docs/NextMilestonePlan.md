@@ -16,8 +16,13 @@ movement.
 steps built, waiting for Luis's play) is archived in
 [Plans/S3_WeightAndStrengthAtTheRock.md](Plans/S3_WeightAndStrengthAtTheRock.md).
 
-**Where it stands:** step 0 is begun. Nothing else here is built except
-where it says "exists".
+**The design as it is built:** [Design/TheBodysOwn.md](Design/TheBodysOwn.md).
+
+**Where it stands:** step 0 is done (October 9): figures, and a bench;
+nothing in the game is changed by it
+([what it found](Design/TheBodysOwn.md#step-0-the-ground-for-it-october-9)).
+**It changed the plan:** see "What step 0 changed", below. Nothing else
+here is built except where it says "exists".
 
 ## The order of stages (October 9)
 
@@ -144,7 +149,7 @@ Each is shown to Luis before the next is built on it.
 
 | | Step | It is to bring | What Luis sees |
 |---|---|---|---|
-| 0 | **The ground for it.** Ankles: the boot becomes a part of its own (today the shin and the boot are one, and a body cannot balance at an ankle it does not have). The test that nothing pushes from nowhere. Today's posed body measured for the table above. What a body's own costs in the frame, one miner and a crowd | | Figures |
+| 0 (done) | **The ground for it.** Ankles: the boot becomes a part of its own (today the shin and the boot are one, and a body cannot balance at an ankle it does not have). The test that nothing pushes from nowhere. Today's posed body measured for the table above. What a body's own costs in the frame, one miner and a crowd | | Figures |
 | 1 | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
 | 2 | **From its knees onto its feet.** The half second that is posed in the getting up. Then the whole of it, from the fall to standing, is the body's own | Not all on one clock (2) | A pushed miner getting up with nothing taking over |
 | 3 | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
@@ -154,6 +159,40 @@ Each is shown to Luis before the next is built on it.
 | 7 | **Then S4,** each of its movements built this way from the start | | The proposal for S4, with its first question answered |
 | At any point | **The fall, again.** It is the body's own already, and it is the furthest of all from a real body: a young person who falls gets a hand to the ground nine times in ten and keeps the head off it eight in nine ([the research, part 4](Research/2026-10-09_AliveAndTheBodysOwn.md#4-action-by-action)); a miner gets no hand down and strikes its head almost every time. Arms that reach for the ground, and a head kept off it | Gets ready (3); shows its effort (8) | A pushed miner catching itself on its hands |
 
+### What step 0 changed (October 9)
+
+- **Standing is a keeper to be designed, not springs to be set.** The
+  engine's joint springs, set stiffly towards a standing pose, do not
+  hold a heavy body over a light boot. What stood still (heads within
+  0.1 to 0.35 mm, twenty-five of twenty-five for twenty seconds) was a
+  body whose legs give torques worked out each step from the push it
+  wants from the ground, its joints held softly towards their pose.
+- **The physics may have to step faster where a body's own is; how much
+  is not settled.** All three stood at 200 steps a second; Long and
+  Round at 100; none reliably at the game's 50. How the joints are
+  sprung mattered as much as the rate, and the cheapest settings were
+  not tried. Step 1 begins by settling it.
+- **Whatever the step becomes, what is already built is touched.** The
+  fall, the getting up, what hangs on the body and the pickaxe in the
+  hands are stepped by the same physics. Stepped finer they behave
+  differently, and the getting up's poses would have to be found again.
+  That was step 2's; it may begin in step 1.
+- **It does not lean yet.** Round took a pull of 30 N; Small and Long
+  fell at it. Today's body leans at 50 to 150 N.
+- **Step 1 is larger** than "it stands by its own ankles, hips and
+  back" sounded. Its order: (a) how often the physics steps, counted
+  over many starts on all three miners; (b) the body's own body in the
+  game, as an articulation of thirteen parts, beside the posed one,
+  switched on the panel, and everything built before checked at that
+  step; (c) the keeper: standing still, leaning against a pull as
+  today's body does, a joint giving no more than it has, the ground
+  known by what touches it; (d) life in it: weight shifting, breath, the
+  head and eyes.
+- **A crowd of bodies of their own cannot be afforded** (one costs a
+  tenth to a fifth of a millisecond of each fiftieth of a second; a
+  hundred, more than the frame). A far-off crowd keeps the posed body.
+  That was open in this plan and stays open for the full game.
+
 Lying is part of step 1: a body that lies should breathe and stir. A
 stir before it gets up was tried on October 9 and taken out again (see
 [the round of October 9](Reviews/2026-10-09_TheBodysOwn_Round.md)).
@@ -161,6 +200,9 @@ stir before it gets up was tried on October 9 and taken out again (see
 ## What it will cost, said plainly
 
 - **Time.** By my estimate, weeks for steps 0 to 3 and more for the walk.
+  (After step 0: step 1 alone is weeks. Standing still is had in a
+  bench; standing against a pull, in the game, on all three miners, with
+  everything built before still working, is not.)
   The walk is the hard one: walks made this way are known to look stiff
   until their numbers are searched for it.
 - **It can fail in ways nobody planned.** A body pushed by forces will,

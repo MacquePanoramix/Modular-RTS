@@ -35,6 +35,11 @@ now [the plan in force](../NextMilestonePlan.md)).
 **What this starts.** The proposal becomes the plan in force, and its
 step 0 (the ground for it) is begun.
 
+**Later the same day,** while step 0's reviewers were at work (they were
+cut off, and were called again): "I hit my usage limit while you were
+working, but it has reset now. Please continue from where you left
+off."
+
 **What Luis did not say:**
 
 - **Whether the build has been opened.** Nothing of the playtest round

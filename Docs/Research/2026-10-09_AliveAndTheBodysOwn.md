@@ -11,11 +11,12 @@ to lay down".
 
 This page adds to
 [the research of October 8](2026-10-08_RealBodiesAndHowToJudgeThem.md),
-which was of real bodies and of how to judge a movement. It has four
+which was of real bodies and of how to judge a movement. It has five
 parts: how long a fallen body lies; what makes a movement read as alive
 (the media studies); how a body is moved by its own joints and kept
-stable; and, action by action, what a real body does, how it is made to
-read, and what ours does.
+stable; action by action, what a real body does, how it is made to
+read, and what ours does; and what a light boot under a heavy body asks
+of the physics.
 
 **How far it can be trusted.** Most of it was read as search
 summaries and abstracts on October 9, not as whole papers: a figure
@@ -287,6 +288,41 @@ and is not repeated.
 
 † From what I know; not read again today.
 
+## 5. A light boot under a heavy body (read for step 0)
+
+**Found** (as search summaries, on October 9, after the bench had shown
+it):
+
+- **A joint's spring is only as quick as its lighter side.** The makers
+  of the engine's physics say a drive has a rate of its own, the root of
+  its stiffness over the mass or inertia of the *lightest* part of the
+  pair it joins, and that this rate times the step should not be much
+  more than one; that stiff drives on light parts in contact with other
+  hard things (a foot on the ground) are the usual cause of trouble;
+  and that the first cures are a softer drive and more turning weight
+  on the light part, before a smaller step
+  ([NVIDIA, articulation stability guide](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/guides/articulation_stability_guide.html)).
+- **Bodies walked by joint torques are stepped fast:** one to two
+  thousand times a second by tradition; a walker of the SIMBICON kind
+  was brought down to 225 a second by tuning its gains and adding
+  feedback on the standing leg, and the lower the rate, the narrower
+  the settings that work
+  ([Carensac and others, 2018](https://hal.archives-ouvertes.fr/hal-01884827)).
+- **A spring worked out from the state a step ahead** stays steady at
+  large steps and high stiffness
+  ([Tan, Liu and Turk, 2011](https://www.cc.gatech.edu/~turk/my_papers/stable_pd.pdf));
+  bodies trained with it are commonly stepped 120 times a second, their
+  targets set 30 times a second.
+- **The same makers recommend their other solver** for articulations,
+  with more position rounds to shorten the step in effect.
+
+**For ours.** The bench agrees with the direction of all of it
+([step 0](../Design/TheBodysOwn.md#step-0-the-ground-for-it-october-9)):
+softer springs stood where stiff ones fell, at half the steps. I read
+the first of these too late: I had already concluded that the step
+must be much smaller, and three reviewers took that out. How few steps
+will do is step 1's first question.
+
 ## Sources
 
 All looked up on October 9, 2026 (most as search summaries and abstracts: see the top of the page), unless marked †.
@@ -362,6 +398,14 @@ All looked up on October 9, 2026 (most as search summaries and abstracts: see th
 - *Influence of the Backward Fall Technique on the Sagittal Linear
   Acceleration of the Head during a Fall.* 2022.
   <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8775844/>
+- NVIDIA. *Articulation and Robot Simulation Stability Guide.*
+  <https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/guides/articulation_stability_guide.html>
+- Carensac S. and others. *Physics-based control of walking virtual
+  characters in low frequency simulations.* 2018.
+  <https://hal.archives-ouvertes.fr/hal-01884827>
+- Tan J., Liu K., Turk G. *Stable Proportional-Derivative Controllers.*
+  IEEE Computer Graphics and Applications, 2011.
+  <https://www.cc.gatech.edu/~turk/my_papers/stable_pd.pdf>
 - † Wang J., Fleet D., Hertzmann A. *Optimizing Walking Controllers.*
   SIGGRAPH Asia 2009. (From what I know; not read again today.)
 - Ubisoft La Forge. *DReCon: Data-Driven Responsive Control of
