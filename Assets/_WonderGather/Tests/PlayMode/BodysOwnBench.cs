@@ -365,6 +365,9 @@ namespace WonderGather.Tests
             }
             float ground = .5f * (sole[0].y + sole[1].y), high = weight.y - ground;
             if (!body.begun) { body.begun = true; body.centre = weight; body.height = high; body.upright = body.Of(Hips).rotation; }
+            // (A body that is down does not push as if it stood: below six tenths of its height it gives nothing here.
+            // In the game that is where it is let go into the fall.)
+            if (float.IsNaN(high) || high < .6f * body.height) { for (int j = 0; j < Count; j++) body.gave[j] = 0; body.outside = 0; return; }
             Vector3 back = quick * quick * Vector3.ProjectOnPlane(body.centre - weight, Vector3.up) - 2 * quick * Vector3.ProjectOnPlane(goes, Vector3.up);
             float rise = Mathf.Clamp(100 * (body.height - high) - 20 * goes.y, -.5f * g, g);
             Vector3 push = scaled * whole * (back + Vector3.up * (g + rise));
@@ -416,6 +419,7 @@ namespace WonderGather.Tests
                 // (A hinge gives only about its own line; what is across it is borne by the joint itself.)
                 if (plan[j].hinge) { Vector3 line = body.Of(j).right; torque[j] = line * Vector3.Dot(line, torque[j]); }
                 torque[j] = Vector3.ClampMagnitude(torque[j], plan[j].strength);
+                if (float.IsNaN(torque[j].x) || float.IsNaN(torque[j].y) || float.IsNaN(torque[j].z)) torque[j] = Vector3.zero;
                 body.gave[j] = torque[j].magnitude;
                 body.Turn(j, torque[j]);
                 body.Turn(From[j], -torque[j]);
@@ -563,6 +567,9 @@ namespace WonderGather.Tests
             float slows = Numbers("-ownSlows", .08f)[0], lasts = Numbers("-ownFor", 30)[0], ankleGives = Numbers("-ownAnkle", .7f)[0], stronger = Numbers("-ownStrong", 1)[0];
             int size = (int)Numbers("-ownSize", 400)[0];
             float quick = Numbers("-ownQuick", 5)[0], crowdFor = Mathf.Max(6, Numbers("-ownCrowdFor", 6)[0]);
+            // -ownJolt: each of a crowd is set going at this speed (m/s) as it begins, each a different way round the
+            // compass (so that they are so many different starts, and not one start so many times).
+            float jolt = Numbers("-ownJolt", 0)[0];
             Iterations = (int)Numbers("-ownIterations", 14, 4)[0]; VelocityIterations = (int)Numbers("-ownIterations", 14, 4)[1];
             Step = Numbers("-ownStep", .02f)[0];
             BootTurns = Numbers("-ownBootTurns", 1)[0]; BootWeighs = Numbers("-ownBootWeighs", 0)[0];
@@ -837,6 +844,14 @@ namespace WonderGather.Tests
                                     Vector3 place = new Vector3((n % side - side / 2) * 1.6f, floorTop - spot.y - (lowest - spot.y) + .002f, (n / side - side / 2) * 1.6f);
                                     crowd.Add(Build(plan, articulated, place, fullAt, slows, 0, 0, false, keeps));
                                 }
+                                var stoodAt = new List<Vector3>();
+                                foreach (var one in crowd) stoodAt.Add(one.Of(Head).position);
+                                if (jolt > 0)
+                                    for (int n = 0; n < crowd.Count; n++)
+                                    {
+                                        Vector3 way = Quaternion.AngleAxis(n * 360f / crowd.Count, Vector3.up) * away;
+                                        for (int i = 0; i < Count; i++) crowd[n].Push(i, crowd[n].Mass(i) * jolt / Step * way, crowd[n].Centre(i));
+                                    }
                                 for (int k = 0; k < Mathf.RoundToInt(1 / Step); k++) { if (keeps) foreach (var one in crowd) Keep(one, plan, quick, fullAt, slows); Physics.Simulate(Step); }
                                 var watch = System.Diagnostics.Stopwatch.StartNew();
                                 for (int k = 0; k < Mathf.RoundToInt(5 / Step); k++) { if (keeps) foreach (var one in crowd) Keep(one, plan, quick, fullAt, slows); Physics.Simulate(Step); }
@@ -846,10 +861,19 @@ namespace WonderGather.Tests
                                 int atSix = 0;
                                 foreach (var one in crowd) if (one.Of(Head).position.y - floorTop > .7f * tall) atSix++;
                                 for (int k = 0; k < Mathf.RoundToInt((crowdFor - 6) / Step); k++) { if (keeps) foreach (var one in crowd) Keep(one, plan, quick, fullAt, slows); Physics.Simulate(Step); }
-                                int standing = 0;
-                                foreach (var one in crowd) if (one.Of(Head).position.y - floorTop > .7f * tall) standing++;
-                                Debug.Log(string.Format(culture, "OWN {0} cost, {1}: {2:0} of it standing on a level floor take {3:0.000} ms more than the place alone ({4:0.000} ms) for each fiftieth of a second, in the Editor; {5} of them still stand after six seconds and {6} after {7:0}",
-                                    name, called, many, each - empty, empty, atSix, standing, crowdFor));
+                                int standing = 0, asItStood = 0;
+                                float furthestOff = 0;
+                                for (int n = 0; n < crowd.Count; n++)
+                                {
+                                    Vector3 head = crowd[n].Of(Head).position;
+                                    if (head.y - floorTop > .7f * tall) standing++;
+                                    // (As it stood: its head no lower than nineteen twentieths of where it was, and within a
+                                    // tenth of its height of there, over the ground.)
+                                    float off = Vector3.ProjectOnPlane(head - stoodAt[n], Vector3.up).magnitude;
+                                    if (head.y - floorTop > .95f * (stoodAt[n].y - floorTop) && off < .1f * tall) { asItStood++; furthestOff = Mathf.Max(furthestOff, off); }
+                                }
+                                Debug.Log(string.Format(culture, "OWN {0} cost, {1}: {2:0} of it standing on a level floor take {3:0.000} ms more than the place alone ({4:0.000} ms) for each fiftieth of a second, in the Editor; {5} of them still stand after six seconds and {6} after {7:0}; {8} stand as they stood (head no lower than 95% and within a tenth of its height of where it was; the furthest of those {9:0} mm off){10}",
+                                    name, called, many, each - empty, empty, atSix, standing, crowdFor, asItStood, furthestOff * 1000, jolt > 0 ? string.Format(culture, "; each was set going at {0:0.00} m/s, each a different way", jolt) : ""));
                                 foreach (var one in crowd) UnityEngine.Object.Destroy(one.root);
                                 yield return null;
                             }
