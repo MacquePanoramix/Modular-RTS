@@ -2858,7 +2858,19 @@ was run.
   try).
 - **The whole PlayMode suite,** alone, on the code as it is: 179 tests; **163 passed, none failed**, 16 are run only when asked (1,410 s).
 - **The release build** was made from that code, and its own measures run: one miner standing 4.4 to 4.6 ms a frame and at its work 4.4 ms; the crowd 4.8, 5.6, 6.3 and 7.9 ms a frame for none, 25, 50 and 100 miners; no exceptions in either log. **The getting up itself was not run in the built player** (nothing falls in those measures).
-- **Not tested:** Luis's eye; any judge; slopes, steps, walls, boulders
-  or bodies in the way; a weak or spent body getting up; a fall with a
-  tool in both hands beyond what the existing test of a fall at work
-  asks.
+- **Three judges of the lantern** (the same way; sheets from behind of
+  Small taking it, walking with it and hanging it back). Two: "reads as
+  real, with a flaw". Three things stood and were put right (the hand
+  that carries goes with the walk; it looks first; the lantern is
+  brought out sooner)
+  ([the table](Reviews/2026-10-08_ThePlaytestRound.md#what-the-judges-of-the-lantern-said-first-round)).
+  `HungThingTests`, with a new check that the carrying hand goes with
+  the walk: 2 of 2 (84 mm for Small, 129 mm for Long).
+- **After that last change:** the whole PlayMode suite, alone: 179 tests; **162 passed, 1 failed**, 16 are run only when asked (1,398 s). The one: `BoulderTests.AMinerMinesABoulderByAClick`, Long's blows landing 31 cm from where the plan put them, for 20 allowed. Run alone three times afterwards it passed each time (15 to 16 cm). Nothing of the swing at the rock was changed in this part, and in the run before this one (the same code but for the lantern's hand) the suite passed, 163 of 163. So Long's blows are near that limit and not steady: **not looked into**.
+- **The release build** was made from the final code and its measures run again: one miner standing 4.4 to 4.7 ms a frame and at its work 4.4 ms; the crowd 5.0, 5.8, 6.3 and 8.0 ms a frame for none, 25, 50 and 100 miners; no exceptions in either log. **Neither the getting up nor the lantern was run in the built player.**
+- **Not tested:** Luis's eye; a second round of any judges; **the walk
+  by any judge** (the pictures taken for it hide the legs in the
+  grass); the hook and the grip from the side; slopes, steps, walls,
+  boulders or bodies in the way of a get-up; a weak or spent body
+  getting up; a fall with a tool in both hands beyond what the existing
+  test of a fall at work asks.

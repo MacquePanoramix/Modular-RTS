@@ -58,8 +58,16 @@
     "reads as real, with a flaw". What stood of the turn and the pick-up
     was put right; of the getting up, most stays open (it sits folded a
     second and a half before it rises; three bodies move on one clock;
-    Long rests on its head). No second round of any yet; none of the
-    walk or the lantern.
+    Long rests on its head). And one of the lantern (the end of the
+    fourth part): the hand that carried it was held still while the
+    body walked; it goes with the walk now, and the body looks before
+    it reaches. No second round of any yet. **The walk has not been
+    judged:** the pictures taken for it hide the legs in the grass.
+  - **Found in the last run, and not looked into:** Long's blows at a
+    boulder landed 31 cm from where they were aimed, once in five runs
+    of that test (it allows 20; the other four were 15 to 16). Nothing
+    of the swing was changed in the round's fourth part. Long's swing
+    is near that limit, and not steady.
   - **For Luis to decide:** Long has two pickaxes (the one modelled on
     its back, and its own in its hands).
   - **How movements are checked now**

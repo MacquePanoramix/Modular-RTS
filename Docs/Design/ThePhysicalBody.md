@@ -1841,6 +1841,15 @@ out by as much as lets the thing hang straight clear of the coat. (It
 was a straight arm held out to the side.) The body looks at the thing as
 it takes it and as it hangs it back.
 
+**After the judges of the lantern** (October 9; `ThingsInHand`): the body
+looks at the thing `LooksFirst` (0.18 s) before its hand sets off, and
+at the hook from the moment its hand sets off to hang it back; the
+lantern is brought out to where it is carried in `Brings` (0.65 s, was
+0.9); and the hand that carries goes with the walk, forwards and back,
+by `SwingsBy` (0.7) of what the carrying arm keeps of its swing
+(`Keeps`, 0.45 of a free arm's), `SwingsAtMost` 12 cm. (Since the third
+part it was held at one place before the hip.)
+
 **Getting up after a fall** (the fourth part, October 9; `PhysicalFall`).
 What was built on October 7 (step 10) let the body go and took it back:
 it curled where it lay and the posed body took over from there. Now:

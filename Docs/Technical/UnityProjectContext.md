@@ -2045,3 +2045,8 @@ with the settings, are in
   `MinerWorkPreview.PushOver()`/`PushOver(way)`/`CanPushOver`, the
   button on `MinerPanel`, and
   `PhysicalFallTests.PushedOverFromThePanelItFallsAndGetsItselfUp`.
+- **After the judges of the lantern (October 9).** `ThingsInHand`:
+  `LooksFirst`, `SwingsBy`, `SwingsAtMost`, `Brings` 0.65; the carried
+  wrist takes the free wrist's swing (which `CarryAtSide` reduces to
+  `Keeps`). `HungThingTests` asks that the carrying hand goes with the
+  walk (12 mm to 30 cm, from the hips).

@@ -282,8 +282,9 @@ them:
    pickaxe: it hangs from the hand, the handle down behind (it was held
    level). *Is this the carry Luis wants?*
 9. **The lantern** (`Space`, click it, "Take in hand"). The miner looks
-   at it, takes it off its hook, and carries it before its hip, the
-   forearm raised. *Is the hold still uncanny?*
+   at it, then takes it off its hook, and carries it before its hip, the
+   forearm raised; walking, the hand goes a little with the walk. *Is
+   the hold still uncanny?*
 
 10. **Getting up after a fall.** On the panel (lower left), press
     **Push it over**: the chosen miner is shoved the way the view looks

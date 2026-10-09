@@ -42,7 +42,7 @@ is a question for Luis.
 | L6 | The kneeling reads as an animation in parts, and most of it is off | **Made again as one movement; measured; one round of judges. For Luis to see.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
 | L7 | Getting up after a fall is an animation, not the body | **Most of it is the body's own strength now; the last half second is not. For Luis to see.** [Below](#l7-getting-up-after-a-fall) |
 | L8 | Long stopped recovering at 77% spent, and stood still | **Cause found and removed; measured.** [Below](#l8-long-stops-recovering) |
-| L9 | Taking the lantern or the mug: uncanny once it is held | **A cause found and removed; for Luis to see.** [Below](#l9-the-lantern-and-the-mug-once-they-are-held) |
+| L9 | Taking the lantern or the mug: uncanny once it is held | **A cause found and removed; one round of judges, and what stood put right. For Luis to see.** [Below](#l9-the-lantern-and-the-mug-once-they-are-held) |
 | L10 | In general: uncanny movements; some look built in, and do not answer to the world | Under way with each of the above. [What is still posed](#what-is-still-posed-and-what-is-the-bodys-own) |
 
 ## How each movement is checked
@@ -1138,9 +1138,48 @@ it off its hook, and carries it before its hip.*
 
 *Walking with it, from the front.*
 
+### What the judges of the lantern said (first round)
+
+Three judges (the body, the animator, the sceptic; each a separate agent
+on the smaller model) were given sheets of Small, from behind, taking
+its lantern, walking with it and hanging it back, and the figures. They
+were asked to judge the whole body, the walk too.
+
+Two: **reads as real, with a flaw.** The sceptic names what a person
+would point at.
+
+| What they found | Who | Checked | |
+|---|---|---|---|
+| **The arm that carries it is held still while the body walks:** "a pose that was chosen and then carried, not an arm answering the walk"; "fixed in place, it reads as a handle" | All three | True, and my doing. Since the third part the carrying hand was put at one place before the hip. The share of its swing that a carrying arm keeps (S3) no longer reached it | **Stands** |
+| **The body looks at the lantern late, as its hand arrives, and in one jump:** "the head seems to follow the hand" | The animator, the sceptic (the body: "cannot tell") | The look began with the reach, and the reach takes 0.44 s | **Stands** |
+| **The take stalls at the hip** for half a second to a second, "then the arm goes out in one move" | All three | The lift off the hook (0.3 s, hidden by the coat from behind), then 0.9 s of bringing it out, slow at both ends | **Stands** |
+| Hanging it back, the lantern tips to 45 to 60 degrees: "a swung object" | The body (first in its list), the sceptic | Measured: 56 degrees. It is not a swing. As the hand comes in over the coat's skirt the lantern lies on the cloth, which pushes its foot out; on its hook it hangs 42 degrees from straight down for the same reason | **Stands as seen;** it is the coat, not a throw. Not changed |
+| The lantern comes to where it is carried with no swing, and hangs dead still | The animator, the body | The hand slows smoothly; standing, it hangs within a degree | Noted; not changed |
+| Nothing below the waist takes part | The animator, the sceptic (both: it may be right for so light a thing) | | Not a fault |
+| The hook, the grip and the hanging cannot be seen from behind | The body, the animator | True of the sheets I made | **Not judged** |
+
+**What was done about what stood.**
+
+- **The hand that carries goes with the walk,** forwards and back, by
+  seven tenths of what a carrying arm keeps of its swing: 84 mm for
+  Small's lantern and 129 mm for Long's mug, from the hips, over a walk
+  with its start and its stop.
+- **It looks first, and then reaches:** its hand sets off 0.18 s after
+  it looks. Hanging the thing back, it looks at the hook from the moment
+  its hand sets off (it was halfway there).
+- **The lantern is brought out to where it is carried in 0.65 s** (0.9).
+
 **Not done, and what is not known.**
 
-- **No judge has looked at it.**
+- **No second round of judges** has looked at it as it is now, and none
+  has seen the hook, the grip or the hanging from the side or the front.
+- **The walk has still not been judged.** The judges saw it only from
+  behind, two pictures a step: one called it right ("the legs cross and
+  pass in a regular rhythm... the stop is clean"), one thought the trunk
+  stiff ("it may be the picture"). I took pictures of all three miners'
+  walk for a round of its own, and they are no use: the trace's walk
+  crosses the meadow, and the grass hides the legs. A walk on the path,
+  from the side, has to be taken first.
 - **The mug** is carried the same way (Long's mug hangs from the hand
   by its handle). Whether a mug should be carried upright, as a mug
   with something in it is, is a question about what the mug *is*, and
@@ -1270,10 +1309,16 @@ is for, and Luis's to say.
   sits folded, then rises) stays open.
 - **The whole PlayMode suite,** alone, on the code as it is: 179 tests; **163 passed, none failed**, 16 are run only when asked (1,410 s).
 - **The release build** was made from that code, and its own measures run: one miner standing 4.4 to 4.6 ms a frame and at its work 4.4 ms; the crowd 4.8, 5.6, 6.3 and 7.9 ms a frame for none, 25, 50 and 100 miners; no exceptions in either log. **The getting up itself was not run in the built player** (nothing falls in those measures).
-- **Not tested:** anything by Luis's eye; any judge; slopes, steps,
-  walls, boulders, other bodies in the way; a weak or spent body's
-  get-up (the weak miner of the tests did not fall in this run); a
-  body that falls holding something in both hands.
+- **Three judges of the lantern,** one round: two "reads as real, with
+  a flaw"; three things stood and were put right. `HungThingTests`, with
+  a new check that the hand that carries goes with the walk: 2 of 2.
+- **After that last change:** the whole PlayMode suite, alone: 179 tests; **162 passed, 1 failed**, 16 are run only when asked (1,398 s). The one: `BoulderTests.AMinerMinesABoulderByAClick`, Long's blows landing 31 cm from where the plan put them, for 20 allowed. Run alone three times afterwards it passed each time (15 to 16 cm). Nothing of the swing at the rock was changed in this part, and in the run before this one (the same code but for the lantern's hand) the suite passed, 163 of 163. So Long's blows are near that limit and not steady: **not looked into**.
+- **The release build** was made from the final code and its measures run again: one miner standing 4.4 to 4.7 ms a frame and at its work 4.4 ms; the crowd 5.0, 5.8, 6.3 and 8.0 ms a frame for none, 25, 50 and 100 miners; no exceptions in either log. **Neither the getting up nor the lantern was run in the built player.**
+- **Not tested:** anything by Luis's eye; a second round of any judges;
+  **the walk by any judge**; slopes, steps, walls, boulders, other
+  bodies in the way of a get-up; a weak or spent body's get-up (the
+  weak miner of the tests did not fall in this run); a body that falls
+  holding something in both hands.
 
 ## What was learnt in this round, so far
 

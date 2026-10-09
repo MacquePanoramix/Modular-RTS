@@ -159,13 +159,13 @@ Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)
 
 | Movement | Numbers | Judges | Luis |
 |---|---|---|---|
-| Walking | **Passes** (all three miners) | Not yet (the first call was cut off before it answered) | Not yet |
+| Walking | **Passes** (all three miners) | Not yet as a walk (the first call was cut off before it answered; in the lantern's round it was seen only from behind, two pictures a step; the pictures taken for a round of its own hide the legs in the grass) | Not yet |
 | Turning round on the spot | **Passes** for Small, **Passes** for Long, fails for Round (5.4 mm on 3 frames) | **One round:** reads as real, with flaws; five stood and four were put right. Not looked at since | Not yet |
 | Sent back the way it came, walking | **Passes** for Small; fails for Long (a foot 17 mm once); fails for Round (hips 9.4 mm) | Not yet | Not yet |
 | Going down for a pickaxe, standing up with it, and laying it down | **Passes** (all three miners), since the judges' changes | **One round:** reads as real, with a flaw; four things stood and were put right (the pickaxe carried level and still; the elbow out; Long's back up before its legs; its coat's front out to the side) | Not yet |
 | The blow, and the rest from it | Efforts of each muscle group measured over five minutes | Not yet | Not yet |
 | Falling, and getting up | Not traced (a let-go body has no hips' height to hold); the fall's own measures instead: its chest to the ground, its shins under it, how fast its trunk and head go; 12 of 12 ways of lying | **One round:** two "reads as real, with a flaw"; six things stood (it sits folded a second and a half and then rises; the half second from its knees is not pushed by anything; two bodies on one clock; Long's head on the ground; the boots in the air; a stiff tunic). One change kept, one tried and not kept; five open | Not yet |
-| Taking the lantern or the mug, and holding it | Not traced (the trace has no fingers, and nothing that hangs); read in pictures; the hold changed | Not yet | Not yet |
+| Taking the lantern or the mug, and holding it | Not traced (the trace has no fingers, and nothing that hangs); read in pictures; the hold changed | **One round:** two "reads as real, with a flaw"; three things stood and were put right (the carrying arm held still while the body walked; the look as late as the hand; a stall at the hip) | Not yet |
 | Clothes in the deepest bend | Not measured yet | Not yet | Not yet |
 
 ## What was learnt setting it up
