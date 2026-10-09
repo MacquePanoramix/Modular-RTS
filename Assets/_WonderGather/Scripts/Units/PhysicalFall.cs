@@ -59,7 +59,42 @@ namespace WonderGather
         // Getting up. It lies this long (seconds) before it gathers itself; gathers itself for at least this long, and
         // until it is still again or this long has passed; and the posed body takes over in this long. Crouched, the
         // posed body's hips are this share of their height lower, and its back is bowed this far (degrees).
-        private const float LiesFor = 1.2f, GathersAtLeast = .8f, GathersAtMost = 2.2f, TakesOver = .9f, CrouchSink = .5f, CrouchBow = 50;
+        private const float GathersAtLeast = .8f, GathersAtMost = 2.2f, TakesOver = .9f, CrouchSink = .5f, CrouchBow = 50;
+        // How long it lies before it begins to get up (Luis, October 9: by "how strong was the force that pushed it
+        // down, its current stamina and anything else relevant"; until then it lay 1.2 s whatever had happened).
+        // It lies at least this long (seconds): a body that has only sat down hard still finds where it is. To that
+        // is added, by how hard it came down (the blow: metres a second; see Blow), up to so long for a blow as hard
+        // as BlowHard, none under BlowLight: it is shaken, and winded. And for its head, by how hard that struck the
+        // ground, up to so long more: it is dazed. And, by how spent its legs and its back are (the square of the
+        // share that is spent), up to so long more: it gets its breath. A body twice as strong takes the root of two
+        // less over all of it, a weaker one more. Never longer than LiesAtMost.
+        // (What these are set from: people who fall and get up again lie a median of ten seconds if they are old,
+        // and a fit body far less; a body with the wind knocked out of it breathes again in seconds to a minute;
+        // games keep a knocked-down fighter down one to three seconds. Docs/Research, October 9.)
+        private const float LiesAtLeast = .8f, ShakenAtMost = 4.5f, BlowLight = 1, BlowHard = 6, DazedAtMost = 2, HeadLight = 2.5f, HeadHard = 6,
+            BreathAtMost = 3.5f, LiesAtMost = 10;
+        private float liesFor = LiesAtLeast, struck, headStruck, shoved;
+        private readonly Vector3[] went = new Vector3[3];
+        // How hard it came down, in metres a second: the speed that what pushed it gave it (its push, over its
+        // weight), or the most speed its hips, its trunk or its head lost in one step as the ground stopped them,
+        // whichever is more. And the same for its head alone.
+        public float Blow => Mathf.Max(struck, shoved);
+        public float HeadStruck => headStruck;
+        // How long it lies this time before it begins to get up (seconds), and how long it has lain.
+        public float LiesFor => liesFor;
+        public float Lain => lain;
+        // Why it lies as long as it does, for whoever says so: how far it is shaken by the blow, dazed by its head's,
+        // and out of breath (each 0 to 1).
+        public float Shaken => Mathf.InverseLerp(BlowLight, BlowHard, Blow);
+        public float Dazed => Mathf.InverseLerp(HeadLight, HeadHard, headStruck);
+        public float OutOfBreath => Mathf.Max(physical.Spent(PhysicalBody.Muscles.Legs), physical.Spent(PhysicalBody.Muscles.Back));
+
+        private float HowLongItLies()
+        {
+            float breath = OutOfBreath;
+            float seconds = LiesAtLeast + ShakenAtMost * Shaken + DazedAtMost * Dazed + BreathAtMost * breath * breath;
+            return Mathf.Min(LiesAtMost, seconds / Mathf.Sqrt(Mathf.Clamp(physical.Strength, .25f, 4)));
+        }
 
         // What is asked of the body before it goes on from one pose to the next: how far its chest faces the ground
         // (1: flat on its front; -1: flat on its back); how high its hips are over the ground, how far they are from
@@ -483,6 +518,8 @@ namespace WonderGather
             if (motor != null) motor.CarriedOff();
             body.LetGo = true;
             Now = State.Falling; Since = 0; still = 0; lain = 0;
+            struck = headStruck = shoved = 0;
+            for (int i = Hips; i <= Head; i++) went[i] = parts[i].linearVelocity;
             Falls++;
         }
 
@@ -523,8 +560,14 @@ namespace WonderGather
         public bool Gives = true;
         public bool Through { get; private set; }
         // (For the search: it lies still, let go, as if it had only now come to lie; and it is falling again.)
-        public void LieStill() { Now = State.Lying; lain = 0; tone = AtRest; stage = null; still = 0; Through = false; Holds(); }
-        public void Fell() { Now = State.Falling; lain = 0; tone = 1; stage = null; still = 0; Through = false; Holds(); }
+        public void LieStill() { Now = State.Lying; lain = 0; liesFor = LiesAtLeast; tone = AtRest; stage = null; still = 0; Through = false; Holds(); }
+        public void Fell()
+        {
+            Now = State.Falling; lain = 0; tone = 1; stage = null; still = 0; Through = false;
+            struck = headStruck = shoved = 0;
+            for (int i = Hips; i <= Head; i++) went[i] = parts[i].linearVelocity;
+            Holds();
+        }
 
         // It begins to get up.
         public void Rouse()
@@ -568,7 +611,7 @@ namespace WonderGather
         // It did not get through a pose: it lets go, lies, and rests before it tries again.
         private void LiesDownAgain()
         {
-            Now = State.Lying; lain = LiesFor - RestsMore;
+            Now = State.Lying; lain = 0; liesFor = RestsMore;
             stage = null;
             GaveUpGetting++; LayDownAgain++; gaveUpRunning++;
         }
@@ -654,7 +697,7 @@ namespace WonderGather
             float low = Crouch(squats ? Mathf.Clamp(lowNow, CrouchSink * body.StandingHipHeight, ProceduralBiped.DeepestSink * body.StandingHipHeight) : CrouchSink * body.StandingHipHeight);
             if (low < 0)
             {
-                Now = State.Lying; lain = LiesFor - RestsMore;
+                Now = State.Lying; lain = 0; liesFor = RestsMore;
                 stage = null;
                 LayDownAgain++;
                 return;
@@ -720,6 +763,8 @@ namespace WonderGather
                 if (away < least) { least = away; nearest = i; }
             }
             parts[nearest].AddForceAtPosition(force, at);
+            // (What pushes it down is part of the blow: the speed it gives the body.)
+            if (Now == State.Falling) shoved += force.magnitude * Time.fixedDeltaTime / Mathf.Max(1, physical.Mass);
         }
 
         // The posed body takes over again, standing where the body lies. (Until getting up is built.)
@@ -772,7 +817,20 @@ namespace WonderGather
             for (int i = Hips; i <= Head && !moving; i++)
                 moving = parts[i].linearVelocity.sqrMagnitude > Still * Still || parts[i].angularVelocity.sqrMagnitude > StillTurning * StillTurning;
             still = moving ? 0 : still + dt;
-            if (Now == State.Falling && still >= LiesAfter) { Now = State.Lying; lain = 0; }
+            // (How hard the ground stops it: the speed its hips, its trunk and its head lose in one step, beyond what
+            // their own weight gives them in that step.)
+            for (int i = Hips; i <= Head; i++)
+            {
+                Vector3 goes = parts[i].linearVelocity;
+                if (Now == State.Falling)
+                {
+                    float lost = went[i].magnitude - goes.magnitude - Physics.gravity.magnitude * dt;
+                    struck = Mathf.Max(struck, lost);
+                    if (i == Head) headStruck = Mathf.Max(headStruck, lost);
+                }
+                went[i] = goes;
+            }
+            if (Now == State.Falling && still >= LiesAfter) { Now = State.Lying; lain = 0; liesFor = HowLongItLies(); }
             else if (Now == State.Lying || Now == State.Gathering)
             {
                 bool thrown = false;
@@ -785,7 +843,7 @@ namespace WonderGather
             if (Now == State.Lying)
             {
                 lain += dt;
-                if (GetsUp && lain >= LiesFor)
+                if (GetsUp && lain >= liesFor)
                 {
                     Rouse();
                     if (Now != State.Gathering) return;

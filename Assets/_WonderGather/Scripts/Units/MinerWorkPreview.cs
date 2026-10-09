@@ -776,6 +776,15 @@ namespace WonderGather
             return status;
         }
 
+        // What a body that lies says of itself: how hard it came down, and why it lies as long as it does.
+        private static string Fallen(PhysicalFall lies)
+        {
+            if (lies.Now != PhysicalFall.State.Lying) return "It fell.";
+            string why = lies.Dazed > .3f ? "dazed" : lies.Shaken > .3f ? "winded" : lies.OutOfBreath > .5f ? "out of breath" : "";
+            float left = Mathf.Max(0, lies.LiesFor - lies.Lain);
+            return (lies.Shaken > .6f ? "It fell hard" : "It fell") + (why.Length > 0 ? ", and lies " + why : ", and lies a moment") + $" ({left:0} s).";
+        }
+
         private string Doing()
         {
             bool tells = Time.time - saidAt < SaidFor;
@@ -783,12 +792,12 @@ namespace WonderGather
             {
                 // (Pushed over with nothing in its hands.)
                 if (choice != null && choice.Current != null && choice.Current.TryGetComponent<PhysicalFall>(out var lies) && lies.Now != PhysicalFall.State.Up)
-                    return lies.Now == PhysicalFall.State.Rising ? "It is on its knees, and stands up." : lies.Now == PhysicalFall.State.Gathering ? "It gets itself up." : "It fell.";
+                    return lies.Now == PhysicalFall.State.Rising ? "It is on its knees, and stands up." : lies.Now == PhysicalFall.State.Gathering ? "It gets itself up." : Fallen(lies);
                 if (tells) return said + ".";
                 return NearestLying(Vector3.zero) != null ? "Nothing in its hands. A pickaxe lies on the ground: Space and a click on it, to pick it up."
                     : "Nothing in its hands, and no pickaxe on the ground.";
             }
-            if (down) return "It fell: its pickaxe lies where it left its hands.";
+            if (down) return fall != null && fall.Now == PhysicalFall.State.Lying ? Fallen(fall) + " Its pickaxe lies where it left its hands." : "It fell: its pickaxe lies where it left its hands.";
             string kilograms = hands != null && hands.Held != null ? $"Pickaxe {hands.ToolMass:0.0} kg" : "Its pickaxe";
             string line;
             if (Carrying)
