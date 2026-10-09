@@ -31,6 +31,9 @@ namespace WonderGather.Tests
         private static int Iterations = 14, VelocityIterations = 4;
         // (A boot's turning weight, so many times what its shape gives it; and its weight, if it is set.)
         private static float BootTurns = 1, BootWeighs = 0;
+        // (A joint's spring set by rule: no stiffer than makes its own rate, times the step, this much, by the turning
+        // weight of the lighter side of the joint; and damped this share of what just stops that side swinging. 0: not.)
+        private static float Rule = 0, Damped = 1;
 
         private struct Solid
         {
@@ -207,6 +210,35 @@ namespace WonderGather.Tests
 
         // The body, built at the plan's place and moved by so much. fullAt: a joint gives all it has when it is this
         // far (degrees) from where it is held; slows: its damping, in seconds (the damper over the spring).
+        // The turning weight (kg m2) of the lighter side of a joint, about the joint: of all that hangs beyond it, or of
+        // all the rest, whichever is less. (Each part as a point at its middle, and a rod of its own length.)
+        private static float Lighter(Planned[] plan, int joint)
+        {
+            Vector3 about = plan[joint].at + plan[joint].turned * plan[joint].anchor;
+            float beyond = 0, rest = 0;
+            for (int k = 0; k < Count; k++)
+            {
+                float length = 0;
+                foreach (var solid in plan[k].solids) length = Mathf.Max(length, solid.kind == 0 ? solid.height : solid.kind == 1 ? 2 * solid.radius : Mathf.Max(solid.size.x, Mathf.Max(solid.size.y, solid.size.z)));
+                float turning = plan[k].mass * ((plan[k].at - about).sqrMagnitude + length * length / 12);
+                bool hangs = false;
+                for (int up = k; up >= 0; up = From[up]) if (up == joint) { hangs = true; break; }
+                if (hangs) beyond += turning; else rest += turning;
+            }
+            return Mathf.Max(1e-4f, Mathf.Min(beyond, rest));
+        }
+
+        // A joint's spring and its damper: by its strength and how far it may be from its pose; and, if the rule is
+        // on, no stiffer than the rule allows.
+        private static void Sprung(Planned[] plan, int i, float fullAt, float slows, out float spring, out float damper)
+        {
+            spring = plan[i].strength / (fullAt * Mathf.Deg2Rad); damper = spring * slows;
+            if (Rule <= 0) return;
+            float lighter = Lighter(plan, i);
+            spring = Mathf.Min(spring, Rule * Rule / (Step * Step) * lighter);
+            damper = Damped * 2 * Mathf.Sqrt(spring * lighter);
+        }
+
         private static Built Build(Planned[] plan, bool articulated, Vector3 moved, float fullAt, float slows, float drag, float turnDrag, bool seen, bool keeps = false)
         {
             var built = new Built { articulated = articulated, keeps = keeps, root = new GameObject(articulated ? "Body (articulation)" : "Body (joints)") };
@@ -223,7 +255,8 @@ namespace WonderGather.Tests
             for (int i = 0; i < Count; i++)
             {
                 var p = plan[i];
-                float spring = p.strength / (fullAt * Mathf.Deg2Rad), damper = spring * slows;
+                float spring = 0, damper = 0;
+                if (From[i] >= 0) Sprung(plan, i, fullAt, slows, out spring, out damper);
                 if (From[i] >= 0) built.rested[i] = Quaternion.Inverse(made[From[i]].transform.rotation) * made[i].transform.rotation;
                 if (articulated)
                 {
@@ -279,7 +312,7 @@ namespace WonderGather.Tests
                     joint.projectionMode = JointProjectionMode.PositionAndRotation;
                     joint.projectionDistance = .02f; joint.projectionAngle = 5;
                     joint.rotationDriveMode = RotationDriveMode.Slerp;
-                    float spring = p.strength / (fullAt * Mathf.Deg2Rad), damper = spring * slows;
+                    Sprung(plan, i, fullAt, slows, out float spring, out float damper);
                     joint.slerpDrive = new JointDrive { positionSpring = spring, positionDamper = damper, maximumForce = p.strength };
                     joint.targetRotation = Quaternion.identity;
                     built.joint[i] = joint;
@@ -390,6 +423,7 @@ namespace WonderGather.Tests
         }
 
         private static string Called(bool articulated, float fullAt) => (articulated ? "articulation" : "joints") + string.Format(CultureInfo.InvariantCulture, ", full at {0:0} degrees, {1:0} steps a second", fullAt, 1 / Step)
+            + (Rule > 0 ? string.Format(CultureInfo.InvariantCulture, ", springs by rule {0:0.00} damped {1:0.0}", Rule, Damped) : "")
             + (BootTurns != 1 ? string.Format(CultureInfo.InvariantCulture, ", a boot's turning weight {0:0} times its own", BootTurns) : "") + (BootWeighs > 0 ? string.Format(CultureInfo.InvariantCulture, ", a boot of {0:0.0} kg", BootWeighs) : "");
 
         // What the engine's numbers mean: one arm, a kilogram with its weight half a metre from a hinge, held out level
@@ -532,6 +566,7 @@ namespace WonderGather.Tests
             Iterations = (int)Numbers("-ownIterations", 14, 4)[0]; VelocityIterations = (int)Numbers("-ownIterations", 14, 4)[1];
             Step = Numbers("-ownStep", .02f)[0];
             BootTurns = Numbers("-ownBootTurns", 1)[0]; BootWeighs = Numbers("-ownBootWeighs", 0)[0];
+            Rule = Numbers("-ownRule", 0)[0]; Damped = Numbers("-ownDamped", 1)[0];
             bool said = Numbers("-ownSay", 0)[0] > 0;
             string kinds = CaptureTools.Argument("-ownKinds") ?? "joints,articulation";
             var culture = CultureInfo.InvariantCulture;
@@ -600,6 +635,16 @@ namespace WonderGather.Tests
                         name, whole, plan[Foot].mass, plan[Shin].mass, plan[Foot].strength, plan[Shin].strength, plan[Thigh].strength, plan[Trunk].strength, plan[Head].strength, plan[UpperArm].strength, plan[Forearm].strength, tall,
                         (lowest - ground.Height(plan[Foot].at.x, plan[Foot].at.z)) * 1000));
 
+                    if (Rule > 0)
+                    {
+                        var springs = new System.Text.StringBuilder();
+                        foreach (int j in new[] { Trunk, Head, UpperArm, Forearm, Thigh, Shin, Foot })
+                        {
+                            Sprung(plan, j, fulls[0], slows, out float spring, out float damper);
+                            springs.Append(string.Format(culture, " {0} {1:0} and {2:0.0} (lighter side {3:0.000} kg m2; by its strength alone {4:0})", plan[j].name.Replace(" (left)", ""), spring, damper, Lighter(plan, j), plan[j].strength / (fulls[0] * Mathf.Deg2Rad)));
+                        }
+                        Debug.Log(string.Format(culture, "OWN   {0}: its springs by rule (N m a radian) and dampers, at {1:0} steps a second:{2}", name, 1 / Step, springs));
+                    }
                     Physics.simulationMode = SimulationMode.Script;
                     foreach (string kind in kinds.Split(','))
                     {
