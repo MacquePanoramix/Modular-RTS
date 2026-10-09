@@ -94,13 +94,17 @@ namespace WonderGather
         public static float StandsMid = .5f;
         // A breath at rest straightens its back by BreathBack degrees, pushes each arm out by BreathArms, and draws
         // its chest fuller by BreathSwell (a share). All three times BreathShown: how breath is drawn is a look for
-        // Luis to choose (1: as in life; more: drawn stronger; 0: not drawn).
-        public const float BreathDrawn = 2.5f;
-        public static float BreathBack = .4f, BreathArms = 1, BreathSwell = .035f, BreathShown = BreathDrawn;
+        // Luis to choose (1: as in life; more: drawn stronger; 0: not drawn). Drawn at the size of life it could
+        // not be seen at all, nor at two and a half times that (three judges of three). (Tried and taken out:
+        // breath lifting the whole body by its legs, 8 mm. Long, on one leg and nudged, went over.)
+        public const float BreathDrawn = 4;
+        public static float BreathBack = .25f, BreathArms = .625f, BreathSwell = .0225f, BreathShown = BreathDrawn;
         // Its head looks somewhere else every so many seconds (between the two), no further aside than LooksAside
         // degrees; a look takes LooksIn seconds and LooksInEach more for each degree. It looks at another miner
         // nearer than LooksAsFar metres about one time in three.
-        public static float LooksAtLeast = 2.5f, LooksAtMost = 7, LooksAside = 40, LooksIn = .25f, LooksInEach = .006f, LooksAsFar = 15;
+        public static float LooksAtLeast = 4, LooksAtMost = 11, LooksAside = 40, LooksIn = .25f, LooksInEach = .006f, LooksAsFar = 15;
+        // Between looks its head is never quite fixed: it wanders by about this many degrees, slowly.
+        public static float HeadWanders = 1.5f;
         // (Which way round the engine counts a joint's turn from its pose.)
         private const float Turns = 1;
         private Breath breath;
@@ -795,7 +799,8 @@ namespace WonderGather
                 Asks(Foot + i, Quaternion.AngleAxis(-.5f * bends, itsRight));
             }
             // Its head keeps to where it looks, whatever the body under it does.
-            Quaternion wants = faces * Quaternion.AngleAxis(looks.x, Vector3.up) * Quaternion.AngleAxis(looks.y, itsRight) * madeTurned[Head];
+            Vector2 wanders = HeadWanders * new Vector2(.65f * Mathf.Sin(.71f * t + 2) + .35f * Mathf.Sin(1.7f * t), .45f * Mathf.Sin(.93f * t + 1) + .25f * Mathf.Sin(2.3f * t + 4));
+            Quaternion wants = faces * Quaternion.AngleAxis(looks.x + wanders.x, Vector3.up) * Quaternion.AngleAxis(looks.y + wanders.y, itsRight) * madeTurned[Head];
             Aims(Head, Quaternion.Inverse(parts[Trunk].transform.rotation * rested[Head]) * wants);
         }
 

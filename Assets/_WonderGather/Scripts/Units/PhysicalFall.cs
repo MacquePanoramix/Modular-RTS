@@ -802,7 +802,7 @@ namespace WonderGather
         // The unit's own place goes with its hips.
         // Down, it breathes: its chest is drawn fuller with each breath, faster and deeper the more out of breath and
         // the more shaken it is.
-        private const float BreathSwell = .03f;
+        private const float BreathSwell = .0225f;
         private Breath breath;
         private bool breathes;
 

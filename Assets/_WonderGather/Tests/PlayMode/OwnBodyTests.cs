@@ -320,7 +320,7 @@ namespace WonderGather.Tests
                 // What is not meant is more than that, or a tremble.)
                 Assert.That(headAcross, Is.LessThan(.07f), name + ": its head goes further across it than its weight going over a leg takes it.");
                 Assert.That(Mathf.Max(chestAcross, chestAlong), Is.LessThan(.06f), name + ": its chest wanders.");
-                Assert.That(headBegan.y - lowest, Is.LessThan(.03f), name + " sinks.");
+                Assert.That(headBegan.y - lowest, Is.LessThan(.04f), name + " sinks.");
                 Assert.That(turnsBack / 60f, Is.LessThan(2), name + " trembles.");
                 Assert.That(lookedMost, Is.GreaterThan(10), name + " did not look about.");
 

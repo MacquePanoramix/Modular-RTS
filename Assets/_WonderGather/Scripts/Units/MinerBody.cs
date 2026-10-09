@@ -469,7 +469,7 @@ namespace WonderGather
             bones.chest.rotation = chestFrame * root * chestRest;
             if (onChest != null)
             {
-                float fuller = 1 + Mathf.Clamp(Swell, 0, .1f);
+                float fuller = 1 + Mathf.Clamp(Swell, 0, .16f);
                 bones.chest.localScale = chestSize * fuller;
                 for (int k = 0; k < onChest.Length; k++) if (onChest[k] != null) onChest[k].localScale = onChestSize[k] / fuller;
             }

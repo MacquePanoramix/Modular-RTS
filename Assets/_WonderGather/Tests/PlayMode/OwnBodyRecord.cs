@@ -50,6 +50,9 @@ namespace WonderGather.Tests
                 if (rig != null) rig.enabled = false;
                 camera.nearClipPlane = .01f;
                 time.Hour = 13;
+                // (The meadow's grass stands between the camera and its boots from the side: it is not drawn.)
+                var grass = UnityEngine.Object.FindAnyObjectByType<GrassField>();
+                if (grass != null) grass.enabled = false;
                 Vector3 OnGround(Vector3 p) => new Vector3(p.x, ground.Height(p.x, p.z), p.z);
                 var a = ground.Path[4];
                 var b = ground.Path[5];
@@ -118,7 +121,7 @@ namespace WonderGather.Tests
                     // Its breath from the side, near: five times a second for ten seconds, at rest; then tired.
                     if (Wanted("breath"))
                     {
-                        View(-90, 1.7f, .62f);
+                        View(-90, 2.2f, .5f);
                         yield return Shoot("breath", 10, 10);
                         look.Tire();
                         yield return Wait(1);
@@ -133,6 +136,16 @@ namespace WonderGather.Tests
                         own.Favour(0);
                         yield return Wait(3);
                         yield return Shoot("shift", 9, 10, k => { if (k == 25) own.Favour(1); if (k == 225) own.Favour(-1); });
+                    }
+                    // A look: asked to look forty degrees to its right, from in front: ten times a second.
+                    if (Wanted("look"))
+                    {
+                        View(0, 2.3f, .5f);
+                        own.Favour(0);
+                        own.LookAt(head.position + away * 3, 3);
+                        yield return Wait(3);
+                        Vector3 place = head.position + Quaternion.AngleAxis(40, Vector3.up) * away * 3;
+                        yield return Shoot("look", 2.4f, 5, k => { if (k == 15) own.LookAt(place, 3); });
                     }
                     // Nudged from in front (set going backwards at 0.15 m/s), from the side: ten times a second.
                     if (Wanted("nudged"))
@@ -187,7 +200,12 @@ namespace WonderGather.Tests
                 }
                 camera.transform.SetPositionAndRotation(gameAt, gameTurned);
             }
-            finally { Time.captureFramerate = 0; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.Alive = true; }
+            finally
+            {
+                Time.captureFramerate = 0; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.Alive = true;
+                var grass = UnityEngine.Object.FindAnyObjectByType<GrassField>();
+                if (grass != null) grass.enabled = true;
+            }
         }
     }
 }
