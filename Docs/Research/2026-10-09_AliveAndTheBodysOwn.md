@@ -11,10 +11,16 @@ to lay down".
 
 This page adds to
 [the research of October 8](2026-10-08_RealBodiesAndHowToJudgeThem.md),
-which was of real bodies and of how to judge a movement. It has three
+which was of real bodies and of how to judge a movement. It has four
 parts: how long a fallen body lies; what makes a movement read as alive
-(the media studies); and how a body is moved by its own joints and kept
-stable.
+(the media studies); how a body is moved by its own joints and kept
+stable; and, action by action, what a real body does, how it is made to
+read, and what ours does.
+
+**How far it can be trusted.** Most of it was read as search
+summaries and abstracts on October 9, not as whole papers: a figure
+here is good enough to choose a direction by, and is to be checked in
+its paper before a number in the game is set from it.
 
 **How to read it.** "Found" is what a source says. "For ours" is my
 reading of it for this project, and is mine. Where I say something from
@@ -241,9 +247,49 @@ body's own" and "stable" meet.
 How this is to be built, in what order, and what Luis sees at each step
 is in [the plan](../Plans/TheBodysOwn_Proposal.md).
 
+## 4. Action by action
+
+Luis: "research of what kind of movements feel natural for certain
+actions". Part 2 is by principle; this is by action, for the actions
+the miners have. It is a first pass: each is to be gone into again when
+its step of [the plan](../Plans/TheBodysOwn_Proposal.md) begins. What
+real bodies do in walking, turning, going down, getting up and resting
+is in [the research of October 8](2026-10-08_RealBodiesAndHowToJudgeThem.md)
+and is not repeated.
+
+| Action | Found: what a real body does | Found: how it is made to read | Ours today |
+|---|---|---|---|
+| **Standing, waiting** | The weight on the two legs is "rarely if ever symmetrical", and people standing long shift it from leg to leg, more as they grow uncomfortable ([a study kept by the CDC](https://stacks.cdc.gov/view/cdc/224976)). Standing quietly for a minute, young adults' point of pressure under the feet still wanders at about 9 mm a second ([reference values](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10170532/)) | A quiet breathing loop with small shifts of weight; short one-off fidgets laid over it every half minute to a minute; the breathing faster in a tense or tired body; never so much that it draws the eye ([a guide to idles](https://mocaponline.com/blogs/mocap-news/idle-animation-design-guide)) | Perfectly still |
+| **Setting off** | Before the foot lifts, the pressure under the feet goes back and towards the leg that will swing; that sends the body's weight forward and over the leg that will stand. How large this is goes with how long the first step will be ([Asymmetry of the adjustment](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4234748/); [weight and gait initiation](https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2017.00127/full)). It takes about half a second † | Anticipation: the lean and the shift are the "getting ready" of a walk | Nothing before the first step; the first step as long as the rest |
+| **Walking** | No two strides take the same time, but nearly: the spread is about 1.5 to 2% of a stride's time in healthy young adults ([figures](https://pmc.ncbi.nlm.nih.gov/articles/PMC6545579/)). The width of the step and the time on both feet vary far more (17 to 27% in one study, whose record I could not identify). And the variation is not noise: a long stride tends to follow long ones, over hundreds of strides; walking to a metronome takes that away ([long recordings of gait](https://archive.physionet.org/physiobank/database/umwdb/)) | Part 2: added variation shaped as a body's makes a cycle look more natural | Every step the same |
+| **Turning** | The eyes go first (about 0.4 s before the first foot of the turn), then the head (which leads the body by about 0.2 s), then the trunk and hips; the feet last. People who are ill, or who fall often, turn more in one block ([head-first turns](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7739666/); [a review](https://clok.uclan.ac.uk/42628/3/42628.pdf); [curved paths](https://pub.uni-bielefeld.de/record/2287980)) | "Not on one clock": a turn that goes head, chest, hips, feet reads as meant; one in a block reads as a turntable | Not looked at for this: whether the head leads a turn was never traced |
+| **Lifting something heavy** | (Going down for a thing: the research of October 8) | The weight stays over the feet and the load close to the body; the feet go wider first; the hips dip and drive (the getting ready is in the hips); slow up and quicker down; much effort for little movement of the thing ([anticipation and weight in games](https://gamedeveloper.com/design/adding-weight-to-your-game-design-part-2-anticipation); students' studies of lifts, a weak source: [one](https://blogs.ulster.ac.uk/b00839206-bdes-animation/?p=4611)) | The pickaxe: looks first, goes down as one movement. No widening, no dip. S4's loads are not built |
+| **Swinging a heavy tool** | (How a pickaxe is really swung: [the review of October 6](../Reviews/2026-10-06_SamePageReview.md)) | One foot back to brace; the hips lead; a short moving hold at the top before it drops; slow to set up and to settle, fast in between ([a small body with a great weapon](https://80.lv/articles/breakdown-animating-tiny-character-with-massive-two-handed-weapon)) | The stance is set apart; the swing's speed comes of the weights. Whether it holds at the top was not looked at |
+| **Falling** | Young adults who fall put **one or both hands out in more than nine falls of ten**; their heads strike in about **one fall in nine** (sideways falls in a laboratory; old people's in one of three). They bend and turn the trunk as they go down. From losing balance to the ground is 0.7 to 1.2 s ([head impact in sideways falls](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6501264/); [arms in falls](https://pmc.ncbi.nlm.nih.gov/articles/PMC7054927)). Going down in a squat first is said to take a fifth off the speed at which the hips land (a second-hand figure); people trained to fall land turned onto a side, and their heads are thrown about less ([falling backwards](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8775844/)) | A body with "a sense of self-preservation" (part 3) | **The hands do not reach for the ground, and the head strikes in nearly every fall,** at 1 to 6 m/s. It does fold at the knees as it goes |
+| **Lying after a fall** | Part 1 | A hurt idle: slumped, favouring a side, the breath slow or heaving | Frozen (six judges of six) |
+
+**For ours, what this adds to part 2:**
+
+- **The fall is the furthest from a real body.** A young, fit body gets a
+  hand to the ground nine times in ten, and keeps its head off it eight
+  in nine. Ours gets no hand down and strikes its head almost every
+  time. A fall in which the arms reach for the ground would also make
+  the lying shorter (the head's blow is most of what it is reckoned
+  from), and belongs before more is tuned in the lying.
+- **Three of these can be said in numbers** and so held to: a weight
+  that shifts from leg to leg now and then, standing; a shift back and
+  to the swing side for about half a second before a first step, with a
+  shorter first step; strides that differ by a percent or two, not
+  at random.
+- **The order in a turn** (eyes, head, trunk, hips, feet) is the same
+  "look first" that the pick-up and the lantern were given by the
+  judges of October 8 and 9.
+
+† From what I know; not read again today.
+
 ## Sources
 
-All read October 9, 2026, unless marked †.
+All looked up on October 9, 2026 (most as search summaries and abstracts: see the top of the page), unless marked †.
 
 - Schwickert L. and others. *Reading from the Black Box: What Sensors
   Tell Us about Resting and Recovery after Real-World Falls.* 2018.
@@ -282,6 +328,40 @@ All read October 9, 2026, unless marked †.
   <https://www.cs.ubc.ca/~van/papers/2007-siggraph-simbicon.pdf>
 - Coros S., Beaudoin P., van de Panne M. *Generalized Biped Walking
   Control.* SIGGRAPH 2010. <https://history.siggraph.org/?p=105848>
+- A study of shifting weight in prolonged standing, kept by the CDC.
+  <https://stacks.cdc.gov/view/cdc/224976>
+- *Posturographic Standards for Optimal Control of Human Standing
+  Posture.* <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10170532/>
+- MoCap Online, *Idle Animation for Games: Designing Character Presence
+  at Rest.* <https://mocaponline.com/blogs/mocap-news/idle-animation-design-guide>
+- *Asymmetry of Anticipatory Postural Adjustment During Gait
+  Initiation.* <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4234748/>
+- *Effects of Changing Body Weight Distribution on Mediolateral
+  Stability Control during Gait Initiation.* 2017.
+  <https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2017.00127/full>
+- Stride-time variability in healthy young adults (*Gait & Posture*,
+  2019). <https://pmc.ncbi.nlm.nih.gov/articles/PMC6545579/>
+- PhysioNet, *Long-term Recordings of Gait Dynamics* (Hausdorff and
+  others). <https://archive.physionet.org/physiobank/database/umwdb/>
+- *Visual Cues Promote Head First Strategies During Walking Turns in
+  Individuals With Parkinson's Disease* (with figures for healthy young
+  adults). <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7739666/>
+- A review of whole-body coordination in turns.
+  <https://clok.uclan.ac.uk/42628/3/42628.pdf>
+- *Walking along curved paths of different angles: the relationship
+  between head and trunk turning.* <https://pub.uni-bielefeld.de/record/2287980>
+- *Adding weight to your game design, part 2: anticipation.* Game
+  Developer, 2010.
+  <https://gamedeveloper.com/design/adding-weight-to-your-game-design-part-2-anticipation>
+- *Breakdown: animating a tiny character with a massive two-handed
+  weapon.* 80 Level.
+  <https://80.lv/articles/breakdown-animating-tiny-character-with-massive-two-handed-weapon>
+- *Age-Related Differences in Head Impact during Experimentally Induced
+  Sideways Falls.* <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6501264/>
+- On the arms in falls. <https://pmc.ncbi.nlm.nih.gov/articles/PMC7054927>
+- *Influence of the Backward Fall Technique on the Sagittal Linear
+  Acceleration of the Head during a Fall.* 2022.
+  <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8775844/>
 - † Wang J., Fleet D., Hertzmann A. *Optimizing Walking Controllers.*
   SIGGRAPH Asia 2009. (From what I know; not read again today.)
 - Ubisoft La Forge. *DReCon: Data-Driven Responsive Control of

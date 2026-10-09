@@ -164,7 +164,7 @@ not stir, and gets up from nothing.**
 | | What | Where it is to be mended |
 |---|---|---|
 | 1 | **A fallen miner lies quite still, and gets up from nothing.** Six judges of six | [The proposal](../Plans/TheBodysOwn_Proposal.md), step 1: breath, and a stir that the turning over is searched with |
-| 2 | **It is almost always its head that lands hardest** (2 to 6 m/s; in life 5 m/s is a serious injury). The falling body tries to keep its head up, and does not manage it | The fall itself. Not looked into |
+| 2 | **It is almost always its head that lands hardest** (1 to 6 m/s; in life 5 m/s is a serious injury), **and its hands do not reach for the ground.** A young, fit person who falls gets a hand down in nine falls of ten and strikes the head in about one of nine ([the research, part 4](../Research/2026-10-09_AliveAndTheBodysOwn.md#4-action-by-action)). Of everything the miners do, the fall is furthest from a real body | The fall itself: arms that reach for the ground. Not looked into. It would shorten the lying too, since the head's blow is most of what that is reckoned from |
 | 3 | **A body that comes down onto its knees and its head** rests there, sagging, for a second or more (Small pushed from behind; Long pushed lightly) | The fall: the body has no hands that catch it. Not looked into |
 | 4 | **Size comes into the time only through the blow.** Whether a heavier or older body should lie longer for itself | Luis's |
 | 5 | **Whether a fall should cost anything** beyond the time (tiredness after it; the pickaxe let go) | Luis's (open since October 9) |
@@ -191,6 +191,13 @@ The whole of it, with sources:
   the getting up was made here.
 - **What it asks of ours:** ankles (the let-go body has none); the walk
   searched until it does not look stiff; and "stable" said in numbers.
+- **Action by action** (part 4): standing people shift their weight from
+  leg to leg; before a first step the weight goes back and to one side
+  for about half a second; strides differ by a percent or two; in a turn
+  the eyes go first, then the head, the trunk, the hips, and the feet
+  last; a heavy lift begins with the feet going wider and the hips
+  dipping. **And a young body that falls gets a hand to the ground nine
+  times in ten: ours never does.**
 
 ## What the proposal says, in short
 

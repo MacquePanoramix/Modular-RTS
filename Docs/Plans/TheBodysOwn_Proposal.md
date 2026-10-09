@@ -112,7 +112,8 @@ The eight things a living body does
 ([the research, part 2](../Research/2026-10-09_AliveAndTheBodysOwn.md#for-ours-eight-things-a-living-body-does-and-where-the-miners-are)).
 Each step below says which of them it is to bring. Before a movement is
 built, what real bodies do in it and how films and games make it read
-are looked up and written down, as Luis asked. Then, as now: the three
+are looked up and written down, as Luis asked (a first pass, action by
+action, is [part 4 of the research](../Research/2026-10-09_AliveAndTheBodysOwn.md#4-action-by-action)). Then, as now: the three
 miners, traced; read in pictures; three judges who did not make it;
 Luis.
 
@@ -130,6 +131,7 @@ Each is shown to Luis before the next is built on it.
 | 5 | **Down to the ground and up.** Picking a thing up, laying it down | Not all on one clock (2); gets ready (3) | The pick-up, beside the pick-up as it was |
 | 6 | **The work.** The body in the swing is its own, as the tool already is | Shows its effort (8) | A miner mining |
 | 7 | **Then S4,** each of its movements built this way from the start | | The proposal for S4, with its first question answered |
+| At any point | **The fall, again.** It is the body's own already, and it is the furthest of all from a real body: a young person who falls gets a hand to the ground nine times in ten and keeps the head off it eight in nine ([the research, part 4](../Research/2026-10-09_AliveAndTheBodysOwn.md#4-action-by-action)); a miner gets no hand down and strikes its head almost every time. Arms that reach for the ground, and a head kept off it | Gets ready (3); shows its effort (8) | A pushed miner catching itself on its hands |
 
 Lying is part of step 1: a body that lies should breathe and stir. A
 stir before it gets up was tried on October 9 and taken out again (see
