@@ -130,7 +130,9 @@ namespace WonderGather.Tests
                     Assert.That(fall.Falls, Is.EqualTo(fell + 1));
                     Assert.That(fall.GotUp, Is.EqualTo(got + 1));
                     Assert.That(stands, Is.EqualTo(tall).Within(.05f * tall), name + " does not stand upright again.");
-                    Assert.That(from, Is.LessThan(.4f), name + " got up far from where it lay.");
+                    // (Since October 8 it turns over and draws its knees under it before it is up: it does not get up
+                    // on the spot where it lay, but it does not go far.)
+                    Assert.That(from, Is.LessThan(1.2f), name + " got up far from where it lay.");
                     Assert.That(unit.GetComponent<Collider>().enabled, Is.True);
                     // Sent somewhere, it goes: back to the walked ground first.
                     Vector3 to = OnGround(spot + away * 2);
@@ -140,6 +142,119 @@ namespace WonderGather.Tests
                     Assert.That(unit.Motor.IsOff, Is.False);
                     Assert.That(Flat(unit.transform.position - to).magnitude, Is.LessThan(.6f), name + " did not go where it was sent after its fall.");
                 }
+                Object.Destroy(fall);
+                yield return null;
+            }
+        }
+
+        // Getting up is the let-go body's own doing (Luis, October 8: "getting up after a fall was just an animation...
+        // supernatural"). Laid on its back, its front and either side, each miner turns itself over and draws its
+        // knees under it while it is still the let-go body, and only then does the posed body take over: it is on its
+        // front and on its knees then, not lying as it fell. It does not come to the old way (curled where it lies, the
+        // posed body taking over from there), which is kept only for a body that has given up three times running.
+        [UnityTest, Timeout(1800000)]
+        public IEnumerator LaidDownAnyWayItGetsUpByItsOwnStrength()
+        {
+            Time.captureFramerate = 50;
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                var miner = unit.GetComponent<MinerBody>();
+                var biped = unit.GetComponent<ProceduralBiped>();
+                var fall = unit.gameObject.AddComponent<PhysicalFall>();
+                foreach (string how in new[] { "back", "front", "left", "right" })
+                {
+                    yield return Stand(unit, (s, a) => { });
+                    float tall = miner.Rig.head.position.y - unit.transform.position.y;
+                    int got = fall.GotUp, old = fall.GotUpTheOldWay, gaveUp = fall.GaveUpGetting;
+                    fall.LetGo();
+                    Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Falling), name + " was not let go.");
+                    PhysicalFallBench.Lay(fall, unit.transform, ground, how);
+                    float began = Time.time, lay = -1, roused = -1, over = -1, taken = -1, front = -2, steep = -2, highest = 0, fastest = 0, laidFront = -2;
+                    bool sound = true;
+                    while (fall.Now != PhysicalFall.State.Up && Time.time - began < 40)
+                    {
+                        if (fall.Part(PhysicalFall.Hips) != null)
+                        {
+                            if (lay < 0 && fall.Now == PhysicalFall.State.Lying) { lay = Time.time - began; laidFront = fall.Measure(PhysicalFall.Asks.Front); }
+                            if (fall.Now == PhysicalFall.State.Gathering)
+                            {
+                                if (roused < 0) roused = Time.time - began;
+                                // As it is now: when the posed body takes over, this is how it was the step before.
+                                front = fall.Measure(PhysicalFall.Asks.Front); steep = fall.Measure(PhysicalFall.Asks.Steep);
+                                if (over < 0 && front >= .6f) over = Time.time - began;
+                                highest = Mathf.Max(highest, fall.Measure(PhysicalFall.Asks.Hips));
+                                for (int i = PhysicalFall.Hips; i <= PhysicalFall.Head; i++) fastest = Mathf.Max(fastest, fall.Part(i).linearVelocity.magnitude);
+                            }
+                            for (int i = 0; i < PhysicalFall.Count; i++)
+                            {
+                                Vector3 at = fall.Part(i).position;
+                                sound &= float.IsFinite(at.x) && float.IsFinite(at.y) && float.IsFinite(at.z);
+                            }
+                        }
+                        else if (taken < 0 && fall.Now == PhysicalFall.State.Rising) taken = Time.time - began;
+                        yield return new WaitForFixedUpdate();
+                    }
+                    float up = Time.time - began;
+                    while ((biped.SinkNow > .02f || Mathf.Abs(biped.BowNow) > 3) && Time.time - began < 46) yield return null;
+                    yield return Wait(.5f);
+                    float stands = miner.Rig.head.position.y - unit.transform.position.y;
+                    Debug.Log($"FALL_GETUP {name}, laid on its {how} (it lay with its chest to the ground by {laidFront:F2}): it began to get up at {roused:F1} s, had turned onto its front at {over:F1} s, and the posed body took over at {taken:F1} s, from a body with its chest to the ground by {front:F2} and its shins {steep:F2} steep; it was up at {up:F1} s and stands {stands:F2} m tall (of {tall:F2}); getting up, its hips were never higher than {highest:F2} of their standing height and no part of its trunk or head faster than {fastest:F1} m/s; it gave up {fall.GaveUpGetting - gaveUp} time(s) on the way, and got up the old way {fall.GotUpTheOldWay - old} time(s)");
+                    Assert.That(sound, Is.True, name + "'s body came apart.");
+                    Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Up), $"{name}, laid on its {how}, did not get up in forty seconds.");
+                    Assert.That(fall.GotUp, Is.EqualTo(got + 1));
+                    Assert.That(fall.GotUpTheOldWay, Is.EqualTo(old), $"{name}, laid on its {how}, did not get up by its own strength: it came to the old way.");
+                    Assert.That(front, Is.GreaterThanOrEqualTo(.2f), $"{name}, laid on its {how}: the posed body took over from a body that was not on its front.");
+                    Assert.That(steep, Is.GreaterThanOrEqualTo(-.3f), $"{name}, laid on its {how}: the posed body took over from a body whose feet were in the air.");
+                    Assert.That(stands, Is.EqualTo(tall).Within(.05f * tall), $"{name}, laid on its {how}, does not stand upright again.");
+                    Assert.That(unit.GetComponent<Collider>().enabled, Is.True);
+                }
+                Object.Destroy(fall);
+                yield return null;
+            }
+        }
+
+        // The panel's "Push it over": the chosen miner, with nothing in its hands and no work, is let go with a shove,
+        // falls, and gets itself up its own way; while it is down it cannot be pushed again.
+        [UnityTest, Timeout(900000)]
+        public IEnumerator PushedOverFromThePanelItFallsAndGetsItselfUp()
+        {
+            Time.captureFramerate = 50;
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                var biped = unit.GetComponent<ProceduralBiped>();
+                Vector3 away = default;
+                yield return Stand(unit, (s, a) => { away = a; });
+                Assert.That(look.CanPushOver, Is.True, name + " cannot be pushed over as it stands.");
+                look.PushOver(-away);
+                var fall = unit.GetComponent<PhysicalFall>();
+                Assert.That(fall, Is.Not.Null);
+                Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Falling), name + " was not let go by the push.");
+                Assert.That(look.CanPushOver, Is.False, name + " can be pushed over again while it is down.");
+                float began = Time.time;
+                bool lay = false;
+                string said = "";
+                while (fall.Now != PhysicalFall.State.Up && Time.time - began < 40)
+                {
+                    lay |= fall.Now == PhysicalFall.State.Lying;
+                    if (fall.Now == PhysicalFall.State.Gathering) said = look.Status();
+                    yield return null;
+                }
+                float up = Time.time - began;
+                while ((biped.SinkNow > .02f || Mathf.Abs(biped.BowNow) > 3) && Time.time - began < 46) yield return null;
+                Debug.Log($"FALL_PUSHED {name}, pushed over backwards from the panel: it lay, and was up {up:F1} s after the push; it gave up {fall.GaveUpGetting} time(s), and got up the old way {fall.GotUpTheOldWay} time(s). Getting up, the panel said: {said}");
+                Assert.That(lay, Is.True, name + " did not come to lie.");
+                Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Up), name + " did not get up after the push.");
+                Assert.That(fall.GotUpTheOldWay, Is.EqualTo(0), name + " did not get up by its own strength.");
+                Assert.That(said, Is.EqualTo("It gets itself up."));
+                Assert.That(look.CanPushOver, Is.True);
                 Object.Destroy(fall);
                 yield return null;
             }

@@ -544,6 +544,42 @@ namespace WonderGather
             aimedAt = working.transform.position; aimedFacing = working.transform.forward;
         }
 
+        // Pushed over (the panel's button: to see a miner fall and get itself up, which by itself it does only at
+        // work far too heavy for it). It is let go, with a shove at its chest of so many newtons for each kilogram
+        // it weighs, for so long, the way the view looks (so that it falls away from the eye). Nothing in the game
+        // pushes a miner yet.
+        private const float ShoveEach = 6, ShoveFor = .3f;
+        private PhysicalFall shoved;
+        private Vector3 shove;
+        private float shoveUntil;
+        public bool CanPushOver => choice != null && choice.Current != null
+            && (!choice.Current.TryGetComponent<PhysicalFall>(out var has) || has.Now == PhysicalFall.State.Up);
+
+        public void PushOver()
+        {
+            var view = Camera.main;
+            PushOver(view != null ? Vector3.ProjectOnPlane(view.transform.forward, Vector3.up) : Vector3.zero);
+        }
+
+        public void PushOver(Vector3 way)
+        {
+            var unit = choice != null ? choice.Current : null;
+            if (unit == null || !unit.TryGetComponent<PhysicalBody>(out var weighs)) return;
+            if (way.sqrMagnitude < 1e-4f) way = unit.transform.forward;
+            if (!unit.TryGetComponent<PhysicalFall>(out var falls)) falls = unit.gameObject.AddComponent<PhysicalFall>();
+            if (falls.Now != PhysicalFall.State.Up) return;
+            falls.LetGo();
+            if (falls.Now != PhysicalFall.State.Falling) return;
+            shoved = falls; shove = way.normalized * ShoveEach * weighs.Mass; shoveUntil = Time.time + ShoveFor;
+        }
+
+        private void FixedUpdate()
+        {
+            if (shoved == null) return;
+            if (Time.time >= shoveUntil || shoved.Now == PhysicalFall.State.Up || shoved.Part(PhysicalFall.Trunk) == null) { shoved = null; return; }
+            shoved.Push(shove, shoved.Part(PhysicalFall.Trunk).worldCenterOfMass);
+        }
+
         // What the miner itself offers: to rest from its work; resting at its boulder, to go back to it.
         public void OptionsForMiner(System.Collections.Generic.List<InteractionClick.Option> into)
         {
@@ -745,6 +781,9 @@ namespace WonderGather
             bool tells = Time.time - saidAt < SaidFor;
             if (!Showing)
             {
+                // (Pushed over with nothing in its hands.)
+                if (choice != null && choice.Current != null && choice.Current.TryGetComponent<PhysicalFall>(out var lies) && lies.Now != PhysicalFall.State.Up)
+                    return lies.Now == PhysicalFall.State.Rising ? "It is on its knees, and stands up." : lies.Now == PhysicalFall.State.Gathering ? "It gets itself up." : "It fell.";
                 if (tells) return said + ".";
                 return NearestLying(Vector3.zero) != null ? "Nothing in its hands. A pickaxe lies on the ground: Space and a click on it, to pick it up."
                     : "Nothing in its hands, and no pickaxe on the ground.";

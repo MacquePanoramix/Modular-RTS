@@ -27,6 +27,84 @@ namespace WonderGather.Tests
             return values;
         }
 
+        // Ways of getting up, from a file. A line "way <name> <front least> <front most> gives|turns", then a line for
+        // each pose:  name | over atLeast within | trunk head | shoulder across elbow | shoulder across elbow |
+        // hip across knee | hip across knee | front>0.6 still>0.2 ...   (the leading side first.)
+        internal static PhysicalFall.Way[] Read(string file)
+        {
+            var culture = CultureInfo.InvariantCulture;
+            var ways = new System.Collections.Generic.List<PhysicalFall.Way>();
+            var stages = new System.Collections.Generic.List<PhysicalFall.Stage>();
+            PhysicalFall.Way way = null;
+            void Close() { if (way != null) { way.stages = stages.ToArray(); ways.Add(way); stages.Clear(); } }
+            foreach (string raw in File.ReadAllLines(file))
+            {
+                string line = raw.Trim();
+                if (line.Length == 0 || line.StartsWith("#")) continue;
+                if (line.StartsWith("way "))
+                {
+                    Close();
+                    var w = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    way = new PhysicalFall.Way { name = w[1], frontLeast = float.Parse(w[2], culture), frontMost = float.Parse(w[3], culture), gives = w[4] == "gives" };
+                    continue;
+                }
+                var fields = line.Split('|');
+                float[] Of(string text)
+                {
+                    var words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var values = new float[words.Length];
+                    for (int i = 0; i < words.Length; i++) values[i] = float.Parse(words[i], culture);
+                    return values;
+                }
+                var stage = new PhysicalFall.Stage { name = fields[0].Trim() };
+                var times = Of(fields[1]);
+                stage.over = times[0]; stage.atLeast = times[1]; stage.within = times[2];
+                // (The trunk's bow and the head's, and after them the trunk's twist if it is given.)
+                var trunk = Of(fields[2]);
+                stage.pose[0] = trunk[0]; stage.pose[1] = trunk[1];
+                if (trunk.Length > 2) stage.pose[14] = trunk[2];
+                int k = 2;
+                for (int f = 3; f <= 6; f++) foreach (float value in Of(fields[f])) stage.pose[k++] = value;
+                Assert.That(k, Is.EqualTo(14), "A pose of " + stage.name + " has not its turns.");
+                var asked = new System.Collections.Generic.List<PhysicalFall.Asked>();
+                if (fields.Length > 7)
+                    foreach (string word in fields[7].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (word.StartsWith("keep=")) { stage.keeps = float.Parse(word.Substring(5), culture); continue; }
+                        int sign = word.IndexOfAny(new[] { '>', '<' });
+                        var what = (PhysicalFall.Asks)Enum.Parse(typeof(PhysicalFall.Asks), word.Substring(0, sign), true);
+                        float value = float.Parse(word.Substring(sign + 1), culture);
+                        asked.Add(new PhysicalFall.Asked { what = what, least = word[sign] == '>' ? value : float.NegativeInfinity, most = word[sign] == '<' ? value : float.PositiveInfinity });
+                    }
+                stage.through = asked.ToArray();
+                stages.Add(stage);
+            }
+            Close();
+            return ways.ToArray();
+        }
+
+        // A let-go body laid down: every part turned as one about where it stood (on its front, its back, its left
+        // side or its right), and set just clear of the ground. (To try one part of getting up at a time.)
+        internal static void Lay(PhysicalFall fall, Transform unit, OrdinaryGround ground, string how)
+        {
+            Vector3 pivot = unit.position;
+            Quaternion turn = how == "front" ? Quaternion.AngleAxis(90, unit.right) : how == "back" ? Quaternion.AngleAxis(-90, unit.right)
+                : how == "left" ? Quaternion.AngleAxis(90, unit.forward) : Quaternion.AngleAxis(-90, unit.forward);
+            for (int i = 0; i < PhysicalFall.Count; i++)
+            {
+                var part = fall.Part(i);
+                part.transform.SetPositionAndRotation(pivot + turn * (part.transform.position - pivot), turn * part.transform.rotation);
+                part.linearVelocity = Vector3.zero; part.angularVelocity = Vector3.zero;
+            }
+            Physics.SyncTransforms();
+            float lowest = float.MaxValue;
+            for (int i = 0; i < PhysicalFall.Count; i++)
+                foreach (var solid in fall.Part(i).GetComponentsInChildren<Collider>())
+                    lowest = Mathf.Min(lowest, solid.bounds.min.y - ground.Height(solid.bounds.center.x, solid.bounds.center.z));
+            for (int i = 0; i < PhysicalFall.Count; i++) fall.Part(i).transform.position += Vector3.up * (.03f - lowest);
+            Physics.SyncTransforms();
+        }
+
         [UnityTest, Explicit, Timeout(3600000)]
         public IEnumerator Bench()
         {
@@ -35,6 +113,14 @@ namespace WonderGather.Tests
             float[] shoves = Numbers("-fallShoves", 300), ways = Numbers("-fallWays", 0, 90, 180), view = Numbers("-fallView", 100, 8, 3.2f);
             float lasts = Numbers("-fallFor", 12)[0];
             int size = (int)Numbers("-fallSize", 360)[0];
+            // -fallScripts a.txt,b.txt: ways of getting up to try, one file after another. -fallEvery: a picture every so
+            // many frames. -fallFollow: how far the camera goes with the body (1: all the way).
+            string[] scripts = (CaptureTools.Argument("-fallScripts") ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            int every = (int)Numbers("-fallEvery", 2)[0];
+            // -fallLays front,back,left,right: not shoved, but laid down so (to try one part of getting up at a time).
+            string[] lays = (CaptureTools.Argument("-fallLays") ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            if (lays.Length > 0) { ways = new float[lays.Length]; for (int i = 0; i < lays.Length; i++) ways[i] = i; shoves = new[] { 0f }; }
+            float follows = Numbers("-fallFollow", .5f)[0];
             var culture = CultureInfo.InvariantCulture;
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
@@ -136,24 +222,40 @@ namespace WonderGather.Tests
                         for (float until = Time.time + .5f; Time.time < until;) yield return null;
                         continue;
                     }
+                    var body = unit.GetComponent<PhysicalBody>();
+                    Debug.Log(string.Format(culture, "FALL   {0}: {1:0.0} kg; a knee gives {2:0} N m, a hip {3:0}, its back {4:0}, a shoulder {5:0}, an elbow {6:0}; its hips stand {7:0.00} m up, a thigh is {8:0.00} m, an upper arm {9:0.00} m and a forearm {10:0.00} m",
+                        name, body.Mass, body.KneeNow, body.KneeNow * 1.5f, body.BackNow, body.ShoulderOf(0), body.ElbowOf(0), biped.StandingHipHeight, biped.BodyProportions.legSegment,
+                        biped.BodyProportions.upperArm, biped.BodyProportions.forearm));
+                    foreach (string script in scripts.Length > 0 ? scripts : new[] { "" })
                     foreach (float shove in shoves)
                         foreach (float way in ways)
                         {
+                            if (script.Length > 0) fall.Ways = Read(script);
                             unit.Motor.Stop();
                             unit.GetComponent<NavMeshAgent>().Warp(spot);
                             unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
                             biped.ResetPose();
                             for (float until = Time.time + .8f; Time.time < until;) yield return null;
                             float tall = miner.Rig.head.position.y - unit.transform.position.y;
-                            string tag = $"{name.ToLowerInvariant()}_{shove:0}_{way:0}";
+                            string lay = lays.Length > 0 ? lays[(int)way] : "";
+                            string tag = (script.Length > 0 ? Path.GetFileNameWithoutExtension(script) + "_" : "") + (lay.Length > 0 ? $"{name.ToLowerInvariant()}_{lay}" : $"{name.ToLowerInvariant()}_{shove:0}_{way:0}");
                             int shot = 0, frame = 0;
                             var after = new GameObject("After everything").AddComponent<AfterEverything>();
                             Vector3 middle = unit.transform.position;
+                            // Once it lies, the camera looks from the side of how it lies (from its hips to its head).
+                            Vector3 lies = away;
+                            bool lain = false;
                             after.Then = () =>
                             {
-                                if (frame++ % 2 != 0) return;
-                                Vector3 target = Vector3.Lerp(middle, unit.transform.position, .5f) + Vector3.up * tall * .4f;
-                                Vector3 dir = Quaternion.AngleAxis(view[0], Vector3.up) * away;
+                                if (follows >= 1 && !lain && fall.Now == PhysicalFall.State.Lying)
+                                {
+                                    lain = true;
+                                    Vector3 spine = Vector3.ProjectOnPlane(fall.HeadAt - fall.HipsAt, Vector3.up);
+                                    if (spine.sqrMagnitude > 1e-4f) lies = spine.normalized;
+                                }
+                                if (frame++ % every != 0) return;
+                                Vector3 target = Vector3.Lerp(middle, unit.transform.position, follows) + Vector3.up * tall * .4f;
+                                Vector3 dir = Quaternion.AngleAxis(view[0], Vector3.up) * lies;
                                 dir = dir * Mathf.Cos(view[1] * Mathf.Deg2Rad) + Vector3.up * Mathf.Sin(view[1] * Mathf.Deg2Rad);
                                 camera.transform.SetPositionAndRotation(target + dir * view[2], Quaternion.LookRotation(-dir));
                                 CaptureTools.Render(camera, Path.Combine(folder, $"{tag}_{shot:000}"), size, size);
@@ -164,12 +266,33 @@ namespace WonderGather.Tests
                             Vector3 push = Quaternion.AngleAxis(way, Vector3.up) * away * shove;
                             fall.LetGo();
                             Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Falling), name + " was not let go.");
-                            float began = Time.time, lay = -1, fastest = 0, furthest = 0, lowestHead = float.MaxValue, headStruck = 0, headBefore = 0;
+                            if (lay.Length > 0) Lay(fall, unit.transform, ground, lay);
+                            float began = Time.time, lay2 = -1, fastest = 0, furthest = 0, lowestHead = float.MaxValue, headStruck = 0, headBefore = 0;
                             bool sound = true, said = false;
                             float gathers = -1, takenOver = -1, stood = -1;
                             Vector3 layAt = Vector3.zero;
+                            float told = -1;
+                            string was = "";
                             while (Time.time - began < lasts)
                             {
+                                // What it does as it gets up: at each new pose, and five times a second.
+                                if (fall.Part(PhysicalFall.Hips) != null && (fall.Now == PhysicalFall.State.Gathering || fall.Now == PhysicalFall.State.Lying))
+                                {
+                                    string doing = fall.Now + " " + fall.WayNow + "/" + fall.StageNow;
+                                    if (doing != was || Time.time - told >= .2f)
+                                    {
+                                        was = doing; told = Time.time;
+                                        // (Its joints as they are: a hip bent forward and a knee bent are more than nothing.)
+                                        var pelvis = fall.Part(PhysicalFall.Hips).transform;
+                                        float Hip(int i) => -Vector3.SignedAngle(-pelvis.up, fall.Part(PhysicalFall.Thigh + i).transform.up, pelvis.right);
+                                        float Knee(int i) => -Vector3.SignedAngle(fall.Part(PhysicalFall.Thigh + i).transform.up, fall.Part(PhysicalFall.Shin + i).transform.up, fall.Part(PhysicalFall.Thigh + i).transform.right);
+                                        float waist = Vector3.SignedAngle(pelvis.up, fall.Part(PhysicalFall.Trunk).transform.up, pelvis.right);
+                                        Debug.Log(string.Format(culture, "GETUP {0} {1:0.00} s {2}: front {3:0.00}, hips {4:0.00}, off {5:0.00}, ahead {6:0.00}, steep {7:0.00}, soles {8:0.00}, upright {9:0.00}, still {10:0.00}, hip {12:0} {13:0}, knee {14:0} {15:0}, waist {16:0}, picture {11}",
+                                            tag, Time.time - began, doing, fall.Measure(PhysicalFall.Asks.Front), fall.Measure(PhysicalFall.Asks.Hips), fall.Measure(PhysicalFall.Asks.Off),
+                                            fall.Measure(PhysicalFall.Asks.Ahead), fall.Measure(PhysicalFall.Asks.Steep), fall.Measure(PhysicalFall.Asks.Soles), fall.Measure(PhysicalFall.Asks.Upright),
+                                            fall.Measure(PhysicalFall.Asks.Still), shot, Hip(0), Hip(1), Knee(0), Knee(1), waist));
+                                    }
+                                }
                                 // It gets up by itself: when it gathers itself, when the posed body takes over, when it stands.
                                 if (gathers < 0 && fall.Now == PhysicalFall.State.Gathering) { gathers = Time.time - began; layAt = fall.HipsAt; }
                                 if (takenOver < 0 && fall.Now == PhysicalFall.State.Rising) takenOver = Time.time - began;
@@ -190,7 +313,7 @@ namespace WonderGather.Tests
                                 float down = -fall.Part(PhysicalFall.Head).linearVelocity.y;
                                 headStruck = Mathf.Max(headStruck, headBefore - down);
                                 headBefore = down;
-                                if (lay < 0 && fall.Now == PhysicalFall.State.Lying) lay = Time.time - began;
+                                if (lay2 < 0 && fall.Now == PhysicalFall.State.Lying) lay2 = Time.time - began;
                                 // How its joints are turned, half a second into the fall: a knee and an elbow (bent is
                                 // negative), a hip and a shoulder (the limb forward of the body is positive).
                                 if (!said && Time.time - began >= .5f)
@@ -215,7 +338,7 @@ namespace WonderGather.Tests
                                 tag, gathers, takenOver, stood, Vector3.ProjectOnPlane(unit.transform.position - layAt, Vector3.up).magnitude,
                                 miner.Rig.head.position.y - unit.transform.position.y, tall, biped.BowNow, biped.SinkNow, fall.Now));
                             Debug.Log(string.Format(culture, "FALL {0} shoved {1:0} N for 0.3 s, {2:0} degrees from ahead: lying after {3:0.00} s ({4}); its hips {5:0.00} m over the ground and {6:0.00} m from where it stood, its head {7:0.00} m over the ground (lowest {8:0.00}); the fastest part {9:0.0} m/s; the part furthest from its hips {10:0.00} m (it is {11:0.00} m tall); deepest under the ground {12:0.000} m; sound {13} ({14} pictures); its head struck the ground at {15:0.0} m/s at most",
-                                name, shove, way, lay, fall.Now, hipsAt.y - ground.Height(hipsAt.x, hipsAt.z), Vector3.ProjectOnPlane(hipsAt - spot, Vector3.up).magnitude,
+                                name, shove, way, lay2, fall.Now, hipsAt.y - ground.Height(hipsAt.x, hipsAt.z), Vector3.ProjectOnPlane(hipsAt - spot, Vector3.up).magnitude,
                                 headAt.y - ground.Height(headAt.x, headAt.z), lowestHead, fastest, furthest, tall, under, sound, shot, headStruck));
                             after.Then = null;
                             UnityEngine.Object.Destroy(after.gameObject);

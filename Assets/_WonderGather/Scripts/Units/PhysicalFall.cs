@@ -15,9 +15,18 @@ namespace WonderGather
     // Falling, each joint is held towards a pose that protects the body (it goes down into a crouch, its arms out
     // towards the ground, its head kept from it), with what strength that joint has left. Lying, it lets go.
     //
-    // Then it gets up. Having lain a moment, it gathers itself: the same crouch, with its own strength, where it
-    // lies. The posed body then takes over from there, crouched at that place, over a moment in which each part goes
-    // from where the physics left it to where the crouch has it; and it stands up at its legs' own pace.
+    // Then it gets up, and for most of that it is still the let-go body (Luis, October 8, of the way it was:
+    // "getting up after a fall was just an animation... supernatural"). Having lain a moment, it turns itself over
+    // onto its front if it does not lie on it, and draws its knees under it. Each of these is a row of poses, one
+    // after another; its joints are held towards each, each joint with the strength it has left, and what moves the
+    // body is its limbs and its weight on the ground. A way that does not serve (it is not on its front, or not on
+    // its knees) is given up: it lies down again, and tries when it has rested.
+    // Only once it is on its knees does the posed body take over, crouched where its feet are, in half a second;
+    // and it stands up at its legs' own pace. That last half second (from its knees onto its feet) is not the
+    // body's own strength yet: each part goes from where the physics left it to where the crouch has it.
+    // (Until October 8 the whole of it was that: it curled up where it lay, and the posed body took over from
+    // there, each part going through the air from where it lay to a crouch standing on its feet. That way is kept
+    // only for a body that has given up three times running, so that none lies for ever.)
     [DefaultExecutionOrder(40)]
     [RequireComponent(typeof(ProceduralBiped), typeof(PhysicalBody), typeof(MinerBody))]
     public sealed class PhysicalFall : MonoBehaviour
@@ -51,13 +60,132 @@ namespace WonderGather
         // until it is still again or this long has passed; and the posed body takes over in this long. Crouched, the
         // posed body's hips are this share of their height lower, and its back is bowed this far (degrees).
         private const float LiesFor = 1.2f, GathersAtLeast = .8f, GathersAtMost = 2.2f, TakesOver = .9f, CrouchSink = .5f, CrouchBow = 50;
+
+        // What is asked of the body before it goes on from one pose to the next: how far its chest faces the ground
+        // (1: flat on its front; -1: flat on its back); how high its hips are over the ground, how far they are from
+        // over its feet, and how far its weight is ahead of its ankles (shares of its hips' standing height); how
+        // steep its shins stand and how flat its soles lie (1: as standing); how upright its trunk is (1); how long
+        // it has been still (seconds); how high its head is over the ground (a share of its hips' height, again).
+        public enum Asks { Front, Hips, Off, Ahead, Steep, Soles, Upright, Still, Head }
+        public struct Asked { public Asks what; public float least, most; }
+        // One pose of getting up: come to from the one before over so long (seconds), kept at least so long, given
+        // up after so long. Its turns, in degrees: the trunk's bow and the head's (forward); then, for the side that
+        // leads (the uppermost when it began) and for the other, an arm (the shoulder forward, the arm across the
+        // body, the elbow bent) and then a leg (the hip bent, the thigh across, the knee bent); and last, how far the
+        // trunk is twisted, its leading side going forward.
+        public sealed class Stage
+        {
+            public string name;
+            public float over, atLeast, within;
+            public float[] pose = new float[15];
+            public Asked[] through = new Asked[0];
+            // If it keeps its weight over its feet in this pose: how far ahead of its ankles (a share of its hips'
+            // height). It does so as a body does, by bowing more or less at the hips. (None of the ways it knows
+            // asks this yet: it is for a way that brings it onto its feet by its own strength, which is not found.)
+            public float keeps = float.NaN;
+        }
+        // One way, for a body whose chest faces the ground by between this and this much. At its end the body is on
+        // its knees and the posed body takes over (gives); or it only lies another way, and chooses its way again.
+        public sealed class Way
+        {
+            public string name;
+            public float frontLeast, frontMost;
+            public bool gives;
+            public Stage[] stages = new Stage[0];
+        }
+        // The ways it knows. (The bench tries others.) These were found by a search (GetUpSearch, in the tests): the
+        // three miners laid and thrown down a dozen ways, the poses varied towards those that left all three best.
+        // They are not drawn by hand, and they are not a recording: they are where its joints are held towards.
+        public Way[] Ways = Usual();
+
+        // One pose: its name, the seconds it is come to over and kept at least, and its fifteen turns. The last pose
+        // of a way that gives the body back asks that the body is on its front, on its knees and its feet, and still.
+        private static Stage Pose(string name, float over, float kept, float trunk, float head, float shoulder, float across, float elbow, float otherShoulder, float otherAcross, float otherElbow,
+            float hip, float thighAcross, float knee, float otherHip, float otherThighAcross, float otherKnee, float twisted, bool gives = false)
+        {
+            var stage = new Stage { name = name, over = over, atLeast = kept, within = kept + 3 };
+            stage.pose = new[] { trunk, head, shoulder, across, elbow, otherShoulder, otherAcross, otherElbow, hip, thighAcross, knee, otherHip, otherThighAcross, otherKnee, twisted };
+            if (gives)
+            {
+                stage.within = kept + 1.2f;
+                stage.through = Kneeling;
+            }
+            return stage;
+        }
+        // On its knees and its feet: its chest faces the ground by at least this much, its shins stand at least this
+        // steep (their feet under it, not in the air behind it), and it has been still this long. (KneesUnder: its
+        // hips no further than this from over its feet, a share of their standing height; lying flat they are
+        // further. Asked only of a body that would end its way early.)
+        private const float OnItsKnees = .2f, ShinsUnder = -.3f, KneesUnder = .65f, KneelsStill = .15f;
+        private static readonly Asked[] Kneeling =
+        {
+            new Asked { what = Asks.Front, least = OnItsKnees, most = float.PositiveInfinity },
+            new Asked { what = Asks.Steep, least = ShinsUnder, most = float.PositiveInfinity },
+            new Asked { what = Asks.Still, least = KneelsStill, most = float.PositiveInfinity },
+        };
+        // A way ends as soon as the body is where the way was taking it, whatever is left of its poses and their
+        // seconds (the judges of October 9: it "sits folded for a second and a half with nothing changing, then
+        // rises"; "parked, then released"). Turning over, it is there when its chest faces the ground by this much
+        // more than the way that follows asks.
+        private const float TurnedWell = .2f;
+        private bool There()
+        {
+            if (got < stage.over) return false;
+            if (!way.gives) return at == way.stages.Length - 1 && Measure(Asks.Front) >= Mathf.Min(.95f, way.frontMost + TurnedWell);
+            // (Before its poses are through, only if its feet are well under it already.)
+            if (Measure(Asks.Off) > KneesUnder) return false;
+            foreach (var asked in Kneeling)
+            {
+                float it = Measure(asked.what);
+                if (it < asked.least || it > asked.most) return false;
+            }
+            return true;
+        }
+
+        private static Way[] Usual() => new[]
+        {
+                new Way { name = "curl", frontLeast = -1, frontMost = 0.6f, gives = false, stages = new[]
+                {
+                    Pose("ball", 0.34f, 0.76f, 61, 3, 157, 51, 74, 83, -74, 31, 114, 33, 57, 114, -27, 123, -14),
+                    Pose("over", 0.36f, 0.43f, 3, -36, 41, 23, 28, 160, 36, 11, 84, 42, 95, 75, 19, 126, 8),
+                    Pose("more", 0.54f, 1.04f, -16, -8, 37, -7, 17, 165, 46, 43, 21, 7, 137, 49, 40, 115, -6),
+                } },
+                new Way { name = "knees", frontLeast = 0.6f, frontMost = 1, gives = true, stages = new[]
+                {
+                    Pose("tuck", 0.61f, 1.30f, 68, -26, 130, -29, 129, 130, -29, 129, 113, -8, 41, 113, -8, 41, 0),
+                    Pose("push", 0.49f, 0.69f, 68, -28, 117, -26, 36, 117, -26, 36, 106, 5, 55, 106, 5, 55, 0),
+                    Pose("fold", 0.48f, 0.49f, 36, -11, 156, 3, 42, 156, 3, 42, 115, 32, 131, 115, 32, 131, 0, true),
+                } },
+        };
+        private Way way;
+        private Stage stage;
+        private int at, leads, chosen;
+        private float got;
+        private readonly float[] posed = new float[15], poseFrom = new float[15];
+        // Keeping its weight over its feet: its hips bend this many degrees more for each second its weight is a
+        // whole hip's height too far back, and no more than this much more or less than the pose has them.
+        private const float Balances = 250, BalancesAtMost = 35;
+        private float leant;
+        // Which way and which pose it is at (while it gathers itself), and how often a pose was given up.
+        public string WayNow => Now == State.Gathering && way != null ? way.name : "";
+        public string StageNow => Now == State.Gathering && stage != null ? stage.name : "";
+        public int GaveUpGetting { get; private set; }
+        // A body that has given up this many times running gets up the way it did until October 8: curled where it
+        // lies, the posed body taking over from there (so that none lies for ever). How many did.
+        private const int GivesUpAfter = 3;
+        private int gaveUpRunning;
+        public int GotUpTheOldWay { get; private set; }
+        // The posed body takes over in this long (seconds) from a body on its knees and feet; in TakesOver from one
+        // that only lies curled.
+        private const float TakesOverKneeling = .5f;
+        private float takesOver = TakesOver;
         // The posed body takes over no deeper in its crouch than its legs can raise it from: where its knees would give
         // this share of what they have now. If that is not even this share of its hips' height, it lies down again,
         // and its legs rest this long (seconds) before it tries again.
         private const float RisesAt = .55f, LeastCrouch = .1f, RestsMore = 2.5f;
         // Once it lies, it is falling again only if its hips, its trunk or its head move faster than this (metres a
         // second): its limbs settling as it lets go are not a fall.
-        private const float Thrown = 1.5f;
+        private const float Thrown = 1.5f, ThrownGettingUp = 2.5f;
         private const int Ground = 1 << 6;
 
         private ProceduralBiped body;
@@ -68,7 +196,7 @@ namespace WonderGather
         private readonly Rigidbody[] parts = new Rigidbody[Count];
         private readonly Transform[] segments = new Transform[Count];
         private readonly Vector3[] before = new Vector3[Count], lately = new Vector3[Count];
-        private readonly Vector3[] footAt = new Vector3[2], toeAt = new Vector3[2];
+        private readonly Vector3[] footAt = new Vector3[2], toeAt = new Vector3[2], plantAt = new Vector3[2];
         private readonly Quaternion[] footTurn = new Quaternion[2], toeTurn = new Quaternion[2];
         private float beforeTime = -1, latelyTime = -1, still, ridesUp, tone = 1, neckLever, lain, gathered, risen;
         // Where the physics left each of the posed body's segments, when the posed body took over.
@@ -207,10 +335,10 @@ namespace WonderGather
 
         // A joint is held towards a turn from its rest (bent, twisted, to the side: degrees), with a strength (newton
         // metres) that is all given when it is FullAt from there.
-        private static void Hold(ConfigurableJoint joint, float bent, float aside, float strength)
+        private static void Hold(ConfigurableJoint joint, float bent, float aside, float strength, float twisted = 0)
         {
             // (The engine takes the turn wanted the other way round.)
-            joint.targetRotation = Quaternion.Inverse(Quaternion.Euler(bent, 0, aside));
+            joint.targetRotation = Quaternion.Inverse(Quaternion.Euler(bent, twisted, aside));
             float spring = strength / (FullAt * Mathf.Deg2Rad);
             joint.slerpDrive = new JointDrive { positionSpring = spring, positionDamper = strength * Slows, maximumForce = strength };
         }
@@ -223,6 +351,26 @@ namespace WonderGather
             float neck = NeckHolds * parts[Head].mass * Physics.gravity.magnitude * neckLever * physical.Strength * strong;
             // Which way the trunk is going down: its front to the ground (1), its back (-1).
             float front = Vector3.Dot(parts[Trunk].rotation * Vector3.forward, Vector3.down);
+            if (Now == State.Gathering && stage != null)
+            {
+                // Getting up: the pose it is at, come to from the one before.
+                float share = stage.over > 0 ? Mathf.SmoothStep(0, 1, got / stage.over) : 1;
+                for (int k = 0; k < posed.Length; k++) posed[k] = Mathf.Lerp(poseFrom[k], stage.pose[k], share);
+                Hold(joints[Trunk], posed[0], 0, back, posed[14] * (leads == 1 ? -1 : 1));
+                Hold(joints[Head], posed[1], 0, neck);
+                for (int n = 0; n < 2; n++)
+                {
+                    int side = n == 0 ? leads : 1 - leads;
+                    int a = 2 + 3 * n, l = 8 + 3 * n;
+                    posed[l] = Mathf.Clamp(posed[l] + leant, Hip.x, Hip.y);
+                    // (An arm's bending forward is the other way round from a leg's, and so is its going across.)
+                    Hold(joints[UpperArm + side], -posed[a], posed[a + 1] * (side == 0 ? -1 : 1), physical.ShoulderOf(side) * strong);
+                    Hold(joints[Forearm + side], -posed[a + 2], 0, physical.ElbowOf(side) * strong);
+                    Hold(joints[Thigh + side], posed[l], posed[l + 1] * (side == 0 ? 1 : -1), hip);
+                    Hold(joints[Shin + side], -posed[l + 2], 0, knee);
+                }
+                return;
+            }
             // How far it is still falling (1), or lying easy (0).
             float falls = Mathf.InverseLerp(AtRest, 1, tone);
             Hold(joints[Trunk], Mathf.Lerp(TrunkEasy, TrunkBowed, falls), 0, back);
@@ -306,6 +454,7 @@ namespace WonderGather
                 joints[Shin + i] = Join(shin, thigh, new Vector3(0, -s.shins[i].localScale.y, 0), Quaternion.identity, Knee);
                 // Its boot goes with the shin, as it stands.
                 footAt[i] = shin.transform.InverseTransformPoint(s.feet[i].position);
+                plantAt[i] = shin.transform.InverseTransformPoint(body.FootPosition(i));
                 footTurn[i] = Quaternion.Inverse(shin.transform.rotation) * s.feet[i].rotation;
                 var boot = new GameObject("Boot");
                 boot.transform.SetParent(shin.transform, false);
@@ -337,6 +486,93 @@ namespace WonderGather
             Falls++;
         }
 
+        // What the let-go body is doing now, as getting up asks of it.
+        public float Measure(Asks what)
+        {
+            if (parts[Hips] == null) return 0;
+            float tall = body.StandingHipHeight;
+            Vector3 hips = parts[Hips].position;
+            Vector3 Boot(int i) => parts[Shin + i].transform.TransformPoint(footAt[i]);
+            Vector3 feet = (Boot(0) + Boot(1)) * .5f;
+            switch (what)
+            {
+                case Asks.Front: return Vector3.Dot(parts[Trunk].rotation * Vector3.forward, Vector3.down);
+                case Asks.Hips:
+                    float under = Physics.Raycast(hips + Vector3.up * .5f, Vector3.down, out var below, 4, Ground) ? below.point.y : hips.y;
+                    return (hips.y - under) / tall;
+                case Asks.Off: return Vector3.ProjectOnPlane(hips - feet, Vector3.up).magnitude / tall;
+                case Asks.Ahead:
+                    // Its weight, ahead of its ankles the way its boots point.
+                    Vector3 weight = Vector3.zero;
+                    float kilograms = 0;
+                    for (int i = 0; i < Count; i++) { weight += parts[i].worldCenterOfMass * parts[i].mass; kilograms += parts[i].mass; }
+                    Vector3 toes = Vector3.ProjectOnPlane(parts[Shin].rotation * footTurn[0] * Vector3.forward + parts[Shin + 1].rotation * footTurn[1] * Vector3.forward, Vector3.up);
+                    if (toes.sqrMagnitude < 1e-6f) return 0;
+                    return Vector3.Dot(weight / kilograms - feet, toes.normalized) / tall;
+                case Asks.Steep: return Mathf.Min(-(parts[Shin].rotation * Vector3.up).y, -(parts[Shin + 1].rotation * Vector3.up).y);
+                case Asks.Soles: return Mathf.Min((parts[Shin].rotation * footTurn[0] * Vector3.up).y, (parts[Shin + 1].rotation * footTurn[1] * Vector3.up).y);
+                case Asks.Upright: return (parts[Trunk].rotation * Vector3.up).y;
+                case Asks.Head:
+                    Vector3 head = parts[Head].position;
+                    return (head.y - (Physics.Raycast(head + Vector3.up * .5f, Vector3.down, out var beneath, 4, Ground) ? beneath.point.y : head.y)) / tall;
+                default: return still;
+            }
+        }
+
+        // (For the search: at the end of a way that gives the body back, it only stays as it is, and says so.)
+        public bool Gives = true;
+        public bool Through { get; private set; }
+        // (For the search: it lies still, let go, as if it had only now come to lie; and it is falling again.)
+        public void LieStill() { Now = State.Lying; lain = 0; tone = AtRest; stage = null; still = 0; Through = false; Holds(); }
+        public void Fell() { Now = State.Falling; lain = 0; tone = 1; stage = null; still = 0; Through = false; Holds(); }
+
+        // It begins to get up.
+        public void Rouse()
+        {
+            // (It begins from how a body lies easy.)
+            float arms = -Mathf.Lerp(ArmsBack, -ArmsForward, Mathf.InverseLerp(-1, 1, Measure(Asks.Front)));
+            posed[0] = TrunkEasy; posed[1] = 0; posed[14] = 0;
+            for (int n = 0; n < 2; n++)
+            {
+                posed[2 + 3 * n] = arms; posed[3 + 3 * n] = 0; posed[4 + 3 * n] = ElbowsBent;
+                posed[8 + 3 * n] = HipsEasy; posed[9 + 3 * n] = 0; posed[10 + 3 * n] = KneesEasy;
+            }
+            Now = State.Gathering; gathered = 0; chosen = 0; Through = false;
+            // (Not for the search, which only tries its ways.)
+            if (Gives && gaveUpRunning >= GivesUpAfter) { way = null; stage = null; return; }
+            if (!Choose()) LiesDownAgain();
+        }
+
+        // It chooses its way of getting up, by how it lies. The side that is uppermost leads.
+        private bool Choose()
+        {
+            float front = Measure(Asks.Front);
+            way = null;
+            // (Not for ever: a body that only turns from one side to the other lies down and rests.)
+            if (++chosen > 4) return false;
+            foreach (var one in Ways)
+                if (one != null && one.stages.Length > 0 && front >= one.frontLeast && front <= one.frontMost) { way = one; break; }
+            if (way == null) return false;
+            leads = Vector3.Dot(parts[Trunk].rotation * Vector3.right, Vector3.up) >= 0 ? 1 : 0;
+            leant = 0;
+            Begin(0);
+            return true;
+        }
+
+        private void Begin(int index)
+        {
+            at = index; stage = way.stages[index]; got = 0; still = 0;
+            for (int k = 0; k < posed.Length; k++) poseFrom[k] = posed[k];
+        }
+
+        // It did not get through a pose: it lets go, lies, and rests before it tries again.
+        private void LiesDownAgain()
+        {
+            Now = State.Lying; lain = LiesFor - RestsMore;
+            stage = null;
+            GaveUpGetting++; LayDownAgain++; gaveUpRunning++;
+        }
+
         // How deep the crouch was that it last got up from (metres its hips were lower than standing), and how many
         // times it has gathered itself and lain down again, its legs not yet able to raise it.
         public float RoseFrom { get; private set; }
@@ -357,9 +593,9 @@ namespace WonderGather
 
         // The deepest crouch its legs can raise it from now, no deeper than the crouch it gathers into; less than
         // nothing if there is none worth the name.
-        private float Crouch()
+        private float Crouch(float deepest)
         {
-            float deepest = CrouchSink * body.StandingHipHeight, least = LeastCrouch * body.StandingHipHeight;
+            float least = LeastCrouch * body.StandingHipHeight;
             if (KneesAsked(deepest) <= RisesAt) return deepest;
             if (KneesAsked(least) > RisesAt) return -1;
             for (int k = 0; k < 6; k++)
@@ -391,15 +627,35 @@ namespace WonderGather
             if (!upright && along.sqrMagnitude > 1e-4f && Mathf.Abs(chest.y) > .3f) faces = chest.y < 0 ? along : -along;
             if (faces.sqrMagnitude < 1e-6f) faces = transform.forward;
             Follow();
+            bool squats = way != null && way.gives;
+            float wider = 0, stagger = 0, lowNow = 0, bowedNow = 0;
+            if (squats)
+            {
+                // It squats on its feet: the posed body stands where they are planted and as far apart as they are,
+                // facing the way they point, its hips as low and its trunk as bowed as they are.
+                Vector3 left = parts[Shin].transform.TransformPoint(plantAt[0]), right = parts[Shin + 1].transform.TransformPoint(plantAt[1]);
+                Vector3 toes = Vector3.ProjectOnPlane(parts[Shin].rotation * footTurn[0] * Vector3.forward + parts[Shin + 1].rotation * footTurn[1] * Vector3.forward, Vector3.up);
+                // (Only if its soles are on the ground: on its knees its boots point down, and it faces the way it lies.)
+                if (toes.sqrMagnitude > 1e-4f && Measure(Asks.Soles) > .6f) faces = toes;
+                Quaternion facing = Quaternion.LookRotation(faces.normalized);
+                wider = Vector3.Dot(right - left, facing * Vector3.right) * .5f - body.BodyProportions.hipWidth;
+                stagger = Vector3.Dot(left - right, facing * Vector3.forward);
+                Vector3 feet = (left + right) * .5f - facing * Vector3.forward * .02f;
+                float ground = Physics.Raycast(new Vector3(feet.x, feet.y + 2, feet.z), Vector3.down, out var under, 8, Ground) ? under.point.y : transform.position.y - ridesUp;
+                lowNow = body.StandingHipHeight - (parts[Hips].position.y - ground);
+                bowedNow = Vector3.Angle(Vector3.up, parts[Trunk].rotation * Vector3.up);
+                transform.position = new Vector3(feet.x, ground + ridesUp, feet.z);
+            }
             transform.rotation = Quaternion.LookRotation(faces.normalized);
             // What its balance had done to its legs before it fell is over: its knees given way, its feet set apart.
             if (balance != null) balance.Afresh();
-            body.Crouch(0); body.SetStance(0, 0);
+            body.Crouch(0); body.SetStance(wider, stagger);
             // The crouch its legs can raise it from. If there is none, it lies down again, and they rest.
-            float low = Crouch();
+            float low = Crouch(squats ? Mathf.Clamp(lowNow, CrouchSink * body.StandingHipHeight, ProceduralBiped.DeepestSink * body.StandingHipHeight) : CrouchSink * body.StandingHipHeight);
             if (low < 0)
             {
                 Now = State.Lying; lain = LiesFor - RestsMore;
+                stage = null;
                 LayDownAgain++;
                 return;
             }
@@ -408,6 +664,9 @@ namespace WonderGather
             for (int i = 0; i < Count; i++) { parts[i] = null; joints[i] = null; }
             // The posed body, crouched there at once.
             float bowed = BowedAt(low);
+            // (As low as it squats, if its legs can raise it from there; and bowed as it is.)
+            if (squats) bowed = Mathf.Clamp(bowedNow, 0, ProceduralBiped.MostBowed);
+            takesOver = squats ? TakesOverKneeling : TakesOver;
             RoseFrom = low;
             body.Bow(bowed, 400); body.Sink(low);
             body.LetGo = false;
@@ -425,7 +684,7 @@ namespace WonderGather
             if (TryGetComponent<PhysicalBack>(out var back)) back.Want(0);
             body.Bow(0); body.Sink(0);
             Now = State.Up; beforeTime = latelyTime = -1;
-            GotUp++;
+            GotUp++; gaveUpRunning = 0;
         }
 
         private int Which(Collider solid)
@@ -500,32 +759,76 @@ namespace WonderGather
 
         private void FixedUpdate()
         {
+            // (A search that steps the physics itself takes these steps itself.)
+            if (Physics.simulationMode == SimulationMode.FixedUpdate) Advance(Time.fixedDeltaTime);
+        }
+
+        // One step of the fall's own doing.
+        public void Advance(float dt)
+        {
             if (Now == State.Up || Now == State.Rising) return;
-            Since += Time.fixedDeltaTime;
+            Since += dt;
             bool moving = false;
             for (int i = Hips; i <= Head && !moving; i++)
                 moving = parts[i].linearVelocity.sqrMagnitude > Still * Still || parts[i].angularVelocity.sqrMagnitude > StillTurning * StillTurning;
-            still = moving ? 0 : still + Time.fixedDeltaTime;
+            still = moving ? 0 : still + dt;
             if (Now == State.Falling && still >= LiesAfter) { Now = State.Lying; lain = 0; }
             else if (Now == State.Lying || Now == State.Gathering)
             {
                 bool thrown = false;
-                for (int i = Hips; i <= Head && !thrown; i++) thrown = parts[i].linearVelocity.sqrMagnitude > Thrown * Thrown;
+                // (A body that is getting up moves itself: it is thrown only by more.)
+                float fast = Now == State.Gathering ? ThrownGettingUp : Thrown;
+                for (int i = Hips; i <= Head && !thrown; i++) thrown = parts[i].linearVelocity.sqrMagnitude > fast * fast;
                 if (thrown) Now = State.Falling;
             }
-            // Having lain a moment, it gathers itself: into its crouch, with its own strength, where it lies.
+            // Having lain a moment, it gets up, pose by pose.
             if (Now == State.Lying)
             {
-                lain += Time.fixedDeltaTime;
-                if (GetsUp && lain >= LiesFor) { Now = State.Gathering; gathered = 0; }
+                lain += dt;
+                if (GetsUp && lain >= LiesFor)
+                {
+                    Rouse();
+                    if (Now != State.Gathering) return;
+                }
             }
             else if (Now == State.Gathering)
             {
-                gathered += Time.fixedDeltaTime;
-                if ((gathered >= GathersAtLeast && still >= .3f) || gathered >= GathersAtMost) { GiveBack(); return; }
+                if (Through) { tone = Mathf.MoveTowards(tone, 1, dt / LetsGoOver); Holds(); return; }
+                if (stage == null)
+                {
+                    // The old way: curled where it lies, until it is still.
+                    gathered += dt;
+                    if ((gathered >= GathersAtLeast && still >= .3f) || gathered >= GathersAtMost) { GotUpTheOldWay++; GiveBack(); return; }
+                    tone = Mathf.MoveTowards(tone, 1, dt / LetsGoOver);
+                    Holds();
+                    return;
+                }
+                gathered += dt; got += dt;
+                if (float.IsNaN(stage.keeps)) leant = Mathf.MoveTowards(leant, 0, 60 * dt);
+                else leant = Mathf.Clamp(leant + Balances * (stage.keeps - Measure(Asks.Ahead)) * dt, -BalancesAtMost, BalancesAtMost);
+                bool through = got >= stage.atLeast;
+                for (int k = 0; through && k < stage.through.Length; k++)
+                {
+                    float it = Measure(stage.through[k].what);
+                    through = it >= stage.through[k].least && it <= stage.through[k].most;
+                }
+                // (Or it is already where the way was taking it.)
+                bool there = There();
+                if (there) at = way.stages.Length - 1;
+                if (through || there)
+                {
+                    if (at + 1 < way.stages.Length) Begin(at + 1);
+                    else if (way.gives)
+                    {
+                        if (Gives) { GiveBack(); return; }
+                        Through = true;
+                    }
+                    else if (!Choose()) { LiesDownAgain(); return; }
+                }
+                else if (got > stage.within) { LiesDownAgain(); return; }
             }
             // Falling, and gathering itself, it holds itself with all it has; lying, it lets go.
-            tone = Mathf.MoveTowards(tone, Now == State.Lying ? AtRest : 1, Time.fixedDeltaTime / LetsGoOver);
+            tone = Mathf.MoveTowards(tone, Now == State.Lying ? AtRest : 1, dt / LetsGoOver);
             Holds();
         }
 
@@ -547,7 +850,7 @@ namespace WonderGather
                 // The posed body has posed its crouch this frame: each segment is between where the physics left it and
                 // there, and is there when the moment is over. Then it stands up.
                 risen += Time.deltaTime;
-                float share = Mathf.SmoothStep(0, 1, risen / TakesOver);
+                float share = Mathf.SmoothStep(0, 1, risen / takesOver);
                 void Between(Transform segment, int k)
                 {
                     segment.SetPositionAndRotation(Vector3.Lerp(leftAt[k], segment.position, share), Quaternion.Slerp(leftTurned[k], segment.rotation, share));
@@ -568,7 +871,7 @@ namespace WonderGather
                     Between(s.feet[i], Count + i);
                     if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null) Between(s.toes[i], Count + 2 + i);
                 }
-                if (risen >= TakesOver) StandUp();
+                if (risen >= takesOver) StandUp();
                 return;
             }
             Follow();

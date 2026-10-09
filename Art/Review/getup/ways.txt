@@ -1,0 +1,11 @@
+# The ways of getting up that PhysicalFall.Usual() holds (found by GetUpSearch on Small, Long and Round together, October 9 2026).
+# way <name> <chest to the ground, least> <most> gives|turns
+# pose | over, kept, given up after (s) | trunk bow, head, trunk twist | leading arm: shoulder, across, elbow | other arm | leading leg: hip, across, knee | other leg |
+way curl -1 0.6 turns
+ball | 0.34 0.76 3.8 | 61 3 -14 | 157 51 74 | 83 -74 31 | 114 33 57 | 114 -27 123 |
+over | 0.36 0.43 3.4 | 3 -36 8 | 41 23 28 | 160 36 11 | 84 42 95 | 75 19 126 |
+more | 0.54 1.04 4.0 | -16 -8 -6 | 37 -7 17 | 165 46 43 | 21 7 137 | 49 40 115 |
+way knees 0.6 1 gives
+tuck | 0.61 1.30 4.3 | 68 -26 0 | 130 -29 129 | 130 -29 129 | 113 -8 41 | 113 -8 41 |
+push | 0.49 0.69 3.7 | 68 -28 0 | 117 -26 36 | 117 -26 36 | 106 5 55 | 106 5 55 |
+fold | 0.48 0.49 3.5 | 36 -11 0 | 156 3 42 | 156 3 42 | 115 32 131 | 115 32 131 |
