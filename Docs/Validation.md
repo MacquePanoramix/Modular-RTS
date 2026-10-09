@@ -2958,3 +2958,38 @@ No code of the game was changed; the bench is run only when asked.
   torques with no springs; the plain tests near the ground. **Not
   confirmed:** that the engine's other solver was in force when it was
   tried.
+
+## S3b step 1, first part — how often the physics steps (October 9)
+
+[Design/TheBodysOwn.md](Design/TheBodysOwn.md#step-1-first-part-how-often-the-physics-steps-october-9).
+No code of the game was changed; the bench is run only when asked.
+
+- **`BodysOwnBench.Bench`,** each joint's spring set by rule (its own
+  rate times the step at one, by the turning weight of the lighter side
+  of its joint; damped to just stop that side swinging): at **50 steps
+  a second** all three miners stand a minute on the path (heads within
+  0.11 to 0.28 mm once still) and 25 of 25 of each still stand after a
+  minute on a level floor (one start, twenty-five times). Without the
+  rule, at 50: 14 of 25 of Small, none of Long.
+- **Twenty-four different starts** (each set going a different way at
+  the same speed; counted as standing as it stood after twenty
+  seconds), Small, Long, Round: at 0.1 m/s, 11, 24, 24 at 50 steps a
+  second and 24, 24, 24 at 100; at 0.2 m/s, 3, 20, 21 at 50; 19, 24, 19
+  at 100; 24, 24, 24 at 200; at 0.3 m/s, 1, 4, 6; 15, 18, 17; 19, 21,
+  19.
+- **Before it is still** its head goes 47, 5 and 47 mm at 50 steps a
+  second; 11, 5 and 8 at 100; 4, 5 and 6 at 200.
+- **Cost,** in the Editor, for each fiftieth of a second: twenty-five
+  standing bodies, 1.3 ms at 50 steps a second (2.6 to 2.8 at 100, 5.2
+  to 5.8 at 200).
+- **Pulled** with 30 N for 2.5 s at 50: Round stands; Small and Long
+  fall. At 50 N Round falls.
+- **One reviewer** (a separate agent, the sceptic) showed that the
+  first write-up's "fifty will do" rested on one start counted
+  twenty-five times, and that the stance at fifty is a poorer one; the
+  different starts were then counted and the write-up rewritten
+  ([what was said](Design/TheBodysOwn.md#what-the-reviewer-said)).
+- **Not run:** a slope; starts that differ in lean or weight; the rule
+  at other values than a half and one; the ankle's spring changed
+  without the dampers; the built player; the engine's other solver with
+  proof.

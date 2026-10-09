@@ -167,24 +167,25 @@ Each is shown to Luis before the next is built on it.
   0.1 to 0.35 mm, twenty-five of twenty-five for twenty seconds) was a
   body whose legs give torques worked out each step from the push it
   wants from the ground, its joints held softly towards their pose.
-- **The physics may have to step faster where a body's own is; how much
-  is not settled.** All three stood at 200 steps a second; Long and
-  Round at 100; none reliably at the game's 50. How the joints are
-  sprung mattered as much as the rate, and the cheapest settings were
-  not tried. Step 1 begins by settling it.
-- **Whatever the step becomes, what is already built is touched.** The
-  fall, the getting up, what hangs on the body and the pickaxe in the
-  hands are stepped by the same physics. Stepped finer they behave
-  differently, and the getting up's poses would have to be found again.
-  That was step 2's; it may begin in step 1.
+- **How often the physics steps.** In step 0 all three stood at 200
+  steps a second, Long and Round at 100, none reliably at the game's 50.
+  **Step 1's first part (the same day): with each joint's spring set
+  by rule, all three stand at the game's own 50, but less steadily than
+  at 100 or 200** (set going at 0.2 m/s, 3, 20 and 21 of 24 stay
+  standing at 50; 19, 24 and 19 at 100; all at 200)
+  ([figures](Design/TheBodysOwn.md#step-1-first-part-how-often-the-physics-steps-october-9)).
+  So the body can be begun at the game's own step, and nothing already
+  built need be touched to begin; the rate is a trade to be chosen when
+  the body is in the game, and the keeper comes first.
 - **It does not lean yet.** Round took a pull of 30 N; Small and Long
   fell at it. Today's body leans at 50 to 150 N.
 - **Step 1 is larger** than "it stands by its own ankles, hips and
   back" sounded. Its order: (a) how often the physics steps, counted
-  over many starts on all three miners; (b) the body's own body in the
+  over many starts on all three miners (looked into for standing: it
+  stands at fifty, sturdier at a hundred and two hundred; chosen later,
+  in the game); (b) the body's own body in the
   game, as an articulation of thirteen parts, beside the posed one,
-  switched on the panel, and everything built before checked at that
-  step; (c) the keeper: standing still, leaning against a pull as
+  switched on the panel; (c) the keeper: standing still, leaning against a pull as
   today's body does, a joint giving no more than it has, the ground
   known by what touches it; (d) life in it: weight shifting, breath, the
   head and eyes.

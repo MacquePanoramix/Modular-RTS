@@ -36,9 +36,12 @@ run the same day, and what is below is what the figures carry now.
    of each still stood after twenty seconds.
 2. **That was at 200 steps of physics a second; the game takes 50.** At
    100, Long and Round stood as still and Small did not. At 50 none
-   stood reliably. **How few will do is not settled:** how softly the
-   joints are sprung mattered as much as the rate (with stiffer springs
-   Round fell at 200 and stood only at 500).
+   stood reliably. How softly the joints are sprung mattered as much as
+   the rate (with stiffer springs Round fell at 200 and stood only at
+   500). **Looked into the same day, in step 1's first part: with each
+   joint's spring set by rule, all three stand at the game's own 50,
+   but less steadily than at 100 or 200**
+   ([below](#step-1-first-part-how-often-the-physics-steps-october-9)).
 3. **What stood** was a body whose legs give torques **worked out** each
    step from the push it wants from the ground, with every joint also
    held softly towards its pose by the engine's spring. The engine's
@@ -297,8 +300,10 @@ tool, the stones) is stepped as often.
   engine's springs hold the pose, softly.
 - **Nothing slows its parts** but its joints.
 
-**Not decided: how often the physics steps.** 200 a second stood all
-three; 100 stood two. The first writing of this page took that for a
+**Not decided in step 0: how often the physics steps** (taken further
+in
+[step 1's first part](#step-1-first-part-how-often-the-physics-steps-october-9)).
+200 a second stood all three; 100 stood two. The first writing of this page took that for a
 need. It is a setting among others, and the cheapest ones were not
 tried: an ankle's spring set by rule (its rate times the step a half
 or less), its damper by the boot's turning weight and not by a time, a
@@ -386,3 +391,164 @@ reached the plan.
   one-joint tests near the ground.
 - **Judges:** there is no movement to judge in this step; it was
   reviewed (above).
+
+## Step 1, first part: how often the physics steps (October 9)
+
+**What step 0 left open:** how many steps of physics a second a body
+kept up by its own joints needs. All three miners had stood at 200,
+two at 100, none reliably at the game's 50. The reviewers of step 0
+said the cheapest thing had not been tried: set each joint's spring by
+the rule of the engine's makers, and its damper by the turning weight
+it works against.
+
+**This part, too, was written twice.** The first writing said "the
+game's own fifty steps a second will do for standing". A reviewer
+showed that its count was of one start made twenty-five times, and
+that the stance at fifty is a poorer one. Different starts were then
+counted, at three rates. What is below is what they show.
+
+### In short
+
+- **With each joint's spring set by rule, all three miners stand at the
+  game's own fifty steps a second:** a minute on the path, and
+  twenty-five of twenty-five on a level floor.
+- **But less steadily than at a hundred or two hundred.** Set going at
+  a fifth of a metre a second (a light shove), 3 of 24 of Small, 20 of
+  Long and 21 of Round were still standing as they stood at fifty steps
+  a second; 19, 24 and 19 at a hundred; all 24 of each at two hundred.
+  And at fifty the body sags before it stands (Small's and Round's
+  heads go 47 mm; 11 and 8 mm at a hundred; 4 and 6 at two hundred).
+- **So the rate buys steadiness, and is a trade:** a body costs about
+  0.05 ms for each fiftieth of a second at 50 steps a second, 0.11 at
+  100, 0.22 at 200 (in the Editor); and above 50 everything else built
+  on the physics is stepped finer too. **Not settled.** The keeper is a
+  first one; a better one may move the whole table.
+
+### What was done
+
+In the bench, each joint's spring is now no stiffer than the rule
+allows, and its damper is set by weight and not by a time:
+
+- **The rule:** a spring has a rate of its own, the root of its
+  stiffness over the turning weight of the *lighter* side of its joint.
+  That rate times the step is kept at one or under.
+- **The damper:** what just stops that lighter side swinging on that
+  spring.
+- **The lighter side** of each joint is reckoned roughly from the
+  body's plan: all that hangs beyond the joint, or all the rest,
+  whichever is less.
+
+**What the rule changed.** Of the springs, only the ankles'; of the
+dampers, every joint's (the waist's went from about 10 to 39). No run
+changed the one without the other.
+
+| At 50 steps a second | Small | Long | Round |
+|---|---|---|---|
+| The lighter side of an ankle (a boot) | 0.007 kg m² | 0.011 | 0.009 |
+| An ankle's spring by its strength alone (soft, 75°) | 46 N m a radian | 108 | 118 |
+| **An ankle's spring by the rule** | **16** | **27** | **22** |
+| A knee's; a hip's; the waist's (unchanged) | 66; 100; 196 | 154; 231; 265 | 168; 253; 353 |
+
+With springs so soft the ankles hold nothing up: both together are a
+sixteenth to a tenth of what the body's leaning asks. What stands the
+body is the torques worked out for its legs.
+
+### Standing, one start
+
+Kept by torques worked out for its legs, as in step 0; an
+articulation; one on the path, and twenty-five of the same on a level
+floor.
+
+| Steps a second | The rule | Small | Long | Round |
+|---|---|---|---|---|
+| **50** | **rate times step at one** | **stands a minute; 25 of 25 after a minute** | **stands; 25 of 25** | **stands; 25 of 25** |
+| 50 | at a half (softer) | stands twenty seconds; but 10 of 25 | stands, wandering 3.8 mm; 25 of 25 | stands; 25 of 25 |
+| 100 | at one | stands; 25 of 25 after twenty seconds | stands; 25 of 25 | stands; 25 of 25 |
+| 50, no rule (step 0's soft springs) | | falls; 14 of 25 | falls; 0 of 25 | |
+
+(The twenty-five are one start, twenty-five times: they differ only by
+where on the floor they stand. They show that a start is not on a
+knife's edge, and no more. "Stands" here is only that the head is
+above seven tenths of its height.)
+
+**How it stands** (on the path, rule at one):
+
+| Steps a second | Small | Long | Round |
+|---|---|---|---|
+| 50: its head goes, before it is still | 47 mm | 5 mm | 47 mm |
+| 100 | 11 mm | 5 mm | 8 mm |
+| 200 | 4 mm | 5 mm | 6 mm |
+| Then, at 50, its head keeps within | 0.11 mm | 0.28 mm | 0.12 mm |
+
+At fifty steps a second Small and Round sag into another stance before
+they are still: most of their weight on one leg (a knee giving 27 and
+67 N m, the other 3 and 14), and the push they want reaching 16 and
+23 mm outside their soles. At a hundred and two hundred they do not.
+It is a poorer stance, not the same one.
+
+### Standing, twenty-four different starts
+
+Twenty-four of each miner on a level floor, each set going as it begins
+at the same speed, each a different way round the compass; counted
+after twenty seconds as **standing as it stood** (its head no lower
+than nineteen twentieths of where it was, and within a tenth of its
+height of there).
+
+| Set going at | 50 steps a second: Small, Long, Round | 100 | 200 |
+|---|---|---|---|
+| 0.05 m/s | 24, 24, 24 | | |
+| 0.1 m/s | 11 (22 still upright), 24, 24 | 24, 24, 24 | |
+| 0.2 m/s | **3, 20, 21** | **19, 24, 19** | **24, 24, 24** |
+| 0.3 m/s | 1, 4, 6 | 15, 18, 17 | 19, 21, 19 |
+
+(0.2 m/s is what a push of 80 to 175 N gives these bodies in a tenth
+of a second. By reckoning, a body that only brings its weight back
+over its feet, and takes no step, can stop itself from about 0.2 to
+0.35 m/s, by which way it is going.)
+
+**Pulled at the chest** for two and a half seconds, at 50 steps a
+second: Round takes 30 N (its head going 17 mm, and back to about a
+millimetre, though it was not still within three seconds); at 50 N it
+falls. Small and Long fall at 30 N. As in step 0: it does not lean.
+
+### What follows
+
+- **The body can be had at the game's own step,** which the first
+  writing of step 0 said it could not. What is already built on the
+  physics need not be touched to begin step 1.
+- **How often the physics steps is to be chosen when the body is in the
+  game,** with its tool and what hangs on it, on the place's own
+  ground, against the measures Luis accepted (lean, step and fall at
+  today's pulls): not on a bench's level floor. The table above says
+  what a faster step buys with this first keeper.
+- **The keeper is the next thing, not the step.** It does not lean; it
+  sags into a poorer stance at the slowest step; it holds the place
+  its weight was, and not where its weight is going.
+
+**Run:** `BodysOwnBench.Bench` with `-ownRule 1 -ownDamped 1 -ownFullAt
+75 -ownKinds articulation+torques`, `-ownStep 0.02`, `0.01`, `0.005`;
+`-ownCrowd 25 -ownCrowdFor 60` (and `20`); `-ownCrowd 24 -ownJolt
+0.05`, `0.1`, `0.2`, `0.3`.
+
+**Not run:** a slope; the path under the twenty-four; starts that
+differ in how they lean or what they weigh; the rule at other values
+than a half and one; the ankle's spring changed without the dampers;
+the engine's other solver with proof.
+
+### What the reviewer said
+
+One reviewer (a separate agent, the sceptic) was given the first
+writing of this part, the bench and its results.
+
+| What was said | Checked | Done |
+|---|---|---|
+| Every figure matches the results | | |
+| "25 of 25" is not a count of different starts: the twenty-five differ only by where they stand; and the level floor is easier than the path (before the rule, one fell on the path while 14 of 25 stood on the floor) | Stands | Twenty-four different starts counted, at three rates, with a stricter measure of standing |
+| "Stands" is only the head above seven tenths of its height: a body sunk, leaning or on one leg passes | Stands | The stricter measure; and the stance is described |
+| "Only the ankles" is true of the springs; the dampers changed at every joint. "It was the ankle" is not shown alone | Stands | Said so. Not run apart |
+| The 47 mm is not the path's slope: at 100 steps a second it is 11 and 8 mm, at 200, 4 and 6. It is a poorer stance of the slowest step, with the push wanted outside the soles | Stands (the results were there; I had read them wrongly) | Said so, with the table |
+| The lighter side is reckoned crudely (parts as points at their middles); a joint that turns three ways has one spring for all, and its twisting may break the rule | Not checked | Kept as a caution; for the body in the game |
+| What holds it up is the worked-out torques: the ankles' springs are a sixteenth to a tenth of what its leaning asks | Stands | Said so |
+| A joint could give twice its strength (as in step 0) | Stands | For the keeper in the game |
+| Round "comes back to about a millimetre" leaves out that it was not still within three seconds | Stands | Added |
+| The trial most likely to break it: truly different starts, a slope, a shove, the rule swept, 50 against 100, judged by lean and hips and sole margin | In part done (different starts, 50 against 100 and 200) | The rest listed as not run |

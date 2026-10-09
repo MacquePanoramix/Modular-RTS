@@ -11,26 +11,32 @@
       all three miners, twenty seconds, their heads within 0.1 to
       0.35 mm once settled; twenty-five of twenty-five of each on a
       level floor.
-    - **That was at 200 steps of physics a second; the game takes 50.**
-      At 100, Long and Round stood and Small did not. How few will do
-      is not settled.
+    - **Even at the game's own fifty steps of physics a second, but
+      less steadily** (step 1's first part, the same day; step 0 had it
+      only at 200). With each joint's spring set by a rule of the
+      engine's makers, all three stand a minute at 50. Given a light
+      shove (0.2 m/s), 3, 20 and 21 of 24 stay standing at 50; 19, 24
+      and 19 at 100; all at 200. The rate is a trade, chosen later
+      ([figures](Design/TheBodysOwn.md#step-1-first-part-how-often-the-physics-steps-october-9)).
     - **Not by the engine's joint springs alone:** by torques worked
       out for its legs each step, with soft springs holding the pose.
     - **It does not lean yet:** Round took a pull of 30 N; Small and
       Long fell at it. Today's posed body leans at 50 to 150 N.
-    - **Cost:** a tenth to a fifth of a millisecond of each fiftieth of
-      a second for one worker (in the Editor). A crowd cannot have it.
+    - **Cost:** 0.05 ms of each fiftieth of a second for a standing
+      body at 50 steps a second, 0.11 at 100, 0.22 at 200 (in the
+      Editor).
     - **Nothing in the game is changed:** it is a bench and figures.
-  - **Three reviewers changed its conclusion.** The first writing said
-    the physics must step four to ten times as fast. They showed the
-    figures did not carry that; two of their trials, run the same day,
-    brought it down
-    ([what they said](Design/TheBodysOwn.md#what-the-reviewers-said)).
-  - **What it changes:** standing is a keeper to be designed; the
-    physics' step is to be settled first in step 1, and whatever it
-    becomes, what is built on the physics (the fall, the getting up,
-    what hangs, the pickaxe in the hands) has to be checked at it.
-    Step 1 is larger than the plan said.
+  - **Reviewers changed its conclusion twice.** The first writing of
+    step 0 said the physics must step four to ten times as fast; three
+    reviewers showed the figures did not carry that. The next writing
+    said fifty would do; a fourth showed that was too much the other
+    way. What stands is between
+    ([step 0's](Design/TheBodysOwn.md#what-the-reviewers-said);
+    [step 1's first part](Design/TheBodysOwn.md#what-the-reviewer-said)).
+  - **What it changes:** standing is a keeper to be designed, not
+    springs to be set, and step 1 is larger than the plan said. The
+    body can be begun at the game's own step; how often the physics
+    steps is chosen when it is in the game.
   - **Decided by Luis:** the body moved by its own joints replaces "no
     active ragdoll"; it comes before S4 ("we will probably end up doing a
     big rework I imagine for it").
@@ -768,8 +774,7 @@ Still valid from September 30:
    If it does not open, what happens when it is tried is the first
    thing to know.
 2. **Step 1 of [the body's own](NextMilestonePlan.md#what-step-0-changed-october-9):**
-   how often the physics steps; the body's own body in the game beside
-   the posed one; standing still and leaning against a pull, all three
+   the body's own body in the game beside the posed one; standing still and leaning against a pull, all three
    miners; then life in it.
 
 The items below are still open from before (October 6 and earlier).

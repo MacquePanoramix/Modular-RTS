@@ -2062,6 +2062,13 @@ with the settings, are in
   `-ownFullAt`, `-ownSlows`, `-ownStep`, `-ownFor`, `-ownPulls`,
   `-ownCrowd`, `-ownCrowdFor`, `-ownIterations`, `-ownAnkle`,
   `-ownStrong`, `-ownQuick`, `-ownBootTurns`, `-ownBootWeighs`,
+  `-ownRule` and `-ownDamped` (each joint's spring no stiffer than
+  makes its own rate times the step that much, by `Lighter(...)`, the
+  turning weight of the lighter side of the joint; its damper that
+  share of what just stops that side: with `-ownRule 1` all three
+  miners stand at 50 steps a second, less steadily than at 100 or 200),
+  `-ownJolt` (each of a crowd set going a different way at that speed:
+  different starts),
   `-ownSay 1` (a trace of every joint, and of a pull). `OneJoint` and
   `OneAnkle` are two plain tests of what the engine's springs do.
   **Learnt:** an `ArticulationDrive`'s stiffness is newton metres a
