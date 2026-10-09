@@ -5,7 +5,8 @@ namespace WonderGather
     // S3, step 11 (Docs/Design/ThePhysicalBody.md): the plain panel of the Ordinary Place, for trying the chosen
     // miner's physical work. How strong it is (a slider), and a pickaxe put on the ground beside it: a light one, its
     // own, or a heavy one. Nothing is put in its hands: it picks a pickaxe up itself, by the interaction click, and
-    // mines a boulder by the same click. The panel also says, in a line, what the miner is doing.
+    // mines a boulder by the same click. The panel also says, in a line, what the miner is doing. And it can push the
+    // miner over, to see it fall and get itself up.
     //
     // It takes the place of the keys of the look at the work (K, and the keys for strength and weight).
     [RequireComponent(typeof(MinerChoice), typeof(MinerWorkPreview))]
@@ -53,6 +54,11 @@ namespace WonderGather
             GUI.Box(area, GUIContent.none, box);
             float x = area.x + 10, y = area.y + 8, inner = Width - 20;
             GUI.Label(new Rect(x, y, inner, 20), choice.NameOf(choice.Chosen), title);
+            // Pushed over, the way the view looks.
+            bool could = GUI.enabled;
+            GUI.enabled = could && look.CanPushOver;
+            if (GUI.Button(new Rect(x + inner - 96, y - 2, 96, 22), "Push it over", button)) look.PushOver();
+            GUI.enabled = could;
             y += 22;
             // How strong it is.
             GUI.Label(new Rect(x, y, 60, 20), "Strength", text);

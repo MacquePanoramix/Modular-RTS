@@ -217,6 +217,49 @@ namespace WonderGather.Tests
             }
         }
 
+        // The panel's "Push it over": the chosen miner, with nothing in its hands and no work, is let go with a shove,
+        // falls, and gets itself up its own way; while it is down it cannot be pushed again.
+        [UnityTest, Timeout(900000)]
+        public IEnumerator PushedOverFromThePanelItFallsAndGetsItselfUp()
+        {
+            Time.captureFramerate = 50;
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                var biped = unit.GetComponent<ProceduralBiped>();
+                Vector3 away = default;
+                yield return Stand(unit, (s, a) => { away = a; });
+                Assert.That(look.CanPushOver, Is.True, name + " cannot be pushed over as it stands.");
+                look.PushOver(-away);
+                var fall = unit.GetComponent<PhysicalFall>();
+                Assert.That(fall, Is.Not.Null);
+                Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Falling), name + " was not let go by the push.");
+                Assert.That(look.CanPushOver, Is.False, name + " can be pushed over again while it is down.");
+                float began = Time.time;
+                bool lay = false;
+                string said = "";
+                while (fall.Now != PhysicalFall.State.Up && Time.time - began < 40)
+                {
+                    lay |= fall.Now == PhysicalFall.State.Lying;
+                    if (fall.Now == PhysicalFall.State.Gathering) said = look.Status();
+                    yield return null;
+                }
+                float up = Time.time - began;
+                while ((biped.SinkNow > .02f || Mathf.Abs(biped.BowNow) > 3) && Time.time - began < 46) yield return null;
+                Debug.Log($"FALL_PUSHED {name}, pushed over backwards from the panel: it lay, and was up {up:F1} s after the push; it gave up {fall.GaveUpGetting} time(s), and got up the old way {fall.GotUpTheOldWay} time(s). Getting up, the panel said: {said}");
+                Assert.That(lay, Is.True, name + " did not come to lie.");
+                Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Up), name + " did not get up after the push.");
+                Assert.That(fall.GotUpTheOldWay, Is.EqualTo(0), name + " did not get up by its own strength.");
+                Assert.That(said, Is.EqualTo("It gets itself up."));
+                Assert.That(look.CanPushOver, Is.True);
+                Object.Destroy(fall);
+                yield return null;
+            }
+        }
+
         [UnityTest, Timeout(900000)]
         public IEnumerator AHardPullThrowsItDownAndALightOneDoesNot()
         {
