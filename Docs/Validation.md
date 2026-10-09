@@ -2868,9 +2868,14 @@ was run.
   the walk: 2 of 2 (84 mm for Small, 129 mm for Long).
 - **After that last change:** the whole PlayMode suite, alone: 179 tests; **162 passed, 1 failed**, 16 are run only when asked (1,398 s). The one: `BoulderTests.AMinerMinesABoulderByAClick`, Long's blows landing 31 cm from where the plan put them, for 20 allowed. Run alone three times afterwards it passed each time (15 to 16 cm). Nothing of the swing at the rock was changed in this part, and in the run before this one (the same code but for the lantern's hand) the suite passed, 163 of 163. So Long's blows are near that limit and not steady: **not looked into**.
 - **The release build** was made from the final code and its measures run again: one miner standing 4.4 to 4.7 ms a frame and at its work 4.4 ms; the crowd 5.0, 5.8, 6.3 and 8.0 ms a frame for none, 25, 50 and 100 miners; no exceptions in either log. **Neither the getting up nor the lantern was run in the built player.**
-- **Not tested:** Luis's eye; a second round of any judges; **the walk
-  by any judge** (the pictures taken for it hide the legs in the
-  grass); the hook and the grip from the side; slopes, steps, walls,
+- **Three judges of the walk** (the same way; Small and Long on the
+  path from the side, a picture every 0.08 s). "Reads as real, with a
+  flaw"; four things stood, two were struck against the trace; nothing
+  was changed after it
+  ([the table](Reviews/2026-10-08_ThePlaytestRound.md#what-the-judges-of-the-walk-said-first-round-october-9)).
+- **Not tested:** Luis's eye; a second round of any judges; the stutter
+  after a step by any eye but the numbers'; the hook and the grip from
+  the side; slopes, steps, walls,
   boulders or bodies in the way of a get-up; a weak or spent body
   getting up; a fall with a tool in both hands beyond what the existing
   test of a fall at work asks.

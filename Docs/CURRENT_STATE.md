@@ -61,8 +61,10 @@
     Long rests on its head). And one of the lantern (the end of the
     fourth part): the hand that carried it was held still while the
     body walked; it goes with the walk now, and the body looks before
-    it reaches. No second round of any yet. **The walk has not been
-    judged:** the pictures taken for it hide the legs in the grass.
+    it reaches. And one of the walk, last: nothing breaks in it; what
+    stood is open (nothing gets ready before the first step, which is as
+    long as the rest; a standing body is perfectly still; the coats'
+    panels are stiff). No second round of any yet.
   - **Found in the last run, and not looked into:** Long's blows at a
     boulder landed 31 cm from where they were aimed, once in five runs
     of that test (it allows 20; the other four were 15 to 16). Nothing

@@ -36,7 +36,7 @@ is a question for Luis.
 |---|---|---|
 | L1 | Fireflies: too many at night; they follow the camera when it zooms out. They are to be their own things in the world, seen by the distance from them: fewer and fainter from far | **Done; for Luis to see.** [Below](#l1-the-fireflies) |
 | L2 | The cabin's light gets suddenly much stronger at some point of zooming out | **Cause found and removed. One choice is Luis's.** [Below](#l2-the-cabins-light) |
-| L3 | The walk: a slight stutter after each step, as if set down a little | **Cause found and removed; measured. For Luis to see.** [Below](#l3-the-stutter-after-each-step) |
+| L3 | The walk: a slight stutter after each step, as if set down a little | **Cause found and removed; measured; one round of judges, whose findings are open. For Luis to see.** [Below](#l3-the-stutter-after-each-step) |
 | L4 | Turning round on the spot: the legs teleport a little, and it does not look human | **Made again twice; measured; one round of judges. For Luis to see.** [Below](#l4-turning-round-on-the-spot) |
 | L5 | The clothes "explode" when a character kneels | **Cause found and removed; for Luis to see.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
 | L6 | The kneeling reads as an animation in parts, and most of it is off | **Made again as one movement; measured; one round of judges. For Luis to see.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
@@ -314,10 +314,60 @@ one line; nothing drops.*
 
 *Small, from 2.48 to 3.16 s of its walk: one picture every 0.04 s.*
 
-**Not done:** no judge has looked at the walk yet (the first round was
-cut off before it answered: the account's usage limit), and Luis has
-not. The numbers say there is no break left in it; they cannot say that
-it reads as a walk.
+### What the judges of the walk said (first round, October 9)
+
+The first call of judges for the walk, on October 8, was cut off before
+it answered (the account's usage limit). At the end of the round three
+new judges (the body, the animator, the sceptic; each a separate agent
+on the smaller model) were given Small and Long walking 2.2 m along the
+path, seen from the side, a picture every 0.08 s, and the figures of
+the 7 m trace.
+
+![Small walking on the path, from the side](../Images/Playtest_2026-10-08/L3_Walk_Small_FromTheSide.jpg)
+
+*Small, from standing: a picture every 0.08 s. (The bag on its strap is
+orange; its lantern is in the far hand.)*
+
+![Long walking on the path, from the side](../Images/Playtest_2026-10-08/L3_Walk_Long_FromTheSide.jpg)
+
+*Long, the same.*
+
+The animator and the body: **reads as real, with a flaw.** The animator:
+"the two ends are less alive than the middle"; the body: "both flaws
+are small". The sceptic names what a person would point at.
+
+| What they found | Who | Checked against the trace | |
+|---|---|---|---|
+| **At the start nothing gets ready:** no lean and no shift of weight before the first foot lifts; "a walk cycle switched on" | All three (the body: of Long) | The chest does lean forward, 3 to 5 degrees, but with the first step and not before it. And the first step is as long as the rest: 38 cm for Small (38 to 41 after), 63 for Long (58 to 59 after). A person's first step is shorter | **Stands** |
+| **At the stop the body goes completely still in one picture,** and stays so: "a standing body is never perfectly fixed" | The animator, the sceptic | True. Standing, nothing in the posed body moves at all | **Stands** |
+| **The free arm swings little,** Small's hardly at all | All three | In this short walk, yes. At its whole pace a free hand swings 9 cm either way for Small, 15 for Long and 8 for Round (the trace): about two thirds of what an arm of that length swings on a person | **Stands** as small |
+| **Long's coat front is a hard-edged wedge thrown forward by its knee:** "a flat sheet being flipped", "cloth that is not cloth" (the sceptic, first in its list). The animator called the same thing right: "cloth acted on by the leg, not fixed to it" | | Each panel of a coat is one stiff piece. It follows the thigh at once, with no fold in it and nothing a moment behind. The same was said of Round's tunic as it turned over | **Stands as stiffness** |
+| Long's last step does not shorten | The sceptic ("it may be the picture") | It does: 59, 59, then 27 cm, then the feet come together (Small: 37, 37, 24). The animator: "it reads as a person stopping, not a part parked" | **Struck** |
+| Small's "held thing" sits on its coat's front and "does not read as being held" | The sceptic | That is Small's bag, on its strap. The lantern is in the far hand, out of sight. My note to the judges did not say there was a bag | **Struck** (my note's fault) |
+| Small steps quickly and flatly: a step every 0.32 s where a child of its height takes about 0.4, its hips rising 18 mm where straight legs would lift them about 34; "a quick patter that glides a little" | The body ("I do not call this a fault") | True by the figures | **Noted** |
+| The stutter after each step cannot be judged at a picture every 0.08 s | The sceptic | True of these sheets. In the trace the largest sudden change between two frames is under 2 mm for Small and under 4 mm for Long | **Not judged by eye** |
+
+What they said was right: the steps open and close in a steady rhythm;
+the stop ("the steps shorten... the body coming upright over both
+feet"); Long's trunk turning against its hips; nothing jumps between
+two pictures.
+
+**Nothing was changed after this round.** Each of the four that stood
+is in something that was tuned with care earlier in the round, or is a
+question of its own, and none is a break:
+
+- **The first step and the start's lean** are in the start of the walk,
+  made again in the second part to take a 34 cm dip out of Long's first
+  step. A shorter first step and a lean that comes first are the next
+  thing to do there.
+- **A standing body that is perfectly still:** what a standing miner
+  does (it breathes; it shifts its weight) has never been built. It is
+  a thing to add, not to mend, and what it should be is Luis's.
+- **The coats' stiff panels** are how the clothes are built: one piece
+  for each flap. Cloth that folds and lags is a larger piece of work.
+
+**Not done:** Luis has not seen it. No second round. The stutter
+itself (Luis's note) has been judged only by the numbers.
 
 **Also to be said:** over the ground the hips now rise and fall 12 to
 15 cm in a step on this slope. A person's rise and fall 4 to 5 cm on
@@ -1173,17 +1223,17 @@ would point at.
 
 - **No second round of judges** has looked at it as it is now, and none
   has seen the hook, the grip or the hanging from the side or the front.
-- **The walk has still not been judged.** The judges saw it only from
-  behind, two pictures a step: one called it right ("the legs cross and
-  pass in a regular rhythm... the stop is clean"), one thought the trunk
-  stiff ("it may be the picture"). I took pictures of all three miners'
-  walk for a round of its own, and they are no use: the trace's walk
-  crosses the meadow, and the grass hides the legs. A walk on the path,
-  from the side, has to be taken first.
+- **The walk** was judged afterwards, from the side, in a round of its
+  own ([under L3](#what-the-judges-of-the-walk-said-first-round-october-9)).
 - **The mug** is carried the same way (Long's mug hangs from the hand
   by its handle). Whether a mug should be carried upright, as a mug
   with something in it is, is a question about what the mug *is*, and
   Luis's.
+
+  ![Long walking with its mug](../Images/Playtest_2026-10-08/L9_Mug_Long_Carried.jpg)
+
+  *Long walking with its mug, from behind (a picture every fifth of a
+  second): it hangs from the hand by its handle.*
 - **The taking itself** (the hand's way to the hook, the lift off it)
   was not changed: Luis called it "okay".
 - The trace has no fingers and no things that hang: this was read in

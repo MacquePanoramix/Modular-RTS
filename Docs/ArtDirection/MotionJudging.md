@@ -159,7 +159,7 @@ Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)
 
 | Movement | Numbers | Judges | Luis |
 |---|---|---|---|
-| Walking | **Passes** (all three miners) | Not yet as a walk (the first call was cut off before it answered; in the lantern's round it was seen only from behind, two pictures a step; the pictures taken for a round of its own hide the legs in the grass) | Not yet |
+| Walking | **Passes** (all three miners) | **One round** (October 9, from the side on the path): "reads as real, with a flaw"; four things stood and are open (nothing gets ready at the start, and the first step is as long as the rest; a standing body is perfectly still; the free arm swings little; the coats' panels are stiff) | Not yet |
 | Turning round on the spot | **Passes** for Small, **Passes** for Long, fails for Round (5.4 mm on 3 frames) | **One round:** reads as real, with flaws; five stood and four were put right. Not looked at since | Not yet |
 | Sent back the way it came, walking | **Passes** for Small; fails for Long (a foot 17 mm once); fails for Round (hips 9.4 mm) | Not yet | Not yet |
 | Going down for a pickaxe, standing up with it, and laying it down | **Passes** (all three miners), since the judges' changes | **One round:** reads as real, with a flaw; four things stood and were put right (the pickaxe carried level and still; the elbow out; Long's back up before its legs; its coat's front out to the side) | Not yet |
