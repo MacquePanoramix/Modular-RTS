@@ -1,8 +1,9 @@
 # Wonder Gather — Current State
 
-**Updated:** October 8, 2026.
+**Updated:** October 9, 2026.
 
-- **Now: the playtest round.** Luis played the build of S3 and sent ten
+- **Now: the playtest round; all ten notes looked into, and waiting for
+  Luis to play.** Luis played the build of S3 and sent ten
   notes ([the message](Correspondence/2026-10-08_THE_PLAYTEST_NO_FAKE_ANIMATIONS.md));
   they come before S4 ("this polishing run and the fixing run" first).
   Each is kept track of in
@@ -41,10 +42,24 @@
       hand hangs from the hand (it was held level and still); the elbow
       of the carrying arm is back; the back waits for the knees in
       standing up; a coat's front hangs between open knees.
-  - **Not begun:** getting up after a fall by the body's own forces.
-  - **Judges:** one round of the turn (after the first part), one of
-    the pick-up (after the second). Both: "reads as real, with a flaw";
-    what stood was put right. No second round of either yet.
+    - **Getting up after a fall** (the fourth part, October 9): the
+      let-go body turns itself over onto its front and draws its knees
+      under it, by its own joints' strength; only then does the posed
+      body take over, in half a second, and it stands. (It curled where
+      it lay, and the posed body took over from there.) All three
+      miners, from their backs, fronts and sides: 12 of 12. The poses
+      were found by a search in the simulation, not set by hand. The
+      panel has a button to push the chosen miner over, to see it.
+  - **Not the body's own yet:** the half second from its knees onto its
+    feet; and the standing up, which is posed as the walk is
+    ([which is which](Reviews/2026-10-08_ThePlaytestRound.md#what-is-still-posed-and-what-is-the-bodys-own)).
+  - **Judges:** one round each of the turn (after the first part), the
+    pick-up (after the second) and the getting up (the fourth). All:
+    "reads as real, with a flaw". What stood of the turn and the pick-up
+    was put right; of the getting up, most stays open (it sits folded a
+    second and a half before it rises; three bodies move on one clock;
+    Long rests on its head). No second round of any yet; none of the
+    walk or the lantern.
   - **For Luis to decide:** Long has two pickaxes (the one modelled on
     its back, and its own in its hands).
   - **How movements are checked now**

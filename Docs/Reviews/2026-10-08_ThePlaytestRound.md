@@ -16,6 +16,13 @@ keeps its look at every distance.
 is the body, with its weight, acting on the world; and each is judged
 against how a real body does the same thing, not by whether it works.
 
+**Where it stands** (October 9): all ten notes have been looked into
+and what was done is in the build, for Luis to play. Nothing in it is
+accepted until Luis has. What is known to be unfinished is said under
+each note; the largest is in the getting up (L7), and
+[which movements are the body's own and which are posed](#what-is-still-posed-and-what-is-the-bodys-own)
+is a question for Luis.
+
 **Where the rest is:**
 
 - What real bodies do, with the sources:
@@ -33,10 +40,10 @@ against how a real body does the same thing, not by whether it works.
 | L4 | Turning round on the spot: the legs teleport a little, and it does not look human | **Made again twice; measured; one round of judges. For Luis to see.** [Below](#l4-turning-round-on-the-spot) |
 | L5 | The clothes "explode" when a character kneels | **Cause found and removed; for Luis to see.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
 | L6 | The kneeling reads as an animation in parts, and most of it is off | **Made again as one movement; measured; one round of judges. For Luis to see.** [Below](#l5-and-l6-going-down-for-the-pickaxe-and-the-clothes) |
-| L7 | Getting up after a fall is an animation, not the body | To be looked into |
+| L7 | Getting up after a fall is an animation, not the body | **Most of it is the body's own strength now; the last half second is not. For Luis to see.** [Below](#l7-getting-up-after-a-fall) |
 | L8 | Long stopped recovering at 77% spent, and stood still | **Cause found and removed; measured.** [Below](#l8-long-stops-recovering) |
 | L9 | Taking the lantern or the mug: uncanny once it is held | **A cause found and removed; for Luis to see.** [Below](#l9-the-lantern-and-the-mug-once-they-are-held) |
-| L10 | In general: uncanny movements; some look built in, and do not answer to the world | Under way with each of the above |
+| L10 | In general: uncanny movements; some look built in, and do not answer to the world | Under way with each of the above. [What is still posed](#what-is-still-posed-and-what-is-the-bodys-own) |
 
 ## How each movement is checked
 
@@ -771,6 +778,233 @@ changed.
   handle and dragged) in pictures; a pickaxe on a slope; one lying
   against a rock.
 
+## L7. Getting up after a fall
+
+**What Luis said.** "And I saw that the animation for them recovering,
+it was just an animation. It was not a physical thing when, like, they
+fell. I saw from your screenshots, and then they tried to get up again.
+It felt supernatural because it was just an animation. It was not the
+actual character with weight interacting with the world."
+
+**What it was.** Luis was right, and the write-up of S3 had said as
+much in small print ("partly not physics"). The *fall* was the body's
+own: eleven weighted parts, jointed, let go. The *getting up* was not.
+The body curled where it lay, and then the posed body "took over": for
+nine tenths of a second every part slid, through the air, from where it
+lay to a crouch standing on its feet. Nothing pushed on the ground.
+
+![Small getting up, as it was](../Images/Playtest_2026-10-08/L7_GetUp_Small_Before.jpg)
+
+*As it was (Small, shoved from behind). Top row: it lies, and curls a
+little where it lies; in the last picture it lifts its head. Bottom row:
+a sixth of a second later it is crouched on its feet.*
+
+**What a real body does.** People who study how bodies get up from the
+floor split it by the arms, the trunk and the legs, and find that the
+ways differ with age and strength: small children turn over onto their
+fronts first, come up onto hands and knees, and go through a squat;
+grown people more often sit straight up and push off evenly with both
+hands. Rolling from the back onto the front is done by bending a knee
+up and across the body, the arm following; from the front, the hips are
+lifted over the knees. The miners are built like small children: a
+large head, short limbs, and (as the body is weighed and its strength
+set) legs and a back far stronger than its arms. A shoulder gives 24
+N m for Small, 31 for Long and 61 for Round; a hip gives 130, 303 and
+331. By my reckoning (not measured), Small's head and trunk ask about
+100 N m about its hips to sit straight up from its back, and its legs,
+with nothing to hold them down, weigh in with about 20: its legs come
+up, not its trunk. And to push its chest up off the ground it would
+need about all a shoulder has. So it cannot do either, and it should
+not look as if it did. It can do what a small child does.
+
+**What was built.**
+
+- **Getting up is the let-go body's own doing, as far as its knees.**
+  Lying, it is still the eleven weighted parts. Each joint is held
+  towards a pose with the strength that joint has (a knee, a hip, the
+  back, a shoulder, an elbow: the same strengths it works with), and one
+  pose follows another. What moves the body is its limbs and its weight
+  on the ground. There are two rows of poses:
+  - **It turns over onto its front** (if it does not lie on it): it
+    draws its knees up, one arm goes over its head and the other across,
+    its trunk twists, and it rolls. Three poses, about two seconds.
+  - **It draws its knees under it:** its hips come up over its knees,
+    its head and arms on the ground before it, and it folds onto its
+    knees and toes. Three poses, about two and a half seconds.
+- **Only then does the posed body take over,** crouched where the
+  body's feet are, as low as its hips are and as bowed as its trunk is,
+  in half a second; and it stands up at its legs' own pace, as before.
+- **A way that does not serve is given up.** Before the posed body
+  takes over, the body must be on its front, its shins under it and not
+  in the air, and still. If it is not, it lets go, lies, rests two and
+  a half seconds and tries again. (Round, laid flat on its front, does
+  this in some runs: its first try fails and its second serves, twelve
+  seconds in all.)
+- **None lies for ever.** A body that has given up three times running
+  gets up the old way. This is kept as a last resort, and counted
+  (`GotUpTheOldWay`): in everything run below it happened no times.
+- **So that it can be seen:** the panel has a button, **Push it over**.
+  The chosen miner is let go with a shove at its chest (6 N for each
+  kilogram it weighs, for 0.3 s) the way the view looks, so that it
+  falls away from the eye. By itself a miner falls only at work far too
+  heavy for it, and seldom. Nothing in the game pushes a miner: the
+  button is for looking, and whether it stays is Luis's.
+
+![Small getting up from its back](../Images/Playtest_2026-10-08/L7_GetUp_Small_FromItsBack.jpg)
+
+*Small, laid on its back (a picture every third to half of a second).
+Top row: it draws its knees up and rolls over onto its front. Bottom
+row: its hips come up, it folds onto its knees; from the third picture
+the posed body takes over, and it stands up.*
+
+![Long getting up from its front](../Images/Playtest_2026-10-08/L7_GetUp_Long_FromItsFront.jpg)
+
+*Long, laid on its front: its hips come up over its knees, its head on
+the ground; it folds onto its knees; the posed body takes over (from the
+second picture of the bottom row) and it stands.*
+
+![Round getting up from its back](../Images/Playtest_2026-10-08/L7_GetUp_Round_FromItsBack.jpg)
+
+*Round, laid on its back: the same two rows of poses, on a body twice
+Small's weight.*
+
+**How the poses were found.** Not by hand. I set poses by hand for five
+runs of the bench (onto its front; knees under; hands by the knees; push
+back onto the feet; sit up from its back), and none got a body off the
+ground: the bodies are round, they roll where a pose meant them to push,
+and their arms cannot lift them. So the poses were **searched**
+(`GetUpSearch`, in the tests): the three miners, each at its own place
+on the path, laid down or shoved down a dozen ways; from each, a row of
+poses tried with the physics stepped by hand, fifty to a hundred tries a
+second, nothing drawn; and the poses varied towards those that left all
+three bodies best (forty tries a round, the best eight kept, thirty to
+eighty rounds). About thirty thousand to sixty thousand tries a search,
+eight to fifteen minutes each. A dozen searches were run.
+
+- The turning over that came out of it serves all three miners: in the
+  search, **35 of 36** (three miners, twelve ways of lying) ended flat
+  on their fronts in one go, in about two seconds. A table found on
+  Small alone did not turn Round over at all.
+- **What the search is asked for, it games.** Asked for "its soles flat
+  and its shins standing", it found lying on its back with its feet
+  planted. Asked for "its hips up", it found a body standing on its
+  head. Each time the thing asked had to say what must *not* be, and
+  each result was looked at in pictures before it was kept.
+- This is how such movements are made elsewhere: by sampling what the
+  joints are driven towards and simulating forward (Liu and others,
+  2010), or by training a controller over millions of tries, first on a
+  stronger body and then on weaker ones (Tao and others, 2022). Neither
+  uses a drawn or a recorded movement, and neither does this.
+
+**What is not the body's own yet.**
+
+- **From its knees onto its feet: half a second.** The posed body takes
+  over from a body on its knees and toes, and in that half second the
+  knees come up off the ground and the feet come flat. Each part goes
+  from where the physics left it to where the crouch has it; nothing
+  pushes. A real body does this with its hands on the ground and a rock
+  backwards, or by putting one foot forward. Five searches looked for
+  it (up on its feet; sat back on its seat and its feet; crouched on
+  its toes with its hands down) and none found a way that all three
+  bodies do: a body that rocks back from its knees went over onto its
+  back. I think the causes are arms too weak to lean on and a boot that
+  does not bend at the ankle (the let-go shin and boot are one part);
+  neither was tested. In that half second the posed body is put where
+  the body's feet are, so that they do not travel (read in pictures,
+  not measured), and its hips rise by about 4 cm (Small) to 13 cm
+  (Long).
+- **Standing up from the crouch** is the posed body, as it was: paced by
+  what its knees give, not pushed by them.
+- **Its head is on the ground while its hips come up.** With arms that
+  cannot carry it, the body's front rests on its head and its forearms.
+  On Small and Round, with their large heads, this reads as curling up;
+  on Long it reads as its face on the ground and its neck bent. An arm
+  sometimes trails behind it (lying on its front, an arm at its side
+  cannot swing forward under it).
+- **Its boots go up in the air for a moment after it has turned over**
+  (its knees are still bent from the roll), and come down as its knees
+  are drawn under.
+- **A tool is not picked up again by itself,** as before: it lies where
+  it fell.
+
+**Against what the research said to hold it to**
+([the research, part 7](../Research/2026-10-08_RealBodiesAndHowToJudgeThem.md#7-getting-up-from-the-ground)):
+
+| Held to | As it is |
+|---|---|
+| At every moment the body is held up by what touches the ground and by nothing else; frozen at any moment, it would stay | **Yes, as far as its knees** (it is the physics that holds it). **No, in the half second after** |
+| It gets up by stages a person would name: rolls to its front; gets its hands under its shoulders; pushes up to all fours; brings a foot under it; rises over that foot | Rolls to its front: **yes**. Hands under its shoulders: **no** (its head and forearms carry its front). All fours: **nearly** (knees, toes, head, forearms). A foot under it: **no** (the posed half second brings both). Rises: posed |
+| About three to four seconds; longer for a weak or tired body, which may fail and try again | From the moment it begins to the moment it stands: **3 to 6 seconds**. It fails and tries again when a way does not serve |
+| It is not stronger getting up than it is doing anything else | **Yes:** the same joints, with the strength each has left |
+
+### What the judges of the get-up said (first round)
+
+Three judges (the body, the animator, the sceptic; each a separate agent
+on the smaller model) were given sheets of Small and Round getting up
+from their backs and Long from its front, timed from the moment each
+began, and the figures (times, speeds, what the joints give). They were
+not told which part is the body's own and which is not.
+
+Two of the three: **reads as real, with a flaw.** The third (the
+sceptic) names what a person would point at.
+
+| What they found | Who | Checked | |
+|---|---|---|---|
+| **It sits folded for a second and a half to two with almost nothing changing, then rises in about a second.** "Parked, then released"; "the body is resting, not rising"; "nothing shows effort" | All three | The knees are drawn under by three poses of fixed seconds (2.5 s in all). The body is in its folded shape well before they are up. Then the posed body's half second | **Stands** |
+| **Small's chest goes from the ground to hands and knees in 0.2 s with nothing visible pushing,** and "its arms are given as too weak for it" | The body; the sceptic ("a raised head and an arm planted, with nothing between") | This is the half second in which the posed body takes over | **Stands. It is the part that is not the body's own,** found by judges who were not told of it |
+| **Small and Round do the same things at the same times,** though one weighs twice the other: "one movement played on two bodies" | The body; the animator | True: one table of poses and seconds serves all three | **Stands** |
+| **Long holds itself half risen on its head, its arm hanging limp;** "no hand is ever placed under the shoulder" | The body; the sceptic (first in its list) | True, and known: arms that cannot carry it | **Stands** |
+| **Boots held up in the air, side by side, on a body lying on its front** | The sceptic; the body ("looks like a pose, a child lounging") | They are the bent knees of the last pose of the roll | **Stands** |
+| Round's tunic "keeps a clean, rounded outline" as it rolls, "like a stiff shell" ("may be a heavy tunic bunching") | The sceptic | In the pictures the skirt hangs to the ground from the raised legs and then lies over the drawn-up knees. Each of its panels is one stiff piece | **Stands as stiffness;** nothing breaks |
+| The last rise cannot be judged: one picture or none between a crouch and standing | The animator; the sceptic | The sheets I made were too thin there | **Not judged** |
+| Longer than people over sixty take (6.2 and 6.4 s against 5.7) | The body | True | **Stands** (it goes with the first) |
+| Long's pickaxe never moves on its own (the animator); it "rides the body as a slung tool should" (the body) | | It is modelled on its back | Not of the get-up |
+| The fastest part belongs to the heaviest body ("may be the picture") | The body | By the figures: Round 1.4 m/s in that run, Small 1.0 | Noted |
+
+What they said was right: **the roll** ("a momentum swing of the leg
+driving the trunk, not a blend of poses"; "this matches how people turn
+from the back to the front"); the starts gather speed; each folded
+position "would stay up if frozen"; Long's last stages (knees under, a
+crouch with one hand ahead, rising over a foot).
+
+**What was done about what stood.**
+
+- **A way ends as soon as the body is where it was taking it,** not when
+  its seconds are up: turned onto its front, it goes on at once to draw
+  its knees under; on its knees and still, the posed body takes over at
+  once. This takes a tenth or two off the boots in the air, and little
+  off the folded wait: the body is not on its knees until the last pose.
+- **Shortening the poses' own seconds was tried and not kept.** With the
+  waits cut by a third to a half, a second came off, and Long and Round,
+  laid on their fronts, failed their first try (and one shoved Small
+  did not get up in time). The seconds the search found were put back.
+
+**What stays open after this round.** The folded wait, the same clock
+for three bodies, Long's head on the ground and its limp arm, the boots
+in the air, and the half second from the knees onto the feet. The first
+two have one remedy: poses that end when the body has reached them, at
+that body's own pace, found by a search that is asked for it. That is
+the next thing to do here, not a setting to turn.
+
+**Not done, and what is not known.**
+
+- **No second round of judges** has looked at it. The standing up at
+  the end was not judged at all (the sheets were too thin there).
+- **Nothing on a slope steeper than the path, on steps, against a wall
+  or a boulder, or among other bodies** was tried. A get-up that is a
+  row of poses does not look where it is: what happens when a rock is
+  in the way of the roll is not known. (The body is still physics while
+  it turns over, so it will not go through the rock; whether it then
+  gets up is another matter.)
+- **A weak or spent body:** the weak miner of the tests (Round at half
+  its strength) did not fall in this run, so a weak body's get-up was
+  not seen.
+- **Whether it takes too long.** Laid down, a miner stands again 5 to 8
+  seconds later (13 when a first try fails); shoved over, 7 to 11
+  seconds after the shove (for Small it was 5 to 7). Whether a fallen miner
+  should be helpless that long is a question about the game, and
+  Luis's.
+
 ## L8. Long stops recovering
 
 **What Luis said.** "The long, it mined, and then it got tired, and then
@@ -916,6 +1150,29 @@ it off its hook, and carries it before its hip.*
 - The trace has no fingers and no things that hang: this was read in
   pictures only.
 
+## What is still posed, and what is the body's own
+
+Luis: "I don't want any fake animations... I want them to be more
+general animations that the character can adapt to any situation." So
+that it is plain which is which, as of this part:
+
+| | What moves it |
+|---|---|
+| **The fall** | The body's own: eleven weighted parts, let go |
+| **Turning over, and drawing its knees under it** | The body's own: the same parts, their joints held towards poses with the strength each has |
+| **From its knees onto its feet** (half a second) | **Not the body's own yet:** each part goes from where it was to where the crouch has it |
+| **Standing up, the walk, the turn, going down for a tool, taking the lantern** | **Posed:** where each part is, is worked out from the ground, the body's proportions, its weight and what its joints can give, at every frame; nothing is drawn or recorded, and the body does not go where its strength could not take it. But it is not pushed by forces: it is put where a body pushed by them would be |
+| **A pickaxe in the hands (the swing at the rock, carrying it), what hangs on the body, a pickaxe on the ground, a boulder's pieces** | Bodies in the physics. The tool is pushed by the hands with no more than the shoulders, the elbows, the wrists and the back can give and have left; the arms follow it |
+| **The balance, and the steps that catch the body** | Worked out from weights and forces at every step of the physics; the body is then posed to it |
+| **The legs and the bow of the body in a swing** | Posed, at a set pace (as S3 left them) |
+
+The posed movements are "general" in Luis's sense (they answer to the
+ground, the body's build and its strength, and nothing in them is
+played back). They are not physics in the sense the fall is. Whether
+more of them should be (the standing up first, since it now follows a
+body that got itself onto its knees) is a question of what the prototype
+is for, and Luis's to say.
+
 ## What was run
 
 ### For the first part (L1 to L4 and L8)
@@ -990,7 +1247,51 @@ it off its hook, and carries it before its hip.*
 - **Not tested:** anything by Luis's eye; a second round of judges; the
   lantern and the mug by any judge.
 
+### For the fourth part (L7: getting up after a fall)
+
+- **`PhysicalFallTests`** (six tests, two of them new): 6 of 6, on the
+  code as it is. One pushes each miner over with the panel's button: up
+  7.6 to 8.2 s after the push, its own way. The other lays each miner
+  on its back, its front and each side: **12 of 12 got up their own
+  way**, and came to the old way no times; eleven at their first try (up
+  5.0 to 7.8 s after being laid down), Round on its front at its second
+  (13.4 s). The posed body took over from a body with its chest to the
+  ground by 0.33 to 0.82 (of 1) and its shins under it; getting up, its
+  hips were never higher than 0.49 of their standing height, and no part
+  of the trunk or head went faster than 1.8 m/s. Shoved forwards and
+  backwards (the old test): 6 of 6 got up, 7 to 11 s after the shove,
+  0.25 to 1.16 m from where they lay (the old test asked for less than 0.4 m, on the spot; it
+  asks 1.2 m now, since a body that turns over does not get up where it
+  lay).
+- **The searches:** a dozen, of eight to fifteen minutes each; their
+  figures are in the section on L7.
+- **Three judges** of the get-up, one round: two "reads as real, with a
+  flaw"; of ten things said, six stood, and the heaviest of them (it
+  sits folded, then rises) stays open.
+- **The whole PlayMode suite,** alone, on the code as it is: 179 tests; **163 passed, none failed**, 16 are run only when asked (1,410 s).
+- **The release build** was made from that code, and its own measures run: one miner standing 4.4 to 4.6 ms a frame and at its work 4.4 ms; the crowd 4.8, 5.6, 6.3 and 7.9 ms a frame for none, 25, 50 and 100 miners; no exceptions in either log. **The getting up itself was not run in the built player** (nothing falls in those measures).
+- **Not tested:** anything by Luis's eye; any judge; slopes, steps,
+  walls, boulders, other bodies in the way; a weak or spent body's
+  get-up (the weak miner of the tests did not fall in this run); a
+  body that falls holding something in both hands.
+
 ## What was learnt in this round, so far
+
+- **When poses set by hand do not solve a movement, search them.** Five
+  runs of the bench with poses I had reasoned out got no body off the
+  ground. A search of the same kind of poses, in the simulation, found
+  a turning over that serves three different bodies in a quarter of an
+  hour. My reasoning was not useless (it said which strengths the body
+  has and which it has not), but it could not see that a round body
+  rolls where a pose means it to push.
+- **A search does what it is asked, not what was meant.** Three times it
+  found a body lying on its back and scored it as squatting. What is
+  asked has to say what must not be; and nothing it finds is kept
+  before it has been looked at in pictures.
+- **Say which parts are the body's own and which are not.** The write-up
+  of S3 said the getting up was "partly not physics", in a clause. Luis
+  saw it at once in the clips. This time the page has a table of what
+  moves each movement.
 
 - **Fresh eyes look at everything, not at what they were shown for.**
   The three judges of the pick-up were shown a going-down and a

@@ -288,6 +288,29 @@ research):
   hiding the join
   ([Unreal forum](https://forums.unrealengine.com/t/smooth-transition-between-ragdoll-and-animation/372228)).
 
+- **Read for the fourth part of the round** (October 9), when ours was
+  built:
+  - Turning from the back onto the front is helped by bending a knee up
+    and across the body; from the front, the hips are lifted over the
+    knees to come onto hands and knees, and from there the hips go back
+    towards the heels (a children's physical therapy practice:
+    [floor mobility transitions](https://www.starfishtherapies.com/blog/2020/11/floor-mobility-transitions)).
+  - How children get up is scored by the arms, the trunk and the legs
+    apart, and goes from uneven to even ways as they grow
+    ([Duncan and others, 2017, the supine-to-stand test in children of 5 to 9](https://pmc.ncbi.nlm.nih.gov/articles/PMC5968950)).
+  - A movement can be made for a simulated body by *sampling*: what its
+    joints are driven towards is varied at random within bounds, the
+    body is simulated forward, and the tries that end best are kept. It
+    needs no derivatives, which is why it works where a body is in and
+    out of touch with the ground
+    ([Liu and others, *Sampling-based Contact-rich Motion Control*, 2010](https://www.cs.ubc.ca/~van/papers/2010-TOG-sampControl/2010-TOG-samcon.pdf)).
+    Ours is a plain form of this: no recorded motion to follow, a few
+    poses in a row, and the same poses for three bodies.
+  - A get-up can be styled by curves of how high the body is and how its
+    trunk is turned
+    ([Frezzato, Tangri and Andrews, *Synthesizing Get-Up Motions for Physics-based Characters*, 2022](https://diglib.eg.org:443/handle/10.1111/cgf14636)).
+    Not used; it may be the way to the half second ours does not do.
+
 **What we hold ours to:**
 
 - At every moment of getting up the body is held up by what touches

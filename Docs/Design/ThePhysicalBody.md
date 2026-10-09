@@ -1841,6 +1841,56 @@ out by as much as lets the thing hang straight clear of the coat. (It
 was a straight arm held out to the side.) The body looks at the thing as
 it takes it and as it hangs it back.
 
+**Getting up after a fall** (the fourth part, October 9; `PhysicalFall`).
+What was built on October 7 (step 10) let the body go and took it back:
+it curled where it lay and the posed body took over from there. Now:
+
+- **Lying, the let-go body gets itself up as far as its knees.** A *way*
+  is a row of *poses*; a pose is fifteen turns (the trunk's bow and
+  twist, the head, each shoulder, elbow, hip and knee, and how far each
+  arm and thigh goes across the body), the seconds it is come to over
+  and the seconds it is kept. Each joint is held towards the pose with
+  the strength that joint has left, as in the fall. The side that is
+  uppermost when a way begins leads, so one table serves both sides.
+- **Which way** is chosen by how far its chest faces the ground
+  (`Asks.Front`: 1 flat on its front, -1 flat on its back):
+
+  | Way | For a body lying | Poses | Takes | Then |
+  |---|---|---|---|---|
+  | `curl` | with its chest to the ground by less than 0.6 | `ball`, `over`, `more` | 2.2 s | chooses again (four times at most) |
+  | `knees` | by 0.6 or more | `tuck`, `push`, `fold` | 2.5 s | the posed body takes over |
+
+  A way ends sooner if the body is already where it was taking it
+  (`There`): turned onto its front by 0.8 or more in the last pose of
+  `curl`; or, in `knees`, on its knees as below with its hips within
+  0.65 of their height of over its feet (`KneesUnder`).
+
+- **Before the posed body takes over** the body must have its chest to
+  the ground by 0.2 or more, its shins no more than a little up behind
+  it (`ShinsUnder`), and have been still 0.15 s, within 1.2 s of the
+  last pose. If not, it lets go and lies, rests 2.5 s (`RestsMore`), and
+  begins again. After three such in a row (`GivesUpAfter`) it gets up
+  the old way.
+- **The posed body takes over** (`GiveBack`) where the body's feet are
+  planted, as far apart as they are (`SetStance`), as low as its hips
+  are (down to the deepest crouch, 0.6 of its hips' height, if its
+  knees can raise it from there) and as bowed as its trunk is, in
+  `TakesOverKneeling` (0.5 s). It faces the way it lies, towards its
+  head.
+- **A body getting up is not "thrown"** by its own movement: lying, it
+  falls again if its hips, trunk or head pass 1.5 m/s; getting up, 2.5.
+
+**The panel's "Push it over"** (`MinerWorkPreview.PushOver`): the chosen
+miner is let go and shoved at its chest, 6 N for each kilogram it weighs
+(`ShoveEach`) for 0.3 s, the way the view looks. It is for looking at a
+fall; nothing in the game pushes a miner.
+
+The poses are in `PhysicalFall.Usual()`. They were found by
+`GetUpSearch` (in the tests, run by hand) and are not to be tuned by
+hand: change what the search is asked for, run it, look at the result on
+the bench (`PhysicalFallBench -fallLays back,front,left,right`), and put
+the file of ways it writes into the table.
+
 **The trace** (`MotionTraceBench`) now also takes a pickaxe picked up
 and laid down (`-traceWhat pick`), and writes the hands, the shoulders,
 the tool, the bow, the lean as it is drawn and as the balance has it,

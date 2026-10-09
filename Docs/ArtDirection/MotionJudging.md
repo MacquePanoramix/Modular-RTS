@@ -164,7 +164,7 @@ Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)
 | Sent back the way it came, walking | **Passes** for Small; fails for Long (a foot 17 mm once); fails for Round (hips 9.4 mm) | Not yet | Not yet |
 | Going down for a pickaxe, standing up with it, and laying it down | **Passes** (all three miners), since the judges' changes | **One round:** reads as real, with a flaw; four things stood and were put right (the pickaxe carried level and still; the elbow out; Long's back up before its legs; its coat's front out to the side) | Not yet |
 | The blow, and the rest from it | Efforts of each muscle group measured over five minutes | Not yet | Not yet |
-| Falling, and getting up | Not traced yet | Not yet | Not yet |
+| Falling, and getting up | Not traced (a let-go body has no hips' height to hold); the fall's own measures instead: its chest to the ground, its shins under it, how fast its trunk and head go; 12 of 12 ways of lying | **One round:** two "reads as real, with a flaw"; six things stood (it sits folded a second and a half and then rises; the half second from its knees is not pushed by anything; two bodies on one clock; Long's head on the ground; the boots in the air; a stiff tunic). One change kept, one tried and not kept; five open | Not yet |
 | Taking the lantern or the mug, and holding it | Not traced (the trace has no fingers, and nothing that hangs); read in pictures; the hold changed | Not yet | Not yet |
 | Clothes in the deepest bend | Not measured yet | Not yet | Not yet |
 
@@ -198,6 +198,13 @@ Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)
 - **Judges disagree, and the trace settles it.** One called the order
   of standing up wrong (back first, legs last), another called the same
   order right. The trace said: together for Small, legs behind for Long.
+- **A movement of the let-go body is searched, not set by hand**
+  (`GetUpSearch`, in the tests): the three miners laid and thrown down a
+  dozen ways, the poses their joints are held towards varied, the
+  physics stepped by hand, fifty to a hundred tries a second. What it is
+  asked for has to say what must not be (it will find a body lying on
+  its back and call it squatting), and what it finds is looked at in
+  pictures on the bench before it is kept.
 - **A trace is only as good as what is in it.** The pick-up was not
   traced in the first part (the trace had no hands). Traced, it showed
   at once that the whole upper body shook fifty times a second whenever

@@ -74,3 +74,20 @@ it sharpens "every action is physical" of October 6):
   boulders' pieces, the strength slider's ends, or the questions put with
   the build (what a weak body should do; the keys). They stay Open.
 - Luis did not say to merge the branch into `main`.
+
+## Later, in the same round (verbatim)
+
+Three short messages from Luis while the round was under way. None
+changed what was asked.
+
+- October 8: "I hit my usage limit while you were working, but it has
+  reset now. Please continue from where you left off."
+- October 8: "i had to stop my computer for a bit, please continue with
+  your previous task."
+- October 9: "I hit my usage limit while you were working, but it has
+  reset now. Please continue from where you left off."
+
+**What I changed because of them** (my own choice, not asked): the
+judges are called three at a time, on the smaller model, and only after
+the work in hand is committed; and whatever is consistent is committed
+and pushed before a long run.

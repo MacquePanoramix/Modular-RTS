@@ -2829,3 +2829,36 @@ was run.
 - **Not tested:** anything Luis has seen or played of this; a second
   round of judges; the lantern and the mug by any judge; the mug in
   pictures (only Small's lantern was pictured).
+
+## The playtest round, fourth part — getting up after a fall by the body's own strength (October 9)
+
+- **`PhysicalFallTests`:** 6 of 6 (two of them new).
+  `PushedOverFromThePanelItFallsAndGetsItselfUp` (new): the three
+  miners, pushed over backwards by the panel's button: up 7.6 to 8.2 s
+  after the push, their own way.
+  `LaidDownAnyWayItGetsUpByItsOwnStrength` (new): the three miners, each
+  laid on its back, front, left and right: 12 of 12 up their own way;
+  the old way no times; eleven at the first try, up 5.0 to 7.8 s after
+  being laid; Round on its front at its second try, 13.4 s (in an
+  earlier run of the same test, at its first).
+  `AMinerLetGoFallsLiesAndGetsUp`: 6 of 6; it now allows 1.2 m from
+  where it lay (0.25 to 1.16 m seen), where it allowed 0.4.
+- **The bench** (`PhysicalFallBench -fallLays back,front`), the three
+  miners: 6 of 6 up; read in pictures
+  ([the round's page](Reviews/2026-10-08_ThePlaytestRound.md#l7-getting-up-after-a-fall)).
+- **The search** (`GetUpSearch`): the turning over, three miners and
+  twelve ways of lying: 35 of 36 flat on their fronts in one go. Five
+  searches for a way from the knees onto the feet found none.
+- **Three judges of the get-up** (separate agents on the smaller model;
+  timed sheets of Small and Round from their backs and Long from its
+  front; the figures). Two: "reads as real, with a flaw". Of ten things
+  said, six stood ([the table](Reviews/2026-10-08_ThePlaytestRound.md#what-the-judges-of-the-get-up-said-first-round)).
+  One change was kept (a way ends when the body is there); one was
+  tried and not kept (shorter waits: two bodies then failed their first
+  try).
+- **The whole PlayMode suite,** alone, on the code as it is: 179 tests; **163 passed, none failed**, 16 are run only when asked (1,410 s).
+- **The release build** was made from that code, and its own measures run: one miner standing 4.4 to 4.6 ms a frame and at its work 4.4 ms; the crowd 4.8, 5.6, 6.3 and 7.9 ms a frame for none, 25, 50 and 100 miners; no exceptions in either log. **The getting up itself was not run in the built player** (nothing falls in those measures).
+- **Not tested:** Luis's eye; any judge; slopes, steps, walls, boulders
+  or bodies in the way; a weak or spent body getting up; a fall with a
+  tool in both hands beyond what the existing test of a fall at work
+  asks.

@@ -2026,3 +2026,22 @@ with the settings, are in
   stop is gone); `ThingsInHand.Carries` (`ForearmRaised`, `UpperHangs`,
   plus `HangsOut`), and it calls `Regard`. `HungThingTests` asks for the
   new hold.
+- **Getting up after a fall (the fourth part, October 9).**
+  `PhysicalFall`: `Way`, `Stage`, `Asks`/`Asked`, `Measure(Asks)`,
+  `Ways` (default `Usual()`), `Rouse()`, `Advance(dt)` (the step that
+  `FixedUpdate` takes; a search that steps the physics itself calls it),
+  `LieStill()`, `Fell()`, `Gives`/`Through` (for the search),
+  `GaveUpGetting`, `GotUpTheOldWay`; `GiveBack` sets the posed stance
+  from where the let-go feet are planted (`plantAt`).
+  `Tests/PlayMode/GetUpSearch.cs` (explicit; `-searchOut`,
+  `-searchWays`, `-searchWay`, `-searchFor front|kneel|crouch|squat|
+  seat|feet|rise`, `-searchMiner Small,Long,Round`, `-searchStarts`,
+  `-searchRounds`, `-searchMany`, `-searchKeep`, `-searchSpread`,
+  `-searchSame`, `-searchFrom`, `-searchHurry`, `-searchKicks`): sets
+  `Physics.simulationMode` to `Script` while it runs and puts it back.
+  `PhysicalFallBench`: `-fallLays`, `-fallScripts`, `-fallEvery`,
+  `-fallFollow`; `Lay(...)` and `Read(...)` are shared with the search
+  and the tests. `PhysicalFallTests.LaidDownAnyWayItGetsUpByItsOwnStrength`.
+  `MinerWorkPreview.PushOver()`/`PushOver(way)`/`CanPushOver`, the
+  button on `MinerPanel`, and
+  `PhysicalFallTests.PushedOverFromThePanelItFallsAndGetsItselfUp`.
