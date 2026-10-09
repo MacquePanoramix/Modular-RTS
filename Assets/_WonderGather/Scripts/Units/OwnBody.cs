@@ -26,7 +26,18 @@ namespace WonderGather
     // work, it gives its body back to the posed one, which takes it over in a quarter of a second. Pushed harder
     // than it can stand, it goes over into the fall that is already built (PhysicalFall), and gets up as that does.
     //
-    // What it does not do yet: step to catch itself; walk; breathe or shift its weight (the rest of step 1).
+    // And there is life in it (the rest of step 1; what real bodies do standing is in the research of October 9,
+    // part 6). None of it is a pose put on the body: each is something its joints are asked for, and the body
+    // answers as its weights let it.
+    //  - It breathes (Breath): its back straightens a little and its arms are pushed out as its chest fills, and
+    //    the chest is drawn fuller; faster and deeper the more its muscles have spent.
+    //  - Its weight goes from one leg to the other now and then: the keeper holds its weight nearer one boot; its
+    //    hips roll (the hip of the leg it stands on higher), its shoulders the other way, and the knee of the other
+    //    leg eases, each a little after the one before. Pushed, it stands square again.
+    //  - Its head looks somewhere else every few seconds, at another miner if one is near, and stays where it looks
+    //    while the body under it moves.
+    //
+    // What it does not do yet: step to catch itself; walk. Its eyes are not modelled apart from its head.
     [DefaultExecutionOrder(41)]
     [RequireComponent(typeof(ProceduralBiped), typeof(PhysicalBody), typeof(MinerBody))]
     public sealed class OwnBody : MonoBehaviour
@@ -63,6 +74,65 @@ namespace WonderGather
         // came to rest from a walk, one boot still in the air on its closing step, Small went down at once.
         private const float AtEaseFor = .4f;
         private float easeFor;
+
+        // ---- The life in it. Set by hand and by what the judges said, not by the search.
+        public static bool Alive = true;
+        // Its weight goes ShiftsBy of the way from between its boots to the one it favours (wholly favouring it),
+        // over ShiftsIn seconds, first after ShiftsFirst seconds and then every so many (between the two). Its hips
+        // roll by Rolls degrees then, RollsAfter seconds behind its weight; its trunk keeps upright, its shoulders
+        // Shoulders degrees the other way; the knee of the other leg eases by KneeEases degrees, EasesAfter behind.
+        public static float ShiftsBy = .28f, ShiftsIn = 1.6f, ShiftsFirst = 3, ShiftsAtLeast = 9, ShiftsAtMost = 26;
+        public static float Rolls = 5, RollsAfter = .25f, Shoulders = 1.5f, KneeEases = 12, EasesAfter = .45f;
+        // It goes over a leg only as far as that leg bears it with ease: when a joint of the leg gives more than
+        // Bears of what it has, it goes no further and comes back a little. (A tired or a weak body shifts less.)
+        public static float Bears = .5f;
+        // Between, it is never quite still: where it holds its weight drifts by a few millimetres (Sways, metres),
+        // slowly, as a standing body's does.
+        public static float Sways = .004f;
+        // It holds its weight this share of the way from where the posed body had it (near its heels) to the middle
+        // of its boots: nudged forwards and coming back, it has sole behind it.
+        public static float StandsMid = .5f;
+        // A breath at rest straightens its back by BreathBack degrees, pushes each arm out by BreathArms, and draws
+        // its chest fuller by BreathSwell (a share). All three times BreathShown: how breath is drawn is a look for
+        // Luis to choose (1: as in life; more: drawn stronger; 0: not drawn).
+        public const float BreathDrawn = 2.5f;
+        public static float BreathBack = .4f, BreathArms = 1, BreathSwell = .035f, BreathShown = BreathDrawn;
+        // Its head looks somewhere else every so many seconds (between the two), no further aside than LooksAside
+        // degrees; a look takes LooksIn seconds and LooksInEach more for each degree. It looks at another miner
+        // nearer than LooksAsFar metres about one time in three.
+        public static float LooksAtLeast = 2.5f, LooksAtMost = 7, LooksAside = 40, LooksIn = .25f, LooksInEach = .006f, LooksAsFar = 15;
+        // (Which way round the engine counts a joint's turn from its pose.)
+        private const float Turns = 1;
+        private Breath breath;
+        private uint chance;
+        private float life, favours, favoursFrom, favoursTo, shiftAlong = 1, shiftIn = 1, shiftsAt, rolled, eased;
+        private Vector2 looks, looksFrom, looksTo;
+        private float lookAlong = 1, lookIn = 1, looksAt, looksUntil;
+        private Vector3 stands, itsRight, itsAhead, lookAt, swayed;
+        private float swaysFrom;
+        // (Where it stands is kept by its boots: so far across from the middle between them, and so far ahead.)
+        private Vector2 standsBy;
+        private float leftSwell;
+        private readonly Quaternion[] madeTurned = new Quaternion[Count];
+
+        // How far it favours a leg (-1: wholly its left; 1: its right), where its head looks (degrees to its right
+        // and down from straight ahead), and its breath.
+        public float Favours => favours;
+        // The largest share of what it has that a joint of a leg gave in the last step, and what a joint has.
+        public float Asked(int leg) => Mathf.Max(gave[Thigh + leg] / Mathf.Max(1e-3f, strength[Thigh + leg]), Mathf.Max(gave[Shin + leg] / Mathf.Max(1e-3f, strength[Shin + leg]), gave[Foot + leg] / Mathf.Max(1e-3f, strength[Foot + leg])));
+        public float Has(int index) => strength[index];
+        private float asked, rollMade, rollSeen;
+        public Vector2 Looks => looks;
+        public float BreathFull => breath.Full;
+        public float BreathsAMinute => breath.AMinute;
+        public int BreathsTaken => breath.Taken;
+        // It is asked to favour a leg now, or to look at a place for some seconds (for whoever shows or tests it).
+        public void Favour(float side) { favoursFrom = favours; favoursTo = Mathf.Clamp(side, -1, 1); shiftAlong = 0; shiftIn = ShiftsIn; shiftsAt = life + shiftIn + ShiftsAtMost; }
+        public void LookAt(Vector3 place, float seconds) { lookAt = place; looksUntil = life + seconds; }
+
+        private float Chance() { chance = chance * 1664525u + 1013904223u; return (chance >> 8) / 16777216f; }
+        // One hump of speed, from nought to one.
+        private static float Hump(float u) { u = Mathf.Clamp01(u); return u * u * u * (10 + u * (6 * u - 15)); }
 
         private ProceduralBiped body;
         private PhysicalBody physical;
@@ -351,8 +421,15 @@ namespace WonderGather
             for (int i = 0; i < Count; i++)
             {
                 wasAt[i] = nowAt[i] = segmentsMade[i].transform.position;
-                wasTurned[i] = nowTurned[i] = segmentsMade[i].transform.rotation;
+                wasTurned[i] = nowTurned[i] = madeTurned[i] = segmentsMade[i].transform.rotation;
             }
+            itsRight = Flat(transform.right).normalized; itsAhead = Flat(transform.forward).normalized;
+            chance = (uint)Breath.SeedOf(name) * 2654435761u + (uint)Began * 40503u + 7u;
+            breath.Begin(Breath.SeedOf(name) + Began);
+            life = 0; favours = favoursFrom = favoursTo = rolled = eased = 0; shiftAlong = 1;
+            shiftsAt = ShiftsFirst * Mathf.Lerp(.7f, 1.3f, Chance());
+            swaysFrom = 60 * Chance(); swayed = Vector3.zero;
+            looks = looksFrom = looksTo = Vector2.zero; lookAlong = 1; looksAt = Mathf.Lerp(1, 3, Chance()); looksUntil = 0;
 
             balance = GetComponent<PhysicalBalance>();
             balanced = balance != null && balance.Acts;
@@ -370,6 +447,7 @@ namespace WonderGather
         {
             if (held != null) { held.SetActive(false); Destroy(held); }
             held = null;
+            leftSwell = miner.Swell; miner.Swell = 0;
             for (int i = 0; i < Count; i++) parts[i] = null;
             Stands = false;
         }
@@ -384,6 +462,7 @@ namespace WonderGather
             for (int i = 0; i < 2; i++)
                 if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null) { leftAt[Count + i] = s.toes[i].position; leftTurned[Count + i] = s.toes[i].rotation; }
             PutAway();
+            miner.Swell = leftSwell;
             if (balance != null) balance.Acts = balanced;
             body.LetGo = false;
             giving = GivesBackIn;
@@ -488,6 +567,9 @@ namespace WonderGather
             {
                 begun = true; height = high; upright = parts[Hips].transform.rotation;
                 rest = Flat(weight); holds = rest;
+                Vector3 between = Flat(.5f * (sole[0] + sole[1])), beside0 = Flat(sole[1] - sole[0]).normalized;
+                standsBy = new Vector2(Vector3.Dot(rest - between, beside0), (1 - (Alive ? StandsMid : 0)) * Vector3.Dot(rest - between, Vector3.Cross(beside0, Vector3.up)));
+                rollMade = Mathf.Asin(Mathf.Clamp(parts[Hips].transform.right.y, -1, 1)) * Mathf.Rad2Deg; rollSeen = 0;
             }
             // Down: it goes over into the fall that is built.
             if (float.IsNaN(high) || high < DownAt * height || Vector3.Angle(Vector3.up, parts[Hips].transform.up) > DownLeaning) { GoDown(); return; }
@@ -504,6 +586,13 @@ namespace WonderGather
                 felt = Vector3.ClampMagnitude(Vector3.Lerp(felt, seen, Mathf.Clamp01(step / Feels)), 4);
             }
             if (hasBefore && realKnown && Tracks > 0) shortBy = Vector3.ClampMagnitude(shortBy + Tracks * step * Flat(actedBefore - realAt), .05f);
+            // The life in it: where it holds its weight between its boots, and what its joints are asked for.
+            // (Boots that slid under a push take where it stands with them.)
+            Vector3 apart = Flat(sole[1] - sole[0]);
+            stands = Flat(.5f * (sole[0] + sole[1])) + apart.normalized * standsBy.x + Vector3.Cross(apart.normalized, Vector3.up) * standsBy.y;
+            if (Alive) Lives(step, felt.magnitude / (falls * falls) > Comfort);
+            else Still();
+            rest = stands + apart * (.5f * ShiftsBy * favours) + swayed;
             Vector3 going = Flat(weight) + Flat(goes) / falls;
             Vector3 wants = going + Quick / falls * (going - holds) + felt / (falls * falls);
             Vector3 acts = new Vector3(wants.x, ground, wants.z);
@@ -555,12 +644,17 @@ namespace WonderGather
             for (int i = 0; i < 2; i++)
             {
                 Vector3 pushes = (i == 0 ? 1 - share : share) * push;
+                // (What it has learnt of the ground's push falling short moves where it means the push to act, but
+                // never off the sole: a push asked for beyond a sole's edge only tips the boot.)
+                Transform foot = parts[Foot + i].transform;
+                Vector3 means = foot.InverseTransformPoint(at[i] + shortBy), half = .5f * soleSize[i];
+                means = foot.TransformPoint(new Vector3(Mathf.Clamp(means.x, -half.x + Edge, half.x - Edge), -half.y, Mathf.Clamp(means.z, -half.z + Edge, half.z - Edge)));
                 for (int j = Thigh + i; j <= Foot + i; j += 2)
-                    torque[j] -= Vector3.Cross(at[i] + shortBy - JointAt(j), pushes);
+                    torque[j] -= Vector3.Cross(means - JointAt(j), pushes);
             }
-            // Its hips keep its trunk as upright as it began.
+            // Its hips keep its trunk as upright as it began (rolled, as it favours a leg).
             {
-                Quaternion off = upright * Quaternion.Inverse(parts[Hips].transform.rotation);
+                Quaternion off = Quaternion.AngleAxis(Rolls * rolled, itsAhead) * upright * Quaternion.Inverse(parts[Hips].transform.rotation);
                 off.ToAngleAxis(out float angle, out Vector3 axis);
                 if (angle > 180) angle -= 360;
                 if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.zero; angle = 0; }
@@ -580,6 +674,154 @@ namespace WonderGather
                 parts[j].AddTorque(torque[j]);
                 parts[From[j]].AddTorque(-torque[j]);
             }
+        }
+
+        // A joint is asked for a turn from the pose it was made in: a turn about the body's own lines as it began
+        // (across it, up, ahead), of the part against what it hangs from.
+        private void Asks(int j, Quaternion turn)
+        {
+            Aims(j, Quaternion.Inverse(madeTurned[j]) * turn * madeTurned[j]);
+        }
+
+        // (The turn in the part's own frame.)
+        private void Aims(int j, Quaternion own)
+        {
+            own.ToAngleAxis(out float angle, out Vector3 axis);
+            if (angle > 180) angle -= 360;
+            if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.right; angle = 0; }
+            Vector3 by = Turns * angle * axis;
+            parts[j].SetDriveTarget(ArticulationDriveAxis.X, by.x);
+            if (hinge[j]) return;
+            parts[j].SetDriveTarget(ArticulationDriveAxis.Y, by.y);
+            parts[j].SetDriveTarget(ArticulationDriveAxis.Z, by.z);
+        }
+
+        // With no life in it, every joint is asked for the pose it was made in.
+        private void Still()
+        {
+            favours = rolled = eased = 0; swayed = Vector3.zero;
+            for (int j = 1; j < Count; j++) Aims(j, Quaternion.identity);
+        }
+
+        // One step of its life: its breath, the leg it favours, where it looks; and what its joints are asked for.
+        private void Lives(float step, bool pushed)
+        {
+            life += step;
+            float spent = Mathf.Max(Mathf.Max(physical.Spent(PhysicalBody.Muscles.Legs), physical.Spent(PhysicalBody.Muscles.Back)),
+                Mathf.Max(physical.Spent(PhysicalBody.Muscles.LeftArm), physical.Spent(PhysicalBody.Muscles.RightArm)));
+            breath.Goes(step, spent / .85f);
+
+            // Its weight, from leg to leg. Pushed, it stands square.
+            if (pushed)
+            {
+                if (favoursTo != 0 || shiftAlong >= 1 && favours != 0) { favoursFrom = favours; favoursTo = 0; shiftAlong = 0; shiftIn = .5f * ShiftsIn; }
+                shiftsAt = life + Mathf.Lerp(4, 8, Chance());
+            }
+            else if (life >= shiftsAt && shiftAlong >= 1)
+            {
+                favoursFrom = favours;
+                // To the other leg, mostly; now and then only a little further on or off the one it is on.
+                float other = favours > 0 ? -1 : favours < 0 ? 1 : Chance() < .5f ? -1 : 1;
+                favoursTo = favours != 0 && Chance() < .3f ? Mathf.Clamp(favours + .5f * (Chance() - .5f), -1, 1) : other * Mathf.Lerp(.55f, 1, Chance());
+                shiftIn = ShiftsIn * Mathf.Lerp(.6f, 1, .5f * Mathf.Abs(favoursTo - favoursFrom)) * Mathf.Lerp(.9f, 1.15f, Chance());
+                shiftAlong = 0;
+                shiftsAt = life + shiftIn + Mathf.Lerp(ShiftsAtLeast, ShiftsAtMost, Chance());
+            }
+            // (As far as the leg bears it with ease, and no further.)
+            asked = Mathf.Lerp(asked, Mathf.Abs(favours) > .05f ? Asked(favours > 0 ? 1 : 0) : 0, Mathf.Clamp01(step / .2f));
+            if (asked > Bears && Mathf.Abs(favours) > .05f && Mathf.Abs(favoursTo) >= .9f * Mathf.Abs(favours) && favoursTo * favours >= 0)
+            {
+                favoursFrom = favours; favoursTo = .8f * favours; shiftAlong = 0; shiftIn = .5f * ShiftsIn; asked = 0;
+            }
+            if (shiftAlong < 1)
+            {
+                shiftAlong = Mathf.Min(1, shiftAlong + step / Mathf.Max(.1f, shiftIn));
+                favours = Mathf.Lerp(favoursFrom, favoursTo, Hump(shiftAlong));
+            }
+            // Between, where it holds its weight drifts: two slow turns along it and two across, never in step.
+            float t = life + swaysFrom;
+            swayed = pushed ? Vector3.Lerp(swayed, Vector3.zero, Mathf.Clamp01(4 * step))
+                : Sways * (itsAhead * (.6f * Mathf.Sin(.9f * t) + .4f * Mathf.Sin(.37f * t + 1.3f)) + itsRight * (.36f * Mathf.Sin(.53f * t + .7f) + .24f * Mathf.Sin(1.21f * t)));
+            // (Its hips follow its weight, and the easing knee follows them.)
+            rolled = Mathf.Lerp(rolled, favours, Mathf.Clamp01(step / RollsAfter));
+            eased = Mathf.Lerp(eased, rolled, Mathf.Clamp01(step / EasesAfter));
+
+            // Where it looks.
+            if (life < looksUntil)
+            {
+                // (At a place it was asked to look at.)
+                Vector3 to = lookAt - parts[Head].transform.position;
+                Vector2 wanted = new Vector2(Mathf.Clamp(Vector3.SignedAngle(itsAhead, Flat(to), Vector3.up), -LooksAside, LooksAside),
+                    Mathf.Clamp(-Mathf.Atan2(to.y, Mathf.Max(.01f, Flat(to).magnitude)) * Mathf.Rad2Deg, -20, 30));
+                if ((wanted - looksTo).magnitude > 2) Glance(wanted);
+                looksAt = Mathf.Max(looksAt, looksUntil + 1);
+            }
+            else if (pushed) { if (looksTo != new Vector2(0, 5)) Glance(new Vector2(0, 5)); looksAt = life + Mathf.Lerp(2, 4, Chance()); }
+            else if (life >= looksAt && lookAlong >= 1)
+            {
+                float what = Chance();
+                Vector2 wanted;
+                if (what < .34f && Another(out Vector2 theirs)) wanted = theirs;
+                else if (what < .7f) wanted = new Vector2(14 * (2 * Chance() - 1), Mathf.Lerp(-3, 8, Chance()));
+                else wanted = new Vector2((Chance() < .5f ? -1 : 1) * Mathf.Lerp(18, LooksAside, Chance()), Mathf.Lerp(-2, 10, Chance()));
+                Glance(wanted);
+                looksAt = life + lookIn + Mathf.Lerp(LooksAtLeast, LooksAtMost, Chance());
+            }
+            if (lookAlong < 1)
+            {
+                lookAlong = Mathf.Min(1, lookAlong + step / Mathf.Max(.05f, lookIn));
+                looks = Vector2.Lerp(looksFrom, looksTo, Hump(lookAlong));
+            }
+
+            // What its joints are asked for.
+            float roll = Rolls * rolled, fills = breath.Full * breath.Deep * BreathShown;
+            Quaternion rollsBack = Quaternion.AngleAxis(-roll, itsAhead);
+            // Its trunk stays upright while its hips roll under it (its shoulders a little the other way): it is
+            // asked against its hips for the roll they are seen to have, taken up slowly (asked to keep upright in
+            // the world step by step, it threw its hips about when it was nudged). And its back straightens as its
+            // chest fills. (Which way it faces now is its hips'.)
+            Quaternion faces = Quaternion.AngleAxis(Vector3.SignedAngle(Flat(upright * Vector3.forward), Flat(parts[Hips].transform.forward), Vector3.up), Vector3.up);
+            rollSeen = Mathf.Lerp(rollSeen, Mathf.Asin(Mathf.Clamp(parts[Hips].transform.right.y, -1, 1)) * Mathf.Rad2Deg - rollMade, Mathf.Clamp01(step / .3f));
+            Asks(Trunk, Quaternion.AngleAxis(-(Mathf.Clamp(rollSeen, -10, 10) + Shoulders * rolled), itsAhead) * Quaternion.AngleAxis(-BreathBack * fills, itsRight));
+            for (int i = 0; i < 2; i++)
+            {
+                float side = i == 0 ? -1 : 1;
+                // (Its arms hang as they did while its shoulders tip; breath pushes them out.)
+                Asks(UpperArm + i, Quaternion.AngleAxis(Shoulders * rolled + side * BreathArms * fills, itsAhead));
+                // The leg it does not stand on: its knee eases forward, its boot staying flat.
+                float bends = KneeEases * Mathf.Clamp01(-side * eased);
+                Asks(Thigh + i, rollsBack * Quaternion.AngleAxis(-.5f * bends, itsRight));
+                Asks(Shin + i, Quaternion.AngleAxis(bends, itsRight));
+                Asks(Foot + i, Quaternion.AngleAxis(-.5f * bends, itsRight));
+            }
+            // Its head keeps to where it looks, whatever the body under it does.
+            Quaternion wants = faces * Quaternion.AngleAxis(looks.x, Vector3.up) * Quaternion.AngleAxis(looks.y, itsRight) * madeTurned[Head];
+            Aims(Head, Quaternion.Inverse(parts[Trunk].transform.rotation * rested[Head]) * wants);
+        }
+
+        private void Glance(Vector2 wanted)
+        {
+            looksFrom = looks; looksTo = wanted; lookAlong = 0;
+            lookIn = LooksIn + LooksInEach * (wanted - looks).magnitude;
+        }
+
+        // Another miner near enough, and not behind it: where its head is, as a look.
+        private bool Another(out Vector2 theirs)
+        {
+            theirs = Vector2.zero;
+            float nearest = LooksAsFar;
+            bool any = false;
+            Vector3 from = parts[Head].transform.position;
+            foreach (var unit in FindObjectsByType<SelectableUnit>(FindObjectsSortMode.None))
+            {
+                if (unit == null || unit.gameObject == gameObject || !unit.TryGetComponent<MinerBody>(out var other) || !other.Ready) continue;
+                Vector3 to = other.Solved.head.position - from;
+                float far = Flat(to).magnitude, aside = Vector3.SignedAngle(itsAhead, Flat(to), Vector3.up);
+                if (far < .5f || far > nearest || Mathf.Abs(aside) > 75) continue;
+                nearest = far; any = true;
+                theirs = new Vector2(Mathf.Clamp(aside, -LooksAside, LooksAside), Mathf.Clamp(-Mathf.Atan2(to.y, far) * Mathf.Rad2Deg, -20, 30));
+            }
+            return any;
         }
 
         // It cannot stand: its parts are put away, and the fall that is built takes the body as it is.
@@ -616,12 +858,14 @@ namespace WonderGather
                 for (int i = 0; i < 2; i++)
                     if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null)
                         s.toes[i].SetPositionAndRotation(segments[Foot + i].TransformPoint(toeAt[i]), segments[Foot + i].rotation * toeTurn[i]);
+                miner.Swell = Alive ? BreathSwell * breath.Full * breath.Deep * BreathShown : 0;
                 return;
             }
             if (giving <= 0 || segments[Hips] == null) return;
             // The posed body has posed this frame: each segment is between where the physics left it and there.
             giving -= Time.deltaTime;
             float share = Mathf.SmoothStep(0, 1, 1 - Mathf.Clamp01(giving / GivesBackIn));
+            miner.Swell = leftSwell * (1 - share);
             for (int i = 0; i < Count; i++)
             {
                 if (i >= UpperArm && i < Foot)

@@ -28,7 +28,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; }
+        public void Restore() { Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; }
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
@@ -66,6 +66,8 @@ namespace WonderGather.Tests
         public IEnumerator EachMinerStandsByItsOwnJointsStill()
         {
             Time.captureFramerate = 50;
+            // (The keeper alone, with no life in the body: what it keeps still.)
+            OwnBody.Alive = false;
             for (int index = 0; index < choice.Count; index++)
             {
                 choice.Choose(index);
@@ -112,6 +114,8 @@ namespace WonderGather.Tests
         public IEnumerator NudgedItKeepsItsFeet()
         {
             Time.captureFramerate = 50;
+            // (The keeper alone: with life in it, it is nudged in the test of that.)
+            OwnBody.Alive = false;
             for (int index = 0; index < choice.Count; index++)
             {
                 choice.Choose(index);
@@ -239,6 +243,124 @@ namespace WonderGather.Tests
                 Assert.That(own.Stands, Is.True, name + " did not stand by its own joints again where it came to: " + look.Status());
                 yield return Wait(3);
                 Assert.That(own.Stands && own.WentDown == 0, Is.True, name + " went down after walking.");
+                look.SetOwn(false);
+                yield return Wait(.6f);
+            }
+        }
+
+        // The life in it: standing a minute it breathes, its weight goes from leg to leg, its head looks about; and
+        // it is still stable (it does not go down, its head keeps within a few centimetres, nothing trembles).
+        [UnityTest, Timeout(1800000)]
+        public IEnumerator StandingAMinuteItIsAliveAndDoesNotWobble()
+        {
+            Time.captureFramerate = 50;
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                Vector3 away = default;
+                yield return Stand(unit, (s, a) => { away = a; });
+                Vector3 right = Vector3.Cross(Vector3.up, away);
+                OwnBody own = null;
+                yield return Own(unit, name, o => own = o);
+                yield return Wait(1.5f);
+                Transform hips = own.Part(OwnBody.Hips).transform, trunk = own.Part(OwnBody.Trunk).transform, head = own.Part(OwnBody.Head).transform;
+                Vector3 hipsBegan = hips.position, headBegan = head.position;
+                float headFaced = Vector3.SignedAngle(away, Flat(head.forward), Vector3.up);
+                int breathsBegan = own.BreathsTaken;
+                // What is measured over the minute.
+                float leanFull = 0, leanEmpty = 0; int full = 0, empty = 0;
+                float hipsRight = 0, hipsLeft = 0, rollRight = 0, rollLeft = 0, kneeFree = 0, kneeStood = 0; int onRight = 0, onLeft = 0;
+                float headWent = 0, lowest = float.MaxValue, lookedMost = 0, lookOff = 0; int lookSeen = 0;
+                float headAcross = 0, headAlong = 0, hipsAcross = 0, hipsAlong = 0, chestAcross = 0, chestAlong = 0, hipsTurned = 0;
+                Vector3 chestBegan = trunk.position; float hipsFaced = Vector3.SignedAngle(away, Flat(hips.forward), Vector3.up);
+                int shifts = 0, turnsBack = 0; float favoured = 0, lastSide = 0, lastHead = 0, wayHead = 0;
+                float Knee(int i) => Vector3.Angle(own.Part(OwnBody.Thigh + i).transform.up, own.Part(OwnBody.Shin + i).transform.up);
+                for (float until = Time.time + 60; Time.time < until;)
+                {
+                    Assert.That(own.Stands, Is.True, $"{name} did not go on standing with life in it ({60 - (until - Time.time):F1} s): {look.Status()}");
+                    float lean = Mathf.Asin(Mathf.Clamp(Vector3.Dot(trunk.up, away), -1, 1)) * Mathf.Rad2Deg;
+                    if (own.BreathFull > .8f) { leanFull += lean; full++; } else if (own.BreathFull < .2f) { leanEmpty += lean; empty++; }
+                    float aside = Vector3.Dot(hips.position - hipsBegan, right), roll = Mathf.Asin(Mathf.Clamp(hips.right.y, -1, 1)) * Mathf.Rad2Deg;
+                    if (own.Favours > .5f) { hipsRight += aside; rollRight += roll; kneeFree += Knee(0); kneeStood += Knee(1); onRight++; }
+                    else if (own.Favours < -.5f) { hipsLeft += aside; rollLeft += roll; kneeFree += Knee(1); kneeStood += Knee(0); onLeft++; }
+                    float side = own.Favours > .3f ? 1 : own.Favours < -.3f ? -1 : lastSide;
+                    if (side != lastSide && lastSide != 0) shifts++;
+                    lastSide = side;
+                    favoured = Mathf.Max(favoured, Mathf.Abs(own.Favours));
+                    headWent = Mathf.Max(headWent, Flat(head.position - headBegan).magnitude);
+                    headAcross = Mathf.Max(headAcross, Mathf.Abs(Vector3.Dot(head.position - headBegan, right))); headAlong = Mathf.Max(headAlong, Mathf.Abs(Vector3.Dot(head.position - headBegan, away)));
+                    hipsAcross = Mathf.Max(hipsAcross, Mathf.Abs(Vector3.Dot(hips.position - hipsBegan, right))); hipsAlong = Mathf.Max(hipsAlong, Mathf.Abs(Vector3.Dot(hips.position - hipsBegan, away)));
+                    chestAcross = Mathf.Max(chestAcross, Mathf.Abs(Vector3.Dot(trunk.position - chestBegan, right))); chestAlong = Mathf.Max(chestAlong, Mathf.Abs(Vector3.Dot(trunk.position - chestBegan, away)));
+                    hipsTurned = Mathf.Max(hipsTurned, Mathf.Abs(Mathf.DeltaAngle(hipsFaced, Vector3.SignedAngle(away, Flat(hips.forward), Vector3.up))));
+                    lowest = Mathf.Min(lowest, head.position.y);
+                    // A tremble: the head going back and forth across the body (turnings of more than a third of a millimetre).
+                    float across = Vector3.Dot(head.position - headBegan, right);
+                    if (wayHead >= 0 && across < lastHead - .0003f) { if (wayHead > 0) turnsBack++; wayHead = -1; lastHead = across; }
+                    else if (wayHead <= 0 && across > lastHead + .0003f) { if (wayHead < 0) turnsBack++; wayHead = 1; lastHead = across; }
+                    else if (wayHead > 0) lastHead = Mathf.Max(lastHead, across); else if (wayHead < 0) lastHead = Mathf.Min(lastHead, across);
+                    float faces = Mathf.DeltaAngle(headFaced, Vector3.SignedAngle(away, Flat(head.forward), Vector3.up));
+                    lookedMost = Mathf.Max(lookedMost, Mathf.Abs(own.Looks.x));
+                    lookOff += Mathf.Abs(Mathf.DeltaAngle(faces, own.Looks.x)); lookSeen++;
+                    yield return new WaitForFixedUpdate();
+                }
+                int breaths = own.BreathsTaken - breathsBegan;
+                float straightens = full > 0 && empty > 0 ? leanEmpty / empty - leanFull / full : 0;
+                Debug.Log($"OWN_ALIVE {name}, a minute: {breaths} breaths, its back {straightens:F2} degrees straighter full than empty; its weight went to the other leg {shifts} times (favouring one by {favoured:F2} at most): on its right leg its hips are {(onRight > 0 ? hipsRight / onRight * 1000 : 0):F0} mm to the right and roll {(onRight > 0 ? rollRight / onRight : 0):F1} degrees (right side up), on its left {(onLeft > 0 ? hipsLeft / onLeft * 1000 : 0):F0} mm and {(onLeft > 0 ? rollLeft / onLeft : 0):F1}; the knee of the leg it stands on is bent {(onRight + onLeft > 0 ? kneeStood / (onRight + onLeft) : 0):F1} degrees, the other {(onRight + onLeft > 0 ? kneeFree / (onRight + onLeft) : 0):F1}; its head went {headWent * 1000:F0} mm at most ({headAcross * 1000:F0} across, {headAlong * 1000:F0} along; its chest {chestAcross * 1000:F0} and {chestAlong * 1000:F0}; its hips {hipsAcross * 1000:F0} and {hipsAlong * 1000:F0}, turning {hipsTurned:F1} degrees) and {(headBegan.y - lowest) * 1000:F0} mm lower, turned back and forth across it {turnsBack / 60f:F2} times a second, looked {lookedMost:F0} degrees aside at most and was {lookOff / Mathf.Max(1, lookSeen):F1} degrees from where it meant to look, on average. The panel says: {look.Status()}");
+                Assert.That(own.WentDown, Is.EqualTo(0), name + " went down, standing with life in it.");
+                Assert.That(breaths, Is.InRange(11, 19), name + " does not breathe as a body at rest does.");
+                Assert.That(straightens, Is.GreaterThan(.15f), name + ": its back does not straighten as its chest fills.");
+                Assert.That(shifts, Is.GreaterThanOrEqualTo(1), name + ": its weight did not go from leg to leg.");
+                Assert.That(onRight > 0 && onLeft > 0 && hipsRight / onRight - hipsLeft / onLeft > .015f, Is.True, name + ": its hips do not go over the leg it favours.");
+                Assert.That(onRight > 0 && onLeft > 0 && rollRight / onRight - rollLeft / onLeft > 1.5f, Is.True, name + ": the hip of the leg it stands on does not rise.");
+                Assert.That(kneeFree - kneeStood, Is.GreaterThan(0), name + ": the knee of the leg it does not stand on does not ease.");
+                // (Its weight going over a leg takes its hips, chest and head with it by some centimetres: that is meant.
+                // What is not meant is more than that, or a tremble.)
+                Assert.That(headAcross, Is.LessThan(.07f), name + ": its head goes further across it than its weight going over a leg takes it.");
+                Assert.That(Mathf.Max(chestAcross, chestAlong), Is.LessThan(.06f), name + ": its chest wanders.");
+                Assert.That(headBegan.y - lowest, Is.LessThan(.03f), name + " sinks.");
+                Assert.That(turnsBack / 60f, Is.LessThan(2), name + " trembles.");
+                Assert.That(lookedMost, Is.GreaterThan(10), name + " did not look about.");
+
+                // It looks at a place it is asked to look at: forty degrees to its right, at the height of its head.
+                Vector3 place = head.position + Quaternion.AngleAxis(40, Vector3.up) * away * 3;
+                own.LookAt(place, 4);
+                yield return Wait(2.5f);
+                float turned = Mathf.DeltaAngle(headFaced, Vector3.SignedAngle(away, Flat(head.forward), Vector3.up));
+                Debug.Log($"OWN_LOOKS {name}: asked to look 40 degrees to its right, its head is turned {turned:F1} degrees to its right, {Vector3.Angle(head.forward, place - head.position):F1} degrees from the place");
+                Assert.That(turned, Is.InRange(25, 50), name + " did not turn its head to where it was asked to look.");
+                yield return Wait(2);
+
+                // Favouring a leg wholly, nudged each way, it keeps its feet.
+                for (int d = 0; d < 4; d++)
+                {
+                    own.Favour(d < 2 ? 1 : -1);
+                    float askedOf = 0;
+                    for (float until = Time.time + 3; Time.time < until;) { askedOf = Mathf.Max(askedOf, own.Asked(d < 2 ? 1 : 0)); yield return new WaitForFixedUpdate(); }
+                    float favouredBy = own.Favours;
+                    Vector3 before = own.HeadAt;
+                    look.Nudge(Quaternion.AngleAxis(d * 90 + 45, Vector3.up) * away, .15f);
+                    float furthest = 0;
+                    for (float until = Time.time + 5; Time.time < until && own.Stands;)
+                    {
+                        furthest = Mathf.Max(furthest, Flat(own.HeadAt - before).magnitude);
+                        yield return new WaitForFixedUpdate();
+                    }
+                    Debug.Log($"OWN_ALIVE_NUDGED {name}, on its {(d < 2 ? "right" : "left")} leg (it favoured it by {favouredBy:F2}, that leg's joints asked for {askedOf * 100:F0}% of what they have at most), set going at 0.15 m/s {d * 90 + 45} degrees from ahead: its head went {furthest * 1000:F0} mm at most; it favours a leg by {own.Favours:F2} five seconds after");
+                    Assert.That(own.Stands && own.WentDown == 0, Is.True, $"{name}, on one leg and nudged {d * 90 + 45} degrees from ahead, went down.");
+                }
+
+                // Tired at once, it breathes faster, and stands.
+                look.Tire();
+                yield return Wait(1);
+                float tired = own.BreathsAMinute;
+                yield return Wait(8);
+                Debug.Log($"OWN_TIRED {name}: tired at once it breathes {tired:F0} times a minute; nine seconds after, {own.BreathsAMinute:F0}");
+                Assert.That(tired, Is.GreaterThan(25), name + " does not breathe faster, tired.");
+                Assert.That(own.Stands && own.WentDown == 0, Is.True, name + " went down, tired.");
+                unit.GetComponent<PhysicalBody>().Refresh();
                 look.SetOwn(false);
                 yield return Wait(.6f);
             }

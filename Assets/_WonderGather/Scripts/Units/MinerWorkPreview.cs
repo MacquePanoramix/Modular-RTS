@@ -94,6 +94,7 @@ namespace WonderGather
         private void Awake()
         {
             choice = GetComponent<MinerChoice>();
+            SetBreathLook(1);
             // The interaction click and the panel live beside it: where it is, they are.
             if (GetComponent<InteractionClick>() == null) gameObject.AddComponent<InteractionClick>();
             if (GetComponent<MinerPanel>() == null) gameObject.AddComponent<MinerPanel>();
@@ -565,6 +566,25 @@ namespace WonderGather
         // else to do. And it can be nudged, the way the view looks, to see it keep its feet: set going at so many
         // metres a second.
         private const float NudgeSpeed = .15f;
+        // How its breath is drawn is a look for Luis to choose between: as in life, drawn stronger, or not drawn.
+        public static readonly string[] BreathLooks = { "as in life", "drawn stronger", "not drawn" };
+        private static readonly float[] BreathShows = { 1, OwnBody.BreathDrawn, 0 };
+        private int breathLook;
+        public string BreathLook => BreathLooks[breathLook];
+        public void SetBreathLook(int which)
+        {
+            breathLook = ((which % BreathLooks.Length) + BreathLooks.Length) % BreathLooks.Length;
+            OwnBody.BreathShown = BreathShows[breathLook];
+        }
+        public void NextBreathLook() => SetBreathLook(breathLook + 1);
+        // The chosen miner is tired at once, as if it had worked hard: to see it breathe so. (It rests as it does
+        // after work.)
+        public void Tire()
+        {
+            if (choice == null || choice.Current == null || !choice.Current.TryGetComponent<PhysicalBody>(out var physical)) return;
+            physical.Worked(PhysicalBody.Muscles.Legs, 1, 15);
+            physical.Worked(PhysicalBody.Muscles.Back, 1, 15);
+        }
         private bool ownWanted;
         private SelectableUnit ownOf;
         public bool StandsByItsOwn => ownWanted;

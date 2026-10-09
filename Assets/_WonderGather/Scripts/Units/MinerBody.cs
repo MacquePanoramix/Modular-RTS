@@ -172,6 +172,12 @@ namespace WonderGather
         private readonly Quaternion[] thighRest = new Quaternion[2], shinRest = new Quaternion[2], footRest = new Quaternion[2], toeRest = new Quaternion[2];
         private readonly Vector3[] upperAim = new Vector3[2], foreAim = new Vector3[2], thighAim = new Vector3[2], shinAim = new Vector3[2];
         private Vector3 pelvisOffset;
+        // Breath: its chest is drawn fuller by this share (0: as modelled). What is on its chest (its neck, its
+        // arms, what hangs there) is moved by that, and is not made larger.
+        public float Swell { get; set; }
+        private Vector3 chestSize;
+        private Transform[] onChest;
+        private Vector3[] onChestSize;
 
         public bool Ready => ready;
         public Bones Rig => bones;
@@ -332,6 +338,13 @@ namespace WonderGather
             pelvisRest = Rest(bones.pelvis);
             spineRest = Rest(bones.spine);
             chestRest = Rest(bones.chest);
+            if (onChest == null)
+            {
+                chestSize = bones.chest.localScale;
+                onChest = new Transform[bones.chest.childCount];
+                onChestSize = new Vector3[onChest.Length];
+                for (int k = 0; k < onChest.Length; k++) { onChest[k] = bones.chest.GetChild(k); onChestSize[k] = onChest[k].localScale; }
+            }
             neckRest = Rest(bones.neck);
             headRest = Rest(bones.head);
             for (int i = 0; i < 2; i++)
@@ -454,6 +467,12 @@ namespace WonderGather
             bones.pelvis.SetPositionAndRotation(solved.pelvis.position + solved.pelvis.rotation * pelvisOffset, hipFrame * root * pelvisRest);
             bones.spine.rotation = Quaternion.Slerp(hipFrame, chestFrame, .5f) * root * spineRest;
             bones.chest.rotation = chestFrame * root * chestRest;
+            if (onChest != null)
+            {
+                float fuller = 1 + Mathf.Clamp(Swell, 0, .1f);
+                bones.chest.localScale = chestSize * fuller;
+                for (int k = 0; k < onChest.Length; k++) if (onChest[k] != null) onChest[k].localScale = onChestSize[k] / fuller;
+            }
             bones.neck.rotation = Quaternion.Slerp(chestFrame, headFrame, .5f) * root * neckRest;
             bones.head.rotation = headFrame * root * headRest;
 

@@ -18,7 +18,7 @@ namespace WonderGather
         // The least and the most strength the slider gives (1: ordinary for its build), and the step it moves by.
         public const float Weakest = .3f, Strongest = 3, Step = .05f;
         // Its size on the screen, and how far it stands from the screen's lower left corner.
-        private const float Width = 400, Height = 202, Margin = 12;
+        private const float Width = 400, Height = 228, Margin = 12;
 
         private MinerChoice choice;
         private MinerWorkPreview look;
@@ -75,6 +75,11 @@ namespace WonderGather
             GUI.enabled = could && look.CanNudge;
             if (GUI.Button(new Rect(x + inner - 96, y - 2, 96, 22), "Nudge it", button)) look.Nudge();
             GUI.enabled = could;
+            y += 26;
+            // Its breath: how it is drawn (a look to choose between), and a miner tired at once to see it breathe so.
+            GUI.Label(new Rect(x, y + 2, 50, 20), "Breath:", text);
+            if (GUI.Button(new Rect(x + 52, y - 1, 130, 22), look.BreathLook, button)) look.NextBreathLook();
+            if (GUI.Button(new Rect(x + inner - 96, y - 1, 96, 22), "Tire it", button)) look.Tire();
             y += 26;
             // A pickaxe put on the ground beside it.
             GUI.Label(new Rect(x, y, inner, 20), "Put a pickaxe on the ground beside it:", text);
