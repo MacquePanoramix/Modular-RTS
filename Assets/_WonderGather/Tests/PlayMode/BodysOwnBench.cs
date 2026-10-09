@@ -61,6 +61,9 @@ namespace WonderGather.Tests
         // this, metres).)
         private static int Law = 2;
         private static float Feels = .1f, Leans = 3, LeansBy = 1, LeansAtMost = .1f, Tracks = 8, Comfort = .03f, KeepsBehind = .035f;
+        // (How hard its hips right its trunk, for each kilogram of it, and how much that is damped; how near the edge
+        // of a sole its push may act; how hard it keeps its height, and how much that is damped; how quick it is.)
+        private static float Rights = 9, RightsDamped = .2f, Edge = .01f, Rises = 100, RisesDamped = 20, Quick = 4;
 
         private struct Solid
         {
@@ -419,7 +422,7 @@ namespace WonderGather.Tests
             // (A body that is down does not push as if it stood: below six tenths of its height it gives nothing here.
             // In the game that is where it is let go into the fall.)
             if (float.IsNaN(high) || high < .6f * body.height) { for (int j = 0; j < Count; j++) body.gave[j] = 0; body.outside = 0; return; }
-            float rise = Mathf.Clamp(100 * (body.height - high) - 20 * goes.y, -.5f * g, g);
+            float rise = Mathf.Clamp(Rises * (body.height - high) - RisesDamped * goes.y, -.5f * g, g);
             Vector3 back, push, acts;
             if (Law < 2)
             {
@@ -471,7 +474,7 @@ namespace WonderGather.Tests
                 float outward = i == 0 ? Mathf.Min(beside, 0) : Mathf.Max(beside, 0);
                 Vector3 aimed = acts - side * (beside - outward);
                 Vector3 local = Quaternion.Inverse(s.turned) * (foot.InverseTransformPoint(aimed) - s.at);
-                Vector3 within = new Vector3(Mathf.Clamp(local.x, -.5f * s.size.x + .01f, .5f * s.size.x - .01f), -.5f * s.size.y, Mathf.Clamp(local.z, -.5f * s.size.z + .01f, .5f * s.size.z - .01f));
+                Vector3 within = new Vector3(Mathf.Clamp(local.x, -.5f * s.size.x + Edge, .5f * s.size.x - Edge), -.5f * s.size.y, Mathf.Clamp(local.z, -.5f * s.size.z + Edge, .5f * s.size.z - Edge));
                 at[i] = foot.TransformPoint(s.at + s.turned * within);
             }
             Vector3 across = sole[1] - sole[0];
@@ -532,8 +535,8 @@ namespace WonderGather.Tests
                 off.ToAngleAxis(out float angle, out Vector3 axis);
                 if (angle > 180) angle -= 360;
                 if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.zero; angle = 0; }
-                float spring = 9 * whole;
-                Vector3 rights = scaled * (spring * (angle * Mathf.Deg2Rad) * axis - .2f * spring * body.Turns(Hips));
+                float spring = Rights * whole;
+                Vector3 rights = scaled * (spring * (angle * Mathf.Deg2Rad) * axis - RightsDamped * spring * body.Turns(Hips));
                 torque[Thigh] -= (1 - share) * rights;
                 torque[Thigh + 1] -= share * rights;
             }
@@ -685,6 +688,214 @@ namespace WonderGather.Tests
             finally { Physics.simulationMode = mode; UnityEngine.Object.Destroy(floor); }
         }
 
+        // ---- The search for the keeper's settings.
+        // What is searched, each with the least and the most it may be.
+        private static readonly string[] Named = { "quick", "feels", "leans", "leansBy", "comfort", "keepsBehind", "tracks", "rule", "damped", "rights", "rightsDamped", "edge", "rises", "risesDamped", "fullAt" };
+        private static readonly float[] Least = { 1, .02f, .5f, .2f, 0, .01f, 0, .4f, .2f, 3, .05f, .003f, 30, 5, 30 };
+        private static readonly float[] Most = { 9, .3f, 10, 1.6f, .07f, .06f, 25, 1.8f, 2.5f, 25, .6f, .03f, 300, 60, 120 };
+        private static void Set(float[] v)
+        {
+            Quick = v[0]; Feels = v[1]; Leans = v[2]; LeansBy = v[3]; Comfort = v[4]; KeepsBehind = v[5]; Tracks = v[6]; Rule = v[7]; Damped = v[8];
+            Rights = v[9]; RightsDamped = v[10]; Edge = v[11]; Rises = v[12]; RisesDamped = v[13];
+        }
+        private static string Said(float[] v)
+        {
+            var text = new System.Text.StringBuilder();
+            for (int k = 0; k < v.Length; k++) text.Append(string.Format(CultureInfo.InvariantCulture, "{0}{1} {2:0.####}", k > 0 ? ", " : "", Named[k], v[k]));
+            return text.ToString();
+        }
+
+        // One of a crowd: how it is disturbed (set going at a speed, or pulled with a share of its weight for two and
+        // a half seconds and let go; a way round the compass), and where its head was when that began.
+        private sealed class Tried { public Built body; public float jolt, pull; public Vector3 way; public Vector3 headWas, madeAt; public float wander, settle; public Vector3 middle; public int seen; }
+
+        // -ownSearch: the settings are searched. -searchRounds, -searchMany (tries a round), -searchKeep (the best kept),
+        // -searchFrom "a,b,c,..." (where it begins: fifteen numbers), -searchOut <file>. At -ownStep.
+        [UnityTest, Explicit, Timeout(14400000)]
+        public IEnumerator Search()
+        {
+            string folder = CaptureTools.Argument("-ownOut") ?? Path.Combine(Application.dataPath, "..", "Captures", "Own");
+            Step = Numbers("-ownStep", .02f)[0];
+            Law = 2;
+            int rounds = (int)Numbers("-searchRounds", 10)[0], many = (int)Numbers("-searchMany", 32)[0], keep = (int)Numbers("-searchKeep", 8)[0];
+            float ankleGives = Numbers("-ownAnkle", .7f)[0];
+            float[] jolts = Numbers("-searchJolts", .12f, .2f), pullShares = Numbers("-searchPulls", .05f, .09f);
+            float lasts = Numbers("-searchFor", 8)[0];
+            var culture = CultureInfo.InvariantCulture;
+            Directory.CreateDirectory(folder);
+            yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            yield return null;
+            Time.captureFramerate = 50;
+            var mode = Physics.simulationMode;
+            var plans = new List<Planned[]>();
+            var names = new List<string>();
+            var talls = new List<float>();
+            var lowests = new List<float>();
+            try
+            {
+                var choice = UnityEngine.Object.FindAnyObjectByType<MinerChoice>();
+                var ground = UnityEngine.Object.FindAnyObjectByType<OrdinaryGround>();
+                Vector3 OnGround(Vector3 q) => new Vector3(q.x, ground.Height(q.x, q.z), q.z);
+                var a = ground.Path[4];
+                var b = ground.Path[5];
+                var spot = OnGround(new Vector3(a.x, 0, a.y));
+                var away = OnGround(new Vector3(b.x, 0, b.y)) - spot;
+                away.y = 0;
+                away.Normalize();
+                var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                floor.transform.position = spot + Vector3.up * 200;
+                floor.transform.localScale = new Vector3(200, 1, 200);
+                float floorTop = floor.transform.position.y + .5f;
+                for (int index = 0; index < choice.Count; index++)
+                {
+                    choice.Choose(index);
+                    yield return null;
+                    var unit = choice.Current;
+                    var miner = unit.GetComponent<MinerBody>();
+                    var biped = unit.GetComponent<ProceduralBiped>();
+                    var physical = unit.GetComponent<PhysicalBody>();
+                    var fall = unit.GetComponent<PhysicalFall>();
+                    if (fall == null) fall = unit.gameObject.AddComponent<PhysicalFall>();
+                    fall.GetsUp = false;
+                    unit.Motor.Stop();
+                    unit.GetComponent<NavMeshAgent>().Warp(spot);
+                    unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                    biped.ResetPose();
+                    for (float until = Time.time + .8f; Time.time < until;) yield return null;
+                    talls.Add(miner.Rig.head.position.y - unit.transform.position.y);
+                    fall.LetGo();
+                    var plan = Plan(fall, physical, ankleGives);
+                    fall.TakeBack();
+                    yield return null;
+                    float lowest = float.MaxValue;
+                    foreach (var solid in plan[Foot].solids) lowest = Mathf.Min(lowest, (plan[Foot].at + plan[Foot].turned * solid.at).y - .5f * solid.size.y);
+                    plans.Add(plan); names.Add(choice.NameOf(index)); lowests.Add(lowest);
+                }
+                foreach (var unit in UnityEngine.Object.FindObjectsByType<SelectableUnit>(FindObjectsSortMode.None)) unit.gameObject.SetActive(false);
+                yield return null;
+                Physics.simulationMode = SimulationMode.Script;
+
+                // What one setting comes to: for each miner, so many bodies on the floor, each disturbed its own way.
+                float[] scores = new float[3];
+                string told = "";
+                IEnumerator Try(float[] v)
+                {
+                    Set(v);
+                    float fullAt = v[14];
+                    told = "";
+                    for (int m = 0; m < plans.Count; m++)
+                    {
+                        var plan = plans[m];
+                        float whole = 0;
+                        foreach (var part in plan) whole += part.mass;
+                        var crowd = new List<Tried>();
+                        void Add(float jolt, float pull, Vector3 way)
+                        {
+                            int n = crowd.Count;
+                            Vector3 place = new Vector3((n % 8 - 4) * 2.5f, floorTop - lowests[m] + .002f, (n / 8 - 2) * 2.5f + m * 30);
+                            crowd.Add(new Tried { body = Build(plan, true, place, fullAt, .05f, 0, 0, false, true), jolt = jolt, pull = pull, way = way });
+                            crowd[crowd.Count - 1].madeAt = crowd[crowd.Count - 1].body.Of(Head).position;
+                        }
+                        Add(0, 0, away);
+                        foreach (float jolt in jolts) for (int d = 0; d < 8; d++) Add(jolt, 0, Quaternion.AngleAxis(d * 45, Vector3.up) * away);
+                        foreach (float share in pullShares) for (int d = 0; d < 4; d++) Add(0, share * whole * 9.81f, Quaternion.AngleAxis(d * 90, Vector3.up) * away);
+                        int steps = Mathf.RoundToInt(lasts / Step), begins = Mathf.RoundToInt(1 / Step), ends = Mathf.RoundToInt(3.5f / Step);
+                        for (int k = 0; k < steps; k++)
+                        {
+                            foreach (var one in crowd)
+                            {
+                                if (k == begins)
+                                {
+                                    one.headWas = one.body.Of(Head).position;
+                                    if (one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
+                                }
+                                if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * one.pull, one.body.Centre(Trunk));
+                                Keep(one.body, plan, Quick, fullAt, .05f);
+                            }
+                            Physics.Simulate(Step);
+                            // (The undisturbed one: how far its head goes in its first second, and how it wanders after.)
+                            var still = crowd[0];
+                            Vector3 head = still.body.Of(Head).position;
+                            if (k == 0) still.middle = head;
+                            if (k < begins) still.settle = Mathf.Max(still.settle, Vector3.ProjectOnPlane(head - still.middle, Vector3.up).magnitude);
+                            if (k == begins * 3) { still.middle = head; }
+                            if (k > begins * 3) still.wander = Mathf.Max(still.wander, (head - still.middle).magnitude);
+                        }
+                        float score = 0;
+                        int stood = 0, jolted = 0, pulled = 0;
+                        foreach (var one in crowd)
+                        {
+                            Vector3 head = one.body.Of(Head).position;
+                            float off = Vector3.ProjectOnPlane(head - one.headWas, Vector3.up).magnitude;
+                            // (And it must not have gone down before it was disturbed at all: a body that fell in its first
+                            // second "stood as it stood" by where its head was after that second, and the search found it.)
+                            bool asItStood = head.y - floorTop > .95f * (one.headWas.y - floorTop) && off < .1f * talls[m] && head.y - floorTop > .9f * (one.madeAt.y - floorTop);
+                            if (asItStood) { stood++; score += 1 - Mathf.Clamp01(off / (.1f * talls[m])) * .3f; if (one.jolt > 0) jolted++; else if (one.pull > 0) pulled++; }
+                        }
+                        // (It must be still when nothing disturbs it: more than a third of a millimetre of wandering, or
+                        // more than a centimetre and a half of settling, costs as much as bodies falling.)
+                        var quiet = crowd[0];
+                        float fidgets = Mathf.Clamp(quiet.wander * 1000 / .35f - 1, 0, 6) + Mathf.Clamp(quiet.settle * 1000 / 15 - 1, 0, 4);
+                        score -= fidgets;
+                        scores[m] = score;
+                        told += string.Format(culture, " {0}: {1} of {2} stand ({3} of {4} set going, {5} of {6} pulled), still within {7:0.00} mm after settling {8:0.0} mm;", names[m], stood, crowd.Count, jolted, jolts.Length * 8, pulled, pullShares.Length * 4, quiet.wander * 1000, quiet.settle * 1000);
+                        foreach (var one in crowd) UnityEngine.Object.Destroy(one.body.root);
+                        yield return null;
+                    }
+                }
+                float Whole() => scores[0] + scores[1] + scores[2] + 2 * Mathf.Min(scores[0], Mathf.Min(scores[1], scores[2]));
+
+                int count = Named.Length;
+                var middle = new float[count];
+                var spread = new float[count];
+                float[] from = Numbers("-searchFrom");
+                float[] first = { Quick, Feels, Leans, LeansBy, Comfort, KeepsBehind, Tracks, 1, 1, Rights, RightsDamped, Edge, Rises, RisesDamped, 75 };
+                for (int k = 0; k < count; k++) { middle[k] = from.Length == count ? from[k] : first[k]; spread[k] = (Most[k] - Least[k]) * Numbers("-searchSpread", .2f)[0]; }
+                yield return Try(middle);
+                float best = Whole();
+                float[] bestOf = (float[])middle.Clone();
+                Debug.Log(string.Format(culture, "OWNSEARCH begins at {0:0.00}:{1} [{2}]", best, told, Said(middle)));
+                var random = new System.Random((int)Numbers("-searchSeed", 7)[0]);
+                float Bell() { double u = 1 - random.NextDouble(), w = 1 - random.NextDouble(); return (float)(Math.Sqrt(-2 * Math.Log(u)) * Math.Sin(2 * Math.PI * w)); }
+                for (int round = 0; round < rounds; round++)
+                {
+                    var tried = new List<(float score, float[] v, string told)>();
+                    for (int n = 0; n < many; n++)
+                    {
+                        var v = new float[count];
+                        for (int k = 0; k < count; k++) v[k] = Mathf.Clamp(middle[k] + spread[k] * Bell(), Least[k], Most[k]);
+                        yield return Try(v);
+                        tried.Add((Whole(), v, told));
+                    }
+                    tried.Sort((x, y) => y.score.CompareTo(x.score));
+                    if (tried[0].score > best) { best = tried[0].score; bestOf = (float[])tried[0].v.Clone(); }
+                    for (int k = 0; k < count; k++)
+                    {
+                        float mean = 0, wide = 0;
+                        for (int n = 0; n < keep; n++) mean += tried[n].v[k] / keep;
+                        for (int n = 0; n < keep; n++) wide += (tried[n].v[k] - mean) * (tried[n].v[k] - mean) / keep;
+                        middle[k] = mean; spread[k] = Mathf.Max(Mathf.Sqrt(wide), (Most[k] - Least[k]) * .01f);
+                    }
+                    Debug.Log(string.Format(culture, "OWNSEARCH round {0}: the best of it {1:0.00}:{2} [{3}]; the best so far {4:0.00}", round + 1, tried[0].score, tried[0].told, Said(tried[0].v), best));
+                }
+                yield return Try(bestOf);
+                Debug.Log(string.Format(culture, "OWNSEARCH found {0:0.00} at {1:0} steps a second:{2} [{3}]", Whole(), 1 / Step, told, Said(bestOf)));
+                string file = CaptureTools.Argument("-searchOut");
+                if (!string.IsNullOrEmpty(file))
+                {
+                    var numbers = new string[count];
+                    for (int k = 0; k < count; k++) numbers[k] = bestOf[k].ToString("0.#####", culture);
+                    File.WriteAllText(file, string.Join(",", numbers));
+                }
+                UnityEngine.Object.Destroy(floor);
+            }
+            finally
+            {
+                Physics.simulationMode = mode;
+                Time.captureFramerate = 0;
+            }
+        }
+
         [UnityTest, Explicit, Timeout(3600000)]
         public IEnumerator Bench()
         {
@@ -702,6 +913,9 @@ namespace WonderGather.Tests
             BootTurns = Numbers("-ownBootTurns", 1)[0]; BootWeighs = Numbers("-ownBootWeighs", 0)[0];
             Rule = Numbers("-ownRule", 0)[0]; Damped = Numbers("-ownDamped", 1)[0];
             Law = (int)Numbers("-ownLaw", 2)[0]; Feels = Numbers("-ownFeels", .1f)[0]; Leans = Numbers("-ownLeans", 3)[0]; LeansAtMost = Numbers("-ownLeansAtMost", .1f)[0]; LeansBy = Numbers("-ownLeansBy", 1)[0]; Comfort = Numbers("-ownComfort", .03f)[0]; KeepsBehind = Numbers("-ownKeepsBehind", .035f)[0]; Tracks = Numbers("-ownTracks", 8)[0];
+            // -ownSet "a,b,...": the fifteen settings a search found, to measure them here.
+            float[] found = Numbers("-ownSet");
+            if (found.Length == Named.Length) { Set(found); quick = Quick; fulls = new[] { found[14] }; }
             bool said = Numbers("-ownSay", 0)[0] > 0;
             string kinds = CaptureTools.Argument("-ownKinds") ?? "joints,articulation";
             var culture = CultureInfo.InvariantCulture;

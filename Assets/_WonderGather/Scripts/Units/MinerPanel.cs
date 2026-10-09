@@ -6,7 +6,7 @@ namespace WonderGather
     // miner's physical work. How strong it is (a slider), and a pickaxe put on the ground beside it: a light one, its
     // own, or a heavy one. Nothing is put in its hands: it picks a pickaxe up itself, by the interaction click, and
     // mines a boulder by the same click. The panel also says, in a line, what the miner is doing. And it can push the
-    // miner over, to see it fall and get itself up.
+    // miner over, to see it fall and get itself up; and (S3b) have it stand by its own joints, and nudge it.
     //
     // It takes the place of the keys of the look at the work (K, and the keys for strength and weight).
     [RequireComponent(typeof(MinerChoice), typeof(MinerWorkPreview))]
@@ -18,11 +18,11 @@ namespace WonderGather
         // The least and the most strength the slider gives (1: ordinary for its build), and the step it moves by.
         public const float Weakest = .3f, Strongest = 3, Step = .05f;
         // Its size on the screen, and how far it stands from the screen's lower left corner.
-        private const float Width = 400, Height = 176, Margin = 12;
+        private const float Width = 400, Height = 202, Margin = 12;
 
         private MinerChoice choice;
         private MinerWorkPreview look;
-        private GUIStyle box, title, text, small, button;
+        private GUIStyle box, title, text, small, button, toggle;
 
         // It is shown while a miner is chosen and the choice of miner is closed.
         public bool Shown => isActiveAndEnabled && choice != null && !choice.Open && choice.Count > 0 && choice.Current != null;
@@ -44,6 +44,7 @@ namespace WonderGather
             text = new GUIStyle(GUI.skin.label) { fontSize = 12 };
             small = new GUIStyle(GUI.skin.label) { fontSize = 11, wordWrap = true };
             button = new GUIStyle(GUI.skin.button) { fontSize = 11, fixedHeight = 24 };
+            toggle = new GUIStyle(GUI.skin.toggle) { fontSize = 12 };
         }
 
         private void OnGUI()
@@ -67,6 +68,13 @@ namespace WonderGather
             if (Mathf.Abs(chosen - look.Strength) > Step * .5f) look.SetStrength(chosen);
             GUI.Label(new Rect(x + inner - 88, y, 36, 20), look.Strength.ToString("0.00"), text);
             if (GUI.Button(new Rect(x + inner - 48, y - 1, 48, 22), 1f.ToString("0.00"), button)) look.SetStrength(1);
+            y += 26;
+            // Standing by its own joints (S3b, step 1): the switch, and a nudge the way the view looks.
+            bool own = GUI.Toggle(new Rect(x, y, inner - 104, 20), look.StandsByItsOwn, " Stands by its own joints (at ease, hands empty)", toggle);
+            if (own != look.StandsByItsOwn) look.SetOwn(own);
+            GUI.enabled = could && look.CanNudge;
+            if (GUI.Button(new Rect(x + inner - 96, y - 2, 96, 22), "Nudge it", button)) look.Nudge();
+            GUI.enabled = could;
             y += 26;
             // A pickaxe put on the ground beside it.
             GUI.Label(new Rect(x, y, inner, 20), "Put a pickaxe on the ground beside it:", text);

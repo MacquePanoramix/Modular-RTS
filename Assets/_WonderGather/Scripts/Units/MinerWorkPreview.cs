@@ -154,6 +154,18 @@ namespace WonderGather
             }
             // The panel's strength is the chosen miner's; one that is no longer chosen is as strong as its build again.
             if (choice.Current != strong) Strengthen();
+            // The chosen miner stands by its own joints if the panel says so, and not while it is at its work; one
+            // that is no longer chosen stands as it did.
+            if (ownOf != choice.Current)
+            {
+                if (ownOf != null && ownOf.TryGetComponent<OwnBody>(out var was)) was.Wanted = false;
+                ownOf = choice.Current;
+            }
+            if (ownOf != null)
+            {
+                if (!ownOf.TryGetComponent<OwnBody>(out var own) && ownWanted) own = ownOf.gameObject.AddComponent<OwnBody>();
+                if (own != null) own.Wanted = ownWanted && !Showing;
+            }
             if (then != null)
             {
                 if (choice.Current != thenFor || (thenWhile != null && !thenWhile())) then = null;
@@ -549,6 +561,28 @@ namespace WonderGather
         // it weighs, for so long, the way the view looks (so that it falls away from the eye). Nothing in the game
         // pushes a miner yet.
         private const float ShoveEach = 6, ShoveFor = .3f;
+        // S3b, step 1: the chosen miner stands by its own joints (OwnBody), if the panel says so, while it has nothing
+        // else to do. And it can be nudged, the way the view looks, to see it keep its feet: set going at so many
+        // metres a second.
+        private const float NudgeSpeed = .15f;
+        private bool ownWanted;
+        private SelectableUnit ownOf;
+        public bool StandsByItsOwn => ownWanted;
+        public void SetOwn(bool wanted) => ownWanted = wanted;
+        public OwnBody Own => choice != null && choice.Current != null && choice.Current.TryGetComponent<OwnBody>(out var own) ? own : null;
+        public bool CanNudge => Own != null && Own.Stands;
+        public void Nudge()
+        {
+            var view = Camera.main;
+            Nudge(view != null ? Vector3.ProjectOnPlane(view.transform.forward, Vector3.up) : Vector3.zero, NudgeSpeed);
+        }
+        public void Nudge(Vector3 way, float speed)
+        {
+            var own = Own;
+            if (own == null || !own.Stands) return;
+            if (way.sqrMagnitude < 1e-4f) way = own.transform.forward;
+            own.Nudge(way, speed);
+        }
         private PhysicalFall shoved;
         private Vector3 shove;
         private float shoveUntil;
@@ -568,6 +602,8 @@ namespace WonderGather
             if (way.sqrMagnitude < 1e-4f) way = unit.transform.forward;
             if (!unit.TryGetComponent<PhysicalFall>(out var falls)) falls = unit.gameObject.AddComponent<PhysicalFall>();
             if (falls.Now != PhysicalFall.State.Up) return;
+            // (Standing by its own joints, its body is handed straight to the fall.)
+            if (unit.TryGetComponent<OwnBody>(out var own) && own.Stands) own.Drop();
             falls.LetGo();
             if (falls.Now != PhysicalFall.State.Falling) return;
             shoved = falls; shove = way.normalized * ShoveEach * weighs.Mass; shoveUntil = Time.time + ShoveFor;
@@ -794,6 +830,10 @@ namespace WonderGather
                 if (choice != null && choice.Current != null && choice.Current.TryGetComponent<PhysicalFall>(out var lies) && lies.Now != PhysicalFall.State.Up)
                     return lies.Now == PhysicalFall.State.Rising ? "It is on its knees, and stands up." : lies.Now == PhysicalFall.State.Gathering ? "It gets itself up." : Fallen(lies);
                 if (tells) return said + ".";
+                var own = Own;
+                if (own != null && own.Stands)
+                    return own.Leaning.magnitude > .01f ? "It stands by its own joints, and leans against what pushes it." : "It stands by its own joints.";
+                if (ownWanted) return "It will stand by its own joints when it is at ease, with nothing in its hands.";
                 return NearestLying(Vector3.zero) != null ? "Nothing in its hands. A pickaxe lies on the ground: Space and a click on it, to pick it up."
                     : "Nothing in its hands, and no pickaxe on the ground.";
             }
