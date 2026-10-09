@@ -220,8 +220,13 @@
       the build ([the guide](Playtests/MinersPlaytest.md#the-physical-work-with-the-panel-october-7)).
       Nothing of S3 is merged into `main`, and nothing in it is Locked.
     - **Next, by the approved order, after the playtest round:** S4
-      (hauling), then S2, then S5. S4's plan begins by saying which of the
-      prototype's own questions it answers; it is not begun.
+      (carrying and equipment), then S2, then S5. **S4 is proposed, not
+      begun** ([the proposal](Plans/S4_CarryingAndEquipment_Proposal.md)):
+      it says which of the prototype's questions it answers, its ten
+      steps, and six things it needs Luis to say first. The first of
+      them decides how all of it is built: whether lifting a stone,
+      shouldering a pack and pulling a cart are to be posed (as the walk
+      is) or the body's own (as the fall is).
 - **The base look:** the hand-painted pass (S1c, second pass) in look E,
   merged into `main` on October 2 (7f7fcc0). Luis's favourite frame is from
   it: the lit house at dusk, seen from low on the path.
