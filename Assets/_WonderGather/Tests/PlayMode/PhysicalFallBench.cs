@@ -83,6 +83,28 @@ namespace WonderGather.Tests
             return ways.ToArray();
         }
 
+        // A let-go body laid down: every part turned as one about where it stood (on its front, its back, its left
+        // side or its right), and set just clear of the ground. (To try one part of getting up at a time.)
+        internal static void Lay(PhysicalFall fall, Transform unit, OrdinaryGround ground, string how)
+        {
+            Vector3 pivot = unit.position;
+            Quaternion turn = how == "front" ? Quaternion.AngleAxis(90, unit.right) : how == "back" ? Quaternion.AngleAxis(-90, unit.right)
+                : how == "left" ? Quaternion.AngleAxis(90, unit.forward) : Quaternion.AngleAxis(-90, unit.forward);
+            for (int i = 0; i < PhysicalFall.Count; i++)
+            {
+                var part = fall.Part(i);
+                part.transform.SetPositionAndRotation(pivot + turn * (part.transform.position - pivot), turn * part.transform.rotation);
+                part.linearVelocity = Vector3.zero; part.angularVelocity = Vector3.zero;
+            }
+            Physics.SyncTransforms();
+            float lowest = float.MaxValue;
+            for (int i = 0; i < PhysicalFall.Count; i++)
+                foreach (var solid in fall.Part(i).GetComponentsInChildren<Collider>())
+                    lowest = Mathf.Min(lowest, solid.bounds.min.y - ground.Height(solid.bounds.center.x, solid.bounds.center.z));
+            for (int i = 0; i < PhysicalFall.Count; i++) fall.Part(i).transform.position += Vector3.up * (.03f - lowest);
+            Physics.SyncTransforms();
+        }
+
         [UnityTest, Explicit, Timeout(3600000)]
         public IEnumerator Bench()
         {
@@ -244,26 +266,7 @@ namespace WonderGather.Tests
                             Vector3 push = Quaternion.AngleAxis(way, Vector3.up) * away * shove;
                             fall.LetGo();
                             Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Falling), name + " was not let go.");
-                            if (lay.Length > 0)
-                            {
-                                // Laid down: every part turned as one about where it stood, and set just clear of the ground.
-                                Vector3 pivot = unit.transform.position;
-                                Quaternion turn = lay == "front" ? Quaternion.AngleAxis(90, unit.transform.right) : lay == "back" ? Quaternion.AngleAxis(-90, unit.transform.right)
-                                    : lay == "left" ? Quaternion.AngleAxis(90, unit.transform.forward) : Quaternion.AngleAxis(-90, unit.transform.forward);
-                                for (int i = 0; i < PhysicalFall.Count; i++)
-                                {
-                                    var part = fall.Part(i);
-                                    part.transform.SetPositionAndRotation(pivot + turn * (part.transform.position - pivot), turn * part.transform.rotation);
-                                    part.linearVelocity = Vector3.zero; part.angularVelocity = Vector3.zero;
-                                }
-                                Physics.SyncTransforms();
-                                float lowest = float.MaxValue;
-                                for (int i = 0; i < PhysicalFall.Count; i++)
-                                    foreach (var solid in fall.Part(i).GetComponentsInChildren<Collider>())
-                                        lowest = Mathf.Min(lowest, solid.bounds.min.y - ground.Height(solid.bounds.center.x, solid.bounds.center.z));
-                                for (int i = 0; i < PhysicalFall.Count; i++) fall.Part(i).transform.position += Vector3.up * (.03f - lowest);
-                                Physics.SyncTransforms();
-                            }
+                            if (lay.Length > 0) Lay(fall, unit.transform, ground, lay);
                             float began = Time.time, lay2 = -1, fastest = 0, furthest = 0, lowestHead = float.MaxValue, headStruck = 0, headBefore = 0;
                             bool sound = true, said = false;
                             float gathers = -1, takenOver = -1, stood = -1;

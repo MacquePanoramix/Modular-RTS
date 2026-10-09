@@ -32,7 +32,7 @@ namespace WonderGather.Tests
             public PhysicalFall fall;
             public Lies standing;
             public List<Lies> starts = new List<Lies>();
-            public float peak, settled;
+            public float peak, settled, kicked;
             public bool lost, done;
         }
 
@@ -107,7 +107,7 @@ namespace WonderGather.Tests
             int first = (int)Number("-searchFrom", 0);
             float spread = Number("-searchSpread", 20);
             bool same = Number("-searchSame", 0) > 0;
-            float hurry = Number("-searchHurry", .1f);
+            float hurry = Number("-searchHurry", .1f), kicks = Number("-searchKicks", 0);
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
             yield return null;
@@ -162,22 +162,7 @@ namespace WonderGather.Tests
                         var fall = body.fall;
                         Put(fall, body.standing);
                         fall.Fell();
-                        if (how.StartsWith("s")) continue;
-                        Vector3 pivot = body.unit.transform.position;
-                        Transform t = body.unit.transform;
-                        Quaternion turn = how == "front" ? Quaternion.AngleAxis(90, t.right) : how == "back" ? Quaternion.AngleAxis(-90, t.right)
-                            : how == "left" ? Quaternion.AngleAxis(90, t.forward) : Quaternion.AngleAxis(-90, t.forward);
-                        for (int i = 0; i < Count; i++)
-                        {
-                            var part = fall.Part(i);
-                            part.transform.SetPositionAndRotation(pivot + turn * (part.transform.position - pivot), turn * part.transform.rotation);
-                        }
-                        Physics.SyncTransforms();
-                        float lowest = float.MaxValue;
-                        for (int i = 0; i < Count; i++)
-                            foreach (var solid in fall.Part(i).GetComponentsInChildren<Collider>())
-                                lowest = Mathf.Min(lowest, solid.bounds.min.y - ground.Height(solid.bounds.center.x, solid.bounds.center.z));
-                        for (int i = 0; i < Count; i++) fall.Part(i).transform.position += Vector3.up * (.03f - lowest);
+                        if (!how.StartsWith("s")) PhysicalFallBench.Lay(fall, body.unit.transform, ground, how);
                     }
                     Physics.SyncTransforms();
                     for (int step = 0; step < 450; step++)
@@ -238,7 +223,21 @@ namespace WonderGather.Tests
                     for (int i = PhysicalFall.Hips; i <= PhysicalFall.Head; i++) moving = Mathf.Max(moving, fall.Part(i).linearVelocity.magnitude);
                     bool there = !body.lost && fall.Through;
                     float worth;
-                    if (aim == "seat")
+                    if (aim == "kneel")
+                    {
+                        // On its knees: its chest to the ground, its shins not up in the air behind it, its feet near
+                        // under its hips.
+                        worth = Mathf.Clamp(front, -1, .8f) + 2 * Mathf.Clamp(steep, -1, .1f) - Mathf.Min(off, 1) + Mathf.Clamp(high, 0, .5f);
+                        well = there && front >= .5f && steep >= -.2f && off <= .6f && moving < .15f;
+                    }
+                    else if (aim == "crouch")
+                    {
+                        // Its feet under it and its weight over them, its chest still to the ground.
+                        float over = soles > .3f ? Mathf.Exp(-Mathf.Pow(ahead / .15f, 2)) : 0;
+                        worth = Mathf.Max(-.5f, steep) + Mathf.Max(-.5f, soles) + over - .5f * Mathf.Min(off, 1) + Mathf.Clamp(front, -1, .5f) + Mathf.Clamp(high, 0, .6f);
+                        well = there && soles >= .6f && steep >= .6f && Mathf.Abs(ahead) <= .15f && front >= .3f && moving < .15f;
+                    }
+                    else if (aim == "seat")
                     {
                         // Sat back on its seat and its feet: its soles flat, its shins standing, its trunk up off its
                         // knees and its head up off the ground.
@@ -273,7 +272,7 @@ namespace WonderGather.Tests
                         worth = front;
                         well = there && front >= .6f && moving < .2f;
                     }
-                    worth -= .5f * Mathf.Max(0, body.peak - 2) + Mathf.Min(1, moving);
+                    worth -= .5f * Mathf.Max(0, body.peak - 2) + Mathf.Min(1, moving) + kicks * body.kicked;
                     if (body.lost) worth -= 2;
                     if (well) worth += 1;
                     if (says != null)
@@ -294,7 +293,7 @@ namespace WonderGather.Tests
                             body.fall.Ways = ways;
                             body.fall.LieStill();
                             body.fall.Rouse();
-                            body.peak = 0; body.settled = 0;
+                            body.peak = 0; body.settled = 0; body.kicked = 0;
                             body.lost = body.fall.Now != PhysicalFall.State.Gathering;
                             body.done = body.lost;
                         }
@@ -310,6 +309,8 @@ namespace WonderGather.Tests
                                 var fall = body.fall;
                                 if (fall.Now != PhysicalFall.State.Gathering) { body.lost = body.done = true; fall.LieStill(); continue; }
                                 for (int i = PhysicalFall.Hips; i <= PhysicalFall.Head; i++) body.peak = Mathf.Max(body.peak, fall.Part(i).linearVelocity.magnitude);
+                                // (In the way that is looked for: how far its feet are thrown up behind it.)
+                                if (fall.WayNow == which) body.kicked = Mathf.Max(body.kicked, -fall.Measure(PhysicalFall.Asks.Steep) - .3f);
                                 if (fall.Through) body.settled += dt;
                                 if (body.settled >= .6f) body.done = true; else going = true;
                             }
