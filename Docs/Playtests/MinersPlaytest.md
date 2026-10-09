@@ -289,12 +289,18 @@ them:
 10. **Getting up after a fall.** On the panel (lower left), press
     **Push it over**: the chosen miner is shoved the way the view looks
     and falls away from the eye. Turn the view to push it from another
-    side. It lies a moment, draws its knees up and rolls onto its front,
+    side. It lies (longer the harder it came down; the panel says how
+    long, and whether it is winded or dazed), draws its knees up and rolls onto its front,
     brings its hips up over its knees with its head down, folds onto its
     knees, and gets up. Try all three miners. *Does it read as a body
     getting itself up? Watch the moment it comes off its knees (half a
     second): that is the part that is not its own strength yet. Is
-    eight seconds on the ground too long?* (The way to a fall in step
+    eight seconds on the ground too long? Since October 9: is the time
+    it lies right for how it fell? (It lies quite still: that is known,
+    and open.) The panel's push is always the same for the miner's
+    weight. By the reckoning, and not tried in the build: with its
+    strength set lower it lies longer; tired from its work, a little
+    longer.* (The way to a fall in step
     14 may no longer bring one about: since October 8 a pickaxe too
     heavy slips from the hands before the legs give way.)
 

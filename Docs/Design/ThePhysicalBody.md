@@ -1206,7 +1206,8 @@ left of it, tired as it is), and no harder:
 
 **Getting up:**
 
-1. **It lies** at least 1.2 s.
+1. **It lies** at least 1.2 s. (Since October 9, by how hard it came
+   down: see "How long it lies", below.)
 2. **It gathers itself:** the same crouch, with its own strength, where
    it lies (still in the physics). On its front it draws its knees under
    it; on its back it curls.
@@ -1888,6 +1889,39 @@ it curled where it lay and the posed body took over from there. Now:
   head.
 - **A body getting up is not "thrown"** by its own movement: lying, it
   falls again if its hips, trunk or head pass 1.5 m/s; getting up, 2.5.
+
+**How long it lies** (October 9, on Luis's word; `PhysicalFall`).
+
+- **It lets go when the ground has it:** falling, it holds itself; when
+  its hips, trunk and head have stopped (under 0.2 m/s) and its trunk
+  is no longer upright (`DownWhen`, 0.5), it goes slack within half a
+  second (`LetsGoIn`). Thrown again (1.5 m/s), it holds itself again.
+  Half a second after it stopped (`LiesAfter`) it is counted as lying.
+  (Until the judges of the lying it let go only then, and over a
+  second: on its back its legs stood in the air.)
+- **The blow** (`Blow`, metres a second) is the speed that what pushed
+  it gave it (the push's force and time over its weight), or the most
+  speed its hips, trunk or head lost in one step of the physics beyond
+  what their own weight gave them, whichever is more. `HeadStruck` is
+  the same for its head alone.
+- **How long** (`HowLongItLies`, reckoned once, when it is counted as
+  lying; `LiesFor`):
+
+  | | | |
+  |---|---|---|
+  | At least | `LiesAtLeast` | 0.8 s |
+  | Shaken: by the blow, from 1 m/s (`BlowLight`) to 6 (`BlowHard`) | `ShakenAtMost` | up to 4.5 s |
+  | Dazed: by its head's, from 2.5 m/s (`HeadLight`) to 6 (`HeadHard`) | `DazedAtMost` | up to 2 s |
+  | Out of breath: the square of the share spent of its legs or its back, whichever is more | `BreathAtMost` | up to 3.5 s |
+  | Divided by the root of its strength (between a quarter and four) | | |
+  | At most | `LiesAtMost` | 10 s |
+
+- **After a try that fails** it lies 2.5 s (`RestsMore`), as before.
+- **The panel says** how it lies and for how long
+  (`MinerWorkPreview.Fallen`): "It fell hard, and lies winded (4 s)."
+- **Not built:** a body that breathes or stirs while it lies (a stir was
+  tried and taken out: [the round](../Reviews/2026-10-09_TheBodysOwn_Round.md#a-stir-before-it-gets-up-tried-and-taken-out));
+  anything a fall costs beyond the time.
 
 **The panel's "Push it over"** (`MinerWorkPreview.PushOver`): the chosen
 miner is let go and shoved at its chest, 6 N for each kilogram it weighs

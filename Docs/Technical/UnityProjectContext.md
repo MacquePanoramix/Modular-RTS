@@ -2050,3 +2050,12 @@ with the settings, are in
   wrist takes the free wrist's swing (which `CarryAtSide` reduces to
   `Keeps`). `HungThingTests` asks that the carrying hand goes with the
   walk (12 mm to 30 cm, from the hips).
+- **How long a fallen miner lies (October 9).** `PhysicalFall`:
+  `Blow`, `HeadStruck`, `LiesFor`, `Lain`, `Shaken`, `Dazed`,
+  `OutOfBreath`, `HowLongItLies()`; the speed lost by the hips, trunk
+  and head is followed in `Advance` while it falls (`went`), and
+  `Push` adds what it gives; `eases` (it lets go when the ground has
+  it: `LetsGoIn`, `DownWhen`). `MinerWorkPreview.Fallen(...)` words it
+  for the panel. `PhysicalFallTests.AHarderFallAndASpentBodyLieLonger`;
+  the older fall tests wait up to 24 and 30 s. `PhysicalFallBench`
+  logs "lies after..." and counts the tries that failed.

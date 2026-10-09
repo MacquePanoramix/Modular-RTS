@@ -2,8 +2,53 @@
 
 **Updated:** October 9, 2026.
 
-- **Now: the playtest round; all ten notes looked into, and waiting for
-  Luis to play.** Luis played the build of S3 and sent ten
+- **Now: Luis's direction of October 9; one thing built on it, and a plan
+  waiting for Luis's word**
+  ([the message](Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md);
+  [the round's page](Reviews/2026-10-09_TheBodysOwn_Round.md)).
+  - **What Luis said:**
+    - Movement is to be **the body's own, not posed, and stable:** "I
+      want stability in the body but with it still being the body's own.
+      I don't want it to be posed like that."
+    - **Natural and alive, not robotic,** and studied before it is
+      built: "we must do media studies and research of what kind of
+      movements feel natural for certain actions."
+    - **How long a fallen miner lies** is to be researched, and to
+      depend on the force that pushed it down, its stamina, and anything
+      else relevant.
+    - **Judges for every further step, always.**
+    - Luis **could not open a test** of the playtest round. Nothing of
+      that round or of this one has been played
+      ([how to open the build](Reviews/2026-10-09_TheBodysOwn_Round.md#how-to-open-the-build)).
+  - **Built: how long a fallen miner lies.** It lay 1.2 s whatever had
+    happened. It lies now by how hard it came down, how hard its head
+    struck, how spent its legs and back are and how strong it is: 0.8 to
+    1.9 s after a light push, 1.9 to 6.7 s after a hard one; the panel
+    says how long and why. The settings are mine, set between the one to
+    three seconds of games and the ten of old people who fall and get
+    up; they are for Luis to change.
+  - **Judged twice** (three judges each time, who did not make it): the
+    times read "about right"; what stood is in
+    [the round's page](Reviews/2026-10-09_TheBodysOwn_Round.md#what-the-judges-of-the-lying-said).
+    Put right: its legs stood in the air for most of a second after it
+    had landed on its back. **Open: a fallen miner lies quite still.**
+  - **Written: the research**
+    ([Alive, and the body's own](Research/2026-10-09_AliveAndTheBodysOwn.md)):
+    how long a fallen body lies; **eight things a living body does**
+    that a robot does not, and where the miners are in each (two not at
+    all: they stand and lie perfectly still, and every step is the same
+    step); how a body is walked by its own joints and kept up.
+  - **Proposed, not approved, nothing built:**
+    [the body's own](Plans/TheBodysOwn_Proposal.md). Nothing pushes the
+    body from nowhere; "stable" is said in numbers and measured first on
+    the body as it is; what Luis has stays beside it to switch to. Its
+    steps come before S4, if Luis agrees.
+  - **For Luis to say** (B1 to B4 in the proposal): is "no active
+    ragdoll" (September 30) replaced; does this come before S4; are the
+    measures of "stable" right; may breathing be drawn on the body.
+  - Nothing of it is merged into `main`, and nothing in it is Locked.
+- **Before it: the playtest round; all ten notes looked into, and waiting
+  for Luis to play.** Luis played the build of S3 and sent ten
   notes ([the message](Correspondence/2026-10-08_THE_PLAYTEST_NO_FAKE_ANIMATIONS.md));
   they come before S4 ("this polishing run and the fixing run" first).
   Each is kept track of in
@@ -392,7 +437,33 @@ A small-scale, high-fidelity **Worker Showcase** for outside playtesters:
 The civilization/faction systems remain in the repository for the full game.
 The showcase flow does not use them.
 
-## Latest Game Director direction (October 6, second message)
+## Latest Game Director direction (October 9)
+
+Recorded verbatim in
+[Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md](Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md):
+
+- **The body's own, and stable.** "I want stability in the body but with
+  it still being the body's own. I don't want it to be posed like that."
+- **Natural and alive.** "I really do want movement to feel natural and
+  alive rather than robotic. That's why it can't be posed and we must do
+  media studies and research of what kind of movements feel natural for
+  certain actions."
+- **How long a fallen miner lies:** to be researched, and to depend on
+  "how strong was the force that pushed it down, it's current stamina and
+  anything else relevant".
+- **The judges:** "good job with the agent reviews, please continue with
+  that for further steps always".
+- **Not played:** "the rest I couldn't open a test to see how your
+  progress was so far, but I liked the comments you were making."
+
+## Game Director direction (October 8)
+
+Recorded verbatim in
+[Correspondence/2026-10-08_THE_PLAYTEST_NO_FAKE_ANIMATIONS.md](Correspondence/2026-10-08_THE_PLAYTEST_NO_FAKE_ANIMATIONS.md):
+ten notes on the build of S3, and the rule "I don't want any fake
+animations".
+
+## Game Director direction (October 6, second message)
 
 Recorded verbatim in
 [Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md](Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md):
@@ -659,10 +730,19 @@ Still valid from September 30:
 
 ## Recommended next action
 
-**Now (October 6):** S3 is approved and begun
-([the plan](NextMilestonePlan.md)). Luis next sees the bench's clips: one
-miner, several strengths, several weights of pickaxe. The items below are
-still open from before.
+**Now (October 9):**
+
+1. **Luis opens the build** and plays what the playtest round and this
+   one changed
+   ([how to open it](Reviews/2026-10-09_TheBodysOwn_Round.md#how-to-open-the-build);
+   [what to look at](Playtests/MinersPlaytest.md#after-luiss-play-of-s3-what-to-look-at-now-october-8)).
+   If it does not open, what happens when it is tried is the first
+   thing to know.
+2. **Luis answers the four questions** of
+   [the proposal for the body's own](Plans/TheBodysOwn_Proposal.md#questions-for-luis).
+   With a yes to the first two, its step 0 is begun.
+
+The items below are still open from before (October 6 and earlier).
 
 1. **Luis checks the dusk fixes** in the build:
    - fewer fireflies, still marked when far out;

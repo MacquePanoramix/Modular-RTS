@@ -132,8 +132,22 @@ gives comes early, and that going on makes the judges agree with each
 other rather than with the world. What is still open after three rounds
 is written down and shown to Luis as open.
 
+**Is it alive?** Since October 9 every judge is given a second sheet
+beside its brief, `alive.md`: eight things a living body does (it is
+never quite still; its parts do not move on one clock; it gets ready; what
+hangs on it goes on a moment; arcs and one hump of speed; it does not
+repeat itself; balance by degrees; it shows its effort). Luis: "I really
+do want movement to feel natural and alive rather than robotic." For
+each the judge says yes, in part, no, or that the pictures cannot show
+it. Where the eight come from is in
+[the research of October 9](../Research/2026-10-09_AliveAndTheBodysOwn.md#2-what-makes-a-movement-read-as-alive-and-not-robotic).
+
+**For every step.** Luis, October 9: "good job with the agent reviews,
+please continue with that for further steps always". A step is not shown
+to Luis as done before three judges have seen it.
+
 **Where it lives.** The judges' briefs are in `Art/Review/judges/`
-(`body.md`, `animator.md`, `sceptic.md`, `referee.md`). The sheets are
+(`body.md`, `animator.md`, `sceptic.md`, `referee.md`, `alive.md`). The sheets are
 made by the benches' pictures and `Art/Review/sequence_clip.py` and
 `select_frames.py`.
 
@@ -155,7 +169,7 @@ doubts first.
 
 ## What is judged, and where each stands
 
-Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md).
+Kept up to date in [the playtest round's page](../Reviews/2026-10-08_ThePlaytestRound.md) and [the round of October 9](../Reviews/2026-10-09_TheBodysOwn_Round.md).
 
 | Movement | Numbers | Judges | Luis |
 |---|---|---|---|
@@ -165,6 +179,7 @@ Kept up to date in [the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)
 | Going down for a pickaxe, standing up with it, and laying it down | **Passes** (all three miners), since the judges' changes | **One round:** reads as real, with a flaw; four things stood and were put right (the pickaxe carried level and still; the elbow out; Long's back up before its legs; its coat's front out to the side) | Not yet |
 | The blow, and the rest from it | Efforts of each muscle group measured over five minutes | Not yet | Not yet |
 | Falling, and getting up | Not traced (a let-go body has no hips' height to hold); the fall's own measures instead: its chest to the ground, its shins under it, how fast its trunk and head go; 12 of 12 ways of lying | **One round:** two "reads as real, with a flaw"; six things stood (it sits folded a second and a half and then rises; the half second from its knees is not pushed by anything; two bodies on one clock; Long's head on the ground; the boots in the air; a stiff tunic). One change kept, one tried and not kept; five open | Not yet |
+| Lying after a fall: how long, and how | The blow, the head's, the time it lies, for the three miners pushed lightly and hard; 36 pushes, all up | **Two rounds** (October 9): all six "reads as real, with a flaw". The times read about right. Put right after the first: its legs stood in the air after it had landed. Stands after both: it lies frozen and gets up from nothing ([the table](../Reviews/2026-10-09_TheBodysOwn_Round.md#what-the-judges-of-the-lying-said)) | Not yet |
 | Taking the lantern or the mug, and holding it | Not traced (the trace has no fingers, and nothing that hangs); read in pictures; the hold changed | **One round:** two "reads as real, with a flaw"; three things stood and were put right (the carrying arm held still while the body walked; the look as late as the hand; a stall at the hip) | Not yet |
 | Clothes in the deepest bend | Not measured yet | Not yet | Not yet |
 

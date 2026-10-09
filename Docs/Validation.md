@@ -2879,3 +2879,36 @@ was run.
   boulders or bodies in the way of a get-up; a weak or spent body
   getting up; a fall with a tool in both hands beyond what the existing
   test of a fall at work asks.
+
+## The round of October 9 — how long a fallen miner lies (October 9)
+
+On Luis's word ([message](Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md));
+the whole of it in [the round's page](Reviews/2026-10-09_TheBodysOwn_Round.md).
+
+- **`PhysicalFallTests`:** 7 of 7. New:
+  `AHarderFallAndASpentBodyLieLonger` (the three miners; lightly, hard,
+  and lightly with legs and back spent): it lies 1.8 to 3.1 s after the
+  light push, 3.9 to 7.3 s after the hard one, 3.8 to 5.2 s spent. The
+  older fall tests now wait up to 24 and 30 s (a body may lie ten).
+- **The bench** (`PhysicalFallBench -fallShoves 100,350,600 -fallWays
+  0,90,180,270`), the three miners: 36 of 36 up their own way, 35 at the
+  first try; it lies 0.8 to 6.7 s. Before the judges' change: 24 of 24
+  at the first try (350 N, eight sides) and 11 of 12 (100 and 600 N).
+- **A stir before it gets up: tried, and taken out.** With three
+  quarters of its strength, the hard-pushed Small failed its first try;
+  with under a half, 22 of 24 at the first try and hardly to be seen.
+- **Three judges of the lying, twice** (separate agents on the smaller
+  model; six sheets; also asked the eight things of `alive.md`). All six
+  verdicts: "reads as real, with a flaw". The times read about right.
+  After the first round one change was made (a falling body lets go
+  when the ground has it: its legs stood in the air after it had
+  landed). After both it stands that the body lies frozen and gets up
+  from nothing; that is open
+  ([the tables](Reviews/2026-10-09_TheBodysOwn_Round.md#what-the-judges-of-the-lying-said)).
+- **The whole PlayMode suite,** alone, on the code as it is: 180 tests; **164 passed, none failed**, 16 are run only when asked (1,434 s).
+- **The release build** was made from that code and its measures run: one miner standing 4.5 to 4.8 ms a frame and at its work 4.5 to 4.6 ms; the crowd 4.9, 5.6 to 5.9, 6.5 to 6.8 and 8.5 to 8.8 ms a frame for none, 25, 50 and 100 miners; no exceptions in either log. Copied to the main project and opened from there once (a measuring run): no error.
+- **Not tested:** Luis's eye; a fall, the lying or the panel's words in
+  the built player; a body weak, or tired by real work, lying; a fall
+  with a tool in the hands, on a slope, or against something; a third
+  round of judges. Long's blows at a boulder (one failure in five runs
+  on October 9) passed here and are still not looked into.

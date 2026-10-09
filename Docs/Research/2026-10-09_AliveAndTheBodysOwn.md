@@ -68,15 +68,15 @@ the games' second and the old people's ten:
 
 | Pushed with | The blow | It lies |
 |---|---|---|
-| 100 N for 0.3 s, from behind and from in front | 0.8 to 2.2 m/s | 0.8 to 1.9 s |
-| 350 N, from eight sides | 1.3 to 4.3 m/s | 1.1 to 4.8 s |
-| 600 N, from behind and from in front | 2.2 to 6.0 m/s | 1.9 to 7.3 s |
+| 100 N for 0.3 s, from four sides | 0.8 to 2.2 m/s | 0.8 to 1.9 s |
+| 350 N, from four sides | 1.3 to 4.3 m/s | 1.1 to 4.8 s |
+| 600 N, from four sides | 2.2 to 5.6 m/s | 1.9 to 6.7 s |
 | Lightly (3 N a kilogram), its legs and back spent | 1.8 to 3.0 m/s | 3.8 to 5.2 s (fresh: 1.8 to 3.1) |
 
 The same push is a harder blow to a lighter body: 600 N from behind
-threw Small down at 4.8 m/s (it lay 5.6 s) and Round at 2.2 (1.9 s).
-The hardest of all was Long pushed over backwards with 600 N: its head
-struck at 6 m/s, and it lay 7.3 s.
+threw Small down at 4.9 m/s (it lay 5.7 s) and Round at 2.2 (1.9 s).
+The hardest of all was Long pushed over backwards or sideways with
+600 N: its head struck at 5.6 m/s, and it lay 6.7 s.
 
 **A stir before it gets up was tried, and taken out.** For the last
 second of its lying the body held itself again with part of its
@@ -94,7 +94,7 @@ hurt (nothing in the game hurts a body yet); a winded body breathing
 fast before it moves (there is no breathing: see part 2).
 
 **What stands out in the figures:** the head. In most falls it is the
-head that the ground stops hardest (2 to 5 m/s). A person's head
+head that the ground stops hardest (1 to 6 m/s). A person's head
 striking at 5 m/s is a serious injury. The falling body tries to keep
 its head up and does not manage it. That is a fault of the fall, not of
 the lying, and is listed as open.

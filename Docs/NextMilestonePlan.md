@@ -21,6 +21,13 @@ body walks, turns, rests, goes down for a tool and is drawn is in
 [the design](Design/ThePhysicalBody.md#after-luiss-play-the-walk-the-turn-and-the-rest-october-8)
 (and [its second part](Design/ThePhysicalBody.md#after-luiss-play-second-part-going-down-for-a-tool-a-walker-sent-back-and-what-is-drawn-between-the-physics-steps-october-8)).
 
+**Luis's direction of October 9:** movement is to be the body's own, not
+posed, and stable; natural and alive, not robotic
+([message](Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md)). How
+that would be built, and that I would build it before S4, is proposed in
+[Plans/TheBodysOwn_Proposal.md](Plans/TheBodysOwn_Proposal.md). Not
+approved: the order of stages below is as Luis approved it on October 6.
+
 ## Which of the prototype's questions it answers
 
 The first of them: does a body with real strength, moving a tool with real

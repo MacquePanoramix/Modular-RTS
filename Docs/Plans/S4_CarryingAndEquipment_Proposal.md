@@ -11,6 +11,15 @@ Nothing here is built.
 **It becomes `NextMilestonePlan.md`** when Luis has answered the
 questions below; S3's plan is then archived beside S1's.
 
+**October 9: Luis has answered the first question (Q1), against my
+recommendation:** "I want stability in the body but with it still being
+the body's own. I don't want it to be posed like that."
+([the message](../Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md)).
+So S4's movements are to be the body's own. What that needs first, and
+whether it comes before S4, is in
+[the proposal for the body's own](TheBodysOwn_Proposal.md). Q2 to Q6 are
+still open. The table below is kept as it was written.
+
 ## Which of the prototype's questions it answers
 
 The second of them: **can what a worker needs (its tool, and what it

@@ -95,8 +95,8 @@ each step. What was read for it is in
    | Measure | What is asked |
    |---|---|
    | Standing at ease, a minute | It breathes and shifts its weight, and its head wanders no more than a centimetre or two. No tremble (nothing moving back and forth faster than about twice a second) |
-   | Pulled a little | It leans against the pull and does not step: at the same pulls as today |
-   | Pulled hard | It steps and stands: at the same pulls as today |
+   | Pulled a little | It leans against the pull and does not step: at the same pulls as today (Round: 100 N forwards, its hips 6 to 8 cm back) |
+   | Pulled hard | It steps and stands: at the same pulls as today (Round: one step at 200 N, two at 350 N; Small: three steps at 110 N) |
    | An extreme pull, or legs that give | It falls: at the same pulls as today (about three fifths of its weight) |
    | Walking the place, its tool in hand, at half, ordinary and double strength, ten minutes each miner | It does not fall |
    | At its work at each of the ten boulders | It does not fall, except as today (legs that give under work far too heavy) |
