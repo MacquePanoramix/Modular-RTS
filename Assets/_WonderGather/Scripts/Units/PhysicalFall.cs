@@ -74,6 +74,13 @@ namespace WonderGather
         private const float LiesAtLeast = .8f, ShakenAtMost = 4.5f, BlowLight = 1, BlowHard = 6, DazedAtMost = 2, HeadLight = 2.5f, HeadHard = 6,
             BreathAtMost = 3.5f, LiesAtMost = 10;
         private float liesFor = LiesAtLeast, struck, headStruck, shoved;
+        // Falling, it lets go when the ground has it: when its hips, trunk and head have stopped and its trunk is no
+        // longer upright (less than DownWhen of it), and it is slack LetsGoIn seconds later. Until October 9 it held
+        // the fall's hold until it was counted as lying, half a second after it had stopped, and then let go over a
+        // second: on its back its legs stood in the air most of a second and then sank slowly (three judges of the
+        // lying said so: "a slack leg would fall with the body"). Thrown again, it holds itself again.
+        private const float LetsGoIn = .5f, DownWhen = .5f;
+        private bool eases;
         private readonly Vector3[] went = new Vector3[3];
         // How hard it came down, in metres a second: the speed that what pushed it gave it (its push, over its
         // weight), or the most speed its hips, its trunk or its head lost in one step as the ground stopped them,
@@ -517,7 +524,7 @@ namespace WonderGather
             ridesUp = Physics.Raycast(transform.position + Vector3.up * 2, Vector3.down, out var under, 6, Ground) ? transform.position.y - under.point.y : 0;
             if (motor != null) motor.CarriedOff();
             body.LetGo = true;
-            Now = State.Falling; Since = 0; still = 0; lain = 0;
+            Now = State.Falling; Since = 0; still = 0; lain = 0; eases = false;
             struck = headStruck = shoved = 0;
             for (int i = Hips; i <= Head; i++) went[i] = parts[i].linearVelocity;
             Falls++;
@@ -563,7 +570,7 @@ namespace WonderGather
         public void LieStill() { Now = State.Lying; lain = 0; liesFor = LiesAtLeast; tone = AtRest; stage = null; still = 0; Through = false; Holds(); }
         public void Fell()
         {
-            Now = State.Falling; lain = 0; tone = 1; stage = null; still = 0; Through = false;
+            Now = State.Falling; lain = 0; tone = 1; stage = null; still = 0; Through = false; eases = false;
             struck = headStruck = shoved = 0;
             for (int i = Hips; i <= Head; i++) went[i] = parts[i].linearVelocity;
             Holds();
@@ -830,6 +837,9 @@ namespace WonderGather
                 }
                 went[i] = goes;
             }
+            if (Now != State.Falling) eases = false;
+            else if (!eases) eases = still > 0 && (parts[Trunk].rotation * Vector3.up).y < DownWhen;
+            else for (int i = Hips; i <= Head && eases; i++) eases = parts[i].linearVelocity.sqrMagnitude <= Thrown * Thrown;
             if (Now == State.Falling && still >= LiesAfter) { Now = State.Lying; lain = 0; liesFor = HowLongItLies(); }
             else if (Now == State.Lying || Now == State.Gathering)
             {
@@ -885,8 +895,9 @@ namespace WonderGather
                 }
                 else if (got > stage.within) { LiesDownAgain(); return; }
             }
-            // Falling, and gathering itself, it holds itself with all it has; lying, it lets go.
-            tone = Mathf.MoveTowards(tone, Now == State.Lying ? AtRest : 1, dt / LetsGoOver);
+            // Falling, and gathering itself, it holds itself with all it has; lying, or down and stopped, it lets go.
+            bool slack = Now == State.Lying || (Now == State.Falling && eases);
+            tone = Mathf.MoveTowards(tone, slack ? AtRest : 1, dt / (slack ? LetsGoIn : LetsGoOver));
             Holds();
         }
 
