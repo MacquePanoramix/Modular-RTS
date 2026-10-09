@@ -1200,7 +1200,7 @@ Steps 3 and 4 of "the miners at work"
 
 ## The physical body, steps 1 and 2: weights, and a real tool in the hands — October 6
 
-Stage S3 ([plan](../NextMilestonePlan.md); [design](../Design/ThePhysicalBody.md)).
+Stage S3 ([plan](../Plans/S3_WeightAndStrengthAtTheRock.md); [design](../Design/ThePhysicalBody.md)).
 Nothing here is in the game's mining yet: it is a bench, run as a test.
 
 - **Blender** (`Art/Blender/Worker`):

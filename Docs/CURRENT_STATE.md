@@ -2,8 +2,21 @@
 
 **Updated:** October 9, 2026.
 
-- **Now: Luis's direction of October 9; one thing built on it, and a plan
-  waiting for Luis's word**
+- **Now: S3b, the body's own. Approved by Luis on October 9; step 0 is
+  begun** ([the plan](NextMilestonePlan.md);
+  [Luis's answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
+  - **Decided by Luis:** the body moved by its own joints replaces "no
+    active ragdoll"; it comes before S4 ("we will probably end up doing a
+    big rework I imagine for it").
+  - **Accepted by Luis as the measures:** the plan's table of "stable"
+    ("they looked pretty good for me").
+  - **Breathing:** wanted, "following the visual aesthetic of the game";
+    drawn on the chest if that reads well, another way if not. Open.
+  - **Step 0, the ground for it:** ankles (the boot a part of its own);
+    the test that nothing pushes the body from nowhere; today's body
+    measured for the table of "stable"; what a body's own costs in the
+    frame. It gives figures, and nothing in the game changes by it.
+- **Before it: Luis's direction of October 9, and what was built on it**
   ([the message](Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md);
   [the round's page](Reviews/2026-10-09_TheBodysOwn_Round.md)).
   - **What Luis said:**
@@ -38,14 +51,8 @@
     that a robot does not, and where the miners are in each (two not at
     all: they stand and lie perfectly still, and every step is the same
     step); how a body is walked by its own joints and kept up.
-  - **Proposed, not approved, nothing built:**
-    [the body's own](Plans/TheBodysOwn_Proposal.md). Nothing pushes the
-    body from nowhere; "stable" is said in numbers and measured first on
-    the body as it is; what Luis has stays beside it to switch to. Its
-    steps come before S4, if Luis agrees.
-  - **For Luis to say** (B1 to B4 in the proposal): is "no active
-    ragdoll" (September 30) replaced; does this come before S4; are the
-    measures of "stable" right; may breathing be drawn on the body.
+  - **Proposed that day, and approved by Luis the same day:**
+    [the body's own](NextMilestonePlan.md) (above).
   - Nothing of it is merged into `main`, and nothing in it is Locked.
 - **Before it: the playtest round; all ten notes looked into, and waiting
   for Luis to play.** Luis played the build of S3 and sent ten
@@ -125,7 +132,7 @@
     [the research](Research/2026-10-08_RealBodiesAndHowToJudgeThem.md).
   - Nothing of it is merged into `main`, and nothing in it is Locked.
 - **Before it: S3, weight and strength at the rock.** Approved by Luis on
-  October 6 ([the plan](NextMilestonePlan.md);
+  October 6 ([the plan](Plans/S3_WeightAndStrengthAtTheRock.md);
   [the design](Design/ThePhysicalBody.md)).
   - **What it is for:** a body with real strength moving a tool with real
     weight against a real rock, true and not goofy. Luis: "that's the whole
@@ -146,7 +153,7 @@
     - **Added:** stamina (short-term tiredness); the interaction click (a
       key and a click show a thing's options, with a cancel); every action
       done physically by the body; all of it built to be built upon.
-  - **Steps:** twelve, in [the plan](NextMilestonePlan.md#steps).
+  - **Steps:** twelve, in [the plan](Plans/S3_WeightAndStrengthAtTheRock.md#steps).
     - **Step 1, everything weighed: built** (October 6). Small weighs
       40.7 kg, Long 58.5 kg, Round 87.6 kg; their pickaxes 1.50, 3.21 and
       2.39 kg ([the table](Design/ThePhysicalBody.md#step-1-everything-weighed-october-6)).
@@ -738,9 +745,8 @@ Still valid from September 30:
    [what to look at](Playtests/MinersPlaytest.md#after-luiss-play-of-s3-what-to-look-at-now-october-8)).
    If it does not open, what happens when it is tried is the first
    thing to know.
-2. **Luis answers the four questions** of
-   [the proposal for the body's own](Plans/TheBodysOwn_Proposal.md#questions-for-luis).
-   With a yes to the first two, its step 0 is begun.
+2. **Step 0 of [the body's own](NextMilestonePlan.md#steps)** (begun
+   October 9): figures, shown to Luis before step 1 is built on them.
 
 The items below are still open from before (October 6 and earlier).
 

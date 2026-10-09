@@ -4,7 +4,7 @@
 ([the round's page](../Reviews/2026-10-08_ThePlaytestRound.md)).
 **Not approved.** Luis said, on October 8, to "proceed with all the plans
 I asked for" once the polishing was done; S4 is the first of them
-([the order, approved October 6](../NextMilestonePlan.md#the-order-of-stages-approved-october-6)).
+([the order, approved October 6](S3_WeightAndStrengthAtTheRock.md#the-order-of-stages-approved-october-6)).
 This page says how I would build it and what I need Luis to say first.
 Nothing here is built.
 
@@ -15,10 +15,12 @@ questions below; S3's plan is then archived beside S1's.
 recommendation:** "I want stability in the body but with it still being
 the body's own. I don't want it to be posed like that."
 ([the message](../Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md)).
-So S4's movements are to be the body's own. What that needs first, and
-whether it comes before S4, is in
-[the proposal for the body's own](TheBodysOwn_Proposal.md). Q2 to Q6 are
-still open. The table below is kept as it was written.
+So S4's movements are to be the body's own. Luis also decided, the same
+day, that the body's own comes **before** S4
+([the answers](../Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md));
+it is [the plan now in force](../NextMilestonePlan.md) (S3b). Q2 to Q6
+are still open, and wait for S4. The table below is kept as it was
+written.
 
 ## Which of the prototype's questions it answers
 

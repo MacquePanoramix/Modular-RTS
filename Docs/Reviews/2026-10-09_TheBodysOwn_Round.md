@@ -6,7 +6,7 @@ It says four things:
 
 | | Luis | What was done | Where |
 |---|---|---|---|
-| 1 | "I want stability in the body but with it still being the body's own. I don't want it to be posed like that." | Recorded as a Direction. A plan for it is proposed; nothing of it is built | [The proposal](../Plans/TheBodysOwn_Proposal.md) |
+| 1 | "I want stability in the body but with it still being the body's own. I don't want it to be posed like that." | Recorded as a Direction. A plan for it was proposed, and Luis approved it the same day; nothing of it was built in this round | [The proposal](../NextMilestonePlan.md) |
 | 2 | "research and look for what would be a reasonable time for the miners to lay down... dependent on factors such as how strong was the force that pushed it down, it's current stamina and anything else relevant" | Researched and built | Below, and [the research, part 1](../Research/2026-10-09_AliveAndTheBodysOwn.md#1-how-long-a-fallen-body-lies) |
 | 3 | "we must do media studies and research of what kind of movements feel natural for certain actions" | A first study: what animators and studies of seeing say makes a movement read as alive, set against the miners as they are | [The research, parts 2 and 3](../Research/2026-10-09_AliveAndTheBodysOwn.md#2-what-makes-a-movement-read-as-alive-and-not-robotic) |
 | 4 | "good job with the agent reviews, please continue with that for further steps always" | The judges are called for every step from now on. They are also asked a second thing: is it alive | [`alive.md`](../../Art/Review/judges/alive.md) |
@@ -112,7 +112,7 @@ it is the first thing a living body does not do
 ([the eight things](../Research/2026-10-09_AliveAndTheBodysOwn.md#for-ours-eight-things-a-living-body-does-and-where-the-miners-are)).
 The mending of it is to search the turning over again with a body that
 stirs first, and to give the body breath; both are in step 1 of
-[the proposal](../Plans/TheBodysOwn_Proposal.md).
+[the proposal](../NextMilestonePlan.md).
 
 ## What the judges of the lying said
 
@@ -163,7 +163,7 @@ not stir, and gets up from nothing.**
 
 | | What | Where it is to be mended |
 |---|---|---|
-| 1 | **A fallen miner lies quite still, and gets up from nothing.** Six judges of six | [The proposal](../Plans/TheBodysOwn_Proposal.md), step 1: breath, and a stir that the turning over is searched with |
+| 1 | **A fallen miner lies quite still, and gets up from nothing.** Six judges of six | [The proposal](../NextMilestonePlan.md), step 1: breath, and a stir that the turning over is searched with |
 | 2 | **It is almost always its head that lands hardest** (1 to 6 m/s; in life 5 m/s is a serious injury), **and its hands do not reach for the ground.** A young, fit person who falls gets a hand down in nine falls of ten and strikes the head in about one of nine ([the research, part 4](../Research/2026-10-09_AliveAndTheBodysOwn.md#4-action-by-action)). Of everything the miners do, the fall is furthest from a real body | The fall itself: arms that reach for the ground. Not looked into. It would shorten the lying too, since the head's blow is most of what that is reckoned from |
 | 3 | **A body that comes down onto its knees and its head** rests there, sagging, for a second or more (Small pushed from behind; Long pushed lightly) | The fall: the body has no hands that catch it. Not looked into |
 | 4 | **Size comes into the time only through the blow.** Whether a heavier or older body should lie longer for itself | Luis's |
@@ -201,8 +201,10 @@ The whole of it, with sources:
 
 ## What the proposal says, in short
 
-[The proposal for the body's own](../Plans/TheBodysOwn_Proposal.md).
-Not approved; nothing of it built.
+[The proposal for the body's own](../NextMilestonePlan.md).
+**Approved by Luis later the same day**
+([the four answers](../Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md));
+it is the plan now in force. As it stood when this page was written:
 
 - **Nothing pushes the body from nowhere.** No unseen hand holds it up.
 - **Stable is measured first on the body as it is today,** and the

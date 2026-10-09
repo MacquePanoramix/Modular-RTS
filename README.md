@@ -30,7 +30,8 @@ physical mining and real hauling. See the [showcase roadmap](Docs/ShowcaseRoadma
     candidates to compare. Open
     `Assets/_WonderGather/Scenes/TheOrdinaryPlace.unity`, or see the
     [look test](Docs/Playtests/OrdinaryPlaceLookTest.md).
-- **Next:** Luis plays the miners' build; then mining with the miners
+- **Now:** the miners mine with real weight and strength (S3, built);
+  next, every movement becomes the body's own
   ([plan](Docs/NextMilestonePlan.md); the up-to-date state is in
   [CURRENT_STATE.md](Docs/CURRENT_STATE.md)).
 

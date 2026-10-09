@@ -1,0 +1,185 @@
+# Implementation plan — S3: weight and strength at the rock
+
+> **Archived on October 9, 2026.** All twelve steps are built; Luis has
+> played the build once (October 8) and not yet what the two rounds
+> after it changed. The plan now in force is
+> [NextMilestonePlan.md](../NextMilestonePlan.md) (S3b, the body's own).
+> This page is kept as it was.
+
+**Proposed:** October 6, 2026, in the review Luis asked for
+([Reviews/2026-10-06_SamePageReview.md](../Reviews/2026-10-06_SamePageReview.md)).
+**Approved by Luis:** October 6, 2026: "I like the order that you proposed.
+So yeah, let's go with it", with more to fit in
+([correspondence](../Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)).
+**Baseline:** 246c11b on `claude/worker-showcase`. Unity 6000.6.0f1 / URP;
+Blender 4.4/4.5.
+**The design it builds:** [Design/ThePhysicalBody.md](../Design/ThePhysicalBody.md).
+**The plan before it** (S1: the Ordinary Place, two cameras, the miners) is
+archived in
+[Plans/S1_OrdinaryPlaceCamerasAndMiners.md](S1_OrdinaryPlaceCamerasAndMiners.md).
+
+**After Luis's play of it (October 8):** ten notes, to be put right before
+S4 is begun ("this polishing run and the fixing run" first). They are
+kept track of, one by one, in
+[the playtest round's page](../Reviews/2026-10-08_ThePlaytestRound.md). The
+twelve steps below are as they were built; what the round changes in how a
+body walks, turns, rests, goes down for a tool and is drawn is in
+[the design](../Design/ThePhysicalBody.md#after-luiss-play-the-walk-the-turn-and-the-rest-october-8)
+(and [its second part](../Design/ThePhysicalBody.md#after-luiss-play-second-part-going-down-for-a-tool-a-walker-sent-back-and-what-is-drawn-between-the-physics-steps-october-8)).
+
+**Luis's direction of October 9:** movement is to be the body's own, not
+posed, and stable; natural and alive, not robotic
+([message](../Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md)). How
+that is built, and that it comes before S4, is
+[the plan now in force](../NextMilestonePlan.md), approved by Luis the
+same day. The order of stages below is as Luis approved it on October 6;
+since October 9 the body's own stands between S3 and S4.
+
+## Which of the prototype's questions it answers
+
+The first of them: does a body with real strength, moving a tool with real
+weight against a real rock, look true and not goofy? Carrying, equipment
+and the creator are built on the answer.
+
+## The order of stages (approved October 6)
+
+| Order | Stage | What it gives |
+|---|---|---|
+| **Now** | **S3, weight and strength at the rock** (this plan) | A miner really lifting a pickaxe that has weight, with strength and tiredness that can be watched; a body that is very stable and can still fall; the interaction click; mining any boulder |
+| Then | **S4, carrying and equipment** | No pickaxe, a pickaxe, a strap for the back, a backpack, a dragged sack, a cart; stones brought home; loads that change the walk; each of these done by the body, physically |
+| Then | **S2, the creator** | The screen: the three appearances, strength with its gentle change of body, equipment, and what this worker will be able to do |
+| Last | **S5, ready for players** | As in [ShowcaseRoadmap.md](../ShowcaseRoadmap.md) |
+
+## Luis's choices (October 6)
+
+| ID | Question | Luis's answer |
+|---|---|---|
+| **A** | How far does the physics go? | **A mixture.** Very stable, never naturally wobbly, but able to trip or fall "in this, like, ragdoll-ish way if it's an extreme situation that calls for it". This replaces D1 |
+| **B** | The lantern and the mug | **Hanging somewhere that makes physical sense,** from the clothes. Hands empty |
+| **C** | The order of stages | **As proposed.** Where the new things fit is left to Claude |
+
+**Added by Luis in the same message:**
+
+- **Stamina:** tiredness of the muscles, short-term at least, already in
+  this prototype.
+- **The interaction click:** a key and a click on something show its
+  options beside it, with a cancel.
+- **Every action is physical:** equipping, unequipping, strapping, putting
+  into a bag are all seen done by the body, with real weight.
+- **Built to be built upon:** running and sword fights come later, on the
+  same body.
+
+## The approach
+
+Everything a miner holds, carries, drags or pulls is a real body in the
+physics, with its real weight and balance. The miner's arms, shoulders and
+back move it only by pushing and pulling, and each working joint has a most
+it can give, set by strength and lowered by tiredness. The legs keep the
+planted walk while the body's weight is within its feet. The body leans,
+braces and steps as its real weights require, and falls only when no step
+can catch it. A swing or any other action is planned as intentions, and
+what happens comes out of the weights and the limits.
+
+Why this is both stable and able to fall, and how each part works:
+[Design/ThePhysicalBody.md](../Design/ThePhysicalBody.md).
+
+## Steps
+
+Where Luis's new things fit is marked **(new)**.
+
+| Step | What | What Luis gets to see | State |
+|---|---|---|---|
+| 1 | **Weigh everything.** Each body part and each pickaxe gets its weight, its balance point and how hard it is to turn, measured from its own model and what it is made of | A table: what each miner and each pickaxe weighs | **Built, October 6** ([the table](../Design/ThePhysicalBody.md#step-1-everything-weighed-october-6)). Small 40.7 kg, Long 58.5 kg, Round 87.6 kg; their pickaxes 1.50, 3.21 and 2.39 kg |
+| 2 | **The bench.** One miner standing on plain ground, with a pickaxe that is a real body, and a strength that can be changed. A grid of strengths and pickaxe weights, each trying to lift the pickaxe to the shoulder and bring it down on a block. The two ways of building the arms are tried and compared | **Clips, before anything is built on it.** Also what one body costs, and whether it is steady at every frame rate | **Built, October 6. Luis: "very promising so far … we can just proceed with your plan as is"** ([message](../Correspondence/2026-10-06_THE_BENCH_IS_PROMISING.md); [clips and figures](../Design/ThePhysicalBody.md#step-2-the-bench-october-6)). One way of building the arms was built, not two; it is steady at every frame rate tried; one body's hands cost about 26 millionths of a second a step |
+| 3 | **Free hands, and things that hang (B).** Both hands free and closing on all three miners. The lantern and the mug hang from the clothes by something real, as real bodies | The remade miners beside the present ones, before anything is replaced | **Built, October 6** ([pictures and checks](../ArtDirection/TheMiners.md#both-hands-free-the-lantern-and-the-mug-at-the-hip-october-6)). Shown to Luis beside the present ones the same day; on the branch they take the present ones' place, and `workers.py --carrying` builds those again. They swing as before; they are not yet objects a hand can take (step 8) |
+| 4 | **The swing,** in its six parts ([review](../Reviews/2026-10-06_SamePageReview.md#the-swing-in-six-parts)): set, lift, top, drive, strike, recover. The upper hand slides along the handle. The legs and the back work. The jolt of the strike goes into the arms | The three miners swinging, at several strengths | **Built, October 6** ([clips and figures](../Design/ThePhysicalBody.md#step-4-the-swing-october-6)). The upper hand goes up the handle by as much as the tool feels heavy and slides down in the blow; the back has its own strength; the hips go back to keep the weight over the feet; aimed at a point, the body bows and bends its knees to reach it. On the bench, not yet in the game. The legs' own strength is step 6's |
+| 5 | **Stamina (new).** Short-term tiredness for the arms, the back and the legs. A tired miner lifts lower, drives slower, rests the head on the ground and waits | One miner worked until it tires, then resting | **Built, October 6** ([clip and figures](../Design/ThePhysicalBody.md#step-5-tiredness-october-6)). Each arm and the back tire with hard work and come back with rest; light work does not tire. A tired miner is weaker by the same rules as before. At 40% spent it stands up and rests with the pickaxe carried in one hand at its side, and goes on at 15%. The paces are a first setting |
+| 6 | **Balance: lean, brace and step (A).** The body's real weights decide how it stands: leaning against a load, bracing before an effort, stepping to catch itself | A miner with a pickaxe too heavy for it; a miner pulled | **Built, October 7** ([clips and figures](../Design/ThePhysicalBody.md#step-6-balance-october-7)). The body works out its weight's point from its real weights and loads. At ease nothing moves; it leans against a load; it sets its feet apart for the work; it steps when the point leaves its feet, and stands set against the load. A heavier body takes more pulling. The knees have a strength of their own. The fall is step 10; balance while walking is step 7 |
+| 7 | **Holding and walking with the tool.** How it is held comes from strength: in one hand at its balance point; in two hands; the head on the ground and dragged; or not at all. Dragging slows the walk | The same miner at several strengths, walking | **Built, October 7** ([clips and figures](../Design/ThePhysicalBody.md#step-7-holding-and-walking-with-the-tool-october-7)). What decides is the hand's hold: carried in one hand at the side while its weight asks no more than half of that; dragged by the handle's end, the body stooping and walking slower, when it asks more; left when it cannot be moved. A tired arm drags what it carried. "In two hands" was not built: a second hand does not share a pickaxe's weight. In the look with `K`, a miner sent somewhere takes its pickaxe along |
+| 8 | **The interaction click and the small actions (new).** Space and a click open a thing's options beside it, with a cancel. The first actions, each done by the body: take the lantern or the mug in hand and hang it back; lay the pickaxe down and pick it up; rest | Each action, close up | **First half built, October 7** ([clips and figures](../Design/ThePhysicalBody.md#step-8-first-half-the-interaction-click-and-the-pickaxe-laid-down-and-picked-up-october-7)). The space bar and a click open a thing's options beside it, with a cancel. The pickaxe is laid down and picked up by the body (it squats and bows to the ground), and a miner rests when told. A pickaxe that lies stays in the world. **Second half built, October 7** ([clips and figures](../Design/ThePhysicalBody.md#step-8-second-half-the-lantern-and-the-mug-taken-in-hand-and-hung-back-october-7)). The lantern and the mug are taken off their hook and loop by the hand on their side, carried at the side with the arm hanging (the carry from before October 6), and hung back. A miner with one in its hand hangs it back before it takes its pickaxe. **Not built:** setting them down on the ground (each would have to be made an object of its own) |
+| 9 | **Any boulder.** A click on any boulder of the Ordinary Place sends the miner to mine it. A place to stand is found from the rock's own shape and the ground. A spot to strike is found on its surface within this body's reach. The swing adapts to the spot. What is struck off falls as real stones and lies where it falls (bringing them home is S4) | Mining several different boulders | **Built, October 7** ([clips and figures](../Design/ThePhysicalBody.md#step-9-any-boulder-by-a-click-october-7)). Each miner finds a place at each of the place's ten boulders, goes there (the last steps off the walked ground, which stops half a metre short of every rock), strikes it, and pieces break off and lie. A low spot is struck late in the blow, the head below the hands. **Also changed:** a tool too heavy to rest holding (Long's) is put down to rest, its head on the ground. **Not built:** the boulder does not get smaller or run out; a level blow at a face; the pick lands 4 to 12 cm from its spot |
+| 10 | **The fall, and getting up (A).** When no step can catch the body, or its legs cannot bear it, the whole body follows the physics, protects itself, lies, and gets up. The riskiest step | Clips of extreme cases, before it is trusted | **Built, October 7; the getting up made again October 9 (the body's own as far as its knees); not yet trusted** ([clips and figures](../Design/ThePhysicalBody.md#step-10-the-fall-and-getting-up-october-7)). A miner whose steps do not catch it, or whose legs cannot bear it, is let go: eleven jointed parts of its own weights. It goes down into a crouch, its arms out and its head kept from the ground, with what strength it has; lies; gathers itself; the posed body takes over from a crouch its legs can raise it from; and it stands. Each miner keeps its feet against a pull of a quarter of its weight and goes down under about three fifths. **Not built:** tripping over something, being struck, falling while walking. The move from lying to its crouch is partly not physics |
+| 11 | **In the Ordinary Place.** A plain panel: the strength slider, and a light, a middling and a heavy pickaxe. The look with `K` is retired | The build | **An early part, October 6** ([how to try it](../Design/ThePhysicalBody.md#in-the-place-to-try-october-6)): so that the work can be watched in the build now, `K` shows the swing with real weight in place of the old swing, with keys for strength (`,` `.`) and for the pickaxe's weight (`-` `=`). The panel, and whether the key stays, remain for this step. **Built, October 7 and 8; Luis has not seen it** ([pictures and figures](../Design/ThePhysicalBody.md#step-11-the-panel-in-the-ordinary-place-october-7)). A panel at the lower left: the strength slider (0.30 to 3.00), and buttons that put a light, its own or a heavy pickaxe on the ground beside the chosen miner (0.6, 1 and 1.8 of its own pickaxe's weight). The keys do nothing any more, and nothing is made in a miner's hands: it picks a pickaxe up itself. **Also changed, from trying every order along the slider:** a body bends its knees no deeper than one of them could hold alone; it places itself and sets its feet before it goes down for a pickaxe; bent to the ground it keeps its feet where they are; bent to its work at a rock, its knees are read before the first blow. **Not built:** a way down for a weak body (below about nine tenths of its strength it does not pick a pickaxe up); work at rock lower than a body can strike standing (Small and Long did not mine the two lowest boulders until step 12) |
+| 12 | **Evidence** (below), the playtest guide, the documents | | **Gathered, October 8; Luis has not played the build** ([the list, item by item](../Design/ThePhysicalBody.md#step-12-evidence-october-8)). Of the twelve things the tests were to show, ten are shown, one in part (a body too weak for its pickaxe strikes feebly or not at all, but enough feeble blows still break a piece off), and one is not: nothing stops the pickaxe at its bearer's own body. One miner at its physical work costs nothing that shows in the frame; a hundred walking miners add about 2.5 ms (2.1 on October 4). **Found on the way, and put right:** Small fell five seconds into any long walk with its pickaxe; and eight of thirty miners and boulders gave their rock up for their knees (now each miner mines each boulder). **Not done:** the close audit of the model quality method; a crowd at physical work |
+
+**Why this order.**
+
+- **Steps 1 and 2 first:** everything else stands on them, and they answer
+  what is not yet known (steadiness, cost, how it reads at the miners'
+  size).
+- **Stamina (5) straight after the swing (4):** it is the same rule as
+  strength, and it is seen best in repeated swings.
+- **Lean, brace and step (6) before the fall (10):** they are what makes
+  the body "very stable". The fall is the last rung of the same ladder, and
+  the hardest to make believable, so it comes when the rest is steady.
+- **The interaction click (8) before any boulder (9):** laying the pickaxe
+  down and picking it up are how a miner comes to hold one at all, now that
+  it no longer appears from nowhere.
+- **Strapping, bags, the sack and the cart** are S4's, built from the same
+  small actions as step 8.
+
+## Evidence
+
+- **Tests:**
+  - a heavier pickaxe is lifted lower and arrives slower, on the same body;
+  - a stronger body lifts the same pickaxe higher and it arrives faster;
+  - a body too weak for its pickaxe does not strike, and nothing is mined;
+  - a tired body is weaker, and recovers with rest;
+  - the head's speed and energy at each strike are measured and shown;
+  - the pickaxe never passes through its bearer, at any strength;
+  - the hands stay on the handle, and let go only when the plan says so or
+    their hold is overcome;
+  - a body within its balance does not step or fall; a body pulled hard
+    enough steps; pulled harder, it falls, and gets up;
+  - nothing appears in a hand or vanishes from one: every object is at
+    every moment held, hanging, or lying;
+  - only a real touch of the head on the rock yields anything (the rule of
+    the strike, unchanged);
+  - any boulder of the place can be mined, by each of the three bodies;
+  - the old test body and its maps work as before.
+- **The model quality method:** the audit in motion, run across a range of
+  strengths, since the motion is no longer the same every time.
+- **Cost:** one miner at work, and a crowd, measured in a release build
+  against today's figures.
+- **Pictures and clips** at every step, read before any number is believed.
+- **A build** and a playtest guide.
+
+## Contracts to keep
+
+- **The rule of the strike.**
+- **The walk:** planted feet, arrival without shuffling, each body's own
+  gait, while the body is within its balance. Loads and the ladder of
+  balance may change it; nothing else does.
+- **The test body and its maps** keep working as they do.
+- **The looks Luis has liked** are shown beside the new before anything is
+  replaced.
+- **Shown early.** Each step's clips go to Luis before the next is built on
+  it, the bench and the fall above all.
+- **The project's rule on physics bodies.** AGENTS.md says not to introduce
+  active ragdolls "without a corresponding milestone request". Luis's
+  messages of October 6 are that request: bodies answer to real physics, and
+  can fall "ragdoll-ish" in extreme situations.
+- **Protected files.** Luis's uncommitted files (TheGroup.unity, two
+  ProjectSettings files, `_Recovery`) are never edited, committed or
+  discarded.
+- **Third-party material** needs Luis's approval. Everything here is
+  planned to be made from scratch.
+
+## Left open, not decided here
+
+- **The interaction key.** Space is proposed
+  ([why](../Design/ThePhysicalBody.md#the-key-the-space-bar-recommended)); it
+  is one setting, for Luis to try.
+- **The list of interaction options.** Luis's examples and a proposed list
+  are in [the design](../Design/ThePhysicalBody.md#options-for-the-prototype-a-proposal-luis-asked-what-else-makes-sense).
+- **Stamina's pace,** whether there is a longer-term tiredness, and what
+  the player is shown of it.
+- **Strength's scale:** what the numbers on the slider are, and how the
+  body's appearance changes with them (the creator, S2).
+- **Whether a rock visibly wears away** as it is mined.
+- **Whether how well it is struck changes how much is mined** (D6). S3
+  measures every strike; the amount stays fixed until Luis decides.
+- **How Long stands in the game** (P1), and the walk's high step in the
+  sharpest turn.
+- **How heavy the miners are.** They are small beings. Their weights come
+  from their models; whether that reads well is for the bench to show.

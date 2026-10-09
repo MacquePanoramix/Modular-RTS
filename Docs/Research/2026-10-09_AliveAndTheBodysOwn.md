@@ -245,14 +245,14 @@ body's own" and "stable" meet.
   ways nobody planned; that is the price of its being real.
 
 How this is to be built, in what order, and what Luis sees at each step
-is in [the plan](../Plans/TheBodysOwn_Proposal.md).
+is in [the plan](../NextMilestonePlan.md).
 
 ## 4. Action by action
 
 Luis: "research of what kind of movements feel natural for certain
 actions". Part 2 is by principle; this is by action, for the actions
 the miners have. It is a first pass: each is to be gone into again when
-its step of [the plan](../Plans/TheBodysOwn_Proposal.md) begins. What
+its step of [the plan](../NextMilestonePlan.md) begins. What
 real bodies do in walking, turning, going down, getting up and resting
 is in [the research of October 8](2026-10-08_RealBodiesAndHowToJudgeThem.md)
 and is not repeated.

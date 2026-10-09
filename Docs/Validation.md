@@ -1778,7 +1778,7 @@ Pictures: `Docs/Images/Miners/Work_Clip_Side.gif`, `Work_Clip_Front.gif`,
 
 ## S3, steps 1 and 2 — everything weighed, and the bench (October 6)
 
-Stage S3, approved by Luis that day ([plan](NextMilestonePlan.md);
+Stage S3, approved by Luis that day ([plan](Plans/S3_WeightAndStrengthAtTheRock.md);
 [design and findings](Design/ThePhysicalBody.md#9-what-is-built)).
 
 - **Built:** the weights of every miner and pickaxe, measured on the

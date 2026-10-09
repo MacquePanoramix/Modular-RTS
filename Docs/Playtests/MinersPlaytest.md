@@ -396,7 +396,7 @@ player log.
   boulder and strikes pieces off it
   ([above](#the-physical-work-with-the-panel-october-7)). The boulder
   stays whole, and nothing is hauled home: that is S4
-  ([the plan](../NextMilestonePlan.md#steps)). The equipment scene still
+  ([the plan](../Plans/S3_WeightAndStrengthAtTheRock.md#steps)). The equipment scene still
   uses the 2.2 m test body and the first swing.
 - **Faces.** One expression each. The hands that carry something keep one
   closed shape.

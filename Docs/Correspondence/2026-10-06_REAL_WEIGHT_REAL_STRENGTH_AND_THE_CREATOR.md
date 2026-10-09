@@ -4,7 +4,7 @@
 (commits 48623fd and 0c3574f;
 [TheMiners.md](../ArtDirection/TheMiners.md#a-pickaxe-for-each-and-the-first-swings-october-6))
 and the choices put to Luis (M1 to M4 and P1 in
-[NextMilestonePlan.md](../NextMilestonePlan.md)).
+[NextMilestonePlan.md](../Plans/S3_WeightAndStrengthAtTheRock.md)).
 
 **Form:** a spoken message, recorded by Luis and sent as its transcript. It is
 kept exactly as it arrived, including what the transcription may have

@@ -83,4 +83,4 @@ These are readings, not corrections. The message above is left as it came.
   design that follows from it:
   [Design/ThePhysicalBody.md](../Design/ThePhysicalBody.md).
 - The approved plan, with these things fitted in:
-  [NextMilestonePlan.md](../NextMilestonePlan.md).
+  [NextMilestonePlan.md](../Plans/S3_WeightAndStrengthAtTheRock.md).

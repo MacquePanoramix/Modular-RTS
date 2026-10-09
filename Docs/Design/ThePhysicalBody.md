@@ -7,7 +7,7 @@ day
 and the research Luis asked for.
 
 **Status:** the design that stage S3 builds
-([NextMilestonePlan.md](../NextMilestonePlan.md)). What Luis said is marked
+([NextMilestonePlan.md](../Plans/S3_WeightAndStrengthAtTheRock.md)). What Luis said is marked
 as Luis's. The rest is proposal: it is tried on a bench and shown to Luis
 before anything is built on it. [GAME_VISION.md](../GAME_VISION.md) remains
 the design authority.
@@ -1493,7 +1493,7 @@ standing; everything about the weakest bodies.
 ### Step 12: evidence (October 8)
 
 What the plan's list of evidence asked for, and what there is to show for
-each ([the list](../NextMilestonePlan.md#evidence)). Nothing here is
+each ([the list](../Plans/S3_WeightAndStrengthAtTheRock.md#evidence)). Nothing here is
 Locked, and none of it is Luis's eye on the build.
 
 **The tests the plan named:**

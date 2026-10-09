@@ -9,10 +9,17 @@
 >
 > | Order | Stage | In short |
 > |---|---|---|
-> | **Now** | **S3, weight and strength at the rock** | Real weight, strength and tiredness; a body that is very stable and can still fall; the interaction click; any boulder ([plan](NextMilestonePlan.md); [design](Design/ThePhysicalBody.md)) |
+> | **Now** | **S3, weight and strength at the rock** | Real weight, strength and tiredness; a body that is very stable and can still fall; the interaction click; any boulder ([plan](Plans/S3_WeightAndStrengthAtTheRock.md); [design](Design/ThePhysicalBody.md)) |
 > | Then | **S4, carrying and equipment** | No pickaxe, a pickaxe, a strap for the back, a backpack, a dragged sack, a cart; stones brought home; every action done by the body |
 > | Then | **S2, the creator** | The three appearances, strength as one number that shows gently in the body, equipment, and what this worker will be able to do |
 > | Last | **S5, ready for players** | As below |
+>
+> **October 9, 2026:** S3 is built and waits for Luis's play. Luis put a
+> stage between S3 and S4: **S3b, the body's own** (every movement
+> pushed by the body's own joints, stable and alive;
+> [plan](NextMilestonePlan.md);
+> [Luis's answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
+> It is the stage now.
 >
 > **Read the rest of this page with that in mind.** The stages below are
 > described as they were written on October 1. Three of their decisions are

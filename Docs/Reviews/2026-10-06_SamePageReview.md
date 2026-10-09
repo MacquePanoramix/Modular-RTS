@@ -19,7 +19,7 @@ extreme situation); B is (a), the lantern and the mug hanging from the
 clothes; and stamina, an interaction click and "all the actions" being
 physical are added. The design that follows is
 [Design/ThePhysicalBody.md](../Design/ThePhysicalBody.md), and the plan is
-[NextMilestonePlan.md](../NextMilestonePlan.md). The text below is left as
+[NextMilestonePlan.md](../Plans/S3_WeightAndStrengthAtTheRock.md). The text below is left as
 it was put to Luis.
 
 ## 1. The short answer
@@ -310,7 +310,7 @@ A plain strength slider would exist from S3's first step, so strength can
 be played with long before the creator's screen is made.
 
 **S3's steps** are written out in
-[NextMilestonePlan.md](../NextMilestonePlan.md).
+[NextMilestonePlan.md](../Plans/S3_WeightAndStrengthAtTheRock.md).
 In short:
 
 1. **Weigh everything.** Each body part and each pickaxe gets its weight

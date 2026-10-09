@@ -76,7 +76,7 @@ mean I kinda prefered the before for this one"
 
 ## Both hands free: the lantern and the mug at the hip (October 6)
 
-Step 3 of [S3](../NextMilestonePlan.md). Luis's choice
+Step 3 of [S3](../Plans/S3_WeightAndStrengthAtTheRock.md). Luis's choice
 ([message](../Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)):
 "the items hanging somewhere, like that makes physical sense, from the
 clothes". The hands are for the pickaxe; how strong the hands are is what
@@ -159,7 +159,7 @@ hands that close on it.
 > [the review](../Reviews/2026-10-06_SamePageReview.md#what-the-swing-is-today)).
 > Luis wants real weight and real strength in it, and the proposal is to
 > build that next
-> ([plan](../NextMilestonePlan.md)).
+> ([plan](../Plans/S3_WeightAndStrengthAtTheRock.md)).
 > The measures, the hands and the pickaxes below are what it will stand on.
 
 ![Round at the rock, in the game](../Images/Miners/Work_Round.jpg)
