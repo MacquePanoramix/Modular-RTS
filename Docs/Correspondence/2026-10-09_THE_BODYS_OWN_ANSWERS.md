@@ -40,6 +40,12 @@ cut off, and were called again): "I hit my usage limit while you were
 working, but it has reset now. Please continue from where you left
 off."
 
+**After the report of step 0 and the first part of step 1** (which ended
+"Next is the rest of step 1: the body in the game beside the posed one
+with a switch on the panel, a controller that leans as today's body
+does, then life in it"): "Shall we proceed then with the next part
+then?" Recorded as Luis's word to go on with the rest of step 1.
+
 **What Luis did not say:**
 
 - **Whether the build has been opened.** Nothing of the playtest round
