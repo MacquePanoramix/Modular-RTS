@@ -264,6 +264,7 @@ namespace WonderGather.Tests
                             for (float until = Time.time + .3f; Time.time < until;) yield return null;
                             // Let go, and shoved at the chest for a moment: forwards (0), to its right (90), backwards (180).
                             Vector3 push = Quaternion.AngleAxis(way, Vector3.up) * away * shove;
+                            int gaveUpBefore = fall.GaveUpGetting, oldBefore = fall.GotUpTheOldWay;
                             fall.LetGo();
                             Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Falling), name + " was not let go.");
                             if (lay.Length > 0) Lay(fall, unit.transform, ground, lay);
@@ -313,7 +314,12 @@ namespace WonderGather.Tests
                                 float down = -fall.Part(PhysicalFall.Head).linearVelocity.y;
                                 headStruck = Mathf.Max(headStruck, headBefore - down);
                                 headBefore = down;
-                                if (lay2 < 0 && fall.Now == PhysicalFall.State.Lying) lay2 = Time.time - began;
+                                if (lay2 < 0 && fall.Now == PhysicalFall.State.Lying)
+                                {
+                                    lay2 = Time.time - began;
+                                    Debug.Log(string.Format(culture, "FALL   {0} lies after {1:0.00} s: the blow {2:0.0} m/s (its head {3:0.0}); shaken {4:0.00}, dazed {5:0.00}, out of breath {6:0.00}; it lies {7:0.0} s",
+                                        tag, lay2, fall.Blow, fall.HeadStruck, fall.Shaken, fall.Dazed, fall.OutOfBreath, fall.LiesFor));
+                                }
                                 // How its joints are turned, half a second into the fall: a knee and an elbow (bent is
                                 // negative), a hip and a shoulder (the limb forward of the body is positive).
                                 if (!said && Time.time - began >= .5f)
@@ -334,9 +340,9 @@ namespace WonderGather.Tests
                             }
             Vector3 hipsAt = layAt, headAt = fall.HeadAt;
                             float under = 0;
-                            Debug.Log(string.Format(culture, "FALL   {0}: it gathered itself {1:0.00} s after the shove, the posed body took over at {2:0.00} s, it stood upright at {3:0.00} s; it stands {4:0.00} m from where it lay, its head {5:0.00} m up (it is {6:0.00} m tall), bowed {7:0.0} degrees, its hips {8:0.000} m low; state {9}",
+                            Debug.Log(string.Format(culture, "FALL   {0}: it gathered itself {1:0.00} s after the shove, the posed body took over at {2:0.00} s, it stood upright at {3:0.00} s; it stands {4:0.00} m from where it lay, its head {5:0.00} m up (it is {6:0.00} m tall), bowed {7:0.0} degrees, its hips {8:0.000} m low; state {9}; it gave up {10} time(s) and got up the old way {11} time(s)",
                                 tag, gathers, takenOver, stood, Vector3.ProjectOnPlane(unit.transform.position - layAt, Vector3.up).magnitude,
-                                miner.Rig.head.position.y - unit.transform.position.y, tall, biped.BowNow, biped.SinkNow, fall.Now));
+                                miner.Rig.head.position.y - unit.transform.position.y, tall, biped.BowNow, biped.SinkNow, fall.Now, fall.GaveUpGetting - gaveUpBefore, fall.GotUpTheOldWay - oldBefore));
                             Debug.Log(string.Format(culture, "FALL {0} shoved {1:0} N for 0.3 s, {2:0} degrees from ahead: lying after {3:0.00} s ({4}); its hips {5:0.00} m over the ground and {6:0.00} m from where it stood, its head {7:0.00} m over the ground (lowest {8:0.00}); the fastest part {9:0.0} m/s; the part furthest from its hips {10:0.00} m (it is {11:0.00} m tall); deepest under the ground {12:0.000} m; sound {13} ({14} pictures); its head struck the ground at {15:0.0} m/s at most",
                                 name, shove, way, lay2, fall.Now, hipsAt.y - ground.Height(hipsAt.x, hipsAt.z), Vector3.ProjectOnPlane(hipsAt - spot, Vector3.up).magnitude,
                                 headAt.y - ground.Height(headAt.x, headAt.z), lowestHead, fastest, furthest, tall, under, sound, shot, headStruck));

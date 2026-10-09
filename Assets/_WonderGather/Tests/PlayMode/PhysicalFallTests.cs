@@ -111,7 +111,8 @@ namespace WonderGather.Tests
                     float began = Time.time;
                     Vector3 push = Quaternion.AngleAxis(way, Vector3.up) * away * (3 * physical.Mass);
                     Down down = default;
-                    yield return Watch(fall, 12, d => down = d, () => { if (Time.time - began < .3f) fall.Push(push, fall.Part(PhysicalFall.Trunk).worldCenterOfMass); return true; });
+                    // (Since October 9 it lies by how hard it came down: up to ten seconds, where it lay 1.2.)
+                    yield return Watch(fall, 24, d => down = d, () => { if (Time.time - began < .3f) fall.Push(push, fall.Part(PhysicalFall.Trunk).worldCenterOfMass); return true; });
                     float taken = Time.time - began;
                     Assert.That(down.sound, Is.True, name + "'s body came apart.");
                     Assert.That(down.lay, Is.True, name + " did not come to lie.");
@@ -260,6 +261,60 @@ namespace WonderGather.Tests
             }
         }
 
+        // How long a fallen miner lies before it begins to get up (Luis, October 9: by "how strong was the force that
+        // pushed it down, its current stamina and anything else relevant"). Pushed down harder, it comes down harder
+        // and lies longer; spent, it lies longer than fresh after the same push; and it never lies less than a moment
+        // or longer than ten seconds.
+        [UnityTest, Timeout(900000)]
+        public IEnumerator AHarderFallAndASpentBodyLieLonger()
+        {
+            Time.captureFramerate = 50;
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                var physical = unit.GetComponent<PhysicalBody>();
+                var fall = unit.gameObject.AddComponent<PhysicalFall>();
+                fall.GetsUp = false;
+                float[] blow = new float[3], lies = new float[3];
+                // Pushed backwards lightly, hard, and lightly again with its legs and its back spent.
+                for (int k = 0; k < 3; k++)
+                {
+                    Vector3 away = default;
+                    yield return Stand(unit, (s, a) => { away = a; });
+                    physical.Refresh();
+                    if (k == 2)
+                    {
+                        physical.Worked(PhysicalBody.Muscles.Legs, 1, 60);
+                        physical.Worked(PhysicalBody.Muscles.Back, 1, 60);
+                    }
+                    Vector3 push = -away * (k == 1 ? 12 : 3) * physical.Mass;
+                    fall.LetGo();
+                    Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Falling), name + " was not let go.");
+                    float began = Time.time;
+                    while (fall.Now != PhysicalFall.State.Lying && Time.time - began < 10)
+                    {
+                        if (Time.time - began < .3f) fall.Push(push, fall.Part(PhysicalFall.Trunk).worldCenterOfMass);
+                        yield return new WaitForFixedUpdate();
+                    }
+                    Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Lying), name + " did not come to lie.");
+                    blow[k] = fall.Blow; lies[k] = fall.LiesFor;
+                    Debug.Log($"FALL_LIES {name}, pushed {(k == 1 ? "hard (12 N a kilogram)" : "lightly (3 N a kilogram)")}{(k == 2 ? ", its legs and back spent" : "")}: the blow {fall.Blow:F1} m/s (its head {fall.HeadStruck:F1}); shaken {fall.Shaken:F2}, dazed {fall.Dazed:F2}, out of breath {fall.OutOfBreath:F2}; it lies {fall.LiesFor:F1} s");
+                    Assert.That(fall.LiesFor, Is.InRange(.5f, 10.01f), name + " lies less than a moment, or longer than ten seconds.");
+                    fall.TakeBack();
+                    yield return Wait(.3f);
+                }
+                physical.Refresh();
+                Assert.That(blow[1], Is.GreaterThan(blow[0] + .5f), name + ", pushed four times as hard, did not come down harder.");
+                Assert.That(lies[1], Is.GreaterThan(lies[0] + .5f), name + ", having come down harder, does not lie longer.");
+                Assert.That(lies[2], Is.GreaterThan(lies[0] + 1), name + ", spent, does not lie longer than fresh.");
+                Object.Destroy(fall);
+                yield return null;
+            }
+        }
+
         [UnityTest, Timeout(900000)]
         public IEnumerator AHardPullThrowsItDownAndALightOneDoesNot()
         {
@@ -306,7 +361,7 @@ namespace WonderGather.Tests
                         Assert.That(balance.Fell, Is.Not.Empty);
                         // It gets up again.
                         float waited = Time.time;
-                        while ((fall.Now != PhysicalFall.State.Up || biped.SinkNow > .02f) && Time.time - waited < 14) yield return null;
+                        while ((fall.Now != PhysicalFall.State.Up || biped.SinkNow > .02f) && Time.time - waited < 30) yield return null;
                         Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Up), name + " did not get up after being pulled down.");
                     }
                     Object.Destroy(pull);
@@ -344,7 +399,7 @@ namespace WonderGather.Tests
             Assert.That(GameObject.Find("Block (a look at the work)"), Is.Null);
             // It gets up; then the look ends by itself, and the pickaxe can be picked up.
             began = Time.time;
-            while (look.Showing && Time.time - began < 15) yield return null;
+            while (look.Showing && Time.time - began < 30) yield return null;
             Assert.That(look.Showing, Is.False, "The look did not end when it was up again.");
             Assert.That(look.Fall == null || look.Fall.Now == PhysicalFall.State.Up, Is.True);
             yield return Wait(.6f);
