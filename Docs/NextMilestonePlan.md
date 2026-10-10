@@ -256,6 +256,38 @@ Read for it: [the research, part 7](Research/2026-10-09_AliveAndTheBodysOwn.md#7
 5. **Then what waited on it:** a fuller shift of weight; its chest
    following a look; and judges.
 
+**Where it stands (October 10).** On the work branch `claude/wip-round`
+only; nothing of step 3 is in the game Luis has.
+
+- **1 is done.** The keeper is one piece of code (`OwnKeeper`), used by
+  the body in the game; the seven tests give the figures they gave.
+  (Written with three numbers added in another order, Round on one leg
+  went down on a fourth nudge: its hold there is that thin.)
+- **2 is begun.** The keeper can step (off unless asked), with settings
+  set by hand, not searched; and the bench has a trial for it
+  (`BodysOwnBench.Steps`: the game's keeper on bodies of the bench,
+  pulled and set going eight ways each).
+
+  | | Small | Long | Round |
+  |---|---|---|---|
+  | Set going at 0.3 m/s: keep their feet, of 8 (without the step) | 8 (5) | 8 (7) | 8 (7) |
+  | ...at 0.5 m/s | 3 (2) | 1 (2) | 6 (3) |
+  | ...at 0.8 m/s | 0 | 0 | 0 |
+  | Pulled with 0.08 of its weight for 2.5 s | 5 (4) | 3 (2) | 5 (5) |
+  | ...with a sixth of its weight, and more | 0 | 0 | 0 |
+
+  Where it keeps its feet it takes none to two steps (the catch, and
+  the other boot brought alongside), and ends with its boots flat and
+  standing as they stood.
+- **A pull that is held is not met at all yet.** Told step by step, a
+  Small pulled with a sixth of its weight begins its step three tenths
+  of a second after the pull begins, its hips 6 cm gone; its boot
+  lands three tenths later only 9 cm ahead of its hips, while its
+  weight goes at about a metre a second; both boots are tipped about
+  twenty degrees; it goes down. **Next:** step sooner under a pull it
+  feels, and further; stand astride and lean back while the pull
+  lasts; land flat. Then the search.
+
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).
 
