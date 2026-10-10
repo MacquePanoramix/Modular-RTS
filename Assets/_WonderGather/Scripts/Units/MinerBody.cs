@@ -176,6 +176,7 @@ namespace WonderGather
         // arms, what hangs there) is moved by that, and is not made larger.
         public float Swell { get; set; }
         private Vector3 chestSize;
+        private float drawnFuller = 1;
         private Transform[] onChest;
         private Vector3[] onChestSize;
 
@@ -467,9 +468,11 @@ namespace WonderGather
             bones.pelvis.SetPositionAndRotation(solved.pelvis.position + solved.pelvis.rotation * pelvisOffset, hipFrame * root * pelvisRest);
             bones.spine.rotation = Quaternion.Slerp(hipFrame, chestFrame, .5f) * root * spineRest;
             bones.chest.rotation = chestFrame * root * chestRest;
-            if (onChest != null)
+            // (Written only when breath changes it: a body that does not breathe so is not touched.)
+            float fuller = 1 + Mathf.Clamp(Swell, 0, .16f);
+            if (onChest != null && fuller != drawnFuller)
             {
-                float fuller = 1 + Mathf.Clamp(Swell, 0, .16f);
+                drawnFuller = fuller;
                 bones.chest.localScale = chestSize * fuller;
                 for (int k = 0; k < onChest.Length; k++) if (onChest[k] != null) onChest[k].localScale = onChestSize[k] / fuller;
             }
