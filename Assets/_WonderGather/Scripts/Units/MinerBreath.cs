@@ -66,7 +66,7 @@ namespace WonderGather
             float size = OwnBody.BreathSize, fills = breath.Full * breath.Deep;
             // (Its chest and its shoulders are drawn so only while it stands by its own joints, or is down. Drawn on a
             // miner standing or walking as it did, its blows at a boulder afterwards landed thirty centimetres off in
-            // four tries of eleven, and in none of fifteen without: a swing is planned from where its shoulders are
+            // five tries of fifteen, and in one of thirty without: a swing is planned from where its shoulders are
             // drawn, and something there turns on a centimetre. Until that is found, the body as it was shows its
             // breath only in the air.)
             if (own == null) TryGetComponent(out own);
