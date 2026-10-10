@@ -3030,8 +3030,11 @@ The body's own body is off unless the panel's switch is on.
 - **Judges:** two rounds of three, on sheets from `OwnBodyRecord`
   ([what they said](Reviews/2026-10-10_StandingWithLife_Judges.md)).
 - **The build** was made from the final state and copied to `Builds/`.
-  It was not opened by me beyond that; its own measures of work and of
-  the crowd were not run again (nothing they measure was changed).
+  It was started once in its own measure of a miner's work: it ran and
+  ended with no error in its log. Its figures were not compared with
+  earlier ones, and its measure of the crowd was not run (nothing they
+  measure was changed). The switch itself was not pressed in the built
+  game by me: it is tested in the Editor's play mode only.
 - **Not tested:** a slope; something in its hands; more than one miner
   standing so at once; nudges given faster than it settles; a weak or
   tired body's limit on shifting (never seen to act); what it costs in
