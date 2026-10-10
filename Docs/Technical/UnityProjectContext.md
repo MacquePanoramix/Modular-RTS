@@ -2068,6 +2068,13 @@ with the settings, are in
   the chest drawn fuller (written only when it changes).
   `Tests/PlayMode/OwnBodyTests.cs` (six); `OwnBodyRecord.cs` (pictures
   for judges; run only when asked: `-ownShots <folder>`).
+- **S3b, the keeper (October 10): `Scripts/Units/OwnKeeper.cs`.** What
+  keeps a body of its own up, taken out of `OwnBody` so that the game
+  and the bench (`BodysOwnBench.Steps`, `StepSearch`) use one piece of
+  code. `OwnBody` gives it its parts and lives its life in the middle
+  of each of its steps (`Lived`). It can step (`OwnKeeper.Steps`): off
+  in the game. Its settings are public statics. `OwnBody.BreathSize`:
+  how large breath is drawn (the panel's slider).
 - **S3b step 1, the looks of breath (October 10).** `MinerBody.Shrug`:
   its shoulders drawn higher (the upper arms' bones moved up; written
   only when it changes). `Scripts/Look/BreathInAir.cs`: breath seen in

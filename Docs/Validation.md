@@ -3069,3 +3069,24 @@ The body's own body is off unless the panel's switch is on.
 - **Not tested:** the looks from where the game is usually played;
   the look in the air against a bright background (it is pale); many
   miners breathing at once (one stands so at a time).
+
+## S3b step 1 — after Luis looked: breath drawn larger, and a size for it (October 10)
+
+[Design/TheBodysOwn.md](Design/TheBodysOwn.md#after-luis-looked-at-it-october-10).
+
+- **`OwnBodyTests`, seven, each on Small, Long and Round: all pass.**
+  With the look in its shoulders at the first size they are drawn 42,
+  53 and 49 mm higher full than empty. On one leg and nudged, heads go
+  15 to 83 mm, as before (what is drawn changes nothing of that).
+- **The whole PlayMode suite, on this state:** 194 tests; **171 passed, none failed**, 23 are run only when asked (the benches, the searches and the recordings); about 25 minutes.
+- **With this the game has the keeper as one piece of code**
+  (`OwnKeeper`, used by the game and by the bench), with the step in it
+  off. The seven tests give the figures they gave before it was taken
+  out of `OwnBody`.
+- **Looked at by me:** each miner's chest empty and full at rest, from
+  the side (hardly to be told apart, even at this size), and its
+  shoulders, from in front (plainly different).
+- **The build** was made from this state and copied to `Builds/`. Not
+  opened by me.
+- **Not tested:** whether Luis can see it. That is what the slider is
+  for.

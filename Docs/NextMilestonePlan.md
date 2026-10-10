@@ -367,6 +367,15 @@ right-hand column says.
 | B6 | Breath drawn on the chest cannot be seen, even at four times life (six judges of six). How is it to be shown? | The panel has three looks to begin from ("drawn stronger", "as in life", "not drawn"). Others, not built: the shoulders and collar rising, drawn boldly; a tired body heaving; breath seen in the cold air at dusk. I would try the shoulders and the dusk air next, beside these |
 | B7 | Shall "a step" (step 3) come before "from its knees onto its feet" (step 2)? | Yes. Leaning as today's body does, a real shift of weight, and standing up to a push all wait on the step; step 2 waits on nothing |
 
+**After Luis looked at step 1 (October 10). Not answered yet.**
+
+| | Question | What I think, for Luis to overrule |
+|---|---|---|
+| B8 | Was "Stands by its own joints" ticked when the standing miner was looked at? (Without it a standing miner is the body as it was, which does not breathe at all; a fallen one breathes either way.) | It decides what "I couldn't really notice the difference" was said of |
+| B9 | Is every miner to breathe, always: walking, working, and standing as it did before? | Yes, drawn (its chest and shoulders: that costs nothing and pushes nothing), with its rate and depth from how hard it has worked. Today only a miner standing by its own joints breathes, and a fallen one |
+| B10 | What size, and which look? | Set by eye on the panel (the slider, and the Breath button), and told to me. It begins on the strong side |
+| B11 | Of the outside review: are the three stale passages it names to be put right (the first lines of the validation page; an old "not yet built" list in the current-state page; the test counts in the README)? I looked: all three are stale | Yes. Nothing else of the review is taken up without Luis saying which |
+
 The five other questions of the proposal for S4 (Q2 to Q6) are still
 open.
 

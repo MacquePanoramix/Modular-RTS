@@ -856,3 +856,48 @@ taken out a second time: with it Long, on one leg and nudged, went
 
 **A lying body** breathes with its chest only, as before: the two new
 looks are for a body standing by its own joints.
+
+### After Luis looked at it (October 10)
+
+Luis ([the message](../Correspondence/2026-10-10_STEP_ONE_LOOKED_AT_AND_AN_OUTSIDE_REVIEW.md)): "I couldn't
+really notice the difference. I could only really notice the breathing
+when the character fell. Was that intended?"
+
+**It was not intended.** Why the one showed and the other did not:
+
+| | Its chest drawn fuller by | Breaths a minute |
+|---|---|---|
+| A fallen miner, shaken (what Luis could see) | 16 parts in a hundred (as far as it was let go) | 30 to 40 |
+| A miner standing at rest, as it was | 9 | 15 |
+
+So Luis's eye agrees with the six judges: at the size it had, a standing
+miner's breath cannot be seen, in any of its looks.
+
+**What was done.**
+
+- **Breath has a size** (`OwnBody.BreathSize`), set on the panel by a
+  slider ("Breath size", nought to three; one is the size it had). It
+  sets what is *drawn* (the chest, the shoulders), not what the joints
+  are asked for: Long's footing on one leg depends on those staying
+  small.
+- **It begins at 1.6:** a standing miner's chest at rest is then drawn
+  about 14 parts in a hundred fuller, near what Luis could see on the
+  fallen one. The fallen one is as it was.
+- **The panel begins with the look that shows most: "in its
+  shoulders".** Seen from the side, a chest drawn 14 parts fuller under
+  a coat still hardly shows (I looked at it full and empty, side by
+  side); the shoulders rising do. At the first size they rise 42 mm on
+  Small, 53 on Long and 49 on Round at rest.
+- **It is on the strong side on purpose,** so that it is seen and can
+  be turned down by eye. What size it is to be, and which look, is
+  Luis's; none of it is settled.
+
+**Still so:** only a miner standing by its own joints breathes (the
+switch on the panel, at ease, hands empty), and a fallen one. A miner
+walking, working, or standing as it did before does not breathe at
+all. Whether every miner is to is put to Luis.
+
+**Also in the game since this:** the keeper is `OwnKeeper`, one piece
+of code for the game and the search
+([the plan](../NextMilestonePlan.md)). It reckons exactly as it did;
+the step in it is off.
