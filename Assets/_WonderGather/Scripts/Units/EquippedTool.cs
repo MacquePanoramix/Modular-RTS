@@ -18,6 +18,8 @@ namespace WonderGather
         private bool spent, stopped;
         private Vector3 lastRoot;
         private ulong attempt, acceptedAttempt;
+        private IHandHolds holds;
+        private bool holdsLooked;
         public ToolDefinition Definition => definition;
         public StrikePhase Phase { get; private set; }
         public bool Busy => target != null;
@@ -60,6 +62,17 @@ namespace WonderGather
             CancelAttempt();
             if (worker != null && worker.MiningTarget != null) worker.InterruptMining("Tool unavailable");
             if (model != null) model.gameObject.SetActive(false);
+            TellHands(Vector3.zero,Vector3.zero);
+        }
+        // A body with hands of its own turns each hand onto the handle and closes its fingers, or lets go.
+        private void TellHands(Vector3 left, Vector3 right)
+        {
+            if(Holds==null) return;
+            for(int hand=0;hand<2;hand++)
+            {
+                bool on=HandsOnTool&&model!=null&&definition!=null&&Uses(hand);
+                holds.HoldHandle(hand,on,on?GripPosition(hand):Vector3.zero,on?HandleDirection:Vector3.up,on?definition.GripRadius(hand):0,hand==0?left:right);
+            }
         }
         private void Update()
         {
@@ -70,15 +83,56 @@ namespace WonderGather
             && mine != null && mine.Accepts(definition) && worker.MiningTarget == mine && worker.HasWorkContact
             && worker.State == Gatherer.Activity.Gathering && worker.FacingWork;
 
-        // Both grips must be reachable BEFORE contact, never clamped independently afterward.
-        private static bool ArmCanReach(float distance) => distance >= .025f && distance <= .865f;
+        // A body with hands of its own says which are free and where a wrist must be to hold a handle. Without one
+        // (the first body) both hands hold, each wrist at its grip.
+        private IHandHolds Holds { get { if(!holdsLooked) { holds=GetComponent<IHandHolds>(); holdsLooked=true; } return holds; } }
+        public bool Uses(int hand) => Holds==null || holds.HandFree(hand);
+        // The tool's model as it is now (its own space is the tool's: y up the handle, z the way it strikes).
+        public Transform Model => model;
+        // The way the handle runs, towards the head.
+        public Vector3 HandleDirection => model != null ? model.up : transform.up;
+        private Vector3 Wrist(int hand, Vector3 position, Quaternion rotation, Vector3 shoulder)
+        {
+            Vector3 grip=position+rotation*(hand==0?definition.SecondaryGrip:definition.PrimaryGrip);
+            return Holds==null ? grip : holds.WristFor(hand,grip,rotation*Vector3.up,definition.GripRadius(hand),shoulder);
+        }
+        // Where this hand's wrist must be to hold the tool as it is now.
+        public Vector3 WristPosition(int hand, Vector3 shoulder) => model != null ? Wrist(hand,model.position,model.rotation,shoulder) : transform.position;
+        // Every hand that holds must reach BEFORE contact, never clamped independently afterward. The lower grip
+        // is the right hand's: without that hand the tool cannot be swung. The reach is the body's own.
+        private bool ArmCanReach(float distance) => body != null ? distance >= body.ToolReachMin && distance <= body.ToolReachMax
+            : distance >= .025f && distance <= .865f;
         private bool Reachable(Vector3 position, Quaternion rotation, Vector3 left, Vector3 right)
-            => ArmCanReach(Vector3.Distance(position+rotation*definition.SecondaryGrip,left))
-            && ArmCanReach(Vector3.Distance(position+rotation*definition.PrimaryGrip,right));
+            => Uses(1) && (!Uses(0) || ArmCanReach(Vector3.Distance(Wrist(0,position,rotation,left),left)))
+            && ArmCanReach(Vector3.Distance(Wrist(1,position,rotation,right),right));
+        // How far the tool leans out over the right shoulder at the top of its backswing, in degrees.
+        private const float OverShoulder = 14;
         private void PoseAt(float angle, Vector3 hips, Quaternion posture, out Vector3 position, out Quaternion rotation)
         {
+            if(Holds!=null && body!=null)
+            {
+                // A body with a shape of its own cannot swing a tool through itself. The first body's swing turns the
+                // tool about a hand held still in front of the hips, and at the top of the backswing the tool's head
+                // is inside the chest. Here the same swing (the same lean of the tool at every moment) goes over the
+                // right shoulder: as the tool leans back the hands go out to the right and up in front of that
+                // shoulder, and the tool leans a little outwards, so its head passes above the shoulder and beside
+                // the body's own head. As it comes forward the hands come back down the same way, and reach a
+                // little further as it strikes. Everything is a share of the body's own arm.
+                float reach=body.ArmReach;
+                Vector3 ready=body.ToolHand,shoulder=body.ShoulderFromHips;
+                var shape=body.BodyProportions;
+                // Out past the head (hair and cap with it), and no nearer the chest than the ready hands are.
+                Vector3 raised=new Vector3(Mathf.Max(shoulder.x+.04f*reach,shape.headHalf+.1f*reach),shoulder.y-.17f*reach,Mathf.Max(shoulder.z+.58f*reach,ready.z));
+                Vector3 round=new Vector3(raised.x*1.1f,ready.y,ready.z+.1f*reach);
+                float up=Mathf.Clamp01((20-angle)/72f),forth=Mathf.Clamp01((angle-20)/68f);
+                // As it strikes the hands reach out, so the handle's foot swings clear of the body's front.
+                Vector3 place=(1-up)*(1-up)*ready+2*up*(1-up)*round+up*up*raised+forth*new Vector3(0,-.05f*reach,.3f*reach);
+                rotation=posture*Quaternion.Euler(0,-OverShoulder*up,0)*Quaternion.Euler(angle,0,0);
+                position=hips+posture*place-rotation*definition.PrimaryGrip;
+                return;
+            }
             rotation=posture*Quaternion.Euler(angle,0,0);
-            Vector3 hand=hips+posture*new Vector3(0,-.03f,.24f);
+            Vector3 hand=hips+posture*(body != null ? body.ToolHand : new Vector3(0,-.03f,.24f));
             position=hand-rotation*definition.PrimaryGrip;
         }
         private static float SwingAngle(float p)
@@ -112,6 +166,11 @@ namespace WonderGather
         // The body supplies its actual shoulders, including torso twist, so reach is judged
         // against the same joints the arm solve will use.
         public void SolveFrame(float dt, Vector3 hips, Quaternion posture, Vector3 left, Vector3 right, bool supported)
+        {
+            Solve(dt,hips,posture,left,right,supported);
+            TellHands(left,right);
+        }
+        private void Solve(float dt, Vector3 hips, Quaternion posture, Vector3 left, Vector3 right, bool supported)
         {
             HandsOnTool=false;
             if(!isActiveAndEnabled || definition==null || model==null) return;
@@ -176,10 +235,12 @@ namespace WonderGather
             }
             else if(!Busy) settle=0;
             PoseAt(angle,hips,posture,out var heldPosition,out var heldRotation);
-            Vector3 back=hips+posture*new Vector3(0,.15f,-.38f);
+            // Put away, it goes round the side to the back: as far as suits the body's size.
+            float size=body != null ? body.ToolScale : 1;
+            Vector3 back=hips+posture*(new Vector3(0,.15f,-.38f)*size);
             Quaternion backRotation=posture*Quaternion.Euler(0,90,-20);
             float transfer=Mathf.SmoothStep(0,1,stow);
-            Vector3 aroundSide=posture*Vector3.right*(Mathf.Sin(transfer*Mathf.PI)*.45f);
+            Vector3 aroundSide=posture*Vector3.right*(Mathf.Sin(transfer*Mathf.PI)*.45f*size);
             model.SetPositionAndRotation(Vector3.Lerp(heldPosition,back,transfer)+aroundSide,Quaternion.Slerp(heldRotation,backRotation,transfer));
             HandsOnTool=stow==0 && Reachable(model.position,model.rotation,left,right);
         }

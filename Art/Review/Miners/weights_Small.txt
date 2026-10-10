@@ -1,0 +1,50 @@
+WEIGHT Worker_Small: 40.7 kg (38.9 kg of body, 1.8 kg worn and carried); 1.42 m tall; its centre 0.808 m up, +7 mm ahead of the model's origin
+  part              kg  of body  centre along    moments (kg m2): across, about, deep
+  Pelvis          7.88     7.10          0.28      0.07365  0.05178  0.07709
+  Spine           4.56     4.50          0.52      0.01695  0.02220  0.02366
+  Chest           3.40     3.17          0.47      0.00988  0.01944  0.01736
+  Neck            1.00     1.00          0.50      0.00184  0.00135  0.00184
+  Head            9.96     9.57          0.36      0.07026  0.07353  0.07364
+  UpperArm.L      1.12     1.06          0.47      0.00582  0.00090  0.00581
+  Forearm.L       0.60     0.59          0.46      0.00207  0.00033  0.00207
+  Hand.L          0.20     0.19          0.54      0.00036  0.00009  0.00039
+  UpperArm.R      1.11     1.06          0.48      0.00565  0.00090  0.00564
+  Forearm.R       0.60     0.59          0.46      0.00207  0.00032  0.00207
+  Hand.R          0.20     0.19          0.54      0.00037  0.00009  0.00040
+  Thigh.L         2.38     2.35          0.46      0.01630  0.00339  0.01630
+  Shin.L          1.35     1.31          0.45      0.00860  0.00112  0.00858
+  Foot.L          1.07     1.07          0.29      0.00278  0.00169  0.00244
+  Toe.L           0.21     0.21          0.45      0.00009  0.00016  0.00018
+  Thigh.R         2.38     2.35          0.46      0.01628  0.00339  0.01629
+  Shin.R          1.35     1.31          0.45      0.00861  0.00112  0.00858
+  Foot.R          1.07     1.07          0.29      0.00278  0.00169  0.00244
+  Toe.R           0.21     0.21          0.45      0.00009  0.00016  0.00018
+  worn and carried:
+    Hair                        391 g
+    Skirt                       358 g
+    Top                         268 g
+    Trousers                    108 g
+    Collar                       97 g
+    Strap                        93 g
+    LanternGlass                 81 g
+    LanternCap                   79 g
+    LanternBase                  73 g
+    Bag                          25 g
+    BagFlap                      17 g
+    Lace0                        15 g
+    Lace1                        15 g
+    Eyelet0                      12 g
+    Eyelet1                      12 g
+    Button2                      11 g
+    Button0                      11 g
+    Button1                      11 g
+    HipHook                       8 g
+    LanternBail0                  8 g
+    LanternBail1                  8 g
+    LanternBar0                   8 g
+    LanternBar2                   8 g
+    LanternBar1                   8 g
+    LanternBar3                   8 g
+    LanternHandle                 8 g
+    BagRing1                      7 g
+    BagRing0                      7 g

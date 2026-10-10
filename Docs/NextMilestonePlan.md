@@ -1,319 +1,294 @@
-# Implementation plan — S1 (revised): the Ordinary Place and two cameras
+# Next milestone — S3b: the body's own (movement pushed by the joints, stable, and alive)
 
-**Revised:** October 1, 2026, from Luis's Visual Soul handoff and his
-two-camera direction
-([correspondence](Correspondence/2026-10-01_VISUAL_SOUL_AND_TWO_CAMERAS.md),
-[VisualSoul.md](ArtDirection/VisualSoul.md)).
-**Baseline:** the grounded body (S0) and the arrival fix. Unity 6000.6.0f1 /
-URP (Forward+, HDR); Blender 4.4/4.5.
-**Status:** In progress. The plan follows the handoff's own instructions
-("start with one ordinary place…", "feasibility needs an in-engine test"). It
-splits the work into checkpoints Luis playtests one at a time:
+**Proposed and approved:** October 9, 2026. Luis answered its four
+questions the same day
+([the answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)):
+the body moved by its own joints replaces "no active ragdoll"; it comes
+before S4 ("we will probably end up doing a big rework I imagine for
+it"); the measures of "stable" "looked pretty good"; breathing is wanted,
+in the game's own look, and how it is shown is open.
 
-1. **S1a, the two cameras.** Built and tested on October 1, and waiting
-   for Luis's playtest ([TwoCamerasPlaytest.md](Playtests/TwoCamerasPlaytest.md)).
-2. **S1b, the Ordinary Place.** First in-engine pass built on October 1
-   ([OrdinaryPlaceLookTest.md](Playtests/OrdinaryPlaceLookTest.md)).
-3. **S1c, choosing the rendering approach.** Five candidates can be switched
-   live in the build, with matched captures and measured costs. Luis chose E
-   (painted light + paint filter + ink) as the working base and agreed that
-   hand-painted textures come next. That is **S1c, second pass** (below). It was
-   built on October 2. Luis found it "already quite beautiful" but not yet the
-   emotion he seeks.
-4. **S1e, the essence beyond the surface.** Luis asked for the breathtaking,
-   out-of-this-world emotion, every frame a painting, and a style unique to
-   Wonder Gather. The first iteration was built on October 2. Luis preferred
-   the hand-painted pass, so it was archived on `claude/essence-exploration`
-   and not adopted ([TheEssencePlaytest.md](Playtests/TheEssencePlaytest.md)).
-5. **S1d, the worker model**, after S1e, in the language it settles.
+**The name "S3b" is mine:** it goes on from S3's question (a body with
+real strength moving real weight, true and not goofy) to the body's own
+movement.
 
-The previous S1 plan (style studies, then the worker model) is archived in
-[Plans/S1_WorkerModelAndStyleStudies.md](Plans/S1_WorkerModelAndStyleStudies.md).
-Its model work continues as S1d.
+**The plan before it** (S3: weight and strength at the rock; all twelve
+steps built, waiting for Luis's play) is archived in
+[Plans/S3_WeightAndStrengthAtTheRock.md](Plans/S3_WeightAndStrengthAtTheRock.md).
 
-## The question
+**The design as it is built:** [Design/TheBodysOwn.md](Design/TheBodysOwn.md).
 
-Can Wonder Gather's visual soul (lighting that leads the emotion, surfaces that
-feel alive, characters with a soul, playful wonder) be rendered in this Unity
-project, in motion, by day and by night, at an acceptable runtime cost? And
-can the player both command the world quickly and wander through it up close?
+**Where it stands:** step 0 is done (October 9): figures, and a bench;
+nothing in the game is changed by it
+([what it found](Design/TheBodysOwn.md#step-0-the-ground-for-it-october-9)).
+**It changed the plan:** see "What step 0 changed", below. Nothing else
+here is built except where it says "exists".
 
-## S1a — Two camera systems
+## The order of stages (October 9)
 
-Luis wants an "Age of Empires-like best RTS possible camera" for playing, and
-an Explore camera for wonder: free, like the Blender/Unity viewport, "cozy to
-navigate and soft". It must not go through the floor or buildings, yet can get
-"very near" them and look up at the sky.
-
-The toggle and both modes go into the shared camera rig, so every existing map
-gets them.
-
-### Toggle
-
-- **Key.** `V` switches modes. An on-screen hint shows the current mode and
-  its controls.
-- **Into Explore.** Explore starts exactly where the RTS view is, so nothing
-  jumps.
-- **Back to Strategy.** Strategy re-centers smoothly on the ground the Explore
-  camera was looking at, keeping its heading.
-
-### Strategy mode (RTS)
-
-- **Pan.** WASD/arrow keys pan faster and more crisply than today: speed
-  scales with height, and starts and stops are short.
-- **Edge scrolling.** The screen scrolls at the screen edge, in the focused
-  game window only.
-- **Grab-pan.** Middle-mouse drag grabs the ground and moves it 1:1.
-- **Zoom.** The wheel zooms in toward the cursor and out from the center. The
-  view flattens when close and steepens when high.
-- **Rotation.** Q/E rotate, as today. Alt + middle-mouse drag also rotates.
-- **Focus.** F focuses the selection, as today.
-- **Limits.** Map bounds and terrain-aware height, as today.
-- **Existing preferences.** Per-map preferences such as the 0.005 zoom
-  sensitivity are kept.
-
-### Explore mode (free POV)
-
-| Input | Action |
-|---|---|
-| Hold right mouse + move | Look around, including straight up at the sky. The cursor hides while looking |
-| WASD | Fly along the view |
-| Q / E | Down / up |
-| Shift / Ctrl | Faster / slower |
-| Wheel | Glide forward/back. With right mouse held, it changes the flight speed |
-| Middle-mouse drag (or Alt + left drag) | Orbit around the point being looked at, or around the followed worker |
-| Shift + middle-mouse drag | Slide sideways and up/down |
-| F | Glide to a close, three-quarter view of the selection, then follow it as it walks. Moving or looking ends the follow |
-| Left click / drag | Select, as in Strategy |
-| Right click (without dragging) | Command, as in Strategy. A right-drag only looks |
-
-**Softness:**
-
-- Movement eases in and out.
-- Speed scales with distance to the nearest surface: slow and precise near
-  grass and walls, quick high up.
-- Looking is lightly smoothed.
-
-**Safeties:**
-
-- The camera is a small sphere (about 6 cm) with a very near clipping plane. It
-  can get within a few centimeters of the ground, walls and props, but never
-  passes into them. It slides along them instead of stopping dead.
-- Workers gently push the camera aside when they walk into it.
-- A soft ceiling and the map's bounds keep the player in the world.
-
-Buildings stay solid while they have no interior. A decorated interior may
-later be made enterable (Possible).
-
-**The game keeps running.** Explore is a viewpoint, not a pause, and orders
-still work.
-
-### Evidence for S1a
-
-PlayMode tests:
-
-- the ground, a wall and a building can't be penetrated, but can be
-  approached to within about 15 cm;
-- sliding along a wall;
-- looking at the sky;
-- the toggle has no jump, and the view re-centers on the way back;
-- a followed worker stays framed;
-- zoom keeps the point under the cursor fixed;
-- a right-drag in Explore issues no command, and a right-click does.
-
-Also: the full regression suite twice, a Windows build, and a playtest guide.
-
-## S1b — The Ordinary Place (in-engine look test)
-
-The handoff asks for "a small house, grassland, path and worker" in the
-existing prototype, at night and by day. It's a new scene, *The Ordinary Place*,
-playable with both cameras:
-
-- **Land.** Gently rolling grassland with a worn dirt path, a few stones and
-  layered distant hills for aerial perspective (A, E).
-- **The house.**
-  - Modeled in Blender from a reproducible script: plaster walls, timber
-    frame, shingled roof, chimney, deep-set windows, an open door, a step,
-    flower pots, a bench, firewood and a fence.
-  - Warm window and door lights spill onto the wall, step, path and grass (A).
-  - It has no interior, so it stays solid to the Explore camera.
-- **Grass.**
-  - Dense, wind-moved blades running from a dark blue-green root to warm
-    tips, with taller seed-head grass that catches window light at night
-    (A, D).
-  - It must stay readable from strategic height and lush up close.
-- **Sky and time of day.**
-  - A painted sky: soft-edged clouds, a lilac and apricot dusk (E), and stars
-    and a moon at night (A, F).
-  - A time-of-day control moves through day, golden hour, dusk and night. It
-    drives sun, moon, sky, ambient light, fog and the house lights together.
-- **The worker.**
-  - Today's procedural body walks the path and around the house under player
-    orders, so moving characters and changing light can be judged.
-  - The real character model is S1d. A placeholder scarf or coat may be added
-    to test how cloth reads, without committing to a costume.
-
-## S1c — Rendering candidates, compared in engine
-
-The handoff leaves the rendering technique open and asks for real captures and
-a measured cost. The same scene can switch live, with a key, between
-candidates that share the same models:
-
-1. **Painted light.**
-   - A custom lit shader with a soft, brush-broken light/shadow edge.
-   - Cool colored shadows from the sky instead of black.
-   - Painterly hue and value variation per material.
-   - Warm local lights, rim light, aerial fog, bloom and color grading.
-2. **Painted light + paint filter.** Candidate 1 plus a screen-space paint
-   filter that turns fine detail into brush-like patches.
-3. **Painted light + ink.** Candidate 1 plus loose, varying contour lines,
-   mainly on characters and silhouettes (B, E).
-
-The candidates can be combined. A subtle paper or brush grain is evaluated
-with each.
-
-### Evidence for S1c
-
-- **Matched captures.** Several angles, near and far, by day, at dusk and at
-  night, set side by side with the references.
-- **A short moving sequence** where possible.
-- **Frame time** at 1920×1080, with representative grass and light density.
-- **Luis's choice.** Luis picks or mixes the rendering approach in his
-  playtest. Until then it stays Open.
-
-## S1c, second pass — hand-painted surfaces
-
-Luis's verdict on the first pass: "going really well into the Visual Soul",
-but not there yet. He prefers E, the most illustrated candidate. The biggest
-remaining gap was painterly surface. In the references the brushwork belongs
-to the objects ("Brush marks, uneven plaster and flowing grass belong to the
-objects", A). Screen filters only paint over the whole image.
-
-**The approach.** Each Ordinary Place model gets a painted colour texture,
-made reproducibly by its Blender script:
-
-1. **Unwrap.** Every mesh is UV-unwrapped.
-2. **Bake.** Cycles bakes surface information into the textures:
-   - ambient occlusion for cavities;
-   - edges and curvature;
-   - upward-facing areas.
-3. **Paint.** A painter's language is applied in shader nodes and baked into
-   the colour texture:
-   - broad warm-to-cool value shifts;
-   - lit, worn edges;
-   - cool coloured cavities;
-   - directional brush strokes that follow the material (plaster daubs,
-     wood grain along beams, shingle-by-shingle variation, stone outlines);
-   - moss on upward stone and roof;
-   - stains low on the walls.
-4. **Import.** The models are exported with UVs, and the textures are
-   imported into `Assets/_WonderGather/Art/OrdinaryPlace/Textures`.
-5. **Shade.** The painted shader samples them. The in-shader dabs relax where
-   a real painted texture exists, and the brush-broken light edge stays.
-
-These textures are painted by script, not by hand. A human painter could
-later paint over them in Blender, because the UVs and source files are kept.
-
-**Base look:** E (painted light + paint filter + ink). The candidates stay
-switchable for comparison.
-
-**Evidence:**
-
-- matched captures before and after, beside references A–F;
-- frame cost in the benchmark;
-- the full suite;
-- a build.
-
-## S1e — The essence beyond the surface
-
-Luis on October 2: the hand-painted pass is "already quite beautiful", but he
-wants "the breath-taking out of this world emotion", the stylistic essence
-rather than the surface. He welcomes a long checkpoint and research. Two
-follow-ups the same day raised the bar:
-- every frame the camera lands on should be a painting, driven by light, while
-  the RTS still runs well;
-- the Visual Soul is the soul, and the result must go above and beyond it, to
-  something unique to Wonder Gather
-  ([correspondence](Correspondence/2026-10-02_THE_ESSENCE_BEYOND_THE_SURFACE.md)).
-
-**The study.** [TheEssence.md](ArtDirection/TheEssence.md) reads why Luis's
-references move him and measures them against our captures. It then proposes
-Wonder Gather's own language: a thesis, seven signature devices and a frame
-test.
-
-**Outcome of the first iteration:** not adopted. Luis likes "the before"
-better, and his favourite frame shows why: the lit house at dusk, intimate,
-enclosed and tonal. Any further iteration starts from the hand-painted pass,
-adds options beside it instead of replacing it, and is shown early as frames.
-The iterations below were the plan before the verdict.
-
-**Iterations:**
-
-1. **The beyond and the painting.** Built October 2 (archived):
-   - **The beyond:**
-     - the far world on a bluff above a valley lake;
-     - monumental Blender-modelled clouds;
-     - planar water reflections;
-     - aerial perspective in the sky's colour;
-     - cloud shadows;
-     - the luminous palette.
-   - **Look F:**
-     - the painting pass (strokes along the forms);
-     - ink on characters only;
-     - the hour's palette;
-     - seeds and fireflies.
-   - **Viewpoint keys.**
-2. **Forms that read as paint.** Painted tree clumps, painted far land and
-   mountains, brushed cloud edges, and strokes that breathe with the wind.
-3. **The meadow and the warm light.** Gusts, flowers, a stream, and the glow
-   and motes of lamplight.
-4. **The signature decisions** that need Luis: the curving world and cosmic
-   night, and giant flowers and reeds.
-
-**Constraints:**
-- **The playable meadow and its navigation are untouched.** The far world is
-  only scenery.
-- **Frame cost** is measured in a release build at every iteration. The RTS
-  must keep headroom for units.
-- **References.** Luis's film references are described but never committed.
-
-## S1d — The worker model (former S1 scope)
-
-This step follows Luis's S1c choice, so the model is made for the chosen look:
-
-- **The model.** A Blender worker in the Visual Soul language: distinctive
-  silhouette and proportions, strong hair and coat shapes, and a simple drawn
-  face. Proportions stay Open, so the body is built to vary in S2.
-- **Rig and dimensions.**
-  - A skeleton matching the procedural rig, with a rig adapter driving its
-    bones.
-  - Body dimensions read from the model, replacing the 2.2 m test biped.
-  - Navigation and camera framing follow the body.
-- **A better pickaxe**, whose grip and head points match its tool data.
-- **Tests** for gait, support and grip on the model rig.
-
-## Contracts to keep
-
-- **The procedural body.** All S0 contracts hold: planted feet, arrival
-  without shuffling, grips at actual grips, navigation owning the root, and no
-  active ragdoll.
-- **Shared camera rig.** Existing maps keep working, and their per-map camera
-  preferences keep their values.
-- **Protected files.** Luis's uncommitted files (TheGroup.unity, two
-  ProjectSettings files, `_Recovery`) are never edited, committed or
-  discarded.
-- **Third-party material.** Anything downloaded or reused needs Luis's
-  approval and a recorded license. Everything in S1 is planned to be made from
-  scratch: Blender scripts, Unity shaders and generated textures.
-
-## Decisions for Luis
-
-These have defaults so the work can proceed. Each can be changed at the
-S1a/S1b playtests.
-
-| ID | Question | Default used |
+| Order | Stage | |
 |---|---|---|
-| C1–C4 | Camera toggle key, orders while exploring, controls, entering buildings | **Accepted Oct 1** ("I really liked the camera") |
-| V1 | Rendering approach | **Working base, Oct 1:** E, plus hand-painted textures (second pass). **Oct 2:** look F (the painting pass, ink on characters only, the hour's palette) tried in S1e; Luis preferred the hand-painted pass in E. Not Locked |
-| V2 | Proportions, architecture, setting | Open, as the handoff states. S1b uses a modest cottage and grassland |
-| V3 | Is the house the worker's home and delivery point in the showcase? | Possible. It would join the Visual Soul place to the worker loop. Not built until Luis decides |
+| Built, waiting for Luis's play | **S3, weight and strength at the rock,** and the two rounds after it | [The plan](Plans/S3_WeightAndStrengthAtTheRock.md); [the playtest round](Reviews/2026-10-08_ThePlaytestRound.md); [the round of October 9](Reviews/2026-10-09_TheBodysOwn_Round.md) |
+| **Now** | **S3b, the body's own** (this plan) | Standing, stepping, walking, reaching and working by the body's own joints, stable and alive |
+| Then | **S4, carrying and equipment** | Built this way from its first step ([the proposal](Plans/S4_CarryingAndEquipment_Proposal.md); five of its questions are open) |
+| Then | **S2, the creator** | |
+| Last | **S5, ready for players** | [ShowcaseRoadmap.md](ShowcaseRoadmap.md) |
+
+**Why.** Luis, October 9
+([the message](Correspondence/2026-10-09_THE_BODYS_OWN_NOT_POSED.md)):
+
+> "I want stability in the body but with it still being the body's own.
+> I don't want it to be posed like that."
+>
+> "I really do want movement to feel natural and alive rather than
+> robotic. That's why it can't be posed and we must do media studies and
+> research of what kind of movements feel natural for certain actions."
+
+That answers the first question of
+[the proposal for S4](Plans/S4_CarryingAndEquipment_Proposal.md) (posed, or the
+body's own?), against what I had recommended. This page says how it is
+built, in what order, how "stable" is held to, and what Luis sees at
+each step. What was read for it is in
+[the research of October 9](Research/2026-10-09_AliveAndTheBodysOwn.md).
+
+## The two words
+
+- **Posed:** each frame, the game works out from the ground, the body's
+  build, its weights and its strengths where every part should be, and
+  puts it there. Nothing pushes it. The walk, the turn, the standing,
+  the reach for a pickaxe and the standing up are made so today.
+- **The body's own:** the body is weighted parts joined at joints. Each
+  joint pushes with no more than the strength it has. Where the body
+  goes is what comes of those pushes, its weight and the ground. The
+  fall, the lying, the turning over and the drawing of the knees under
+  are made so today.
+
+## What is which today
+
+| Movement | Today |
+|---|---|
+| A thing hanging on the body (lantern, mug, bag, a pickaxe in the hand) | Its own |
+| The pickaxe in the swing | Its own (the hands push it with what the arms can give) |
+| The fall; lying; turning over; drawing the knees under | **The body's own** |
+| From its knees onto its feet (half a second) | Posed |
+| Standing up | Posed |
+| Standing; keeping its balance when pulled | Posed (the balance is worked out by real weights, and the body is then put where it says) |
+| Walking; turning; stopping | Posed |
+| Going down for a thing; picking it up; laying it down | Posed |
+| The body in the swing (back, knees, arms) | Posed to the tool |
+
+## What this changes that was decided before
+
+**Both confirmed by Luis on October 9.**
+
+- **D1, September 30: "a physics-informed body (no active ragdoll)"** is
+  replaced. A body moved by its own joints is what that line ruled out.
+  `AGENTS.md` says not to introduce such a body "without a corresponding
+  milestone request": this plan, with Luis's answers, is that request.
+- **The order of stages** (approved October 6: S4, then S2, then S5).
+  This comes before S4: S4 cannot be built the body's own on a body that
+  walks and stands posed.
+
+## How it is made stable
+
+"Very stable, never naturally wobbly", yet able to fall "ragdoll-ish" in
+"an extreme situation" (Luis, October 6). Both stand.
+
+1. **Nothing pushes the body from nowhere.** Many games keep such a body
+   up with an unseen hand at its hips. That is a posed body wearing a
+   simulated one. Here the only forces on the body are its weight, the
+   ground, what it holds, and what its own joints give; a test holds
+   that to zero.
+2. **It keeps its feet as a body does, by degrees:** at the ankles for a
+   small disturbance; at the hips and back for a larger; by a step when
+   those are not enough; and it falls when a step is not enough. The
+   balance that exists already works out all of this from the real
+   weights. What changes is that the joints are then pushed towards it,
+   not the parts placed.
+3. **Where the foot comes down keeps a walk up** (the oldest and best
+   tried way: see the research, part 3). It is corrected at every
+   moment by how far and how fast the body's weight is from the
+   standing foot.
+4. **Each joint is held towards a pose with the strength that joint
+   has,** as in the fall and the getting up; **the poses and their
+   numbers are found by a search on Small, Long and Round together,**
+   not set by hand (the tool exists: `GetUpSearch`; five hand-set tries
+   at the getting up got no body up, and the search did).
+5. **"Stable" is said in numbers, measured first on today's posed body,
+   and the body's own must do no worse** (Luis, October 9: "they looked
+   pretty good for me"):
+
+   | Measure | What is asked |
+   |---|---|
+   | Standing at ease, a minute | It breathes and shifts its weight, and between shifts its head wanders no more than a centimetre or two (so read since October 10: a weight that goes over a leg takes the head 3 to 4 cm with it, and that is meant). No tremble (nothing moving back and forth faster than about twice a second) |
+   | Pulled a little | It leans against the pull and does not step: at the same pulls as today (Round: 100 N forwards, its hips 6 to 8 cm back) |
+   | Pulled hard | It steps and stands: at the same pulls as today (Round: one step at 200 N, two at 350 N; Small: three steps at 110 N) |
+   | An extreme pull, or legs that give | It falls: at the same pulls as today (about three fifths of its weight) |
+   | Walking the place, its tool in hand, at half, ordinary and double strength, ten minutes each miner | It does not fall |
+   | At its work at each of the ten boulders | It does not fall, except as today (legs that give under work far too heavy) |
+
+6. **The posed body stays beside it, to switch to, until Luis accepts
+   each movement.** The panel gets a choice, movement by movement. Luis
+   liked the walk as it is (October 1); nothing Luis has is taken away
+   by a step of this plan.
+
+## How it is made alive
+
+The eight things a living body does
+([the research, part 2](Research/2026-10-09_AliveAndTheBodysOwn.md#for-ours-eight-things-a-living-body-does-and-where-the-miners-are)).
+Each step below says which of them it is to bring. Before a movement is
+built, what real bodies do in it and how films and games make it read
+are looked up and written down, as Luis asked (a first pass, action by
+action, is [part 4 of the research](Research/2026-10-09_AliveAndTheBodysOwn.md#4-action-by-action)). Then, as now: the three
+miners, traced; read in pictures; three judges who did not make it;
+Luis.
+
+## Steps
+
+Each is shown to Luis before the next is built on it.
+
+**The order was changed by Luis on October 10:** step 3 (a step) is built
+before step 2 (from its knees onto its feet), because leaning as today's
+body does, a real shift of weight, and standing up to a push all wait on
+the step ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)). The numbers are
+kept as they were, so that what is written elsewhere still points right.
+
+| | Step | It is to bring | What Luis sees |
+|---|---|---|---|
+| 0 (done) | **The ground for it.** Ankles: the boot becomes a part of its own (today the shin and the boot are one, and a body cannot balance at an ankle it does not have). The test that nothing pushes from nowhere. Today's posed body measured for the table above. What a body's own costs in the frame, one miner and a crowd | | Figures |
+| 1 (built October 10; for Luis to see) | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
+| 2 | **From its knees onto its feet.** The half second that is posed in the getting up. Then the whole of it, from the fall to standing, is the body's own | Not all on one clock (2) | A pushed miner getting up with nothing taking over |
+| 3 | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
+| 4 | **Walking, turning, stopping.** On the path, the meadow and its slopes. No two steps quite the same. The free arm swings | Arcs and one hump of speed (5); does not repeat itself (6) | The walk, beside the walk as it was |
+| 5 | **Down to the ground and up.** Picking a thing up, laying it down | Not all on one clock (2); gets ready (3) | The pick-up, beside the pick-up as it was |
+| 6 | **The work.** The body in the swing is its own, as the tool already is | Shows its effort (8) | A miner mining |
+| 7 | **Then S4,** each of its movements built this way from the start | | The proposal for S4, with its first question answered |
+| At any point | **The fall, again.** It is the body's own already, and it is the furthest of all from a real body: a young person who falls gets a hand to the ground nine times in ten and keeps the head off it eight in nine ([the research, part 4](Research/2026-10-09_AliveAndTheBodysOwn.md#4-action-by-action)); a miner gets no hand down and strikes its head almost every time. Arms that reach for the ground, and a head kept off it | Gets ready (3); shows its effort (8) | A pushed miner catching itself on its hands |
+
+### What step 0 changed (October 9)
+
+- **Standing is a keeper to be designed, not springs to be set.** The
+  engine's joint springs, set stiffly towards a standing pose, do not
+  hold a heavy body over a light boot. What stood still (heads within
+  0.1 to 0.35 mm, twenty-five of twenty-five for twenty seconds) was a
+  body whose legs give torques worked out each step from the push it
+  wants from the ground, its joints held softly towards their pose.
+- **How often the physics steps.** In step 0 all three stood at 200
+  steps a second, Long and Round at 100, none reliably at the game's 50.
+  **Step 1's first part (the same day): with each joint's spring set
+  by rule, all three stand at the game's own 50, but less steadily than
+  at 100 or 200** (set going at 0.2 m/s, 3, 20 and 21 of 24 stay
+  standing at 50; 19, 24 and 19 at 100; all at 200)
+  ([figures](Design/TheBodysOwn.md#step-1-first-part-how-often-the-physics-steps-october-9)).
+  So the body can be begun at the game's own step, and nothing already
+  built need be touched to begin; the rate is a trade to be chosen when
+  the body is in the game, and the keeper comes first.
+- **It does not lean yet.** Round took a pull of 30 N; Small and Long
+  fell at it. Today's body leans at 50 to 150 N.
+- **Step 1 is larger** than "it stands by its own ankles, hips and
+  back" sounded. Its order: (a) how often the physics steps, counted
+  over many starts on all three miners (looked into for standing: it
+  stands at fifty, sturdier at a hundred and two hundred; chosen later,
+  in the game); (b) the body's own body in the
+  game, as an articulation of thirteen parts, beside the posed one,
+  switched on the panel; (c) the keeper: standing still, leaning against a pull as
+  today's body does, a joint giving no more than it has, the ground
+  known by what touches it; (d) life in it: weight shifting, breath, the
+  head and eyes.
+- **A crowd of bodies of their own cannot be afforded** (one costs a
+  tenth to a fifth of a millisecond of each fiftieth of a second; a
+  hundred, more than the frame). A far-off crowd keeps the posed body.
+  That was open in this plan and stays open for the full game.
+
+Lying is part of step 1: a body that lies should breathe and stir. A
+stir before it gets up was tried on October 9 and taken out again (see
+[the round of October 9](Reviews/2026-10-09_TheBodysOwn_Round.md)). Since
+October 10 a lying body's chest is drawn breathing; it does not stir.
+
+### What step 1 found (October 10)
+
+[The design as built](Design/TheBodysOwn.md#step-1-the-rest-of-it-the-body-in-the-game-and-the-life-in-it-october-9-and-10);
+[what its judges said](Reviews/2026-10-10_StandingWithLife_Judges.md).
+
+- **Built:** the body's own body in the game beside the posed one,
+  switched on the panel; a keeper whose settings a search found; life
+  in it (breath, its weight from leg to leg, a slow drift, a head that
+  looks about). It stands as still as was asked, and gives its body
+  back, or to the fall, when anything else is asked of it.
+- **Not reached: "leaning against a pull as today's body does".** On
+  flat feet, without a step, it holds 20 to 30 N (Round to 65 N);
+  today's posed body leans against 50 to 150 N. The posed body is not
+  bound by what feet can do. **It waits on step 3.**
+- **Alive, by its judges: only in its head.** Its breath and its shift
+  of weight are there in the figures and cannot be seen in the
+  pictures. A fuller shift took a nudged miner over: it too waits on
+  step 3. How breath is shown is put to Luis (B6).
+- **The measure "its head wanders no more than a centimetre or two"**
+  (the table above) is met between shifts of weight (millimetres) and
+  not across them (its chest 2 to 3 cm, its head 3 to 4 cm, over a
+  minute): a weight that goes over a leg takes the body with it. Put to
+  Luis (B5).
+- **The order of steps 2 and 3** is put to Luis (B7).
+
+**All three were answered the same day:** Luis approved what was
+suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).
+
+## What it will cost, said plainly
+
+- **Time.** By my estimate, weeks for steps 0 to 3 and more for the walk.
+  (After step 0: step 1 alone is weeks. Standing still is had in a
+  bench; standing against a pull, in the game, on all three miners, with
+  everything built before still working, is not.)
+  The walk is the hard one: walks made this way are known to look stiff
+  until their numbers are searched for it.
+- **It can fail in ways nobody planned.** A body pushed by forces will,
+  now and then, do what was not meant: miss a step, sit down. That is
+  what makes it real, and it is why the measures above are run for
+  minutes on all three miners at several strengths before Luis sees a
+  step. (Long fails first.)
+- **The frame.** Eleven to thirteen weighted parts a miner. For one
+  worker it should not show; for a crowd it will. What a far-off crowd
+  does is a question for the full game, kept open.
+- **Step 2 was tried and failed once.** Five searches for a way from the
+  knees onto the feet found none that all three bodies do. They were
+  made without ankles. With ankles it may be found; it may not.
+
+## Questions for Luis
+
+All four were answered on October 9
+([the message](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
+
+| | Question | Luis |
+|---|---|---|
+| B1 | Is D1 ("no active ragdoll") replaced? | "Yes." |
+| B2 | Does this come before S4? | "Yeah I also think so, we will probably end up doing a big rework I imagine for it." |
+| B3 | Is the table of "stable" the right measure? | "Yeah they looked pretty good for me." (Luis's eye on the build is still the measure that counts) |
+| B4 | May breathing be drawn on the body (the chest rising), with its rate taken from how hard the body has worked? | "If you think it will look nice/apparent, then sure. If not then we can think of other ways to represent it. But yeah breathing is good to have while following the visual aesthetic of the game for it too." |
+
+**So for breathing** (step 1): it is wanted. It is tried drawn on the
+chest first; if it cannot be seen at the distances the game is played
+at, or does not sit in the game's look, other ways are tried (the
+shoulders and the back moved by their own joints; the coat; breath seen
+in cold air at dusk). Each is shown to Luis as a look beside the others,
+and none is taken as settled.
+
+**Three more, from step 1 (October 10). Answered by Luis the same day:**
+"I approve of all your suggestions for the questions you asked me."
+([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)). So each is as its
+right-hand column says.
+
+| | Question | What was suggested, and Luis approved |
+|---|---|---|
+| B5 | The table of "stable" says a standing miner's "head wanders no more than a centimetre or two". Is that to hold while its weight goes from leg to leg, or only between? | Only between. A weight that really goes over a leg takes the head 2 to 4 cm with it, slowly, and that is not a wobble. As it is now: millimetres between shifts, 3 to 4 cm across them |
+| B6 | Breath drawn on the chest cannot be seen, even at four times life (six judges of six). How is it to be shown? | The panel has three looks to begin from ("drawn stronger", "as in life", "not drawn"). Others, not built: the shoulders and collar rising, drawn boldly; a tired body heaving; breath seen in the cold air at dusk. I would try the shoulders and the dusk air next, beside these |
+| B7 | Shall "a step" (step 3) come before "from its knees onto its feet" (step 2)? | Yes. Leaning as today's body does, a real shift of weight, and standing up to a push all wait on the step; step 2 waits on nothing |
+
+The five other questions of the proposal for S4 (Q2 to Q6) are still
+open.
+
+## What it does not do
+
+- No recorded movement, no downloads, no learning from recordings.
+- No running, no fighting: later, on the same body.
+- Nothing is taken out of the game until Luis has accepted what
+  replaces it, and nothing is merged to `main` without Luis's word.

@@ -1,5 +1,32 @@
 # The Worker Showcase — roadmap to the playtest build
 
+> **October 6, 2026: a new order, approved by Luis.** Luis restated what
+> the prototype is for (real weight, real strength, any rock, the creator;
+> [message](Correspondence/2026-10-06_REAL_WEIGHT_REAL_STRENGTH_AND_THE_CREATOR.md))
+> and approved the order proposed in the review Luis asked for
+> ([Reviews/2026-10-06_SamePageReview.md](Reviews/2026-10-06_SamePageReview.md);
+> [answer](Correspondence/2026-10-06_STABLE_BUT_ABLE_TO_FALL_AND_THE_INTERACTION_CLICK.md)):
+>
+> | Order | Stage | In short |
+> |---|---|---|
+> | **Now** | **S3, weight and strength at the rock** | Real weight, strength and tiredness; a body that is very stable and can still fall; the interaction click; any boulder ([plan](Plans/S3_WeightAndStrengthAtTheRock.md); [design](Design/ThePhysicalBody.md)) |
+> | Then | **S4, carrying and equipment** | No pickaxe, a pickaxe, a strap for the back, a backpack, a dragged sack, a cart; stones brought home; every action done by the body |
+> | Then | **S2, the creator** | The three appearances, strength as one number that shows gently in the body, equipment, and what this worker will be able to do |
+> | Last | **S5, ready for players** | As below |
+>
+> **October 9, 2026:** S3 is built and waits for Luis's play. Luis put a
+> stage between S3 and S4: **S3b, the body's own** (every movement
+> pushed by the body's own joints, stable and alive;
+> [plan](NextMilestonePlan.md);
+> [Luis's answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
+> It is the stage now.
+>
+> **Read the rest of this page with that in mind.** The stages below are
+> described as they were written on October 1. Three of their decisions are
+> replaced: D1 (the body is now physical where it works, stable, and able
+> to fall); D3 and O2 (strength is one number, perhaps a slider); and the
+> one boulder (any boulder of the place can be mined).
+
 **Created:** October 1, 2026, from Luis's clarification of the showcase's scope.
 **Status:** Living plan. On October 1 Luis chose:
 
@@ -8,7 +35,7 @@
   (two cameras, the Ordinary Place, rendering candidates, then the model).
 - **O4:** the worker model first.
 - **O2:** strength comes from the body plus training.
-- **GitHub:** each stage merges into `main` after his playtest.
+- **GitHub:** each stage merges into `main` after Luis's playtest.
 
 Each stage still gets its own plan in [NextMilestonePlan.md](NextMilestonePlan.md).
 **Sources:**
@@ -103,14 +130,14 @@ Strength and Burden checkpoint A delivered:
 - heel/toe feet and weight transfer;
 - a natural 1.8 m/s pace.
 
-Luis judged it "much better". The arrival shuffle he reported is fixed: the
+Luis judged it "much better". The arrival shuffle Luis reported is fixed: the
 body finishes its stride and stands still. See
 [GroundedBodyPlaytest.md](Playtests/GroundedBodyPlaytest.md).
 
 ### S1 — The Ordinary Place, two cameras and the worker model (in progress)
 
 Revised on October 1. Luis set aside the three Blender style studies and
-supplied the Visual Soul handoff ([VisualSoul.md](ArtDirection/VisualSoul.md)). He also
+supplied the Visual Soul handoff ([VisualSoul.md](ArtDirection/VisualSoul.md)). Luis also
 asked for two camera systems. The detailed plan is in
 [NextMilestonePlan.md](NextMilestonePlan.md). It has four checkpoints:
 
@@ -123,7 +150,13 @@ asked for two camera systems. The detailed plan is in
 - **S1c, rendering candidates.** Compared live in that scene, with matched
   captures and measured frame time. Luis chooses the rendering approach.
 - **S1d, the worker model.** Made in the chosen language. This continues the
-  original S1 scope below.
+  original S1 scope below. October 2: three concepts
+  ([WorkerConcepts.md](ArtDirection/WorkerConcepts.md)), then, after Luis's
+  ranking, the miners remade at higher quality from modules
+  ([TheMiners.md](ArtDirection/TheMiners.md)). October 3: polished, rigged,
+  lightened (three levels of detail, one atlas) and walking in the Ordinary
+  Place with the choice of three ([MinersPlaytest.md](Playtests/MinersPlaytest.md));
+  mining with them is next.
 
 The original S1 scope that continues as S1d:
 
@@ -233,7 +266,7 @@ pickaxes) still hold.
 - Work happens on a branch (currently `claude/worker-showcase`). A stage is
   merged into `main` after Luis playtests it (chosen October 1).
 - Implementation and validation happen in an isolated copy while Luis's Editor
-  stays open. His uncommitted work is never included or discarded.
+  stays open. Luis's uncommitted work is never included or discarded.
 - Every stage ends with:
   - tests;
   - a rendered review;

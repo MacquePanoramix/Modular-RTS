@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99c0e0f3ec4523d4ea3cd5be70f28127, type: 3}
+  m_Name: Pickaxe_Long
+  m_EditorClassIdentifier: WonderGather.Runtime::WonderGather.ToolDefinition
+  id: pickaxe
+  displayName: Pickaxe
+  prefab: {fileID: 1326706684566095820, guid: a63b42c3749e73b4fb4ee6d20749bfff, type: 3}
+  primaryGrip: {x: 0, y: -0.13897, z: 0}
+  secondaryGrip: {x: 0, y: 0.08338, z: 0}
+  head: {x: -0, y: 0.35542, z: 0.16712}
+  headRadius: 0.02426
+  gripRadii: {x: 0.01804, y: 0.02029}
+  mass: 3.2114
+  centre: {x: -0, y: 0.32623, z: -0.0014}
+  inertia: {x: 0.0106044, y: 0.0605152, z: 0.0703649}
+  inertiaTurn: {x: 0.49881813, y: 0.5011791, z: 0.49881813, w: 0.5011791}
+  span: {x: -0.31267, y: 0.40583}
+  point: {x: -0, y: 0.35158, z: 0.19108}

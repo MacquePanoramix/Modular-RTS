@@ -1,0 +1,87 @@
+SWEEP Long: 9 failing of 86 checks (distances in mm)
+  FAIL beneath   Trousers under Skirt                       limit  3.0  rest      -   worst   65.6 at knees_90  (4/27 frames)  arms_forward_ 2.6 arms_overhead 2.6 arms_back_ 2.6 arms_out_ 2.6 elbows_ 2.6 wrists_up_ 2.6 wrists_down_ 2.6 backswing 2.6 strike 2.6 knee_lifted_ 25.3 leg_back_ 0.0 knees_ 65.6 deep_bend 23.6 bow_ 2.6 lean_back_ 2.6 side_bend_ 2.6 twist_ 2.6 head_down_ 2.6 head_up_ 2.6 head_turned_ 2.6 head_tilted_ 2.6 toes_bent_ 2.6  [0.135, 0.169, 0.56]
+  FAIL lies on   Lace0 on Boot0                             limit  9.5  rest      -   worst   10.1 at deep_bend (1/27 frames)  arms_forward_ 7.0 arms_overhead 7.0 arms_back_ 7.0 arms_out_ 7.0 elbows_ 7.0 wrists_up_ 7.0 wrists_down_ 7.0 backswing 7.0 strike 7.0 knee_lifted_ 7.0 leg_back_ 7.0 knees_ 7.0 deep_bend 10.1 bow_ 7.0 lean_back_ 7.0 side_bend_ 7.0 twist_ 7.0 head_down_ 7.0 head_up_ 7.0 head_turned_ 7.0 head_tilted_ 7.0 toes_bent_ 7.0  [-0.095, -0.196, 0.734]
+  FAIL lies on   Patch1 on Skirt                            limit  9.0  rest      -   worst   18.6 at deep_bend (1/27 frames)  arms_forward_ 6.2 arms_overhead 6.2 arms_back_ 6.2 arms_out_ 6.2 elbows_ 6.2 wrists_up_ 6.2 wrists_down_ 6.2 backswing 6.2 strike 6.2 knee_lifted_ 6.0 leg_back_ 6.2 knees_ 6.2 deep_bend 18.6 bow_ 6.2 lean_back_ 6.2 side_bend_ 6.2 twist_ 6.2 head_down_ 6.2 head_up_ 6.2 head_turned_ 6.2 head_tilted_ 6.2 toes_bent_ 6.2  [-0.162, -0.188, 0.98]
+  FAIL meets     PickLoop0 with PickStrap                   limit  1.5  rest      -   worst   21.3 at bow_40    (4/27 frames)  arms_forward_ 0.0 arms_overhead 0.0 arms_back_ 0.0 arms_out_ 0.0 elbows_ 0.0 wrists_up_ 0.0 wrists_down_ 0.0 backswing 0.0 strike 12.0 knee_lifted_ 0.0 leg_back_ 0.0 knees_ 0.0 deep_bend 14.0 bow_ 21.3 lean_back_ 0.0 side_bend_ 0.0 twist_ 3.2 head_down_ 0.0 head_up_ 0.0 head_turned_ 0.0 head_tilted_ 0.0 toes_bent_ 0.0  [-0.034, 0.025, 1.324]
+  FAIL pinched   elbow.L                                    limit 45.0  rest      -   worst   45.4 at elbows_130 (1/27 frames)  arms_forward_ 0.0 arms_overhead 0.0 arms_back_ 0.0 arms_out_ 0.0 elbows_ 45.4 wrists_up_ 0.0 wrists_down_ 0.0 backswing 13.0 strike 1.6 knee_lifted_ 0.0 leg_back_ 0.0 knees_ 0.0 deep_bend 0.0 bow_ 0.0 lean_back_ 0.0 side_bend_ 0.0 twist_ 0.0 head_down_ 0.0 head_up_ 0.0 head_turned_ 0.0 head_tilted_ 0.0 toes_bent_ 0.0  [0.312, 0.024, 1.128]
+  FAIL pinched   shoulder.L                                 limit 45.0  rest      -   worst   59.4 at arms_overhead (1/27 frames)  arms_forward_ 20.7 arms_overhead 59.4 arms_back_ 2.5 arms_out_ 7.5 elbows_ 0.0 wrists_up_ 0.0 wrists_down_ 0.0 backswing 37.4 strike 7.8 knee_lifted_ 0.0 leg_back_ 0.0 knees_ 0.0 deep_bend 0.9 bow_ 1.4 lean_back_ 0.0 side_bend_ 0.0 twist_ 0.0 head_down_ 0.0 head_up_ 0.0 head_turned_ 0.0 head_tilted_ 0.0 toes_bent_ 0.0  [0.165, -0.037, 1.449]
+  FAIL pinched   shoulder.R                                 limit 45.0  rest      -   worst   55.3 at arms_overhead (1/27 frames)  arms_forward_ 21.9 arms_overhead 55.3 arms_back_ 2.6 arms_out_ 6.9 elbows_ 0.0 wrists_up_ 0.0 wrists_down_ 0.0 backswing 37.2 strike 7.7 knee_lifted_ 0.0 leg_back_ 0.0 knees_ 0.0 deep_bend 0.2 bow_ 0.4 lean_back_ 0.1 side_bend_ 2.4 twist_ 1.0 head_down_ 0.0 head_up_ 0.0 head_turned_ 0.0 head_tilted_ 0.0 toes_bent_ 0.0  [-0.155, -0.052, 1.42]
+  FAIL stretched Skirt                                      limit  1.9  rest      -   worst    9.1 at deep_bend (4/27 frames)  arms_forward_ 1.0 arms_overhead 1.0 arms_back_ 1.0 arms_out_ 1.0 elbows_ 1.0 wrists_up_ 1.0 wrists_down_ 1.0 backswing 1.0 strike 1.1 knee_lifted_ 8.2 leg_back_ 3.0 knees_ 1.0 deep_bend 9.1 bow_ 1.2 lean_back_ 1.1 side_bend_ 1.1 twist_ 1.1 head_down_ 1.0 head_up_ 1.0 head_turned_ 1.0 head_tilted_ 1.0 toes_bent_ 1.0  [-0.198, -0.244, 0.7]
+  FAIL stretched Top                                        limit  1.9  rest      -   worst    2.5 at arms_overhead (4/27 frames)  arms_forward_ 2.0 arms_overhead 2.5 arms_back_ 1.4 arms_out_ 2.1 elbows_ 1.6 wrists_up_ 1.3 wrists_down_ 1.3 backswing 2.3 strike 1.5 knee_lifted_ 1.0 leg_back_ 1.0 knees_ 1.0 deep_bend 1.3 bow_ 1.3 lean_back_ 1.1 side_bend_ 1.2 twist_ 1.2 head_down_ 1.1 head_up_ 1.1 head_turned_ 1.1 head_tilted_ 1.1 toes_bent_ 1.0  [0.128, -0.04, 1.385]
+  ok   lies on   Eyelet0 on Boot0                           limit  7.0  rest      -   worst    6.4 at deep_bend (0/27 frames)  [-0.113, -0.197, 0.747]
+  ok   lies on   Eyelet1 on Boot1                           limit  7.0  rest      -   worst    6.0 at deep_bend (0/27 frames)  [0.075, -0.164, 0.726]
+  ok   lies on   Lace1 on Boot1                             limit  9.5  rest      -   worst    8.9 at deep_bend (0/27 frames)  [0.093, -0.196, 0.733]
+  ok   lies on   Patch0 on Top                              limit  7.5  rest      -   worst    6.2 at twist_35  (0/27 frames)  [0.099, -0.073, 1.237]
+  ok   meets     MugArm0 with Mug                           limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.435, -0.387, 0.914]
+  ok   meets     MugArm0 with MugHandle                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.435, -0.387, 0.914]
+  ok   meets     MugArm1 with Mug                           limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.435, -0.466, 0.932]
+  ok   meets     MugArm1 with MugHandle                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.435, -0.466, 0.932]
+  ok   meets     MugHandle with Hand0|Hand1                 limit  1.5  rest      -   worst    1.0 at arms_out_65 (0/27 frames)  [0.875, 0.021, 1.412]
+  ok   meets     PickCollar with PickLoop1                  limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.033, 0.057, 1.449]
+  ok   meets     PickHandle with PickLoop0                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.192, 0.146, 0.946]
+  ok   meets     PickHandle with PickLoop1                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.192, 0.146, 0.946]
+  ok   meets     PickLoop1 with PickStrap                   limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.052, 0.075, 1.435]
+  ok   meets     PickStrap with Top|Collar                  limit  4.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.094, -0.058, 1.528]
+  ok   pinched   elbow.R                                    limit 45.0  rest      -   worst   41.2 at elbows_130 (0/27 frames)  [-0.304, 0.03, 1.132]
+  ok   pinched   knee.L                                     limit 45.0  rest      -   worst   37.4 at deep_bend (0/27 frames)  [0.082, -0.464, 0.972]
+  ok   pinched   knee.R                                     limit 45.0  rest      -   worst   36.9 at deep_bend (0/27 frames)  [-0.08, -0.464, 0.972]
+  ok   pinched   wrist.L                                    limit 45.0  rest      -   worst    1.8 at bow_40    (0/27 frames)  [0.418, 0.21, 1.004]
+  ok   pinched   wrist.R                                    limit 45.0  rest      -   worst    2.5 at wrists_up_40 (0/27 frames)  [-0.416, -0.002, 0.892]
+  ok   sinks     Boot0 into Boot1                           limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Boot0 into Trousers.L                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Boot1 into Trousers.R                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hair into Collar                           limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hair into PickHead                         limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hair into Top.Body                         limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand0 into PickHandle                      limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand0 into PickHead                        limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand0 into Skirt                           limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand0 into Top.Body                        limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand1 into PickHandle                      limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand1 into PickHead                        limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand1 into Skirt                           limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand1 into Top.Body                        limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Heel0 into Boot1                           limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Heel0 into Trousers.L                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Heel1 into Trousers.R                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Mug into Hand0                             limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Mug into Hand1                             limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Mug into Skirt                             limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Mug into Top.Body                          limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Mug into Trousers                          limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm0 into Hand0                         limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm0 into Hand1                         limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm0 into Skirt                         limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm0 into Top.Body                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm0 into Trousers                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm1 into Hand0                         limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm1 into Hand1                         limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm1 into Skirt                         limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm1 into Top.Body                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugArm1 into Trousers                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugHandle into Hand0                       limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugHandle into Hand1                       limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugHandle into Skirt                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugHandle into Top.Body                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     MugHandle into Trousers                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickCollar into Collar                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickCollar into Skin                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickCollar into Skirt                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickCollar into Top                        limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickHandle into Collar                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickHandle into Skin                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickHandle into Skirt                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickHandle into Top                        limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickHead into Collar                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickHead into Skin                         limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickHead into Skirt                        limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickHead into Top                          limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickStrap into Collar                      limit  3.0  rest      -   worst    2.4 at arms_forward_45 (0/27 frames)  [0.097, -0.074, 1.531]
+  ok   sinks     PickStrap into Skirt                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     PickStrap into Top                         limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Sole0 into Boot1                           limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Sole0 into Trousers.L                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Sole1 into Trousers.R                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   stretched Collar                                     limit  1.9  rest      -   worst    1.6 at head_turned_60 (0/27 frames)  [-0.006, -0.133, 1.551]
+  ok   stretched Skin                                       limit  1.9  rest      -   worst    1.8 at head_turned_60 (0/27 frames)  [-0.036, -0.137, 1.584]
+  ok   stretched Trousers                                   limit  1.9  rest      -   worst    1.9 at deep_bend (0/27 frames)  [-0.023, -0.142, 0.936]

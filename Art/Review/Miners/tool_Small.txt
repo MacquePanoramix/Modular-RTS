@@ -1,0 +1,6 @@
+TOOL Pickaxe_Small: 0 failing; made for arms of 0.433 m and a hand of 149 mm
+  length 517 mm, 714 triangles (far away 214)
+  grips at -100 and +60 mm, the handle 28.9 and 32.5 mm thick there
+  the point at [0, 252, 137] mm; the strike's ball 17 mm at [0, 255, 120] mm
+  it weighs 1502 g (PickHandle 236 g, PickHead 1044 g, PickCollar 222 g); its weight is +234 mm along the handle from the origin, 334 mm above the lower grip, -1 mm towards the point
+  to turn it about its centre: 0.00254, 0.01436, 0.01667 kg m2

@@ -64,6 +64,9 @@ which is the best way to judge the look up close.
 | [ / ] | Scrub the time of day |
 | L | Time-lapse: the day passes at 30 in-game minutes per second |
 | H | Hide or show the look-test panel (it shows the frame time) |
+| 7 | Fireflies at dusk and night (on; third pass) |
+| 8 | The hearth: house lights flicker gently like a fire (on; third pass) |
+| 9 | Window glow: a soft warm halo at the windows and door (on; third pass) |
 
 ## The rendering candidates (S1c)
 
@@ -303,3 +306,67 @@ See [Validation.md](../Validation.md).
   captures after the change match the earlier sky pixel for pixel.
 - **Distant leaves.** Painted textures fill the space between UV islands with
   the material's own colour, so distant mipmaps no longer turn leaves black.
+
+## Third pass: dusk details (October 2)
+
+Luis preferred this hand-painted pass to the S1e experiment. His favourite
+frame came from it: look E at 19:12, low on the path in front of the lit
+house. He asked for:
+- the fireflies from the experiment, in this scene;
+- the dusk mood deepened in small steps, before moving to the worker model.
+
+So each detail is a small step that switches on and off over the
+hand-painted look, judged on Luis's own frame:
+
+| Key | Detail | Default |
+|---|---|---|
+| 7 | **Fireflies.** About 1,100 (now 600) blinking green-gold lights drift low over the meadow, out only once the sun has set. Near the camera they fade and shrink, so none blots the view. | On (Luis asked for them) |
+| 8 | **The hearth.** The door and window lights flicker gently, like one fire inside, and the lantern like a candle; the windows' glow breathes with them. | Off until Luis judged it; now on |
+| 9 | **Window glow.** A soft warm halo just outside each lit window and the door, softened where it meets the wall or grass. | Off until Luis judged it; now on |
+
+The house's own light, sky and look are unchanged.
+
+![The dusk steps on Luis's favourite frame](../Images/OrdinaryPlace/Dusk_Steps_Favourite.jpg)
+![The doorway at night, before and with the details](../Images/OrdinaryPlace/Dusk_Steps_Doorway.jpg)
+
+The hearth's flicker moves in time, so a still cannot show it; try 8 in the
+build.
+
+**Captures.** `OrdinaryPlaceCapture.Capture -captureSet dusk` recreates
+Luis's frame (and the doorway at night) with each detail off and on. The
+worker steps out of the shot, as in Luis's frame.
+
+See [Validation.md](../Validation.md) for tests, build and cost.
+
+### After Luis's test (October 2)
+
+Luis played the build: "Honestly I loved it." Luis's notes and what changed
+(verbatim in
+[the correspondence](../Correspondence/2026-10-02_DUSK_DETAILS_AND_THE_WORKER.md)):
+
+- **All three details on by default.** Fireflies, the hearth and window glow
+  now start on. Keys 7, 8 and 9 still switch them.
+- **Fewer fireflies.** Near the ground they went "from gentle wonder inducing
+  to a bit overwhelming".
+  - They now number 600 instead of 1,100.
+  - Each blinks a little more sparsely.
+- **Fireflies far out.** They used to vanish when the camera pulled back. Luis
+  asked for some sign of them, even very zoomed out, stylized and cheap.
+  - They now live in a patch of meadow around where the camera looks, which
+    widens as the camera rises.
+  - Each keeps at least a tiny painted dot, so from high above they read as a
+    sparse scatter of lights.
+  - The cost stays the same 600 quads.
+- **The lamplight close up.** Far away the house's light looked strong and
+  spread over the terrain; closer in that brightness disappeared. Luis liked
+  the far look, so the near view was brought to it.
+  - **The cause.** From far away the eye sees mostly grass tips, which the
+    lamps lit about twice as strongly as the lower blade. Close up, the darker
+    blade bodies, and the soil shaded under the grass, hid the warm pool.
+  - **The fix.** Lamplight now reaches further down the blades and onto the
+    soil. The tips, the far look, and the sun and moon's shading under the
+    grass are unchanged.
+
+![The lamplight, far and near, before and after the fix](../Images/OrdinaryPlace/Dusk_Fix_Lamplight.jpg)
+![Fireflies at three zooms at night, and Luis's frame with everything on](../Images/OrdinaryPlace/Dusk_Fix_Fireflies.jpg)
+

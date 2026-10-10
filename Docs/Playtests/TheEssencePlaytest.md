@@ -6,7 +6,7 @@
 > - **The code** is on the branch `claude/essence-exploration`, not on
 >   `claude/worker-showcase`.
 > - **The reading of why** is in
->   [TheEssence.md](../ArtDirection/TheEssence.md#luiss-verdict-and-what-his-favourite-frame-teaches).
+>   [TheEssence.md](../ArtDirection/TheEssence.md#luiss-verdict-and-what-luiss-favourite-frame-teaches).
 
 **Built:** October 2, 2026, in an isolated worktree, on the
 `claude/essence-exploration` branch.

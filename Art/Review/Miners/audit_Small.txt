@@ -1,0 +1,466 @@
+AUDIT Small: 9 failing of 465 checks (distances in mm)
+  FAIL beneath   Trousers under Skirt                       limit  3.0  rest    0.0   worst   11.3 at turn148   (1/146 frames)  stand 0.0 walk 0.0 turn 11.3 stop 0.0 mine 0.0  [0.025, -0.194, 0.306]
+  FAIL sinks     Boot0 into Trousers.L                      limit  2.0  rest    0.0   worst    8.6 at turn144   (1/146 frames)  stand 0.0 walk 0.0 turn 8.6 stop 0.0 mine 0.0  [-0.024, -0.084, 0.117]
+  FAIL sinks     Hand1 into Skirt                           limit  3.0  rest    0.0   worst    5.4 at turn160   (2/146 frames)  stand 0.0 walk 0.0 turn 5.4 stop 0.0 mine 0.0  [0.231, 0.015, 0.365]
+  FAIL sinks     LanternBar1 into Trousers                  limit  2.0  rest    0.0   worst    7.2 at turn148   (1/146 frames)  stand 0.0 walk 0.0 turn 7.2 stop 0.0 mine 0.0  [0.027, -0.207, 0.285]
+  FAIL sinks     LanternBase into Trousers                  limit  2.0  rest    0.0   worst   18.4 at turn148   (1/146 frames)  stand 0.0 walk 0.0 turn 18.4 stop 0.0 mine 0.0  [0.014, -0.221, 0.279]
+  FAIL sinks     LanternGlass into Trousers                 limit  2.0  rest    0.0   worst    3.3 at turn148   (1/146 frames)  stand 0.0 walk 0.0 turn 3.3 stop 0.0 mine 0.0  [0.024, -0.214, 0.295]
+  FAIL sinks     Strap into Top                             limit  2.0  rest    0.0   worst   11.9 at mine266   (6/146 frames)  stand 0.0 walk 0.0 turn 0.0 stop 0.0 mine 11.9  [-0.005, -0.101, 0.783]
+  FAIL sinks     StrapTab0 into Top.Arm.R                   limit  2.0  rest    0.0   worst    3.9 at mine258   (6/146 frames)  stand 0.0 walk 0.0 turn 0.0 stop 0.0 mine 3.9  [-0.057, -0.093, 0.657]
+  FAIL stretched Top                                        limit  1.9  rest      -   worst    2.1 at mine270   (28/28 frames)  mine 2.1  [-0.102, -0.072, 0.939]
+  ok   bones     Bag                                        limit  4.0  rest    1.0  None
+  ok   bones     BagFlap                                    limit  4.0  rest    1.0  None
+  ok   bones     BagLoop0                                   limit  4.0  rest    1.0  None
+  ok   bones     BagLoop1                                   limit  4.0  rest    1.0  None
+  ok   bones     BagRing0                                   limit  4.0  rest    1.0  None
+  ok   bones     BagRing1                                   limit  4.0  rest    1.0  None
+  ok   bones     BagTongue                                  limit  4.0  rest    1.0  None
+  ok   bones     Boot0                                      limit  4.0  rest    3.0  None
+  ok   bones     Boot1                                      limit  4.0  rest    3.0  None
+  ok   bones     Buckle                                     limit  4.0  rest    1.0  None
+  ok   bones     Button0                                    limit  4.0  rest    3.0  None
+  ok   bones     Button1                                    limit  4.0  rest    3.0  None
+  ok   bones     Button2                                    limit  4.0  rest    2.0  None
+  ok   bones     Collar                                     limit  4.0  rest    4.0  None
+  ok   bones     Eyelet0                                    limit  4.0  rest    3.0  None
+  ok   bones     Eyelet1                                    limit  4.0  rest    3.0  None
+  ok   bones     Hair                                       limit  4.0  rest    1.0  None
+  ok   bones     Hand0                                      limit  4.0  rest    4.0  None
+  ok   bones     Hand1                                      limit  4.0  rest    4.0  None
+  ok   bones     Heel0                                      limit  4.0  rest    3.0  None
+  ok   bones     Heel1                                      limit  4.0  rest    3.0  None
+  ok   bones     HipHook                                    limit  4.0  rest    1.0  None
+  ok   bones     HipTab                                     limit  4.0  rest    1.0  None
+  ok   bones     Lace0                                      limit  4.0  rest    3.0  None
+  ok   bones     Lace1                                      limit  4.0  rest    3.0  None
+  ok   bones     LanternBail0                               limit  4.0  rest    1.0  None
+  ok   bones     LanternBail1                               limit  4.0  rest    1.0  None
+  ok   bones     LanternBar0                                limit  4.0  rest    1.0  None
+  ok   bones     LanternBar1                                limit  4.0  rest    1.0  None
+  ok   bones     LanternBar2                                limit  4.0  rest    1.0  None
+  ok   bones     LanternBar3                                limit  4.0  rest    1.0  None
+  ok   bones     LanternBase                                limit  4.0  rest    1.0  None
+  ok   bones     LanternCap                                 limit  4.0  rest    1.0  None
+  ok   bones     LanternEar0                                limit  4.0  rest    1.0  None
+  ok   bones     LanternEar1                                limit  4.0  rest    1.0  None
+  ok   bones     LanternGlass                               limit  4.0  rest    1.0  None
+  ok   bones     LanternHandle                              limit  4.0  rest    1.0  None
+  ok   bones     Skin                                       limit  4.0  rest    3.0  None
+  ok   bones     Skirt                                      limit  4.0  rest    4.0  None
+  ok   bones     Sole0                                      limit  4.0  rest    3.0  None
+  ok   bones     Sole1                                      limit  4.0  rest    3.0  None
+  ok   bones     Strap                                      limit  4.0  rest    3.0  None
+  ok   bones     StrapTab0                                  limit  4.0  rest    1.0  None
+  ok   bones     StrapTab1                                  limit  4.0  rest    1.0  None
+  ok   bones     Top                                        limit  4.0  rest    4.0  None
+  ok   bones     Trousers                                   limit  4.0  rest    4.0  None
+  ok   covered   Boot0 in Trousers.R                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   covered   Boot1 in Trousers.L                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   floating  Bag                                        limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.113, -0.12, 0.605]
+  ok   floating  BagFlap                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.13, 0.005, 0.697]
+  ok   floating  BagLoop0                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.087, -0.114, 0.696]
+  ok   floating  BagLoop1                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.137, -0.023, 0.696]
+  ok   floating  BagRing0                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.089, -0.088, 0.724]
+  ok   floating  BagRing1                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.139, 0.003, 0.724]
+  ok   floating  BagTongue                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.161, -0.097, 0.661]
+  ok   floating  Boot0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.125, -0.109, 0.038]
+  ok   floating  Boot1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.032, -0.028, 0.204]
+  ok   floating  Buckle                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.181, -0.083, 0.642]
+  ok   floating  Button0                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.0, -0.091, 0.958]
+  ok   floating  Button1                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.0, -0.072, 0.848]
+  ok   floating  Button2                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.001, -0.074, 0.741]
+  ok   floating  Collar                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.121, -0.01, 1.112]
+  ok   floating  Eyelet0#0                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.093, -0.069, 0.088]
+  ok   floating  Eyelet0#1                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.07, -0.072, 0.088]
+  ok   floating  Eyelet0#2                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.092, -0.039, 0.101]
+  ok   floating  Eyelet0#3                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.065, -0.042, 0.1]
+  ok   floating  Eyelet0#4                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.092, -0.043, 0.123]
+  ok   floating  Eyelet0#5                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.064, -0.046, 0.122]
+  ok   floating  Eyelet0#6                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.092, -0.048, 0.144]
+  ok   floating  Eyelet0#7                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.064, -0.051, 0.144]
+  ok   floating  Eyelet0#8                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.092, -0.053, 0.166]
+  ok   floating  Eyelet0#9                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.063, -0.056, 0.165]
+  ok   floating  Eyelet1#0                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.07, -0.072, 0.088]
+  ok   floating  Eyelet1#1                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.093, -0.069, 0.088]
+  ok   floating  Eyelet1#2                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.065, -0.041, 0.1]
+  ok   floating  Eyelet1#3                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.092, -0.039, 0.101]
+  ok   floating  Eyelet1#4                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.064, -0.046, 0.122]
+  ok   floating  Eyelet1#5                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.092, -0.043, 0.123]
+  ok   floating  Eyelet1#6                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.064, -0.051, 0.144]
+  ok   floating  Eyelet1#7                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.092, -0.048, 0.144]
+  ok   floating  Eyelet1#8                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.063, -0.056, 0.165]
+  ok   floating  Eyelet1#9                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.092, -0.053, 0.166]
+  ok   floating  Hair#0                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.008, 0.071, 1.413]
+  ok   floating  Hair#1                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.017, -0.059, 1.412]
+  ok   floating  Hair#10                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.069, 0.031, 1.401]
+  ok   floating  Hair#11                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.057, 0.035, 1.406]
+  ok   floating  Hair#12                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.065, 0.048, 1.394]
+  ok   floating  Hair#13                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.044, 0.05, 1.403]
+  ok   floating  Hair#14                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.023, 0.056, 1.408]
+  ok   floating  Hair#15                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.018, 0.081, 1.406]
+  ok   floating  Hair#16                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.004, 0.057, 1.41]
+  ok   floating  Hair#17                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.007, 0.057, 1.41]
+  ok   floating  Hair#18                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.023, 0.067, 1.402]
+  ok   floating  Hair#19                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.022, 0.058, 1.408]
+  ok   floating  Hair#2                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.032, -0.075, 1.398]
+  ok   floating  Hair#20                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.043, 0.064, 1.399]
+  ok   floating  Hair#21                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.05, 0.062, 1.397]
+  ok   floating  Hair#22                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.047, 0.041, 1.409]
+  ok   floating  Hair#23                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.089, 0.014, 1.404]
+  ok   floating  Hair#24                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.064, 0.032, 1.404]
+  ok   floating  Hair#25                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.079, -0.001, 1.414]
+  ok   floating  Hair#26                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.102, -0.013, 1.394]
+  ok   floating  Hair#27                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.084, -0.022, 1.409]
+  ok   floating  Hair#28                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.067, -0.035, 1.415]
+  ok   floating  Hair#29                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.094, -0.016, 1.388]
+  ok   floating  Hair#3                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.074, -0.046, 1.411]
+  ok   floating  Hair#30                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.087, -0.033, 1.39]
+  ok   floating  Hair#31                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.084, -0.04, 1.39]
+  ok   floating  Hair#32                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.064, -0.066, 1.402]
+  ok   floating  Hair#33                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.047, -0.069, 1.409]
+  ok   floating  Hair#34                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.043, -0.07, 1.41]
+  ok   floating  Hair#35                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.045, -0.063, 1.403]
+  ok   floating  Hair#36                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.004, -0.072, 1.416]
+  ok   floating  Hair#37                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.01, -0.071, 1.415]
+  ok   floating  Hair#38                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.015, -0.072, 1.416]
+  ok   floating  Hair#39                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.037, -0.07, 1.413]
+  ok   floating  Hair#4                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.051, -0.043, 1.409]
+  ok   floating  Hair#40                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.04, -0.07, 1.412]
+  ok   floating  Hair#41                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.041, -0.063, 1.396]
+  ok   floating  Hair#42                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.069, -0.064, 1.401]
+  ok   floating  Hair#5                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.037, -0.036, 1.416]
+  ok   floating  Hair#6                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.044, -0.026, 1.416]
+  ok   floating  Hair#7                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.084, 0.018, 1.408]
+  ok   floating  Hair#8                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.083, -0.003, 1.396]
+  ok   floating  Hair#9                                     limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.062, 0.012, 1.409]
+  ok   floating  Hand0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.341, -0.009, 0.546]
+  ok   floating  Hand1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.326, -0.016, 0.563]
+  ok   floating  Heel0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.094, 0.062, 0.0]
+  ok   floating  Heel1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.044, 0.057, 0.0]
+  ok   floating  HipHook                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.045, -0.101, 0.68]
+  ok   floating  HipTab                                     limit  3.0  rest    0.0   worst    2.2 at turn160   (0/12 frames)  [0.044, -0.106, 0.523]
+  ok   floating  Lace0#0                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.076, -0.066, 0.177]
+  ok   floating  Lace0#1                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.099, -0.07, 0.09]
+  ok   floating  Lace0#10                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.094, -0.053, 0.162]
+  ok   floating  Lace0#11                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.064, -0.055, 0.159]
+  ok   floating  Lace0#12                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.077, -0.064, 0.177]
+  ok   floating  Lace0#13                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.079, -0.06, 0.177]
+  ok   floating  Lace0#14                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.079, -0.064, 0.177]
+  ok   floating  Lace0#15                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.08, -0.06, 0.175]
+  ok   floating  Lace0#2                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.098, -0.07, 0.09]
+  ok   floating  Lace0#3                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.064, -0.07, 0.087]
+  ok   floating  Lace0#4                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.095, -0.042, 0.097]
+  ok   floating  Lace0#5                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.063, -0.045, 0.096]
+  ok   floating  Lace0#6                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.094, -0.046, 0.119]
+  ok   floating  Lace0#7                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.063, -0.049, 0.118]
+  ok   floating  Lace0#8                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.094, -0.051, 0.14]
+  ok   floating  Lace0#9                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.062, -0.054, 0.139]
+  ok   floating  Lace1#0                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.081, -0.065, 0.177]
+  ok   floating  Lace1#1                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.065, -0.073, 0.09]
+  ok   floating  Lace1#10                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.062, -0.056, 0.161]
+  ok   floating  Lace1#11                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.091, -0.053, 0.16]
+  ok   floating  Lace1#12                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.079, -0.064, 0.177]
+  ok   floating  Lace1#13                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.077, -0.06, 0.176]
+  ok   floating  Lace1#14                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.077, -0.064, 0.177]
+  ok   floating  Lace1#15                                   limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.076, -0.06, 0.175]
+  ok   floating  Lace1#2                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.067, -0.072, 0.087]
+  ok   floating  Lace1#3                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.098, -0.07, 0.09]
+  ok   floating  Lace1#4                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.063, -0.045, 0.096]
+  ok   floating  Lace1#5                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.095, -0.042, 0.097]
+  ok   floating  Lace1#6                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.063, -0.049, 0.118]
+  ok   floating  Lace1#7                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.094, -0.046, 0.119]
+  ok   floating  Lace1#8                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.062, -0.054, 0.139]
+  ok   floating  Lace1#9                                    limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.094, -0.051, 0.14]
+  ok   floating  LanternBail0                               limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.032, -0.151, 0.658]
+  ok   floating  LanternBail1                               limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.085, -0.136, 0.66]
+  ok   floating  LanternBar0                                limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.095, -0.159, 0.578]
+  ok   floating  LanternBar1                                limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.055, -0.144, 0.567]
+  ok   floating  LanternBar2                                limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.038, -0.183, 0.579]
+  ok   floating  LanternBar3                                limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.078, -0.197, 0.59]
+  ok   floating  LanternBase                                limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.08, -0.203, 0.496]
+  ok   floating  LanternCap                                 limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.063, -0.157, 0.62]
+  ok   floating  LanternEar0                                limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.035, -0.18, 0.582]
+  ok   floating  LanternEar1                                limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.097, -0.163, 0.583]
+  ok   floating  LanternGlass                               limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.078, -0.197, 0.512]
+  ok   floating  LanternHandle                              limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.014, -0.156, 0.651]
+  ok   floating  Skin                                       limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.084, -0.112, 1.313]
+  ok   floating  Skirt                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.027, 0.011, 0.87]
+  ok   floating  Sole0                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.064, 0.072, 0.021]
+  ok   floating  Sole1                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.071, 0.073, 0.021]
+  ok   floating  Strap                                      limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.065, -0.104, 0.736]
+  ok   floating  StrapTab0                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.091, -0.093, 0.728]
+  ok   floating  StrapTab1                                  limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.14, -0.001, 0.731]
+  ok   floating  Top                                        limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.347, 0.0, 0.646]
+  ok   floating  Trousers#0                                 limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [-0.095, -0.09, 0.343]
+  ok   floating  Trousers#1                                 limit  3.0  rest    0.0   worst    0.0 at rest      (0/12 frames)  [0.041, -0.086, 0.347]
+  ok   grounded  Sole0                                      limit  4.0  rest    0.6  [-0.088, -0.138, 0.001]
+  ok   grounded  Sole1                                      limit  4.0  rest    0.6  [0.088, -0.138, 0.001]
+  ok   inside out Bag                                        limit  0.0  rest    0.0  None
+  ok   inside out Boot0                                      limit  0.0  rest    0.0  None
+  ok   inside out Boot1                                      limit  0.0  rest    0.0  None
+  ok   inside out Collar                                     limit  0.0  rest    0.0  None
+  ok   inside out Hand0                                      limit  0.0  rest    0.0  None
+  ok   inside out Hand1                                      limit  0.0  rest    0.0  None
+  ok   inside out Skin                                       limit  0.0  rest    0.0  None
+  ok   inside out Skirt                                      limit  0.0  rest    0.0  None
+  ok   inside out Top                                        limit  0.0  rest    0.0  None
+  ok   inside out Trousers                                   limit  0.0  rest    0.0  None
+  ok   lies on   Eyelet0 on Boot0                           limit  7.0  rest    2.4   worst    4.7 at walk28    (0/146 frames)  [-0.08, 0.137, 0.061]
+  ok   lies on   Eyelet1 on Boot1                           limit  7.0  rest    2.5   worst    5.7 at turn152   (0/146 frames)  [-0.178, 0.045, 0.048]
+  ok   lies on   HipTab on Skirt|Top.Body                   limit  9.0  rest    4.6   worst    6.4 at turn156   (0/146 frames)  [0.037, -0.106, 0.523]
+  ok   lies on   Lace0 on Boot0                             limit  9.5  rest    6.7   worst    8.3 at walk28    (0/146 frames)  [-0.077, 0.144, 0.053]
+  ok   lies on   Lace1 on Boot1                             limit  9.5  rest    6.9   worst    9.2 at turn154   (0/146 frames)  [0.022, -0.12, 0.071]
+  ok   meets     Bag with Skirt|Top.Body                    limit  4.0  rest    1.9   worst    2.7 at turn180   (0/146 frames)  [-0.106, -0.073, 0.5]
+  ok   meets     BagFlap with Bag                           limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.13, 0.005, 0.697]
+  ok   meets     BagLoop0 with Bag                          limit  1.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.087, -0.114, 0.696]
+  ok   meets     BagLoop1 with Bag                          limit  1.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.137, -0.023, 0.696]
+  ok   meets     BagRing0 with BagLoop0                     limit  1.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.089, -0.088, 0.724]
+  ok   meets     BagRing1 with BagLoop1                     limit  1.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.139, 0.003, 0.724]
+  ok   meets     BagTongue with BagFlap                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.161, -0.097, 0.661]
+  ok   meets     Buckle with Bag|BagTongue                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.181, -0.083, 0.642]
+  ok   meets     Button0 with Top|Skirt                     limit  1.2  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.0, -0.091, 0.958]
+  ok   meets     Button1 with Top|Skirt                     limit  1.2  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.0, -0.072, 0.848]
+  ok   meets     Button2 with Top|Skirt                     limit  1.2  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.001, -0.074, 0.741]
+  ok   meets     Hand0 with WorkPickHandle                  limit  2.0  rest      -   worst    0.0 at mine236   (0/28 frames)  [-0.051, -0.208, 0.687]
+  ok   meets     Hand1 with WorkPickHandle                  limit  2.0  rest      -   worst    0.0 at mine246   (0/28 frames)  [-0.186, -0.213, 0.872]
+  ok   meets     HipHook with HipTab                        limit  2.0  rest    1.6   worst    1.6 at mine290   (0/146 frames)  [0.047, -0.096, 0.583]
+  ok   meets     HipTab with Skirt|Top.Body                 limit  2.0  rest    0.0   worst    1.3 at turn156   (0/146 frames)  [0.015, -0.094, 0.55]
+  ok   meets     LanternBail0 with LanternEar0              limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.032, -0.151, 0.658]
+  ok   meets     LanternBail0 with LanternHandle            limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.032, -0.151, 0.658]
+  ok   meets     LanternBail1 with LanternEar1              limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.085, -0.136, 0.66]
+  ok   meets     LanternBail1 with LanternHandle            limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.085, -0.136, 0.66]
+  ok   meets     LanternEar0 with LanternCap                limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.035, -0.18, 0.582]
+  ok   meets     LanternEar1 with LanternCap                limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.097, -0.163, 0.583]
+  ok   meets     LanternHandle with Hand0|Hand1|HipHook     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [0.014, -0.156, 0.651]
+  ok   meets     Strap with BagRing0                        limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.065, -0.104, 0.736]
+  ok   meets     Strap with BagRing1                        limit  1.5  rest    0.3   worst    0.3 at mine290   (0/146 frames)  [-0.126, -0.004, 0.633]
+  ok   meets     StrapTab0 with Strap                       limit  1.5  rest    0.0   worst    1.0 at turn148   (0/146 frames)  [-0.055, -0.091, 0.514]
+  ok   meets     StrapTab1 with Strap                       limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  [-0.14, -0.001, 0.731]
+  ok   pinched   elbow.L                                    limit 45.0  rest      -   worst   30.3 at mine258   (0/28 frames)  [0.171, -0.114, 0.738]
+  ok   pinched   elbow.R                                    limit 45.0  rest      -   worst   27.6 at mine270   (0/28 frames)  [-0.302, -0.018, 0.713]
+  ok   pinched   knee.L                                     limit 45.0  rest      -   worst    0.0 at mine290   (0/28 frames)  [0.086, -0.105, 0.254]
+  ok   pinched   knee.R                                     limit 45.0  rest      -   worst    0.1 at mine236   (0/28 frames)  [-0.073, -0.116, 0.257]
+  ok   pinched   shoulder.L                                 limit 45.0  rest      -   worst   22.9 at mine270   (0/28 frames)  [0.169, 0.006, 0.929]
+  ok   pinched   shoulder.R                                 limit 45.0  rest      -   worst    1.4 at mine288   (0/28 frames)  [-0.149, 0.015, 0.96]
+  ok   pinched   wrist.L                                    limit 45.0  rest      -   worst   13.9 at mine270   (0/28 frames)  [-0.141, -0.139, 0.959]
+  ok   pinched   wrist.R                                    limit 45.0  rest      -   worst   19.8 at mine244   (0/28 frames)  [-0.175, -0.189, 0.768]
+  ok   sinks     Bag into Skirt                             limit  6.0  rest    0.0   worst    5.9 at turn148   (0/146 frames)  [-0.123, -0.155, 0.399]
+  ok   sinks     Bag into Top.Arm.L                         limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Bag into Top.Arm.R                         limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Bag into Top.Body                          limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Bag into Trousers                          limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagFlap into Skirt                         limit  6.0  rest    0.0   worst    0.5 at turn150   (0/146 frames)  [-0.136, -0.136, 0.407]
+  ok   sinks     BagFlap into Top.Arm.L                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagFlap into Top.Arm.R                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagFlap into Top.Body                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagFlap into Trousers                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop0 into Skirt                        limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop0 into Top.Arm.L                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop0 into Top.Arm.R                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop0 into Top.Body                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop0 into Trousers                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop1 into Skirt                        limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop1 into Top.Arm.L                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop1 into Top.Arm.R                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop1 into Top.Body                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagLoop1 into Trousers                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing0 into Skirt                        limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing0 into Top.Arm.L                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing0 into Top.Arm.R                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing0 into Top.Body                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing0 into Trousers                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing1 into Skirt                        limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing1 into Top.Arm.L                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing1 into Top.Arm.R                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing1 into Top.Body                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagRing1 into Trousers                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagTongue into Skirt                       limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagTongue into Top.Arm.L                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagTongue into Top.Arm.R                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagTongue into Top.Body                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     BagTongue into Trousers                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Boot0 into Boot1                           limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Boot1 into Trousers.R                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Buckle into Skirt                          limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Buckle into Top.Arm.L                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Buckle into Top.Arm.R                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Buckle into Top.Body                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Buckle into Trousers                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Hair into Collar                           limit  3.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Hair into Top.Body                         limit  3.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Hair into WorkPickHandle                   limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     Hair into WorkPickHead                     limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     Hand0 into Bag                             limit  3.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Hand0 into Skirt                           limit  3.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Hand0 into Top.Body                        limit  3.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Hand0 into WorkPickHandle                  limit  1.5  rest      -   worst    0.3 at mine236   (0/28 frames)  [-0.06, -0.228, 0.67]
+  ok   sinks     Hand1 into Bag                             limit  3.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Hand1 into Top.Body                        limit  3.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Hand1 into WorkPickHandle                  limit  1.5  rest      -   worst    0.1 at mine252   (0/28 frames)  [-0.036, -0.277, 0.81]
+  ok   sinks     Heel0 into Boot1                           limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Heel0 into Trousers.L                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Heel1 into Trousers.R                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     HipHook into Skirt                         limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     HipHook into Top.Body                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     HipHook into Trousers                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail0 into Bag                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail0 into Boot0                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail0 into Boot1                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail0 into Hand0                    limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail0 into Hand1                    limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail0 into Skirt                    limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail0 into Top.Body                 limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail0 into Trousers                 limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail0 into WorkPickHandle           limit  3.0  rest      -   worst    1.6 at mine258   (0/28 frames)  [0.007, -0.159, 0.549]
+  ok   sinks     LanternBail0 into WorkPickHead             limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBail1 into Bag                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail1 into Boot0                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail1 into Boot1                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail1 into Hand0                    limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail1 into Hand1                    limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail1 into Skirt                    limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail1 into Top.Body                 limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail1 into Trousers                 limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBail1 into WorkPickHandle           limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBail1 into WorkPickHead             limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBar0 into Bag                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar0 into Boot0                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar0 into Boot1                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar0 into Hand0                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar0 into Hand1                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar0 into Skirt                     limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar0 into Top.Body                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar0 into Trousers                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar0 into WorkPickHandle            limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBar0 into WorkPickHead              limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBar1 into Bag                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar1 into Boot0                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar1 into Boot1                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar1 into Hand0                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar1 into Hand1                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar1 into Skirt                     limit  6.0  rest    0.0   worst    4.9 at walk26    (0/146 frames)  [0.053, -0.185, 0.405]
+  ok   sinks     LanternBar1 into Top.Body                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar1 into WorkPickHandle            limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBar1 into WorkPickHead              limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBar2 into Bag                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar2 into Boot0                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar2 into Boot1                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar2 into Hand0                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar2 into Hand1                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar2 into Skirt                     limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar2 into Top.Body                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar2 into Trousers                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar2 into WorkPickHandle            limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBar2 into WorkPickHead              limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBar3 into Bag                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar3 into Boot0                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar3 into Boot1                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar3 into Hand0                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar3 into Hand1                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar3 into Skirt                     limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar3 into Top.Body                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar3 into Trousers                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBar3 into WorkPickHandle            limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBar3 into WorkPickHead              limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBase into Bag                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBase into Boot0                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBase into Boot1                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBase into Hand0                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBase into Hand1                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBase into Skirt                     limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBase into Top.Body                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternBase into WorkPickHandle            limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternBase into WorkPickHead              limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternCap into Bag                        limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternCap into Boot0                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternCap into Boot1                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternCap into Hand0                      limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternCap into Hand1                      limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternCap into Skirt                      limit  6.0  rest    0.0   worst    5.4 at walk22    (0/146 frames)  [0.086, -0.174, 0.432]
+  ok   sinks     LanternCap into Top.Body                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternCap into Trousers                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternCap into WorkPickHandle             limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternCap into WorkPickHead               limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternEar0 into Bag                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar0 into Boot0                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar0 into Boot1                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar0 into Hand0                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar0 into Hand1                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar0 into Skirt                     limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar0 into Top.Body                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar0 into Trousers                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar0 into WorkPickHandle            limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternEar0 into WorkPickHead              limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternEar1 into Bag                       limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar1 into Boot0                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar1 into Boot1                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar1 into Hand0                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar1 into Hand1                     limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar1 into Skirt                     limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar1 into Top.Body                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar1 into Trousers                  limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternEar1 into WorkPickHandle            limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternEar1 into WorkPickHead              limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternGlass into Bag                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternGlass into Boot0                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternGlass into Boot1                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternGlass into Hand0                    limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternGlass into Hand1                    limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternGlass into Skirt                    limit  6.0  rest    0.0   worst    5.0 at walk24    (0/146 frames)  [0.038, -0.189, 0.403]
+  ok   sinks     LanternGlass into Top.Body                 limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternGlass into WorkPickHandle           limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternGlass into WorkPickHead             limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternHandle into Bag                     limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternHandle into Boot0                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternHandle into Boot1                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternHandle into Hand0                   limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternHandle into Hand1                   limit  1.5  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternHandle into Skirt                   limit  6.0  rest    0.0   worst    1.4 at turn154   (0/146 frames)  [-0.011, -0.151, 0.487]
+  ok   sinks     LanternHandle into Top.Body                limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternHandle into Trousers                limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     LanternHandle into WorkPickHandle          limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     LanternHandle into WorkPickHead            limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     Sole0 into Boot1                           limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Sole0 into Trousers.L                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Sole1 into Trousers.R                      limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Strap into Collar                          limit  3.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Strap into Skirt                           limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     Strap into WorkPickHandle                  limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     Strap into WorkPickHead                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     StrapTab0 into Skirt                       limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     StrapTab0 into Top.Arm.L                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     StrapTab0 into Top.Body                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     StrapTab0 into Trousers                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     StrapTab1 into Skirt                       limit  6.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     StrapTab1 into Top.Arm.L                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     StrapTab1 into Top.Arm.R                   limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     StrapTab1 into Top.Body                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     StrapTab1 into Trousers                    limit  2.0  rest    0.0   worst    0.0 at rest      (0/146 frames)  None
+  ok   sinks     WorkPickCollar into Bag                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickCollar into Boot0                  limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickCollar into Boot1                  limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickCollar into Collar                 limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickCollar into Skin                   limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickCollar into Skirt                  limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickCollar into Top                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickCollar into Trousers               limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHandle into Bag                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHandle into Boot0                  limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHandle into Boot1                  limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHandle into Collar                 limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHandle into Skin                   limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHandle into Skirt                  limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHandle into Top                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHandle into Trousers               limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHead into Bag                      limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHead into Boot0                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHead into Boot1                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHead into Collar                   limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHead into Skin                     limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHead into Skirt                    limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHead into Top                      limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   sinks     WorkPickHead into Trousers                 limit  3.0  rest      -   worst    0.0 at mine236   (0/28 frames)  None
+  ok   stretched Collar                                     limit  1.9  rest      -   worst    1.2 at mine272   (0/28 frames)  [0.116, 0.01, 1.005]
+  ok   stretched Skin                                       limit  1.9  rest      -   worst    1.0 at mine290   (0/28 frames)  [-0.016, -0.025, 1.029]
+  ok   stretched Skirt                                      limit  1.9  rest      -   worst    1.3 at mine282   (0/28 frames)  [-0.192, 0.025, 0.351]
+  ok   stretched Trousers                                   limit  1.9  rest      -   worst    1.1 at mine242   (0/28 frames)  [-0.018, -0.016, 0.368]

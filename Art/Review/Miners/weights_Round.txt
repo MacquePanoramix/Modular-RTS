@@ -1,0 +1,46 @@
+WEIGHT Worker_Round: 87.6 kg (84.9 kg of body, 2.8 kg worn and carried); 1.56 m tall; its centre 0.867 m up, -2 mm ahead of the model's origin
+  part              kg  of body  centre along    moments (kg m2): across, about, deep
+  Pelvis         23.63    22.19          0.31      0.31098  0.29581  0.36564
+  Spine          16.47    16.19          0.48      0.14024  0.21550  0.19079
+  Chest           8.97     8.84          0.45      0.04670  0.09858  0.07912
+  Neck            0.76     0.76          0.50      0.00124  0.00225  0.00124
+  Head            9.82     9.30          0.37      0.07021  0.07540  0.07337
+  UpperArm.L      2.17     2.11          0.48      0.01310  0.00305  0.01308
+  Forearm.L       1.20     1.20          0.45      0.00522  0.00107  0.00522
+  Hand.L          0.33     0.33          0.59      0.00055  0.00014  0.00064
+  UpperArm.R      2.17     2.11          0.48      0.01310  0.00305  0.01309
+  Forearm.R       1.20     1.20          0.45      0.00522  0.00107  0.00522
+  Hand.R          0.33     0.33          0.59      0.00055  0.00014  0.00064
+  Thigh.L         5.60     5.54          0.46      0.05517  0.01590  0.05516
+  Shin.L          3.14     3.08          0.45      0.02857  0.00511  0.02851
+  Foot.L          1.30     1.29          0.26      0.00392  0.00228  0.00360
+  Toe.L           0.26     0.26          0.45      0.00013  0.00022  0.00026
+  Thigh.R         5.60     5.54          0.46      0.05515  0.01590  0.05514
+  Shin.R          3.14     3.08          0.45      0.02857  0.00511  0.02852
+  Foot.R          1.30     1.29          0.26      0.00392  0.00228  0.00360
+  Toe.R           0.26     0.26          0.45      0.00013  0.00022  0.00026
+  worn and carried:
+    HammerHead                  584 g
+    Apron                       480 g
+    Skirt                       392 g
+    Top                         308 g
+    Cap                         230 g
+    Trousers                    224 g
+    Hair                        176 g
+    CapLamp                      52 g
+    HammerHandle                 45 g
+    ApronPocket                  44 g
+    ApronStrap                   41 g
+    CapBrim                      28 g
+    CapLampMount                 27 g
+    Neckband                     20 g
+    Roll1                        18 g
+    Roll0                        17 g
+    Lace0                        17 g
+    Lace1                        17 g
+    Eyelet1                      12 g
+    Eyelet0                      12 g
+    CapLens                      12 g
+    HammerLoop                    9 g
+    ApronTie0                     7 g
+    ApronTie1                     7 g

@@ -13,15 +13,15 @@ images from or after Studio Ghibli films (Howl's Moving Castle and Spirited
 Away). They are described in the correspondence and are not committed,
 because they are copyrighted film frames.
 
-He was clear that he wants the essence, not the surface. So this document
+Luis was clear: the essence, not the surface. So this document
 does not try to imitate Ghibli. It asks **why** these images produce that
 feeling, and what that means for a 3D strategy game.
 
-## Luis's verdict, and what his favourite frame teaches
+## Luis's verdict, and what Luis's favourite frame teaches
 
 **The verdict, October 2.** The same day, after seeing the first iteration's
-captures, Luis said he likes "the before" (the hand-painted pass) better. He
-attached a frame he had taken in that build and "absolutely loved".
+captures, Luis preferred "the before" (the hand-painted pass), and attached a frame
+taken in that build and "absolutely loved".
 - **The base.** The hand-painted pass stays the base.
 - **The first iteration** (sections 3 to 5, and
   [TheEssencePlaytest.md](../Playtests/TheEssencePlaytest.md)) is not adopted.
@@ -44,16 +44,16 @@ enclosed moment: the pocket of life rather than the immensity around it. The
 Ghibli references were read too literally, as vastness and brightness.
 
 **What was missing from the process.** The first iteration replaced the look
-he loved instead of adding options beside it, and it was not shown to him
+Luis loved instead of adding options beside it, and it was not shown to Luis
 early. From now on:
-- **Explorations are additive and switchable.** Nothing he loves is replaced
+- **Explorations are additive and switchable.** Nothing Luis loves is replaced
   by default.
 - **Big swings are shown early**, as a few frames, before they are built
   out.
 
 **Kept from this study, if Luis wants them** (each would be an option over
 the before, never a replacement):
-- **Fireflies** around the lit house at dusk and night. They fit his frame.
+- **Fireflies** around the lit house at dusk and night. They fit Luis's frame.
 - **Composed viewpoints** on keys.
 - **Look F's painting pass and ink on people only**, as an extra look.
 - **The research method:** measuring colour against references.

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -430,14 +431,68 @@ namespace WonderGather.Editor
             Debug.Log("ORDINARY_PLACE_PAINTED_OK " + applied);
         }
 
-        // A release build, so frame times in the benchmark are representative.
+        // The dusk details over the hand-painted look, each switchable in Play (keys 7, 8, 9):
+        // fireflies, the hearth's flicker and the window glow, all on since Luis tried them.
+        // Updates the existing scene in place and can run again.
+        [MenuItem("Wonder Gather/Add The Dusk Details To The Ordinary Place")]
+        public static void AddDuskDetails()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Leave Play mode first.");
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var time = Object.FindAnyObjectByType<TimeOfDay>() ?? throw new InvalidOperationException("The scene has no time of day.");
+            var look = Object.FindAnyObjectByType<LookDevControls>() ?? throw new InvalidOperationException("The scene has no look controls.");
+            var house = GameObject.Find("The lit house") ?? throw new InvalidOperationException("The scene has no house.");
+
+            var flies = time.GetComponent<Fireflies>() ?? time.gameObject.AddComponent<Fireflies>();
+            // Each has its own home in the meadow (one to every 20 m2 of grass): fewer than there were,
+            // twice (Luis, October 2 and 8), and no longer a patch that follows the camera.
+            flies.Configure(MaterialFor("Fireflies", "Wonder Gather/Fireflies"), time, UnityEngine.Object.FindAnyObjectByType<OrdinaryGround>());
+            flies.enabled = true;
+
+            var windows = house.GetComponentsInChildren<Light>(true)
+                .Where(x => x.name.StartsWith("Door") || x.name.Contains("Window")).ToList();
+            if (windows.Count < 3) throw new InvalidOperationException("The house's window and door lights were not found.");
+            var glow = time.GetComponent<WindowGlow>() ?? time.gameObject.AddComponent<WindowGlow>();
+            glow.Configure(MaterialFor("Window glow", "Wonder Gather/Window Glow"), windows);
+            glow.enabled = true;
+
+            var hearth = new SerializedObject(time);
+            hearth.FindProperty("hearth").boolValue = true;
+            hearth.ApplyModifiedPropertiesWithoutUndo();
+            look.ConfigureDusk(flies, glow);
+            foreach (var item in new Object[] { flies, glow, time, look }) EditorUtility.SetDirty(item);
+            if (!EditorSceneManager.SaveScene(scene)) throw new IOException("Could not save " + ScenePath);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"ORDINARY_PLACE_DUSK_OK windows {windows.Count}");
+        }
+
+        private static Material MaterialFor(string name, string shaderName)
+        {
+            string path = MaterialPath + "/" + name + ".mat";
+            var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (existing != null) return existing;
+            var shader = Shader.Find(shaderName) ?? throw new InvalidOperationException(shaderName + " did not compile.");
+            var material = new Material(shader) { name = name };
+            AssetDatabase.CreateAsset(material, path);
+            return material;
+        }
+
+        private static string Argument(string name)
+        {
+            var args = Environment.GetCommandLineArgs();
+            for (int i = 0; i + 1 < args.Length; i++) if (args[i] == name) return args[i + 1];
+            return null;
+        }
+
+        // A release build, so frame times in the benchmark are representative. -buildOut names
+        // the folder under Builds/ (default WindowsOrdinaryPlace).
         public static void BuildWindows()
         {
             PlayerSettings.enableFrameTimingStats = true;
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = new[] { ScenePath },
-                locationPathName = "Builds/WindowsOrdinaryPlace/WonderGather.exe",
+                locationPathName = "Builds/" + (Argument("-buildOut") ?? "WindowsOrdinaryPlace") + "/WonderGather.exe",
                 target = BuildTarget.StandaloneWindows64,
                 options = BuildOptions.None
             });

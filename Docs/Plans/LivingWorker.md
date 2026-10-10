@@ -102,7 +102,7 @@ this proposal inserts an integration step before it, subject to Luis's choice.
 - Existing speed, gathering-rate and carrying-capacity settings still work;
   old factions, permissions and ordinary RTS controls retain their behavior.
 - Luis can read the action at strategic distance and enjoys observing it
-  closely. Weight, restraint and tone remain his creative judgment.
+  closely. Weight, restraint and tone remain Luis's creative judgment.
 
 Automated integration/regression checks should cover gameplay accounting and
 state transitions; rendered/runtime review should cover body interaction.

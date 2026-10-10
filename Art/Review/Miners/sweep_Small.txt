@@ -1,0 +1,207 @@
+SWEEP Small: 7 failing of 206 checks (distances in mm)
+  FAIL pinched   shoulder.L                                 limit 45.0  rest      -   worst   63.8 at arms_overhead (1/27 frames)  arms_forward_ 24.8 arms_overhead 63.8 arms_back_ 2.9 arms_out_ 9.2 elbows_ 0.0 wrists_up_ 0.0 wrists_down_ 0.0 backswing 43.2 strike 8.9 knee_lifted_ 0.0 leg_back_ 0.0 knees_ 0.0 deep_bend 0.9 bow_ 1.5 lean_back_ 0.0 side_bend_ 0.0 twist_ 0.0 head_down_ 0.0 head_up_ 0.0 head_turned_ 0.0 head_tilted_ 0.0 toes_bent_ 0.0  [0.137, 0.012, 1.028]
+  FAIL pinched   shoulder.R                                 limit 45.0  rest      -   worst   61.1 at arms_overhead (1/27 frames)  arms_forward_ 24.2 arms_overhead 61.1 arms_back_ 2.9 arms_out_ 9.0 elbows_ 0.0 wrists_up_ 0.0 wrists_down_ 0.0 backswing 42.2 strike 8.7 knee_lifted_ 0.0 leg_back_ 0.0 knees_ 0.0 deep_bend 0.9 bow_ 1.5 lean_back_ 0.0 side_bend_ 3.0 twist_ 2.9 head_down_ 0.0 head_up_ 0.0 head_turned_ 0.0 head_tilted_ 0.0 toes_bent_ 0.0  [-0.139, 0.011, 1.028]
+  FAIL sinks     Hand1 into Skirt                           limit  3.0  rest      -   worst    4.6 at side_bend_20 (1/27 frames)  arms_forward_ 0.0 arms_overhead 0.0 arms_back_ 0.0 arms_out_ 0.0 elbows_ 0.0 wrists_up_ 0.0 wrists_down_ 0.0 backswing 0.0 strike 0.0 knee_lifted_ 0.0 leg_back_ 0.0 knees_ 0.0 deep_bend 0.0 bow_ 0.0 lean_back_ 0.0 side_bend_ 4.6 twist_ 0.0 head_down_ 0.0 head_up_ 0.0 head_turned_ 0.0 head_tilted_ 0.0 toes_bent_ 0.0  [0.193, 0.033, 0.438]
+  FAIL sinks     Strap into Top                             limit  2.0  rest      -   worst    4.0 at arms_overhead (2/27 frames)  arms_forward_ 0.3 arms_overhead 4.0 arms_back_ 0.0 arms_out_ 2.3 elbows_ 0.0 wrists_up_ 0.0 wrists_down_ 0.0 backswing 0.1 strike 0.1 knee_lifted_ 0.0 leg_back_ 0.0 knees_ 0.0 deep_bend 0.0 bow_ 0.0 lean_back_ 0.1 side_bend_ 0.0 twist_ 0.0 head_down_ 0.0 head_up_ 0.0 head_turned_ 0.0 head_tilted_ 0.0 toes_bent_ 0.0  [0.13, 0.021, 1.004]
+  FAIL stretched Skirt                                      limit  1.9  rest      -   worst    3.7 at knee_lifted_90 (4/27 frames)  arms_forward_ 1.0 arms_overhead 1.0 arms_back_ 1.0 arms_out_ 1.0 elbows_ 1.0 wrists_up_ 1.0 wrists_down_ 1.0 backswing 1.0 strike 1.1 knee_lifted_ 3.7 leg_back_ 2.1 knees_ 1.0 deep_bend 3.6 bow_ 1.1 lean_back_ 1.1 side_bend_ 1.1 twist_ 1.1 head_down_ 1.0 head_up_ 1.0 head_turned_ 1.0 head_tilted_ 1.0 toes_bent_ 1.0  [0.202, -0.005, 0.464]
+  FAIL stretched Top                                        limit  1.9  rest      -   worst    3.1 at arms_overhead (5/27 frames)  arms_forward_ 2.5 arms_overhead 3.1 arms_back_ 1.4 arms_out_ 2.2 elbows_ 1.7 wrists_up_ 1.4 wrists_down_ 1.3 backswing 2.9 strike 2.0 knee_lifted_ 1.0 leg_back_ 1.0 knees_ 1.0 deep_bend 1.3 bow_ 1.4 lean_back_ 1.1 side_bend_ 1.3 twist_ 1.5 head_down_ 1.0 head_up_ 1.1 head_turned_ 1.1 head_tilted_ 1.0 toes_bent_ 1.0  [-0.113, 0.027, 0.94]
+  FAIL stretched Trousers                                   limit  1.9  rest      -   worst    2.0 at knee_lifted_90 (1/27 frames)  arms_forward_ 1.0 arms_overhead 1.0 arms_back_ 1.0 arms_out_ 1.0 elbows_ 1.0 wrists_up_ 1.0 wrists_down_ 1.0 backswing 1.0 strike 1.0 knee_lifted_ 2.0 leg_back_ 1.5 knees_ 1.7 deep_bend 1.9 bow_ 1.0 lean_back_ 1.0 side_bend_ 1.0 twist_ 1.0 head_down_ 1.0 head_up_ 1.0 head_turned_ 1.0 head_tilted_ 1.0 toes_bent_ 1.0  [-0.027, -0.025, 0.206]
+  ok   beneath   Trousers under Skirt                       limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   lies on   Eyelet0 on Boot0                           limit  7.0  rest      -   worst    6.9 at deep_bend (0/27 frames)  [-0.089, -0.12, 0.483]
+  ok   lies on   Eyelet1 on Boot1                           limit  7.0  rest      -   worst    6.6 at deep_bend (0/27 frames)  [0.089, -0.12, 0.483]
+  ok   lies on   Lace0 on Boot0                             limit  9.5  rest      -   worst    8.9 at deep_bend (0/27 frames)  [-0.094, -0.147, 0.492]
+  ok   lies on   Lace1 on Boot1                             limit  9.5  rest      -   worst    9.1 at deep_bend (0/27 frames)  [0.078, -0.156, 0.491]
+  ok   meets     Bag with Skirt|Top.Body                    limit  4.0  rest      -   worst    1.9 at arms_forward_45 (0/27 frames)  [-0.125, -0.08, 0.616]
+  ok   meets     BagFlap with Bag                           limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.13, 0.005, 0.697]
+  ok   meets     BagLoop0 with Bag                          limit  1.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.087, -0.114, 0.696]
+  ok   meets     BagLoop1 with Bag                          limit  1.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.137, -0.023, 0.696]
+  ok   meets     BagRing0 with BagLoop0                     limit  1.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.089, -0.088, 0.724]
+  ok   meets     BagRing1 with BagLoop1                     limit  1.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.139, 0.003, 0.724]
+  ok   meets     BagTongue with BagFlap                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.161, -0.097, 0.661]
+  ok   meets     Buckle with Bag|BagTongue                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.181, -0.083, 0.642]
+  ok   meets     Button0 with Top|Skirt                     limit  1.2  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.0, -0.091, 0.958]
+  ok   meets     Button1 with Top|Skirt                     limit  1.2  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.0, -0.072, 0.848]
+  ok   meets     Button2 with Top|Skirt                     limit  1.2  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.001, -0.074, 0.741]
+  ok   meets     LanternBail0 with LanternEar0              limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.343, -0.237, 0.627]
+  ok   meets     LanternBail0 with LanternHandle            limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.343, -0.237, 0.627]
+  ok   meets     LanternBail1 with LanternEar1              limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.343, -0.291, 0.64]
+  ok   meets     LanternBail1 with LanternHandle            limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.343, -0.291, 0.64]
+  ok   meets     LanternEar0 with LanternCap                limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.342, -0.249, 0.548]
+  ok   meets     LanternEar1 with LanternCap                limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.342, -0.311, 0.563]
+  ok   meets     LanternHandle with Hand0|Hand1             limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [0.342, -0.222, 0.618]
+  ok   meets     Strap with BagRing0                        limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.065, -0.104, 0.736]
+  ok   meets     Strap with BagRing1                        limit  1.5  rest      -   worst    0.3 at toes_bent_35 (0/27 frames)  [-0.126, -0.008, 0.729]
+  ok   meets     StrapTab0 with Strap                       limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.091, -0.093, 0.728]
+  ok   meets     StrapTab1 with Strap                       limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  [-0.14, -0.001, 0.731]
+  ok   pinched   elbow.L                                    limit 45.0  rest      -   worst   42.4 at elbows_130 (0/27 frames)  [0.249, 0.02, 0.815]
+  ok   pinched   elbow.R                                    limit 45.0  rest      -   worst   43.9 at elbows_130 (0/27 frames)  [-0.248, 0.06, 0.786]
+  ok   pinched   knee.L                                     limit 45.0  rest      -   worst   38.7 at deep_bend (0/27 frames)  [0.076, -0.297, 0.618]
+  ok   pinched   knee.R                                     limit 45.0  rest      -   worst   39.1 at deep_bend (0/27 frames)  [-0.077, -0.296, 0.618]
+  ok   pinched   wrist.L                                    limit 45.0  rest      -   worst    1.1 at bow_40    (0/27 frames)  [0.338, 0.195, 0.732]
+  ok   pinched   wrist.R                                    limit 45.0  rest      -   worst    2.5 at wrists_up_40 (0/27 frames)  [-0.33, 0.036, 0.62]
+  ok   sinks     Bag into Skirt                             limit  6.0  rest      -   worst    1.5 at deep_bend (0/27 frames)  [-0.161, -0.03, 0.605]
+  ok   sinks     Bag into Top.Arm.L                         limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Bag into Top.Arm.R                         limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Bag into Top.Body                          limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Bag into Trousers                          limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagFlap into Skirt                         limit  6.0  rest      -   worst    2.8 at deep_bend (0/27 frames)  [-0.102, -0.132, 0.705]
+  ok   sinks     BagFlap into Top.Arm.L                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagFlap into Top.Arm.R                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagFlap into Top.Body                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagFlap into Trousers                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagLoop0 into Skirt                        limit  6.0  rest      -   worst    2.7 at deep_bend (0/27 frames)  [-0.078, -0.109, 0.716]
+  ok   sinks     BagLoop0 into Top.Arm.L                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagLoop0 into Top.Arm.R                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagLoop0 into Top.Body                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagLoop0 into Trousers                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagLoop1 into Skirt                        limit  6.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagLoop1 into Top.Arm.L                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagLoop1 into Top.Arm.R                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagLoop1 into Top.Body                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagLoop1 into Trousers                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagRing0 into Skirt                        limit  6.0  rest      -   worst    3.0 at deep_bend (0/27 frames)  [-0.075, -0.116, 0.717]
+  ok   sinks     BagRing0 into Top.Arm.L                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagRing0 into Top.Arm.R                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagRing0 into Top.Body                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagRing0 into Trousers                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagRing1 into Skirt                        limit  6.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagRing1 into Top.Arm.L                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagRing1 into Top.Arm.R                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagRing1 into Top.Body                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagRing1 into Trousers                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagTongue into Skirt                       limit  6.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagTongue into Top.Arm.L                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagTongue into Top.Arm.R                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagTongue into Top.Body                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     BagTongue into Trousers                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Boot0 into Boot1                           limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Boot0 into Trousers.L                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Boot1 into Trousers.R                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Buckle into Skirt                          limit  6.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Buckle into Top.Arm.L                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Buckle into Top.Arm.R                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Buckle into Top.Body                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Buckle into Trousers                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hair into Collar                           limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hair into Top.Body                         limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand0 into Bag                             limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand0 into Skirt                           limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand0 into Top.Body                        limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand1 into Bag                             limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Hand1 into Top.Body                        limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Heel0 into Boot1                           limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Heel0 into Trousers.L                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Heel1 into Trousers.R                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail0 into Bag                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail0 into Boot0                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail0 into Boot1                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail0 into Hand0                    limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail0 into Hand1                    limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail0 into Skirt                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail0 into Top.Body                 limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail0 into Trousers                 limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail1 into Bag                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail1 into Boot0                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail1 into Boot1                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail1 into Hand0                    limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail1 into Hand1                    limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail1 into Skirt                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail1 into Top.Body                 limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBail1 into Trousers                 limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar0 into Bag                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar0 into Boot0                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar0 into Boot1                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar0 into Hand0                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar0 into Hand1                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar0 into Skirt                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar0 into Top.Body                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar0 into Trousers                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar1 into Bag                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar1 into Boot0                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar1 into Boot1                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar1 into Hand0                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar1 into Hand1                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar1 into Skirt                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar1 into Top.Body                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar1 into Trousers                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar2 into Bag                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar2 into Boot0                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar2 into Boot1                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar2 into Hand0                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar2 into Hand1                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar2 into Skirt                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar2 into Top.Body                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar2 into Trousers                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar3 into Bag                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar3 into Boot0                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar3 into Boot1                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar3 into Hand0                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar3 into Hand1                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar3 into Skirt                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar3 into Top.Body                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBar3 into Trousers                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBase into Bag                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBase into Boot0                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBase into Boot1                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBase into Hand0                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBase into Hand1                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBase into Skirt                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBase into Top.Body                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternBase into Trousers                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternCap into Bag                        limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternCap into Boot0                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternCap into Boot1                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternCap into Hand0                      limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternCap into Hand1                      limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternCap into Skirt                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternCap into Top.Body                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternCap into Trousers                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar0 into Bag                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar0 into Boot0                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar0 into Boot1                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar0 into Hand0                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar0 into Hand1                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar0 into Skirt                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar0 into Top.Body                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar0 into Trousers                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar1 into Bag                       limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar1 into Boot0                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar1 into Boot1                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar1 into Hand0                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar1 into Hand1                     limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar1 into Skirt                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar1 into Top.Body                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternEar1 into Trousers                  limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternGlass into Bag                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternGlass into Boot0                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternGlass into Boot1                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternGlass into Hand0                    limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternGlass into Hand1                    limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternGlass into Skirt                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternGlass into Top.Body                 limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternGlass into Trousers                 limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternHandle into Bag                     limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternHandle into Boot0                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternHandle into Boot1                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternHandle into Hand0                   limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternHandle into Hand1                   limit  1.5  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternHandle into Skirt                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternHandle into Top.Body                limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     LanternHandle into Trousers                limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Sole0 into Boot1                           limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Sole0 into Trousers.L                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Sole1 into Trousers.R                      limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Strap into Collar                          limit  3.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     Strap into Skirt                           limit  2.0  rest      -   worst    1.4 at bow_40    (0/27 frames)  [-0.021, -0.049, 0.793]
+  ok   sinks     StrapTab0 into Skirt                       limit  6.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     StrapTab0 into Top.Arm.L                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     StrapTab0 into Top.Arm.R                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     StrapTab0 into Top.Body                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     StrapTab0 into Trousers                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     StrapTab1 into Skirt                       limit  6.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     StrapTab1 into Top.Arm.L                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     StrapTab1 into Top.Arm.R                   limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     StrapTab1 into Top.Body                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   sinks     StrapTab1 into Trousers                    limit  2.0  rest      -   worst    0.0 at arms_forward_45 (0/27 frames)  None
+  ok   stretched Collar                                     limit  1.9  rest      -   worst    1.3 at arms_overhead (0/27 frames)  [-0.121, -0.008, 1.104]
+  ok   stretched Skin                                       limit  1.9  rest      -   worst    1.7 at head_turned_60 (0/27 frames)  [-0.019, 0.059, 1.127]

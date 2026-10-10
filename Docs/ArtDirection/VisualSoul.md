@@ -167,6 +167,35 @@ remains open.
 - **Further reading:** Tarsier on visual language and scale. Small, simple
   character shapes contrast with an oversized organic world.
 
+## The language for every being and thing
+
+Luis, October 2 ([correspondence](../Correspondence/2026-10-02_DUSK_DETAILS_AND_THE_WORKER.md)):
+these principles are "the base principles that we will apply as art style to
+all beings and things in this worlds we portrey". That covers every kind of
+unit the RTS will have, not one character. Details in the images, like the
+scarf, were examples, not a costume to repeat.
+
+Read for any being (people, creatures, units) and, where it applies, any thing:
+
+1. **A shape that tells character.** Each being has a distinctive, readable
+   silhouette built on one clear idea (round and heavy, long and thin, small
+   and quick), with honest exaggeration (E).
+2. **Drawn, not only modelled.** Lively, slightly imperfect contours, and
+   confident flat shapes (B, E, Luis's own reference).
+3. **Feeling from very few marks.** A face, or the being's equivalent, that
+   expresses much with almost nothing (B, E).
+4. **Value design.** Confident dark shapes, such as hair, coats, hides or
+   shells, against lighter ones (B).
+5. **Posture and small gestures.** These carry personality: how a being
+   stands, leans and rests its hands (B, E).
+6. **Individual, worn surfaces.** Painted texture that belongs to each
+   material and hints at a life beyond the frame: wear, patches, personal
+   objects (A, B, E).
+7. **Light finds them.** Warm light picks out a cheek, a hand or an edge
+   against a cool world (A, B, D).
+8. **Small against an immense, organic world.** Simple beings against
+   oversized surroundings (D, F, Tarsier).
+
 ## How we translate it (engineering reading, to be tested in engine)
 
 These are working hypotheses for the S1 in-engine test. They are not
@@ -178,7 +207,7 @@ decisions. Each will be judged against real captures in motion.
 | Surfaces feel alive | **Painterly variation.** Hue and value vary across surfaces, and brush-mark texture is tied to each object (plaster, wood, cloth, grass, skin), with an individual treatment per material. **Shape.** Irregular silhouettes, so nothing is perfectly straight. |
 | Grassland | **Dense grass.** Wind-moved blades darken to blue-green at the root and catch warm light at the tips. **Seed heads.** Tall grass with seed heads catches window light at night (A, D). **Foreground.** Dark grass silhouettes frame close views. |
 | Sky | **A painted sky.** Clouds with soft lit edges, stars and a moon at night, and a lilac and apricot dusk (E), giving a sky worth looking up at from the Explore camera. **Distance.** Layered aerial perspective in the distance (A, E). |
-| Characters have a soul | **Shape and face.** Distinctive silhouettes and proportions, strong dark hair and coat shapes, and a simple drawn face. **Contours.** Possibly loose ink contours on characters (B, E). **Gestures.** Small idle gestures. **Scarf.** A scarf appears in almost every image (B, C, D, E, F), but costume remains open. |
+| Characters have a soul | **Shape and face.** Distinctive silhouettes and proportions, strong dark hair and coat shapes, and a simple drawn face. **Contours.** Possibly loose ink contours on characters (B, E). **Gestures.** Small idle gestures. **Costume.** The scarf in the images was only an example, not a key detail (Luis, October 2); costume stays open. |
 | Wonder and scale | **Reading near and far.** The scene must read both up close (Explore camera) and from strategic height (RTS camera). **Scale.** Large forms (trees, reeds, distant hills) against a small person. |
 
 **Candidate rendering techniques to compare in engine**:

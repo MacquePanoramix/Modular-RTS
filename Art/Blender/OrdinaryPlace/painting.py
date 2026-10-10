@@ -140,10 +140,12 @@ def scaled(rgb, k):
 def build_painting(material, r):
     g = Graph(material)
     base = r["base"]
+    # Smaller objects (a person, a tool) take smaller variation: k scales the broad and middle patches.
+    k = r.get("scale", 1.0)
     # 1. Broad warm/cool patches, the way a painter varies a flat colour.
-    broad = g.remap(g.noise(0.6, 2.0), 0.35, 0.65)
+    broad = g.remap(g.noise(0.6 * k, 2.0), 0.35, 0.65)
     color = g.mix(tuple(min(1, c * w) for c, w in zip(base, r["warm"])), tuple(min(1, c * w) for c, w in zip(base, r["cool"])), broad)
-    mid = g.remap(g.noise(2.2, 3.0), 0.3, 0.7)
+    mid = g.remap(g.noise(2.2 * k, 3.0), 0.3, 0.7)
     color = g.mix(g.tint(color, (0.84, 0.84, 0.88)), g.tint(color, (1.12, 1.1, 1.05)), mid)
     # Paint daubs: flat patches of slightly different tone, as a brush lays them down.
     daubs = g.node("ShaderNodeTexVoronoi", feature='SMOOTH_F1')
@@ -236,18 +238,18 @@ def build_painting(material, r):
     if r.get("stains"):
         height = g.node("ShaderNodeSeparateXYZ")
         g.link(g.geometry.outputs["Position"], height.inputs["Vector"])
-        low = g.remap(height.outputs["Z"], 0.9, 0.05)
-        drips = g.remap(g.noise(3.0, 4.0, 0.6, g.stretched((6.0, 6.0, 0.4)), 0.5), 0.45, 0.7)
+        low = g.remap(height.outputs["Z"], r.get("stain_top", 0.9), 0.05)
+        drips = g.remap(g.noise(3.0 * k, 4.0, 0.6, g.stretched((6.0, 6.0, 0.4)), 0.5), 0.45, 0.7)
         stain = g.math('MULTIPLY', g.math('MULTIPLY', low, drips), r["stains"])
         color = g.mix(color, g.tint(color, (0.62, 0.6, 0.55)), stain)
     # 4. Cavities: cool and coloured, not black.
     ao = g.node("ShaderNodeAmbientOcclusion", samples=16)
-    ao.inputs["Distance"].default_value = 0.35
+    ao.inputs["Distance"].default_value = r.get("ao", 0.35)
     cavity = g.remap(ao.outputs["AO"], 0.2, 1.0)
     color = g.mix(g.tint(color, r["cavity"]), color, cavity)
     # 5. Lit, worn edges.
     bevel = g.node("ShaderNodeBevel", samples=8)
-    bevel.inputs["Radius"].default_value = 0.025
+    bevel.inputs["Radius"].default_value = r.get("bevel", 0.025)
     dot = g.node("ShaderNodeVectorMath", operation='DOT_PRODUCT')
     g.link(bevel.outputs["Normal"], dot.inputs[0])
     g.link(g.geometry.outputs["Normal"], dot.inputs[1])
@@ -319,7 +321,8 @@ def paint(objects, folder, samples=48):
         image = bpy.data.images.new(name + "_Painted", r["size"], r["size"], alpha=False)
         # Fill the space between islands with the material's colour so distant mipmaps never darken.
         import numpy
-        image.pixels.foreach_set(numpy.tile(numpy.array([*r["base"], 1.0], dtype=numpy.float32), r["size"] * r["size"]))
+        fill = r.get("fill", r["base"])
+        image.pixels.foreach_set(numpy.tile(numpy.array([*fill, 1.0], dtype=numpy.float32), r["size"] * r["size"]))
         target = g.node("ShaderNodeTexImage")
         target.image = image
         g.nodes.active = target
