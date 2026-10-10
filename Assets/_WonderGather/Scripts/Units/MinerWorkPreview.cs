@@ -486,6 +486,7 @@ namespace WonderGather
                 carry.enabled = false;
                 swing.enabled = true;
                 Aims();
+                RockTells?.Invoke("sets to work: " + Stands() + "; the aim misses by " + (swing.AimMiss * 1000).ToString("0") + " mm");
                 swing.TakeUp();
                 headBlows = hands.Thing.HeadBlows; tookThisSwing = false;
                 return;
@@ -548,8 +549,25 @@ namespace WonderGather
                 && ((working.transform.position - aimedAt).sqrMagnitude > .0001f || Vector3.Angle(working.transform.forward, aimedFacing) > 1))
             {
                 Aims();
-                if (swing.AimMiss > .05f) GoToRock();
+                RockTells?.Invoke("aims again: " + Stands() + "; the aim misses by " + (swing.AimMiss * 1000).ToString("0") + " mm");
+                if (swing.AimMiss > .05f || short_.magnitude > SwingsWithin) GoToRock();
             }
+        }
+
+        // At a boulder a swing is begun only from its place: stood further from it than this (metres), it steps
+        // back to its place first, wherever it could reach from. (It aimed again from where it stood, and went
+        // back only if the spot was out of its reach: a hand's length too near the rock the spot is in reach,
+        // and the blow from there landed 30 cm off. October 10.)
+        public static float SwingsWithin = .06f;
+
+        // (For whoever looks at its work at a rock, a test: what it does between its blows. Nobody listens in the game.)
+        public static System.Action<string> RockTells;
+        private string Stands()
+        {
+            Vector3 from = Vector3.ProjectOnPlane(working.transform.position - plan.stand, Vector3.up), to = Vector3.ProjectOnPlane(plan.spot - plan.stand, Vector3.up);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} at {1:0.00} s, {2:0} mm from its place ({3:0} towards the rock), facing {4:0} deg off its spot",
+                working.name, Time.time, from.magnitude * 1000, Vector3.Dot(from, to.normalized) * 1000,
+                Vector3.SignedAngle(Vector3.ProjectOnPlane(plan.spot - working.transform.position, Vector3.up), working.transform.forward, Vector3.up));
         }
 
         private void Aims()
@@ -594,7 +612,9 @@ namespace WonderGather
             physical.Worked(PhysicalBody.Muscles.Legs, 1, 15);
             physical.Worked(PhysicalBody.Muscles.Back, 1, 15);
         }
-        private bool ownWanted;
+        // (On from the start since October 10: Luis accepted the body standing by its own joints, and that its
+        // switch be on. The body as it was is one click away.)
+        private bool ownWanted = true;
         private SelectableUnit ownOf;
         public bool StandsByItsOwn => ownWanted;
         public void SetOwn(bool wanted) => ownWanted = wanted;

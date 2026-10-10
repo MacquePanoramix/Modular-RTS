@@ -9,6 +9,14 @@ namespace WonderGather.Tests
     // (the project has no image-encoding module).
     internal static class CaptureTools
     {
+        // The Ordinary Place as it was before a miner at ease stood by its own joints (its switch is on from the
+        // start since October 10): for every test that is of the body as it was.
+        public static void AsItWas()
+        {
+            var look = UnityEngine.Object.FindAnyObjectByType<MinerWorkPreview>();
+            if (look != null) look.SetOwn(false);
+        }
+
         public static string Argument(string name)
         {
             var args = Environment.GetCommandLineArgs();

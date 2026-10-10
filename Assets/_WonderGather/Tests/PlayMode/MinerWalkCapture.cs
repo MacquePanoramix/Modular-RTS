@@ -61,6 +61,7 @@ namespace WonderGather.Tests
             string folder = Folder();
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             var choice = UnityEngine.Object.FindAnyObjectByType<MinerChoice>();
             var ground = UnityEngine.Object.FindAnyObjectByType<OrdinaryGround>();

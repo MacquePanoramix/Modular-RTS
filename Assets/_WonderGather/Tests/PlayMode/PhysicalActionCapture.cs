@@ -37,6 +37,7 @@ namespace WonderGather.Tests
             var culture = CultureInfo.InvariantCulture;
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             Time.captureFramerate = 50;
             try

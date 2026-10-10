@@ -53,6 +53,7 @@ namespace WonderGather.Tests
             string balancing = CaptureTools.Argument("-benchBalance");
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             // The body is posed once a frame and the physics steps fifty times a second: the bench runs frame for step,
             // and keeps every other frame for the moving picture (25 a second).

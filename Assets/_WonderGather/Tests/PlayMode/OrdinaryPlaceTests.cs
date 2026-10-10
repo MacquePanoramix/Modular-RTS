@@ -22,6 +22,7 @@ namespace WonderGather.Tests
         [UnitySetUp] public IEnumerator Load()
         {
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             rig = Object.FindAnyObjectByType<RtsCamera>();
             worker = Object.FindAnyObjectByType<SelectableUnit>();

@@ -724,6 +724,7 @@ namespace WonderGather.Tests
             var culture = CultureInfo.InvariantCulture;
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             Time.captureFramerate = 50;
             var mode = Physics.simulationMode;
@@ -921,6 +922,7 @@ namespace WonderGather.Tests
             var culture = CultureInfo.InvariantCulture;
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             Time.captureFramerate = 50;
             var mode = Physics.simulationMode;
@@ -1305,6 +1307,7 @@ namespace WonderGather.Tests
                 field.SetValue(null, float.Parse(sides[1], culture));
             }
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             Time.captureFramerate = 50;
             var mode = Physics.simulationMode;
@@ -1481,6 +1484,7 @@ namespace WonderGather.Tests
             var began = new float[n];
             for (int i = 0; i < n; i++) { fields[i] = typeof(OwnKeeper).GetField(StepSettings[i].name); Assert.That(fields[i] != null, Is.True, StepSettings[i].name); began[i] = (float)fields[i].GetValue(null); }
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             Time.captureFramerate = 50;
             var mode = Physics.simulationMode;

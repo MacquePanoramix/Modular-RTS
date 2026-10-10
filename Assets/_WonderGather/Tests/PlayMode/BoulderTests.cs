@@ -22,6 +22,7 @@ namespace WonderGather.Tests
         public IEnumerator Load()
         {
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             choice = Object.FindAnyObjectByType<MinerChoice>();
             look = Object.FindAnyObjectByType<MinerWorkPreview>();
@@ -30,7 +31,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; }
+        public void Restore() { Time.captureFramerate = 0; MinerWorkPreview.RockTells = null; }
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
@@ -117,9 +118,20 @@ namespace WonderGather.Tests
             // the edge of what the bodies can do: from one run to the next Small works there with ease, or is thrown
             // off its place by its first swings and falls. That is written up as a defect of the swing at low rock
             // (Docs/Design/ThePhysicalBody.md, step 11); this test is of mining a boulder by a click.)
+            // (-breathOnAll 1: with breath drawn on every body, to look for the miss it brings on. Not the game.)
+            if (CaptureTools.Argument("-breathOnAll") == "1") MinerBreath.OnEveryBody = true;
+            string toldLast = "";
+            MinerWorkPreview.RockTells = what => { if (toldLast == "") toldLast = what; Debug.Log("BOULDER_ROCK " + what); };
+            // (-blowsAtLeast 16 -onlyWho Long: more blows, and one miner only, to look at a long stretch of work. Not the test.)
+            int atLeast = int.TryParse(CaptureTools.Argument("-blowsAtLeast"), out int asked) ? asked : 4;
+            string only = CaptureTools.Argument("-onlyWho");
+            // (-rockAsItWas 1: without what keeps a miner's blows to its place at a boulder, to measure against.)
+            if (CaptureTools.Argument("-rockAsItWas") == "1") { MinerWorkPreview.SwingsWithin = float.MaxValue; PhysicalSwing.KeepsFeetTakingUp = false; }
+            if (CaptureTools.Argument("-stepsTakingUp") == "1") PhysicalSwing.KeepsFeetTakingUp = false;
             var tries = new (string who, int boulder)[] { ("Small", 1), ("Long", 3), ("Round", 4) };
             foreach (var (who, which) in tries)
             {
+                if (!string.IsNullOrEmpty(only) && only != who) continue;
                 choice.Choose(Miner(who));
                 yield return Wait(.4f);
                 var unit = choice.Current;
@@ -163,13 +175,21 @@ namespace WonderGather.Tests
 
                 // It strikes the rock, and goes on until a piece breaks off (a weaker blow takes more of them).
                 began = Time.time;
-                while ((boulder.Blows - blowsBefore < 4 || boulder.Stones.Count == stonesBefore) && look.Mining == boulder && Time.time - began < 90) yield return null;
+                while ((boulder.Blows - blowsBefore < atLeast || boulder.Stones.Count == stonesBefore) && look.Mining == boulder && Time.time - began < 90 + (atLeast - 4) * 10) yield return null;
                 Assert.That(boulder.Blows - blowsBefore, Is.GreaterThanOrEqualTo(4), $"{who} did not strike the boulder four times: {look.LeftRock}");
                 float took = Time.time - began;
                 int blowsTaken = boulder.Blows - blowsBefore;
                 yield return Wait(1.5f);
                 float farthest = 0;
-                for (int i = blowsBefore; i < boulder.Struck.Count; i++) farthest = Mathf.Max(farthest, Vector3.Distance(boulder.Struck[i], plan.lands));
+                string each = "";
+                for (int i = blowsBefore; i < boulder.Struck.Count; i++)
+                {
+                    Vector3 from = boulder.Struck[i] - plan.lands;
+                    farthest = Mathf.Max(farthest, from.magnitude);
+                    // (Each blow: how far from where the plan put it; of that, up, and along the way the miner faces.)
+                    each += $" {from.magnitude * 1000:F0}({from.y * 1000:F0} up, {Vector3.Dot(from, unit.transform.forward) * 1000:F0} on, {Vector3.Dot(from, unit.transform.right) * 1000:F0} right)";
+                }
+                Debug.Log($"BOULDER_BLOWS {who}:{each}");
                 int stones = boulder.Stones.Count - stonesBefore;
                 string lying = "";
                 for (int i = stonesBefore; i < boulder.Stones.Count; i++)
@@ -183,6 +203,9 @@ namespace WonderGather.Tests
                     Assert.That(over, Is.InRange(-.05f, 1.2f), "A stone is not on the ground or the rock.");
                 }
                 var swing = look.Swing;
+                string told = "";
+                foreach (var r in swing.results) told += $" [{(r.struck ? "struck" : "did not strike")} {Vector3.Distance(r.landed, plan.lands) * 1000:F0} mm off, moved {Flat(r.stood - r.droveFrom).magnitude * 1000:F0} mm as the blow came down, turned {r.rolled:F0} deg round its handle, hands at {r.heldLow * 1000:F0} and {r.heldHigh * 1000:F0} mm, after {r.afterRests} rests; it stood {Flat(r.stood - plan.stand).magnitude * 1000:F0} mm from its place ({Vector3.Dot(r.stood - plan.stand, Flat(plan.spot - plan.stand).normalized) * 1000:F0} towards the rock) facing {Vector3.SignedAngle(Flat(plan.spot - plan.stand), Flat(r.faced), Vector3.up):F0} deg off]";
+                Debug.Log($"BOULDER_SWINGS {who}:{told}");
                 Debug.Log($"BOULDER_MINED {who} picked the pickaxe up {pickedUp:F1} s after the order; at boulder {which}: its spot {plan.height:F2} m over the ground, its place {plan.away:F2} m from it and {off:F2} m off the walked ground; there {came:F1} s after the order, {fromPlace * 1000:F0} mm from its place, facing its spot within {turned:F1} degrees; {blowsTaken} blows in {took:F1} s, landing at most {farthest * 1000:F0} mm from where the plan put them; {stones} stone(s) off it:{lying}");
                 Assert.That(farthest, Is.LessThan(.2f), who + "'s blows land far from where the plan put them.");
                 Assert.That(stones, Is.GreaterThanOrEqualTo(1), "Its blows should have broken a piece off by now.");
@@ -220,6 +243,38 @@ namespace WonderGather.Tests
                 Assert.That(look.Mining, Is.EqualTo(boulder), $"{who} gave its boulder up when it was told to go back to its work: {look.LeftRock}");
                 Assert.That(boulder.Blows, Is.GreaterThan(blowsAtRest), $"{who} did not strike again when it was told to go back to its work ({Time.time - began:F0} s, {restedThere:F0} s of them resting of its own accord)");
                 Debug.Log($"BOULDER_BACK {who} rested at its boulder when told, and struck it again {Time.time - began:F1} s after it was told to go back ({restedThere:F1} s of that resting of its own accord)");
+
+                // Taken off its place, it steps back to it before it swings again, wherever it could reach from.
+                // (Here it is carried a hand's length and a half towards the rock as a blow ends, as a step to catch
+                // itself carries it: from there its spot is in reach. Its own step took a tall miner there, one time
+                // in nine that it took its pickaxe up at a low boulder, and its blow from there landed 30 cm off.
+                // October 10.)
+                began = Time.time;
+                while (look.Mining == boulder && !(look.Swinging && look.Swing.phase == PhysicalSwing.Phase.Struck) && Time.time - began < 240) yield return null;
+                Assert.That(look.Mining == boulder && look.Swinging && look.Swing.phase == PhysicalSwing.Phase.Struck, Is.True, $"{who} did not strike again: {look.LeftRock}");
+                int swungBefore = look.Swing.results.Count;
+                began = Time.time; toldLast = "";
+                Vector3 towards = Flat(plan.spot - plan.stand).normalized;
+                // (To a hand's length and a half nearer than its place, wherever the blow left it: the blow itself
+                // may have taken it as far back.)
+                for (int k = 0; k < 100; k++)
+                {
+                    Vector3 left = Flat(plan.stand + towards * .15f - unit.transform.position);
+                    if (left.magnitude < .001f) break;
+                    unit.transform.position += Vector3.ClampMagnitude(left, .6f * Time.deltaTime);
+                    yield return null;
+                }
+                float wasNearer = Vector3.Dot(unit.transform.position - plan.stand, Flat(plan.spot - plan.stand).normalized);
+                Assert.That(wasNearer, Is.GreaterThan(.12f), who + " was not carried nearer the rock.");
+                // (The blow that was ending is told when the tool is at rest again; the next one is the one begun after.)
+                while (look.Mining == boulder && (look.Swing == null || look.Swing.results.Count < swungBefore + 2) && Time.time - began < 240) yield return null;
+                Assert.That(look.Mining, Is.EqualTo(boulder), $"{who}, taken off its place, gave its boulder up: {look.LeftRock}");
+                Assert.That(look.Swing.results.Count, Is.GreaterThanOrEqualTo(swungBefore + 2), who + ", taken off its place, did not swing again.");
+                var after = look.Swing.results[swungBefore + 1];
+                float beganFrom = Flat(after.droveFrom - plan.stand).magnitude;
+                Debug.Log($"BOULDER_PLACE {who}, carried {wasNearer * 1000:F0} mm nearer the rock as a blow ended (it {toldLast}), brought its next blow down from {beganFrom * 1000:F0} mm from its place, {Time.time - began:F1} s after; it {(after.struck ? "struck " + (Vector3.Distance(after.landed, plan.lands) * 1000).ToString("F0") + " mm from where the plan put it" : "did not strike")}");
+                Assert.That(beganFrom, Is.LessThan(.06f), who + " swung from where it was taken to, not from its place.");
+                Assert.That(after.struck, Is.True, who + ", back at its place, did not strike.");
 
                 // Sent somewhere, it comes back to the walked ground, and walks there with its pickaxe.
                 Vector3 to = plan.approach + Flat(plan.approach - boulder.Rock.bounds.center).normalized * 3;

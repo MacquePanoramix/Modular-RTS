@@ -20,6 +20,7 @@ namespace WonderGather.Tests
         public IEnumerator Load()
         {
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             choice = Object.FindAnyObjectByType<MinerChoice>();
             ground = Object.FindAnyObjectByType<OrdinaryGround>();

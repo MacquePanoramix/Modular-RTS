@@ -431,5 +431,22 @@ namespace WonderGather.Tests
             }
             time.Hour = hour;
         }
+
+        // Luis, October 10: the body standing by its own joints is accepted, and its switch is on from the start.
+        [UnityTest, Timeout(300000)]
+        public IEnumerator TheSwitchIsOnFromTheStart()
+        {
+            Time.captureFramerate = 50;
+            Assert.That(look.StandsByItsOwn, Is.True, "The switch is not on from the start.");
+            choice.Choose(0);
+            var unit = choice.Current;
+            yield return Stand(unit, (s, a) => { });
+            OwnBody own = null;
+            for (float began = Time.time; Time.time - began < 5 && (own == null || !own.Stands);) { unit.TryGetComponent(out own); yield return null; }
+            Assert.That(own != null && own.Stands, Is.True, "A miner at ease does not stand by its own joints without being asked: " + look.Status());
+            look.SetOwn(false);
+            yield return Wait(.6f);
+            Assert.That(own.Stands, Is.False, "The body as it was is not one click away.");
+        }
     }
 }

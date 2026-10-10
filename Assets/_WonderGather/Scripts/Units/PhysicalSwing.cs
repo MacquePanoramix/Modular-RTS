@@ -40,6 +40,14 @@ namespace WonderGather
             // The head's speed as the tool came down through the body's own upright, on its way to the blow: read
             // between steps, so it does not depend on when the blow is found.
             public float upright;
+            // How far round its handle the tool was turned from how it was meant, when it struck (degrees); where
+            // the lower and the upper hand held it then (metres along the handle); and how many rests came before.
+            public float rolled, heldLow, heldHigh;
+            public int afterRests;
+            // Where the body stood when it struck, and which way it faced.
+            public Vector3 stood, faced;
+            // Where it stood when the blow began to come down.
+            public Vector3 droveFrom;
         }
 
         // The tool's lean against the body at rest, at the top of the lift, and where the drive means to end (through
@@ -244,9 +252,26 @@ namespace WonderGather
             => PhysicalCarry.AtSide(body, hands, hips, posture, out position, out rotation);
 
         // It takes up to its work a tool it was carrying: from however it is held now.
+        // Taking the tool up to its work it bends of its own accord, and keeps its feet (PhysicalBalance.KeepsFeet,
+        // as when it bends to the ground for a tool). Its own bow moves its weight as a loss of balance would, and
+        // the step it took to catch itself took a tall miner at a low boulder a hand's length or two towards the
+        // rock, about one time in nine that it took the tool up there. (October 10. It can be put off, to measure
+        // against. Not through the blow itself: tried, the body stood where it was and every blow landed 19 to
+        // 28 cm beyond where the plan put it. Where a blow is planned to land is reckoned for hips that go back
+        // as it comes down.)
+        public static bool KeepsFeetTakingUp = true;
+        private bool takingUp;
+
+        private void OnDisable()
+        {
+            takingUp = false;
+            if (balance != null) balance.KeepsFeet = false;
+        }
+
         public void TakeUp()
         {
             if (hands == null || hands.Held == null) return;
+            takingUp = true;
             from = hands.Held.position; fromTurn = hands.Held.rotation;
             Go(Phase.Recover);
         }
@@ -271,6 +296,8 @@ namespace WonderGather
             {
                 if (phase == Phase.Rest) balance.Ease();
                 else balance.Brace(StanceWider, StanceStagger);
+                if (phase != Phase.Recover) takingUp = false;
+                balance.KeepsFeet = KeepsFeetTakingUp && takingUp;
             }
             // The body as it stands at this step's own moment (it is posed once a frame; this steps on the physics' clock).
             System.Span<Vector3> unused = stackalloc Vector3[4];
@@ -331,7 +358,11 @@ namespace WonderGather
                 }
                 case Phase.Top:
                     high = Mathf.Max(high, headUp);
-                    if (clock >= .12f) { now.lifted = high - low; blows = hands.Thing.HeadBlows; leanBefore = Lean(posture); headSpeed = hands.HeadVelocity.magnitude; Go(Phase.Drive); }
+                    if (clock >= .12f)
+                    {
+                        now.lifted = high - low; now.droveFrom = transform.position;
+                        blows = hands.Thing.HeadBlows; leanBefore = Lean(posture); headSpeed = hands.HeadVelocity.magnitude; Go(Phase.Drive);
+                    }
                     break;
                 case Phase.Drive:
                     // The back goes first, and the arms follow when it is well on its way: the tool comes over last.
@@ -347,6 +378,11 @@ namespace WonderGather
                         // How fast the head was going at the step before it struck (the tool's weight is nearly all there).
                         now.struck = true; now.speed = headSpeed; now.energy = .5f * hands.ToolMass * now.speed * now.speed;
                         now.landed = hands.HeadPosition;
+                        Intend(Lean(posture), hips, posture, out _, out var meant);
+                        Vector3 handle = hands.Held.rotation * Vector3.up;
+                        now.rolled = Vector3.SignedAngle(Vector3.ProjectOnPlane(meant * Vector3.forward, handle), Vector3.ProjectOnPlane(hands.Held.rotation * Vector3.forward, handle), handle);
+                        now.heldLow = hands.GripAlong(1); now.heldHigh = hands.GripAlong(0); now.afterRests = rests;
+                        now.stood = transform.position; now.faced = transform.forward;
                     }
                     float leans = Lean(posture), speeds = hands.HeadVelocity.magnitude;
                     if (leanBefore < 0 && leans >= 0 && now.upright <= 0) now.upright = Mathf.Lerp(headSpeed, speeds, Mathf.InverseLerp(leanBefore, leans, 0));
@@ -392,6 +428,7 @@ namespace WonderGather
                     if (clock >= 2.5f && (Spent <= GoesOnAt || (given && Spent <= RestsAt - WorthGoingOn)))
                     {
                         // It takes the tool up to its work again from where it holds it.
+                        takingUp = true;
                         from = hands.Held.position; fromTurn = hands.Held.rotation;
                         Go(Phase.Recover);
                     }
