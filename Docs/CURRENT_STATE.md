@@ -2,6 +2,19 @@
 
 **Updated:** October 10, 2026.
 
+- **Luis looked at step 1 on October 10, and could hardly tell it from
+  the body as it was:** "I couldn't really notice the difference. I
+  could only really notice the breathing when the character fell."
+  That was not intended. The standing breath is now drawn as large as
+  the fallen one, and the panel can set its size
+  ([the message](Correspondence/2026-10-10_STEP_ONE_LOOKED_AT_AND_AN_OUTSIDE_REVIEW.md)).
+  **Nothing of step 1 is accepted.**
+- **`main`:** Luis merged the work branch into `main` on October 10
+  (pull request 3). What came after is on `claude/worker-showcase`.
+- **An outside review** of the whole project is kept, unchanged, in
+  [Reviews](Reviews/2026-10-10_Independent_Outside_Review.md): advice,
+  not direction. Nothing was changed because of it.
+
 - **Now: S3b, the body's own. Approved by Luis on October 9; step 0 is
   done, step 1 is built, and Luis said on October 10 to go on. The two
   more looks of breath are built (its shoulders rising; its breath seen
@@ -117,7 +130,7 @@
     step); how a body is walked by its own joints and kept up.
   - **Proposed that day, and approved by Luis the same day:**
     [the body's own](NextMilestonePlan.md) (above).
-  - Nothing of it is merged into `main`, and nothing in it is Locked.
+  - Luis merged it into `main` on October 10 (pull request 3); nothing in it is Locked.
 - **Before it: the playtest round; all ten notes looked into, and waiting
   for Luis to play.** Luis played the build of S3 and sent ten
   notes ([the message](Correspondence/2026-10-08_THE_PLAYTEST_NO_FAKE_ANIMATIONS.md));
@@ -194,7 +207,7 @@
     judges who did not make them; then Luis. What real bodies do, with
     sources, is in
     [the research](Research/2026-10-08_RealBodiesAndHowToJudgeThem.md).
-  - Nothing of it is merged into `main`, and nothing in it is Locked.
+  - Luis merged it into `main` on October 10 (pull request 3); nothing in it is Locked.
 - **Before it: S3, weight and strength at the rock.** Approved by Luis on
   October 6 ([the plan](Plans/S3_WeightAndStrengthAtTheRock.md);
   [the design](Design/ThePhysicalBody.md)).
@@ -344,7 +357,7 @@
         miner mines each of the ten boulders.
     - **S3's twelve steps are built.** What it needs now is Luis's play of
       the build ([the guide](Playtests/MinersPlaytest.md#the-physical-work-with-the-panel-october-7)).
-      Nothing of S3 is merged into `main`, and nothing in it is Locked.
+      Luis merged S3 into `main` on October 10 (pull request 3); nothing in it is Locked.
     - **Next, by the approved order, after the playtest round:** S4
       (carrying and equipment), then S2, then S5. **S4 is proposed, not
       begun** ([the proposal](Plans/S4_CarryingAndEquipment_Proposal.md)):
