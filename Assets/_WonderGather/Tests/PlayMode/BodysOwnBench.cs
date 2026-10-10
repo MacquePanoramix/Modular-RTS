@@ -11,6 +11,28 @@ using UnityEngine.TestTools;
 
 namespace WonderGather.Tests
 {
+    // What the ground does to a boot in a step of the physics: how hard it pushes (newton seconds, summed), and where
+    // (the middle of that push). Cleared by whoever reads it.
+    public sealed class Touching : MonoBehaviour
+    {
+        public Vector3 pushed, where;
+        public float up;
+        public void Clear() { pushed = Vector3.zero; where = Vector3.zero; up = 0; }
+        private void Take(Collision touch)
+        {
+            for (int k = 0; k < touch.contactCount; k++)
+            {
+                var point = touch.GetContact(k);
+                Vector3 gave = point.impulse;
+                pushed += gave;
+                float lifts = Mathf.Max(0, gave.y);
+                where += point.point * lifts; up += lifts;
+            }
+        }
+        private void OnCollisionEnter(Collision touch) => Take(touch);
+        private void OnCollisionStay(Collision touch) => Take(touch);
+    }
+
     // The bench of S3b's step 0 (Docs/NextMilestonePlan.md): what the body's own body is to be made of.
     //
     // A miner's body is made again as thirteen weighted parts (the eleven of the let-go body, and its two boots as
@@ -34,6 +56,14 @@ namespace WonderGather.Tests
         // (A joint's spring set by rule: no stiffer than makes its own rate, times the step, this much, by the turning
         // weight of the lighter side of the joint; and damped this share of what just stops that side swinging. 0: not.)
         private static float Rule = 0, Damped = 1;
+        // (Which law keeps it: 1, back to where its weight was; 2, from where its weight is going, feeling what
+        // pushes it (over this long, seconds; 0: not) and leaning against it (this fast, a second; no further than
+        // this, metres).)
+        private static int Law = 2;
+        private static float Feels = .1f, Leans = 3, LeansBy = 1, LeansAtMost = .1f, Tracks = 8, Comfort = .03f, KeepsBehind = .035f;
+        // (How hard its hips right its trunk, for each kilogram of it, and how much that is damped; how near the edge
+        // of a sole its push may act; how hard it keeps its height, and how much that is damped; how quick it is.)
+        private static float Rights = 9, RightsDamped = .2f, Edge = .01f, Rises = 100, RisesDamped = 20, Quick = 4;
 
         private struct Solid
         {
@@ -72,10 +102,28 @@ namespace WonderGather.Tests
             // Kept by its own torques: where its weight was and how high, when it began; and what each joint gave last.
             public bool keeps, begun;
             public Vector3 centre;
+            // (The second law: where its weight is at ease, over the ground; the place it holds its weight now, which
+            // drifts when it leans; what it feels pushing it from outside (m/s2); and the step before.)
+            public Vector3 rest, held, felt, wentBefore, weightBefore, actedBefore;
+            public bool hasBefore;
             public Quaternion upright;
             public float height;
             public readonly float[] gave = new float[Count];
             public float outside;
+            public readonly Touching[] touches = new Touching[2];
+            public Vector3 acted;
+            // What the ground really gave it in the last step: how hard it bore the body up (newtons), where that
+            // acted, and whether it bore it at all. And how far the real push has been falling short of the meant one.
+            public Vector3 realAt, short_;
+            public float realUp;
+            public bool realKnown, atItsEdge;
+            public void Ground()
+            {
+                Vector3 at = Vector3.zero; float up = 0;
+                for (int i = 0; i < 2; i++) if (touches[i] != null) { at += touches[i].where; up += touches[i].up; touches[i].Clear(); }
+                realUp = up / Step; realKnown = up > 1e-6f;
+                if (realKnown) realAt = at / up;
+            }
             public float Whole() { float m = 0; for (int i = 0; i < Count; i++) m += Mass(i); return m; }
             public Vector3 Weight() { Vector3 c = Vector3.zero; float m = 0; for (int i = 0; i < Count; i++) { c += Centre(i) * Mass(i); m += Mass(i); } return c / m; }
             public Vector3 WeightGoes() { Vector3 v = Vector3.zero; float m = 0; for (int i = 0; i < Count; i++) { v += Goes(i) * Mass(i); m += Mass(i); } return v / m; }
@@ -323,6 +371,7 @@ namespace WonderGather.Tests
                     if (articulated) built.link[i].inertiaTensor = built.link[i].inertiaTensor * BootTurns;
                     else built.solid[i].inertiaTensor = built.solid[i].inertiaTensor * BootTurns;
                 }
+            for (int i = 0; i < 2; i++) built.touches[i] = made[Foot + i].AddComponent<Touching>();
             // Its own parts do not strike one another (it only stands here).
             var solids = built.root.GetComponentsInChildren<Collider>();
             for (int a = 0; a < solids.Length; a++)
@@ -357,6 +406,7 @@ namespace WonderGather.Tests
         {
             float g = Physics.gravity.magnitude, whole = body.Whole();
             Vector3 weight = body.Weight(), goes = body.WeightGoes();
+            body.Ground();
             var sole = new Vector3[2];
             for (int i = 0; i < 2; i++)
             {
@@ -364,39 +414,118 @@ namespace WonderGather.Tests
                 sole[i] = body.Of(Foot + i).TransformPoint(s.at + s.turned * new Vector3(0, -.5f * s.size.y, 0));
             }
             float ground = .5f * (sole[0].y + sole[1].y), high = weight.y - ground;
-            if (!body.begun) { body.begun = true; body.centre = weight; body.height = high; body.upright = body.Of(Hips).rotation; }
+            if (!body.begun)
+            {
+                body.begun = true; body.centre = weight; body.height = high; body.upright = body.Of(Hips).rotation;
+                body.rest = Vector3.ProjectOnPlane(weight, Vector3.up); body.held = body.rest;
+            }
             // (A body that is down does not push as if it stood: below six tenths of its height it gives nothing here.
             // In the game that is where it is let go into the fall.)
             if (float.IsNaN(high) || high < .6f * body.height) { for (int j = 0; j < Count; j++) body.gave[j] = 0; body.outside = 0; return; }
-            Vector3 back = quick * quick * Vector3.ProjectOnPlane(body.centre - weight, Vector3.up) - 2 * quick * Vector3.ProjectOnPlane(goes, Vector3.up);
-            float rise = Mathf.Clamp(100 * (body.height - high) - 20 * goes.y, -.5f * g, g);
-            Vector3 push = scaled * whole * (back + Vector3.up * (g + rise));
-            // Where the push must act, on the ground under its weight.
-            Vector3 acts = weight - Vector3.up * high - back * (high / (g + rise));
+            float rise = Mathf.Clamp(Rises * (body.height - high) - RisesDamped * goes.y, -.5f * g, g);
+            Vector3 back, push, acts;
+            if (Law < 2)
+            {
+                // The first law: back to where its weight was, as quick as `quick`, without swinging past.
+                back = quick * quick * Vector3.ProjectOnPlane(body.centre - weight, Vector3.up) - 2 * quick * Vector3.ProjectOnPlane(goes, Vector3.up);
+                // Where the push must act, on the ground under its weight.
+                acts = weight - Vector3.up * high - back * (high / (g + rise));
+            }
+            else
+            {
+                // The second law. A standing body falls away from where the ground pushes it, at a rate of its own
+                // (the root of gravity over its height). So what matters is where its weight is *going*: its place
+                // and its speed over that rate. The push must act beyond that point to bring it back.
+                float falls = Mathf.Sqrt((g + rise) / Mathf.Max(.1f, high));
+                // What pushes it from outside: how its weight really went in the last step, beyond what its own
+                // push from the ground gave it. Felt over a tenth of a second, not at once.
+                // (Where the ground's push really acted in that step is known from what touched the boots; where it
+                // was only meant to act is used when nothing is known.)
+                if (body.hasBefore && Feels > 0)
+                {
+                    Vector3 pushedAt = body.realKnown && Tracks > 0 ? body.realAt : body.actedBefore;
+                    Vector3 seen = Vector3.ProjectOnPlane(goes - body.wentBefore, Vector3.up) / Step - falls * falls * Vector3.ProjectOnPlane(body.weightBefore - pushedAt, Vector3.up);
+                    body.felt = Vector3.ClampMagnitude(Vector3.Lerp(body.felt, seen, Mathf.Clamp01(Step / Feels)), 4);
+                }
+                // The real push falls short of the meant one (by a fifth or so: the legs are not weightless rods): it
+                // means its push further by how far, learnt at Tracks a second, and not while the push is at the
+                // edge of its soles (where the real one cannot follow).
+                // (Where it wants the push is kept within its soles; what its legs are then asked for is reckoned as if
+                // the push were to act further out by the shortfall, so that the real one comes to where it is wanted.)
+                if (body.hasBefore && body.realKnown && Tracks > 0)
+                    body.short_ = Vector3.ClampMagnitude(body.short_ + Tracks * Step * Vector3.ProjectOnPlane(body.actedBefore - body.realAt, Vector3.up), .05f);
+                Vector3 going = Vector3.ProjectOnPlane(weight, Vector3.up) + Vector3.ProjectOnPlane(goes, Vector3.up) / falls;
+                Vector3 wants = going + quick / falls * (going - body.held) + body.felt / (falls * falls);
+                acts = new Vector3(wants.x, weight.y - high, wants.z);
+            }
             var at = new Vector3[2];
             body.outside = 0;
+            // (The push is shared between the two boots by how far across it lies, from one boot's middle to the
+            // other's; and each boot carries its share along its own middle line, as far forward or back as the push
+            // is wanted. Only a push wanted outside both boots is taken to a boot's outer side. Asked to carry it at
+            // the point of its sole nearest the wanted place, each boot bore on its inner front corner, and tipped.)
+            Vector3 over = Vector3.ProjectOnPlane(sole[1] - sole[0], Vector3.up);
+            Vector3 side = over.sqrMagnitude > 1e-8f ? over.normalized : Vector3.right;
             for (int i = 0; i < 2; i++)
             {
                 var s = plan[Foot + i].solids[0];
                 Transform foot = body.Of(Foot + i);
-                Vector3 local = Quaternion.Inverse(s.turned) * (foot.InverseTransformPoint(acts) - s.at);
-                Vector3 within = new Vector3(Mathf.Clamp(local.x, -.5f * s.size.x + .01f, .5f * s.size.x - .01f), -.5f * s.size.y, Mathf.Clamp(local.z, -.5f * s.size.z + .01f, .5f * s.size.z - .01f));
+                float beside = Vector3.Dot(Vector3.ProjectOnPlane(acts - sole[i], Vector3.up), side);
+                float outward = i == 0 ? Mathf.Min(beside, 0) : Mathf.Max(beside, 0);
+                Vector3 aimed = acts - side * (beside - outward);
+                Vector3 local = Quaternion.Inverse(s.turned) * (foot.InverseTransformPoint(aimed) - s.at);
+                Vector3 within = new Vector3(Mathf.Clamp(local.x, -.5f * s.size.x + Edge, .5f * s.size.x - Edge), -.5f * s.size.y, Mathf.Clamp(local.z, -.5f * s.size.z + Edge, .5f * s.size.z - Edge));
                 at[i] = foot.TransformPoint(s.at + s.turned * within);
             }
             Vector3 across = sole[1] - sole[0];
             float share = Mathf.Clamp01(Vector3.Dot(acts - sole[0], across) / Mathf.Max(1e-6f, across.sqrMagnitude));
             Vector3 acted = Vector3.Lerp(at[0], at[1], share);
             body.outside = Vector3.ProjectOnPlane(acts - acted, Vector3.up).magnitude;
+            body.acted = acted;
+            body.atItsEdge = body.outside > .002f;
             // The push can only act where the soles are: so it pushes sideways only as much as a push from there,
             // through its weight, does. (Asked for more, its legs paw at the ground and throw its trunk the other way.)
             back = Vector3.ProjectOnPlane(weight - acted, Vector3.up) * ((g + rise) / Mathf.Max(.1f, high));
             push = scaled * whole * (back + Vector3.up * (g + rise));
+            if (Law >= 2)
+            {
+                // It leans against what it feels: the place it holds its weight goes the other way from the push, by
+                // this share of what would bring its own push back to where it acts at ease, and no further than
+                // LeansAtMost (so that, let go, it still has ground behind its weight). It comes to that, and back
+                // from it, at Leans a second. (A first way, the held place drifting until the push acted at ease,
+                // took Round's weight to the edge of its heels against 30 N, ran away when the pull ended, and it
+                // fell over backwards.)
+                // It leans only for what it cannot take standing as it is (its push may act Comfort from where it
+                // does at ease before it leans at all), and never so far that less than KeepsBehind of sole is left
+                // behind its weight: pulled with 50 N and then let go at once, Round, leaning 40 mm, went over
+                // backwards with 17 mm of heel behind its weight.
+                float fallsAt = Mathf.Sqrt((g + rise) / Mathf.Max(.1f, high));
+                Vector3 asked = body.felt / (fallsAt * fallsAt);
+                Vector3 leansTo = body.rest;
+                if (asked.magnitude > Comfort)
+                {
+                    Vector3 way = -asked.normalized;
+                    float reach = 0;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        var s = plan[Foot + i].solids[0];
+                        for (int c = 0; c < 4; c++)
+                        {
+                            Vector3 corner = body.Of(Foot + i).TransformPoint(s.at + s.turned * new Vector3((c & 1) == 0 ? -.5f * s.size.x : .5f * s.size.x, -.5f * s.size.y, (c & 2) == 0 ? -.5f * s.size.z : .5f * s.size.z));
+                            reach = Mathf.Max(reach, Vector3.Dot(Vector3.ProjectOnPlane(corner, Vector3.up) - body.rest, way));
+                        }
+                    }
+                    leansTo = body.rest + way * Mathf.Min(LeansBy * (asked.magnitude - Comfort), Mathf.Min(LeansAtMost, Mathf.Max(0, reach - KeepsBehind)));
+                }
+                body.held = Vector3.Lerp(body.held, leansTo, Mathf.Clamp01(Leans * Step));
+                body.wentBefore = goes; body.weightBefore = weight; body.actedBefore = acted; body.hasBefore = true;
+            }
             var torque = new Vector3[Count];
             for (int i = 0; i < 2; i++)
             {
                 Vector3 pushes = (i == 0 ? 1 - share : share) * push;
                 foreach (int j in new[] { Thigh + i, Shin + i, Foot + i })
-                    torque[j] -= Vector3.Cross(at[i] - body.Of(j).TransformPoint(plan[j].anchor), pushes);
+                    torque[j] -= Vector3.Cross(at[i] + (Law >= 2 ? body.short_ : Vector3.zero) - body.Of(j).TransformPoint(plan[j].anchor), pushes);
             }
             // Its hips keep its trunk as upright as it began: what turns the hips back is taken from the two thighs,
             // by how much each leg bears. (Nothing else holds the trunk over the legs: the push above passes
@@ -406,8 +535,8 @@ namespace WonderGather.Tests
                 off.ToAngleAxis(out float angle, out Vector3 axis);
                 if (angle > 180) angle -= 360;
                 if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.zero; angle = 0; }
-                float spring = 9 * whole;
-                Vector3 rights = scaled * (spring * (angle * Mathf.Deg2Rad) * axis - .2f * spring * body.Turns(Hips));
+                float spring = Rights * whole;
+                Vector3 rights = scaled * (spring * (angle * Mathf.Deg2Rad) * axis - RightsDamped * spring * body.Turns(Hips));
                 torque[Thigh] -= (1 - share) * rights;
                 torque[Thigh + 1] -= share * rights;
             }
@@ -428,6 +557,7 @@ namespace WonderGather.Tests
 
         private static string Called(bool articulated, float fullAt) => (articulated ? "articulation" : "joints") + string.Format(CultureInfo.InvariantCulture, ", full at {0:0} degrees, {1:0} steps a second", fullAt, 1 / Step)
             + (Rule > 0 ? string.Format(CultureInfo.InvariantCulture, ", springs by rule {0:0.00} damped {1:0.0}", Rule, Damped) : "")
+            + (Law >= 2 ? string.Format(CultureInfo.InvariantCulture, ", second law (feels over {0:0.00} s, leans {1:0.0} a second)", Feels, Leans) : "")
             + (BootTurns != 1 ? string.Format(CultureInfo.InvariantCulture, ", a boot's turning weight {0:0} times its own", BootTurns) : "") + (BootWeighs > 0 ? string.Format(CultureInfo.InvariantCulture, ", a boot of {0:0.0} kg", BootWeighs) : "");
 
         // What the engine's numbers mean: one arm, a kilogram with its weight half a metre from a hinge, held out level
@@ -558,6 +688,214 @@ namespace WonderGather.Tests
             finally { Physics.simulationMode = mode; UnityEngine.Object.Destroy(floor); }
         }
 
+        // ---- The search for the keeper's settings.
+        // What is searched, each with the least and the most it may be.
+        private static readonly string[] Named = { "quick", "feels", "leans", "leansBy", "comfort", "keepsBehind", "tracks", "rule", "damped", "rights", "rightsDamped", "edge", "rises", "risesDamped", "fullAt" };
+        private static readonly float[] Least = { 1, .02f, .5f, .2f, 0, .01f, 0, .4f, .2f, 3, .05f, .003f, 30, 5, 30 };
+        private static readonly float[] Most = { 9, .3f, 10, 1.6f, .07f, .06f, 25, 1.8f, 2.5f, 25, .6f, .03f, 300, 60, 120 };
+        private static void Set(float[] v)
+        {
+            Quick = v[0]; Feels = v[1]; Leans = v[2]; LeansBy = v[3]; Comfort = v[4]; KeepsBehind = v[5]; Tracks = v[6]; Rule = v[7]; Damped = v[8];
+            Rights = v[9]; RightsDamped = v[10]; Edge = v[11]; Rises = v[12]; RisesDamped = v[13];
+        }
+        private static string Said(float[] v)
+        {
+            var text = new System.Text.StringBuilder();
+            for (int k = 0; k < v.Length; k++) text.Append(string.Format(CultureInfo.InvariantCulture, "{0}{1} {2:0.####}", k > 0 ? ", " : "", Named[k], v[k]));
+            return text.ToString();
+        }
+
+        // One of a crowd: how it is disturbed (set going at a speed, or pulled with a share of its weight for two and
+        // a half seconds and let go; a way round the compass), and where its head was when that began.
+        private sealed class Tried { public Built body; public float jolt, pull; public Vector3 way; public Vector3 headWas, madeAt; public float wander, settle; public Vector3 middle; public int seen; }
+
+        // -ownSearch: the settings are searched. -searchRounds, -searchMany (tries a round), -searchKeep (the best kept),
+        // -searchFrom "a,b,c,..." (where it begins: fifteen numbers), -searchOut <file>. At -ownStep.
+        [UnityTest, Explicit, Timeout(14400000)]
+        public IEnumerator Search()
+        {
+            string folder = CaptureTools.Argument("-ownOut") ?? Path.Combine(Application.dataPath, "..", "Captures", "Own");
+            Step = Numbers("-ownStep", .02f)[0];
+            Law = 2;
+            int rounds = (int)Numbers("-searchRounds", 10)[0], many = (int)Numbers("-searchMany", 32)[0], keep = (int)Numbers("-searchKeep", 8)[0];
+            float ankleGives = Numbers("-ownAnkle", .7f)[0];
+            float[] jolts = Numbers("-searchJolts", .12f, .2f), pullShares = Numbers("-searchPulls", .05f, .09f);
+            float lasts = Numbers("-searchFor", 8)[0];
+            var culture = CultureInfo.InvariantCulture;
+            Directory.CreateDirectory(folder);
+            yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            yield return null;
+            Time.captureFramerate = 50;
+            var mode = Physics.simulationMode;
+            var plans = new List<Planned[]>();
+            var names = new List<string>();
+            var talls = new List<float>();
+            var lowests = new List<float>();
+            try
+            {
+                var choice = UnityEngine.Object.FindAnyObjectByType<MinerChoice>();
+                var ground = UnityEngine.Object.FindAnyObjectByType<OrdinaryGround>();
+                Vector3 OnGround(Vector3 q) => new Vector3(q.x, ground.Height(q.x, q.z), q.z);
+                var a = ground.Path[4];
+                var b = ground.Path[5];
+                var spot = OnGround(new Vector3(a.x, 0, a.y));
+                var away = OnGround(new Vector3(b.x, 0, b.y)) - spot;
+                away.y = 0;
+                away.Normalize();
+                var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                floor.transform.position = spot + Vector3.up * 200;
+                floor.transform.localScale = new Vector3(200, 1, 200);
+                float floorTop = floor.transform.position.y + .5f;
+                for (int index = 0; index < choice.Count; index++)
+                {
+                    choice.Choose(index);
+                    yield return null;
+                    var unit = choice.Current;
+                    var miner = unit.GetComponent<MinerBody>();
+                    var biped = unit.GetComponent<ProceduralBiped>();
+                    var physical = unit.GetComponent<PhysicalBody>();
+                    var fall = unit.GetComponent<PhysicalFall>();
+                    if (fall == null) fall = unit.gameObject.AddComponent<PhysicalFall>();
+                    fall.GetsUp = false;
+                    unit.Motor.Stop();
+                    unit.GetComponent<NavMeshAgent>().Warp(spot);
+                    unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                    biped.ResetPose();
+                    for (float until = Time.time + .8f; Time.time < until;) yield return null;
+                    talls.Add(miner.Rig.head.position.y - unit.transform.position.y);
+                    fall.LetGo();
+                    var plan = Plan(fall, physical, ankleGives);
+                    fall.TakeBack();
+                    yield return null;
+                    float lowest = float.MaxValue;
+                    foreach (var solid in plan[Foot].solids) lowest = Mathf.Min(lowest, (plan[Foot].at + plan[Foot].turned * solid.at).y - .5f * solid.size.y);
+                    plans.Add(plan); names.Add(choice.NameOf(index)); lowests.Add(lowest);
+                }
+                foreach (var unit in UnityEngine.Object.FindObjectsByType<SelectableUnit>(FindObjectsSortMode.None)) unit.gameObject.SetActive(false);
+                yield return null;
+                Physics.simulationMode = SimulationMode.Script;
+
+                // What one setting comes to: for each miner, so many bodies on the floor, each disturbed its own way.
+                float[] scores = new float[3];
+                string told = "";
+                IEnumerator Try(float[] v)
+                {
+                    Set(v);
+                    float fullAt = v[14];
+                    told = "";
+                    for (int m = 0; m < plans.Count; m++)
+                    {
+                        var plan = plans[m];
+                        float whole = 0;
+                        foreach (var part in plan) whole += part.mass;
+                        var crowd = new List<Tried>();
+                        void Add(float jolt, float pull, Vector3 way)
+                        {
+                            int n = crowd.Count;
+                            Vector3 place = new Vector3((n % 8 - 4) * 2.5f, floorTop - lowests[m] + .002f, (n / 8 - 2) * 2.5f + m * 30);
+                            crowd.Add(new Tried { body = Build(plan, true, place, fullAt, .05f, 0, 0, false, true), jolt = jolt, pull = pull, way = way });
+                            crowd[crowd.Count - 1].madeAt = crowd[crowd.Count - 1].body.Of(Head).position;
+                        }
+                        Add(0, 0, away);
+                        foreach (float jolt in jolts) for (int d = 0; d < 8; d++) Add(jolt, 0, Quaternion.AngleAxis(d * 45, Vector3.up) * away);
+                        foreach (float share in pullShares) for (int d = 0; d < 4; d++) Add(0, share * whole * 9.81f, Quaternion.AngleAxis(d * 90, Vector3.up) * away);
+                        int steps = Mathf.RoundToInt(lasts / Step), begins = Mathf.RoundToInt(1 / Step), ends = Mathf.RoundToInt(3.5f / Step);
+                        for (int k = 0; k < steps; k++)
+                        {
+                            foreach (var one in crowd)
+                            {
+                                if (k == begins)
+                                {
+                                    one.headWas = one.body.Of(Head).position;
+                                    if (one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
+                                }
+                                if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * one.pull, one.body.Centre(Trunk));
+                                Keep(one.body, plan, Quick, fullAt, .05f);
+                            }
+                            Physics.Simulate(Step);
+                            // (The undisturbed one: how far its head goes in its first second, and how it wanders after.)
+                            var still = crowd[0];
+                            Vector3 head = still.body.Of(Head).position;
+                            if (k == 0) still.middle = head;
+                            if (k < begins) still.settle = Mathf.Max(still.settle, Vector3.ProjectOnPlane(head - still.middle, Vector3.up).magnitude);
+                            if (k == begins * 3) { still.middle = head; }
+                            if (k > begins * 3) still.wander = Mathf.Max(still.wander, (head - still.middle).magnitude);
+                        }
+                        float score = 0;
+                        int stood = 0, jolted = 0, pulled = 0;
+                        foreach (var one in crowd)
+                        {
+                            Vector3 head = one.body.Of(Head).position;
+                            float off = Vector3.ProjectOnPlane(head - one.headWas, Vector3.up).magnitude;
+                            // (And it must not have gone down before it was disturbed at all: a body that fell in its first
+                            // second "stood as it stood" by where its head was after that second, and the search found it.)
+                            bool asItStood = head.y - floorTop > .95f * (one.headWas.y - floorTop) && off < .1f * talls[m] && head.y - floorTop > .9f * (one.madeAt.y - floorTop);
+                            if (asItStood) { stood++; score += 1 - Mathf.Clamp01(off / (.1f * talls[m])) * .3f; if (one.jolt > 0) jolted++; else if (one.pull > 0) pulled++; }
+                        }
+                        // (It must be still when nothing disturbs it: more than a third of a millimetre of wandering, or
+                        // more than a centimetre and a half of settling, costs as much as bodies falling.)
+                        var quiet = crowd[0];
+                        float fidgets = Mathf.Clamp(quiet.wander * 1000 / .35f - 1, 0, 6) + Mathf.Clamp(quiet.settle * 1000 / 15 - 1, 0, 4);
+                        score -= fidgets;
+                        scores[m] = score;
+                        told += string.Format(culture, " {0}: {1} of {2} stand ({3} of {4} set going, {5} of {6} pulled), still within {7:0.00} mm after settling {8:0.0} mm;", names[m], stood, crowd.Count, jolted, jolts.Length * 8, pulled, pullShares.Length * 4, quiet.wander * 1000, quiet.settle * 1000);
+                        foreach (var one in crowd) UnityEngine.Object.Destroy(one.body.root);
+                        yield return null;
+                    }
+                }
+                float Whole() => scores[0] + scores[1] + scores[2] + 2 * Mathf.Min(scores[0], Mathf.Min(scores[1], scores[2]));
+
+                int count = Named.Length;
+                var middle = new float[count];
+                var spread = new float[count];
+                float[] from = Numbers("-searchFrom");
+                float[] first = { Quick, Feels, Leans, LeansBy, Comfort, KeepsBehind, Tracks, 1, 1, Rights, RightsDamped, Edge, Rises, RisesDamped, 75 };
+                for (int k = 0; k < count; k++) { middle[k] = from.Length == count ? from[k] : first[k]; spread[k] = (Most[k] - Least[k]) * Numbers("-searchSpread", .2f)[0]; }
+                yield return Try(middle);
+                float best = Whole();
+                float[] bestOf = (float[])middle.Clone();
+                Debug.Log(string.Format(culture, "OWNSEARCH begins at {0:0.00}:{1} [{2}]", best, told, Said(middle)));
+                var random = new System.Random((int)Numbers("-searchSeed", 7)[0]);
+                float Bell() { double u = 1 - random.NextDouble(), w = 1 - random.NextDouble(); return (float)(Math.Sqrt(-2 * Math.Log(u)) * Math.Sin(2 * Math.PI * w)); }
+                for (int round = 0; round < rounds; round++)
+                {
+                    var tried = new List<(float score, float[] v, string told)>();
+                    for (int n = 0; n < many; n++)
+                    {
+                        var v = new float[count];
+                        for (int k = 0; k < count; k++) v[k] = Mathf.Clamp(middle[k] + spread[k] * Bell(), Least[k], Most[k]);
+                        yield return Try(v);
+                        tried.Add((Whole(), v, told));
+                    }
+                    tried.Sort((x, y) => y.score.CompareTo(x.score));
+                    if (tried[0].score > best) { best = tried[0].score; bestOf = (float[])tried[0].v.Clone(); }
+                    for (int k = 0; k < count; k++)
+                    {
+                        float mean = 0, wide = 0;
+                        for (int n = 0; n < keep; n++) mean += tried[n].v[k] / keep;
+                        for (int n = 0; n < keep; n++) wide += (tried[n].v[k] - mean) * (tried[n].v[k] - mean) / keep;
+                        middle[k] = mean; spread[k] = Mathf.Max(Mathf.Sqrt(wide), (Most[k] - Least[k]) * .01f);
+                    }
+                    Debug.Log(string.Format(culture, "OWNSEARCH round {0}: the best of it {1:0.00}:{2} [{3}]; the best so far {4:0.00}", round + 1, tried[0].score, tried[0].told, Said(tried[0].v), best));
+                }
+                yield return Try(bestOf);
+                Debug.Log(string.Format(culture, "OWNSEARCH found {0:0.00} at {1:0} steps a second:{2} [{3}]", Whole(), 1 / Step, told, Said(bestOf)));
+                string file = CaptureTools.Argument("-searchOut");
+                if (!string.IsNullOrEmpty(file))
+                {
+                    var numbers = new string[count];
+                    for (int k = 0; k < count; k++) numbers[k] = bestOf[k].ToString("0.#####", culture);
+                    File.WriteAllText(file, string.Join(",", numbers));
+                }
+                UnityEngine.Object.Destroy(floor);
+            }
+            finally
+            {
+                Physics.simulationMode = mode;
+                Time.captureFramerate = 0;
+            }
+        }
+
         [UnityTest, Explicit, Timeout(3600000)]
         public IEnumerator Bench()
         {
@@ -574,6 +912,10 @@ namespace WonderGather.Tests
             Step = Numbers("-ownStep", .02f)[0];
             BootTurns = Numbers("-ownBootTurns", 1)[0]; BootWeighs = Numbers("-ownBootWeighs", 0)[0];
             Rule = Numbers("-ownRule", 0)[0]; Damped = Numbers("-ownDamped", 1)[0];
+            Law = (int)Numbers("-ownLaw", 2)[0]; Feels = Numbers("-ownFeels", .1f)[0]; Leans = Numbers("-ownLeans", 3)[0]; LeansAtMost = Numbers("-ownLeansAtMost", .1f)[0]; LeansBy = Numbers("-ownLeansBy", 1)[0]; Comfort = Numbers("-ownComfort", .03f)[0]; KeepsBehind = Numbers("-ownKeepsBehind", .035f)[0]; Tracks = Numbers("-ownTracks", 8)[0];
+            // -ownSet "a,b,...": the fifteen settings a search found, to measure them here.
+            float[] found = Numbers("-ownSet");
+            if (found.Length == Named.Length) { Set(found); quick = Quick; fulls = new[] { found[14] }; }
             bool said = Numbers("-ownSay", 0)[0] > 0;
             string kinds = CaptureTools.Argument("-ownKinds") ?? "joints,articulation";
             var culture = CultureInfo.InvariantCulture;
@@ -763,6 +1105,15 @@ namespace WonderGather.Tests
                             UnityEngine.Object.Destroy(body.root);
                             yield return null;
 
+                            // (How far its boots reach, ahead of where it stands and behind.)
+                            float toes = float.MinValue, heels = float.MaxValue;
+                            for (int i = 0; i < 2; i++)
+                                foreach (var s in plan[Foot + i].solids)
+                                    for (int c = 0; c < 8; c++)
+                                    {
+                                        Vector3 corner = plan[Foot + i].at + plan[Foot + i].turned * (s.at + s.turned * Vector3.Scale(s.size * .5f, new Vector3((c & 1) == 0 ? -1 : 1, (c & 2) == 0 ? -1 : 1, (c & 4) == 0 ? -1 : 1)));
+                                        toes = Mathf.Max(toes, Vector3.Dot(corner - spot, away)); heels = Mathf.Min(heels, Vector3.Dot(corner - spot, away));
+                                    }
                             // ---- 2. It is pulled at the chest, forwards, for two and a half seconds, and left three.
                             foreach (float pull in fell ? new float[0] : pulls)
                             {
@@ -778,10 +1129,15 @@ namespace WonderGather.Tests
                                     if (keeps) Keep(body, plan, quick, fullAt, slows);
                                     Physics.Simulate(Step);
                                     if (said && keeps && k % Mathf.RoundToInt(.25f / Step) == 0)
-                                        Debug.Log(string.Format(culture, "OWN   {0} pulled {1:0} N, {2:0.00} s: its weight {3:0} mm ahead of where it began and going {4:0} mm/s; the push it wants is {5:0} mm outside its soles; its trunk leans {6:0.0} degrees; boots tipped {7:0.0} and {8:0.0}; an ankle gives {9:0} and {10:0}, a knee {11:0} and {12:0}, a hip {13:0} and {14:0}",
+                                        Debug.Log(string.Format(culture, "OWN   {0} pulled {1:0} N, {2:0.00} s ground: it bore {3:0} N a step ago, {4:0} mm ahead of where the body stands (the keeper meant {5:0}; it has learnt the real one falls {6:0} mm short); its weight is {7:0} mm ahead of where it stands; its toes reach {8:0} and its heels {9:0} mm",
+                                            name, pull, k * Step, body.realUp, Vector3.Dot(body.realAt - spot, away) * 1000, Vector3.Dot(body.actedBefore - spot, away) * 1000, Vector3.Dot(body.short_, away) * 1000,
+                                            Vector3.Dot(body.Weight() - spot, away) * 1000, toes * 1000, heels * 1000));
+                                    if (said && keeps && k % Mathf.RoundToInt(.25f / Step) == 0)
+                                        Debug.Log(string.Format(culture, "OWN   {0} pulled {1:0} N, {2:0.00} s: its weight {3:0} mm ahead of where it began and going {4:0} mm/s; the push it wants is {5:0} mm outside its soles; its trunk leans {6:0.0} degrees; boots tipped {7:0.0} and {8:0.0}; an ankle gives {9:0} and {10:0}, a knee {11:0} and {12:0}, a hip {13:0} and {14:0}; it feels {15:0.00} m/s2 from outside and holds its weight {16:0} mm from where it rests",
                                             name, pull, k * Step, Vector3.Dot(body.Weight() - body.centre, away) * 1000, Vector3.Dot(body.WeightGoes(), away) * 1000, body.outside * 1000,
                                             Quaternion.Angle(body.upright, body.Of(Hips).rotation), Quaternion.Angle(plan[Foot].turned, body.Of(Foot).rotation), Quaternion.Angle(plan[Foot + 1].turned, body.Of(Foot + 1).rotation),
-                                            body.gave[Foot], body.gave[Foot + 1], body.gave[Shin], body.gave[Shin + 1], body.gave[Thigh], body.gave[Thigh + 1]));
+                                            body.gave[Foot], body.gave[Foot + 1], body.gave[Shin], body.gave[Shin + 1], body.gave[Thigh], body.gave[Thigh + 1],
+                                            Vector3.Dot(body.felt, away), Vector3.Dot(body.held - body.rest, away) * 1000));
                                     Vector3 head = body.Of(Head).position;
                                     if (head.y - spot.y < .7f * (headBefore.y - spot.y)) { down = true; break; }
                                     leant = Mathf.Max(leant, Vector3.Dot(head - headBefore, away));
