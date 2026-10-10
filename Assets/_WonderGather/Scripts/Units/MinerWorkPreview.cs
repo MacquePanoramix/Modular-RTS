@@ -94,8 +94,7 @@ namespace WonderGather
         private void Awake()
         {
             choice = GetComponent<MinerChoice>();
-            // (It begins with the look that shows most: its shoulders. Luis could not notice the others.)
-            SetBreathLook(1);
+            SetBreathLook(0);
             OwnBody.BreathSize = OwnBody.BreathSizeAtFirst;
             // The interaction click and the panel live beside it: where it is, they are.
             if (GetComponent<InteractionClick>() == null) gameObject.AddComponent<InteractionClick>();
@@ -569,10 +568,11 @@ namespace WonderGather
         // metres a second.
         private const float NudgeSpeed = .15f;
         // How its breath is drawn is a look for Luis to choose between: as in life, drawn stronger, or not drawn.
-        public static readonly string[] BreathLooks = { "drawn stronger", "in its shoulders", "seen in the air (dusk to dawn)", "as in life", "not drawn" };
-        private static readonly float[] BreathShows = { OwnBody.BreathDrawn, OwnBody.BreathDrawn, OwnBody.BreathDrawn, 1, 0 };
-        private static readonly float[] BreathShrugs = { 0, 1, 0, 0, 0 };
-        private static readonly bool[] BreathAirs = { false, false, true, false, false };
+        // (Luis, October 10: "all three options looked good to me". So they are drawn together unless one is chosen.)
+        public static readonly string[] BreathLooks = { "all together", "in its chest only", "in its shoulders", "seen in the air (dusk to dawn)", "as in life", "not drawn" };
+        private static readonly float[] BreathShows = { OwnBody.BreathDrawn, OwnBody.BreathDrawn, OwnBody.BreathDrawn, OwnBody.BreathDrawn, 1, 0 };
+        private static readonly float[] BreathShrugs = { 1, 0, 1, 0, 0, 0 };
+        private static readonly bool[] BreathAirs = { true, false, false, true, false, false };
         private int breathLook;
         public string BreathLook => BreathLooks[breathLook];
         public void SetBreathLook(int which)

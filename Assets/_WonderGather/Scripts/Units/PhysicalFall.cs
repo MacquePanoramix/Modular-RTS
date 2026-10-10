@@ -800,11 +800,6 @@ namespace WonderGather
         }
 
         // The unit's own place goes with its hips.
-        // Down, it breathes: its chest is drawn fuller with each breath, faster and deeper the more out of breath and
-        // the more shaken it is.
-        private const float BreathSwell = .0225f;
-        private Breath breath;
-        private bool breathes;
 
         private void Follow()
         {
@@ -912,7 +907,6 @@ namespace WonderGather
         {
             if (Now == State.Up)
             {
-                if (breathes) { breathes = false; miner.Swell = 0; }
                 // Where each part of the posed body is, this frame and the last: how it is moving, if it is let go.
                 if (!body.Ready || !miner.Ready) return;
                 if (segments[Hips] == null) Gather();
@@ -921,11 +915,6 @@ namespace WonderGather
                 return;
             }
             var s = miner.Solved;
-            if (!breathes) { breathes = true; breath.Begin(Breath.SeedOf(name)); }
-            breath.Goes(Time.deltaTime, Mathf.Max(OutOfBreath, Shaken));
-            // (No fuller than a tenth for each one of the size its breath is drawn at: at the first size, the sixteen
-            // parts in a hundred that Luis could see.)
-            miner.Swell = Mathf.Min(.1f * OwnBody.BreathSize, BreathSwell * breath.Full * breath.Deep * OwnBody.BreathShown * OwnBody.BreathSize);
             if (Now == State.Rising)
             {
                 // The posed body has posed its crouch this frame: each segment is between where the physics left it and

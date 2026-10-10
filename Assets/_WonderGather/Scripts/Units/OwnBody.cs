@@ -85,20 +85,14 @@ namespace WonderGather
         // Two more looks of breath (Luis, October 10: to try beside the others). Its shoulders drawn rising: by
         // ShouldersRise of its height for a breath at rest, times BreathShoulders (0: not drawn so). And its breath
         // seen in the cold air, from dusk to dawn (BreathInAir): so many puffs to a breath out, so far apart.
-        public static float BreathShoulders = 0, ShouldersRise = .018f;
-        public static bool BreathSeenInAir;
+        public static float BreathShoulders = 1, ShouldersRise = .018f;
+        public static bool BreathSeenInAir = true;
         // How large its breath is drawn (its chest and its shoulders; not what its joints are asked for): a size for
         // Luis to set by eye on the panel. Luis, October 10, of the size it had: "I could only really notice the
         // breathing when the character fell." At BreathSizeAtFirst a standing miner's chest at rest is drawn about as
         // full as the fallen one's Luis could see. Its chest is drawn no fuller than SwellAtMost times the size.
-        public const float BreathSizeAtFirst = 1.6f, SwellAtMost = .125f;
+        public const float BreathSizeAtFirst = 1, SwellAtMost = .16f;
         public static float BreathSize = BreathSizeAtFirst;
-        private const int PuffsABreath = 3;
-        private const float PuffsApart = .16f;
-        private BreathInAir air;
-        private float stature, headHalf, fullBefore, puffIn, leftShrug;
-        private int puffsLeft;
-        private bool emptying;
         // Its head looks somewhere else every so many seconds (between the two), no further aside than LooksAside
         // degrees; a look takes LooksIn seconds and LooksInEach more for each degree. It looks at another miner
         // nearer than LooksAsFar metres about one time in three.
@@ -110,14 +104,13 @@ namespace WonderGather
         // leg and nudged, went over. It waits on the step.)
         // (Which way round the engine counts a joint's turn from its pose.)
         private const float Turns = 1;
-        private Breath breath;
+        private MinerBreath breath;
         private uint chance;
         private float life, favours, favoursFrom, favoursTo, shiftAlong = 1, shiftIn = 1, shiftsAt, rolled, eased;
         private Vector2 looks, looksFrom, looksTo;
         private float lookAlong = 1, lookIn = 1, looksAt, looksUntil;
         private Vector3 itsRight, itsAhead, lookAt, swayed;
         private float swaysFrom;
-        private float leftSwell;
         private readonly Quaternion[] madeTurned = new Quaternion[Count];
 
         // How far it favours a leg (-1: wholly its left; 1: its right), where its head looks (degrees to its right
@@ -189,6 +182,7 @@ namespace WonderGather
             physical = GetComponent<PhysicalBody>();
             miner = GetComponent<MinerBody>();
             motor = GetComponent<UnitMotor>();
+            if (!TryGetComponent(out breath)) breath = gameObject.AddComponent<MinerBreath>();
         }
 
         // It can stand by its own joints when the posed body stands at ease with empty hands, and has not fallen.
@@ -289,8 +283,6 @@ namespace WonderGather
             if (Stands || !CanStand) return false;
             var s = miner.Solved;
             var shape = body.BodyProportions;
-            headHalf = Mathf.Max(.06f, shape.headHalf);
-            stature = s.head.position.y - transform.position.y + headHalf;
             segments[Hips] = s.pelvis; segments[Trunk] = s.torso; segments[Head] = s.head;
             for (int i = 0; i < 2; i++)
             {
@@ -423,9 +415,7 @@ namespace WonderGather
             }
             itsRight = Flat(transform.right).normalized; itsAhead = Flat(transform.forward).normalized;
             chance = (uint)Breath.SeedOf(name) * 2654435761u + (uint)Began * 40503u + 7u;
-            breath.Begin(Breath.SeedOf(name) + Began);
             life = 0; favours = favoursFrom = favoursTo = rolled = eased = 0; shiftAlong = 1;
-            fullBefore = 0; puffsLeft = 0; emptying = false;
             shiftsAt = ShiftsFirst * Mathf.Lerp(.7f, 1.3f, Chance());
             swaysFrom = 60 * Chance(); swayed = Vector3.zero;
             looks = looksFrom = looksTo = Vector2.zero; lookAlong = 1; looksAt = Mathf.Lerp(1, 3, Chance()); looksUntil = 0;
@@ -448,8 +438,6 @@ namespace WonderGather
             if (held != null) { held.SetActive(false); Destroy(held); }
             held = null;
             keeper = null;
-            leftSwell = miner.Swell; miner.Swell = 0;
-            leftShrug = miner.Shrug; miner.Shrug = 0;
             for (int i = 0; i < Count; i++) parts[i] = null;
             Stands = false;
         }
@@ -464,7 +452,6 @@ namespace WonderGather
             for (int i = 0; i < 2; i++)
                 if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null) { leftAt[Count + i] = s.toes[i].position; leftTurned[Count + i] = s.toes[i].rotation; }
             PutAway();
-            miner.Swell = leftSwell; miner.Shrug = leftShrug;
             if (balance != null) balance.Acts = balanced;
             body.LetGo = false;
             giving = GivesBackIn;
@@ -578,25 +565,6 @@ namespace WonderGather
         private void Lives(float step, bool pushed)
         {
             life += step;
-            float spent = Mathf.Max(Mathf.Max(physical.Spent(PhysicalBody.Muscles.Legs), physical.Spent(PhysicalBody.Muscles.Back)),
-                Mathf.Max(physical.Spent(PhysicalBody.Muscles.LeftArm), physical.Spent(PhysicalBody.Muscles.RightArm)));
-            breath.Goes(step, spent / .85f);
-            // Its breath seen in the air: as its chest begins to empty, a few puffs from its mouth, one after another.
-            if (breath.Full > fullBefore) emptying = false;
-            else if (breath.Full < fullBefore && !emptying)
-            {
-                emptying = true;
-                if (BreathSeenInAir && fullBefore >= .9f) { puffsLeft = PuffsABreath; puffIn = 0; }
-            }
-            fullBefore = breath.Full;
-            if (puffsLeft > 0 && (puffIn -= step) <= 0)
-            {
-                puffsLeft--; puffIn = PuffsApart;
-                if (air == null && !TryGetComponent(out air)) air = gameObject.AddComponent<BreathInAir>();
-                Transform face = parts[Head].transform;
-                air.Puff(face.position + face.forward * (1.05f * headHalf) - face.up * (.35f * headHalf), face.forward - .1f * face.up, .5f * breath.Deep, headHalf);
-            }
-
             // Its weight, from leg to leg. Pushed, it stands square.
             if (pushed)
             {
@@ -745,15 +713,12 @@ namespace WonderGather
                 for (int i = 0; i < 2; i++)
                     if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null)
                         s.toes[i].SetPositionAndRotation(segments[Foot + i].TransformPoint(toeAt[i]), segments[Foot + i].rotation * toeTurn[i]);
-                miner.Swell = Alive ? Mathf.Min(SwellAtMost * BreathSize, BreathSwell * breath.Full * breath.Deep * BreathShown * BreathSize) : 0;
-                miner.Shrug = Alive ? ShouldersRise * stature * BreathShoulders * BreathSize * breath.Full * Mathf.Min(breath.Deep, 1.4f) : 0;
                 return;
             }
             if (giving <= 0 || segments[Hips] == null) return;
             // The posed body has posed this frame: each segment is between where the physics left it and there.
             giving -= Time.deltaTime;
             float share = Mathf.SmoothStep(0, 1, 1 - Mathf.Clamp01(giving / GivesBackIn));
-            miner.Swell = leftSwell * (1 - share); miner.Shrug = leftShrug * (1 - share);
             for (int i = 0; i < Count; i++)
             {
                 if (i >= UpperArm && i < Foot)
