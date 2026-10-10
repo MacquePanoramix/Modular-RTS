@@ -87,6 +87,12 @@ namespace WonderGather
         // seen in the cold air, from dusk to dawn (BreathInAir): so many puffs to a breath out, so far apart.
         public static float BreathShoulders = 0, ShouldersRise = .018f;
         public static bool BreathSeenInAir;
+        // How large its breath is drawn (its chest and its shoulders; not what its joints are asked for): a size for
+        // Luis to set by eye on the panel. Luis, October 10, of the size it had: "I could only really notice the
+        // breathing when the character fell." At BreathSizeAtFirst a standing miner's chest at rest is drawn about as
+        // full as the fallen one's Luis could see. Its chest is drawn no fuller than SwellAtMost times the size.
+        public const float BreathSizeAtFirst = 1.6f, SwellAtMost = .125f;
+        public static float BreathSize = BreathSizeAtFirst;
         private const int PuffsABreath = 3;
         private const float PuffsApart = .16f;
         private BreathInAir air;
@@ -739,8 +745,8 @@ namespace WonderGather
                 for (int i = 0; i < 2; i++)
                     if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null)
                         s.toes[i].SetPositionAndRotation(segments[Foot + i].TransformPoint(toeAt[i]), segments[Foot + i].rotation * toeTurn[i]);
-                miner.Swell = Alive ? BreathSwell * breath.Full * breath.Deep * BreathShown : 0;
-                miner.Shrug = Alive ? ShouldersRise * stature * BreathShoulders * breath.Full * Mathf.Min(breath.Deep, 1.4f) : 0;
+                miner.Swell = Alive ? Mathf.Min(SwellAtMost * BreathSize, BreathSwell * breath.Full * breath.Deep * BreathShown * BreathSize) : 0;
+                miner.Shrug = Alive ? ShouldersRise * stature * BreathShoulders * BreathSize * breath.Full * Mathf.Min(breath.Deep, 1.4f) : 0;
                 return;
             }
             if (giving <= 0 || segments[Hips] == null) return;

@@ -923,7 +923,9 @@ namespace WonderGather
             var s = miner.Solved;
             if (!breathes) { breathes = true; breath.Begin(Breath.SeedOf(name)); }
             breath.Goes(Time.deltaTime, Mathf.Max(OutOfBreath, Shaken));
-            miner.Swell = BreathSwell * breath.Full * breath.Deep * OwnBody.BreathShown;
+            // (No fuller than a tenth for each one of the size its breath is drawn at: at the first size, the sixteen
+            // parts in a hundred that Luis could see.)
+            miner.Swell = Mathf.Min(.1f * OwnBody.BreathSize, BreathSwell * breath.Full * breath.Deep * OwnBody.BreathShown * OwnBody.BreathSize);
             if (Now == State.Rising)
             {
                 // The posed body has posed its crouch this frame: each segment is between where the physics left it and
