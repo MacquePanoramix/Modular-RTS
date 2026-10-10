@@ -390,6 +390,47 @@ player log.
 - **The walks.** Do they feel natural to each body? (Luis asked for that on
   October 3.)
 
+## Standing by its own joints (October 10)
+
+**New on the panel** (the Ordinary Place; nothing is different until
+the switch is on):
+
+| On the panel | What it does |
+|---|---|
+| **Stands by its own joints (at ease, hands empty)** | A switch. On: the chosen miner, when it stands at ease with nothing in its hands, stands by what its own hips, knees and ankles give. Off: as it was |
+| **Nudge it** | Sets its whole body going the way the view looks, at 0.15 m/s. (Only while it stands by its own joints) |
+| **Breath: drawn stronger / as in life / not drawn** | How its breath is drawn. A look to choose between; press to go to the next |
+| **Tire it** | Makes the chosen miner tired at once, as after hard work, to see it breathe so. It rests as it does after work |
+
+**What to try.** Choose a miner, switch it on, and watch it for a
+minute from near. Nudge it from several sides. Push it over ("Push it
+over"): it should fall as before, get up, and stand by its own joints
+again. Send it somewhere: it should walk as before and stand so again
+where it stops. Tire it and watch its breath. Then switch it off and
+look at the same miner standing as it did.
+
+**What to judge.**
+
+- Is it **stable**? (It should not wobble, sink, or slide. Nudged, it
+  should rock a little and come back.)
+- Is it **alive**? Its judges said: only in its head. Its breath and
+  its weight going from leg to leg are there and can hardly be seen.
+- **Its breath:** which of the three looks, if any; or another way of
+  showing it ([B6](../NextMilestonePlan.md#questions-for-luis)).
+- **Its head:** does it look about too often, or too far? It has no
+  eyes that move, so its head does all of it.
+
+**What it does not do, so that it is not taken for a fault.**
+
+- **It cannot step.** Nudged again and again before it has settled, or
+  harder than the button does, it will go over (into the fall, and get
+  up). It does not lean against a pull as the posed body does.
+- **Only the chosen miner** stands so, and only with empty hands. With
+  a pickaxe in its hand, or at its work, it is the posed body.
+- Long's chin held up, the arms hanging away from the body, Round's
+  shut eyes: these are how the models are made, and show more on a
+  still body seen from near.
+
 ## Not yet
 
 - **Mining as part of the game.** A miner picks a pickaxe up, goes to a

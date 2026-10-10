@@ -150,7 +150,7 @@ Each is shown to Luis before the next is built on it.
 | | Step | It is to bring | What Luis sees |
 |---|---|---|---|
 | 0 (done) | **The ground for it.** Ankles: the boot becomes a part of its own (today the shin and the boot are one, and a body cannot balance at an ankle it does not have). The test that nothing pushes from nowhere. Today's posed body measured for the table above. What a body's own costs in the frame, one miner and a crowd | | Figures |
-| 1 | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
+| 1 (built October 10; for Luis to see) | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
 | 2 | **From its knees onto its feet.** The half second that is posed in the getting up. Then the whole of it, from the fall to standing, is the body's own | Not all on one clock (2) | A pushed miner getting up with nothing taking over |
 | 3 | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
 | 4 | **Walking, turning, stopping.** On the path, the meadow and its slopes. No two steps quite the same. The free arm swings | Arcs and one hump of speed (5); does not repeat itself (6) | The walk, beside the walk as it was |
@@ -196,7 +196,33 @@ Each is shown to Luis before the next is built on it.
 
 Lying is part of step 1: a body that lies should breathe and stir. A
 stir before it gets up was tried on October 9 and taken out again (see
-[the round of October 9](Reviews/2026-10-09_TheBodysOwn_Round.md)).
+[the round of October 9](Reviews/2026-10-09_TheBodysOwn_Round.md)). Since
+October 10 a lying body's chest is drawn breathing; it does not stir.
+
+### What step 1 found (October 10)
+
+[The design as built](Design/TheBodysOwn.md#step-1-the-rest-of-it-the-body-in-the-game-and-the-life-in-it-october-9-and-10);
+[what its judges said](Reviews/2026-10-10_StandingWithLife_Judges.md).
+
+- **Built:** the body's own body in the game beside the posed one,
+  switched on the panel; a keeper whose settings a search found; life
+  in it (breath, its weight from leg to leg, a slow drift, a head that
+  looks about). It stands as still as was asked, and gives its body
+  back, or to the fall, when anything else is asked of it.
+- **Not reached: "leaning against a pull as today's body does".** On
+  flat feet, without a step, it holds 20 to 30 N (Round to 65 N);
+  today's posed body leans against 50 to 150 N. The posed body is not
+  bound by what feet can do. **It waits on step 3.**
+- **Alive, by its judges: only in its head.** Its breath and its shift
+  of weight are there in the figures and cannot be seen in the
+  pictures. A fuller shift took a nudged miner over: it too waits on
+  step 3. How breath is shown is put to Luis (B6).
+- **The measure "its head wanders no more than a centimetre or two"**
+  (the table above) is met between shifts of weight (millimetres) and
+  not across them (its chest 2 to 3 cm, its head 3 to 4 cm, over a
+  minute): a weight that goes over a leg takes the body with it. Put to
+  Luis (B5).
+- **The order of steps 2 and 3** is put to Luis (B7).
 
 ## What it will cost, said plainly
 
@@ -236,6 +262,14 @@ at, or does not sit in the game's look, other ways are tried (the
 shoulders and the back moved by their own joints; the coat; breath seen
 in cold air at dusk). Each is shown to Luis as a look beside the others,
 and none is taken as settled.
+
+**Three more, from step 1 (October 10). Not answered.**
+
+| | Question | What I think, for Luis to overrule |
+|---|---|---|
+| B5 | The table of "stable" says a standing miner's "head wanders no more than a centimetre or two". Is that to hold while its weight goes from leg to leg, or only between? | Only between. A weight that really goes over a leg takes the head 2 to 4 cm with it, slowly, and that is not a wobble. As it is now: millimetres between shifts, 3 to 4 cm across them |
+| B6 | Breath drawn on the chest cannot be seen, even at four times life (six judges of six). How is it to be shown? | The panel has three looks to begin from ("drawn stronger", "as in life", "not drawn"). Others, not built: the shoulders and collar rising, drawn boldly; a tired body heaving; breath seen in the cold air at dusk. I would try the shoulders and the dusk air next, beside these |
+| B7 | Shall "a step" (step 3) come before "from its knees onto its feet" (step 2)? | Yes. Leaning as today's body does, a real shift of weight, and standing up to a push all wait on the step; step 2 waits on nothing |
 
 The five other questions of the proposal for S4 (Q2 to Q6) are still
 open.

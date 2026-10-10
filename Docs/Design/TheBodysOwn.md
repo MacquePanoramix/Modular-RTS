@@ -552,3 +552,250 @@ writing of this part, the bench and its results.
 | A joint could give twice its strength (as in step 0) | Stands | For the keeper in the game |
 | Round "comes back to about a millimetre" leaves out that it was not still within three seconds | Stands | Added |
 | The trial most likely to break it: truly different starts, a slope, a shove, the rule swept, 50 against 100, judged by lean and hips and sole margin | In part done (different starts, 50 against 100 and 200) | The rest listed as not run |
+
+## Step 1, the rest of it: the body in the game, and the life in it (October 9 and 10)
+
+Luis, October 9, after the first part: "Shall we proceed then with the
+next part then?" The next part was: the body's own body in the game
+beside the posed one, with a switch on the panel; a keeper that leans
+as today's body does; then life in it.
+
+### In short
+
+- **It is in the game, beside the posed body, and off unless it is
+  switched on.** The miners' panel has a switch, "Stands by its own
+  joints". With it on, the chosen miner, at ease and with empty hands,
+  stands by what its own hips, knees and ankles give. Nothing of what
+  Luis has is changed with the switch off.
+- **It stands as still as was asked.** With no life in it: all three
+  miners, twenty-five seconds on the path, their heads within 0.00 to
+  0.07 mm once settled (they settle 7 to 12 mm from where the posed
+  body had them). Nudged four ways (set going at 0.15 m/s), their heads
+  go 11 to 28 mm and are back within 6 mm five seconds after.
+- **There is life in it,** and none of it is a pose put on the body: it
+  breathes (15 breaths a minute at rest, 30 to 36 tired); its weight
+  goes from one leg to the other every nine to twenty-six seconds;
+  where it holds its weight drifts by a few millimetres between; its
+  head looks somewhere else every four to eleven seconds, at another
+  miner if one is near. Each is something its joints are asked for, and
+  the body answers as its weights let it.
+- **It gives its body back when anything else is asked of it,** and
+  takes it again: sent somewhere it walks as it did (posed) and stands
+  by its own joints again three to four seconds after it was sent;
+  pushed harder than it can stand, it goes over into the fall that was
+  built, gets up, and stands so again.
+- **Three things Luis should know before looking:**
+  1. **It cannot step, so it cannot yet do what today's posed body does
+     when it is pulled.** In the bench it held pulls of 20 to 30 N
+     (Round: to 65 N); today's posed body leans against 50 to 150 N and
+     steps beyond. A body on flat feet that may not step cannot be made
+     to: the posed body is not bound by what feet can do. Stepping is
+     step 3 of the plan.
+  2. **For the same reason its shift of weight is small** (about two
+     thirds of its weight on a leg; its hips 2 to 3 cm over; its hips
+     rolled 3 degrees). A fuller one (the hip out) was built, and a
+     miner standing so went over on a fourth nudge in a row. A body on
+     one leg saves itself from a push by stepping.
+  3. **Its breath can hardly be seen.** Drawn at the size it has in
+     life it cannot be seen at all; at two and a half times that, three
+     judges of three could not see it; it is now drawn at four times.
+     How breath is shown is Luis's to choose (answer B4): the panel has
+     the three looks, and other ways are open (below).
+- **The plan's measure "its head wanders no more than a centimetre or
+  two" is not met as written,** and I think it should be read anew: over
+  a minute a miner's chest keeps within 2 to 3 cm of where it began,
+  and its head within 3 to 4 cm across; nearly all of that is its
+  weight going over a leg, and its head turning (a head that turns
+  moves its own middle). Between shifts it keeps within millimetres.
+  Put to Luis below.
+
+### What is which
+
+| | |
+|---|---|
+| **The body's own** | The standing: thirteen parts on joints, held up by torques at its hips, knees and ankles, each no more than the joint has. Its breath's movement, its weight going over, its head turning: asked of its joints as a turn from the pose, answered by the body |
+| **Drawn, not physical** | The chest drawn fuller with breath (the chest bone made larger; what is on it moved, not made larger) |
+| **Still posed** | Everything else a miner does: walking, turning, picking up, work. The pose it stands in when it begins (its stance, its bent knees, its arms a little away from it) is the posed body's, taken as it is |
+| **Handed over** | To the fall that was built, when it is down. Back to the posed body, over a quarter of a second, when it is sent somewhere, put to work, or switched off |
+
+### The keeper
+
+Each step of the physics (`OwnBody.Keep`; first written and searched in
+`BodysOwnBench`):
+
+1. **Where the ground really bore it** in the last step is read from
+   what touched its boots (`GroundTouch`).
+2. **How high its weight is** is kept by a little more or less push
+   than its weight.
+3. **Where its weight is going** is its place and its speed over the
+   rate at which a standing body falls away from where the ground
+   pushes it (the root of gravity over its height). The push it wants
+   is beyond where its weight is going, by how far that is from where
+   it means to hold it; and further for a push from outside, which it
+   feels by how its weight really went.
+4. **Where the push can act** is on its soles and nowhere else: each
+   boot bears its share along its own middle line, and the point is
+   kept inside the sole.
+5. **Each leg's hip, knee and ankle give** what makes its boot push the
+   ground so. Its hips keep its trunk upright. A hinge gives only about
+   its own line. Nothing gives more than it has; every torque is put on
+   the two parts a joint joins, equal and opposite.
+6. **It leans against what it feels,** for what it cannot take standing
+   as it is, keeping sole behind its weight.
+7. **Every joint is held softly towards its pose** by the joint's own
+   spring, set by the rule of step 1's first part.
+
+Its fifteen settings were **found by a search on Small, Long and Round
+together** at the game's fifty steps of the physics a second
+(`BodysOwnBench.Search`), not set by hand: twenty-five bodies of each
+(one left alone, sixteen set going at 0.12 and 0.2 m/s eight ways,
+eight pulled with a twentieth and an eleventh of their weight and let
+go), scored by how many still stand as they stood and how still. **The
+search gamed what it was asked once:** a body that fell in the first
+second "stood as it stood" where it lay. What it is asked now also
+needs the head to be where it was made.
+
+| Setting | Found | |
+|---|---|---|
+| Quick | 6.33 a second | how quick it brings its weight back |
+| Feels | 0.040 s | over how long it comes to feel a push |
+| Leans, by, beyond, keeping behind | 2.90 a second, 0.94, 33 mm, 21 mm | how it leans against one |
+| Tracks | 6.87 a second | how fast it learns the ground's push falls short of the one it meant |
+| A joint's spring: full at, rule, damped | 92.7 degrees, 0.64, 0.38 | (step 1's first part) |
+| Rights, damped | 5.40 for each kilogram, 0.05 | its hips righting its trunk |
+| Edge | 4 mm | how near a sole's edge the push may act |
+| Rises, damped | 224, 14.3 | keeping its height |
+
+In the bench, with these: all three stand a minute on the path at
+fifty steps a second (within 0.2 to 0.3 mm once settled); twenty-four
+of twenty-four of each keep their feet set going at 0.2 m/s (they were
+3, 20 and 21 of 24 with the first keeper); pulls held: Small and Long
+20 and 30 N (down at 40), Round 20 to 65 N (down at 80).
+
+### Three faults found by tracing, and mended
+
+| What was seen | What it was | What was done |
+|---|---|---|
+| Small went down the moment it stood by its own joints again after a walk | It began while the posed body was on its closing step, one boot in the air (the posed body going 42 mm/s) | It begins only when the posed body has had both boots down, at rest, for four tenths of a second |
+| Tired at once after several nudges, Small went over sideways | Where it stands was a place on the ground. Its boots had slid under the nudges, and its whole weight was left on one of them | Where it stands is kept by its boots: between them, as far across and ahead as when it began |
+| On one leg and nudged, both boots tipped twenty degrees and left the ground, and it went over backwards | What the keeper had learnt of the ground's push falling short (up to 5 cm) was added to where it meant the push to act *after* that had been kept inside the sole: it asked for a push beyond the sole's edge, and a push asked for where there is no sole only tips the boot. The search never saw it (it does not look at boots) | The sum is kept inside the sole. After it, all three miners held every nudge on one leg |
+
+### The life in it
+
+What real bodies do standing, and how it is drawn, was read first:
+[the research, part 6](../Research/2026-10-09_AliveAndTheBodysOwn.md#6-standing-at-ease-breath-weight-head-read-for-step-1).
+
+| | What its joints are asked | Sizes now (set by hand and by what the judges said, not searched) |
+|---|---|---|
+| **Breath** (`Breath`, a clock of its own) | Its back to straighten as its chest fills, its arms to go out. And its chest is drawn fuller | 15 a minute at rest, to 42 wholly out of breath, and to two and a half times as deep; at the default look ("drawn stronger", four times life) the back 1 degree, the arms 2.5, the chest 9 parts in a hundred at rest. No two breaths quite as long or as deep; no two bodies in step |
+| **Weight from leg to leg** | The keeper holds its weight nearer one boot. Its hips to roll, a quarter of a second behind its weight; its trunk to stay upright with its shoulders a little the other way; the other knee to ease, later still | Every 9 to 26 s, over about 1.6 s in one hump of speed; 0.28 of the way to a boot (about two thirds of its weight on that leg); three times in ten only a little further on or off the leg it is on. Pushed, it stands square |
+| **Never quite still** | Where it holds its weight drifts, two slow turns along it and two across | 4 mm |
+| **Its head** | To turn to where it looks, and to keep to it whatever the body under it does; between looks to wander a little | Every 4 to 11 s, to 40 degrees aside, in 0.25 to 0.5 s; at another miner nearer than 15 m about one time in three; wanders 1.5 degrees |
+| **Lying after a fall** | (Drawn only) its chest drawn fuller with each breath, faster and deeper the more shaken and out of breath | The fall itself is as it was |
+
+The miners' **eyes are not modelled apart from their heads** and they
+do not blink, so the head says where a miner looks; a real head would
+turn less often and less far, with the eyes doing most of it.
+
+**Tried and taken out** (each made a miner go over under a light
+nudge, or did nothing):
+
+- Breath lifting the whole body by its legs (8 mm). Long, on one leg
+  and nudged, went 11 to 13 cm and fell once in three runs; 4 to 6 cm
+  without it.
+- A fuller shift of weight (0.4 to 0.5 of the way to a boot, with
+  larger rolls). Went over on a third or fourth nudge in a row.
+- Its trunk asked to keep upright in the world, step by step. It threw
+  its hips about when nudged. It is asked against its hips, taking up
+  the roll they are seen to have, slowly.
+- Its chest following a far look. Not the cause of anything; one thing
+  less asked of the trunk.
+- **Still in, and never seen to act:** it goes over a leg only as far as
+  that leg's joints bear with ease (half of what they have). In every
+  test they were asked for 17 to 26 hundredths. It is meant for a weak
+  or a tired body, and was not tried on one.
+
+### Figures (the final state, Small / Long / Round)
+
+`OwnBodyTests`, six tests, on the path of the ordinary place, at the
+game's fifty steps a second.
+
+| | Small | Long | Round |
+|---|---|---|---|
+| **No life in it.** Settling, its head goes from where the posed body had it | 6.5 mm | 10.3 mm | 12.2 mm |
+| ...then, for twenty seconds, keeps within | 0.00 mm | 0.01 mm | 0.07 mm |
+| ...set going at 0.15 m/s four ways, its head goes at most | 13 to 24 mm | 23 to 28 mm | 11 to 24 mm |
+| ...and is back within, five seconds after | 0.3 to 1.8 mm | 1.6 to 5.7 mm | 0.4 to 2.7 mm |
+| **With life in it, a minute.** Breaths | 15 | 15 | 15 |
+| Its back straighter with its chest full than empty | 1.2 degrees | 1.1 | 1.0 |
+| Its weight went to the other leg | 3 times | 2 | 3 |
+| On its right leg / its left: its hips across | +21 / -17 mm | +21 / -29 | +21 / -28 |
+| ...its hips roll | 3.1 / -2.8 degrees | 2.5 / -3.2 | 2.0 / -3.1 |
+| ...the knee of the leg it stands on / the other | 27 / 34 degrees | 26 / 31 | 27 / 34 |
+| Its chest goes at most (across / along) | 21 / 19 mm | 27 / 12 | 28 / 7 |
+| Its head goes at most (across / along) | 41 / 43 mm | 42 / 37 | 34 / 19 |
+| Its head turns back across it (a tremble would be more than twice a second) | 0.8 a second | 0.7 | 0.6 |
+| Asked to look 40 degrees to its right, its head turns | 40 degrees | 40 | 41 |
+| **On one leg wholly, set going at 0.15 m/s four ways,** its head goes at most | 15 to 20 mm | 36 to 61 mm | 37 to 83 mm |
+| Tired at once, it breathes | 31 a minute | 36 | 30 |
+| **Set going backwards at 1.2 m/s,** it is down, and the fall has it, after | 0.5 s | 0.6 s | 0.5 s |
+| ...it is up after / stands by its own joints again after | 9.0 / 10.1 s | 10.8 / 12.2 s | 9.6 / 10.8 s |
+| **Sent 2.5 m,** it gives its body back, walks, and stands so again after | 3.6 s | 3.1 s | 3.4 s |
+| It went down in any of it but where it was meant to | no | no | no |
+
+The whole suite: 170 pass, none fail, 21 are run only when asked (the
+benches and recordings). The build is made from this state.
+
+### What it costs
+
+Not measured again in the game. In the bench a standing body of its own
+cost about 0.05 ms of each fiftieth of a second at fifty steps a second
+(in the Editor). One miner at a time stands so (the chosen one); a
+crowd keeps the posed body.
+
+### Not done, and not tested
+
+- **Stepping** (the plan's step 3), and with it leaning as today's body
+  does, a fuller shift of weight, and any pull beyond a few tens of
+  newtons.
+- **A slope.** Every test is on the path, which is nearly level.
+- **Hands with something in them.** It stands so only with empty hands.
+- **More than one miner standing so at once.** The panel keeps the
+  chosen one so.
+- **Many nudges in a row, as Luis may give them.** Four in a row on one
+  leg were held by all three; a body nudged again and again, each time
+  before it has settled, was not tried, and its boots slide a little
+  under each (Small's came 3 cm nearer each other over four).
+- **Long is the least sure:** in an earlier state it went 13 cm under
+  one nudge and stood. It is the tallest on the narrowest stance.
+- **What a far crowd does;** what it costs in the built game.
+- **Whether the engine's joint springs twist the rule** for a joint that
+  turns three ways (a caution of step 1's first part): not looked into.
+- **How often the physics steps** is still the game's fifty; a hundred
+  would be sturdier (step 1's first part), and is not chosen.
+- **A weak or tired body's limit on shifting** (above): never seen to act.
+
+### What the judges said
+
+Two rounds, three judges each, on sheets of pictures of the three
+miners ([all of it](../Reviews/2026-10-10_StandingWithLife_Judges.md)).
+
+- **Stable: three of three, both rounds.** Boots flat and planted in
+  every picture; nothing snaps.
+- **Alive only in its head: three of three, both rounds.** "A still body
+  with a roving head." Its breath could not be seen at two and a half
+  times life nor at four; its weight going over a leg could not be
+  seen; its head turns alone, nothing leading it and nothing following.
+- **What was done between the rounds:** breath drawn larger; the head
+  turning less often and never quite fixed; and three things tried and
+  taken out again because a nudged miner went over (above).
+- **What is left open,** for Luis: how breath is to be shown; that a
+  real shift of weight waits on the step; its chest following a look;
+  and how the models are made to stand (Long's chin up, the arms in an
+  A, Round's shut eyes), which a still body looked at closely shows.
+
+Pictures: [Long, its weight asked onto its right leg and then its left](../Images/StandingWithLife_2026-10-10/long_shift.jpg);
+[Small, breathing, from the side](../Images/StandingWithLife_2026-10-10/small_breath.jpg);
+[Small, asked to look to its right](../Images/StandingWithLife_2026-10-10/small_look.jpg);
+[Round, nudged](../Images/StandingWithLife_2026-10-10/round_nudged.jpg);
+[the three, their chests empty and full, tired](../Images/StandingWithLife_2026-10-10/chest_empty_full.jpg).

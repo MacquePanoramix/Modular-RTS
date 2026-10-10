@@ -1,11 +1,37 @@
 # Wonder Gather — Current State
 
-**Updated:** October 9, 2026.
+**Updated:** October 10, 2026.
 
 - **Now: S3b, the body's own. Approved by Luis on October 9; step 0 is
-  done, and step 1 is next** ([the plan](NextMilestonePlan.md);
+  done, and step 1 is built and waits for Luis to look at it** ([the plan](NextMilestonePlan.md);
   [the design as it is built](Design/TheBodysOwn.md);
   [Luis's answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
+  - **Step 1 is built (October 10), and is off unless it is switched
+    on** ([the design](Design/TheBodysOwn.md#step-1-the-rest-of-it-the-body-in-the-game-and-the-life-in-it-october-9-and-10);
+    [its judges](Reviews/2026-10-10_StandingWithLife_Judges.md);
+    [how to look at it](Playtests/MinersPlaytest.md#standing-by-its-own-joints-october-10)).
+    - **The panel has a switch, "Stands by its own joints".** The chosen
+      miner, at ease with empty hands, then stands by what its own
+      hips, knees and ankles give. Sent somewhere or put to work it
+      gives its body back to the posed one; pushed harder than it can
+      stand it goes over into the fall that was built, gets up, and
+      stands so again.
+    - **Stable:** with no life in it, heads within 0.00 to 0.07 mm;
+      nudged four ways (0.15 m/s), heads go 11 to 28 mm and come back.
+      With life in it, on one leg and nudged: 15 to 83 mm, nobody down.
+    - **There is life in it** (breath, its weight from leg to leg, a
+      slow drift, a head that looks about), each asked of its joints
+      and none a pose. **Six judges of six: stable, and alive only in
+      its head.** Its breath and its shift of weight cannot be seen.
+    - **It cannot step.** So it does not lean as today's body does
+      (20 to 30 N held; today's posed body, 50 to 150 N), and its shift
+      of weight is small: a fuller one took a nudged miner over. Both
+      wait on the plan's step 3.
+    - **Three questions for Luis** ([B5 to B7](NextMilestonePlan.md#questions-for-luis)):
+      what the measure "a centimetre or two" is to mean; how breath is
+      to be shown; whether the step comes before the knees.
+    - **A fault of the keeper found by tracing:** it asked the ground to
+      push from beyond the edge of a sole, which only tips the boot.
   - **Step 0 found** ([figures](Design/TheBodysOwn.md#step-0-the-ground-for-it-october-9)):
     - **A body can stand by its own joints as still as Luis asked:**
       all three miners, twenty seconds, their heads within 0.1 to

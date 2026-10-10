@@ -46,6 +46,10 @@ with a switch on the panel, a controller that leans as today's body
 does, then life in it"): "Shall we proceed then with the next part
 then?" Recorded as Luis's word to go on with the rest of step 1.
 
+**On October 10,** while that part was being built (the judges' first
+round was not yet called): "I hit my usage limit while you were working,
+but it has reset now. Please continue from where you left off."
+
 **What Luis did not say:**
 
 - **Whether the build has been opened.** Nothing of the playtest round

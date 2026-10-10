@@ -2050,6 +2050,24 @@ with the settings, are in
   wrist takes the free wrist's swing (which `CarryAtSide` reduces to
   `Keeps`). `HungThingTests` asks that the carrying hand goes with the
   walk (12 mm to 30 cm, from the hips).
+- **S3b step 1 (October 10): `Scripts/Units/OwnBody.cs`**, the body's
+  own body, standing ([design](../Design/TheBodysOwn.md#step-1-the-rest-of-it-the-body-in-the-game-and-the-life-in-it-october-9-and-10)).
+  Added to the chosen miner by `MinerWorkPreview` when the panel's
+  switch is on. `Begin` makes thirteen `ArticulationBody` parts where
+  the posed body's segments are (when the posed body has had both boots
+  down, at rest, for 0.4 s, with empty hands) and sets `ProceduralBiped.LetGo`;
+  `Keep` (each physics step) is the keeper; `Lives` is the life in it
+  (it sets the joints' drive targets: `Asks`, `Aims`); `LateUpdate`
+  writes the posed body's segments from the parts, between physics
+  steps; `GiveBack` blends to the posed body over a quarter of a
+  second; `GoDown` hands the parts' speeds to `PhysicalFall.LetGo`.
+  Its settings are public statics: the keeper's from
+  `BodysOwnBench.Search`, the life's by hand. `GroundTouch.cs`: what
+  the ground does to a boot in a step. `Breath.cs`: the breathing
+  clock (also used by `PhysicalFall` for a lying body). `MinerBody.Swell`:
+  the chest drawn fuller (written only when it changes).
+  `Tests/PlayMode/OwnBodyTests.cs` (six); `OwnBodyRecord.cs` (pictures
+  for judges; run only when asked: `-ownShots <folder>`).
 - **S3b step 0 (October 9): `Tests/PlayMode/BodysOwnBench.cs`** (run
   only when asked; nothing of the game uses it). It reads the let-go
   body as `PhysicalFall.LetGo()` makes it, takes the boots off the shins

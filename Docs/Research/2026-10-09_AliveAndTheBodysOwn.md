@@ -16,7 +16,8 @@ parts: how long a fallen body lies; what makes a movement read as alive
 (the media studies); how a body is moved by its own joints and kept
 stable; action by action, what a real body does, how it is made to
 read, and what ours does; and what a light boot under a heavy body asks
-of the physics.
+of the physics. A sixth part was added on October 10, for step 1: what
+a body does standing at ease (its breath, its weight, its head).
 
 **How far it can be trusted.** Most of it was read as search
 summaries and abstracts on October 9, not as whole papers: a figure
@@ -323,6 +324,118 @@ the first of these too late: I had already concluded that the step
 must be much smaller, and three reviewers took that out. How few steps
 will do is step 1's first question.
 
+## 6. Standing at ease: breath, weight, head (read for step 1)
+
+Read on October 9 before the life was put into the standing body
+([step 1 of the design](../Design/TheBodysOwn.md#step-1-the-rest-of-it-the-body-in-the-game-and-the-life-in-it-october-9-and-10)).
+As above: search summaries and abstracts, not whole papers.
+
+### Breath
+
+**Found.**
+
+- **An adult at rest breathes about 12 to 16 times a minute**
+  ([the European Lung Foundation's teaching sheet](https://europeanlung.org/wp-content/uploads/2023/12/t-sc-1663767440-ks2-breathing-rate-mini-investigation_ver_1.pdf)).
+  After work it is faster and falls back quickest at first, then
+  slowly; how long depends on how hard the work was. One classroom
+  record (a weak source): 14 at rest, 30 after seven minutes' jogging,
+  24 five minutes later, 14 after fifteen
+  ([a guide to recovery](https://ringconn.com/blogs/guides/respiratory-recovery)).
+- **Breathing moves a standing body, and the body takes it up.** A
+  breath shifts the trunk; in healthy people the hips, knees and
+  ankles move against it so that the weight hardly goes anywhere, and
+  the link between breath and sway is seen forwards and back, not
+  sideways. Breathing faster or deeper sways the body more
+  ([Manor and others](https://pmc.ncbi.nlm.nih.gov/articles/PMC3387343);
+  [modes of ventilation and balance](https://brieflands.com/articles/asjsm-21567);
+  Kuznetsov and Riley 2012, seen only as cited).
+- **How animators draw it.** In layers, from the middle of the body
+  outwards: the chest first (a slight growing of it sells the
+  filling), the shoulders a little after the chest, the arms after the
+  shoulders; the head kept quiet. The in-breath and the out-breath are
+  not given the same time. And the size goes with the camera: "the
+  further away, the more exaggerated the movements need to be"; close
+  by it should be subtle
+  ([AnimSchool on animated breathing](https://blog.animschool.edu/tag/animated-breathing/);
+  two students' breakdowns of idles, weak sources:
+  [one](https://yufeizheng.myblog.arts.ac.uk/2021/05/01/week2-idle-animation/)).
+
+**For ours.** The clock (`Breath`): 15 breaths a minute at rest, up to
+42 wholly out of breath, and up to two and a half times as deep. At
+rest the chest fills over two fifths of a breath, empties quicker at
+first, and waits a moment empty (how a body at rest breathes †; the
+animators' guides say only that in and out are unequal); out of breath
+it is in and out alike with no wait. No two breaths are quite as long
+or as deep. What it moves is the body's own: the back is asked to
+straighten a little and the arms to be pushed out, and the legs take
+it up, as the studies say a body does. Drawn at the size it has in
+life it **cannot be seen** on the miners (a still picture of the chest
+empty and one of it full cannot be told apart, near or far); so the
+look that is on by default is two and a half times life, as the
+animators' rule for a far camera says, and the life-size one is kept
+to switch to. Which it is to be is Luis's.
+
+### Weight from leg to leg
+
+**Found.**
+
+- People standing long **do not stand evenly**, and they change which
+  leg bears them. How often cannot be said in one number: studies
+  count "shifts", "fidgets" and "drifts" each in their own way, and
+  the same recording gives a wide range of counts by method
+  ([a six-hour standing study](https://pmc.ncbi.nlm.nih.gov/articles/PMC9976808)).
+  One rule used: a shift is the weight changed and **held for more
+  than seven and a half seconds**, with more than four fifths of it on
+  one leg; a fidget is out and back within that time
+  ([the same, citing Wiggermann and Keyserling](https://stacks.cdc.gov/view/cdc/224976)).
+  Shifts and fidgets grow more frequent the longer a body stands.
+  Duarte and Zatsiorsky's counts for half an hour of free standing
+  were not reached (the paper would not open).
+- **Where the weight goes, the body follows in a known shape**
+  (contrapposto): the hip of the leg that bears is higher; the
+  shoulders tip the other way; the knee of the other leg is eased. A
+  shift of the middle of the body by "just a few inches" is already a
+  large shift of weight
+  ([a guide to idles](https://mocaponline.com/blogs/mocap-news/idle-animation-loop);
+  the shape itself is the art-school commonplace †).
+
+**For ours.** Every nine to twenty-six seconds the keeper holds the
+weight nearer one boot (about three quarters of it on that leg at
+most), over about a second and a half, in one hump of speed; the hips
+roll a quarter of a second behind the weight and the other knee eases
+after them (not all on one clock). Three times in ten it only goes a
+little further on or off the leg it is on (a fidget). Pushed, it
+stands square. The plan's table said a standing miner's "head wanders
+no more than a centimetre or two": a weight that really goes over a
+leg takes the head with it by more than that (see the design page),
+and that is put to Luis.
+
+### The head
+
+**Found.**
+
+- **Small looks are made with the eyes alone.** The head joins in for
+  shifts beyond about twenty degrees, and by thirty it gives about a
+  third of the turn; people differ (some move the head for small
+  looks, some hardly at all)
+  ([the eye-head mover spectrum](https://arxiv.org/html/2602.06164v1)).
+  To something seen, the eyes go first and the head follows; the head
+  goes on moving for about a tenth of a second after the look has
+  landed, the eyes turning back in it
+  ([gaze shifts](https://pmc.ncbi.nlm.nih.gov/articles/PMC3191847)).
+- Walking people shift their eyes about 145 times a minute; the head
+  far less often, and mostly from side to side
+  ([a table in a study of tunnel vision](https://pmc.ncbi.nlm.nih.gov/articles/PMC2629530/table/T1)).
+
+**For ours.** The miners' eyes are not modelled apart from the head,
+so the head has to say where a miner looks: it turns every two and a
+half to seven seconds, in one hump of speed, up to forty degrees
+aside, at another miner if one is near about one time in three; and it
+keeps to where it looks while the body under it breathes and shifts.
+A real head would turn less often and less far than this, with the
+eyes doing most of it. Eyes that move are not built; they would be
+the right place for most of this.
+
 ## Sources
 
 All looked up on October 9, 2026 (most as search summaries and abstracts: see the top of the page), unless marked †.
@@ -413,3 +526,25 @@ All looked up on October 9, 2026 (most as search summaries and abstracts: see th
   <https://montreal.ubisoft.com/en/drecon-data-driven-responsive-control-of-physics-based-characters/>
 - Rosen D. *An Indie Approach to Procedural Animation.* GDC 2014.
   <https://www.gdcvault.com/play/1020583/An-Indie-Approach-to-Procedural>
+- European Lung Foundation, *Breathing rate mini investigation* (a
+  teaching sheet).
+  <https://europeanlung.org/wp-content/uploads/2023/12/t-sc-1663767440-ks2-breathing-rate-mini-investigation_ver_1.pdf>
+- RingConn, *Respiratory rate after exercise* (a guide; a weak source).
+  <https://ringconn.com/blogs/guides/respiratory-recovery>
+- Manor B. and others, on breathing and postural sway.
+  <https://pmc.ncbi.nlm.nih.gov/articles/PMC3387343>
+- *The Influence of Different Modes of Ventilation on Standing Balance
+  of Athletes.* <https://brieflands.com/articles/asjsm-21567>
+- AnimSchool, posts on animated breathing.
+  <https://blog.animschool.edu/tag/animated-breathing/>
+- A student's breakdown of an idle (a weak source).
+  <https://yufeizheng.myblog.arts.ac.uk/2021/05/01/week2-idle-animation/>
+- A six-hour standing study (weight shifts and fidgets, and how the
+  count depends on the method). <https://pmc.ncbi.nlm.nih.gov/articles/PMC9976808>
+- MoCap Online, *Idle animation: what game developers need to know.*
+  <https://mocaponline.com/blogs/mocap-news/idle-animation-loop>
+- *The Eye-Head Mover Spectrum.* 2026. <https://arxiv.org/html/2602.06164v1>
+- On gaze shifts of the eyes and head together.
+  <https://pmc.ncbi.nlm.nih.gov/articles/PMC3191847>
+- A table of saccades a minute, walking.
+  <https://pmc.ncbi.nlm.nih.gov/articles/PMC2629530/table/T1>

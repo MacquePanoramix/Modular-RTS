@@ -2993,3 +2993,46 @@ No code of the game was changed; the bench is run only when asked.
   at other values than a half and one; the ankle's spring changed
   without the dampers; the built player; the engine's other solver with
   proof.
+
+## S3b step 1, the rest — the body in the game, and the life in it (October 9 and 10)
+
+[Design/TheBodysOwn.md](Design/TheBodysOwn.md#step-1-the-rest-of-it-the-body-in-the-game-and-the-life-in-it-october-9-and-10).
+The body's own body is off unless the panel's switch is on.
+
+- **`OwnBodyTests`, six tests, each on Small, Long and Round, at the
+  game's fifty steps a second: all pass.** Standing still with no life
+  in it (heads within 0.00, 0.01 and 0.07 mm for twenty seconds);
+  nudged four ways at 0.15 m/s (heads go 11 to 28 mm, back within
+  6 mm); set going at 1.2 m/s (down in 0.5 to 0.6 s, into the fall; up
+  after 9 to 11 s; standing by its own joints again a second later);
+  pushed over from the panel; sent 2.5 m (it gives its body back,
+  walks, and stands so again 3.1 to 3.6 s after); and a minute with
+  life in it (15 breaths; its weight to the other leg two or three
+  times; its chest within 21 to 28 mm; then on one leg and nudged four
+  ways, heads go 15 to 83 mm; tired at once, 30 to 36 breaths a
+  minute). [The table](Design/TheBodysOwn.md#figures-the-final-state-small--long--round).
+- **The whole PlayMode suite, on the final state:** 191 tests; **170 passed, none failed**, 21 are run only when asked (the benches and recordings); about 24 minutes. It was run three times on October 10: before the judges' first round (170, none failed); after the second round's changes (169, and one failed: the boulder test below); and on the final state (170, none failed).
+- **A fault this step made, found by the suite and mended.** Drawing
+  breath wrote the chest's size every frame for every miner, breathing
+  or not. `BoulderTests.AMinerMinesABoulderByAClick` (Long's blows
+  landing where the plan put them; Long's pickaxe hangs on its chest)
+  passed three times of three on the code before this step and failed
+  two times of four after it (30 cm off). With the size written only
+  when breath changes it: four of four. **The same test failed once on
+  October 9,** before any of this, so it can fail without it; that was
+  not looked into.
+- **States that failed on the way** (each on one leg and nudged at
+  0.15 m/s): a fuller shift of weight (Small down on a fourth nudge);
+  breath lifting the body by its legs (Long down once in three runs);
+  the trunk kept upright in the world step by step (Small down). And
+  before the keeper was mended (it asked for a push beyond a sole's
+  edge): Round down at the settings that are in now.
+- **Judges:** two rounds of three, on sheets from `OwnBodyRecord`
+  ([what they said](Reviews/2026-10-10_StandingWithLife_Judges.md)).
+- **The build** was made from the final state and copied to `Builds/`.
+  It was not opened by me beyond that; its own measures of work and of
+  the crowd were not run again (nothing they measure was changed).
+- **Not tested:** a slope; something in its hands; more than one miner
+  standing so at once; nudges given faster than it settles; a weak or
+  tired body's limit on shifting (never seen to act); what it costs in
+  the built game; whether Luis finds it stable, or alive.
