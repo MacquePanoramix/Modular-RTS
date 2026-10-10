@@ -59,6 +59,11 @@ namespace WonderGather
         private readonly Vector3[] torque = new Vector3[Count], sole = new Vector3[2], at = new Vector3[2];
         private readonly float[] gave = new float[Count];
 
+        // Where it wants the ground to push it is further the way its body tips: by Tilts of how far its hips have
+        // tipped (times its height), and TiltsRate of how fast, over its rate of falling. (A pull above its weight
+        // turns the whole body over, and a push that passes through its weight never turns it back.) Nought: not.
+        public static float Tilts = 0, TiltsRate = 0;
+
         // ---- The step (S3b, step 3; what was read for it: the research of October 9, part 7). Set by hand to begin
         // with; to be found by a search on the three miners together, as the settings above were.
         // Whether it steps at all (off: it stands as it did, and goes down when it cannot).
@@ -69,24 +74,27 @@ namespace WonderGather
         // going now, and StepsFurther metres beyond; no further from its hip than Reach of the leg's length. Sideways
         // (its fall more than Sideways across it) it steps with the leg on the side it falls to; else with the leg
         // that bears less.
-        public static float StepsBeyond = .01f, StepsAfter = .04f, UnloadsIn = .06f, SwingsIn = .22f, Clears = .05f;
-        public static float StepsAhead = 1.8f, StepsFurther = .03f, Reach = .75f, Sideways = .6f;
+        public static float StepsBeyond = 0.0297f, StepsAfter = 0.0192f, UnloadsIn = 0.02f, SwingsIn = 0.1636f, Clears = 0.0672f;
+        public static float StepsAhead = 1.8677f, StepsFurther = 0.0382f, Reach = 0.841f, Sideways = 0.7088f;
         // (How much of what pushes it counts in whether it must step, and where to: a blow is felt as a great push
         // for a moment, and is not one that lasts.)
-        public static float StepsFelt = .5f;
+        public static float StepsFelt = 0;
         // For this long after a boot lands (seconds), how its weight went is not taken for a push from outside.
-        public static float LandsDeaf = .1f;
+        public static float LandsDeaf = 0.1706f;
         // While its boot swings, that leg's joints give all they have at SwingFullAt degrees from where the boot
         // should be (never stiffer than the rule), damped by SwingDamped of what just stops them swinging.
-        public static float SwingFullAt = 25, SwingDamped = .7f;
+        public static float SwingFullAt = 22.8128f, SwingDamped = 0.2644f;
         // Its boot is carried there by a pull for each kilogram of the leg: SwingStiff for each metre it is from where
         // it should be, SwingSlows for each metre a second it lags; no more than SwingAtMost times the leg's weight.
-        public static float SwingStiff = 300, SwingSlows = 25, SwingAtMost = 4;
+        public static float SwingStiff = 318.134f, SwingSlows = 33.7976f, SwingAtMost = 1;
+        // The hip of the leg it stands on takes up this share of what the swinging leg's hip gives; and its hips are
+        // righted this many times as hard while it stands on one leg.
+        public static float TakesUp = 0.3f, StepRights = 1.2439f, SwingAnkle = 12.4616f;
         // Afterwards the other boot is brought alongside: when its boots stand more than Astride (metres) from how
         // they stood, and it has been at rest (its weight going slower than CalmUnder, metres a second) for
         // ClosesAfter seconds. That step is got ready: its weight goes onto the leg it will stand on, to within
         // ReadyWithin (metres), for no longer than ReadiesAtMost seconds.
-        public static float Astride = .06f, CalmUnder = .08f, ClosesAfter = .5f, ReadyWithin = .025f, ReadiesAtMost = 1;
+        public static float Astride = 0.0851f, CalmUnder = 0.1074f, ClosesAfter = 0.5351f, ReadyWithin = 0.0198f, ReadiesAtMost = 1;
 
         private readonly float[] lighter;
         private readonly Quaternion[] rested = new Quaternion[Count], madeTurned = new Quaternion[Count], madeLay = new Quaternion[Count];
@@ -186,12 +194,13 @@ namespace WonderGather
         // degrees from where the boot should be, but never stiffer than the rule.
         private void Springs(int leg, bool swinging, float step)
         {
-            for (int j = Thigh + leg; j <= Foot + leg; j += 2)
+            for (int j = Shin + leg; j <= Foot + leg; j += 2)
             {
                 float spring = stoodSpring[j], damper = stoodDamper[j];
                 if (swinging)
                 {
-                    spring = Mathf.Min(strength[j] / (SwingFullAt * Mathf.Deg2Rad), Rule * Rule / (step * step) * lighter[j]);
+                    // (The rule is for a boot on the ground: in the air its ankle may be stiffer.)
+                    spring = Mathf.Min(strength[j] / (SwingFullAt * Mathf.Deg2Rad), (j >= Foot ? SwingAnkle : 1) * Rule * Rule / (step * step) * lighter[j]);
                     damper = SwingDamped * 2 * Mathf.Sqrt(spring * lighter[j]);
                 }
                 var drive = parts[j].xDrive; drive.stiffness = spring; drive.damping = damper; parts[j].xDrive = drive;
@@ -371,7 +380,7 @@ namespace WonderGather
                             Quaternion shinWants = Quaternion.LookRotation(shinWay, Vector3.ProjectOnPlane(parts[Hips].transform.forward, shinWay).normalized) * Quaternion.Inverse(madeLay[Shin + swings]) * madeTurned[Shin + swings];
                             Aims(Thigh + swings, Quaternion.Inverse(parts[Hips].transform.rotation * rested[Thigh + swings]) * thighWants);
                             Aims(Shin + swings, Quaternion.Inverse(thighWants * rested[Shin + swings]) * shinWants);
-                            Aims(Foot + swings, Quaternion.Inverse(shinWants * rested[Foot + swings]) * bootWants);
+                            Aims(Foot + swings, Quaternion.Inverse(parts[Shin + swings].transform.rotation * rested[Foot + swings]) * bootWants);
                             // It lands: at the end of its swing, or sooner if its boot meets the ground on the way down.
                             if (u >= 1 || (u > .55f && bears[swings] > 1e-4f))
                             {
@@ -392,6 +401,16 @@ namespace WonderGather
             // holds it (catching itself on one leg, as near where its weight is going as its sole reaches).
             // (Written in this order so that, with no step, it reckons exactly as it did.)
             Vector3 wants = swings >= 0 && catching ? going + felt / (falls * falls) : going + Quick / falls * (going - holds) + felt / (falls * falls);
+            if (Tilts > 0 || TiltsRate > 0)
+            {
+                // (How its hips are tipped from how they should be, as a turn; the way their top has gone is that
+                // turn across upright.)
+                Quaternion tipped = parts[Hips].transform.rotation * Quaternion.Inverse(Roll * upright);
+                tipped.ToAngleAxis(out float tip, out Vector3 about);
+                if (tip > 180) tip -= 360;
+                if (!float.IsNaN(about.x) && !float.IsInfinity(about.x))
+                    wants += high * (Tilts * Flat(Vector3.Cross(about * (tip * Mathf.Deg2Rad), Vector3.up)) + TiltsRate / falls * Flat(Vector3.Cross(parts[Hips].angularVelocity, Vector3.up)));
+            }
             Vector3 acts = new Vector3(wants.x, ground, wants.z);
             acted = Borne(acts, single, stance, unloaded, out float share);
             Outside = Flat(acts - acted).magnitude;
@@ -442,11 +461,14 @@ namespace WonderGather
                 off.ToAngleAxis(out float angle, out Vector3 axis);
                 if (angle > 180) angle -= 360;
                 if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.zero; angle = 0; }
-                float spring = Rights * whole;
+                float spring = Rights * whole * (carrying >= 0 ? StepRights : 1);
                 Vector3 rights = spring * (angle * Mathf.Deg2Rad) * axis - RightsDamped * spring * parts[Hips].angularVelocity;
                 torque[Thigh] -= (1 - share) * rights;
                 torque[Thigh + 1] -= share * rights;
             }
+            // (What the swinging leg's hip gives would turn its hips the other way: the hip of the leg it stands on
+            // takes that up, into the ground.)
+            if (carrying >= 0) torque[Thigh + 1 - carrying] -= TakesUp * torque[Thigh + carrying];
             for (int j = Thigh; j < Count; j++)
             {
                 // (A hinge gives only about its own line; what is across it is borne by the joint itself.)

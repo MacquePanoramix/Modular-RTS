@@ -1354,6 +1354,7 @@ namespace WonderGather.Tests
                 // (The bodies are sprung as the game's are.)
                 Rule = OwnKeeper.Rule; Damped = OwnKeeper.Damped;
                 OwnKeeper.Steps = steps;
+                LogAssert.ignoreFailingMessages = true;
 
                 for (int m = 0; m < plans.Count; m++)
                 {
@@ -1381,7 +1382,7 @@ namespace WonderGather.Tests
                         {
                             if (k == begins && one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
                             if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * one.pull, one.body.Centre(Trunk));
-                            if (!one.down && !one.keeper.Keep(Step)) { one.down = true; one.downAt = k * Step; }
+                            if (!one.down && (float.IsNaN(one.body.Of(Hips).position.x) || !one.keeper.Keep(Step))) { one.down = true; one.downAt = k * Step; }
                             one.furthest = Mathf.Max(one.furthest, Vector3.ProjectOnPlane(one.body.Of(Hips).position - one.madeHips, Vector3.up).magnitude);
                         }
                         // (One of them told step by step: -stepSay Long -stepSayPull .17 -stepSayWay 0.)
@@ -1442,6 +1443,7 @@ namespace WonderGather.Tests
             finally
             {
                 OwnKeeper.Steps = false;
+                LogAssert.ignoreFailingMessages = false;
                 foreach (var pair in was) typeof(OwnKeeper).GetField(pair.Key).SetValue(null, pair.Value);
                 Rule = rule; Damped = damped;
                 Physics.simulationMode = mode;
@@ -1460,6 +1462,7 @@ namespace WonderGather.Tests
             ("Clears", .02f, .1f), ("StepsAhead", 1, 3), ("StepsFurther", 0, .12f), ("Reach", .5f, .95f), ("Sideways", .3f, .9f),
             ("SwingFullAt", 5, 60), ("SwingDamped", .1f, 1.2f), ("SwingStiff", 50, 800), ("SwingSlows", 5, 60), ("SwingAtMost", 1, 8),
             ("LandsDeaf", 0, .3f), ("Astride", .03f, .15f), ("CalmUnder", .03f, .2f), ("ClosesAfter", .2f, 1.5f), ("ReadyWithin", .01f, .06f),
+            ("TakesUp", 0, 1.2f), ("StepRights", 1, 5), ("SwingAnkle", 1, 40), ("Tilts", 0, 2.5f), ("TiltsRate", 0, .6f),
         };
 
         [UnityTest, Explicit, Timeout(14400000)]
@@ -1525,6 +1528,8 @@ namespace WonderGather.Tests
                 Physics.simulationMode = SimulationMode.Script;
                 Rule = OwnKeeper.Rule; Damped = OwnKeeper.Damped;
                 OwnKeeper.Steps = true;
+                // (A body that flies apart is told of by the engine as an error; here it is a body that went down.)
+                LogAssert.ignoreFailingMessages = true;
 
                 // What one set of settings comes to.
                 float total = 0; string told = "";
@@ -1560,7 +1565,7 @@ namespace WonderGather.Tests
                             {
                                 if (k == begins && one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
                                 if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * one.pull, one.body.Centre(Trunk));
-                                if (!one.down && !one.keeper.Keep(Step)) { one.down = true; one.downAt = k * Step; }
+                                if (!one.down && (float.IsNaN(one.body.Of(Hips).position.x) || !one.keeper.Keep(Step))) { one.down = true; one.downAt = k * Step; }
                             }
                             Physics.Simulate(Step);
                         }
@@ -1631,6 +1636,7 @@ namespace WonderGather.Tests
             finally
             {
                 OwnKeeper.Steps = false;
+                LogAssert.ignoreFailingMessages = false;
                 for (int i = 0; i < n; i++) fields[i].SetValue(null, began[i]);
                 Rule = rule; Damped = damped;
                 Physics.simulationMode = mode;
