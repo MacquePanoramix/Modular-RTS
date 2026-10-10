@@ -279,14 +279,40 @@ only; nothing of step 3 is in the game Luis has.
   Where it keeps its feet it takes none to two steps (the catch, and
   the other boot brought alongside), and ends with its boots flat and
   standing as they stood.
-- **A pull that is held is not met at all yet.** Told step by step, a
-  Small pulled with a sixth of its weight begins its step three tenths
-  of a second after the pull begins, its hips 6 cm gone; its boot
-  lands three tenths later only 9 cm ahead of its hips, while its
-  weight goes at about a metre a second; both boots are tipped about
-  twenty degrees; it goes down. **Next:** step sooner under a pull it
-  feels, and further; stand astride and lean back while the pull
-  lasts; land flat. Then the search.
+- **Later the same day: three searches of the step's settings**
+  (`BodysOwnBench.StepSearch`: twenty-odd settings, the three miners
+  together, pulled and set going four ways each; about 560 tries a
+  search), and four changes to how it steps on the way (its swinging
+  boot carried by what its hip and knee give for a pull on the boot;
+  the hip it stands on taking up what the swinging hip gives; a stiffer
+  ankle in the air; the blow of landing not taken for a push). With
+  what the third search found:
+
+  | | Small | Long | Round |
+  |---|---|---|---|
+  | Set going at 0.3 m/s: keep their feet, of 8 (without the step) | 8 (5) | 8 (7) | 8 (7) |
+  | ...at 0.5 m/s | 4 (2) | 8 (2) | 7 (3) |
+  | ...at 0.7 m/s | 1 | 3 | 2 |
+  | Pulled with 0.08 of its weight for 2.5 s | 6 (4) | 5 (2) | 5 (5) |
+  | ...with an eighth of its weight, and more | 0 | 0 | 0 or 1 |
+
+  In none to four steps (one of them took nine), the other boot
+  brought back alongside. **So a shove is caught far better than
+  before; a pull that is held is not caught at all.**
+- **A pull that is held is not understood yet.** Told step by step, a
+  Small pulled forwards with an eighth of its weight does not step for
+  four tenths of a second; its boot lands barely ahead of its hips and
+  tipped; its hips pitch further forward with each step, and it goes
+  down. Two things were tried for it and changed nothing: counting
+  what it feels in when and where it steps (the search turned that
+  down to nought), and answering its body's tipping with where the
+  ground pushes it (at a first hand-set size). What I think is so, and
+  have not shown: on a boot as short as these, a pull of an eighth of
+  its weight at the chest cannot be stood through without a step; and
+  the step it takes is too late and too short for a force that goes on
+  pushing while it steps. **Next:** trace one pulled body through its
+  first step with nothing else changed; a search asked for weaker
+  pulls first; and only then the game.
 
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).
