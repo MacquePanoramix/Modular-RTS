@@ -102,7 +102,7 @@ namespace WonderGather
         // Two more looks of breath (Luis, October 10: to try beside the others). Its shoulders drawn rising: by
         // ShouldersRise of its height for a breath at rest, times BreathShoulders (0: not drawn so). And its breath
         // seen in the cold air, from dusk to dawn (BreathInAir): so many puffs to a breath out, so far apart.
-        public static float BreathShoulders = 0, ShouldersRise = .014f;
+        public static float BreathShoulders = 0, ShouldersRise = .018f;
         public static bool BreathSeenInAir;
         private const int PuffsABreath = 3;
         private const float PuffsApart = .16f;
@@ -745,7 +745,7 @@ namespace WonderGather
                 puffsLeft--; puffIn = PuffsApart;
                 if (air == null && !TryGetComponent(out air)) air = gameObject.AddComponent<BreathInAir>();
                 Transform face = parts[Head].transform;
-                air.Puff(face.position + face.forward * (.95f * headHalf) - face.up * (.35f * headHalf), face.forward - .25f * face.up, .5f * breath.Deep, headHalf);
+                air.Puff(face.position + face.forward * (1.05f * headHalf) - face.up * (.35f * headHalf), face.forward - .1f * face.up, .5f * breath.Deep, headHalf);
             }
 
             // Its weight, from leg to leg. Pushed, it stands square.
@@ -897,7 +897,7 @@ namespace WonderGather
                     if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null)
                         s.toes[i].SetPositionAndRotation(segments[Foot + i].TransformPoint(toeAt[i]), segments[Foot + i].rotation * toeTurn[i]);
                 miner.Swell = Alive ? BreathSwell * breath.Full * breath.Deep * BreathShown : 0;
-                miner.Shrug = Alive ? ShouldersRise * stature * BreathShoulders * breath.Full * Mathf.Min(breath.Deep, 1.7f) : 0;
+                miner.Shrug = Alive ? ShouldersRise * stature * BreathShoulders * breath.Full * Mathf.Min(breath.Deep, 1.4f) : 0;
                 return;
             }
             if (giving <= 0 || segments[Hips] == null) return;

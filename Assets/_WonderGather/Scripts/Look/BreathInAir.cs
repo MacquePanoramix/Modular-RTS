@@ -13,7 +13,7 @@ namespace WonderGather
         // A puff lasts this long (seconds); it leaves the mouth at this speed (metres a second), loses it at this
         // rate (a second), and rises at this (metres a second); it grows from this to this (in the size it is
         // told, which is the head's).
-        private const float Lasts = 1.7f, Leaves = .5f, Slows = 2.4f, Rises = .07f, SmallAs = .3f, LargeAs = 1.5f;
+        private const float Lasts = 1.7f, Leaves = .55f, Slows = 2.6f, Rises = .16f, SmallAs = .14f, LargeAs = 1.05f;
         private static Material look;
         private static bool sought;
         private readonly Vector4[] at = new Vector4[Most], state = new Vector4[Most];
@@ -56,11 +56,11 @@ namespace WonderGather
             int k = next;
             next = (next + 1) % Most;
             Vector3 aside = Vector3.Cross(Vector3.up, way).normalized;
-            goes[k] = (way.normalized + aside * (.25f * (2 * Chance() - 1)) + Vector3.up * (.15f * Chance())) * (Leaves * Mathf.Sqrt(Mathf.Max(.2f, strength)) * Mathf.Lerp(.8f, 1.2f, Chance()));
+            goes[k] = (way.normalized + aside * (.4f * (2 * Chance() - 1)) + Vector3.up * (.2f * (2 * Chance() - 1))) * (Leaves * Mathf.Sqrt(Mathf.Max(.2f, strength)) * Mathf.Lerp(.7f, 1.3f, Chance()));
             at[k] = from;
             age[k] = 0;
-            shows[k] = cold * Mathf.Clamp01(.5f + .5f * strength);
-            sized[k] = head;
+            shows[k] = cold * Mathf.Clamp01(.7f + .5f * strength);
+            sized[k] = head * Mathf.Lerp(.8f, 1.25f, Chance());
             own[k] = Chance();
             Puffed++;
         }
@@ -73,8 +73,10 @@ namespace WonderGather
                 if (age[k] >= 1) continue;
                 age[k] = Mathf.Min(1, age[k] + dt / Lasts);
                 goes[k] *= Mathf.Exp(-Slows * dt);
-                Vector3 place = (Vector3)at[k] + (goes[k] + Vector3.up * Rises) * dt;
-                at[k] = new Vector4(place.x, place.y, place.z, sized[k] * Mathf.Lerp(SmallAs, LargeAs, Mathf.Sqrt(age[k])));
+                // (It goes forward first, and rises more the older it is: warm breath in cold air. It begins small at the
+                // mouth and grows.)
+                Vector3 place = (Vector3)at[k] + (goes[k] + Vector3.up * (Rises * age[k])) * dt;
+                at[k] = new Vector4(place.x, place.y, place.z, sized[k] * Mathf.Lerp(SmallAs, LargeAs, Mathf.Pow(age[k], .75f)));
             }
         }
 

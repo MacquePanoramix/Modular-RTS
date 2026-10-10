@@ -65,8 +65,10 @@ Shader "Wonder Gather/Breath"
                 float age = input.puff.x;
                 float2 uv = input.uv;
                 // A soft blob with a brushed, irregular edge (as the smoke's).
-                float edge = WG_Fbm(float3(uv * 1.7 + input.puff.y * 13, age * 2)) * 0.55;
-                float shape = smoothstep(1.0, 0.3, length(uv) + edge - 0.25);
+                float edge = WG_Fbm(float3(uv * 1.9 + input.puff.y * 13, age * 2)) * 0.75;
+                float shape = smoothstep(1.0, 0.25, length(uv) + edge - 0.32);
+                // (Thicker here and thinner there, each puff its own way: not an even disc.)
+                shape *= 0.7 + 0.55 * WG_Fbm(float3(uv * 2.6 - input.puff.y * 7, age * 3 + 5));
                 // It is there at once, and thins away.
                 float thins = smoothstep(0.0, 0.1, age) * pow(saturate(1 - age), 1.4);
                 float alpha = shape * thins * _Opacity * input.puff.z;
