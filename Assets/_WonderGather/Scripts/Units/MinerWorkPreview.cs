@@ -94,7 +94,9 @@ namespace WonderGather
         private void Awake()
         {
             choice = GetComponent<MinerChoice>();
-            SetBreathLook(0);
+            // (It begins with the look that shows most: its shoulders. Luis could not notice the others.)
+            SetBreathLook(1);
+            OwnBody.BreathSize = OwnBody.BreathSizeAtFirst;
             // The interaction click and the panel live beside it: where it is, they are.
             if (GetComponent<InteractionClick>() == null) gameObject.AddComponent<InteractionClick>();
             if (GetComponent<MinerPanel>() == null) gameObject.AddComponent<MinerPanel>();
@@ -581,6 +583,9 @@ namespace WonderGather
             OwnBody.BreathSeenInAir = BreathAirs[breathLook];
         }
         public void NextBreathLook() => SetBreathLook(breathLook + 1);
+        // How large its breath is drawn: for Luis to set by eye (one is the size it had; it begins at the size of the
+        // fallen miner's breath, which Luis could see).
+        public float BreathSize { get => OwnBody.BreathSize; set => OwnBody.BreathSize = Mathf.Clamp(value, 0, 3); }
         // The chosen miner is tired at once, as if it had worked hard: to see it breathe so. (It rests as it does
         // after work.)
         public void Tire()

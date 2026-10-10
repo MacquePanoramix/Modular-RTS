@@ -18,7 +18,7 @@ namespace WonderGather
         // The least and the most strength the slider gives (1: ordinary for its build), and the step it moves by.
         public const float Weakest = .3f, Strongest = 3, Step = .05f;
         // Its size on the screen, and how far it stands from the screen's lower left corner.
-        private const float Width = 400, Height = 228, Margin = 12;
+        private const float Width = 400, Height = 254, Margin = 12;
 
         private MinerChoice choice;
         private MinerWorkPreview look;
@@ -80,6 +80,12 @@ namespace WonderGather
             GUI.Label(new Rect(x, y + 2, 50, 20), "Breath:", text);
             if (GUI.Button(new Rect(x + 52, y - 1, 204, 22), look.BreathLook, button)) look.NextBreathLook();
             if (GUI.Button(new Rect(x + inner - 96, y - 1, 96, 22), "Tire it", button)) look.Tire();
+            y += 26;
+            // How large its breath is drawn: to be set by eye.
+            GUI.Label(new Rect(x, y + 2, 84, 20), "Breath size:", text);
+            float size = GUI.HorizontalSlider(new Rect(x + 88, y + 8, inner - 88 - 52, 14), look.BreathSize, 0, 3);
+            if (Mathf.Abs(size - look.BreathSize) > 1e-4f) look.BreathSize = size;
+            GUI.Label(new Rect(x + inner - 44, y + 2, 44, 20), look.BreathSize.ToString("0.0") + " x", text);
             y += 26;
             // A pickaxe put on the ground beside it.
             GUI.Label(new Rect(x, y, inner, 20), "Put a pickaxe on the ground beside it:", text);

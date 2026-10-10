@@ -475,7 +475,7 @@ namespace WonderGather
             bones.spine.rotation = Quaternion.Slerp(hipFrame, chestFrame, .5f) * root * spineRest;
             bones.chest.rotation = chestFrame * root * chestRest;
             // (Written only when breath changes it: a body that does not breathe so is not touched.)
-            float fuller = 1 + Mathf.Clamp(Swell, 0, .16f);
+            float fuller = 1 + Mathf.Clamp(Swell, 0, .4f);
             if (onChest != null && fuller != drawnFuller)
             {
                 drawnFuller = fuller;

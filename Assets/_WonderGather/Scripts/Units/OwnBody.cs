@@ -43,33 +43,16 @@ namespace WonderGather
     public sealed class OwnBody : MonoBehaviour
     {
         // The parts, in this order (the left of a pair first), and what each hangs from.
-        public const int Hips = 0, Trunk = 1, Head = 2, UpperArm = 3, Forearm = 5, Thigh = 7, Shin = 9, Foot = 11, Count = 13;
+        public const int Hips = OwnKeeper.Hips, Trunk = OwnKeeper.Trunk, Head = OwnKeeper.Head, UpperArm = OwnKeeper.UpperArm, Forearm = OwnKeeper.Forearm, Thigh = OwnKeeper.Thigh, Shin = OwnKeeper.Shin, Foot = OwnKeeper.Foot, Count = OwnKeeper.Count;
         private static readonly int[] From = { -1, Hips, Trunk, Trunk, Trunk, UpperArm, UpperArm + 1, Hips, Hips, Thigh, Thigh + 1, Shin, Shin + 1 };
 
-        // ---- Its settings. Found by a search on the three miners together (BodysOwnBench.Search, at the game's
-        // fifty steps of the physics a second), not set by hand: change what the search is asked, run it, and put
-        // what it finds here.
-        // How quick it brings its weight back (a second); over how long it comes to feel a push from outside
-        // (seconds); how fast it leans against one (a second), by what share of what would ease it, only for what
-        // is beyond Comfort (metres from where its push acts at ease), and never leaving less sole than KeepsBehind
-        // behind its weight; how fast it learns how far the ground's real push falls short of the one it meant (a
-        // second).
-        public static float Quick = 6.33f, Feels = .04005f, Leans = 2.9021f, LeansBy = .94264f, Comfort = .03266f, KeepsBehind = .02071f, Tracks = 6.8665f;
-        // Each joint's spring gives all the joint's strength when it is FullAt degrees from its pose, but is no
-        // stiffer than makes its own rate, times the step, Rule (by the turning weight of the lighter side of the
-        // joint: a stiff spring between a heavy body and a light boot does not hold at the game's step); its damper
-        // is Damped of what just stops that side swinging.
-        public static float FullAt = 92.743f, Rule = .64038f, Damped = .38328f;
-        // How hard its hips right its trunk, for each kilogram of it, and the share of that which damps it; how near
-        // the edge of a sole its push may act (metres); how hard it keeps its height, and how that is damped.
-        public static float Rights = 5.3963f, RightsDamped = .05f, Edge = .00435f, Rises = 224.2f, RisesDamped = 14.277f;
         // An ankle gives this share of what a knee gives; a hip, this many times a knee; a neck, this many times the
         // head's own turning weight. (The last two as in the let-go body.)
         private const float AnkleGives = .7f, HipGives = 1.5f, NeckHolds = 3;
-        // It is down, and goes over into the fall, when its weight is lower than this share of how high it stood, or
-        // its hips lean further than this (degrees). The posed body takes it back over this long (seconds). It is at
+        // (When it is down, and goes over into the fall, is the keeper's to say.) The posed body takes it back over
+        // this long (seconds). It is at
         // ease when the posed body moves slower than this (metres a second), sunk less than this and bowed less.
-        private const float DownAt = .8f, DownLeaning = 35, GivesBackIn = .25f, AtEase = .02f, SunkAtMost = .02f, BowedAtMost = 3;
+        private const float GivesBackIn = .25f, AtEase = .02f, SunkAtMost = .02f, BowedAtMost = 3;
         // And it must have been at ease so, both boots on the ground, for this long (seconds): begun as the posed body
         // came to rest from a walk, one boot still in the air on its closing step, Small went down at once.
         private const float AtEaseFor = .4f;
@@ -104,6 +87,12 @@ namespace WonderGather
         // seen in the cold air, from dusk to dawn (BreathInAir): so many puffs to a breath out, so far apart.
         public static float BreathShoulders = 0, ShouldersRise = .018f;
         public static bool BreathSeenInAir;
+        // How large its breath is drawn (its chest and its shoulders; not what its joints are asked for): a size for
+        // Luis to set by eye on the panel. Luis, October 10, of the size it had: "I could only really notice the
+        // breathing when the character fell." At BreathSizeAtFirst a standing miner's chest at rest is drawn about as
+        // full as the fallen one's Luis could see. Its chest is drawn no fuller than SwellAtMost times the size.
+        public const float BreathSizeAtFirst = 1.6f, SwellAtMost = .125f;
+        public static float BreathSize = BreathSizeAtFirst;
         private const int PuffsABreath = 3;
         private const float PuffsApart = .16f;
         private BreathInAir air;
@@ -126,10 +115,8 @@ namespace WonderGather
         private float life, favours, favoursFrom, favoursTo, shiftAlong = 1, shiftIn = 1, shiftsAt, rolled, eased;
         private Vector2 looks, looksFrom, looksTo;
         private float lookAlong = 1, lookIn = 1, looksAt, looksUntil;
-        private Vector3 stands, itsRight, itsAhead, lookAt, swayed;
+        private Vector3 itsRight, itsAhead, lookAt, swayed;
         private float swaysFrom;
-        // (Where it stands is kept by its boots: so far across from the middle between them, and so far ahead.)
-        private Vector2 standsBy;
         private float leftSwell;
         private readonly Quaternion[] madeTurned = new Quaternion[Count];
 
@@ -137,7 +124,7 @@ namespace WonderGather
         // and down from straight ahead), and its breath.
         public float Favours => favours;
         // The largest share of what it has that a joint of a leg gave in the last step, and what a joint has.
-        public float Asked(int leg) => Mathf.Max(gave[Thigh + leg] / Mathf.Max(1e-3f, strength[Thigh + leg]), Mathf.Max(gave[Shin + leg] / Mathf.Max(1e-3f, strength[Shin + leg]), gave[Foot + leg] / Mathf.Max(1e-3f, strength[Foot + leg])));
+        public float Asked(int leg) => Mathf.Max(keeper.Gave[Thigh + leg] / Mathf.Max(1e-3f, strength[Thigh + leg]), Mathf.Max(keeper.Gave[Shin + leg] / Mathf.Max(1e-3f, strength[Shin + leg]), keeper.Gave[Foot + leg] / Mathf.Max(1e-3f, strength[Foot + leg])));
         public float Has(int index) => strength[index];
         private float asked, rollMade, rollSeen;
         public Vector2 Looks => looks;
@@ -176,14 +163,6 @@ namespace WonderGather
         private readonly Vector3[] leftAt = new Vector3[Count + 2];
         private readonly Quaternion[] leftTurned = new Quaternion[Count + 2];
         private float giving;
-        // The keeper's own state.
-        private bool begun, hasBefore;
-        private Vector3 rest, holds, felt, wentBefore, weightBefore, actedBefore, realAt, shortBy, acted;
-        private Quaternion upright;
-        private float height, whole;
-        private bool realKnown;
-        private readonly Vector3[] torque = new Vector3[Count], sole = new Vector3[2], at = new Vector3[2];
-        private readonly float[] gave = new float[Count];
         private Vector3 nudge;
         private int nudgeFor;
 
@@ -198,11 +177,11 @@ namespace WonderGather
         public ArticulationBody Part(int index) => parts[index];
         // What a joint's worked-out torque was in the last step (newton metres), and how far outside its soles the
         // push it wanted lay (metres): for whoever watches it.
-        public float Gave(int index) => gave[index];
-        public float Outside { get; private set; }
+        public float Gave(int index) => keeper != null ? keeper.Gave[index] : 0;
+        public float Outside => keeper != null ? keeper.Outside : 0;
         // How far it leans against what it feels (metres from where it rests), and what it feels (m/s2).
-        public Vector3 Leaning => holds - rest;
-        public Vector3 Feeling => felt;
+        public Vector3 Leaning => keeper != null ? keeper.Leaning : Vector3.zero;
+        public Vector3 Feeling => keeper != null ? keeper.Felt : Vector3.zero;
 
         private void Awake()
         {
@@ -398,10 +377,8 @@ namespace WonderGather
 
             // Jointed: one body, its hips the root; every other part on a joint to what it hangs from, sprung
             // softly towards the pose it is made in.
-            whole = 0;
             for (int i = 0; i < Count; i++)
             {
-                whole += masses[i];
                 if (From[i] >= 0) rested[i] = Quaternion.Inverse(segmentsMade[From[i]].transform.rotation) * segmentsMade[i].transform.rotation;
             }
             for (int i = 0; i < Count; i++)
@@ -422,8 +399,9 @@ namespace WonderGather
                     link.twistLock = ArticulationDofLock.FreeMotion;
                     if (!hinge[i]) { link.swingYLock = ArticulationDofLock.FreeMotion; link.swingZLock = ArticulationDofLock.FreeMotion; }
                     float lighter = Lighter(i), step = Time.fixedDeltaTime;
-                    float spring = Mathf.Min(strength[i] / (FullAt * Mathf.Deg2Rad), Rule * Rule / (step * step) * lighter);
-                    float damper = Damped * 2 * Mathf.Sqrt(spring * lighter);
+                    turning[i] = lighter;
+                    float spring = Mathf.Min(strength[i] / (OwnKeeper.FullAt * Mathf.Deg2Rad), OwnKeeper.Rule * OwnKeeper.Rule / (step * step) * lighter);
+                    float damper = OwnKeeper.Damped * 2 * Mathf.Sqrt(spring * lighter);
                     var drive = new ArticulationDrive { stiffness = spring, damping = damper, forceLimit = strength[i], target = 0, targetVelocity = 0, driveType = ArticulationDriveType.Force };
                     link.xDrive = drive;
                     if (!hinge[i]) { link.yDrive = drive; link.zDrive = drive; }
@@ -456,8 +434,9 @@ namespace WonderGather
             balanced = balance != null && balance.Acts;
             if (balance != null) balance.Acts = false;
             body.LetGo = true;
-            begun = false; hasBefore = false; realKnown = false;
-            felt = shortBy = Vector3.zero; nudgeFor = 0; giving = 0;
+            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { StandsMid = Alive ? StandsMid : 0, Life = Lived };
+            rollMade = Mathf.Asin(Mathf.Clamp(parts[Hips].transform.right.y, -1, 1)) * Mathf.Rad2Deg; rollSeen = 0;
+            nudgeFor = 0; giving = 0;
             Stands = true;
             Began++;
             return true;
@@ -468,6 +447,7 @@ namespace WonderGather
         {
             if (held != null) { held.SetActive(false); Destroy(held); }
             held = null;
+            keeper = null;
             leftSwell = miner.Swell; miner.Swell = 0;
             leftShrug = miner.Shrug; miner.Shrug = 0;
             for (int i = 0; i < Count; i++) parts[i] = null;
@@ -538,22 +518,6 @@ namespace WonderGather
             }
         }
 
-        private Vector3 Weight()
-        {
-            Vector3 c = Vector3.zero;
-            for (int i = 0; i < Count; i++) c += parts[i].worldCenterOfMass * masses[i];
-            return c / whole;
-        }
-
-        private Vector3 WeightGoes()
-        {
-            Vector3 v = Vector3.zero;
-            for (int i = 0; i < Count; i++) v += parts[i].GetPointVelocity(parts[i].worldCenterOfMass) * masses[i];
-            return v / whole;
-        }
-
-        private Vector3 JointAt(int j) => parts[j].transform.TransformPoint(anchors[j]);
-
         private void FixedUpdate()
         {
             if (!Stands) return;
@@ -568,134 +532,7 @@ namespace WonderGather
                 nudgeFor--;
                 for (int i = 0; i < Count; i++) parts[i].AddForce(masses[i] * nudge);
             }
-            Keep(Time.fixedDeltaTime);
-        }
-
-        // One step of keeping itself up.
-        private void Keep(float step)
-        {
-            float g = Physics.gravity.magnitude;
-            Vector3 weight = Weight(), goes = WeightGoes();
-            // Where the ground really bore it in the last step.
-            {
-                Vector3 bore = Vector3.zero; float lifted = 0;
-                for (int i = 0; i < 2; i++) { bore += touches[i].Where; lifted += touches[i].Up; touches[i].Clear(); }
-                realKnown = lifted > 1e-6f;
-                if (realKnown) realAt = bore / lifted;
-            }
-            for (int i = 0; i < 2; i++) sole[i] = parts[Foot + i].transform.TransformPoint(soleAt[i]);
-            float ground = .5f * (sole[0].y + sole[1].y), high = weight.y - ground;
-            if (!begun)
-            {
-                begun = true; height = high; upright = parts[Hips].transform.rotation;
-                rest = Flat(weight); holds = rest;
-                Vector3 between = Flat(.5f * (sole[0] + sole[1])), beside0 = Flat(sole[1] - sole[0]).normalized;
-                standsBy = new Vector2(Vector3.Dot(rest - between, beside0), (1 - (Alive ? StandsMid : 0)) * Vector3.Dot(rest - between, Vector3.Cross(beside0, Vector3.up)));
-                rollMade = Mathf.Asin(Mathf.Clamp(parts[Hips].transform.right.y, -1, 1)) * Mathf.Rad2Deg; rollSeen = 0;
-            }
-            // Down: it goes over into the fall that is built.
-            if (float.IsNaN(high) || high < DownAt * height || Vector3.Angle(Vector3.up, parts[Hips].transform.up) > DownLeaning) { GoDown(); return; }
-
-            float rise = Mathf.Clamp(Rises * (height - high) - RisesDamped * goes.y, -.5f * g, g);
-            // A standing body falls away from where the ground pushes it, at a rate of its own (the root of gravity
-            // over its height). So what matters is where its weight is going: its place, and its speed over that rate.
-            float falls = Mathf.Sqrt((g + rise) / Mathf.Max(.1f, high));
-            if (hasBefore && Feels > 0)
-            {
-                // What pushes it from outside: how its weight really went, beyond what the ground's push gave it.
-                Vector3 pushedAt = realKnown && Tracks > 0 ? realAt : actedBefore;
-                Vector3 seen = Flat(goes - wentBefore) / step - falls * falls * Flat(weightBefore - pushedAt);
-                felt = Vector3.ClampMagnitude(Vector3.Lerp(felt, seen, Mathf.Clamp01(step / Feels)), 4);
-            }
-            if (hasBefore && realKnown && Tracks > 0) shortBy = Vector3.ClampMagnitude(shortBy + Tracks * step * Flat(actedBefore - realAt), .05f);
-            // The life in it: where it holds its weight between its boots, and what its joints are asked for.
-            // (Boots that slid under a push take where it stands with them.)
-            Vector3 apart = Flat(sole[1] - sole[0]);
-            stands = Flat(.5f * (sole[0] + sole[1])) + apart.normalized * standsBy.x + Vector3.Cross(apart.normalized, Vector3.up) * standsBy.y;
-            if (Alive) Lives(step, felt.magnitude / (falls * falls) > Comfort);
-            else Still();
-            rest = stands + apart * (.5f * ShiftsBy * favours) + swayed;
-            Vector3 going = Flat(weight) + Flat(goes) / falls;
-            Vector3 wants = going + Quick / falls * (going - holds) + felt / (falls * falls);
-            Vector3 acts = new Vector3(wants.x, ground, wants.z);
-
-            // The push is shared between the boots by how far across it lies, and each boot bears its share along
-            // its own middle line; only a push wanted outside both is taken to a boot's outer side.
-            Vector3 over = Flat(sole[1] - sole[0]);
-            Vector3 beside = over.sqrMagnitude > 1e-8f ? over.normalized : Vector3.right;
-            for (int i = 0; i < 2; i++)
-            {
-                Transform foot = parts[Foot + i].transform;
-                float across = Vector3.Dot(Flat(acts - sole[i]), beside);
-                float outward = i == 0 ? Mathf.Min(across, 0) : Mathf.Max(across, 0);
-                Vector3 local = foot.InverseTransformPoint(acts - beside * (across - outward));
-                Vector3 half = .5f * soleSize[i];
-                local = new Vector3(Mathf.Clamp(local.x, -half.x + Edge, half.x - Edge), -half.y, Mathf.Clamp(local.z, -half.z + Edge, half.z - Edge));
-                at[i] = foot.TransformPoint(local);
-            }
-            float share = Mathf.Clamp01(Vector3.Dot(Flat(acts - sole[0]), over) / Mathf.Max(1e-6f, over.sqrMagnitude));
-            acted = Vector3.Lerp(at[0], at[1], share);
-            Outside = Flat(acts - acted).magnitude;
-            // The push can only act where the soles are: it pushes sideways only as a push from there, through its
-            // weight, does.
-            Vector3 sideways = Flat(weight - acted) * ((g + rise) / Mathf.Max(.1f, high));
-            Vector3 push = whole * (sideways + Vector3.up * (g + rise));
-
-            // It leans against what it feels, for what it cannot take standing as it is, keeping sole behind its weight.
-            {
-                Vector3 asked = felt / (falls * falls);
-                Vector3 leansTo = rest;
-                if (asked.magnitude > Comfort)
-                {
-                    Vector3 way = -asked.normalized;
-                    float reach = 0;
-                    for (int i = 0; i < 2; i++)
-                        for (int c = 0; c < 4; c++)
-                        {
-                            Vector3 corner = parts[Foot + i].transform.TransformPoint(new Vector3((c & 1) == 0 ? -.5f * soleSize[i].x : .5f * soleSize[i].x, -.5f * soleSize[i].y, (c & 2) == 0 ? -.5f * soleSize[i].z : .5f * soleSize[i].z));
-                            reach = Mathf.Max(reach, Vector3.Dot(Flat(corner) - rest, way));
-                        }
-                    leansTo = rest + way * Mathf.Min(LeansBy * (asked.magnitude - Comfort), Mathf.Max(0, reach - KeepsBehind));
-                }
-                holds = Vector3.Lerp(holds, leansTo, Mathf.Clamp01(Leans * step));
-            }
-            wentBefore = goes; weightBefore = weight; actedBefore = acted; hasBefore = true;
-
-            // What each leg's joints give to make its boot push the ground so.
-            for (int j = 0; j < Count; j++) torque[j] = Vector3.zero;
-            for (int i = 0; i < 2; i++)
-            {
-                Vector3 pushes = (i == 0 ? 1 - share : share) * push;
-                // (What it has learnt of the ground's push falling short moves where it means the push to act, but
-                // never off the sole: a push asked for beyond a sole's edge only tips the boot.)
-                Transform foot = parts[Foot + i].transform;
-                Vector3 means = foot.InverseTransformPoint(at[i] + shortBy), half = .5f * soleSize[i];
-                means = foot.TransformPoint(new Vector3(Mathf.Clamp(means.x, -half.x + Edge, half.x - Edge), -half.y, Mathf.Clamp(means.z, -half.z + Edge, half.z - Edge)));
-                for (int j = Thigh + i; j <= Foot + i; j += 2)
-                    torque[j] -= Vector3.Cross(means - JointAt(j), pushes);
-            }
-            // Its hips keep its trunk as upright as it began (rolled, as it favours a leg).
-            {
-                Quaternion off = Quaternion.AngleAxis(Rolls * rolled, itsAhead) * upright * Quaternion.Inverse(parts[Hips].transform.rotation);
-                off.ToAngleAxis(out float angle, out Vector3 axis);
-                if (angle > 180) angle -= 360;
-                if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.zero; angle = 0; }
-                float spring = Rights * whole;
-                Vector3 rights = spring * (angle * Mathf.Deg2Rad) * axis - RightsDamped * spring * parts[Hips].angularVelocity;
-                torque[Thigh] -= (1 - share) * rights;
-                torque[Thigh + 1] -= share * rights;
-            }
-            for (int j = Thigh; j < Count; j++)
-            {
-                // (A hinge gives only about its own line; what is across it is borne by the joint itself.)
-                if (hinge[j]) { Vector3 line = parts[j].transform.right; torque[j] = line * Vector3.Dot(line, torque[j]); }
-                torque[j] = Vector3.ClampMagnitude(torque[j], strength[j]);
-                if (float.IsNaN(torque[j].x) || float.IsNaN(torque[j].y) || float.IsNaN(torque[j].z)) torque[j] = Vector3.zero;
-                gave[j] = torque[j].magnitude;
-                // Equal and opposite, on the two parts the joint joins: nothing pushes the body from nowhere.
-                parts[j].AddTorque(torque[j]);
-                parts[From[j]].AddTorque(-torque[j]);
-            }
+            if (!keeper.Keep(Time.fixedDeltaTime)) GoDown();
         }
 
         // A joint is asked for a turn from the pose it was made in: a turn about the body's own lines as it began
@@ -716,6 +553,18 @@ namespace WonderGather
             if (hinge[j]) return;
             parts[j].SetDriveTarget(ArticulationDriveAxis.Y, by.y);
             parts[j].SetDriveTarget(ArticulationDriveAxis.Z, by.z);
+        }
+
+        // Its life is lived in the middle of each of the keeper's steps: it says where its weight is held, and how its
+        // hips roll.
+        private OwnKeeper keeper;
+        private readonly float[] turning = new float[Count];
+        private void Lived(float step, bool pushed, Vector3 apart)
+        {
+            if (Alive) Lives(step, pushed);
+            else Still();
+            keeper.Shift = apart * (.5f * ShiftsBy * favours) + swayed;
+            keeper.Roll = Quaternion.AngleAxis(Rolls * rolled, itsAhead);
         }
 
         // With no life in it, every joint is asked for the pose it was made in.
@@ -817,7 +666,7 @@ namespace WonderGather
             // asked against its hips for the roll they are seen to have, taken up slowly (asked to keep upright in
             // the world step by step, it threw its hips about when it was nudged). And its back straightens as its
             // chest fills. (Which way it faces now is its hips'.)
-            Quaternion faces = Quaternion.AngleAxis(Vector3.SignedAngle(Flat(upright * Vector3.forward), Flat(parts[Hips].transform.forward), Vector3.up), Vector3.up);
+            Quaternion faces = Quaternion.AngleAxis(Vector3.SignedAngle(Flat(keeper.Upright * Vector3.forward), Flat(parts[Hips].transform.forward), Vector3.up), Vector3.up);
             rollSeen = Mathf.Lerp(rollSeen, Mathf.Asin(Mathf.Clamp(parts[Hips].transform.right.y, -1, 1)) * Mathf.Rad2Deg - rollMade, Mathf.Clamp01(step / .3f));
             Asks(Trunk, Quaternion.AngleAxis(-(Mathf.Clamp(rollSeen, -10, 10) + Shoulders * rolled), itsAhead) * Quaternion.AngleAxis(-BreathBack * fills, itsRight));
             for (int i = 0; i < 2; i++)
@@ -896,8 +745,8 @@ namespace WonderGather
                 for (int i = 0; i < 2; i++)
                     if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null)
                         s.toes[i].SetPositionAndRotation(segments[Foot + i].TransformPoint(toeAt[i]), segments[Foot + i].rotation * toeTurn[i]);
-                miner.Swell = Alive ? BreathSwell * breath.Full * breath.Deep * BreathShown : 0;
-                miner.Shrug = Alive ? ShouldersRise * stature * BreathShoulders * breath.Full * Mathf.Min(breath.Deep, 1.4f) : 0;
+                miner.Swell = Alive ? Mathf.Min(SwellAtMost * BreathSize, BreathSwell * breath.Full * breath.Deep * BreathShown * BreathSize) : 0;
+                miner.Shrug = Alive ? ShouldersRise * stature * BreathShoulders * BreathSize * breath.Full * Mathf.Min(breath.Deep, 1.4f) : 0;
                 return;
             }
             if (giving <= 0 || segments[Hips] == null) return;
