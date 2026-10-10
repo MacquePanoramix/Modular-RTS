@@ -313,6 +313,13 @@ only; nothing of step 3 is in the game Luis has.
   pushing while it steps. **Next:** trace one pulled body through its
   first step with nothing else changed; a search asked for weaker
   pulls first; and only then the game.
+- **One more thing tried by hand, later on October 10, and no
+  better:** stepping sooner (as soon as what it feels cannot be met
+  within its soles) with a slower, gentler swing of the leg. A pull
+  of an eighth of its weight was still caught by one body in eight at
+  the most, and a shove less often than with the searched settings.
+  So the cause is not yet found by reasoning about it; it is to be
+  found in the trace.
 
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).
