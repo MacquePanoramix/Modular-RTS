@@ -155,6 +155,34 @@ namespace WonderGather.Tests
                         yield return Wait(3);
                         yield return Shoot("nudged", 3, 5, k => { if (k == 25) own.Nudge(-away, .15f); });
                     }
+                    // Two more looks of breath. Its shoulders drawn rising, from in front and a little aside, nearer:
+                    // at rest, then tired.
+                    if (Wanted("shoulders"))
+                    {
+                        look.SetBreathLook(1);
+                        own.Favour(0);
+                        View(20, 1.5f, .7f);
+                        yield return Wait(2);
+                        yield return Shoot("shoulders", 8, 10);
+                        look.Tire();
+                        yield return Wait(1);
+                        yield return Shoot("shouldertired", 4, 5);
+                        unit.GetComponent<PhysicalBody>().Refresh();
+                        look.SetBreathLook(0);
+                        yield return Wait(3);
+                    }
+                    // Its breath seen in the air, after dusk: from its side and a little in front, nearer.
+                    if (Wanted("air"))
+                    {
+                        look.SetBreathLook(2);
+                        float was = time.Hour;
+                        time.Hour = 20.5f;
+                        View(-65, 1.5f, .74f);
+                        yield return Wait(2);
+                        yield return Shoot("air", 8, 10);
+                        time.Hour = was;
+                        look.SetBreathLook(0);
+                    }
                     look.SetOwn(false);
                     yield return Wait(.6f);
                 }
@@ -202,7 +230,7 @@ namespace WonderGather.Tests
             }
             finally
             {
-                Time.captureFramerate = 0; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.Alive = true;
+                Time.captureFramerate = 0; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.Alive = true; OwnBody.BreathShoulders = 0; OwnBody.BreathSeenInAir = false;
                 var grass = UnityEngine.Object.FindAnyObjectByType<GrassField>();
                 if (grass != null) grass.enabled = true;
             }
