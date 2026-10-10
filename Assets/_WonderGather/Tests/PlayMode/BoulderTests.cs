@@ -31,7 +31,13 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; MinerWorkPreview.RockTells = null; }
+        public void Restore()
+        {
+            Time.captureFramerate = 0;
+            // (What a run with arguments may have changed is as it was for the tests after it.)
+            MinerWorkPreview.RockTells = null; MinerWorkPreview.SwingsWithin = .06f;
+            PhysicalSwing.KeepsFeetTakingUp = true; MinerBreath.OnEveryBody = false;
+        }
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
@@ -125,6 +131,8 @@ namespace WonderGather.Tests
             // (-blowsAtLeast 16 -onlyWho Long: more blows, and one miner only, to look at a long stretch of work. Not the test.)
             int atLeast = int.TryParse(CaptureTools.Argument("-blowsAtLeast"), out int asked) ? asked : 4;
             string only = CaptureTools.Argument("-onlyWho");
+            // (-rockStrength 0.6: every miner so strong, 1 being ordinary for its build. Not the test.)
+            float strong = float.TryParse(CaptureTools.Argument("-rockStrength"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float given) ? given : -1;
             // (-rockShots <folder>: pictures from the side, each time it sets to work at its boulder, for two seconds.)
             string shotsTo = CaptureTools.Argument("-rockShots");
             RockShots shots = null;
@@ -147,9 +155,22 @@ namespace WonderGather.Tests
                 if (!string.IsNullOrEmpty(only) && only != who) continue;
                 choice.Choose(Miner(who));
                 yield return Wait(.4f);
+                if (strong > 0) look.SetStrength(strong);
                 var unit = choice.Current;
                 var boulder = boulders[which];
+                // (-ownAsPlayed 1, the test as the game is played: it is put there as the body it was, which a test may
+                // do and the game does not; then it stands by its own joints before it is told anything.)
+                bool asPlayed = CaptureTools.Argument("-ownAsPlayed") == "1";
+                if (asPlayed) { look.SetOwn(false); yield return Wait(.6f); }
                 yield return PutNear(unit, boulder, 2.5f);
+                if (asPlayed)
+                {
+                    look.SetOwn(true);
+                    OwnBody own = null;
+                    for (float from = Time.time; Time.time - from < 6 && (own == null || !own.Stands);) { unit.TryGetComponent(out own); yield return null; }
+                    Assert.That(own != null && own.Stands, Is.True, who + " did not come to stand by its own joints by its boulder: " + look.Status());
+                    yield return Wait(1);
+                }
                 var agent = unit.GetComponent<NavMeshAgent>();
                 int blowsBefore = boulder.Blows, stonesBefore = boulder.Stones.Count;
 
@@ -171,7 +192,7 @@ namespace WonderGather.Tests
                 float began = Time.time;
                 while (look.Mining != boulder && look.Showing && Time.time - began < 25) yield return null;
                 float pickedUp = Time.time - began;
-                Assert.That(look.Showing && look.Carrying && look.Mining == boulder, Is.True, who + " did not set out for the boulder with its pickaxe.");
+                Assert.That(look.Showing && look.Carrying && look.Mining == boulder, Is.True, $"{who} did not set out for the boulder with its pickaxe ({Time.time - began:F1} s; showing {look.Showing}, carrying {look.Carrying}, fetching {look.Carry != null && look.Carry.Fetching}): {look.Status()}");
                 Assert.That(unit.GetComponent<PhysicalHands>().Thing, Is.EqualTo(pickaxe), who + " does not have the pickaxe that lay beside it.");
                 var plan = look.MiningPlan;
                 if (shots != null) shots.Look(who, unit.transform, plan.stand, plan.spot);
@@ -190,7 +211,7 @@ namespace WonderGather.Tests
                 // It strikes the rock, and goes on until a piece breaks off (a weaker blow takes more of them).
                 began = Time.time;
                 while ((boulder.Blows - blowsBefore < atLeast || boulder.Stones.Count == stonesBefore) && look.Mining == boulder && Time.time - began < 90 + (atLeast - 4) * 10) yield return null;
-                Assert.That(boulder.Blows - blowsBefore, Is.GreaterThanOrEqualTo(4), $"{who} did not strike the boulder four times: {look.LeftRock}");
+                Assert.That(boulder.Blows - blowsBefore, Is.GreaterThanOrEqualTo(4), $"{who} did not strike the boulder four times: {look.LeftRock} (at its rock {look.AtRock}; swinging {look.Swinging}, {(look.Swing != null ? look.Swing.phase.ToString() : "no swing")}): {look.Status()}");
                 float took = Time.time - began;
                 int blowsTaken = boulder.Blows - blowsBefore;
                 yield return Wait(1.5f);
@@ -268,6 +289,8 @@ namespace WonderGather.Tests
                 Assert.That(look.Mining == boulder && look.Swinging && look.Swing.phase == PhysicalSwing.Phase.Struck, Is.True, $"{who} did not strike again: {look.LeftRock}");
                 int swungBefore = look.Swing.results.Count;
                 began = Time.time; toldLast = "";
+                // (Off the walked ground nothing of its walk moves it: it stays where it is carried.)
+                Assert.That(unit.Motor.IsOff, Is.True, who + " is not off the walked ground at its boulder: it cannot be carried.");
                 Vector3 towards = Flat(plan.spot - plan.stand).normalized;
                 // (To a hand's length and a half nearer than its place, wherever the blow left it: the blow itself
                 // may have taken it as far back.)

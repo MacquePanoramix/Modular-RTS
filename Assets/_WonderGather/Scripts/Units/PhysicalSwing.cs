@@ -260,6 +260,9 @@ namespace WonderGather
         // 28 cm beyond where the plan put it. Where a blow is planned to land is reckoned for hips that go back
         // as it comes down.)
         public static bool KeepsFeetTakingUp = true;
+        // (For no longer than this, seconds: taking it up takes 0.85 s, longer if a hand is slow to take hold. A body
+        // that keeps its feet takes no step to catch itself, and falls if its weight stays outside them.)
+        private const float KeepsFeetFor = 1.5f;
         private bool takingUp;
 
         private void OnDisable()
@@ -287,7 +290,12 @@ namespace WonderGather
 
         private void FixedUpdate()
         {
-            if (hands == null || hands.Held == null || back == null) return;
+            if (hands == null || hands.Held == null || back == null)
+            {
+                // (With nothing in its hands it is taking nothing up.)
+                if (takingUp) { takingUp = false; if (balance != null) balance.KeepsFeet = false; }
+                return;
+            }
             float dt = Time.fixedDeltaTime;
             clock += dt;
             // It stands braced for the work, and at ease when it rests.
@@ -297,7 +305,7 @@ namespace WonderGather
                 if (phase == Phase.Rest) balance.Ease();
                 else balance.Brace(StanceWider, StanceStagger);
                 if (phase != Phase.Recover) takingUp = false;
-                balance.KeepsFeet = KeepsFeetTakingUp && takingUp;
+                balance.KeepsFeet = KeepsFeetTakingUp && takingUp && clock < KeepsFeetFor;
             }
             // The body as it stands at this step's own moment (it is posed once a frame; this steps on the physics' clock).
             System.Span<Vector3> unused = stackalloc Vector3[4];

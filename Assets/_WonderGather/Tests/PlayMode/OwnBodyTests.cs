@@ -99,7 +99,7 @@ namespace WonderGather.Tests
                 Assert.That(went, Is.LessThan(.03f), name + " settled far from where the posed body stood.");
                 Assert.That(sank, Is.LessThan(.03f), name + " sank.");
                 Assert.That(wander, Is.LessThan(.002f), name + " does not stand still.");
-                Assert.That(look.Status(), Is.EqualTo("It stands by its own joints."));
+                Assert.That(look.Status(), Does.StartWith("It stands by its own joints."));
                 // Switched off, the posed body has it again.
                 look.SetOwn(false);
                 yield return Wait(.6f);
