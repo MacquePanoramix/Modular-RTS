@@ -125,6 +125,19 @@ namespace WonderGather.Tests
             // (-blowsAtLeast 16 -onlyWho Long: more blows, and one miner only, to look at a long stretch of work. Not the test.)
             int atLeast = int.TryParse(CaptureTools.Argument("-blowsAtLeast"), out int asked) ? asked : 4;
             string only = CaptureTools.Argument("-onlyWho");
+            // (-rockShots <folder>: pictures from the side, each time it sets to work at its boulder, for two seconds.)
+            string shotsTo = CaptureTools.Argument("-rockShots");
+            RockShots shots = null;
+            if (!string.IsNullOrEmpty(shotsTo))
+            {
+                System.IO.Directory.CreateDirectory(shotsTo);
+                var grass = Object.FindAnyObjectByType<GrassField>();
+                if (grass != null) grass.enabled = false;
+                shots = new GameObject("RockShots").AddComponent<RockShots>();
+                shots.folder = shotsTo;
+                var tells = MinerWorkPreview.RockTells;
+                MinerWorkPreview.RockTells = what => { tells(what); if (what.StartsWith("sets to work")) shots.Begin(); };
+            }
             // (-rockAsItWas 1: without what keeps a miner's blows to its place at a boulder, to measure against.)
             if (CaptureTools.Argument("-rockAsItWas") == "1") { MinerWorkPreview.SwingsWithin = float.MaxValue; PhysicalSwing.KeepsFeetTakingUp = false; }
             if (CaptureTools.Argument("-stepsTakingUp") == "1") PhysicalSwing.KeepsFeetTakingUp = false;
@@ -161,6 +174,7 @@ namespace WonderGather.Tests
                 Assert.That(look.Showing && look.Carrying && look.Mining == boulder, Is.True, who + " did not set out for the boulder with its pickaxe.");
                 Assert.That(unit.GetComponent<PhysicalHands>().Thing, Is.EqualTo(pickaxe), who + " does not have the pickaxe that lay beside it.");
                 var plan = look.MiningPlan;
+                if (shots != null) shots.Look(who, unit.transform, plan.stand, plan.spot);
 
                 // It comes to its place (the last steps off the walked ground), turns to the spot, and sets to work.
                 began = Time.time;
@@ -439,6 +453,41 @@ namespace WonderGather.Tests
             Assert.That(look.Lying, Is.Null, "Its pickaxe still lies on the ground.");
             Assert.That(unit.GetComponent<PhysicalHands>().Thing, Is.EqualTo(pickaxe), "It did not strike with the pickaxe that lay beside it.");
             Debug.Log($"BOULDER_CHAIN Small hung its lantern back, picked its pickaxe up, went to the boulder and struck it {Time.time - began:F1} s after the order");
+        }
+    }
+
+    // Pictures of a miner at its boulder from the side, for whoever looks at how it takes its pickaxe up there.
+    public sealed class RockShots : MonoBehaviour
+    {
+        public string folder;
+        private Camera view;
+        private string who;
+        private Transform body;
+        private float until = -1;
+        private int taken, shot, frame;
+
+        public void Look(string name, Transform miner, Vector3 stand, Vector3 spot)
+        {
+            who = name.ToLowerInvariant(); body = miner; taken = 0; until = -1;
+            if (view == null)
+            {
+                view = new GameObject("RockShotsView").AddComponent<Camera>();
+                view.CopyFrom(Camera.main);
+                view.enabled = false;
+            }
+            Vector3 towards = Vector3.ProjectOnPlane(spot - stand, Vector3.up).normalized, aside = Vector3.Cross(Vector3.up, towards);
+            Vector3 middle = stand + towards * .3f + Vector3.up * .8f;
+            view.transform.position = middle + aside * 4.2f + Vector3.up * .2f;
+            view.transform.rotation = Quaternion.LookRotation(middle - view.transform.position);
+            view.fieldOfView = 30; view.nearClipPlane = .05f;
+        }
+
+        public void Begin() { if (body == null) return; taken++; shot = 0; frame = 0; until = Time.time + 2; }
+
+        private void LateUpdate()
+        {
+            if (view == null || Time.time > until) return;
+            if (frame++ % 4 == 0) CaptureTools.Render(view, System.IO.Path.Combine(folder, $"{who}_{taken}_{shot++:000}"), 480, 480);
         }
     }
 }
