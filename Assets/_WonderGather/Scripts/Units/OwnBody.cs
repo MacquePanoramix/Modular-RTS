@@ -393,6 +393,7 @@ namespace WonderGather
                     link.twistLock = ArticulationDofLock.FreeMotion;
                     if (!hinge[i]) { link.swingYLock = ArticulationDofLock.FreeMotion; link.swingZLock = ArticulationDofLock.FreeMotion; }
                     float lighter = Lighter(i), step = Time.fixedDeltaTime;
+                    turning[i] = lighter;
                     float spring = Mathf.Min(strength[i] / (OwnKeeper.FullAt * Mathf.Deg2Rad), OwnKeeper.Rule * OwnKeeper.Rule / (step * step) * lighter);
                     float damper = OwnKeeper.Damped * 2 * Mathf.Sqrt(spring * lighter);
                     var drive = new ArticulationDrive { stiffness = spring, damping = damper, forceLimit = strength[i], target = 0, targetVelocity = 0, driveType = ArticulationDriveType.Force };
@@ -427,7 +428,7 @@ namespace WonderGather
             balanced = balance != null && balance.Acts;
             if (balance != null) balance.Acts = false;
             body.LetGo = true;
-            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize) { StandsMid = Alive ? StandsMid : 0, Life = Lived };
+            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { StandsMid = Alive ? StandsMid : 0, Life = Lived };
             rollMade = Mathf.Asin(Mathf.Clamp(parts[Hips].transform.right.y, -1, 1)) * Mathf.Rad2Deg; rollSeen = 0;
             nudgeFor = 0; giving = 0;
             Stands = true;
@@ -551,6 +552,7 @@ namespace WonderGather
         // Its life is lived in the middle of each of the keeper's steps: it says where its weight is held, and how its
         // hips roll.
         private OwnKeeper keeper;
+        private readonly float[] turning = new float[Count];
         private void Lived(float step, bool pushed, Vector3 apart)
         {
             if (Alive) Lives(step, pushed);

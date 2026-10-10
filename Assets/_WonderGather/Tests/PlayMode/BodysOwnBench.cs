@@ -1247,5 +1247,192 @@ namespace WonderGather.Tests
                 Time.captureFramerate = 0;
             }
         }
+
+        // ---- S3b step 3: the keeper of the game (OwnKeeper), with its step, on bodies of the bench.
+
+        // The game's keeper on a body of the bench.
+        private static OwnKeeper Keeper(Built body, Planned[] plan)
+        {
+            var masses = new float[Count]; var strength = new float[Count]; var hinge = new bool[Count];
+            var anchors = new Vector3[Count]; var lighter = new float[Count];
+            var parts = new ArticulationBody[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                parts[i] = body.link[i]; masses[i] = body.link[i].mass; strength[i] = plan[i].strength; hinge[i] = plan[i].hinge; anchors[i] = plan[i].anchor;
+                if (i > 0) lighter[i] = Lighter(plan, i);
+            }
+            var touches = new GroundTouch[2]; var soleAt = new Vector3[2]; var soleSize = new Vector3[2];
+            for (int i = 0; i < 2; i++)
+            {
+                touches[i] = body.link[Foot + i].gameObject.AddComponent<GroundTouch>();
+                var s = plan[Foot + i].solids[0];
+                soleAt[i] = s.at + s.turned * new Vector3(0, -.5f * s.size.y, 0); soleSize[i] = s.size;
+            }
+            // (As in the game with life in it: its weight held half way to the middle of its boots.)
+            return new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, lighter) { StandsMid = .5f };
+        }
+
+        private sealed class Stepper
+        {
+            public Built body; public OwnKeeper keeper; public bool down; public float downAt;
+            public float pull, jolt; public Vector3 way; public int wayIs;
+            public Vector3 madeHead, madeHips; public float furthest;
+        }
+
+        // For each miner, bodies on a level floor, each pulled at its chest with a share of its weight for two and a
+        // half seconds, or set going at a speed, one of several ways: does it step, how often, does it stand after,
+        // and how do its boots stand.
+        //   -stepOut <folder> [-stepPulls .08,.17,.25,.33] [-stepJolts .3,.5,.8] [-stepWays 8] [-stepFor 9]
+        //   [-stepSet "StepsAhead=1.8,SwingsIn=.25"] [-stepOff 1] [-stepSay Long]
+        [UnityTest, Explicit, Timeout(3600000)]
+        public IEnumerator Steps()
+        {
+            Step = Numbers("-ownStep", .02f)[0];
+            float[] pulls = Numbers("-stepPulls", .08f, .17f, .25f, .33f), jolts = Numbers("-stepJolts", .3f, .5f, .8f);
+            int ways = (int)Numbers("-stepWays", 8)[0];
+            float lasts = Numbers("-stepFor", 9)[0];
+            string say = CaptureTools.Argument("-stepSay");
+            float sayPull = Numbers("-stepSayPull", .17f)[0]; int sayWay = (int)Numbers("-stepSayWay", 0)[0];
+            var culture = CultureInfo.InvariantCulture;
+            var was = new Dictionary<string, float>();
+            bool steps = Numbers("-stepOff", 0)[0] < .5f;
+            foreach (string pair in (CaptureTools.Argument("-stepSet") ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string[] sides = pair.Split('=');
+                var field = typeof(OwnKeeper).GetField(sides[0].Trim());
+                Assert.That(field != null && sides.Length == 2, Is.True, "No such setting of the keeper: " + pair);
+                was[field.Name] = (float)field.GetValue(null);
+                field.SetValue(null, float.Parse(sides[1], culture));
+            }
+            yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            yield return null;
+            Time.captureFramerate = 50;
+            var mode = Physics.simulationMode;
+            float rule = Rule, damped = Damped;
+            try
+            {
+                var choice = UnityEngine.Object.FindAnyObjectByType<MinerChoice>();
+                var ground = UnityEngine.Object.FindAnyObjectByType<OrdinaryGround>();
+                Vector3 OnGround(Vector3 q) => new Vector3(q.x, ground.Height(q.x, q.z), q.z);
+                var a = ground.Path[4];
+                var b = ground.Path[5];
+                var spot = OnGround(new Vector3(a.x, 0, a.y));
+                var away = OnGround(new Vector3(b.x, 0, b.y)) - spot;
+                away.y = 0;
+                away.Normalize();
+                var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                floor.transform.position = spot + Vector3.up * 200;
+                floor.transform.localScale = new Vector3(400, 1, 400);
+                float floorTop = floor.transform.position.y + .5f;
+                var plans = new List<Planned[]>(); var names = new List<string>(); var lowests = new List<float>();
+                for (int index = 0; index < choice.Count; index++)
+                {
+                    choice.Choose(index);
+                    yield return null;
+                    var unit = choice.Current;
+                    var biped = unit.GetComponent<ProceduralBiped>();
+                    var physical = unit.GetComponent<PhysicalBody>();
+                    var fall = unit.GetComponent<PhysicalFall>();
+                    if (fall == null) fall = unit.gameObject.AddComponent<PhysicalFall>();
+                    fall.GetsUp = false;
+                    unit.Motor.Stop();
+                    unit.GetComponent<NavMeshAgent>().Warp(spot);
+                    unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                    biped.ResetPose();
+                    for (float until = Time.time + .8f; Time.time < until;) yield return null;
+                    fall.LetGo();
+                    var plan = Plan(fall, physical, .7f);
+                    fall.TakeBack();
+                    yield return null;
+                    float lowest = float.MaxValue;
+                    foreach (var solid in plan[Foot].solids) lowest = Mathf.Min(lowest, (plan[Foot].at + plan[Foot].turned * solid.at).y - .5f * solid.size.y);
+                    plans.Add(plan); names.Add(choice.NameOf(index)); lowests.Add(lowest);
+                }
+                foreach (var unit in UnityEngine.Object.FindObjectsByType<SelectableUnit>(FindObjectsSortMode.None)) unit.gameObject.SetActive(false);
+                yield return null;
+                Physics.simulationMode = SimulationMode.Script;
+                // (The bodies are sprung as the game's are.)
+                Rule = OwnKeeper.Rule; Damped = OwnKeeper.Damped;
+                OwnKeeper.Steps = steps;
+
+                for (int m = 0; m < plans.Count; m++)
+                {
+                    var plan = plans[m];
+                    float whole = 0;
+                    foreach (var part in plan) whole += part.mass;
+                    var crowd = new List<Stepper>();
+                    void Add(float pull, float jolt, int w)
+                    {
+                        int n = crowd.Count;
+                        Vector3 place = new Vector3((n % 10 - 5) * 4f, floorTop - lowests[m] + .002f, (n / 10 - 3) * 4f + m * 60);
+                        var one = new Stepper { body = Build(plan, true, place, OwnKeeper.FullAt, .05f, 0, 0, false, true), pull = pull, jolt = jolt, wayIs = w * 360 / ways, way = Quaternion.AngleAxis(w * 360f / ways, Vector3.up) * away };
+                        one.keeper = Keeper(one.body, plan);
+                        one.madeHead = one.body.Of(Head).position; one.madeHips = one.body.Of(Hips).position;
+                        crowd.Add(one);
+                    }
+                    foreach (float pull in pulls) for (int w = 0; w < ways; w++) Add(pull * whole * 9.81f, 0, w);
+                    foreach (float jolt in jolts) for (int w = 0; w < ways; w++) Add(0, jolt, w);
+                    Physics.SyncTransforms();
+                    int count = Mathf.RoundToInt(lasts / Step), begins = Mathf.RoundToInt(1 / Step), ends = Mathf.RoundToInt(3.5f / Step);
+                    bool told = !string.IsNullOrEmpty(say) && string.Equals(say, names[m], StringComparison.OrdinalIgnoreCase);
+                    for (int k = 0; k < count; k++)
+                    {
+                        foreach (var one in crowd)
+                        {
+                            if (k == begins && one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
+                            if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * one.pull, one.body.Centre(Trunk));
+                            if (!one.down && !one.keeper.Keep(Step)) { one.down = true; one.downAt = k * Step; }
+                            one.furthest = Mathf.Max(one.furthest, Vector3.ProjectOnPlane(one.body.Of(Hips).position - one.madeHips, Vector3.up).magnitude);
+                        }
+                        // (One of them told step by step: -stepSay Long -stepSayPull .17 -stepSayWay 0.)
+                        if (told && k >= begins - 5 && k % 5 == 0)
+                            foreach (var one in crowd)
+                            {
+                                if (one.wayIs != sayWay || Mathf.Abs(one.pull - sayPull * whole * 9.81f) > .01f || one.jolt > 0) continue;
+                                Transform hips = one.body.Of(Hips), left = one.body.Of(Foot), right = one.body.Of(Foot + 1);
+                                Vector3 side = Vector3.Cross(Vector3.up, one.way);
+                                Debug.Log(string.Format(culture, "STEPSAY {0} {1:0.0} s: steps {2}, swings {3}{4}; hips {5:0} mm along, {6:0} aside, {7:0} up, leaning {8:0} deg; left boot {9:0} along {10:0} aside {11:0} up tipped {12:0}; right boot {13:0} along {14:0} aside {15:0} up tipped {16:0}; outside {17:0} mm; feels {18:0.00}; leans {19:0} mm",
+                                    names[m], k * Step, one.keeper.Stepped, one.keeper.Swings, one.down ? " DOWN" : "", Vector3.Dot(hips.position - one.madeHips, one.way) * 1000, Vector3.Dot(hips.position - one.madeHips, side) * 1000, (hips.position.y - one.madeHips.y) * 1000, Vector3.Angle(Vector3.up, hips.up),
+                                    Vector3.Dot(left.position - one.madeHips, one.way) * 1000, Vector3.Dot(left.position - one.madeHips, side) * 1000, (left.position.y - floorTop) * 1000, Vector3.Angle(Vector3.up, left.up),
+                                    Vector3.Dot(right.position - one.madeHips, one.way) * 1000, Vector3.Dot(right.position - one.madeHips, side) * 1000, (right.position.y - floorTop) * 1000, Vector3.Angle(Vector3.up, right.up),
+                                    one.keeper.Outside * 1000, one.keeper.Felt.magnitude, one.keeper.Leaning.magnitude * 1000));
+                            }
+                        Physics.Simulate(Step);
+                        if (k % 100 == 99) yield return null;
+                    }
+                    // What became of each: grouped by how hard, over the ways.
+                    string Group(Func<Stepper, bool> which, string called)
+                    {
+                        int stood = 0, n = 0, fewest = int.MaxValue, most = 0, flat = 0; float went = 0, astride = 0;
+                        string each = "";
+                        foreach (var one in crowd)
+                        {
+                            if (!which(one)) continue;
+                            n++;
+                            Vector3 head = one.body.Of(Head).position;
+                            bool stands = !one.down && head.y - floorTop > .9f * (one.madeHead.y - floorTop);
+                            Transform left = one.body.Of(Foot), right = one.body.Of(Foot + 1);
+                            bool boots = Vector3.Angle(Vector3.up, left.up) < 8 && Vector3.Angle(Vector3.up, right.up) < 8 && Mathf.Abs(left.position.y - right.position.y) < .02f;
+                            if (stands) { stood++; fewest = Mathf.Min(fewest, one.keeper.Stepped); most = Mathf.Max(most, one.keeper.Stepped); went += Vector3.ProjectOnPlane(one.body.Of(Hips).position - one.madeHips, Vector3.up).magnitude; if (boots) flat++; astride += Vector3.ProjectOnPlane(right.position - left.position, Vector3.up).magnitude; }
+                            each += string.Format(culture, " {0}:{1}{2}", one.wayIs, stands ? one.keeper.Stepped.ToString() : "down@" + one.downAt.ToString("0.0", culture), stands && !boots ? "!" : "");
+                        }
+                        return string.Format(culture, "STEPS {0} {1}: {2} of {3} stand ({4} with boots flat), in {5} to {6} steps, come to rest {7:0.00} m off, boots {8:0.00} m apart; by way:{9}", names[m], called, stood, n, flat, stood > 0 ? fewest : 0, most, stood > 0 ? went / stood : 0, stood > 0 ? astride / stood : 0, each);
+                    }
+                    foreach (float pull in pulls) { float f = pull * whole * 9.81f; Debug.Log(Group(one => Mathf.Abs(one.pull - f) < .01f && one.jolt <= 0, string.Format(culture, "pulled with {0:0.00} of its weight ({1:0} N)", pull, f))); }
+                    foreach (float jolt in jolts) Debug.Log(Group(one => Mathf.Abs(one.jolt - jolt) < 1e-4f, string.Format(culture, "set going at {0:0.00} m/s", jolt)));
+                    foreach (var one in crowd) UnityEngine.Object.Destroy(one.body.root);
+                    yield return null;
+                }
+                UnityEngine.Object.Destroy(floor);
+            }
+            finally
+            {
+                OwnKeeper.Steps = false;
+                foreach (var pair in was) typeof(OwnKeeper).GetField(pair.Key).SetValue(null, pair.Value);
+                Rule = rule; Damped = damped;
+                Physics.simulationMode = mode;
+                Time.captureFramerate = 0;
+            }
+        }
     }
 }
