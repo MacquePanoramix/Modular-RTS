@@ -99,12 +99,26 @@ namespace WonderGather
         // breath lifting the whole body by its legs, 8 mm. Long, on one leg and nudged, went over.)
         public const float BreathDrawn = 4;
         public static float BreathBack = .25f, BreathArms = .625f, BreathSwell = .0225f, BreathShown = BreathDrawn;
+        // Two more looks of breath (Luis, October 10: to try beside the others). Its shoulders drawn rising: by
+        // ShouldersRise of its height for a breath at rest, times BreathShoulders (0: not drawn so). And its breath
+        // seen in the cold air, from dusk to dawn (BreathInAir): so many puffs to a breath out, so far apart.
+        public static float BreathShoulders = 0, ShouldersRise = .014f;
+        public static bool BreathSeenInAir;
+        private const int PuffsABreath = 3;
+        private const float PuffsApart = .16f;
+        private BreathInAir air;
+        private float stature, headHalf, fullBefore, puffIn, leftShrug;
+        private int puffsLeft;
+        private bool emptying;
         // Its head looks somewhere else every so many seconds (between the two), no further aside than LooksAside
         // degrees; a look takes LooksIn seconds and LooksInEach more for each degree. It looks at another miner
         // nearer than LooksAsFar metres about one time in three.
         public static float LooksAtLeast = 4, LooksAtMost = 11, LooksAside = 40, LooksIn = .25f, LooksInEach = .006f, LooksAsFar = 15;
         // Between looks its head is never quite fixed: it wanders by about this many degrees, slowly.
         public static float HeadWanders = 1.5f;
+        // (Tried twice and taken out twice: its chest following a look aside by a fifth of it, a third of a second
+        // behind its head. Its judges said a head that turns alone is "a head on a pivot"; but with it Long, on one
+        // leg and nudged, went over. It waits on the step.)
         // (Which way round the engine counts a joint's turn from its pose.)
         private const float Turns = 1;
         private Breath breath;
@@ -296,6 +310,8 @@ namespace WonderGather
             if (Stands || !CanStand) return false;
             var s = miner.Solved;
             var shape = body.BodyProportions;
+            headHalf = Mathf.Max(.06f, shape.headHalf);
+            stature = s.head.position.y - transform.position.y + headHalf;
             segments[Hips] = s.pelvis; segments[Trunk] = s.torso; segments[Head] = s.head;
             for (int i = 0; i < 2; i++)
             {
@@ -431,6 +447,7 @@ namespace WonderGather
             chance = (uint)Breath.SeedOf(name) * 2654435761u + (uint)Began * 40503u + 7u;
             breath.Begin(Breath.SeedOf(name) + Began);
             life = 0; favours = favoursFrom = favoursTo = rolled = eased = 0; shiftAlong = 1;
+            fullBefore = 0; puffsLeft = 0; emptying = false;
             shiftsAt = ShiftsFirst * Mathf.Lerp(.7f, 1.3f, Chance());
             swaysFrom = 60 * Chance(); swayed = Vector3.zero;
             looks = looksFrom = looksTo = Vector2.zero; lookAlong = 1; looksAt = Mathf.Lerp(1, 3, Chance()); looksUntil = 0;
@@ -452,6 +469,7 @@ namespace WonderGather
             if (held != null) { held.SetActive(false); Destroy(held); }
             held = null;
             leftSwell = miner.Swell; miner.Swell = 0;
+            leftShrug = miner.Shrug; miner.Shrug = 0;
             for (int i = 0; i < Count; i++) parts[i] = null;
             Stands = false;
         }
@@ -466,7 +484,7 @@ namespace WonderGather
             for (int i = 0; i < 2; i++)
                 if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null) { leftAt[Count + i] = s.toes[i].position; leftTurned[Count + i] = s.toes[i].rotation; }
             PutAway();
-            miner.Swell = leftSwell;
+            miner.Swell = leftSwell; miner.Shrug = leftShrug;
             if (balance != null) balance.Acts = balanced;
             body.LetGo = false;
             giving = GivesBackIn;
@@ -714,6 +732,21 @@ namespace WonderGather
             float spent = Mathf.Max(Mathf.Max(physical.Spent(PhysicalBody.Muscles.Legs), physical.Spent(PhysicalBody.Muscles.Back)),
                 Mathf.Max(physical.Spent(PhysicalBody.Muscles.LeftArm), physical.Spent(PhysicalBody.Muscles.RightArm)));
             breath.Goes(step, spent / .85f);
+            // Its breath seen in the air: as its chest begins to empty, a few puffs from its mouth, one after another.
+            if (breath.Full > fullBefore) emptying = false;
+            else if (breath.Full < fullBefore && !emptying)
+            {
+                emptying = true;
+                if (BreathSeenInAir && fullBefore >= .9f) { puffsLeft = PuffsABreath; puffIn = 0; }
+            }
+            fullBefore = breath.Full;
+            if (puffsLeft > 0 && (puffIn -= step) <= 0)
+            {
+                puffsLeft--; puffIn = PuffsApart;
+                if (air == null && !TryGetComponent(out air)) air = gameObject.AddComponent<BreathInAir>();
+                Transform face = parts[Head].transform;
+                air.Puff(face.position + face.forward * (.95f * headHalf) - face.up * (.35f * headHalf), face.forward - .25f * face.up, .5f * breath.Deep, headHalf);
+            }
 
             // Its weight, from leg to leg. Pushed, it stands square.
             if (pushed)
@@ -864,13 +897,14 @@ namespace WonderGather
                     if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null)
                         s.toes[i].SetPositionAndRotation(segments[Foot + i].TransformPoint(toeAt[i]), segments[Foot + i].rotation * toeTurn[i]);
                 miner.Swell = Alive ? BreathSwell * breath.Full * breath.Deep * BreathShown : 0;
+                miner.Shrug = Alive ? ShouldersRise * stature * BreathShoulders * breath.Full * Mathf.Min(breath.Deep, 1.7f) : 0;
                 return;
             }
             if (giving <= 0 || segments[Hips] == null) return;
             // The posed body has posed this frame: each segment is between where the physics left it and there.
             giving -= Time.deltaTime;
             float share = Mathf.SmoothStep(0, 1, 1 - Mathf.Clamp01(giving / GivesBackIn));
-            miner.Swell = leftSwell * (1 - share);
+            miner.Swell = leftSwell * (1 - share); miner.Shrug = leftShrug * (1 - share);
             for (int i = 0; i < Count; i++)
             {
                 if (i >= UpperArm && i < Foot)

@@ -28,7 +28,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; }
+        public void Restore() { Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.BreathShoulders = 0; OwnBody.BreathSeenInAir = false; }
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
@@ -364,6 +364,68 @@ namespace WonderGather.Tests
                 look.SetOwn(false);
                 yield return Wait(.6f);
             }
+        }
+
+        // Two more looks of breath (Luis, October 10): its shoulders drawn rising; and its breath seen in the air, from
+        // dusk to dawn and not by day.
+        [UnityTest, Timeout(900000)]
+        public IEnumerator ItsBreathHasTwoMoreLooks()
+        {
+            Time.captureFramerate = 50;
+            var time = Object.FindAnyObjectByType<TimeOfDay>();
+            float hour = time.Hour;
+            Assert.That(BreathInAir.Look() != null, Is.True, "The look of breath in the air (Resources/BreathInAir) was not found.");
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                yield return Stand(unit, (s, a) => { });
+                OwnBody own = null;
+                yield return Own(unit, name, o => own = o);
+                var rig = unit.GetComponent<MinerBody>().Rig;
+                // How high its shoulders are drawn over its chest, with its chest full and empty.
+                float Shoulders() => .5f * (rig.upperArms[0].position.y + rig.upperArms[1].position.y) - rig.chest.position.y;
+                float rises = 0;
+                IEnumerator Breathes(float seconds)
+                {
+                    float full = 0, empty = 0; int fulls = 0, empties = 0;
+                    for (float until = Time.time + seconds; Time.time < until;)
+                    {
+                        if (own.BreathFull > .9f) { full += Shoulders(); fulls++; } else if (own.BreathFull < .1f) { empty += Shoulders(); empties++; }
+                        yield return null;
+                    }
+                    rises = fulls > 0 && empties > 0 ? full / fulls - empty / empties : 0;
+                }
+                look.SetBreathLook(0);
+                yield return Breathes(9);
+                float plain = rises;
+                look.SetBreathLook(1);
+                Assert.That(look.BreathLook, Is.EqualTo("in its shoulders"));
+                yield return Breathes(9);
+                float shrugged = rises;
+                // In the air: nothing by day; puffs after dusk.
+                look.SetBreathLook(2);
+                time.Hour = 13;
+                yield return Wait(9);
+                var air = unit.GetComponent<BreathInAir>();
+                int byDay = air != null ? air.Puffed : 0;
+                time.Hour = 21;
+                yield return Wait(9);
+                air = unit.GetComponent<BreathInAir>();
+                int byNight = air != null ? air.Puffed - byDay : 0;
+                Debug.Log($"OWN_LOOKS_OF_BREATH {name}: its shoulders are drawn {plain * 1000:F1} mm higher over its chest full than empty as it was, and {shrugged * 1000:F1} mm with the look in its shoulders; in the air it breathed {byDay} puffs in nine seconds by day and {byNight} after dusk (cold {(air != null ? air.Cold : 0):F2}); it stands: {own.Stands}");
+                Assert.That(own.Stands && own.WentDown == 0, Is.True, name + " went down.");
+                Assert.That(shrugged - plain, Is.GreaterThan(.006f), name + ": its shoulders are not drawn rising with its breath.");
+                Assert.That(byDay, Is.EqualTo(0), name + ": its breath is seen in the air by day.");
+                Assert.That(byNight, Is.GreaterThanOrEqualTo(3), name + ": its breath is not seen in the air after dusk.");
+                time.Hour = hour;
+                look.SetBreathLook(0);
+                look.SetOwn(false);
+                yield return Wait(.6f);
+            }
+            time.Hour = hour;
         }
     }
 }

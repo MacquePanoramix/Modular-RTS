@@ -177,6 +177,11 @@ namespace WonderGather
         public float Swell { get; set; }
         private Vector3 chestSize;
         private float drawnFuller = 1;
+        // Breath, another look of it: its shoulders are drawn this much higher (metres; 0: as modelled). Its arms
+        // go up with them.
+        public float Shrug { get; set; }
+        private float drawnShrug;
+        private readonly Vector3[] shoulderAt = new Vector3[2];
         private Transform[] onChest;
         private Vector3[] onChestSize;
 
@@ -345,6 +350,7 @@ namespace WonderGather
                 onChest = new Transform[bones.chest.childCount];
                 onChestSize = new Vector3[onChest.Length];
                 for (int k = 0; k < onChest.Length; k++) { onChest[k] = bones.chest.GetChild(k); onChestSize[k] = onChest[k].localScale; }
+                for (int i = 0; i < 2; i++) shoulderAt[i] = bones.upperArms[i].localPosition;
             }
             neckRest = Rest(bones.neck);
             headRest = Rest(bones.head);
@@ -475,6 +481,15 @@ namespace WonderGather
                 drawnFuller = fuller;
                 bones.chest.localScale = chestSize * fuller;
                 for (int k = 0; k < onChest.Length; k++) if (onChest[k] != null) onChest[k].localScale = onChestSize[k] / fuller;
+            }
+            if (onChest != null && Shrug != drawnShrug)
+            {
+                drawnShrug = Shrug;
+                for (int i = 0; i < 2; i++)
+                {
+                    Transform above = bones.upperArms[i].parent;
+                    bones.upperArms[i].localPosition = shoulderAt[i] + (above != null ? above.InverseTransformVector(Vector3.up * Shrug) : Vector3.up * Shrug);
+                }
             }
             bones.neck.rotation = Quaternion.Slerp(chestFrame, headFrame, .5f) * root * neckRest;
             bones.head.rotation = headFrame * root * headRest;

@@ -78,7 +78,7 @@ namespace WonderGather
             y += 26;
             // Its breath: how it is drawn (a look to choose between), and a miner tired at once to see it breathe so.
             GUI.Label(new Rect(x, y + 2, 50, 20), "Breath:", text);
-            if (GUI.Button(new Rect(x + 52, y - 1, 130, 22), look.BreathLook, button)) look.NextBreathLook();
+            if (GUI.Button(new Rect(x + 52, y - 1, 204, 22), look.BreathLook, button)) look.NextBreathLook();
             if (GUI.Button(new Rect(x + inner - 96, y - 1, 96, 22), "Tire it", button)) look.Tire();
             y += 26;
             // A pickaxe put on the ground beside it.

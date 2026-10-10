@@ -94,7 +94,7 @@ namespace WonderGather
         private void Awake()
         {
             choice = GetComponent<MinerChoice>();
-            SetBreathLook(1);
+            SetBreathLook(0);
             // The interaction click and the panel live beside it: where it is, they are.
             if (GetComponent<InteractionClick>() == null) gameObject.AddComponent<InteractionClick>();
             if (GetComponent<MinerPanel>() == null) gameObject.AddComponent<MinerPanel>();
@@ -567,14 +567,18 @@ namespace WonderGather
         // metres a second.
         private const float NudgeSpeed = .15f;
         // How its breath is drawn is a look for Luis to choose between: as in life, drawn stronger, or not drawn.
-        public static readonly string[] BreathLooks = { "as in life", "drawn stronger", "not drawn" };
-        private static readonly float[] BreathShows = { 1, OwnBody.BreathDrawn, 0 };
+        public static readonly string[] BreathLooks = { "drawn stronger", "in its shoulders", "seen in the air (dusk to dawn)", "as in life", "not drawn" };
+        private static readonly float[] BreathShows = { OwnBody.BreathDrawn, OwnBody.BreathDrawn, OwnBody.BreathDrawn, 1, 0 };
+        private static readonly float[] BreathShrugs = { 0, 1, 0, 0, 0 };
+        private static readonly bool[] BreathAirs = { false, false, true, false, false };
         private int breathLook;
         public string BreathLook => BreathLooks[breathLook];
         public void SetBreathLook(int which)
         {
             breathLook = ((which % BreathLooks.Length) + BreathLooks.Length) % BreathLooks.Length;
             OwnBody.BreathShown = BreathShows[breathLook];
+            OwnBody.BreathShoulders = BreathShrugs[breathLook];
+            OwnBody.BreathSeenInAir = BreathAirs[breathLook];
         }
         public void NextBreathLook() => SetBreathLook(breathLook + 1);
         // The chosen miner is tired at once, as if it had worked hard: to see it breathe so. (It rests as it does
