@@ -399,14 +399,14 @@ the switch is on):
 |---|---|
 | **Stands by its own joints (at ease, hands empty)** | A switch. On: the chosen miner, when it stands at ease with nothing in its hands, stands by what its own hips, knees and ankles give. Off: as it was |
 | **Nudge it** | Sets its whole body going the way the view looks, at 0.15 m/s. (Only while it stands by its own joints) |
-| **Breath: drawn stronger / in its shoulders / seen in the air (dusk to dawn) / as in life / not drawn** | How its breath is drawn. Five looks to choose between; press to go to the next. **For the look in the air, make it dusk or night first (keys `4` and `6`):** by day nothing is seen |
+| **Breath: all together / in its chest only / in its shoulders / seen in the air (dusk to dawn) / as in life / not drawn** | How its breath is drawn. It begins with all of them together (since the evening of October 10); press to see each alone. **The breath in the air shows from dusk to dawn (keys `4` and `6`):** by day nothing is seen. Every miner breathes in the air; only one standing by its own joints, or fallen, shows it in its chest and shoulders |
 | **Tire it** | Makes the chosen miner tired at once, as after hard work, to see it breathe so. It rests as it does after work |
-| **Breath size** (a slider, since October 10) | How large its breath is drawn, from nought to three (one is the size it had when Luis could not see it). It begins at 1.6, on the strong side on purpose: **turn it until it looks right, and tell me the number** |
+| **Breath size** (a slider) | How large its breath is drawn, from nought to three. It begins at one (1.6 was "a bit too strong"): **move it if it is not right, and tell me the number** |
 
-**Since Luis looked (October 10):** the breath begins with the look
-"in its shoulders" and at a larger size. **The switch must be on** for
-a standing miner to breathe at all: without it, it stands as it did,
-and only a fallen miner breathes.
+**The switch must be on** for a standing miner to show its breath in
+its chest and shoulders. Without it, it stands as it did, and breathes
+only in the air, from dusk to dawn. (On the morning of October 10 it
+was looked at with the switch off, and nothing was seen.)
 
 **What to try.** Choose a miner, switch it on, and watch it for a
 minute from near. Nudge it from several sides. Push it over ("Push it

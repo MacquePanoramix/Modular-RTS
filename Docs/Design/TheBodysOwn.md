@@ -901,3 +901,50 @@ all. Whether every miner is to is put to Luis.
 of code for the game and the search
 ([the plan](../NextMilestonePlan.md)). It reckons exactly as it did;
 the step in it is off.
+
+### Every miner breathes (October 10, evening)
+
+Luis, with the switch ticked at last
+([the message](../Correspondence/2026-10-10_THE_SWITCH_TICKED.md)): "I am loving the
+results"; the looks of breath "all... looked good"; the size made up
+that morning "a bit too strong"; and, of every miner breathing: "to
+some degree... when they are not very tired or in a moment that
+justifies a lot of breath the breath should be gentle", "scale
+appropriately with situation".
+
+**What is built.**
+
+- **One clock of breath for each miner** (`MinerBreath`, put on every
+  miner by its body), whatever has its body: standing as it did,
+  walking, at its work, standing by its own joints, fallen. The body of
+  its own and the fall read it; they kept clocks of their own before.
+- **It scales with the situation:** 15 breaths a minute and gentle at
+  rest; faster and up to two and a half times as deep the more its
+  muscles have spent (after work it comes back as they do, over about
+  half a minute); and, down after a fall, by how shaken it is.
+- **The size is back to one** (it was 1.6 for a day). At rest, standing
+  by its own joints: its chest drawn 9 parts in a hundred fuller, its
+  shoulders 29 to 33 mm higher. The slider stays.
+- **The looks are drawn together** unless one is picked: the panel's
+  button now reads "all together", then each alone ("in its chest
+  only", "in its shoulders", "seen in the air"), "as in life", "not
+  drawn".
+
+**Where each part of it is drawn, and where not yet.**
+
+| | Its breath in the air (dusk to dawn) | Its chest and shoulders |
+|---|---|---|
+| Standing by its own joints | yes | yes |
+| Fallen | yes | yes |
+| Standing, walking or working as it did (the posed body) | **yes** | **not yet** |
+
+**Why not yet on the body as it was.** Drawn there, a miner's blows at
+a boulder afterwards landed thirty centimetres from where they were
+meant in five tries of fifteen (`BoulderTests.AMinerMinesABoulderByAClick`;
+one try in thirty without). A swing is planned from where the miner's
+shoulders are drawn, and something in that turns on a centimetre. That
+is a fault of its own, older than breath (the same test failed once on
+October 9), and it is to be found before breath is drawn on a miner at
+work. So today **a miner that has worked hard shows it in the air at
+dusk, and on its chest and shoulders only once it stands by its own
+joints with empty hands, or is down.**

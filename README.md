@@ -35,7 +35,16 @@ physical mining and real hauling. See the [showcase roadmap](Docs/ShowcaseRoadma
   ([plan](Docs/NextMilestonePlan.md); the up-to-date state is in
   [CURRENT_STATE.md](Docs/CURRENT_STATE.md)).
 
-Latest milestone: **The Equipped Worker**, connecting a blueprint-selected
+**Now (October 10, 2026):** the work in hand is S3b, a body moved by its
+own joints: a miner can stand so (a switch on the panel of the Ordinary
+Place), breathing and shifting its weight; a step is begun. The last whole
+PlayMode run: 171 passed, none failed, 23 run only when asked. Where things
+stand, day by day, is in [CURRENT_STATE.md](Docs/CURRENT_STATE.md); the build
+to open is `Builds/WindowsOrdinaryPlace/WonderGather.exe`.
+
+What follows is an earlier milestone, kept as it was written (September 30).
+
+Earlier milestone: **The Equipped Worker**, connecting a blueprint-selected
 pickaxe to reachable procedural strikes and real resource extraction. Open
 `Assets/_WonderGather/Scenes/TheFactionCreator.unity`, choose **Pickaxe** under
 the worker's **Equipped tool**, then select **Playtest equipment →**.

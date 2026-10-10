@@ -1,7 +1,13 @@
 # Validation history
 
-Current milestone: The Living Worker; see the September 26 entry below and
-Docs/Playtests/LivingWorkerPlaytest.md. Earlier sections preserve historical evidence.
+This page is a history, oldest first: each section is the evidence of its
+day, kept as it was written. **The latest is at the end.** What is current
+is in [CURRENT_STATE.md](CURRENT_STATE.md); the milestone in hand (October
+2026) is S3b, the body's own ([the plan](NextMilestonePlan.md)).
+
+(Until October 10 this page opened by calling the Living Worker of
+September 26 the current milestone. An outside review pointed out that it
+was stale; Luis said to put it right.)
 
 ## Unity 6.6 foundation — September 6, 2026
 
@@ -3090,3 +3096,36 @@ The body's own body is off unless the panel's switch is on.
   opened by me.
 - **Not tested:** whether Luis can see it. That is what the slider is
   for.
+
+## S3b — every miner breathes on one clock (October 10, evening)
+
+[Design/TheBodysOwn.md](Design/TheBodysOwn.md#every-miner-breathes-october-10-evening).
+
+- **`OwnBodyTests`, seven, each on Small, Long and Round: all pass.**
+  At size one, with the look in its shoulders, they are drawn 29, 33
+  and 32 mm higher full than empty at rest; six puffs in nine seconds
+  after dusk and none by day; tired at once, 30 to 33 breaths a minute.
+  On one leg and nudged, heads go 13 to 116 mm (Long's the 116), none
+  down.
+- **The whole PlayMode suite:** 194 tests; **171 passed, none failed**, 23 are run only when asked; about 25 minutes.
+- **The mining test, many times over,** because drawing breath touches
+  what a swing is planned from (`BoulderTests.AMinerMinesABoulderByAClick`:
+  blows landing within 20 cm of where they were meant):
+
+  | What was drawn on a miner standing or walking as it did | Failed |
+  |---|---|
+  | Its chest and shoulders, always | 1 of 4 |
+  | Its chest and shoulders, while its hands were empty | 4 of 11 |
+  | Nothing (as built now: only its breath in the air) | 1 of 14 |
+  | The state before any of this, the same day | 0 of 16 |
+  | (October 9, before breath existed) | once |
+
+  So drawing it on the body as it was makes the miss far more
+  frequent, and it is not drawn there. Whether the state as built is
+  any worse than before cannot be told from one in fourteen against
+  none in sixteen. **The miss itself (thirty centimetres, Long or
+  Round) is a fault older than this, and is not found.**
+- **The build** was made from this state and copied to `Builds/`. Not
+  opened by me.
+- **Not tested:** many miners breathing at once at dusk (each draws up
+  to eight puffs); a miner out of breath from real work, seen at dusk.

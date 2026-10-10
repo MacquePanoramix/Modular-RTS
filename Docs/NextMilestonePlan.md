@@ -374,7 +374,21 @@ right-hand column says.
 | B6 | Breath drawn on the chest cannot be seen, even at four times life (six judges of six). How is it to be shown? | The panel has three looks to begin from ("drawn stronger", "as in life", "not drawn"). Others, not built: the shoulders and collar rising, drawn boldly; a tired body heaving; breath seen in the cold air at dusk. I would try the shoulders and the dusk air next, beside these |
 | B7 | Shall "a step" (step 3) come before "from its knees onto its feet" (step 2)? | Yes. Leaning as today's body does, a real shift of weight, and standing up to a push all wait on the step; step 2 waits on nothing |
 
-**After Luis looked at step 1 (October 10). Not answered yet.**
+**After Luis looked at step 1 (October 10). Answered the same evening**
+([the message](Correspondence/2026-10-10_THE_SWITCH_TICKED.md)): B8, "I think it wasn't, sorry"; B9, "to some
+degree... the breath should be gentle... scale appropriately with
+situation"; B10, "all three options looked good" and the size of that
+morning "a bit too strong"; B11, "Sure can be thanks!"
+
+**Asked after that, and not answered yet:**
+
+| | Question | What I think |
+|---|---|---|
+| B12 | Is step 1 (standing by its own joints, with life in it) accepted? And may the switch be on from the start, so that a miner at ease stands so without being asked? | Yes to both: Luis likes it, and the switch being off is what hid it. The body as it was stays one click away |
+| B13 | Are the looks of breath to be drawn together (chest, shoulders, and the air from dusk to dawn), as they now are? | Yes |
+| B14 | A miner's blows at a boulder sometimes land thirty centimetres off (one try in thirty; five in fifteen while breath was drawn on its shoulders). Is that to be found now, before the step goes on, or after? | Now: it is a miss Luis could see in the game, and it is what keeps breath off a miner at work |
+
+**The questions as they were put that morning:**
 
 | | Question | What I think, for Luis to overrule |
 |---|---|---|

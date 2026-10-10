@@ -2068,6 +2068,12 @@ with the settings, are in
   the chest drawn fuller (written only when it changes).
   `Tests/PlayMode/OwnBodyTests.cs` (six); `OwnBodyRecord.cs` (pictures
   for judges; run only when asked: `-ownShots <folder>`).
+- **Breath (October 10, evening): `Scripts/Units/MinerBreath.cs`.** One
+  clock of breath for each miner, added by `MinerBody.Awake`. It sets
+  `MinerBody.Swell` and `Shrug` (only while an `OwnBody` stands or the
+  fall has the body: see the validation of that evening for why) and
+  breathes out through `BreathInAir` for every miner. `OwnBody` reads
+  its `Full` and `Deep` for what it asks of its joints.
 - **S3b, the keeper (October 10): `Scripts/Units/OwnKeeper.cs`.** What
   keeps a body of its own up, taken out of `OwnBody` so that the game
   and the bench (`BodysOwnBench.Steps`, `StepSearch`) use one piece of

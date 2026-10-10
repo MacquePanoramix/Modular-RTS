@@ -2,6 +2,15 @@
 
 **Updated:** October 10, 2026.
 
+- **Luis saw step 1 with its switch on, on the evening of October 10:**
+  "I am loving the results." (That morning the switch had not been
+  ticked: what follows in this entry was said of the body as it was.)
+  Every miner now breathes on one clock, gently at rest and more the
+  more it has spent; the size made up that morning was "a bit too
+  strong" and is back to one
+  ([the message](Correspondence/2026-10-10_THE_SWITCH_TICKED.md);
+  [what is built](Design/TheBodysOwn.md#every-miner-breathes-october-10-evening)).
+  Whether step 1 is accepted is asked, not assumed.
 - **Luis looked at step 1 on October 10, and could hardly tell it from
   the body as it was:** "I couldn't really notice the difference. I
   could only really notice the breathing when the character fell."
@@ -804,13 +813,16 @@ Still valid from September 30:
   [Validation.md](Validation.md)).
 - **Evidence.** The full PlayMode suite passes, and Windows builds succeed.
   See [Validation.md](Validation.md).
-- **Not yet built:**
-  - a real character model (the body is still primitive segments with
-    exaggerated 2.2 m proportions);
-  - the character creator;
-  - an effort-driven swing (the swing is still the canned curve and clips);
-  - strength, mass and hauling gear;
-  - the landscape, sound and final art.
+- **Not yet built** (put right on October 10: this list was written in
+  September and had gone stale, as an outside review pointed out):
+  - the character creator at the quality the showcase asks (S2);
+  - carrying and hauling gear (S4);
+  - walking, reaching and working by the body's own joints (S3b, in hand:
+    only standing is built, and a step is begun);
+  - sound, and final art beyond the Ordinary Place.
+- **Built since that list was written:** the miners' own models (Small,
+  Long and Round); the swing by effort, with tool weight, grip, strength
+  and tiredness (S3); falling and getting up.
 
 ## Recommended next action
 
