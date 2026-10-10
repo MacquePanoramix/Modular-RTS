@@ -325,7 +325,12 @@ namespace WonderGather
             blend = next > row ? Mathf.InverseLerp(grip.radii[row], grip.radii[next], radius) : 0;
         }
 
-        private void Awake() => CaptureRest();
+        private void Awake()
+        {
+            CaptureRest();
+            // (Every miner breathes: the clock of its breath goes with its body.)
+            if (!TryGetComponent<MinerBreath>(out _)) gameObject.AddComponent<MinerBreath>();
+        }
 
         private static bool Pair(Transform[] values) => values != null && values.Length == 2 && values[0] != null && values[1] != null;
 

@@ -159,7 +159,7 @@ namespace WonderGather.Tests
                     // at rest, then tired.
                     if (Wanted("shoulders"))
                     {
-                        look.SetBreathLook(1);
+                        look.SetBreathLook(2);
                         own.Favour(0);
                         View(20, 1.5f, .7f);
                         yield return Wait(2);
@@ -174,7 +174,7 @@ namespace WonderGather.Tests
                     // Its breath seen in the air, after dusk: from its side and a little in front, nearer.
                     if (Wanted("air"))
                     {
-                        look.SetBreathLook(2);
+                        look.SetBreathLook(3);
                         float was = time.Hour;
                         time.Hour = 20.5f;
                         View(-65, 1.5f, .74f);
@@ -230,7 +230,7 @@ namespace WonderGather.Tests
             }
             finally
             {
-                Time.captureFramerate = 0; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.Alive = true; OwnBody.BreathShoulders = 0; OwnBody.BreathSeenInAir = false;
+                Time.captureFramerate = 0; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.Alive = true; OwnBody.BreathShoulders = 1; OwnBody.BreathSeenInAir = true;
                 var grass = UnityEngine.Object.FindAnyObjectByType<GrassField>();
                 if (grass != null) grass.enabled = true;
             }

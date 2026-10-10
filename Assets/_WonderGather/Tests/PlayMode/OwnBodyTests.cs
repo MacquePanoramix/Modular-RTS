@@ -28,7 +28,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.BreathShoulders = 0; OwnBody.BreathSeenInAir = false; OwnBody.BreathSize = OwnBody.BreathSizeAtFirst; }
+        public void Restore() { Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.BreathShoulders = 1; OwnBody.BreathSeenInAir = true; OwnBody.BreathSize = OwnBody.BreathSizeAtFirst; }
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
@@ -398,23 +398,27 @@ namespace WonderGather.Tests
                     }
                     rises = fulls > 0 && empties > 0 ? full / fulls - empty / empties : 0;
                 }
-                look.SetBreathLook(0);
+                look.SetBreathLook(1);
                 yield return Breathes(9);
                 float plain = rises;
-                look.SetBreathLook(1);
+                look.SetBreathLook(2);
                 Assert.That(look.BreathLook, Is.EqualTo("in its shoulders"));
                 yield return Breathes(9);
                 float shrugged = rises;
                 // In the air: nothing by day; puffs after dusk.
-                look.SetBreathLook(2);
+                look.SetBreathLook(3);
                 time.Hour = 13;
-                yield return Wait(9);
+                // (Every miner breathes all the while, this one too before its turn: what counts is what is breathed
+                // out from now.)
                 var air = unit.GetComponent<BreathInAir>();
-                int byDay = air != null ? air.Puffed : 0;
+                int before = air != null ? air.Puffed : 0;
+                yield return Wait(9);
+                air = unit.GetComponent<BreathInAir>();
+                int byDay = (air != null ? air.Puffed : 0) - before;
                 time.Hour = 21;
                 yield return Wait(9);
                 air = unit.GetComponent<BreathInAir>();
-                int byNight = air != null ? air.Puffed - byDay : 0;
+                int byNight = air != null ? air.Puffed - byDay - before : 0;
                 Debug.Log($"OWN_LOOKS_OF_BREATH {name}: its shoulders are drawn {plain * 1000:F1} mm higher over its chest full than empty as it was, and {shrugged * 1000:F1} mm with the look in its shoulders; in the air it breathed {byDay} puffs in nine seconds by day and {byNight} after dusk (cold {(air != null ? air.Cold : 0):F2}); it stands: {own.Stands}");
                 Assert.That(own.Stands && own.WentDown == 0, Is.True, name + " went down.");
                 Assert.That(shrugged - plain, Is.GreaterThan(.006f), name + ": its shoulders are not drawn rising with its breath.");
