@@ -364,8 +364,8 @@ namespace WonderGather
 
             // Where it wants the ground to push it: beyond where its weight is going, by how far that is from where it
             // holds it (catching itself on one leg, as near where its weight is going as its sole reaches).
-            Vector3 wants = going + felt / (falls * falls);
-            if (!(swings >= 0 && catching)) wants += Quick / falls * (going - holds);
+            // (Written in this order so that, with no step, it reckons exactly as it did.)
+            Vector3 wants = swings >= 0 && catching ? going + felt / (falls * falls) : going + Quick / falls * (going - holds) + felt / (falls * falls);
             Vector3 acts = new Vector3(wants.x, ground, wants.z);
             acted = Borne(acts, single, stance, unloaded, out float share);
             Outside = Flat(acts - acted).magnitude;
