@@ -100,8 +100,10 @@ namespace WonderGather
         }
         // The share of what the legs bear that is on the left one (the rest is on the right).
         public float OnLeft { get; private set; }
-        // Set while the body is bent to the ground by its own doing (PhysicalCarry: taking a tool up, laying it down):
-        // it takes no step to catch itself then. If its weight stays outside its feet, it still falls.
+        // Set while the body bends by its own doing (PhysicalCarry: to the ground, taking a tool up or laying it down;
+        // PhysicalSwing: taking the tool up to its work): it takes no step to catch itself then. If its weight stays
+        // outside its feet, it still falls. (Whichever of the two is enabled writes it at every step of the physics,
+        // and clears it when it is disabled: they are never both enabled.)
         public bool KeepsFeet;
         // How far its knees have given way under it (metres).
         public float GaveNow => gave;

@@ -3124,8 +3124,87 @@ The body's own body is off unless the panel's switch is on.
   frequent, and it is not drawn there. Whether the state as built is
   any worse than before cannot be told from one in fourteen against
   none in sixteen. **The miss itself (thirty centimetres, Long or
-  Round) is a fault older than this, and is not found.**
+  Round) is a fault older than this, and is not found.** (Found that
+  night: the next entry.)
 - **The build** was made from this state and copied to `Builds/`. Not
   opened by me.
 - **Not tested:** many miners breathing at once at dusk (each draws up
   to eight puffs); a miner out of breath from real work, seen at dusk.
+
+## S3b — the switch on from the start, and the miss at a low boulder (October 10, night)
+
+[Design/TheBodysOwn.md](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10).
+Luis accepted step 1 and its switch on from the start
+([the message](Correspondence/2026-10-10_STEP_ONE_ACCEPTED.md)).
+
+- **The switch.** "Stands by its own joints" is on from the start.
+  Every test of the body as it was says so after it loads the Ordinary
+  Place (`CaptureTools.AsItWas`, in 35 places). `OwnBodyTests` has an
+  eighth test, `TheSwitchIsOnFromTheStart` (a miner at ease stands by
+  its own joints without being asked; the body as it was is one click
+  away): **eight of eight pass.**
+- **Any test can be run as the game is played:** `-ownAsPlayed 1`
+  (`AsItWas` then does nothing). The mining test, so run, puts the
+  miner by its boulder as the body it was, lets it come to stand by its
+  own joints, and only then gives the order.
+- **The mining test now tells each blow** (`BOULDER_BLOWS`,
+  `BOULDER_SWINGS`, `BOULDER_ROCK`, `BOULDER_PLACE` in the log:
+  where it landed and on what, where the miner stood, what it did
+  between blows), and can be asked for a long stretch of one miner's
+  work (`-blowsAtLeast 20 -onlyWho Long`), the state before the first
+  mending (`-rockAsItWas 1`), only its first half (`-stepsTakingUp 1`),
+  breath drawn on every body (`-breathOnAll 1`), another strength
+  (`-rockStrength 1.5`), and pictures from the side (`-rockShots`).
+- **The first fault** (a tall miner at a low boulder swinging from off
+  its place), `BoulderTests.AMinerMinesABoulderByAClick` and long runs
+  of Long alone:
+
+  | | Neither change | Only "from its place" | Both |
+  |---|---|---|---|
+  | Steps towards the rock as it took its pickaxe up | 5 in 46 | 4 in 24 | 0 in 62 |
+  | Long runs with a blow 20 cm or more off | 1 of 7 | 0 of 5 | 0 of 9 |
+  | Runs of the test with one | 5 of 23 | | 0 of 25 |
+
+  **The runs are not separate tries** (they repeat a handful of
+  courses to the centimetre; the five bad runs were one course). What
+  counts for more is the check below.
+- **A new check in that test:** a miner carried 15 cm towards the rock
+  as a blow ends steps back to its place before it swings again. With
+  the mending: Small, Long and Round bring their next blow down from
+  0 to 1 mm from their places. Without it (`-rockAsItWas 1`): Long
+  from 150 mm, and the check fails, as it should. (Small and Round went
+  back before too, so the check tells only with Long.)
+- **The second fault** (a blow shared between a rock and a bush given
+  to the bush), found by running the test as played: before, 3 runs of
+  3 as played failed (Small's blows on "Bush_B": 30 of 30 in the run
+  where each was told); after, **5 of 5 as played pass, and 3 of 3 with
+  the switch off;** 95 blows of 95 on their rock.
+- **Tried, and taken out:** keeping its feet through the blow itself
+  (3 long runs: no step in 23 blows, and 18 of them 20 cm or more from
+  where they were meant).
+- **The third fault** (breath on a working miner's chest and
+  shoulders), `-breathOnAll 1`: Round's second blow 253 to 255 mm off
+  in each of the 6 runs in which it mined, before the first mending and
+  after. Not mended; breath is not drawn there.
+- **Tried, and not in the build:** breath drawn on the body as it was
+  whenever its hands are not at exact work: 6 runs of 6 pass. Not
+  looked at.
+- **Other strengths** (two runs each, after the changes, the switch
+  off): at 1.5, Long is never taken off its place, and one blow in
+  eight landed 253 mm from the plan, so that run failed; at 0.6, Small
+  did not get its pickaxe up within the test's 25 seconds (two of two).
+  Neither was run before the changes.
+- **Three reviewers** (the physicist, the sceptic, the builder) read
+  the first writing of it with the code and every run's telling. What
+  they found, and what was done:
+  [the design page](Design/TheBodysOwn.md#what-the-reviewers-said-1).
+- **The whole PlayMode suite:** 195 tests; **172 passed, none failed**, 23 are run only when asked.
+- **The whole suite as the game is played** (`-ownAsPlayed 1`): The whole suite so run, before the panel's line was mended: 155 pass and 17 fail (172 pass with the switch off). Two of the 17 were a fault of the game as played (the panel's line hid that a pickaxe lies by the miner), mended, and pass as played since; thirteen are tests that take the body by hand, which the game does not do to a body standing by its own joints; two measure a hand against how the body as it was stands. Sorted by reading each test, not by running each again ([the design page](Design/TheBodysOwn.md#the-whole-suite-as-the-game-is-played)).
+- **The build** was made from this state and copied to `Builds/`. Not
+  opened by me.
+- **Not tested:** other miners at other boulders than the test's three
+  (Small at boulder 1, Long at 3, Round at 4); a long stretch of work
+  for Small or Round; fifty runs with the start varied, which is what
+  would turn the counts above into odds; the switch on from the start
+  in a long session of play (a miner sent, put to work, rested and
+  left alone many times over).

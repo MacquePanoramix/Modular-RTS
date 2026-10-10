@@ -1,7 +1,38 @@
 # Wonder Gather — Current State
 
-**Updated:** October 10, 2026.
+**Updated:** October 11, 2026.
 
+- **Step 1 of the body's own is accepted by Luis (October 10, night):**
+  "Indeed yes to both": the miner standing by its own joints, with life
+  in it; and its switch on from the start. A miner at ease with empty
+  hands now stands so without being asked; the body as it was is one
+  click away. The looks of breath drawn together: "Yes that's perfect I
+  think." ([the message](Correspondence/2026-10-10_STEP_ONE_ACCEPTED.md)).
+  **It is the first thing of S3b that is accepted. The step (step 3) is
+  not: it is not in the game.**
+- **The pickaxe miss is found** (Luis: "Yes I think so, good
+  suggestion"). Three faults came out of it
+  ([the design page](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10);
+  three reviewers, whose findings changed it):
+  - **Mended:** a tall miner at a low boulder, taken off its place by
+    its own steps, sometimes swung from where it stood, and the blow
+    landed 30 cm off. It now swings only from its place, and keeps its
+    feet as it takes its pickaxe up.
+  - **Mended:** a blow that met its rock and a bush at once was given
+    to the bush, and the rock took nothing (Small, at one boulder: 3
+    blows of 8, and every blow when it had stood by its own joints
+    first). **Found only because a reviewer asked for the test as the
+    game is played;** it had been run only with the switch off.
+  - **Not mended:** breath drawn on a working miner's chest and
+    shoulders moves where its blows land (Round's, to 25 cm off). So a
+    miner at work, or resting from it, still shows its breath only in
+    the air at dusk.
+  - **Not mended either:** Long at a low boulder is still taken a
+    hand's length back by about one blow in three, and walks back to
+    its place each time. That is the swing itself, which becomes the
+    body's own in step 6.
+  - **Tests can now be run as the game is played** (`-ownAsPlayed 1`).
+    The whole suite so run, before the panel's line was mended: 155 pass and 17 fail (172 pass with the switch off). Two of the 17 were a fault of the game as played (the panel's line hid that a pickaxe lies by the miner), mended, and pass as played since; thirteen are tests that take the body by hand, which the game does not do to a body standing by its own joints; two measure a hand against how the body as it was stands. Sorted by reading each test, not by running each again ([the design page](Design/TheBodysOwn.md#the-whole-suite-as-the-game-is-played)).
 - **Luis saw step 1 with its switch on, on the evening of October 10:**
   "I am loving the results." (That morning the switch had not been
   ticked: what follows in this entry was said of the body as it was.)
@@ -10,14 +41,14 @@
   strong" and is back to one
   ([the message](Correspondence/2026-10-10_THE_SWITCH_TICKED.md);
   [what is built](Design/TheBodysOwn.md#every-miner-breathes-october-10-evening)).
-  Whether step 1 is accepted is asked, not assumed.
+  (Step 1 was accepted that night: above.)
 - **Luis looked at step 1 on October 10, and could hardly tell it from
   the body as it was:** "I couldn't really notice the difference. I
   could only really notice the breathing when the character fell."
   That was not intended. The standing breath is now drawn as large as
   the fallen one, and the panel can set its size
   ([the message](Correspondence/2026-10-10_STEP_ONE_LOOKED_AT_AND_AN_OUTSIDE_REVIEW.md)).
-  **Nothing of step 1 is accepted.**
+  (The switch had not been ticked: the entries above.)
 - **`main`:** Luis merged the work branch into `main` on October 10
   (pull request 3). What came after is on `claude/worker-showcase`.
 - **An outside review** of the whole project is kept, unchanged, in
@@ -25,16 +56,17 @@
   not direction. Nothing was changed because of it.
 
 - **Now: S3b, the body's own. Approved by Luis on October 9; step 0 is
-  done, step 1 is built, and Luis said on October 10 to go on. The two
-  more looks of breath are built (its shoulders rising; its breath seen
-  in the dusk air: five looks on the panel, for Luis to choose
-  between). Step 3, a step, is begun on the work branch (not in the
+  done, step 1 is built and accepted, and Luis said on October 10 to go
+  on. The looks of breath (its chest, its shoulders rising, its breath
+  seen in the dusk air) are drawn together, by Luis's word; each can
+  still be seen alone on the panel. Step 3, a step, is begun on the
+  work branch (not in the
   game): a shoved body now catches itself with a step far more often;
   a body pulled and held does not yet** ([the plan](NextMilestonePlan.md);
   [the design as it is built](Design/TheBodysOwn.md);
   [Luis's answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
-  - **Step 1 is built (October 10), and is off unless it is switched
-    on** ([the design](Design/TheBodysOwn.md#step-1-the-rest-of-it-the-body-in-the-game-and-the-life-in-it-october-9-and-10);
+  - **Step 1 is built (October 10), accepted, and on from the start**
+    ([the design](Design/TheBodysOwn.md#step-1-the-rest-of-it-the-body-in-the-game-and-the-life-in-it-october-9-and-10);
     [its judges](Reviews/2026-10-10_StandingWithLife_Judges.md);
     [how to look at it](Playtests/MinersPlaytest.md#standing-by-its-own-joints-october-10)).
     - **The panel has a switch, "Stands by its own joints".** The chosen
@@ -60,8 +92,8 @@
       weight; for breath, the shoulders rising and breath seen in the
       dusk air are tried next, beside the three looks; the step
       (step 3) is built before the knees onto the feet (step 2).
-      **Not said:** whether the build was opened. Nothing of step 1 is
-      recorded as accepted.
+      (Said then: nothing of whether the build was opened. Step 1 was
+      accepted later that day.)
     - **A fault of the keeper found by tracing:** it asked the ground to
       push from beyond the edge of a sole, which only tips the boot.
   - **Step 0 found** ([figures](Design/TheBodysOwn.md#step-0-the-ground-for-it-october-9)):

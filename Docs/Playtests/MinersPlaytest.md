@@ -392,24 +392,28 @@ player log.
 
 ## Standing by its own joints (October 10)
 
-**New on the panel** (the Ordinary Place; nothing is different until
-the switch is on):
+**On from the start since the night of October 10** (Luis: "Indeed yes
+to both"). A miner at ease with nothing in its hands stands by its own
+joints without being asked. **To see the body as it was, untick
+"Stands by its own joints".**
+
+**On the panel** (the Ordinary Place):
 
 | On the panel | What it does |
 |---|---|
-| **Stands by its own joints (at ease, hands empty)** | A switch. On: the chosen miner, when it stands at ease with nothing in its hands, stands by what its own hips, knees and ankles give. Off: as it was |
+| **Stands by its own joints (at ease, hands empty)** | A switch, on from the start. On: the chosen miner, when it stands at ease with nothing in its hands, stands by what its own hips, knees and ankles give. Off: as it was |
 | **Nudge it** | Sets its whole body going the way the view looks, at 0.15 m/s. (Only while it stands by its own joints) |
 | **Breath: all together / in its chest only / in its shoulders / seen in the air (dusk to dawn) / as in life / not drawn** | How its breath is drawn. It begins with all of them together (since the evening of October 10); press to see each alone. **The breath in the air shows from dusk to dawn (keys `4` and `6`):** by day nothing is seen. Every miner breathes in the air; only one standing by its own joints, or fallen, shows it in its chest and shoulders |
 | **Tire it** | Makes the chosen miner tired at once, as after hard work, to see it breathe so. It rests as it does after work |
 | **Breath size** (a slider) | How large its breath is drawn, from nought to three. It begins at one (1.6 was "a bit too strong"): **move it if it is not right, and tell me the number** |
 
-**The switch must be on** for a standing miner to show its breath in
-its chest and shoulders. Without it, it stands as it did, and breathes
-only in the air, from dusk to dawn. (On the morning of October 10 it
-was looked at with the switch off, and nothing was seen.)
+**The switch must be on** (it is, unless it was unticked) for a
+standing miner to show its breath in its chest and shoulders. Without
+it, it stands as it did, and breathes only in the air, from dusk to
+dawn. (On the morning of October 10 it was looked at with the switch
+off, and nothing was seen.)
 
-**What to try.** Choose a miner, switch it on, and watch it for a
-minute from near. Nudge it from several sides. Push it over ("Push it
+**What to try.** Choose a miner and watch it for a minute from near. Nudge it from several sides. Push it over ("Push it
 over"): it should fall as before, get up, and stand by its own joints
 again. Send it somewhere: it should walk as before and stand so again
 where it stops. Tire it and watch its breath. Then switch it off and
@@ -435,6 +439,21 @@ look at the same miner standing as it did.
   up). It does not lean against a pull as the posed body does.
 - **Only the chosen miner** stands so, and only with empty hands. With
   a pickaxe in its hand, or at its work, it is the posed body.
+- **A miner at work, or resting from its blows with its pickaxe at its
+  side, does not heave.** It shows its breath only in the air, from
+  dusk to dawn. Drawn on a working miner's shoulders, breath moved
+  where its blows landed
+  ([why](../Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10)).
+
+**At a boulder (the night of October 10).** A tall miner at a low
+boulder is still taken a hand's length back by its own blow, about one
+blow in three, and steps back to its place before the next: that is not
+new, and not mended. What is mended: it no longer swings from where it
+was taken to; and a blow that meets the rock and a bush growing against
+it now counts for the rock (Small's five blows at one boulder took 16
+to 21 seconds, and take 13). If a blow lands well off its spot, or a
+miner strikes and nothing comes of it, I would like to hear of it, with
+which miner and which boulder.
 - Long's chin held up, the arms hanging away from the body, Round's
   shut eyes: these are how the models are made, and show more on a
   still body seen from near.

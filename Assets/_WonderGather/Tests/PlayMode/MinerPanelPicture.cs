@@ -22,6 +22,7 @@ namespace WonderGather.Tests
             string who = CaptureTools.Argument("-panelMiner") ?? "Round";
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             var choice = Object.FindAnyObjectByType<MinerChoice>();
             var look = Object.FindAnyObjectByType<MinerWorkPreview>();

@@ -18,7 +18,11 @@ steps built, waiting for Luis's play) is archived in
 
 **The design as it is built:** [Design/TheBodysOwn.md](Design/TheBodysOwn.md).
 
-**Where it stands:** step 0 is done (October 9): figures, and a bench;
+**Where it stands:** step 1 (standing, with life in it) is **accepted
+by Luis** (October 10, night:
+[the message](Correspondence/2026-10-10_STEP_ONE_ACCEPTED.md)), and its
+switch is on from the start. Step 3 (a step) is in hand, and is not in
+the game. Step 0 is done (October 9): figures, and a bench;
 nothing in the game is changed by it
 ([what it found](Design/TheBodysOwn.md#step-0-the-ground-for-it-october-9)).
 **It changed the plan:** see "What step 0 changed", below. Nothing else
@@ -156,7 +160,7 @@ kept as they were, so that what is written elsewhere still points right.
 | | Step | It is to bring | What Luis sees |
 |---|---|---|---|
 | 0 (done) | **The ground for it.** Ankles: the boot becomes a part of its own (today the shin and the boot are one, and a body cannot balance at an ankle it does not have). The test that nothing pushes from nowhere. Today's posed body measured for the table above. What a body's own costs in the frame, one miner and a crowd | | Figures |
-| 1 (built October 10; for Luis to see) | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
+| 1 (built October 10; **accepted by Luis** that night) | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
 | 2 | **From its knees onto its feet.** The half second that is posed in the getting up. Then the whole of it, from the fall to standing, is the body's own | Not all on one clock (2) | A pushed miner getting up with nothing taking over |
 | 3 | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
 | 4 | **Walking, turning, stopping.** On the path, the meadow and its slopes. No two steps quite the same. The free arm swings | Arcs and one hump of speed (5); does not repeat itself (6) | The walk, beside the walk as it was |
@@ -380,13 +384,21 @@ degree... the breath should be gentle... scale appropriately with
 situation"; B10, "all three options looked good" and the size of that
 morning "a bit too strong"; B11, "Sure can be thanks!"
 
-**Asked after that, and not answered yet:**
+**Asked after that, and answered by Luis that night**
+([the message](Correspondence/2026-10-10_STEP_ONE_ACCEPTED.md)):
+
+| | Question | What I thought | Luis |
+|---|---|---|---|
+| B12 | Is step 1 (standing by its own joints, with life in it) accepted? And may the switch be on from the start, so that a miner at ease stands so without being asked? | Yes to both: Luis likes it, and the switch being off is what hid it. The body as it was stays one click away | **"Indeed yes to both."** Done: the switch is on from the start |
+| B13 | Are the looks of breath to be drawn together (chest, shoulders, and the air from dusk to dawn), as they now are? | Yes | **"Yes that's perfect I think."** |
+| B14 | A miner's blows at a boulder sometimes land thirty centimetres off (one try in thirty; five in fifteen while breath was drawn on its shoulders). Is that to be found now, before the step goes on, or after? | Now: it is a miss Luis could see in the game, and it is what keeps breath off a miner at work | **"Yes I think so, good suggestion."** Found: [three faults, two mended](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10) |
+
+**One thing for Luis to say, when it matters to Luis** (nothing waits
+on it):
 
 | | Question | What I think |
 |---|---|---|
-| B12 | Is step 1 (standing by its own joints, with life in it) accepted? And may the switch be on from the start, so that a miner at ease stands so without being asked? | Yes to both: Luis likes it, and the switch being off is what hid it. The body as it was stays one click away |
-| B13 | Are the looks of breath to be drawn together (chest, shoulders, and the air from dusk to dawn), as they now are? | Yes |
-| B14 | A miner's blows at a boulder sometimes land thirty centimetres off (one try in thirty; five in fifteen while breath was drawn on its shoulders). Is that to be found now, before the step goes on, or after? | Now: it is a miss Luis could see in the game, and it is what keeps breath off a miner at work |
+| B15 | A miner resting from its blows does not heave: breath is drawn on the chest and shoulders only of a miner standing by its own joints with empty hands, or down ([why](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10)). Is that to wait for walking and the work to become the body's own (steps 4 and 6), or to be done on the body as it was first (about a day)? | Wait. It comes of itself with steps 4 and 6, and a day on the body as it was is a day not spent on them |
 
 **The questions as they were put that morning:**
 

@@ -74,6 +74,7 @@ namespace WonderGather.Tests
             var sets = new HashSet<string>((CaptureTools.Argument("-captureSets") ?? "orbit,distances,zones,walk,motion,fresh,work").Split(','));
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             Time.captureFramerate = 30;
             try

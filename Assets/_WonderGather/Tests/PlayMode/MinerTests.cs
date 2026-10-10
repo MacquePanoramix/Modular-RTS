@@ -20,6 +20,7 @@ namespace WonderGather.Tests
         {
             PlayerPrefs.DeleteKey("WonderGather.Miner");
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             choice = Object.FindAnyObjectByType<MinerChoice>();
             ground = Object.FindAnyObjectByType<OrdinaryGround>();

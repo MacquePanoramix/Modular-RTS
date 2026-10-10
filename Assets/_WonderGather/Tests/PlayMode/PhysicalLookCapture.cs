@@ -26,6 +26,7 @@ namespace WonderGather.Tests
             float weight = float.Parse(CaptureTools.Argument("-lookWeight") ?? "1", culture);
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             Time.captureFramerate = 50;
             try

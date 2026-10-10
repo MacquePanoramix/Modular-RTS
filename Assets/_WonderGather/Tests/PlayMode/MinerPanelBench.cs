@@ -45,6 +45,7 @@ namespace WonderGather.Tests
             var culture = CultureInfo.InvariantCulture;
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             int miners = UnityEngine.Object.FindAnyObjectByType<MinerChoice>().Count;
             try
@@ -56,6 +57,7 @@ namespace WonderGather.Tests
                             // Each try in a place loaded afresh: what one did is not the next one's.
                             Time.captureFramerate = 0;
                             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+                            CaptureTools.AsItWas();
                             yield return null;
                             // -panelFrames: the frames a second it is run at (50, the physics' own rate, unless it is said).
                             Time.captureFramerate = (int)Numbers("-panelFrames", 50)[0];

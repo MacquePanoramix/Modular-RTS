@@ -19,6 +19,7 @@ namespace WonderGather.Tests
         [UnitySetUp] public IEnumerator Load()
         {
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             time = Object.FindAnyObjectByType<TimeOfDay>();
             look = Object.FindAnyObjectByType<LookDevControls>();

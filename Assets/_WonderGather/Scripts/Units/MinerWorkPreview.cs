@@ -320,7 +320,7 @@ namespace WonderGather
             swing.KneesAtMost = float.MaxValue; kneeTries = 0;
             var found = RockWork.Find(boulder, swing, biped, tall, working.transform.position);
             if (!found.found) { Say("It finds no place to stand and strike at that boulder"); return; }
-            mining = boulder; plan = found; tries = 0;
+            mining = boulder; plan = found; tries = 0; wentBack = 0;
             // (Why an earlier rock was given up is not why this one will be.)
             LeftRock = "";
             // (Its knees are read once for the order, the first time it bends to its work there: not again when it
@@ -486,6 +486,7 @@ namespace WonderGather
                 carry.enabled = false;
                 swing.enabled = true;
                 Aims();
+                RockTells?.Invoke("sets to work: " + Stands() + "; the aim misses by " + (swing.AimMiss * 1000).ToString("0") + " mm");
                 swing.TakeUp();
                 headBlows = hands.Thing.HeadBlows; tookThisSwing = false;
                 return;
@@ -532,12 +533,17 @@ namespace WonderGather
             // measured it (the head's speed at the step before it struck).
             if (!tookThisSwing && swing.Current.struck && (swing.phase == PhysicalSwing.Phase.Drive || swing.phase == PhysicalSwing.Phase.Struck))
             {
-                tookThisSwing = true;
+                tookThisSwing = true; wentBack = 0;
                 // Where it landed: the side of the head's striking ball that met the rock. (The engine finds a fast
                 // contact a step ahead, and gives its place as where the head then was: up to a step's travel short.)
                 Vector3 landed = swing.Current.landed - plan.outward * swing.tool.HeadRadius;
                 var struck = hands.Thing.LastHeadBlow.struck;
+                // (Its head may meet the rock and something else in the same step, a bush that grows against the
+                // boulder: the rock's touch counts, whichever was told last. October 10: Small's blows at one boulder
+                // were given to a bush three times in eight, and the rock took nothing of them.)
+                if (struck != mining.Rock && hands.Thing.HeadStruck(mining.Rock, Time.time - .5f)) struck = mining.Rock;
                 StruckLast = struck != null ? struck.name : "nothing";
+                RockTells?.Invoke("a blow: " + Stands() + "; it landed on " + StruckLast + (struck == mining.Rock ? " (its rock)" : "") + " with " + swing.Current.energy.ToString("0") + " J");
                 if (struck == mining.Rock) mining.Strike(landed, plan.outward, swing.Current.energy);
                 // A piece that lies where the pick lands is knocked aside: the rock takes nothing of that blow.
                 else if (struck != null && struck.GetComponentInParent<LooseStone>() is LooseStone piece) piece.Knocked(plan.outward, swing.Current.energy);
@@ -548,8 +554,30 @@ namespace WonderGather
                 && ((working.transform.position - aimedAt).sqrMagnitude > .0001f || Vector3.Angle(working.transform.forward, aimedFacing) > 1))
             {
                 Aims();
+                RockTells?.Invoke("aims again: " + Stands() + "; the aim misses by " + (swing.AimMiss * 1000).ToString("0") + " mm");
                 if (swing.AimMiss > .05f) GoToRock();
+                else if (short_.magnitude > SwingsWithin && wentBack < GoesBackAtMost) { wentBack++; GoToRock(); }
             }
+        }
+
+        // At a boulder a swing is begun only from its place: stood further from it than this (metres), it steps
+        // back to its place first, wherever it could reach from. (It aimed again from where it stood, and went
+        // back only if the spot was out of its reach: a hand's length too near the rock the spot is in reach,
+        // and the blow from there landed 30 cm off. October 10.)
+        public static float SwingsWithin = .06f;
+        // (So many times without a blow between; after that only if its spot is out of its reach, as before: it is
+        // not to go back and forth for ever at a place it cannot keep.)
+        private const int GoesBackAtMost = 3;
+        private int wentBack;
+
+        // (For whoever looks at its work at a rock, a test: what it does between its blows. Nobody listens in the game.)
+        public static System.Action<string> RockTells;
+        private string Stands()
+        {
+            Vector3 from = Vector3.ProjectOnPlane(working.transform.position - plan.stand, Vector3.up), to = Vector3.ProjectOnPlane(plan.spot - plan.stand, Vector3.up);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} at {1:0.00} s, {2:0} mm from its place ({3:0} towards the rock), facing {4:0} deg off its spot",
+                working.name, Time.time, from.magnitude * 1000, Vector3.Dot(from, to.normalized) * 1000,
+                Vector3.SignedAngle(Vector3.ProjectOnPlane(plan.spot - working.transform.position, Vector3.up), working.transform.forward, Vector3.up));
         }
 
         private void Aims()
@@ -594,7 +622,9 @@ namespace WonderGather
             physical.Worked(PhysicalBody.Muscles.Legs, 1, 15);
             physical.Worked(PhysicalBody.Muscles.Back, 1, 15);
         }
-        private bool ownWanted;
+        // (On from the start since October 10: Luis accepted the body standing by its own joints, and that its
+        // switch be on. The body as it was is one click away.)
+        private bool ownWanted = true;
         private SelectableUnit ownOf;
         public bool StandsByItsOwn => ownWanted;
         public void SetOwn(bool wanted) => ownWanted = wanted;
@@ -859,11 +889,13 @@ namespace WonderGather
                 if (choice != null && choice.Current != null && choice.Current.TryGetComponent<PhysicalFall>(out var lies) && lies.Now != PhysicalFall.State.Up)
                     return lies.Now == PhysicalFall.State.Rising ? "It is on its knees, and stands up." : lies.Now == PhysicalFall.State.Gathering ? "It gets itself up." : Fallen(lies);
                 if (tells) return said + ".";
+                // (That a pickaxe lies by it, and how to pick it up, is said however it stands: with the switch on from
+                // the start, a line of its standing alone hid it. The line has room for two short sentences. October 10.)
+                bool oneLies = NearestLying(Vector3.zero) != null;
                 var own = Own;
-                if (own != null && own.Stands)
-                    return own.Leaning.magnitude > .01f ? "It stands by its own joints, and leans against what pushes it." : "It stands by its own joints.";
-                if (ownWanted) return "It will stand by its own joints when it is at ease, with nothing in its hands.";
-                return NearestLying(Vector3.zero) != null ? "Nothing in its hands. A pickaxe lies on the ground: Space and a click on it, to pick it up."
+                if (own != null && own.Stands && own.Leaning.magnitude > .01f) return "It stands by its own joints, and leans against what pushes it.";
+                if (oneLies) return "Nothing in its hands. A pickaxe lies on the ground: Space and a click on it, to pick it up.";
+                return own != null && own.Stands ? "It stands by its own joints. Nothing in its hands, and no pickaxe on the ground."
                     : "Nothing in its hands, and no pickaxe on the ground.";
             }
             if (down) return fall != null && fall.Now == PhysicalFall.State.Lying ? Fallen(fall) + " Its pickaxe lies where it left its hands." : "It fell: its pickaxe lies where it left its hands.";

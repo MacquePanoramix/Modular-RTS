@@ -15,6 +15,8 @@ namespace WonderGather
     {
         // So many puffs to a breath out, so far apart (seconds), where it is seen in the air. Its shoulders are let
         // rise, or let down, over this long (seconds) as its body becomes its own, or is given back.
+        // (To measure what it does to a blow: drawn on every body. Not in the game.)
+        public static bool OnEveryBody;
         private const int PuffsABreath = 3;
         private const float PuffsApart = .16f, ShouldersIn = .4f;
         private Breath breath;
@@ -64,13 +66,14 @@ namespace WonderGather
 
             // What is drawn of it.
             float size = OwnBody.BreathSize, fills = breath.Full * breath.Deep;
-            // (Its chest and its shoulders are drawn so only while it stands by its own joints, or is down. Drawn on a
-            // miner standing or walking as it did, its blows at a boulder afterwards landed thirty centimetres off in
-            // five tries of fifteen, and in one of thirty without: a swing is planned from where its shoulders are
-            // drawn, and something there turns on a centimetre. Until that is found, the body as it was shows its
-            // breath only in the air.)
+            // (Its chest and its shoulders are drawn so only while it stands by its own joints, or is down. On the
+            // body as it was its arms hang from where its shoulders are drawn: drawn higher by a breath as a blow
+            // came down, Round's blows at a boulder landed 25 cm from where they were meant in six runs of eight,
+            // and 12 to 14 cm without. Walking and the work become the body's own in S3b's steps 4 and 6, where a
+            // breath is asked of the joints themselves; until then the body as it was shows its breath only in
+            // the air. October 10, night.)
             if (own == null) TryGetComponent(out own);
-            bool shown = (own != null && own.Stands) || (fall != null && fall.Now != PhysicalFall.State.Up);
+            bool shown = OnEveryBody || (own != null && own.Stands) || (fall != null && fall.Now != PhysicalFall.State.Up);
             shoulders = Mathf.MoveTowards(shoulders, shown ? 1 : 0, dt / ShouldersIn);
             miner.Swell = shoulders * Mathf.Min(OwnBody.SwellAtMost * size, OwnBody.BreathSwell * fills * OwnBody.BreathShown * size);
             miner.Shrug = OwnBody.ShouldersRise * stature * OwnBody.BreathShoulders * size * shoulders * breath.Full * Mathf.Min(breath.Deep, 1.4f);

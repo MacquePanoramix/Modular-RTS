@@ -941,10 +941,261 @@ appropriately with situation".
 **Why not yet on the body as it was.** Drawn there, a miner's blows at
 a boulder afterwards landed thirty centimetres from where they were
 meant in five tries of fifteen (`BoulderTests.AMinerMinesABoulderByAClick`;
-one try in thirty without). A swing is planned from where the miner's
-shoulders are drawn, and something in that turns on a centimetre. That
-is a fault of its own, older than breath (the same test failed once on
-October 9), and it is to be found before breath is drawn on a miner at
-work. So today **a miner that has worked hard shows it in the air at
-dusk, and on its chest and shoulders only once it stands by its own
-joints with empty hands, or is down.**
+one try in thirty without). So today **a miner that has worked hard
+shows it in the air at dusk, and on its chest and shoulders only once
+it stands by its own joints with empty hands, or is down.**
+
+(As first written, this paragraph said the miss was "a fault of its
+own, older than breath", to be found. It was found the same night, and
+it is two faults: [below](#the-miss-at-a-low-boulder-october-10).)
+
+### The miss at a low boulder (October 10)
+
+Luis, asked whether the miss was to be found before the step goes on:
+"Yes I think so, good suggestion."
+([the message](../Correspondence/2026-10-10_STEP_ONE_ACCEPTED.md)).
+
+**In short.** Three faults came out of it. Two are mended.
+
+1. **A tall miner at a low boulder swung from off its place, now and
+   then,** and that blow landed 30 cm from where it was meant. Mended.
+2. **A blow that met its rock and a bush in the same instant was given
+   to the bush,** and the rock took nothing. Found only when the test
+   was run as the game is now played, which a reviewer asked for.
+   Mended.
+3. **Breath drawn on a working miner's chest and shoulders moves where
+   its blows land.** Not mended: so breath stays off the chest and
+   shoulders of the body as it was.
+
+And the swing at a low boulder is still ungainly: see "Not mended".
+
+One more thing came of the reviewers' question, and it is about me, not
+the miner: **the switch had gone on from the start without the game
+once being run so through its tests.** It has been now
+([below](#the-whole-suite-as-the-game-is-played)).
+
+**How it was looked for.** The mining test now tells every blow: how
+far from where the plan put it, and which way; what it landed on;
+whether the tool was turned in the hands; where the hands held it;
+where the miner stood when the blow began to come down and when it
+struck; and what the miner did between its blows. Then the test was
+run many times over, and Long alone for long stretches of work (twelve
+or thirteen blows a run).
+
+**What was not the matter.** The tool is not turned in the hands (17
+degrees round its handle at the most, 8 or less for Long and Round),
+the hands hold it at the same places in every blow, and no rest comes
+between the blows of the test.
+
+#### The first fault: swinging from off its place
+
+Long, at a boulder whose spot is a third of a metre over the ground:
+
+| | |
+|---|---|
+| As a blow comes down, its own step to catch itself takes it back off its place | 10 to 16 cm, about one blow in three (28 of 89 blows in the long runs before the change, 41 of 116 after: the change does nothing to it). Never while it lifts (0 mm in each of 72 blows where that was measured) |
+| It went back to its place before its next blow | Only if its spot was out of reach from where it stood. After a step back it always was (the aim missing by 84 to 138 mm) |
+| Back at its place, taking its pickaxe up again, its own bow took it a step towards the rock | 5 times in 46 that it came back (two of them seen 3 and 4 cm into the step, and sent back; three of 12 to 16 cm). Always 0.86 to 1.0 s after it set to work: as the taking up ends. Its bending moves its weight as a loss of balance would, and it stepped to catch itself |
+| From there (16 to 20 cm too near, and a little to one side) its spot was in reach, so it swung | And the blow landed 307 to 315 mm from where the plan put it, beyond the spot and to the right |
+
+Small and Round were never taken off their places at their boulders.
+
+**What was done.**
+
+- **At a boulder a swing is begun only from its place.** Stood more
+  than 6 cm from it, the miner steps back to its place first, wherever
+  it could reach from (`MinerWorkPreview.SwingsWithin`). Three times
+  at the most without a blow between; after that as before, so that it
+  cannot go back and forth for ever at a place it cannot keep.
+- **Taking the tool up to its work, it keeps its feet,** as it already
+  does when it bends to the ground for a tool: its hips go where its
+  weight is at ease, and it takes no step to catch itself
+  (`PhysicalSwing.KeepsFeetTakingUp`; after a rest too; for a second
+  and a half at the most, since a body that keeps its feet falls if
+  its weight stays outside them).
+
+**What each does, measured alone** (Long alone, long runs):
+
+| | Steps towards the rock as it took its pickaxe up | Blows 20 cm or more from where they were meant |
+|---|---|---|
+| Neither change | 5 in 46 times it came back | 1 run of 7 (and 5 runs of 23 of the test itself) |
+| Only the first (it swings only from its place) | 4 in 24 | 0 runs of 5: it was sent back each time |
+| Both | 0 in 62 (0 in 103 with two more batches) | 0 runs of 9 (and 0 of 25 of the test itself) |
+
+**How much these counts are worth.** Less than they look, and the
+reviewers said so before I did. The runs are not separate tries: the
+engine does the same thing each time, and a run falls into one of a
+handful of courses that repeat to the centimetre. Long's 23 runs of the
+test before were about six courses; the five bad runs were one course,
+met five times, four of them in the two earliest batches. Against the
+later batches alone it is 1 of 16 before and 0 of 25 after, which
+proves nothing by counting. What stands on firmer ground:
+
+- what was seen to happen in the bad course (the step towards the
+  rock, then the swing from there, told blow by blow);
+- that the first change makes that course impossible by rule, and the
+  test now makes it happen: a miner carried 15 cm towards the rock as
+  a blow ends steps back to its place before it swings again. Without
+  the change Long brings its next blow down from 150 mm off its place,
+  and the test fails; with it, from 0 to 1 mm. (Small and Round went
+  back before too: from 15 cm nearer, their spots are out of reach. So
+  the check tells only with Long.)
+- the steps towards the rock, which are separate events: 4 in 24
+  without the second change, none in 62 with it.
+
+**What the changes cost.** Round's second blow lands a centimetre and
+a half further from the plan than it did (135 mm, from 119), and one
+of its fourth blows 143: it too now keeps its feet as it takes its
+pickaxe up, and stands a little differently for it. Nothing else was
+seen to change.
+
+#### The second fault: a rock and a bush at once
+
+The sceptic among the reviewers pointed out that every run above was
+made with "Stands by its own joints" off, and that the game is now
+played with it on. So the test was run as played (the miner standing
+by its own joints when it is told to mine): **it failed three times of
+three.** Small swung thirty times at its boulder and the rock took
+nothing.
+
+Told what each blow landed on, the answer was one word: "Bush_B". A
+bush grows against that boulder where Small strikes. The pick's head
+meets the rock and the bush's leaves in the same step of the physics;
+each touch is told on its own, in no order that means anything; and
+the blow was given to whichever was told last.
+
+| | Blows that went to the bush |
+|---|---|
+| As the tests ran (the switch off) | 3 of Small's first 8, in the run where each blow was told. Small's five blows took 16 to 21 seconds in every run before |
+| As the game is played (the switch on) | 30 of 30 in the run where each was told. In three more: none taken by the rock in 90 seconds, or five in 71 |
+
+So the fault is older than this work, and showed in every run as a
+slower Small. Standing by its own joints first does not cause it; it
+only shifts by a hair which touch is told last.
+
+**What was done.** A blow counts for the rock if the head touched the
+rock in that blow, whatever else it touched (`HeldThing.HeadStruck`).
+
+**After.** 95 blows of 95 landed on their rock, as played and as the
+tests ran. Small's five blows take 13.3 s. The test as played: 5 of 5
+pass, with figures like those with the switch off.
+
+**Not looked into:** that a bush is solid to a pickaxe at all. A head
+that met the leaves before the rock would stop on them.
+
+#### The third fault: breath and blows
+
+With breath drawn on every body's chest and shoulders, at work too (a
+switch for the test only):
+
+| | Without | With |
+|---|---|---|
+| Round's blows, from where the plan put them | 29 to 143 mm | its second blow 253 to 255 mm, in every run in which it mined (6 of 6 before the first fault was mended, 6 of 6 after) |
+| Long's | 73 to 187 mm | its first blow 199 to 200 mm in 1 run of 7 before, 3 of 8 after |
+| Small's | 60 to 84 mm | 60 to 86 mm |
+
+A miner's arms hang from where its chest and shoulders are drawn, and
+a breath moves them by two to five centimetres. **How that becomes
+twelve centimetres more at the pick's head I have not traced:** it is
+what I take to be the cause, not a thing shown. What is shown is that
+with breath drawn the blows move, and without it they do not.
+
+So of what I told Luis that evening ("the swing is planned from where
+the shoulders are drawn"): right of this fault, as far as it goes, and
+wrong of the first.
+
+**One more thing tried: its breath drawn whenever its hands are not at
+exact work** (not in a swing, but for the rest it takes from it; not
+bent to the ground for a tool). The test passed six runs of six, with
+blows as without. **It is not in the build.** I have not looked at it:
+a hand that holds a tool may be drawn off its handle as the shoulder
+rises (my reading of how the arm is drawn, not a thing seen); and
+walking and the work become the body's own in steps 4 and 6, where a
+breath is asked of the joints themselves. It is about a day's work to
+do properly on the body as it was, if Luis wants a resting miner to
+heave before then ([asked](../NextMilestonePlan.md#questions-for-luis)).
+
+#### The whole suite, as the game is played
+
+After that the whole suite was run as played (`-ownAsPlayed 1`: the
+switch on, as it now is from the start). With the switch off, as every
+test but the standing body's own had been run: 172 pass, none fail. As
+played: **155 pass, 17 fail.**
+
+| The 17 | | |
+|---|---|---|
+| 2 | **A fault of the game as played, mended.** The panel's line of words said only "It stands by its own joints", and no longer that a pickaxe lies by the miner and how to pick it up | `MinerPanelTests` (two). The line says so again, however the miner stands |
+| 13 | Tests that take the body by hand: put it somewhere at once, let it go, pull it, or give it its tool themselves. The game does none of that to a body standing by its own joints (it is given back to the posed body first, when it is sent or put to work). Among them: pulled with a quarter of its weight a miner standing by its own joints falls, where the posed one leans. That is step 1's known limit, and nothing in the game pulls a miner yet | `PhysicalBodyTests` (five), `PhysicalFallTests` (three), `PhysicalBalanceTests` (two), `MinerToolTests`, `EvidenceTests`, and the second test of `BoulderTests`, one each |
+| 2 | Measures of a hand taken against how the body as it was stands: one is 1 cm over its limit; the other is 29 mm off, which is the rise of its shoulders in a breath | `HungThingTests`, `MinerTests`, one each |
+
+**That sorting is by reading how each test sets its miner up. The 15
+were not each run again with the miner put there as the game would.**
+What does pass as played, and goes through the game's own doors (a
+click, the panel): mining a boulder by a click, the pickaxe picked up
+and laid down, a thing taken in hand and hung back, a rest and back to
+work, being sent (`BoulderTests`' first test, `InteractionTests`,
+`MinerPanelTests`, `OwnBodyTests`).
+
+#### Tried, and taken out
+
+- **Keeping its feet through the blow itself.** It then stood where it
+  was (no step in 23 blows), which is the first fault at its root. But
+  18 of the 23 landed 20 cm or more from where the plan put them (19 to
+  28 cm), beyond the spot: where a blow is planned to land is reckoned
+  for a body whose hips go back as the blow comes down. To use it, the
+  plan of the blow would have to be made again.
+- **Lowering the tool without striking if the body had stepped while
+  lifting.** It never does step while lifting, so this never happened.
+
+#### Not mended, and why
+
+- **The step back as a blow comes down** (Long, at a low boulder, about
+  one blow in three). Each costs it the walk back to its place: it is
+  ungainly, and slow. It is the fault written up as R9 in
+  [the physical body](ThePhysicalBody.md), and it belongs to the swing
+  itself. The swing becomes the body's own in step 6 of this plan; I
+  have not rebuilt the posed one for it.
+- **A step towards the rock as a blow comes down.** Seen once, in
+  about 200 blows of the long runs before the change: Long struck from
+  11 cm off its place, and the blow landed 234 mm off, to one side.
+  Neither change touches it (they act before a swing begins, not in
+  it). Not seen in the 116 blows since, which shows nothing.
+- **Too near its rock, it turns about to go back.** A miner taken
+  towards the rock turns round, walks the hand's length, and turns
+  again (it walks the way it faces). It was so before, whenever its
+  spot was out of reach; it is rare now that it keeps its feet taking
+  the tool up. A step backwards would be the natural thing. Not built.
+- **Long's blows come within a centimetre or two of the test's limit**
+  with nothing wrong (187 mm against 200). A run could fail there by a
+  hair. Part of every such distance is how the engine reports a fast
+  blow (up to a step of the head's travel short of where it lands).
+- **At other strengths.** At one and a half times its strength Long is
+  not taken off its place at all, and one blow in eight landed 25 cm
+  short of the plan: the blow itself, not the place. At 0.6 of its
+  strength Small did not get its pickaxe up within the test's 25
+  seconds, in two runs of two (not looked into; not run before the
+  changes either, so I cannot say it is old). Two runs each, no more.
+
+#### What the reviewers said
+
+Three separate agents who did not make the change (the physicist, the
+sceptic, the builder: Luis's standing word of October 9) were given the
+first writing of this section, the code and every run's telling. Each
+finding was checked before it was acted on.
+
+| What was said | By | Checked | Done |
+|---|---|---|---|
+| **Every run was made with the switch off; nothing measures what Luis will play** | The sceptic | Stands. Run as played, the test failed three of three | The second fault, found and mended; the test can be run as played (`-ownAsPlayed 1`) |
+| The runs are near-copies of one another; "5 of 23 to 0 of 17" is one course met five times, four of them in the two earliest batches; against the later batches it is 1 of 16 | The sceptic; the physicist | Stands | "How much these counts are worth", above |
+| Each change was never measured alone | The physicist | Stands | Measured: the table above |
+| "32 of 72 blows, nearly one in two" was counted on the runs after the change, and is about one in three on all of them | The physicist | Stands | Corrected |
+| The blow 234 mm off does not fit the story: by the old rule it would have walked back | The physicist; the sceptic | Half. It did not walk back because it was taken there in the swing itself, after the last look at where it stood. So it is a fault of its own, and not mended | Said so, under "Not mended" |
+| Round's blows with breath: "6 of 8" is 6 of the 6 runs in which it mined; and that a breath lifts the arms is asserted, not shown | The sceptic; the physicist | Stands | Corrected; said so |
+| The aim missed by 84 to 138 mm after a step back, not 96 to 132 | The physicist | Stands | Corrected |
+| Nothing bounds the new rule: a miner knocked off its place while it stands ready would go back for ever | The builder | Could happen; not seen | Three times at the most without a blow between |
+| Keeping its feet has no end if a hand is slow to take hold, and then it falls where it used to step; and it stays set if the tool leaves its hands | The builder | Could happen; not seen | A second and a half at the most; given up with the tool |
+| The test's switches were not all put back for the tests after it | The builder | Stands | Put back |
+| Its feet stay planted in the pictures; the tool comes from behind the hip to the front in two pictures, quick for a heavy thing | The physicist | I see it too | Not changed: it is how the tool was taken up before |
+| Too near its rock it turns about, walks, and turns again | The builder | Stands; it was so before | Said so, under "Not mended" |
+| Other strengths, other boulders, a long stretch for Small and Round were not tried; nor fifty runs of each with the start varied | The sceptic | Stands | Two strengths, two runs each (above). The rest is not done |
+| Every return to its place spends one of its four tries at coming there | The sceptic | Not so: a try is spent only when it stops short of its place | Nothing |

@@ -41,6 +41,7 @@ namespace WonderGather.Tests
             string only = CaptureTools.Argument("-captureMiner");
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             Time.captureFramerate = 30;
             try

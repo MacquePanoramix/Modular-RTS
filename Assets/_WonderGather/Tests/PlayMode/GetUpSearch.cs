@@ -110,6 +110,7 @@ namespace WonderGather.Tests
             float hurry = Number("-searchHurry", .1f), kicks = Number("-searchKicks", 0);
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             var choice = UnityEngine.Object.FindAnyObjectByType<MinerChoice>();
             var ground = UnityEngine.Object.FindAnyObjectByType<OrdinaryGround>();

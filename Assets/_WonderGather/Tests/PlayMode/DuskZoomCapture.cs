@@ -40,6 +40,7 @@ namespace WonderGather.Tests
             var culture = CultureInfo.InvariantCulture;
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             var time = Object.FindAnyObjectByType<TimeOfDay>();
             var choice = Object.FindAnyObjectByType<MinerChoice>();

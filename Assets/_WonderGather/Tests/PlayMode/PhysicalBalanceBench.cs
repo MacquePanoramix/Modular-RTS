@@ -45,6 +45,7 @@ namespace WonderGather.Tests
             int frames = (int)Numbers("-balanceFrames", 0)[0];
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
+            CaptureTools.AsItWas();
             yield return null;
             Time.captureFramerate = (int)Numbers("-balanceRate", 50)[0];
             try
