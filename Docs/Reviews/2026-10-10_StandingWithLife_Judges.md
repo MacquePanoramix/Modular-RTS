@@ -107,3 +107,32 @@ fuller at rest); a look every four to eleven seconds.
    that order; what this step found (leaning, a real shift of weight,
    and standing up to a push all wait on the step) speaks for the step
    first. Luis's to say.
+
+## The two more looks of breath
+
+A third calling of judges, the same day, on something new: the two
+looks of breath Luis approved trying
+([the message](../Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md);
+[what was built](../Design/TheBodysOwn.md#two-more-looks-of-breath-october-10)). Three
+judges, new ones; nine sheets (each miner: its shoulders at rest and
+tired, by day, with a line drawn across every picture to measure
+against; its breath in the air, after dusk).
+
+| What was said | Judges | Checked | Done |
+|---|---|---|---|
+| **In the air: it reads as breath,** and is the stronger sign from far off | 3 of 3 | | |
+| A puff appears already the size of the head and off the face; it should begin small at the mouth and grow | 2 of 3 | It grew with the root of its age: two thirds of its size in a sixth of a second | Begins small, grows slower |
+| It sinks instead of rising; Round's lies over its chin, neck and apron | 2 of 3 | It was breathed out a little downwards and hardly rose | Forward, then up |
+| Round's has a hard straight lower edge, "like a clipped patch" | 3 of 3 | A puff is a flat picture facing the camera; where it meets the body it is cut | Smaller and kept in front of the face, so it meets the body less. The cut itself is not mended |
+| Round, even discs; "a bubble or ball"; one breath's like the next's (Long's "frame for frame the same") | 2 of 3 | One size, one shape, the same three puffs | Ragged, uneven within, and each breath's size, way and speed its own |
+| **In its shoulders: clear when tired** ("a heave", "hunching and heaving"; smooth, not pumping), and tired reads as tired | 3 of 3 (Small: in part) | | |
+| At rest it can hardly be seen on Small and Long | 3 of 3 | 21 and 27 mm then | A little more at rest (26 and 33 mm) |
+| At the top of a tired breath the neck is gone (Round), the shoulders near the ears; the shoulder line goes angular, "a coat hanger"; Long's sleeve kinks | 3 of 3 | Stands | Tired is no higher than it was. The angular line is left |
+| It reads as a shrug or hunch more than a chest filling | 2 of 3 | It is the shoulders that are moved; the chest's own filling is too small to see | Left: it is what this look is |
+| Round's mouth is one open "o" with or without a puff | 1 of 3 | The faces do not move | Not built |
+| The head turning, and the weight going over, are larger than the breath and hide it at rest | 3 of 3 | Stands | Left |
+| The sheets: night sheets very dark; 0.4 s apart hides how a puff leaves the mouth; the line is in the wrong place for Round | 3 of 3 | Stands | For next time |
+
+**After these changes the looks were not judged again.** I looked at
+new pictures of both. They are for Luis to choose between, on the
+build.

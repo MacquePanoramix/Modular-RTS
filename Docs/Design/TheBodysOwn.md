@@ -799,3 +799,60 @@ Pictures: [Long, its weight asked onto its right leg and then its left](../Image
 [Small, asked to look to its right](../Images/StandingWithLife_2026-10-10/small_look.jpg);
 [Round, nudged](../Images/StandingWithLife_2026-10-10/round_nudged.jpg);
 [the three, their chests empty and full, tired](../Images/StandingWithLife_2026-10-10/chest_empty_full.jpg).
+
+### Two more looks of breath (October 10)
+
+Luis, October 10, to the question of how breath is to be shown
+([the message](../Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)):
+the shoulders rising and breath seen in the dusk air are tried, beside
+the three looks on the panel. Both are built. **Which look it is to be
+is not chosen:** that is for Luis, on the build.
+
+The panel's breath button now goes through five looks:
+
+| Look | What it is |
+|---|---|
+| **drawn stronger** (as it was; the first) | The chest drawn fuller, the back straightening, the arms a little out: four times the size of life |
+| **in its shoulders** | That, and **its shoulders drawn higher as its chest fills**, its arms going up with them; down again as it empties. Drawn, not physical (`MinerBody.Shrug`) |
+| **seen in the air (dusk to dawn)** | That, and **each breath out is seen in the cold air:** three soft puffs leave its mouth one after another, each beginning small, going forward, slowing, rising, growing ragged and thinning away in under two seconds (`BreathInAir`, painted as the chimney's smoke is). By day nothing is seen: the air is taken to be cold when the sun is down, as the fireflies are out then (keys `4` and `6`) |
+| **as in life** | The first look at the size of life: hardly to be seen |
+| **not drawn** | |
+
+| Measured (`OwnBodyTests.ItsBreathHasTwoMoreLooks`) | Small | Long | Round |
+|---|---|---|---|
+| Its shoulders drawn higher over its chest, full against empty, as it was | 4 mm | 5 mm | 7 mm |
+| ...with the look in its shoulders, at rest | 26 mm | 33 mm | 31 mm |
+| ...tired | to 1.4 times that | | |
+| Puffs in nine seconds, by day / after dusk | 0 / 6 | 0 / 6 | 0 / 6 |
+
+**What their judges said** (one round of three, on nine sheets;
+[all of it](../Reviews/2026-10-10_StandingWithLife_Judges.md#the-two-more-looks-of-breath)):
+the breath in the air **reads as breath, and is the stronger sign from
+far off** (three of three); the shoulders read clearly when it is
+tired, as a heave, and hardly at rest. What was done after:
+
+- **In the air.** A puff began as a disc the size of the head, already
+  off the face; it sank; Round's lay over its chest and was cut by it;
+  one breath's puffs were just like the next's. Now a puff begins
+  small at the mouth and grows, goes forward and then up, is ragged,
+  and no two breaths are alike.
+- **In its shoulders.** A little more at rest (it could hardly be seen
+  on Small and Long), and no higher tired than it was (at the top
+  Round's neck was gone).
+- **Changed after the judges, and not judged again:** looked at by me
+  only ([a breath going out, each miner](../Images/StandingWithLife_2026-10-10/breath_in_the_air.jpg);
+  [Round's shoulders, at rest](../Images/StandingWithLife_2026-10-10/round_shoulders.jpg)).
+
+**Still wrong, by the judges, and left:** at the top of a tired breath
+the line of the shoulders goes angular, "like a coat hanger", and
+Long's sleeve kinks (the shoulder is drawn up by moving the arm's bone,
+and the cloth between stretches); Round's mouth is one open "o" whether
+it breathes out or not (the faces do not move); a puff is a flat
+picture facing the camera, and where it meets the body it is cut.
+
+**Its chest following a far look** was put back for this round and
+taken out a second time: with it Long, on one leg and nudged, went
+15 cm and over (4 to 8 cm without it). It waits on the step.
+
+**A lying body** breathes with its chest only, as before: the two new
+looks are for a body standing by its own joints.

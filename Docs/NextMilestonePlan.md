@@ -230,6 +230,32 @@ October 10 a lying body's chest is drawn breathing; it does not stir.
   Luis (B5).
 - **The order of steps 2 and 3** is put to Luis (B7).
 
+**The two more looks of breath (B6) are built** ([what they are](Design/TheBodysOwn.md#two-more-looks-of-breath-october-10)),
+and are on the panel beside the three. Which look: Luis's, on the build.
+
+### Step 3, as it is to be built (written October 10, before it is begun)
+
+Read for it: [the research, part 7](Research/2026-10-09_AliveAndTheBodysOwn.md#7-a-step-catching-itself-read-for-step-3).
+
+1. **One keeper, for the game and for the search.** Today the bench has
+   one keeper and the game a copy of it that has since been mended
+   three times. The keeper is taken out into one piece of code that
+   both use, changing nothing of how it stands; the seven tests of the
+   body's own are the proof.
+2. **The step, in the bench:** when where its weight is going cannot be
+   kept within its soles, a leg is chosen, unloaded, lifted, swung to
+   where its weight is going and a little beyond, and stood on; then
+   the other boot is brought alongside. Its settings found by a search
+   on Small, Long and Round together, which also looks at the boots.
+3. **Held to today's posed body** (the table above): it leans without
+   stepping to about a sixth of its weight, steps at about a quarter,
+   falls from a third to three quarters. Pulls, nudges, and many in a
+   row.
+4. **In the game,** on the panel beside the posed body, with a way to
+   pull it; the miner's place going with its feet.
+5. **Then what waited on it:** a fuller shift of weight; its chest
+   following a look; and judges.
+
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).
 

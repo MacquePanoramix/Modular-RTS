@@ -17,7 +17,8 @@ parts: how long a fallen body lies; what makes a movement read as alive
 stable; action by action, what a real body does, how it is made to
 read, and what ours does; and what a light boot under a heavy body asks
 of the physics. A sixth part was added on October 10, for step 1: what
-a body does standing at ease (its breath, its weight, its head).
+a body does standing at ease (its breath, its weight, its head). And a
+seventh, for step 3: how a body catches itself with a step.
 
 **How far it can be trusted.** Most of it was read as search
 summaries and abstracts on October 9, not as whole papers: a figure
@@ -436,6 +437,100 @@ A real head would turn less often and less far than this, with the
 eyes doing most of it. Eyes that move are not built; they would be
 the right place for most of this.
 
+## 7. A step: catching itself (read for step 3)
+
+Read on October 10, before the step is built (Luis the same day: the
+step comes before the knees onto the feet). As above: search summaries
+and abstracts, not whole papers; † is from what I know and did not read
+again.
+
+### When a body must step, and where
+
+**Found.**
+
+- **Where the weight is going decides it.** Take the place of a body's
+  weight over the ground, and add its speed divided by the rate at
+  which a standing body falls (the root of gravity over its height):
+  the "extrapolated centre of mass" of the study of balance, the
+  "capture point" of walking robots. They are the same thing, from the
+  same pendulum. While that point lies within the feet, the body can
+  stop itself where it stands; when it leaves them, it must step; and
+  a foot put down **at** that point brings the body to rest over it
+  ([Hof and others, 2005](https://braceworks.ca/wp-content/uploads/2016/05/hof-condition-for-dynamic-stability.pdf);
+  [Pratt and others, 2006](https://cs.utexas.edu/~shivaram/readings/b2hd-PrattCDG2006.html);
+  [a review of foot placement in people](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6030625/)).
+  How far that point is inside the edge of the feet is the "margin of
+  stability". People's feet do land in keeping with it, with limits
+  ([capture point against human foot placement](https://hal.archives-ouvertes.fr/hal-00494610)).
+- **A harder push is met by a longer step, not an earlier one,** in the
+  young ([first recovery steps](https://cris.bgu.ac.il/en/publications/characteristics-of-first-recovery-step-response-following-unexpec/)).
+  Balance studies measure a body by the smallest push that makes it
+  step once, and the smallest that makes it step more than once.
+- **A step to catch oneself is not begun like a step to set off.** A
+  first step of a walk is got ready: the weight goes towards the leg
+  that will swing and then onto the one that will stand, before the
+  foot lifts. A step to catch a fall often leaves that out, and the
+  foot leaves the ground sooner for it
+  ([anticipatory adjustments and the latency of compensatory steps](https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2021.674960/pdf)).
+  From the push to the foot leaving the ground is a quarter to half a
+  second, and the step itself a quarter of a second or so †.
+- **Sideways,** the young mostly catch themselves with **one side step
+  of the leg on the side they are falling to**, though that leg bears
+  the weight and has to be unloaded first. Stepping with the other leg
+  starts sooner but crosses in front or behind, takes more steps, and
+  the legs can strike each other; old people do it more, and use their
+  arms more
+  ([lateral losses of balance](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7372810/);
+  [arm and trunk responses](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7564542/)).
+  The young's arms answer strongly the first time and much less by the
+  tenth.
+
+### How it is built, in games and robots
+
+**Found.**
+
+- **SIMBICON** (2007): a walking body is a few poses held by its
+  joints; what keeps it up is one correction, to where the swinging
+  leg's hip aims, by how far the weight is from the standing foot and
+  how fast it goes. That "changes the future point of support", and
+  makes the walk stand up to large pushes
+  ([Yin, Loken and van de Panne](https://www.cs.ubc.ca/~van/papers/2007-siggraph-simbicon.pdf)).
+- **Generalized biped walking control** (2010): the poses tracked by
+  the joints; **the foot placed by the pendulum above**; and what the
+  poses cannot give (holding the body up against gravity, correcting
+  its speed) given as torques worked out from a force wanted at the
+  body, through the standing leg. It walks forwards and backwards,
+  turns, stops, stands and starts, on bodies of different builds,
+  "with no character-specific or motion-specific tuning"
+  ([Coros, Beaudoin and van de Panne](https://www.cs.ubc.ca/~van/papers/2010-TOG-gbwc/index.html)).
+
+**For ours.**
+
+- **The keeper is two thirds of this already.** It reckons where the
+  weight is going each step of the physics, and gives its legs'
+  torques from the push it wants of the ground. What is missing is the
+  third: a leg let off the ground and put down where the weight is
+  going.
+- **So the step is:** when where its weight is going cannot be kept
+  within its soles, it chooses a leg (sideways, the one on the side it
+  falls to; forwards and back, the one that bears less), takes its
+  weight off it at once (a catch is not got ready), lifts it, swings
+  the boot to where its weight is going and a little beyond, and stands
+  on both again; then, at rest, brings the other boot alongside (a
+  body does not stay standing astride).
+- **What it is held to** is the plan's table: what today's posed body
+  does. It leans without stepping to about a sixth of its weight,
+  steps at about a quarter, and falls from a third (Long) to three
+  quarters (Small).
+- **Its arms** are not asked for anything yet. A real body's fly out;
+  the young's less each time.
+- **The step that sets off a walk** (got ready, and shorter) belongs to
+  walking, step 4.
+- **Found by search, on all three miners,** as the standing keeper was;
+  and judged on the boots as well as on the body staying up (the
+  search that set the standing keeper never looked at the boots, and
+  they tipped).
+
 ## Sources
 
 All looked up on October 9, 2026 (most as search summaries and abstracts: see the top of the page), unless marked †.
@@ -548,3 +643,27 @@ All looked up on October 9, 2026 (most as search summaries and abstracts: see th
   <https://pmc.ncbi.nlm.nih.gov/articles/PMC3191847>
 - A table of saccades a minute, walking.
   <https://pmc.ncbi.nlm.nih.gov/articles/PMC2629530/table/T1>
+- Hof A. L., Gazendam M. G. J., Sinke W. E. *The condition for dynamic
+  stability.* 2005.
+  <https://braceworks.ca/wp-content/uploads/2016/05/hof-condition-for-dynamic-stability.pdf>
+- Pratt J., Carff J., Drakunov S., Goswami A. *Capture Point: A Step
+  toward Humanoid Push Recovery.* 2006.
+  <https://cs.utexas.edu/~shivaram/readings/b2hd-PrattCDG2006.html>
+- *Control of human gait stability through foot placement* (a review).
+  <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6030625/>
+- *Comparison of Capture Point estimation with human foot placement.*
+  <https://hal.archives-ouvertes.fr/hal-00494610>
+- *Characteristics of first recovery step response following unexpected
+  loss of balance during walking.*
+  <https://cris.bgu.ac.il/en/publications/characteristics-of-first-recovery-step-response-following-unexpec/>
+- On anticipatory adjustments and the latency of compensatory steps.
+  <https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2021.674960/pdf>
+- *The kinematics and strategies of recovery steps during lateral
+  losses of balance in standing.* <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7372810/>
+- *Age-Related Differences in Arm and Trunk Responses to First and
+  Repeated Exposure to Laterally Induced Imbalances.*
+  <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7564542/>
+- Yin K., Loken K., van de Panne M. *SIMBICON: Simple Biped Locomotion
+  Control.* 2007. <https://www.cs.ubc.ca/~van/papers/2007-siggraph-simbicon.pdf>
+- Coros S., Beaudoin P., van de Panne M. *Generalized Biped Walking
+  Control.* 2010. <https://www.cs.ubc.ca/~van/papers/2010-TOG-gbwc/index.html>

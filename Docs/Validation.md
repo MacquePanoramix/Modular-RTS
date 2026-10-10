@@ -3039,3 +3039,33 @@ The body's own body is off unless the panel's switch is on.
   standing so at once; nudges given faster than it settles; a weak or
   tired body's limit on shifting (never seen to act); what it costs in
   the built game; whether Luis finds it stable, or alive.
+
+## S3b step 1 — two more looks of breath (October 10)
+
+[Design/TheBodysOwn.md](Design/TheBodysOwn.md#two-more-looks-of-breath-october-10).
+
+- **`OwnBodyTests`, now seven, each on Small, Long and Round: all
+  pass,** on the final state. The new one
+  (`ItsBreathHasTwoMoreLooks`): with the look in its shoulders they are
+  drawn 26, 33 and 31 mm higher full than empty (4, 5 and 7 mm
+  without); with the look in the air, no puff in nine seconds by day
+  and six after dusk; it stands through all of it.
+- **The whole PlayMode suite:** 192 tests; **171 passed, none failed**, 21 are run only when asked. That run was on the two looks as they were first built. What was changed after their judges (how a puff is drawn and moves, and how high the shoulders go: drawing only) was followed by the seven tests of the body's own, which pass, and not by the whole suite again.
+- **A run that hung, and why:** the new test first waited for the end
+  of each frame, and Unity run without a window never comes to it. The
+  worktree's Unity was stopped (only that one) and the test waits a
+  frame instead.
+- **Its chest following a far look, put back:** Long, on one leg and
+  nudged, went 146 mm and down. Taken out again; with it out, 42 to
+  80 mm.
+- **Judges:** one round of three on the two looks
+  ([what they said](Reviews/2026-10-10_StandingWithLife_Judges.md#the-two-more-looks-of-breath)).
+  What was changed after them was looked at by me in new pictures and
+  not judged again.
+- **The build** was made from the final state and copied to `Builds/`.
+  The two looks were not looked at in the built game by me: that the
+  look of breath in the air is found there (its material is loaded by
+  name) is tested in the Editor's play mode only.
+- **Not tested:** the looks from where the game is usually played;
+  the look in the air against a bright background (it is pale); many
+  miners breathing at once (one stands so at a time).

@@ -3,9 +3,10 @@
 **Updated:** October 10, 2026.
 
 - **Now: S3b, the body's own. Approved by Luis on October 9; step 0 is
-  done, step 1 is built, and Luis said on October 10 to go on: two more
-  looks of breath (the shoulders rising; breath seen in the dusk air),
-  then step 3, a step, before step 2** ([the plan](NextMilestonePlan.md);
+  done, step 1 is built, and Luis said on October 10 to go on. The two
+  more looks of breath are built (its shoulders rising; its breath seen
+  in the dusk air: five looks on the panel, for Luis to choose
+  between). Next: step 3, a step, before step 2** ([the plan](NextMilestonePlan.md);
   [the design as it is built](Design/TheBodysOwn.md);
   [Luis's answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
   - **Step 1 is built (October 10), and is off unless it is switched

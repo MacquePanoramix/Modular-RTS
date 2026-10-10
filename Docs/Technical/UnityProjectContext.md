@@ -2068,6 +2068,17 @@ with the settings, are in
   the chest drawn fuller (written only when it changes).
   `Tests/PlayMode/OwnBodyTests.cs` (six); `OwnBodyRecord.cs` (pictures
   for judges; run only when asked: `-ownShots <folder>`).
+- **S3b step 1, the looks of breath (October 10).** `MinerBody.Shrug`:
+  its shoulders drawn higher (the upper arms' bones moved up; written
+  only when it changes). `Scripts/Look/BreathInAir.cs`: breath seen in
+  cold air, a few puffs kept and drawn with no mesh, as `SmokePlume`
+  draws the chimney's smoke; the shader `Art/Shaders/WGBreath.shader`
+  ("Wonder Gather/Breath"). **Its material is `Resources/BreathInAir.mat`,
+  loaded by name,** so that the shader is in the build without a scene
+  being touched; it is made by `Editor/BreathLookSetup.cs` (menu "Wonder
+  Gather", or `-executeMethod WonderGather.Editor.BreathLookSetup.Make`).
+  `OwnBody.BreathShown`, `BreathShoulders`, `BreathSeenInAir`: which
+  look, set by `MinerWorkPreview.SetBreathLook`.
 - **S3b step 0 (October 9): `Tests/PlayMode/BodysOwnBench.cs`** (run
   only when asked; nothing of the game uses it). It reads the let-go
   body as `PhysicalFall.LetGo()` makes it, takes the boots off the shins

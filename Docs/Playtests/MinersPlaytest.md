@@ -399,7 +399,7 @@ the switch is on):
 |---|---|
 | **Stands by its own joints (at ease, hands empty)** | A switch. On: the chosen miner, when it stands at ease with nothing in its hands, stands by what its own hips, knees and ankles give. Off: as it was |
 | **Nudge it** | Sets its whole body going the way the view looks, at 0.15 m/s. (Only while it stands by its own joints) |
-| **Breath: drawn stronger / as in life / not drawn** | How its breath is drawn. A look to choose between; press to go to the next |
+| **Breath: drawn stronger / in its shoulders / seen in the air (dusk to dawn) / as in life / not drawn** | How its breath is drawn. Five looks to choose between; press to go to the next. **For the look in the air, make it dusk or night first (keys `4` and `6`):** by day nothing is seen |
 | **Tire it** | Makes the chosen miner tired at once, as after hard work, to see it breathe so. It rests as it does after work |
 
 **What to try.** Choose a miner, switch it on, and watch it for a
@@ -415,8 +415,10 @@ look at the same miner standing as it did.
   should rock a little and come back.)
 - Is it **alive**? Its judges said: only in its head. Its breath and
   its weight going from leg to leg are there and can hardly be seen.
-- **Its breath:** which of the three looks, if any; or another way of
-  showing it ([B6](../NextMilestonePlan.md#questions-for-luis)).
+- **Its breath:** which of the five looks, if any, or which together
+  (they are separate for now so that each can be judged alone); and
+  whether the look in its shoulders is a breath or a shrug. Tire it
+  and look again.
 - **Its head:** does it look about too often, or too far? It has no
   eyes that move, so its head does all of it.
 
