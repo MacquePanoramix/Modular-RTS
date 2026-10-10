@@ -3,7 +3,9 @@
 **Updated:** October 10, 2026.
 
 - **Now: S3b, the body's own. Approved by Luis on October 9; step 0 is
-  done, and step 1 is built and waits for Luis to look at it** ([the plan](NextMilestonePlan.md);
+  done, step 1 is built, and Luis said on October 10 to go on: two more
+  looks of breath (the shoulders rising; breath seen in the dusk air),
+  then step 3, a step, before step 2** ([the plan](NextMilestonePlan.md);
   [the design as it is built](Design/TheBodysOwn.md);
   [Luis's answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
   - **Step 1 is built (October 10), and is off unless it is switched
@@ -27,9 +29,14 @@
       (20 to 30 N held; today's posed body, 50 to 150 N), and its shift
       of weight is small: a fuller one took a nudged miner over. Both
       wait on the plan's step 3.
-    - **Three questions for Luis** ([B5 to B7](NextMilestonePlan.md#questions-for-luis)):
-      what the measure "a centimetre or two" is to mean; how breath is
-      to be shown; whether the step comes before the knees.
+    - **Three questions, answered by Luis on October 10**
+      ([the message](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)):
+      the measure "a centimetre or two" holds between shifts of
+      weight; for breath, the shoulders rising and breath seen in the
+      dusk air are tried next, beside the three looks; the step
+      (step 3) is built before the knees onto the feet (step 2).
+      **Not said:** whether the build was opened. Nothing of step 1 is
+      recorded as accepted.
     - **A fault of the keeper found by tracing:** it asked the ground to
       push from beyond the edge of a sole, which only tips the boot.
   - **Step 0 found** ([figures](Design/TheBodysOwn.md#step-0-the-ground-for-it-october-9)):

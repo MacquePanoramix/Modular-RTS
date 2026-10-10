@@ -120,7 +120,7 @@ each step. What was read for it is in
 
    | Measure | What is asked |
    |---|---|
-   | Standing at ease, a minute | It breathes and shifts its weight, and its head wanders no more than a centimetre or two. No tremble (nothing moving back and forth faster than about twice a second) |
+   | Standing at ease, a minute | It breathes and shifts its weight, and between shifts its head wanders no more than a centimetre or two (so read since October 10: a weight that goes over a leg takes the head 3 to 4 cm with it, and that is meant). No tremble (nothing moving back and forth faster than about twice a second) |
    | Pulled a little | It leans against the pull and does not step: at the same pulls as today (Round: 100 N forwards, its hips 6 to 8 cm back) |
    | Pulled hard | It steps and stands: at the same pulls as today (Round: one step at 200 N, two at 350 N; Small: three steps at 110 N) |
    | An extreme pull, or legs that give | It falls: at the same pulls as today (about three fifths of its weight) |
@@ -146,6 +146,12 @@ Luis.
 ## Steps
 
 Each is shown to Luis before the next is built on it.
+
+**The order was changed by Luis on October 10:** step 3 (a step) is built
+before step 2 (from its knees onto its feet), because leaning as today's
+body does, a real shift of weight, and standing up to a push all wait on
+the step ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)). The numbers are
+kept as they were, so that what is written elsewhere still points right.
 
 | | Step | It is to bring | What Luis sees |
 |---|---|---|---|
@@ -224,6 +230,9 @@ October 10 a lying body's chest is drawn breathing; it does not stir.
   Luis (B5).
 - **The order of steps 2 and 3** is put to Luis (B7).
 
+**All three were answered the same day:** Luis approved what was
+suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).
+
 ## What it will cost, said plainly
 
 - **Time.** By my estimate, weeks for steps 0 to 3 and more for the walk.
@@ -263,9 +272,12 @@ shoulders and the back moved by their own joints; the coat; breath seen
 in cold air at dusk). Each is shown to Luis as a look beside the others,
 and none is taken as settled.
 
-**Three more, from step 1 (October 10). Not answered.**
+**Three more, from step 1 (October 10). Answered by Luis the same day:**
+"I approve of all your suggestions for the questions you asked me."
+([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)). So each is as its
+right-hand column says.
 
-| | Question | What I think, for Luis to overrule |
+| | Question | What was suggested, and Luis approved |
 |---|---|---|
 | B5 | The table of "stable" says a standing miner's "head wanders no more than a centimetre or two". Is that to hold while its weight goes from leg to leg, or only between? | Only between. A weight that really goes over a leg takes the head 2 to 4 cm with it, slowly, and that is not a wobble. As it is now: millimetres between shifts, 3 to 4 cm across them |
 | B6 | Breath drawn on the chest cannot be seen, even at four times life (six judges of six). How is it to be shown? | The panel has three looks to begin from ("drawn stronger", "as in life", "not drawn"). Others, not built: the shoulders and collar rising, drawn boldly; a tired body heaving; breath seen in the cold air at dusk. I would try the shoulders and the dusk air next, beside these |
