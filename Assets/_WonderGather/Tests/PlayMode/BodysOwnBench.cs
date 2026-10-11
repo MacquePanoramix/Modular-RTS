@@ -1293,6 +1293,10 @@ namespace WonderGather.Tests
             float[] pulls = Numbers("-stepPulls", .08f, .17f, .25f, .33f), jolts = Numbers("-stepJolts", .3f, .5f, .8f);
             int ways = (int)Numbers("-stepWays", 8)[0];
             float lasts = Numbers("-stepFor", 9)[0];
+            // (-stepPullAt weight: the pull given to every part by its share of the weight, which does not turn the body;
+            // as it is, at the middle of its trunk, above its weight. -stepPullFor 2.5: how long it is held.)
+            bool atWeight = CaptureTools.Argument("-stepPullAt") == "weight";
+            float pullFor = Numbers("-stepPullFor", 2.5f)[0];
             string say = CaptureTools.Argument("-stepSay");
             float sayPull = Numbers("-stepSayPull", .17f)[0]; int sayWay = (int)Numbers("-stepSayWay", 0)[0];
             var culture = CultureInfo.InvariantCulture;
@@ -1377,14 +1381,18 @@ namespace WonderGather.Tests
                     foreach (float pull in pulls) for (int w = 0; w < ways; w++) Add(pull * whole * 9.81f, 0, w);
                     foreach (float jolt in jolts) for (int w = 0; w < ways; w++) Add(0, jolt, w);
                     Physics.SyncTransforms();
-                    int count = Mathf.RoundToInt(lasts / Step), begins = Mathf.RoundToInt(1 / Step), ends = Mathf.RoundToInt(3.5f / Step);
+                    int count = Mathf.RoundToInt(lasts / Step), begins = Mathf.RoundToInt(1 / Step), ends = Mathf.RoundToInt((1 + pullFor) / Step);
                     bool told = !string.IsNullOrEmpty(say) && string.Equals(say, names[m], StringComparison.OrdinalIgnoreCase);
                     for (int k = 0; k < count; k++)
                     {
                         foreach (var one in crowd)
                         {
                             if (k == begins && one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
-                            if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * one.pull, one.body.Centre(Trunk));
+                            if (one.pull > 0 && k >= begins && k < ends)
+                            {
+                                if (atWeight) for (int i = 0; i < Count; i++) one.body.Push(i, one.way * (one.pull * one.body.Mass(i) / whole), one.body.Centre(i));
+                                else one.body.Push(Trunk, one.way * one.pull, one.body.Centre(Trunk));
+                            }
                             if (!one.down && (float.IsNaN(one.body.Of(Hips).position.x) || !one.keeper.Keep(Step))) { one.down = true; one.downAt = k * Step; }
                             one.furthest = Mathf.Max(one.furthest, Vector3.ProjectOnPlane(one.body.Of(Hips).position - one.madeHips, Vector3.up).magnitude);
                         }
@@ -1473,7 +1481,7 @@ namespace WonderGather.Tests
             ("LandsDeaf", 0, .3f), ("Astride", .03f, .15f), ("CalmUnder", .03f, .2f), ("ClosesAfter", .2f, 1.5f), ("ReadyWithin", .01f, .06f),
             ("TakesUp", 0, 1.2f), ("StepRights", 1, 5), ("SwingAnkle", 1, 40), ("Tilts", 0, 2.5f), ("TiltsRate", 0, .6f),
             // (October 11: what it feels only as far as it lasts; the boot behind steps; a boot lands when it bears.)
-            ("StepsFeltOver", 0, .2f), ("TrailsFrom", 0, .25f), ("LandsBy", 1, 3),
+            ("StepsFeltOver", 0, .2f), ("TrailsFrom", 0, 2), ("LandsBy", 1, 3),
         };
 
         [UnityTest, Explicit, Timeout(14400000)]
@@ -1497,6 +1505,8 @@ namespace WonderGather.Tests
                 var sides = pair.Split('=');
                 from[sides[0].Trim()] = float.Parse(sides[1], CultureInfo.InvariantCulture);
             }
+            // (-stepSearchHold "StepsFelt,TrailsFrom": those named are not searched; they stay where the search begins.)
+            var held = new HashSet<string>((CaptureTools.Argument("-stepSearchHold") ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
             var keeps = new float[n];
             for (int i = 0; i < n; i++)
             {
@@ -1640,6 +1650,7 @@ namespace WonderGather.Tests
                             double u1 = 1 - random.NextDouble(), u2 = random.NextDouble();
                             float bell = (float)(Math.Sqrt(-2 * Math.Log(u1)) * Math.Cos(2 * Math.PI * u2));
                             v[i] = t == 0 ? (round == 0 ? middle[i] : best[i]) : Mathf.Clamp01(middle[i] + spread[i] * bell);
+                            if (held.Contains(StepSettings[i].name)) v[i] = Mathf.InverseLerp(StepSettings[i].least, StepSettings[i].most, began[i]);
                         }
                         yield return Try(v);
                         tried.Add((total, v));

@@ -62,7 +62,7 @@ namespace WonderGather
         // Where it wants the ground to push it is further the way its body tips: by Tilts of how far its hips have
         // tipped (times its height), and TiltsRate of how fast, over its rate of falling. (A pull above its weight
         // turns the whole body over, and a push that passes through its weight never turns it back.) Nought: not.
-        public static float Tilts = 0.4329f, TiltsRate = 0.081f;
+        public static float Tilts = 0.3671f, TiltsRate = 0.2505f;
 
         // ---- The step (S3b, step 3; what was read for it: the research of October 9, part 7). Set by hand to begin
         // with; to be found by a search on the three miners together, as the settings above were.
@@ -74,53 +74,49 @@ namespace WonderGather
         // going now, and StepsFurther metres beyond; no further from its hip than Reach of the leg's length. Sideways
         // (its fall more than Sideways across it) it steps with the leg on the side it falls to; else with the leg
         // that bears less.
-        public static float StepsBeyond = 0.0136f, StepsAfter = 0.0283f, UnloadsIn = 0.02f, SwingsIn = 0.1289f, Clears = 0.0737f;
-        public static float StepsAhead = 1.6811f, StepsFurther = 0.0304f, Reach = 0.7348f, Sideways = 0.5843f;
+        public static float StepsBeyond = 0.017f, StepsAfter = 0.0295f, UnloadsIn = 0.0214f, SwingsIn = 0.12f, Clears = 0.0752f;
+        public static float StepsAhead = 1.8306f, StepsFurther = 0.0291f, Reach = 0.8185f, Sideways = 0.619f;
         // (How much of what pushes it counts in whether it must step, and where to: a blow is felt as a great push
         // for a moment, and is not one that lasts.)
-        public static float StepsFelt = 1.004f;
-        // How far ahead a catching boot is put, reckoned from how long the step takes: while a boot is in the air
-        // its weight goes on falling away from the boot it stands on, and where it is going grows by the rate it
-        // falls at, over that time (e to the rate times the time). This, times that, in place of StepsAhead; 0: not
-        // so (StepsAhead as it is). (October 11: a slower swing with StepsAhead left as the search set it for a
-        // fast one put the boot a hand's width too near, and a pulled miner's first step caught it only just.)
-        public static float StepsGrow = 0;
+        public static float StepsFelt = 0.9301f;
         // A swinging boot has landed when it bears on the ground; or, if it has not by then, at this many times the
         // time its swing takes (1: at the end of its swing whether it bears or not, as the step was first built).
         // Past the end of its swing it is put straight down from where it is, onto the ground it left: a boot
         // put further than its leg reaches from hips still so high hangs in the air until the body has fallen
         // onto it. (October 11: let go by the clock, a pulled miner's boot was 2 to 5 cm in the air; it was taken
         // for landed, and swung again or came down a hand's width nearer than it was put.)
-        public static float LandsBy = 1.3235f;
+        public static float LandsBy = 1.4054f;
         // What it feels counts towards a step (StepsFelt) only as far as it has lasted this long, seconds: the least
         // it has felt over that time. A shove is over in a step of the physics, and where its weight is going
         // already tells of it; a pull that is held goes on. 0: all it feels at once, as the step was first built.
-        public static float StepsFeltOver = 0.1212f;
-        // Standing with one boot this far before the other (metres, along the way it falls), the boot behind is the
-        // one that steps: never the boot in front, which is holding it. 0: not so (the leg is chosen as for boots
+        public static float StepsFeltOver = 0.1174f;
+        // Standing with one boot this far before the other (along the way it falls; a share of how far apart its
+        // boots stand at ease), and not falling sideways across its body, the boot behind is the one that steps:
+        // never the boot in front, which is holding it. 0: not so (the leg is chosen as for boots
         // side by side, as the step was first built). (October 11: with its boots astride after a first step, the
         // line between them is no longer across it, a fall forward was taken for a fall sideways, and it lifted the
         // boot in front.)
-        public static float TrailsFrom = 0.2052f;
+        public static float TrailsFrom = 1.321f;
         private readonly Vector3[] feltLately = new Vector3[16];
         private int feltTold;
         private float leftGround;
+        private bool putDown;
         // For this long after a boot lands (seconds), how its weight went is not taken for a push from outside.
-        public static float LandsDeaf = 0.0915f;
+        public static float LandsDeaf = 0.0979f;
         // While its boot swings, that leg's joints give all they have at SwingFullAt degrees from where the boot
         // should be (never stiffer than the rule), damped by SwingDamped of what just stops them swinging.
-        public static float SwingFullAt = 30.8501f, SwingDamped = 0.4724f;
+        public static float SwingFullAt = 25.5969f, SwingDamped = 0.3571f;
         // Its boot is carried there by a pull for each kilogram of the leg: SwingStiff for each metre it is from where
         // it should be, SwingSlows for each metre a second it lags; no more than SwingAtMost times the leg's weight.
-        public static float SwingStiff = 404.6371f, SwingSlows = 17.8932f, SwingAtMost = 1.4573f;
+        public static float SwingStiff = 231.543f, SwingSlows = 32.3328f, SwingAtMost = 1.7378f;
         // The hip of the leg it stands on takes up this share of what the swinging leg's hip gives; and its hips are
         // righted this many times as hard while it stands on one leg.
-        public static float TakesUp = 0.4056f, StepRights = 1, SwingAnkle = 6.2723f;
+        public static float TakesUp = 0.5773f, StepRights = 1, SwingAnkle = 12.132f;
         // Afterwards the other boot is brought alongside: when its boots stand more than Astride (metres) from how
         // they stood, and it has been at rest (its weight going slower than CalmUnder, metres a second) for
         // ClosesAfter seconds. That step is got ready: its weight goes onto the leg it will stand on, to within
         // ReadyWithin (metres), for no longer than ReadiesAtMost seconds.
-        public static float Astride = 0.12f, CalmUnder = 0.101f, ClosesAfter = 0.7413f, ReadyWithin = 0.0232f, ReadiesAtMost = 1;
+        public static float Astride = 0.0834f, CalmUnder = 0.0932f, ClosesAfter = 0.3178f, ReadyWithin = 0.0252f, ReadiesAtMost = 1;
 
         private readonly float[] lighter;
         private readonly Quaternion[] rested = new Quaternion[Count], madeTurned = new Quaternion[Count], madeLay = new Quaternion[Count];
@@ -354,13 +350,14 @@ namespace WonderGather
                     {
                         // A catch. Sideways, the leg on the side it falls to; else the leg that bears less.
                         Vector3 way = Flat(needs - kept).normalized;
-                        float aside = Vector3.Dot(way, apart.normalized);
+                        // (With the boot behind stepping, sideways is across its body: astride, the line between
+                        // its boots is not.)
+                        float aside = Vector3.Dot(way, TrailsFrom > 0 ? acrossNow : apart.normalized);
                         swings = Mathf.Abs(aside) > Sideways ? (aside > 0 ? 1 : 0) : (bearing > .5f ? 0 : 1);
                         float leads = Vector3.Dot(apart, way);
-                        if (TrailsFrom > 0 && Mathf.Abs(leads) > TrailsFrom) swings = leads > 0 ? 0 : 1;
+                        if (TrailsFrom > 0 && Mathf.Abs(aside) <= Sideways && Mathf.Abs(leads) > TrailsFrom * Mathf.Abs(madeApart.x)) swings = leads > 0 ? 0 : 1;
                         Vector3 stood = Flat(sole[1 - swings]);
-                        float ahead = StepsGrow > 0 ? StepsGrow * Mathf.Exp(falls * (UnloadsIn + Mathf.Max(.05f, SwingsIn))) : StepsAhead;
-                        stepTo = stood + (needs - stood) * ahead + way * StepsFurther;
+                        stepTo = stood + (needs - stood) * StepsAhead + way * StepsFurther;
                         catching = true; readying = false;
                     }
                     else if (calmFor >= ClosesAfter)
@@ -380,7 +377,7 @@ namespace WonderGather
                         stepTo = hipOver + Vector3.ClampMagnitude(stepTo - hipOver, Reach * (thighLong[swings] + shinLong[swings]));
                         stepFrom = Flat(sole[swings]);
                         stepT = 0; stiff = false; beyondFor = 0; calmFor = 0; carried = false;
-                        leftGround = Mathf.Min(sole[0].y, sole[1].y);
+                        leftGround = Mathf.Min(sole[0].y, sole[1].y); putDown = false;
                         Stepped++;
                     }
                 }
@@ -408,7 +405,12 @@ namespace WonderGather
                             float uu = Mathf.Clamp01(u), along = uu * uu * uu * (10 + uu * (6 * uu - 15));
                             Vector3 soleWants = Vector3.Lerp(stepFrom, stepTo, along);
                             soleWants.y = sole[stance].y + Clears * Mathf.Sin(Mathf.PI * uu);
-                            if (u > 1) soleWants = new Vector3(sole[swings].x, leftGround - .03f, sole[swings].z);
+                            if (u > 1)
+                            {
+                                // (Put straight down from where it is: the pull on it begins afresh.)
+                                if (!putDown) { putDown = true; carried = false; }
+                                soleWants = new Vector3(sole[swings].x, leftGround - .03f, sole[swings].z);
+                            }
                             SwingWants = soleWants; SwingIs = sole[swings]; SwingTo = stepTo; SwingFrom = stepFrom;
                             // What carries its boot there: a pull on the boot towards where it should be, and against how
                             // it lags, and the leg's own weight; given by its hip and knee.
