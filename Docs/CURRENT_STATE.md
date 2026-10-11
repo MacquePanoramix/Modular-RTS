@@ -26,7 +26,10 @@
   - **Not mended:** breath drawn on a working miner's chest and
     shoulders moves where its blows land (Round's, to 25 cm off). So a
     miner at work, or resting from it, still shows its breath only in
-    the air at dusk.
+    the air at dusk. **Luis, October 11: "Sure we can wait first for
+    steps 4 and 6"**
+    ([the message](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)):
+    it waits, and walking and the work are each to bring it.
   - **Not mended either:** Long at a low boulder is still taken a
     hand's length back by about one blow in three, and walks back to
     its place each time. That is the swing itself, which becomes the

@@ -163,9 +163,9 @@ kept as they were, so that what is written elsewhere still points right.
 | 1 (built October 10; **accepted by Luis** that night) | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
 | 2 | **From its knees onto its feet.** The half second that is posed in the getting up. Then the whole of it, from the fall to standing, is the body's own | Not all on one clock (2) | A pushed miner getting up with nothing taking over |
 | 3 | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
-| 4 | **Walking, turning, stopping.** On the path, the meadow and its slopes. No two steps quite the same. The free arm swings | Arcs and one hump of speed (5); does not repeat itself (6) | The walk, beside the walk as it was |
+| 4 | **Walking, turning, stopping.** On the path, the meadow and its slopes. No two steps quite the same. The free arm swings. **Its breath shows on its chest and shoulders as it walks** (it waits for this step: [Luis, October 11](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)) | Arcs and one hump of speed (5); does not repeat itself (6) | The walk, beside the walk as it was |
 | 5 | **Down to the ground and up.** Picking a thing up, laying it down | Not all on one clock (2); gets ready (3) | The pick-up, beside the pick-up as it was |
-| 6 | **The work.** The body in the swing is its own, as the tool already is | Shows its effort (8) | A miner mining |
+| 6 | **The work.** The body in the swing is its own, as the tool already is. **Its breath shows on its chest and shoulders at its work, and as it rests from it** (it waits for this step: [Luis, October 11](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)). The swing at a low boulder, which takes a tall miner off its place, is made again here ([what was found](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10)) | Shows its effort (8) | A miner mining |
 | 7 | **Then S4,** each of its movements built this way from the start | | The proposal for S4, with its first question answered |
 | At any point | **The fall, again.** It is the body's own already, and it is the furthest of all from a real body: a young person who falls gets a hand to the ground nine times in ten and keeps the head off it eight in nine ([the research, part 4](Research/2026-10-09_AliveAndTheBodysOwn.md#4-action-by-action)); a miner gets no hand down and strikes its head almost every time. Arms that reach for the ground, and a head kept off it | Gets ready (3); shows its effort (8) | A pushed miner catching itself on its hands |
 
@@ -393,12 +393,12 @@ morning "a bit too strong"; B11, "Sure can be thanks!"
 | B13 | Are the looks of breath to be drawn together (chest, shoulders, and the air from dusk to dawn), as they now are? | Yes | **"Yes that's perfect I think."** |
 | B14 | A miner's blows at a boulder sometimes land thirty centimetres off (one try in thirty; five in fifteen while breath was drawn on its shoulders). Is that to be found now, before the step goes on, or after? | Now: it is a miss Luis could see in the game, and it is what keeps breath off a miner at work | **"Yes I think so, good suggestion."** Found: [three faults, two mended](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10) |
 
-**One thing for Luis to say, when it matters to Luis** (nothing waits
-on it):
+**One more, answered by Luis on October 11**
+([the message](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)):
 
-| | Question | What I think |
-|---|---|---|
-| B15 | A miner resting from its blows does not heave: breath is drawn on the chest and shoulders only of a miner standing by its own joints with empty hands, or down ([why](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10)). Is that to wait for walking and the work to become the body's own (steps 4 and 6), or to be done on the body as it was first (about a day)? | Wait. It comes of itself with steps 4 and 6, and a day on the body as it was is a day not spent on them |
+| | Question | What I thought | Luis |
+|---|---|---|---|
+| B15 | A miner resting from its blows does not heave: breath is drawn on the chest and shoulders only of a miner standing by its own joints with empty hands, or down ([why](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10)). Is that to wait for walking and the work to become the body's own (steps 4 and 6), or to be done on the body as it was first (about a day)? | Wait. It comes of itself with steps 4 and 6, and a day on the body as it was is a day not spent on them | **"Sure we can wait first for steps 4 and 6."** It waits. Steps 4 and 6 are each to bring it |
 
 **The questions as they were put that morning:**
 

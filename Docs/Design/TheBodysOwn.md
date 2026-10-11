@@ -1111,9 +1111,11 @@ blows as without. **It is not in the build.** I have not looked at it:
 a hand that holds a tool may be drawn off its handle as the shoulder
 rises (my reading of how the arm is drawn, not a thing seen); and
 walking and the work become the body's own in steps 4 and 6, where a
-breath is asked of the joints themselves. It is about a day's work to
-do properly on the body as it was, if Luis wants a resting miner to
-heave before then ([asked](../NextMilestonePlan.md#questions-for-luis)).
+breath is asked of the joints themselves. It would be about a day's
+work to do properly on the body as it was. **Luis, asked, on October
+11: "Sure we can wait first for steps 4 and 6."** So it waits, and
+steps 4 and 6 are each to bring it
+([the message](../Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)).
 
 #### The whole suite, as the game is played
 
