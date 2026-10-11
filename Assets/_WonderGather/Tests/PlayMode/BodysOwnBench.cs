@@ -1409,11 +1409,17 @@ namespace WonderGather.Tests
                                 if (one.wayIs != sayWay || Mathf.Abs(one.pull - sayPull * whole * 9.81f) > .01f || one.jolt > 0) continue;
                                 Transform hips = one.body.Of(Hips), left = one.body.Of(Foot), right = one.body.Of(Foot + 1);
                                 Vector3 side = Vector3.Cross(Vector3.up, one.way);
-                                Debug.Log(string.Format(culture, "STEPSAY {0} {1:0.0} s: steps {2}, swings {3}{4}; hips {5:0} mm along, {6:0} aside, {7:0} up, leaning {8:0} deg; left boot {9:0} along {10:0} aside {11:0} up tipped {12:0}; right boot {13:0} along {14:0} aside {15:0} up tipped {16:0}; outside {17:0} mm; feels {18:0.00}; leans {19:0} mm",
+                                Debug.Log(string.Format(culture, "STEPSAY {0} {1:0.0} s: steps {2}, swings {3}{4}; hips {5:0} mm along, {6:0} aside, {7:0} up, leaning {8:0} deg; left boot {9:0} along {10:0} aside {11:0} up tipped {12:0}; right boot {13:0} along {14:0} aside {15:0} up tipped {16:0}; outside {17:0} mm; feels {18:0.00}; leans {19:0} mm | along: weight {20:0}, going {21:0}, wants {22:0}, can act {23:0}, bore {24:0}, holds {25:0}, felt {26:0} (of {27:0.00} m/s2), soles {28:0} and {29:0}, falls {30:0.00}",
                                     names[m], k * Step, one.keeper.Stepped, one.keeper.Swings, one.down ? " DOWN" : "", Vector3.Dot(hips.position - one.madeHips, one.way) * 1000, Vector3.Dot(hips.position - one.madeHips, side) * 1000, (hips.position.y - one.madeHips.y) * 1000, Vector3.Angle(Vector3.up, hips.up),
                                     Vector3.Dot(left.position - one.madeHips, one.way) * 1000, Vector3.Dot(left.position - one.madeHips, side) * 1000, (left.position.y - floorTop) * 1000, Vector3.Angle(Vector3.up, left.up),
                                     Vector3.Dot(right.position - one.madeHips, one.way) * 1000, Vector3.Dot(right.position - one.madeHips, side) * 1000, (right.position.y - floorTop) * 1000, Vector3.Angle(Vector3.up, right.up),
-                                    one.keeper.Outside * 1000, one.keeper.Felt.magnitude, one.keeper.Leaning.magnitude * 1000));
+                                    one.keeper.Outside * 1000, one.keeper.Felt.magnitude, one.keeper.Leaning.magnitude * 1000,
+                                    Vector3.Dot(one.keeper.WeightAt - one.madeHips, one.way) * 1000,
+                                    Vector3.Dot(one.keeper.GoingAt - one.madeHips, one.way) * 1000,
+                                    Vector3.Dot(one.keeper.WantedAt - one.madeHips, one.way) * 1000, Vector3.Dot(one.keeper.ActedAt - one.madeHips, one.way) * 1000,
+                                    Vector3.Dot(one.keeper.BoreAt - one.madeHips, one.way) * 1000, Vector3.Dot(one.keeper.HoldsAt - one.madeHips, one.way) * 1000,
+                                    Vector3.Dot(one.keeper.Felt, one.way) / (one.keeper.FallsAt * one.keeper.FallsAt) * 1000, Vector3.Dot(one.keeper.Felt, one.way),
+                                    Vector3.Dot(one.keeper.SoleAt(0) - one.madeHips, one.way) * 1000, Vector3.Dot(one.keeper.SoleAt(1) - one.madeHips, one.way) * 1000, one.keeper.FallsAt));
                             }
                         Physics.Simulate(Step);
                         if (k % 100 == 99) yield return null;
@@ -1466,6 +1472,8 @@ namespace WonderGather.Tests
             ("SwingFullAt", 5, 60), ("SwingDamped", .1f, 1.2f), ("SwingStiff", 50, 800), ("SwingSlows", 5, 60), ("SwingAtMost", 1, 8),
             ("LandsDeaf", 0, .3f), ("Astride", .03f, .15f), ("CalmUnder", .03f, .2f), ("ClosesAfter", .2f, 1.5f), ("ReadyWithin", .01f, .06f),
             ("TakesUp", 0, 1.2f), ("StepRights", 1, 5), ("SwingAnkle", 1, 40), ("Tilts", 0, 2.5f), ("TiltsRate", 0, .6f),
+            // (October 11: what it feels only as far as it lasts; the boot behind steps; a boot lands when it bears.)
+            ("StepsFeltOver", 0, .2f), ("TrailsFrom", 0, .25f), ("LandsBy", 1, 3),
         };
 
         [UnityTest, Explicit, Timeout(14400000)]
@@ -1482,7 +1490,20 @@ namespace WonderGather.Tests
             int n = StepSettings.Length;
             var fields = new System.Reflection.FieldInfo[n];
             var began = new float[n];
-            for (int i = 0; i < n; i++) { fields[i] = typeof(OwnKeeper).GetField(StepSettings[i].name); Assert.That(fields[i] != null, Is.True, StepSettings[i].name); began[i] = (float)fields[i].GetValue(null); }
+            // (-stepSearchFrom "StepsFelt=1,TrailsFrom=.1": where the search begins, for those named; the rest from where they are.)
+            var from = new Dictionary<string, float>();
+            foreach (string pair in (CaptureTools.Argument("-stepSearchFrom") ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                var sides = pair.Split('=');
+                from[sides[0].Trim()] = float.Parse(sides[1], CultureInfo.InvariantCulture);
+            }
+            var keeps = new float[n];
+            for (int i = 0; i < n; i++)
+            {
+                fields[i] = typeof(OwnKeeper).GetField(StepSettings[i].name); Assert.That(fields[i] != null, Is.True, StepSettings[i].name);
+                keeps[i] = (float)fields[i].GetValue(null);
+                began[i] = from.TryGetValue(StepSettings[i].name, out float given) ? given : keeps[i];
+            }
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
             CaptureTools.AsItWas();
             yield return null;
@@ -1641,7 +1662,7 @@ namespace WonderGather.Tests
             {
                 OwnKeeper.Steps = false;
                 LogAssert.ignoreFailingMessages = false;
-                for (int i = 0; i < n; i++) fields[i].SetValue(null, began[i]);
+                for (int i = 0; i < n; i++) fields[i].SetValue(null, keeps[i]);
                 Rule = rule; Damped = damped;
                 Physics.simulationMode = mode;
                 Time.captureFramerate = 0;
