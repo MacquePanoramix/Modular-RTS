@@ -36,6 +36,15 @@
     body's own in step 6.
   - **Tests can now be run as the game is played** (`-ownAsPlayed 1`).
     The whole suite so run, before the panel's line was mended: 155 pass and 17 fail (172 pass with the switch off). Two of the 17 were a fault of the game as played (the panel's line hid that a pickaxe lies by the miner), mended, and pass as played since; thirteen are tests that take the body by hand, which the game does not do to a body standing by its own joints; two measure a hand against how the body as it was stands. Sorted by reading each test, not by running each again ([the design page](Design/TheBodysOwn.md#the-whole-suite-as-the-game-is-played)).
+- **Step 3 (a step), October 11: why a pull that is held was never
+  caught is found, by tracing one pulled body.** It stepped too late,
+  then lifted the boot that was holding it, and its swinging boot was
+  taken for landed while still in the air. With those put right and its
+  settings searched twice more, a pull of an eighth of its weight is
+  stood through about half the time (never before), and a hard shove
+  twice as often; a pull of a sixth or more, still never
+  ([the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun),
+  "Where it stands"). **On the work branch only; the step is off in the game.**
 - **Luis saw step 1 with its switch on, on the evening of October 10:**
   "I am loving the results." (That morning the switch had not been
   ticked: what follows in this entry was said of the body as it was.)

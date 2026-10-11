@@ -324,6 +324,62 @@ only; nothing of step 3 is in the game Luis has.
   the most, and a shove less often than with the searched settings.
   So the cause is not yet found by reasoning about it; it is to be
   found in the trace.
+- **October 11: the trace, and what it showed.** A Small pulled
+  forwards with a sixth of its weight was told step by step: where its
+  weight is, where it is going, where it wants the ground to push it,
+  where on its soles that push can act, and where the ground really
+  bore it. It was not that the pull is too great to be stood through.
+  Four things in how it steps were wrong for a pull that is held:
+  - **It stepped too late.** It began a step only when where its
+    weight was going had left its soles (0.27 s after the pull began).
+    Begun on what it feels as well, it steps 0.08 s after, and **its
+    first step does catch it:** its weight comes to rest between its
+    boots.
+  - **Then it lifted the boot in front.** Which leg steps was chosen
+    by the line between its boots, which is across it only while they
+    are side by side. Astride after a first step, a fall forward was
+    taken for a fall sideways, and it stepped with the boot that was
+    holding it. Now the boot behind steps.
+  - **Begun on all it feels, it stepped at every small shove** (and
+    stood fewer of them than before). Now what it feels counts only as
+    far as it has lasted (0.12 s): a shove is over in a moment, and
+    where its weight is going already tells of it.
+  - **A swinging boot was taken for landed by the clock, while still
+    2 to 5 cm in the air,** and was swung again, or came down a hand's
+    width nearer than it was put. Now it has landed when it bears.
+  Each is a switch that is off unless set. With them in play, the
+  settings were searched twice more (a fourth and a fifth search).
+  Standing of 8 ways each, on the bench:
+
+  | | Small | Long | Round | (the third search) |
+  |---|---|---|---|---|
+  | Shoved at 0.3 m/s | 8 | 8 | 8 | (8, 8, 8) |
+  | ...at 0.5 m/s | 7 | 8 | 8 | (4, 8, 7) |
+  | ...at 0.7 m/s | 5 | 6 | 5 | (1, 3, 2) |
+  | Pulled with 0.08 of its weight for 2.5 s | 7 | 8 | 8 | (6, 5, 5) |
+  | ...with an eighth of its weight | 4 | 6 | 3 | (0, 0, 0 or 1) |
+  | ...with a sixth, and a quarter | 0 | 0 | 0 | (0, 0, 0) |
+
+  **So a pull of an eighth of its weight is now stood through about
+  half the time, where it was never; a sixth or more, still never.**
+  Some take many steps over it (up to thirteen).
+- **What I think is next for the held pull, from the same trace, and
+  have not built:**
+  - **How long a step takes should come of how far it goes.** Every
+    swing takes the same 0.13 s, whether the boot goes a hand's width
+    or half a metre; the long ones do not arrive.
+  - **Its hips have to come down for a long step.** With its hips at
+    standing height its boot cannot reach the ground much ahead of
+    them: it hangs until the body has fallen onto it. A body that
+    means a long step bends the knee it stands on.
+  - **Braced, it should stay braced.** While the pull lasts it should
+    keep its boots astride and its weight back; today it brings the
+    other boot alongside as soon as it can, and stands the pull with
+    its boots together and its weight over its heels, only just.
+- **Where the code is:** on the work branch `claude/wip-round`. The
+  step is off in the game, and with it off a miner stands exactly as
+  it did (the standing body's eight tests pass). Not run: the whole
+  suite on this state; any of it in the game.
 
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).
