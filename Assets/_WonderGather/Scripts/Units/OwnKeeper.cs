@@ -109,11 +109,24 @@ namespace WonderGather
         // how long it takes made it worse (10 of 24, and hard shoves 9 from 18). Both are taken out again.
         // It sinks into a catching step: its hips come down by this share of what its leg needs to reach the ground
         // where its boot is to land (at most SinksAtMost of its height), and come up again over SinksBack
-        // seconds once it has landed. 0: its hips are held at standing height through a step. And while a boot that
-        // was to have landed still does not bear, it goes on sinking, at SinksOn metres a second: what its leg
-        // needs is reckoned from its lengths, and came out two or three centimetres short.
-        public static float Sinks = 0.6064f, SinksAtMost = .22f, SinksBack = .5f, SinksOn = 0.0449f;
-        private float sinksBy;
+        // seconds once it has landed. 0: its hips are held at standing height through a step. (It comes down at
+        // SinksDown metres a second, not all in one step of the physics; and no further than well short of where
+        // it would be taken for fallen.)
+        public static float Sinks = 0.6064f, SinksAtMost = .12f, SinksBack = .5f;
+        private const float SinksDown = .5f;
+        // It lowers itself by this share of its height as soon as it feels a push that lasts, beyond its ease,
+        // before any step: a body that braces is a lower body, and a boot reaches further from lower hips. 0: not.
+        public static float SinksReady = 0;
+        // The hip of a swinging leg is sprung as stiffly as its knee and its ankle are in the air. 0: it is left as
+        // it stands (and the boot came 14 to 25 cm behind where it was wanted by the end of its swing).
+        public static float SwingHip = 0;
+        // Its trunk leans back against a push that lasts: so many degrees for each 10 cm the ground would have to
+        // push beyond its ease, LeansBackAtMost at the most. 0: its trunk is held as it stands, and a pull at its
+        // chest folds it forward.
+        public static float LeansBack = 0, LeansBackAtMost = 22;
+        private float sinksBy, sinkWants, leansNow, lastingAsked;
+        private Vector3 lastingFelt;
+        private bool leaned;
         private readonly Vector3[] feltLately = new Vector3[16];
         private int feltTold;
         private float leftGround;
@@ -251,7 +264,7 @@ namespace WonderGather
         // degrees from where the boot should be, but never stiffer than the rule.
         private void Springs(int leg, bool swinging, float step)
         {
-            for (int j = Shin + leg; j <= Foot + leg; j += 2)
+            for (int j = (SwingHip > .5f ? Thigh : Shin) + leg; j <= Foot + leg; j += 2)
             {
                 float spring = stoodSpring[j], damper = stoodDamper[j];
                 if (swinging)
@@ -344,7 +357,9 @@ namespace WonderGather
             // and its boot put down where its weight will be going. Afterwards, at rest, the other boot is brought
             // alongside (that one is got ready: its weight goes onto the leg it will stand on first).
             int single = -1, stance = -1;
-            if (swings < 0 && sinksBy > 0) sinksBy = Mathf.MoveTowards(sinksBy, 0, SinksAtMost * height * step / Mathf.Max(.05f, SinksBack));
+            // (How low it means to be: standing, by what it is ready for; in a catching step, by what its leg needs.)
+            if (swings < 0) sinkWants = Steps && SinksReady > 0 && lastingAsked > Comfort ? Mathf.Min(SinksAtMost, SinksReady) * height : 0;
+            if (sinksBy != sinkWants) sinksBy = Mathf.MoveTowards(sinksBy, sinkWants, (sinkWants > sinksBy ? SinksDown : SinksAtMost * height / Mathf.Max(.05f, SinksBack)) * step);
             carrying = -1;
             float unloaded = 0;
             if (Steps && lighter != null)
@@ -366,6 +381,7 @@ namespace WonderGather
                         }
                     }
                     Vector3 needs = going + StepsFelt * lasting / (falls * falls);
+                    lastingFelt = lasting; lastingAsked = lasting.magnitude / (falls * falls);
                     Vector3 kept = Borne(new Vector3(needs.x, ground, needs.z), -1, -1, 0, out float bearing);
                     float beyond = Flat(needs - kept).magnitude;
                     beyondFor = beyond > StepsBeyond ? beyondFor + step : 0;
@@ -440,9 +456,7 @@ namespace WonderGather
                                 float ankleUp = Mathf.Abs(parts[Foot + swings].transform.TransformVector(anchors[Foot + swings] - soleAt[swings]).y);
                                 float legLong = .97f * (thighLong[swings] + shinLong[swings]), away = Flat(stepTo - hipThen).magnitude;
                                 float hipMay = ankleUp + Mathf.Sqrt(Mathf.Max(0, legLong * legLong - away * away));
-                                float byReach = Mathf.Min(SinksAtMost * height, Sinks * Mathf.Max(0, hipNow.y - leftGround - hipMay));
-                                if (u <= 1) sinksBy = byReach;
-                                else if (bears[swings] <= 1e-4f) sinksBy = Mathf.Min(SinksAtMost * height, Mathf.Max(sinksBy, byReach) + SinksOn * step);
+                                sinkWants = Mathf.Max(sinkWants, Mathf.Min(SinksAtMost * height, Sinks * Mathf.Max(0, hipNow.y + sinksBy - leftGround - hipMay)));
                             }
                             if (u > 1)
                             {
@@ -491,6 +505,21 @@ namespace WonderGather
                 }
             }
 
+            if (Steps && LeansBack > 0)
+            {
+                float leans = Mathf.Min(LeansBackAtMost, LeansBack * Mathf.Max(0, lastingAsked - Comfort) / .1f);
+                leansNow = Mathf.MoveTowards(leansNow, leans, 90 * step);
+                Vector3 from0 = Flat(lastingFelt);
+                if (leansNow > 1e-3f && from0.sqrMagnitude > 1e-6f)
+                {
+                    // (Its top goes the way against the push, about the line across that way.)
+                    Quaternion back = Quaternion.AngleAxis(leansNow, Vector3.Cross(Vector3.up, -from0.normalized));
+                    Quaternion made = parts[Hips].transform.rotation * rested[Trunk];
+                    Aims(Trunk, Quaternion.Inverse(made) * back * made);
+                }
+                else if (leansNow <= 1e-3f && leaned) Aims(Trunk, Quaternion.identity);
+                leaned = leansNow > 1e-3f;
+            }
             // Where it wants the ground to push it: beyond where its weight is going, by how far that is from where it
             // holds it (catching itself on one leg, as near where its weight is going as its sole reaches).
             // (Written in this order so that, with no step, it reckons exactly as it did.)

@@ -1301,6 +1301,8 @@ namespace WonderGather.Tests
             // (-stepStrong 3: every joint so many times as strong as it is, to see what strength alone would do.)
             float stronger = Numbers("-stepStrong", 1)[0];
             float pullFor = Numbers("-stepPullFor", 2.5f)[0];
+            // (-stepPullOver 0.5: the pull comes on over so long, as a rope draws tight; as it is, all at once.)
+            float pullOver = Numbers("-stepPullOver", 0)[0];
             string say = CaptureTools.Argument("-stepSay");
             float sayPull = Numbers("-stepSayPull", .17f)[0]; int sayWay = (int)Numbers("-stepSayWay", 0)[0];
             var culture = CultureInfo.InvariantCulture;
@@ -1395,8 +1397,9 @@ namespace WonderGather.Tests
                             if (k == begins && one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
                             if (one.pull > 0 && k >= begins && k < ends)
                             {
-                                if (atWeight) for (int i = 0; i < Count; i++) one.body.Push(i, one.way * (one.pull * one.body.Mass(i) / whole), one.body.Centre(i));
-                                else one.body.Push(Trunk, one.way * one.pull, one.body.Centre(Trunk));
+                                float on = pullOver > 0 ? Mathf.Clamp01((k - begins + 1) * Step / pullOver) : 1;
+                                if (atWeight) for (int i = 0; i < Count; i++) one.body.Push(i, one.way * (on * one.pull * one.body.Mass(i) / whole), one.body.Centre(i));
+                                else one.body.Push(Trunk, one.way * (on * one.pull), one.body.Centre(Trunk));
                             }
                             if (!one.down && (float.IsNaN(one.body.Of(Hips).position.x) || !one.keeper.Keep(Step))) { one.down = true; one.downAt = k * Step; }
                             one.furthest = Mathf.Max(one.furthest, Vector3.ProjectOnPlane(one.body.Of(Hips).position - one.madeHips, Vector3.up).magnitude);
@@ -1499,7 +1502,7 @@ namespace WonderGather.Tests
         //   [-stepSearchPulls .12,.2] [-stepSearchJolts .4,.7] [-stepSearchWays 4] [-stepSearchFor 6.5]
         private static readonly (string name, float least, float most)[] StepSettings =
         {
-            ("StepsBeyond", 0, .06f), ("StepsAfter", 0, .12f), ("StepsFelt", 0, 1.2f), ("UnloadsIn", .02f, .15f), ("SwingsIn", .12f, .45f),
+            ("StepsBeyond", 0, .06f), ("StepsAfter", 0, .12f), ("StepsFelt", 0, 1.2f), ("UnloadsIn", .01f, .15f), ("SwingsIn", .06f, .45f),
             ("Clears", .02f, .1f), ("StepsAhead", 1, 3), ("StepsFurther", 0, .12f), ("Reach", .5f, .95f), ("Sideways", .3f, .9f),
             ("SwingFullAt", 5, 60), ("SwingDamped", .1f, 1.2f), ("SwingStiff", 50, 800), ("SwingSlows", 5, 60), ("SwingAtMost", 1, 8),
             ("LandsDeaf", 0, .3f), ("Astride", .03f, .15f), ("CalmUnder", .03f, .2f), ("ClosesAfter", .2f, 1.5f), ("ReadyWithin", .01f, .06f),
@@ -1507,7 +1510,7 @@ namespace WonderGather.Tests
             // (October 11: what it feels only as far as it lasts; the boot behind steps; a boot lands when it bears.)
             ("StepsFeltOver", 0, .2f), ("TrailsFrom", 0, 2), ("LandsBy", 1, 3),
             // (October 12: it sinks into a catching step.)
-            ("Sinks", 0, 1.5f), ("SinksOn", 0, 1.5f),
+            ("Sinks", 0, 1.5f), ("SinksReady", 0, .1f), ("SwingHip", 0, 1), ("LeansBack", 0, 14),
         };
 
         [UnityTest, Explicit, Timeout(14400000)]
@@ -1518,6 +1521,8 @@ namespace WonderGather.Tests
             float[] pulls = Numbers("-stepSearchPulls", .12f, .2f), jolts = Numbers("-stepSearchJolts", .4f, .7f);
             int ways = (int)Numbers("-stepSearchWays", 4)[0];
             float lasts = Numbers("-stepSearchFor", 6.5f)[0];
+            // (-stepSearchPullOver 1: the pulls come on over so long; as it is, all at once.)
+            float searchPullOver = Numbers("-stepSearchPullOver", 0)[0];
             string outFile = CaptureTools.Argument("-stepSearchOut");
             var culture = CultureInfo.InvariantCulture;
             var random = new System.Random((int)Numbers("-stepSearchSeed", 3)[0]);
@@ -1626,7 +1631,7 @@ namespace WonderGather.Tests
                             foreach (var one in crowd)
                             {
                                 if (k == begins && one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
-                                if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * one.pull, one.body.Centre(Trunk));
+                                if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * (one.pull * (searchPullOver > 0 ? Mathf.Clamp01((k - begins + 1) * Step / searchPullOver) : 1)), one.body.Centre(Trunk));
                                 if (!one.down && (float.IsNaN(one.body.Of(Hips).position.x) || !one.keeper.Keep(Step))) { one.down = true; one.downAt = k * Step; }
                             }
                             Physics.Simulate(Step);
