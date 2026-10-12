@@ -1,6 +1,6 @@
 # Wonder Gather — Current State
 
-**Updated:** October 11, 2026.
+**Updated:** October 12, 2026.
 
 - **Step 1 of the body's own is accepted by Luis (October 10, night):**
   "Indeed yes to both": the miner standing by its own joints, with life
@@ -36,6 +36,18 @@
     body's own in step 6.
   - **Tests can now be run as the game is played** (`-ownAsPlayed 1`).
     The whole suite so run, before the panel's line was mended: 155 pass and 17 fail (172 pass with the switch off). Two of the 17 were a fault of the game as played (the panel's line hid that a pickaxe lies by the miner), mended, and pass as played since; thirteen are tests that take the body by hand, which the game does not do to a body standing by its own joints; two measure a hand against how the body as it was stands. Sorted by reading each test, not by running each again ([the design page](Design/TheBodysOwn.md#the-whole-suite-as-the-game-is-played)).
+- **Step 3, October 12: saved in the middle of the work** (Luis: "nice
+  progress. Please continue now then with it"; then the machine had to
+  go off). A search with three new levers (the swinging leg's hip
+  sprung, the trunk leaning back, sinking into the step) stood the
+  first two bodies ever through a pull of a sixth of its weight (2 of
+  24; an eighth: 18 of 24), and a pull that comes on over a second is
+  stood far oftener than one that comes at once. A second round of
+  reviewers overturned my conclusion that a sixth could not be done.
+  **Not finished: where to take it up is written in
+  [the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun),
+  "October 12, saved in the middle of the work".** On the work branch
+  only; the step is off in the game.
 - **Step 3 (a step), October 11: one pulled body traced, three
   reviewers, and two searches set like against like.** A step begun on
   what it feels, as far as that has lasted, and a boot landed only

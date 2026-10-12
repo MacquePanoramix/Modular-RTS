@@ -436,6 +436,50 @@ only; nothing of step 3 is in the game Luis has.
     one that is exactly one step of the physics long;
   - uneven ground: where a boot is put down is reckoned from the boot
     it stands on.
+- **October 12, saved in the middle of the work** (Luis's machine
+  had to go off; [the message that day](Correspondence/2026-10-12_GO_ON_WITH_THE_STEP.md)).
+  **This entry is notes, not yet the account: the second round of
+  reviewers is not yet written in.**
+  - **The three things were measured,** on five bodies told at every
+    step of the physics. Its joints are below what they have until the
+    last tenth of a second (0.8 to 0.9 at the most, not at their end).
+    What it feels is unsteady for two tenths of a second after a boot
+    lands. **And on one boot its weight is not over that boot:** it
+    lies 2 to 5 cm inside the sole's inner edge, and one traced body
+    went down sideways. (I first wrote that it was; a reviewer read the
+    lines again.)
+  - **The first step under a sixth lands one to three centimetres
+    short of holding,** and the body falls half a second later by
+    creeping. So it is a narrow miss, not a wall. I had concluded that
+    a sixth was beyond a step from a stand; **the sceptic among the
+    reviewers took that apart, and was right.**
+  - **How the pull comes on matters as much as how strong it is.**
+    Coming on over 1.2 s in place of at once, 0.12 is stood by 22 of
+    24 and 0.17 by 8, with settings never searched for it.
+  - **Built since, each off at nought:** it sinks into a catching step
+    (kept: 0.12 stood by 18 of 24, from 13); the hip of a swinging leg
+    sprung as its knee and ankle are; its trunk leaning back against a
+    push that lasts; lowering itself before a step. With the last
+    three free to be found, a search as long as the others gave, pull
+    at once: **0.08: 24; 0.12: 18; 0.17: 2, the first bodies ever to
+    stand a sixth;** shoved at 0.5 and 0.7 m/s: 24 and 20; 112 of 168
+    in all (106 before). It chose the hip sprung and the trunk leaning.
+  - **Tried and taken out:** a far boot taking longer (nothing); the
+    step's length reckoned from how long it takes (worse).
+  - **Where to take it up:** (1) put that search's settings into the
+    keeper (they are in the message of the work branch's last commit,
+    and below), run the standing body's tests, and take each of the
+    three levers out in turn; (2) write the reviewers of October 12
+    into this page (the sceptic's eleven points, the physicist's
+    corrections, the builder's order for going into the game); (3)
+    search with pulls that come on over a time as well as at once;
+    (4) the builder's list, then the step into the game with a way to
+    pull on the panel; (5) one thing for Luis: the bar for a pulled
+    body was taken from the posed body, which leans without a step to
+    a sixth of its weight, and a body moved only by its joints cannot
+    (from rest, about 0.09). What it is to be held to is Luis's to say.
+  - The settings that search found:
+    `StepsBeyond=0.035,StepsAfter=0.0389,StepsFelt=0.764,UnloadsIn=0.0123,SwingsIn=0.1205,Clears=0.0841,StepsAhead=1.7984,StepsFurther=0.0219,Reach=0.7771,Sideways=0.6257,SwingFullAt=36.9916,SwingDamped=0.3692,SwingStiff=102.3059,SwingSlows=52.1183,SwingAtMost=1.4859,LandsDeaf=0.1131,Astride=0.1045,CalmUnder=0.0901,ClosesAfter=0.8898,ReadyWithin=0.0134,TakesUp=1.1961,StepRights=1,SwingAnkle=16.2657,Tilts=0.3658,TiltsRate=0.274,StepsFeltOver=0.1652,TrailsFrom=1.0148,LandsBy=1.3392,Sinks=0.2615,SinksReady=0.0033,SwingHip=0.7069,LeansBack=8.3633`
 - **Where the code is:** on the work branch `claude/wip-round`, with
   the settings of the table's last column. The step is off in the
   game, and with it off a miner stands exactly as it did (the standing
