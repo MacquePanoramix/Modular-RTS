@@ -1296,6 +1296,10 @@ namespace WonderGather.Tests
             // (-stepPullAt weight: the pull given to every part by its share of the weight, which does not turn the body;
             // as it is, at the middle of its trunk, above its weight. -stepPullFor 2.5: how long it is held.)
             bool atWeight = CaptureTools.Argument("-stepPullAt") == "weight";
+            // (-stepTick 1.0,2.6: the body that is told, at every step of the physics between those times: STEPTICK.)
+            float[] tick = Numbers("-stepTick", -1, -1);
+            // (-stepStrong 3: every joint so many times as strong as it is, to see what strength alone would do.)
+            float stronger = Numbers("-stepStrong", 1)[0];
             float pullFor = Numbers("-stepPullFor", 2.5f)[0];
             string say = CaptureTools.Argument("-stepSay");
             float sayPull = Numbers("-stepSayPull", .17f)[0]; int sayWay = (int)Numbers("-stepSayWay", 0)[0];
@@ -1361,6 +1365,7 @@ namespace WonderGather.Tests
                 // (The bodies are sprung as the game's are.)
                 Rule = OwnKeeper.Rule; Damped = OwnKeeper.Damped;
                 OwnKeeper.Steps = steps;
+                if (stronger != 1) foreach (var made in plans) for (int i = 0; i < made.Length; i++) made[i].strength *= stronger;
                 LogAssert.ignoreFailingMessages = true;
 
                 for (int m = 0; m < plans.Count; m++)
@@ -1410,6 +1415,25 @@ namespace WonderGather.Tests
                                 Debug.Log(string.Format(culture, "SWINGHIP {0:0.00} s: asked {1:0} {2:0} {3:0} deg; is {4:0} {5:0} {6:0} deg ({7} dofs); spring {8:0} damper {9:0.0} limit {10:0}; gives {11:0} {12:0} {13:0}",
                                     k * Step, lk.xDrive.target, lk.yDrive.target, lk.zDrive.target, jp.dofCount > 0 ? jp[0] * 57.3f : 0, jp.dofCount > 1 ? jp[1] * 57.3f : 0, jp.dofCount > 2 ? jp[2] * 57.3f : 0, jp.dofCount,
                                     lk.xDrive.stiffness, lk.xDrive.damping, lk.xDrive.forceLimit, lk.driveForce.dofCount > 0 ? lk.driveForce[0] : 0, lk.driveForce.dofCount > 1 ? lk.driveForce[1] : 0, lk.driveForce.dofCount > 2 ? lk.driveForce[2] : 0));
+                            }
+                        if (told && tick[0] >= 0 && k * Step >= tick[0] - 1e-4f && k * Step <= tick[1] + 1e-4f)
+                            foreach (var one in crowd)
+                            {
+                                if (one.wayIs != sayWay || Mathf.Abs(one.pull - sayPull * whole * 9.81f) > .01f || one.jolt > 0) continue;
+                                var kp = one.keeper; Vector3 side = Vector3.Cross(Vector3.up, one.way), o = one.madeHips;
+                                float A(Vector3 v) => Vector3.Dot(v - o, one.way) * 1000; float S(Vector3 v) => Vector3.Dot(v - o, side) * 1000;
+                                float R(int j) => kp.Asked[j] / Mathf.Max(1e-4f, kp.Has(j));
+                                Transform hp = one.body.Of(Hips), tr = one.body.Of(Trunk);
+                                Debug.Log(string.Format(culture, "STEPTICK {0:0.00} sw{1} st{2}{3} | along: weight {4:0} going {5:0} wants {6:0} act {7:0} bore {8:0} soles {9:0} {10:0} | aside: weight {11:0} going {12:0} wants {13:0} act {14:0} bore {15:0} soles {16:0} {17:0} | bears {18:0.00} {19:0.00} | felt {20:0.00} {21:0.00} seen {22:0.0} {23:0.0} falls {24:0.00} | asked of has: L thigh {25:0.00} shin {26:0.00} foot {27:0.00}, R thigh {28:0.00} shin {29:0.00} foot {30:0.00}, trunk {31:0.00} | hips {32:0} up, tipped {33:0.0} ahead {34:0.0} aside; trunk tipped {35:0.0} ahead",
+                                    k * Step, kp.Swings, kp.Stepped, one.down ? " DOWN" : "",
+                                    A(kp.WeightAt), A(kp.GoingAt), A(kp.WantedAt), A(kp.ActedAt), A(kp.BoreAt), A(kp.SoleAt(0)), A(kp.SoleAt(1)),
+                                    S(kp.WeightAt), S(kp.GoingAt), S(kp.WantedAt), S(kp.ActedAt), S(kp.BoreAt), S(kp.SoleAt(0)), S(kp.SoleAt(1)),
+                                    kp.Bore(0), kp.Bore(1),
+                                    Vector3.Dot(kp.Felt, one.way), Vector3.Dot(kp.Felt, side), Vector3.Dot(kp.SeenLast, one.way), Vector3.Dot(kp.SeenLast, side), kp.FallsAt,
+                                    R(Thigh), R(Shin), R(Foot), R(Thigh + 1), R(Shin + 1), R(Foot + 1), R(Trunk),
+                                    (hp.position.y - one.madeHips.y) * 1000,
+                                    Mathf.Asin(Mathf.Clamp(Vector3.Dot(hp.up, one.way), -1, 1)) * Mathf.Rad2Deg, Mathf.Asin(Mathf.Clamp(Vector3.Dot(hp.up, side), -1, 1)) * Mathf.Rad2Deg,
+                                    Mathf.Asin(Mathf.Clamp(Vector3.Dot(tr.up, one.way), -1, 1)) * Mathf.Rad2Deg));
                             }
                         if (told && k >= begins - 5 && k % 5 == 0)
                             foreach (var one in crowd)
@@ -1482,6 +1506,8 @@ namespace WonderGather.Tests
             ("TakesUp", 0, 1.2f), ("StepRights", 1, 5), ("SwingAnkle", 1, 40), ("Tilts", 0, 2.5f), ("TiltsRate", 0, .6f),
             // (October 11: what it feels only as far as it lasts; the boot behind steps; a boot lands when it bears.)
             ("StepsFeltOver", 0, .2f), ("TrailsFrom", 0, 2), ("LandsBy", 1, 3),
+            // (October 12: it sinks into a catching step.)
+            ("Sinks", 0, 1.5f), ("SinksOn", 0, 1.5f),
         };
 
         [UnityTest, Explicit, Timeout(14400000)]
@@ -1570,7 +1596,8 @@ namespace WonderGather.Tests
                 float total = 0; string told = "";
                 IEnumerator Try(float[] v)
                 {
-                    for (int i = 0; i < n; i++) fields[i].SetValue(null, Mathf.Lerp(StepSettings[i].least, StepSettings[i].most, Mathf.Clamp01(v[i])));
+                    // (A setting that is held stays where the search began, though that be outside what is searched.)
+                    for (int i = 0; i < n; i++) fields[i].SetValue(null, held.Contains(StepSettings[i].name) ? began[i] : Mathf.Lerp(StepSettings[i].least, StepSettings[i].most, Mathf.Clamp01(v[i])));
                     total = 0; told = "";
                     float least = float.MaxValue;
                     for (int m = 0; m < plans.Count; m++)
@@ -1635,7 +1662,7 @@ namespace WonderGather.Tests
                 string Said(float[] v)
                 {
                     string said = "";
-                    for (int i = 0; i < n; i++) said += (i > 0 ? "," : "") + StepSettings[i].name + "=" + Mathf.Lerp(StepSettings[i].least, StepSettings[i].most, Mathf.Clamp01(v[i])).ToString("0.####", culture);
+                    for (int i = 0; i < n; i++) said += (i > 0 ? "," : "") + StepSettings[i].name + "=" + (held.Contains(StepSettings[i].name) ? began[i] : Mathf.Lerp(StepSettings[i].least, StepSettings[i].most, Mathf.Clamp01(v[i]))).ToString("0.####", culture);
                     return said;
                 }
                 for (int round = 0; round < rounds; round++)
