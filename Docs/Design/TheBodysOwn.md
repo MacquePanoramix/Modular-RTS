@@ -1367,13 +1367,17 @@ physical animation at all... I want the character to get up naturally
 with their own limbs and strength in a natural manner and the character
 shouldn't look dead and then start moving to get up after a timer."
 
-So far: **one miner (Small), from lying on its front, gets up with
-nothing posed anywhere**: it draws its knees under, comes onto its feet
-in a low tuck, and its legs raise it; it uncurls and stands. On the
-bench, the same start tried eight times: **seven stand**, about 11.5 s
-after they began. That is too long, it is one miner from one way of
-lying, and it is not in the game. It is the first time any miner has
-gone from lying to standing by its joints alone.
+So far: **each miner, laid on its front at one place on the path, gets
+up with nothing posed anywhere**: it draws its knees under, comes onto
+its feet in a low tuck, and its legs raise it; it uncurls and stands.
+It is the first time any miner has gone from lying to standing by its
+joints alone.
+
+**It holds at that one place only.** Laid at six other places on the
+same path, where the meadow's ground lies a little differently, **none
+of 18 stood** (below). So what is found is not yet a way of getting up:
+it is one that works where it was searched. It is also too long (8 to
+12 s), only from the front, and not in the game.
 
 ![Small getting up from its front by its own joints](../Images/GettingUp_2026-10-14/Small_FromItsFront_FirstWholeGetUp.jpg)
 
@@ -1513,9 +1517,46 @@ keeper taking it and raising it, in the same try.
 folded over, a second, four seconds and nine seconds after the keeper
 took it.*
 
+### Each miner its own way, and where it holds
+
+Small's way does not get Long or Round up, and was not meant to. Each
+was searched from Small's, at the first place on the path:
+
+| | On its feet | Up | Where it was searched | At six other places on the path |
+|---|---|---|---|---|
+| Small | 8.4 s | 11.5 s | 7 tries of 8 stand | 0 of 6 (once on its feet, and down again) |
+| Round | 5.6 s | 8.3 s | 2 of 2 | 0 of 6 |
+| Long | 8.6 s | 12.2 to 12.6 s | 2 of 2 (1 of 2 in the search's last round) | 0 of 6 |
+
+Two things are wrong, and they are one thing.
+
+- **The ground.** The path is not level and not the same from place to
+  place. A row of poses with only time between them does the same
+  thing on any ground, and what the ground does back is different. (It
+  is what October 13 taught of the step: a figure found on a level
+  floor tipped a boot over on the meadow.)
+- **The same poses from the same start do not end the same way twice.**
+  A search from four places at once began with two of four standing and
+  never saw that again from the same numbers: it could not climb. The
+  getting up it found goes through moments where a centimetre decides.
+
+So a way has to answer to what the body finds, not only to the clock.
+Three things already do, and are what made it stand at all: the keeper
+that takes it the moment its boots bear it; the keeper having its weight
+on its feet before it rises; and the rise going at its legs' pace. The
+part between its knees coming under and its boots bearing it does not.
+
+**Begun for that:** a pose can have a foot *put* somewhere: its boot
+carried flat to a place on the ground ahead of its own hip, its leg's
+joints asked for whatever puts it there on the ground as it is, and the
+pose through only once that boot bears. Two first ways with it, set by
+hand, do not work: Small cannot get its chest off the ground with its
+arms (they give a third of what an ordinary arm does, and its head is a
+quarter of its weight), so there is no room under it for a leg.
+
 ### What is not done
 
-- **Long and Round.** Their own ways are being searched.
+- **A way that holds wherever it lies.** The above.
 - **From its back and its sides.** Only from its front so far. As it
   was, a miner on its back kicked into a ball and rolled over in under
   two seconds; that is the "convulsing".
@@ -1524,11 +1565,9 @@ took it.*
   while it's recovering from the fall, and maybe indeed not right away,
   but it should slowly get to moving up." Not begun: its strength
   coming back by degrees, its breath, the first stir.
-- **How long it takes.** Small is on its feet 8.4 s after it begins and
-  up at 11.5; people take three to six. The four poses between its
-  knees coming under and the tuck are what a search left, and read as
-  fussing.
-- **One try in eight still goes down** once the keeper has it.
+- **How long it takes.** 8 to 12 s; people take three to six. The poses
+  between its knees coming under and the tuck are what a search left,
+  and read as fussing.
 - **In the game.** None of it. The fall still hands a lying miner to
   the old getting up.
 - **Not looked at by Luis, nor by judges.**

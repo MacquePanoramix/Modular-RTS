@@ -5,15 +5,18 @@
 - **The getting up is being built (October 14; on the work branch
   and the bench only; not in the game, not in a build; Luis has seen
   none of it).** For the first time a miner goes from lying to
-  standing with nothing posed anywhere: Small, from its front, draws
+  standing with nothing posed anywhere: laid on its front, it draws
   its knees under, comes onto its feet in a tuck, and its own legs
-  raise it. On the bench, the same start eight times: seven stand,
-  about 11.5 s after they begin (too long). It is done on the body
-  that stands (with ankles), made as the miner lies, so one body goes
-  from lying to standing; the poses are searched, each miner its own.
-  **Not done:** Long and Round; from its back and sides; the lying
-  itself (what Luis asked for first: not dead until a clock runs
-  out); a shorter middle; the game
+  raise it. Each of the three does so **at the one place on the path
+  where its way was searched** (Small 7 tries of 8; Round and Long 2
+  of 2; 8 to 12 s, too long) **and at none of six other places (0
+  of 18):** the ground lies differently at each, and a row of poses
+  does not answer to it. It is done on the body that stands (with
+  ankles), made as the miner lies, so one body goes from lying to
+  standing; the poses are searched, each miner its own.
+  **Not done:** a way that holds wherever it lies; from its back and
+  sides; the lying itself (what Luis asked for first: not dead until
+  a clock runs out); a shorter middle; the game
   ([what is built](Design/TheBodysOwn.md#step-2-the-getting-up-the-bodys-own-begun-october-14-not-in-the-game)).
   The three builds are as they were on October 13.
 

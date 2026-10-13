@@ -1010,14 +1010,24 @@ only; nothing of step 3 is in the game Luis has.
     than it has) brings it onto its feet; the keeper takes it the
     moment its boots bear it. The poses are searched on a bench, each
     miner its own.
-  - **Small, from its front: seven tries of eight stand,** about
-    11.5 s after they begin, with nothing posed anywhere. Too long,
-    one miner, one way of lying.
+  - **Each miner, from its front, stands up with nothing posed
+    anywhere, at the one place on the path where its way was
+    searched** (Small 7 tries of 8, up at 11.5 s; Round 2 of 2, 8.3
+    s; Long 2 of 2, 12.2 to 12.6 s). **Laid at six other places on
+    the same path: 0 of 18.** The ground lies differently at each,
+    and a row of poses with only time between them does not answer
+    to it; the same poses from the same start do not even end the
+    same way twice. What stands them up at all is what does answer
+    to the body (the keeper taking it when its boots bear it, and
+    raising it at its legs' pace). The part before that has to as
+    well: begun (a foot put on the ground by what its leg's joints
+    must give), not working yet.
   - **The plan's third part is changed in one thing:** I had written
     that it would rise "facing as it faced". It rises facing as its
     feet are when it comes onto them. What turned it a quarter round
     in the build was the posed body taking over, not the miner.
-  - **Still to do, in this order:** Long's and Round's own ways; from
+  - **Still to do, in this order:** a way that holds wherever it
+    lies (searched and counted at many places, never at one); from
     its back and its sides; the lying (its strength back by degrees,
     its breath, the first stir, no clock); a shorter and plainer
     middle; into the game; then judges, and Luis.
