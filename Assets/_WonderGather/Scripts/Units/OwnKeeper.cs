@@ -207,7 +207,10 @@ namespace WonderGather
         // of what it has), its boot tips over its toe (28 degrees) and is thrown. And under 0.10 and more it runs
         // out of time getting ready. A person pulled does not wait on one leg either. Not to be switched on as it
         // is.
-        public static float ReadiesAhead = 0, ReadyFurther = .02f, ReadiesQuick = 3;
+        // (October 13, later: the boot of such a step is lifted while it still bears ReadyUnder of its weight, for
+        // three steps of the physics: the getting ready and the step overlap. In the game, pulled with 0.08, with
+        // 0.35 and with 0.5: Small's first step 8 cm, its second 12, its head going 13 cm in all for 30.)
+        public static float ReadiesAhead = 0, ReadyFurther = .02f, ReadiesQuick = 3, ReadyUnder = .4f;
 
         private readonly float[] lighter;
         private readonly Quaternion[] rested = new Quaternion[Count], madeTurned = new Quaternion[Count], madeLay = new Quaternion[Count];
@@ -605,7 +608,7 @@ namespace WonderGather
                         // (Ready: the boot to be lifted bears next to nothing and the other most of its weight, and
                         // have for three steps of the physics.)
                         float bearsOf = bears[swings] / (whole * g * step);
-                        lightFor = bearsOf < LiftsUnder && bears[stance] > LiftsOver * whole * g * step ? lightFor + 1 : 0;
+                        lightFor = (prepared ? bearsOf < ReadyUnder : bearsOf < LiftsUnder && bears[stance] > LiftsOver * whole * g * step) ? lightFor + 1 : 0;
                         if (lightFor >= 3)
                         {
                             readying = false;
