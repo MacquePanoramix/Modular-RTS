@@ -3295,7 +3295,7 @@ verdict: Luis has not seen the step.**
   over 1.2 s, standing with it and without: 0.06, 0.08 and 0.10, 24 and
   24; 0.12, 22 and 23; 0.14, 22 and 19; 0.17, 8 and 5; shoved at 0.3
   and 0.5 m/s, 24 and 24. In the game, pulled with 0.08: Small goes
-  down (four runs of four with it on, at three settings of it); with
+  down (five runs of five with it on, at four settings of it); with
   0.10, Small and Long stand and Round goes down (one run); with 0.12
   all three go down (one run). With it off again: the shove test 12 of
   12 with the same steps; the gentle pull, four runs: Long and Round
