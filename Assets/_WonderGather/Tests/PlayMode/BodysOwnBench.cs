@@ -1278,6 +1278,8 @@ namespace WonderGather.Tests
         {
             public Built body; public OwnKeeper keeper; public bool down; public float downAt;
             public float pull, jolt; public Vector3 way; public int wayIs;
+            // (The pull comes on over this long: nought, all at once.)
+            public float over;
             public Vector3 madeHead, madeHips; public float furthest;
         }
 
@@ -1510,7 +1512,9 @@ namespace WonderGather.Tests
             // (October 11: what it feels only as far as it lasts; the boot behind steps; a boot lands when it bears.)
             ("StepsFeltOver", 0, .2f), ("TrailsFrom", 0, 2), ("LandsBy", 1, 3),
             // (October 12: it sinks into a catching step.)
-            ("Sinks", 0, 1.5f), ("SinksReady", 0, .1f), ("SwingHip", 0, 1), ("LeansBack", 0, 14),
+            ("Sinks", 0, 1.5f), ("SwingHip", 0, 1), ("LeansBack", 0, 14),
+            // (October 13: a push known to last by being there at every step; how fast it lets itself come down.)
+            ("StepsFeltHeld", 0, .14f), ("SinksFree", .3f, .95f),
         };
 
         [UnityTest, Explicit, Timeout(14400000)]
@@ -1523,6 +1527,11 @@ namespace WonderGather.Tests
             float lasts = Numbers("-stepSearchFor", 6.5f)[0];
             // (-stepSearchPullOver 1: the pulls come on over so long; as it is, all at once.)
             float searchPullOver = Numbers("-stepSearchPullOver", 0)[0];
+            // (-stepSearchSlow .17,.22 -stepSearchSlowOver 1.2: more pulls, that come on over that long, beside the others.)
+            float[] slows = CaptureTools.Argument("-stepSearchSlow") != null ? Numbers("-stepSearchSlow", .17f) : new float[0];
+            float slowOver = Numbers("-stepSearchSlowOver", 1.2f)[0];
+            // (-stepSearchPullFor 3: how long the search's pulls are held; two seconds as it was.)
+            float searchPullFor = Numbers("-stepSearchPullFor", 2)[0];
             string outFile = CaptureTools.Argument("-stepSearchOut");
             var culture = CultureInfo.InvariantCulture;
             var random = new System.Random((int)Numbers("-stepSearchSeed", 3)[0]);
@@ -1621,9 +1630,10 @@ namespace WonderGather.Tests
                             crowd.Add(one);
                         }
                         foreach (float pull in pulls) for (int w = 0; w < ways; w++) Add(pull * whole * 9.81f, 0, w);
+                        foreach (float pull in slows) for (int w = 0; w < ways; w++) { Add(pull * whole * 9.81f, 0, w); crowd[crowd.Count - 1].over = slowOver; }
                         foreach (float jolt in jolts) for (int w = 0; w < ways; w++) Add(0, jolt, w);
                         Physics.SyncTransforms();
-                        int count = Mathf.RoundToInt(lasts / Step), begins = Mathf.RoundToInt(.6f / Step), ends = Mathf.RoundToInt(2.6f / Step);
+                        int count = Mathf.RoundToInt(lasts / Step), begins = Mathf.RoundToInt(.6f / Step), ends = Mathf.RoundToInt((.6f + searchPullFor) / Step);
                         var madeApart = new List<Vector3>();
                         foreach (var one in crowd) madeApart.Add(one.body.Of(Foot + 1).position - one.body.Of(Foot).position);
                         for (int k = 0; k < count; k++)
@@ -1631,7 +1641,7 @@ namespace WonderGather.Tests
                             foreach (var one in crowd)
                             {
                                 if (k == begins && one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
-                                if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * (one.pull * (searchPullOver > 0 ? Mathf.Clamp01((k - begins + 1) * Step / searchPullOver) : 1)), one.body.Centre(Trunk));
+                                if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * (one.pull * (one.over > 0 ? Mathf.Clamp01((k - begins + 1) * Step / one.over) : searchPullOver > 0 ? Mathf.Clamp01((k - begins + 1) * Step / searchPullOver) : 1)), one.body.Centre(Trunk));
                                 if (!one.down && (float.IsNaN(one.body.Of(Hips).position.x) || !one.keeper.Keep(Step))) { one.down = true; one.downAt = k * Step; }
                             }
                             Physics.Simulate(Step);

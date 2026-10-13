@@ -62,7 +62,7 @@ namespace WonderGather
         // Where it wants the ground to push it is further the way its body tips: by Tilts of how far its hips have
         // tipped (times its height), and TiltsRate of how fast, over its rate of falling. (A pull above its weight
         // turns the whole body over, and a push that passes through its weight never turns it back.) Nought: not.
-        public static float Tilts = 0.2472f, TiltsRate = 0.1831f;
+        public static float Tilts = 0.38f, TiltsRate = 0.2994f;
 
         // ---- The step (S3b, step 3; what was read for it: the research of October 9, part 7). Set by hand to begin
         // with; to be found by a search on the three miners together, as the settings above were.
@@ -74,29 +74,35 @@ namespace WonderGather
         // going now, and StepsFurther metres beyond; no further from its hip than Reach of the leg's length. Sideways
         // (its fall more than Sideways across it) it steps with the leg on the side it falls to; else with the leg
         // that bears less.
-        public static float StepsBeyond = 0.0153f, StepsAfter = 0.0349f, UnloadsIn = 0.0267f, SwingsIn = 0.1251f, Clears = 0.0711f;
-        public static float StepsAhead = 1.5466f, StepsFurther = 0.0413f, Reach = 0.692f, Sideways = 0.6708f;
+        public static float StepsBeyond = 0.0376f, StepsAfter = 0.0466f, UnloadsIn = 0.0105f, SwingsIn = 0.0964f, Clears = 0.0869f;
+        public static float StepsAhead = 1.4708f, StepsFurther = 0.041f, Reach = 0.8581f, Sideways = 0.514f;
         // (How much of what pushes it counts in whether it must step, and where to: a blow is felt as a great push
         // for a moment, and is not one that lasts.)
-        public static float StepsFelt = 0.9859f;
+        public static float StepsFelt = 0.9705f;
         // A swinging boot has landed when it bears on the ground; or, if it has not by then, at this many times the
         // time its swing takes (1: at the end of its swing whether it bears or not, as the step was first built).
         // Past the end of its swing it is put straight down from where it is, onto the ground it left: a boot
         // put further than its leg reaches from hips still so high hangs in the air until the body has fallen
         // onto it. (October 11: let go by the clock, a pulled miner's boot was 2 to 5 cm in the air; it was taken
         // for landed, and swung again or came down a hand's width nearer than it was put.)
-        public static float LandsBy = 1.2705f;
+        public static float LandsBy = 1.3846f;
         // What it feels counts towards a step (StepsFelt) only as far as it has lasted this long, seconds: the least
         // it has felt over that time. A shove is over in a step of the physics, and where its weight is going
         // already tells of it; a pull that is held goes on. 0: all it feels at once, as the step was first built.
-        public static float StepsFeltOver = 0.1776f;
+        public static float StepsFeltOver = 0.043f;
+        // Or (if this is more than nought, in place of that): what it feels counts once a push has been there at
+        // every step of the physics for this long, seconds. A shove is there for one step; a pull for all of them.
+        // (A push is "there" when what pushed it at that step, unsmoothed, would have the ground push beyond its
+        // ease; it is gone when it has not been for two steps running.)
+        public static float StepsFeltHeld = 0.0475f;
+        private float pushedFor; private int notPushed;
         // Standing with one boot this far before the other (along the way it falls; a share of how far apart its
         // boots stand at ease), and not falling sideways across its body, the boot behind is the one that steps:
         // never the boot in front, which is holding it. 0: not so (the leg is chosen as for boots
         // side by side, as the step was first built). (October 11: with its boots astride after a first step, the
         // line between them is no longer across it, a fall forward was taken for a fall sideways, and it lifted the
         // boot in front.)
-        public static float TrailsFrom = 1.8357f;
+        public static float TrailsFrom = 1.1352f;
         // What five bodies pulled with a sixth of their weight showed, told at every step of the physics (October
         // 12): their joints were asked for 0.7 of what they have at the most; what they felt was not misjudged; and
         // their weight was over the boot they stood on. But every first step landed with where their weight was
@@ -112,18 +118,17 @@ namespace WonderGather
         // seconds once it has landed. 0: its hips are held at standing height through a step. (It comes down at
         // SinksDown metres a second, not all in one step of the physics; and no further than well short of where
         // it would be taken for fallen.)
-        public static float Sinks = 0.6064f, SinksAtMost = .12f, SinksBack = .5f;
+        public static float Sinks = 0.1736f, SinksAtMost = .12f, SinksBack = .5f;
         private const float SinksDown = .5f;
-        // It lowers itself by this share of its height as soon as it feels a push that lasts, beyond its ease,
-        // before any step: a body that braces is a lower body, and a boot reaches further from lower hips. 0: not.
-        public static float SinksReady = 0;
+        // How fast it lets itself come down, as a share of falling free (with the step off: a half, as it was).
+        public static float SinksFree = 0.4797f;
         // The hip of a swinging leg is sprung as stiffly as its knee and its ankle are in the air. 0: it is left as
         // it stands (and the boot came 14 to 25 cm behind where it was wanted by the end of its swing).
-        public static float SwingHip = 0;
+        public static float SwingHip = 0.9542f;
         // Its trunk leans back against a push that lasts: so many degrees for each 10 cm the ground would have to
         // push beyond its ease, LeansBackAtMost at the most. 0: its trunk is held as it stands, and a pull at its
         // chest folds it forward.
-        public static float LeansBack = 0, LeansBackAtMost = 22;
+        public static float LeansBack = 10.223f, LeansBackAtMost = 22;
         private float sinksBy, sinkWants, leansNow, lastingAsked;
         private Vector3 lastingFelt;
         private bool leaned;
@@ -132,21 +137,21 @@ namespace WonderGather
         private float leftGround;
         private bool putDown;
         // For this long after a boot lands (seconds), how its weight went is not taken for a push from outside.
-        public static float LandsDeaf = 0.0895f;
+        public static float LandsDeaf = 0.1505f;
         // While its boot swings, that leg's joints give all they have at SwingFullAt degrees from where the boot
         // should be (never stiffer than the rule), damped by SwingDamped of what just stops them swinging.
-        public static float SwingFullAt = 32.6026f, SwingDamped = 0.5017f;
+        public static float SwingFullAt = 23.7483f, SwingDamped = 0.4716f;
         // Its boot is carried there by a pull for each kilogram of the leg: SwingStiff for each metre it is from where
         // it should be, SwingSlows for each metre a second it lags; no more than SwingAtMost times the leg's weight.
-        public static float SwingStiff = 172.8436f, SwingSlows = 53.5533f, SwingAtMost = 1.9629f;
+        public static float SwingStiff = 192.7996f, SwingSlows = 51.9164f, SwingAtMost = 1.6595f;
         // The hip of the leg it stands on takes up this share of what the swinging leg's hip gives; and its hips are
         // righted this many times as hard while it stands on one leg.
-        public static float TakesUp = 0.8976f, StepRights = 1.0385f, SwingAnkle = 12.0614f;
+        public static float TakesUp = 1.2f, StepRights = 1, SwingAnkle = 13.186f;
         // Afterwards the other boot is brought alongside: when its boots stand more than Astride (metres) from how
         // they stood, and it has been at rest (its weight going slower than CalmUnder, metres a second) for
         // ClosesAfter seconds. That step is got ready: its weight goes onto the leg it will stand on, to within
         // ReadyWithin (metres), for no longer than ReadiesAtMost seconds.
-        public static float Astride = 0.096f, CalmUnder = 0.1207f, ClosesAfter = 0.9645f, ReadyWithin = 0.0183f, ReadiesAtMost = 1;
+        public static float Astride = 0.1067f, CalmUnder = 0.0817f, ClosesAfter = 0.6579f, ReadyWithin = 0.0138f, ReadiesAtMost = 1;
 
         private readonly float[] lighter;
         private readonly Quaternion[] rested = new Quaternion[Count], madeTurned = new Quaternion[Count], madeLay = new Quaternion[Count];
@@ -330,7 +335,7 @@ namespace WonderGather
             // Down: it goes over into the fall that is built.
             if (float.IsNaN(high) || high < DownAt * height || Vector3.Angle(Vector3.up, parts[Hips].transform.up) > DownLeaning) return false;
 
-            float rise = Mathf.Clamp(Rises * (height - sinksBy - high) - RisesDamped * goes.y, -.5f * g, g);
+            float rise = Mathf.Clamp(Rises * (height - sinksBy - high) - RisesDamped * goes.y, -(Steps ? Mathf.Clamp(SinksFree, .1f, .95f) : .5f) * g, g);
             // A standing body falls away from where the ground pushes it, at a rate of its own (the root of gravity
             // over its height). So what matters is where its weight is going: its place, and its speed over that rate.
             float falls = Mathf.Sqrt((g + rise) / Mathf.Max(.1f, high));
@@ -357,8 +362,8 @@ namespace WonderGather
             // and its boot put down where its weight will be going. Afterwards, at rest, the other boot is brought
             // alongside (that one is got ready: its weight goes onto the leg it will stand on first).
             int single = -1, stance = -1;
-            // (How low it means to be: standing, by what it is ready for; in a catching step, by what its leg needs.)
-            if (swings < 0) sinkWants = Steps && SinksReady > 0 && lastingAsked > Comfort ? Mathf.Min(SinksAtMost, SinksReady) * height : 0;
+            // (How low it means to be: in a catching step, by what its leg needs; standing, as it stands.)
+            if (swings < 0) sinkWants = 0;
             if (sinksBy != sinkWants) sinksBy = Mathf.MoveTowards(sinksBy, sinkWants, (sinkWants > sinksBy ? SinksDown : SinksAtMost * height / Mathf.Max(.05f, SinksBack)) * step);
             carrying = -1;
             float unloaded = 0;
@@ -370,7 +375,13 @@ namespace WonderGather
                     // (Where the ground would have to push it for it to stand as it is: where its weight is going, and
                     // further for what pushes it. Can its soles bear that?)
                     Vector3 lasting = felt;
-                    if (StepsFeltOver > 0)
+                    if (StepsFeltHeld > 0)
+                    {
+                        if (SeenLast.magnitude / (falls * falls) > Comfort) { pushedFor += step; notPushed = 0; }
+                        else if (++notPushed >= 2) pushedFor = 0;
+                        if (pushedFor < StepsFeltHeld) lasting = Vector3.zero;
+                    }
+                    else if (StepsFeltOver > 0)
                     {
                         feltLately[feltTold++ % feltLately.Length] = felt;
                         int back = Mathf.Clamp(Mathf.RoundToInt(StepsFeltOver / step), 1, Mathf.Min(feltTold, feltLately.Length));
