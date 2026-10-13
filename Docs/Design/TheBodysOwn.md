@@ -1546,13 +1546,62 @@ that takes it the moment its boots bear it; the keeper having its weight
 on its feet before it rises; and the rise going at its legs' pace. The
 part between its knees coming under and its boots bearing it does not.
 
-**Begun for that:** a pose can have a foot *put* somewhere: its boot
-carried flat to a place on the ground ahead of its own hip, its leg's
-joints asked for whatever puts it there on the ground as it is, and the
-pose through only once that boot bears. Two first ways with it, set by
-hand, do not work: Small cannot get its chest off the ground with its
-arms (they give a third of what an ordinary arm does, and its head is a
-quarter of its weight), so there is no room under it for a leg.
+**Begun for that: pieces that answer to the body.**
+
+- **A foot is put.** In a pose, a boot is carried flat to a place on the
+  ground by its own hip (so far ahead or behind, so far out), its leg's
+  joints asked for whatever puts it there on the ground as it is, and
+  the pose is through only once that boot bears.
+- **It sits back until its boots bear it:** its knees bend for as long
+  as its weight is ahead of its soles, and no further.
+
+**What they give so far (Small, laid on its front at six places):** its
+knees under, its hips pushed up over them, each foot put flat under it
+and out to its side. At **five of the six places it is then the same:**
+its soles flat, its hips at 0.44 to 0.46 of their standing height, its
+weight on its head and arms, half its hips' height ahead of its feet.
+Before, no two places ended alike. **Getting its weight from there onto
+its feet is not done:** lifting its chest by its hips, as tried, tips
+its boots. So the first half now holds from place to place, and the
+second half is what is left.
+
+Two faults of mine in the putting of a foot, found in pictures: its knee
+was sent "up and ahead" in the world, which for a body bowed over on
+its knees is up over its back (it bends the way the front of its hips
+faces now); and a boot laid exactly on the ground bore nothing, so the
+pose that waited for it waited for ever (it is pressed down a little).
+
+### A question for Luis: its arms
+
+**Small cannot push its chest off the ground with its arms.** An arm's
+strength is reckoned from its thickness, against an ordinary grown
+person's: Small's arms give about a third of that (24 N m at the
+shoulder for an ordinary 70), Long's under a half, Round's nearly all of
+it; and Small's head is a quarter of its weight. Tried on the bench:
+knees under, then arms straightened under its shoulders. As its arms
+are, it does not come up, and tips onto its side. With arms three times
+as strong, the same pose throws its chest up and over onto its back: so
+it is their strength, not the pose, that keeps it down.
+
+It matters because **the plainest way a person gets up goes through
+hands and knees** (hands under the shoulders, push up, a foot brought
+forward, rise over it), and a miner that cannot hold its chest up cannot
+go that way: its head stays on the ground until its legs alone have its
+weight. That is what the pictures above show, and it is why the middle
+is so hard to make hold.
+
+Its legs were settled the other way on October 7: "a knee is as strong
+as its own body needs", whatever its thickness. **Whether its arms
+should be too is Luis's to say**, because the same arms swing the
+pickaxe and carry: stronger arms change the work of S3 as well.
+
+| | What it would mean |
+|---|---|
+| **A. Arms as strong as its own body needs** (enough to push its chest up, as its legs carry it) | Getting up through hands and knees becomes possible, and plainer to look at. Its work gets stronger too: every figure of S3's work (how many blows a boulder takes, how soon it tires) would have to be measured again and, if Luis wants them as they are, brought back another way |
+| **B. Arms as they are** | It gets up without them: its head and forearms on the ground until its legs have it. Harder to make hold, and it may always read a little as a body that cannot use its arms |
+
+I lean to A, and have not done it: it is not mine to decide. Until Luis
+says, I go on with B.
 
 ### What is not done
 

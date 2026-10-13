@@ -14,6 +14,17 @@
   does not answer to it. It is done on the body that stands (with
   ankles), made as the miner lies, so one body goes from lying to
   standing; the poses are searched, each miner its own.
+  With two pieces that answer to the body (a foot put on the ground
+  by its leg's joints; sitting back until its boots bear it), Small
+  now comes to the same place at five places of six: its feet flat
+  under it, its weight still on its head and arms. Getting its weight
+  from there onto its feet is what is left of that.
+  **A question for Luis** (not answered; I go on without it): Small
+  cannot push its chest off the ground with its arms, which give a
+  third of an ordinary arm's. Should a miner's arms be as strong as
+  its own body needs, as its legs are? It would also make its work
+  stronger
+  ([the question](Design/TheBodysOwn.md#a-question-for-luis-its-arms)).
   **Not done:** a way that holds wherever it lies; from its back and
   sides; the lying itself (what Luis asked for first: not dead until
   a clock runs out); a shorter middle; the game
