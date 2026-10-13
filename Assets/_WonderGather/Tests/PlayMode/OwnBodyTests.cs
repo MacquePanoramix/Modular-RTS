@@ -64,6 +64,19 @@ namespace WonderGather.Tests
             yield return Wait(1.5f);
         }
 
+        // (-ownStepSet "LandsBy=3,Edge=.02": the keeper's settings, by name, for trying a thing. Not a test: what is
+        // changed stays changed for the run.)
+        private static void StepSet()
+        {
+            foreach (string pair in (CaptureTools.Argument("-ownStepSet") ?? "").Split(new[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries))
+            {
+                var sides = pair.Split('=');
+                var field = typeof(OwnKeeper).GetField(sides[0].Trim());
+                Assert.That(field != null, Is.True, sides[0]);
+                field.SetValue(null, float.Parse(sides[1], System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
+
         // The panel's switch is turned on, and the miner's body becomes its own.
         private IEnumerator Own(SelectableUnit unit, string name, System.Action<OwnBody> got)
         {
@@ -524,13 +537,7 @@ namespace WonderGather.Tests
             // (-ownShove .7: shoved at another speed, to see how far what it does reaches. Not the test.)
             float shove = CaptureTools.Argument("-ownShove") != null ? float.Parse(CaptureTools.Argument("-ownShove"), System.Globalization.CultureInfo.InvariantCulture) : MinerWorkPreview.ShoveSpeed;
             OwnBody.StaysPut = CaptureTools.Argument("-ownStaysPut") == "1"; OwnBody.AnyGround = CaptureTools.Argument("-ownAnyGround") == "1";
-            foreach (string pair in (CaptureTools.Argument("-ownStepSet") ?? "").Split(new[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries))
-            {
-                var sides = pair.Split('=');
-                var field = typeof(OwnKeeper).GetField(sides[0].Trim());
-                Assert.That(field != null, Is.True, sides[0]);
-                field.SetValue(null, float.Parse(sides[1], System.Globalization.CultureInfo.InvariantCulture));
-            }
+            StepSet();
             Assert.That(look.StepsToCatch && OwnKeeper.Steps, Is.True, "The step is not on from the start.");
             for (int index = 0; index < choice.Count; index++)
             {
@@ -623,6 +630,7 @@ namespace WonderGather.Tests
         {
             Time.captureFramerate = 50;
             OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
+            StepSet();
             // (-ownPull .12: with another share of its weight, as the panel's "Pull it" gives. Not the test.)
             float share = CaptureTools.Argument("-ownPull") != null ? float.Parse(CaptureTools.Argument("-ownPull"), System.Globalization.CultureInfo.InvariantCulture) : .08f;
             for (int index = 0; index < choice.Count; index++)
@@ -640,7 +648,15 @@ namespace WonderGather.Tests
                 look.Pull(away, share, MinerWorkPreview.PullFor, MinerWorkPreview.PullOver);
                 Assert.That(own.Pulled, Is.True, name + " is not pulled.");
                 float furthest = 0;
-                for (float until = Time.time + 7; Time.time < until && own.Stands;) { furthest = Mathf.Max(furthest, Flat(own.HeadAt - before).magnitude); yield return new WaitForFixedUpdate(); }
+                // (-ownTick 1: every step of the physics told, as the bench tells it. Not the test.)
+                bool ticks = CaptureTools.Argument("-ownTick") == "1";
+                Vector3 hipsFrom = own.Part(OwnBody.Hips).transform.position; float pulledAt = Time.time;
+                for (float until = Time.time + 7; Time.time < until && own.Stands;)
+                {
+                    furthest = Mathf.Max(furthest, Flat(own.HeadAt - before).magnitude);
+                    yield return new WaitForFixedUpdate();
+                    if (ticks) Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "OWN_TICK {0:0.00} {1}", Time.time - pulledAt, own.Tick(away.normalized, hipsFrom)));
+                }
                 Debug.Log($"OWN_PULLED {name}, pulled forwards at its chest with {share:F2} of its weight for {MinerWorkPreview.PullFor} s: {own.Stepped} steps; its head went {furthest * 1000:F0} mm at most; down {own.WentDown} times");
                 if (name != "Round" && share <= .08f) Assert.That(own.Stands && own.WentDown == 0, Is.True, name + ", pulled with 0.08 of its weight, went down.");
                 else if (!own.Stands || own.WentDown > 0)
