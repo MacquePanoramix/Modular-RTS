@@ -213,9 +213,22 @@ namespace WonderGather
         // Small and Round lean and take no step, Long takes one of 9.5 cm; with 0.08 Small's steps are 8 and 12 cm
         // for 22 and 22 and its head goes 14 cm for 30, Round's 11 and 13 cm, and Long, out of time, 25 and 28; with
         // 0.10, 7 of 9 stand with it and 7 of 9 without, in more steps with it. Shoved, it never comes to it.
+        // OFF AGAIN, the night of October 13, BECAUSE OF LONG. For Long the gentle pull is already more than its
+        // feet can lean against (it is pulled higher up, and its soles are shorter for its height), so it is always
+        // out of time; and half ready and out of time it catches itself worse than from standing square. Long alone,
+        // pulled with 0.08, four runs each: with the rule 3 stand, in five to seven steps, its head going 43 to 45
+        // cm; without it 4 stand, in two steps, 31 to 34 cm. (Its boot going where a catch would, once out of time:
+        // 0 of 4, taken out.) It is right for Small and Round and wrong for Long, and stays off until it is right
+        // for all three.
         // (Getting ready for it, where it holds its weight goes over ReadiesQuick times as fast as when it only
         // leans.)
-        public static float ReadiesAhead = 1.8f, ReadyFurther = .02f, ReadiesQuick = 3, ReadyUnder = .4f, ReadyMore = 1.6f;
+        // (And it is a step: its boot goes at least ReadyAtLeast of its own sole's length. Pulled to its side, Small
+        // had lifted a boot and put it down 10 mm away.)
+        public static float ReadiesAhead = 0, ReadyFurther = .02f, ReadiesQuick = 3, ReadyUnder = .4f, ReadyMore = 1.6f, ReadyAtLeast = .5f;
+        // (ReadiesNeeds: begun only while it still has so much time, in the time it falls in. Off at nought: what it
+        // reckons it has when it begins does not tell who will be ready in time. Round began with 0.8 and was;
+        // Long with 1.05 and was not; Small with 1.5 and was.)
+        public static float ReadiesNeeds = 0;
 
         private readonly float[] lighter;
         private readonly Quaternion[] rested = new Quaternion[Count], madeTurned = new Quaternion[Count], madeLay = new Quaternion[Count];
@@ -224,7 +237,7 @@ namespace WonderGather
         private int swings = -1, stoodLast = -1, closesTried, lightFor, landed = -1, hasFor;
         private bool prepared, hadNeeds;
         private Vector3 needsBefore;
-        private float needsRate;
+        private float needsRate, hasNow;
         private bool followDue;
         private bool catching, readying, stiff;
         private float stepT, beyondFor, calmFor, readyFor, sinceLanded = 1e9f;
@@ -527,7 +540,8 @@ namespace WonderGather
                     else needsRate = 0;
                     needsBefore = needs; hadNeeds = true;
                     // (Counted in the time this body falls in: a taller one needs longer to get its weight over.)
-                    hasFor = lastingAsked > Comfort && has * falls < ReadiesAhead ? hasFor + 1 : 0;
+                    hasFor = lastingAsked > Comfort && has * falls < ReadiesAhead && has * falls > ReadiesNeeds ? hasFor + 1 : 0;
+                    hasNow = has * falls;
                     Vector3 kept = Borne(new Vector3(needs.x, ground, needs.z), -1, -1, 0, out float bearing);
                     float beyond = Flat(needs - kept).magnitude;
                     beyondFor = beyond > StepsBeyond ? beyondFor + step : 0;
@@ -571,6 +585,9 @@ namespace WonderGather
                             stepTo = mustCatch ? stood + (needs - stood) * StepsAhead + way * StepsFurther : needs + way * ReadyFurther;
                             catching = true; readying = hasTime; prepared = hasTime; hasFor = 0;
                             if (hasTime) { readyFor = 0; lightFor = 0; }
+                            // (With time, and the boot that would step already about where its weight is going, as the
+                            // boot on that side is when it is pulled to its side: no step is begun.)
+                            if (hasTime && Vector3.Dot(stepTo - Flat(sole[swings]), way) < .5f * ReadyAtLeast * soleSize[swings].z) { swings = -1; catching = false; readying = false; prepared = false; }
                         }
                         else if (follows || (calmFor >= ClosesAfter && closesTried < 2))
                         {
@@ -606,7 +623,7 @@ namespace WonderGather
                                 stepT = 0; stiff = false; beyondFor = 0; calmFor = 0; carried = false;
                                 leftGround = Mathf.Min(sole[0].y, sole[1].y); putDown = false;
                                 Stepped++;
-                                Tells?.Invoke($"step {Stepped} by leg {swings} ({(prepared ? "it has time for" : catching ? "a catch" : "alongside")}): its boot to go {Flat(stepTo - stepFrom).magnitude * 1000:F0} mm; it bears {bears[0]:F2} and {bears[1]:F2}");
+                                Tells?.Invoke($"step {Stepped} by leg {swings} ({(prepared ? $"it has time for, {hasNow:F2} of its falling times" : catching ? "a catch" : "alongside")}): its boot to go {Flat(stepTo - stepFrom).magnitude * 1000:F0} mm; it bears {bears[0]:F2} and {bears[1]:F2}");
                             }
                         }
                     }
@@ -637,6 +654,10 @@ namespace WonderGather
                                 Vector3 beyondSole = Flat(needsNow) - onSole;
                                 Vector3 wayNow = beyondSole.sqrMagnitude > 1e-8f ? beyondSole.normalized : line.normalized;
                                 stepTo = onSole + beyondSole * (Mathf.Exp(falls * swingFor) + ReadyMore) + wayNow * ReadyFurther;
+                                // (It is a step: no shorter than a share of its own boot.)
+                                Vector3 goesTo = stepTo - Flat(sole[swings]);
+                                float atLeast = ReadyAtLeast * soleSize[swings].z;
+                                if (goesTo.magnitude < atLeast) stepTo = Flat(sole[swings]) + (goesTo.sqrMagnitude > 1e-8f ? goesTo.normalized : wayNow) * atLeast;
                                 // (Its boots are not put across each other, nor further than the leg reaches.)
                                 Vector3 own = swings == 1 ? acrossNow : -acrossNow;
                                 float clear = Vector3.Dot(stepTo - lead, own), least = .6f * Mathf.Abs(madeApart.x);

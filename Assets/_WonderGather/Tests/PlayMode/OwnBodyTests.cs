@@ -639,6 +639,7 @@ namespace WonderGather.Tests
                 yield return Wait(.3f);
                 var unit = choice.Current;
                 string name = choice.NameOf(index);
+                if (!string.IsNullOrEmpty(CaptureTools.Argument("-ownOnly")) && CaptureTools.Argument("-ownOnly") != name) continue;
                 Vector3 away = default;
                 yield return StandPlainly(unit, (s, a) => { away = a; });
                 OwnBody own = null;
