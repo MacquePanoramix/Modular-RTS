@@ -1204,7 +1204,8 @@ finding was checked before it was acted on.
 
 ## Step 3: a step, as it is built (October 13)
 
-**For Luis to judge; not accepted.** How it came to be so, what was
+**For Luis to judge; not accepted. Three judges have looked at it
+once ([below](#what-the-judges-said-october-13-one-round)); Luis has not.** How it came to be so, what was
 tried and taken out, and what three rounds of reviewers found, is in
 [the plan](../NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun).
 This is only what the build does. It is the keeper's (`OwnKeeper`),
@@ -1291,6 +1292,52 @@ quarters of a minute, each miner: no step).
 - **Stand well after a fall:** getting up leaves its feet apart and
   staggered, and the body's own takes that over as its stand.
 - Stand a pull of an eighth of its weight or more (in the game).
+
+### What the judges said (October 13, one round)
+
+Three separate judges (the body, the animator, the sceptic: Luis's
+standing word of October 9) were each given nine sheets of pictures,
+0.04 s apart: each miner shoved at 0.5 m/s from behind, from in front
+and from its left, from its plain stand. They were told what was done
+to the body and the measured times, and nothing of how it is made. None
+of the nine takes fell. **Their verdict is not Luis's.**
+
+**The verdicts.** The body: "reads as real, with a flaw". The
+animator: "reads as real, with a flaw". The sceptic: "a person would
+point at the first-step snap".
+
+| What was said | By | Checked against the pictures and the keeper's own telling | Done |
+|---|---|---|---|
+| **The first step is a snap.** A boot is seen in the air in one picture and is down 0.2 to 0.3 m away in the next | The sceptic | Stands. Told to leave the ground at 0.34 s, the boot is still down at 0.40 s, in the air at 0.44 and down again at 0.48: all of it in under a tenth of a second. It trails what it is asked and is then pulled after it | Open. A slower swing was tried in the game (0.18 s, and 0.24 s, for 0.12; nothing else changed; one run each): Small stood 2 shoves of 4 both times, where it stands 4 (the test stops at the first miner that fails, so Long and Round were not shoved). A slower step needs the rest searched for it; that is not done. |
+| **The first step runs to one clock for all three:** leaving to landing 0.14 to 0.16 s, whatever the weight and the leg. Weight shows only in the step's length and in how late the second comes | The animator; the sceptic | Stands. Its times are the same for all three (known, and in the list of what is not done) | Open |
+| **Once it has caught itself the body freezes.** Nothing settles. Small, shoved from in front, stays with one boot behind the other, unchanged for 1.4 s | All three | Stands. While its boots are astride the life in it leaves its legs alone and it stands square: built so, and it shows | Open |
+| **The second step starts out of stillness,** with no gathering to be seen, and late (Round's 0.8 s after the first) | All three | Stands. Getting ready is its weight going a few centimetres onto the other boot: too little to see | Open |
+| In the second step the boot skims the ground at a slant; Round's leg swings nearly straight, toe down, "like a pendulum" | The body; the animator | Stands (Round, shoved from behind, 1.52 to 1.56 s) | Open |
+| Small's shins cross in an X after its first step | All three | Half. No leg passes through the other. The leg that stepped lands nearly straight, and the knee of the leg behind bends far forward, past it. A person catching himself does the reverse: the front knee gives, the leg behind is the straighter | Open |
+| Round's head goes from tipped back to bowed in one or two pictures as its first boot lands | The animator | Stands (0.64 to 0.76 s). Its head lags the shove, then goes on as its body is stopped | Open |
+| Long's coat hem jumps forward in one picture | The sceptic (the animator took it for the cloth following through) | It is the coat following the thigh it is skinned to, in the one picture in which that leg comes through. It is not cloth | Open with the snap |
+| Round's arms are already out at the shove's first picture | The animator | Not so. They hang so in every picture before the shove (it is how Round is made) | Nothing |
+| Small's head and chest turn towards the camera as it is shoved from in front | The animator | Its head does turn, from 0.20 s. It is the standing body's looking about, which fell on that moment | Nothing |
+| A pale green mass beside Round's chest | The sceptic | A tree standing behind it | Nothing. The next brief says what stands behind |
+
+**What they said reads right** (all three): each steps the way it was
+pushed; its lean comes before its boots; its weight is over the boot it
+stands on while the other is in the air; head, trunk and arms do not
+move on one clock; and Round, shoved from its side, sways and comes
+back without a step ("the best" of the nine, to the animator).
+
+**The eight things a living body does.** Never quite still: in part
+(all three). Not all on one clock: yes (all three). Gets ready: in
+part. What hangs goes on: in part. Arcs: in part (a boot one picture in
+the air cannot be judged). Does not repeat itself: in part, in part,
+yes. Balance by degrees: yes (all three). Shows its effort: in part.
+
+**What I did with it.** Nothing in the build was changed after the
+judges. Every finding that stands is about how the step is made (how
+fast a leg swings, what the body does while it stands astride), not a
+slip to be put right in an hour, and Luis has not yet seen the step at
+all. They are written here as open. Two rounds of judges are left for
+this movement.
 
 ### What was run, and what was not
 

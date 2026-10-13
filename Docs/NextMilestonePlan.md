@@ -162,7 +162,7 @@ kept as they were, so that what is written elsewhere still points right.
 | 0 (done) | **The ground for it.** Ankles: the boot becomes a part of its own (today the shin and the boot are one, and a body cannot balance at an ankle it does not have). The test that nothing pushes from nowhere. Today's posed body measured for the table above. What a body's own costs in the frame, one miner and a crowd | | Figures |
 | 1 (built October 10; **accepted by Luis** that night) | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
 | 2 | **From its knees onto its feet.** The half second that is posed in the getting up. Then the whole of it, from the fall to standing, is the body's own | Not all on one clock (2) | A pushed miner getting up with nothing taking over |
-| 3 (in the game since October 13, **for Luis to judge: not accepted.** Built: shoved or pulled, it catches itself with a step and the boot behind follows. Not built: getting ready before a first step; setting off) | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
+| 3 (in the game since October 13, **for Luis to judge: not accepted; three judges looked once, Luis has not.** Built: shoved or pulled, it catches itself with a step and the boot behind follows. Not built: getting ready before a first step; setting off) | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
 | 4 | **Walking, turning, stopping.** On the path, the meadow and its slopes. No two steps quite the same. The free arm swings. **Its breath shows on its chest and shoulders as it walks** (it waits for this step: [Luis, October 11](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)) | Arcs and one hump of speed (5); does not repeat itself (6) | The walk, beside the walk as it was |
 | 5 | **Down to the ground and up.** Picking a thing up, laying it down | Not all on one clock (2); gets ready (3) | The pick-up, beside the pick-up as it was |
 | 6 | **The work.** The body in the swing is its own, as the tool already is. **Its breath shows on its chest and shoulders at its work, and as it rests from it** (it waits for this step: [Luis, October 11](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)). The swing at a low boulder, which takes a tall miner off its place, is made again here ([what was found](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10)) | Shows its effort (8) | A miner mining |
@@ -632,18 +632,51 @@ only; nothing of step 3 is in the game Luis has.
     - A second shove while a boot is in the air is still not answered.
     - It does not step across its own leg: a slow sideways fall onto
       the loaded leg is caught late or not at all.
-    - How often it ends astride was not counted (in the runs read, it
-      did not).
+    - **It ends astride now and then.** In one take of the nine
+      recorded for the judges (Small, shoved from in front) the boot
+      behind still bore a quarter of its weight after a second, was
+      not lifted, and it stood with one boot behind the other. How
+      often was not counted; in the test runs read, it did not.
     - The lengths and times are still the same for all three miners.
-    - **How the step looks has been seen by nobody:** no frames of it
-      have been drawn, and no judge has looked.
+    - **How the step looks: three judges, one round, and it is not
+      mended.** Two said "reads as real, with a flaw"; the sceptic,
+      that a person would point at the first step, which is a snap: a
+      boot in the air in one picture and down 0.2 to 0.3 m away in
+      the next. All three: once it has caught itself the body
+      freezes, and the second step starts out of stillness with no
+      gathering to see. The first step runs to one clock for all
+      three miners. What reads right, to all three: it steps the way
+      it was pushed, its lean comes before its boots, and Round,
+      shoved from its side, sways and comes back without a step.
+      Each finding, checked:
+      [the design page](Design/TheBodysOwn.md#what-the-judges-said-october-13-one-round).
+      A slower swing was tried in the game (0.18 s, and 0.24 s, for 0.12; nothing else changed; one run each): Small stood 2 shoves of 4 both times, where it stands 4 (the test stops at the first miner that fails, so Long and Round were not shoved). A slower step needs the rest searched for it; that is not done.
   - **One thing for Luis,** unanswered since October 12: the bar for a
     pulled miner was taken from the body as it was posed, which leans
     against a sixth of its weight without a step. A body moved only by
     its joints cannot, from rest (about 0.09 without a step). What it
     is to be held to is Luis's to say.
-- **Where the code is:** on the work branch `claude/wip-round` and,
-  once the whole suite has been run on it, in the game (below).
+- **Where the code is:** on the work branch `claude/wip-round`, and in
+  the game: the main branch's `Assets/_WonderGather/Scripts` and
+  `Tests` are the work branch's, and the build in `Builds/` was made
+  from them after the whole suite had passed (175, none failed, 23
+  run only when asked).
+- **October 13, saved** (Luis's machine had to go off again;
+  [the message](Correspondence/2026-10-12_GO_ON_WITH_THE_STEP.md)).
+  Nothing is half done: both branches are committed and pushed, and
+  the build is the one described above. **Where to take it up,** in
+  this order unless Luis says otherwise:
+  1. Luis's look at the step, and Luis's answer on what a pulled miner
+     is to be held to. Both come before more is built on it.
+  2. What the judges pointed at (the first step a snap and on one
+     clock for all three; the freeze between the steps; the second
+     step out of stillness). A slower swing alone fells Small, so it
+     needs a search with the swing's time held longer and scaled to
+     the leg, **run in the game on the meadow as well as on the
+     bench.** Then new sheets and new judges (two rounds are left).
+  3. The stand a miner takes over after a fall; Round under a gentle
+     pull; the sideways shove towards higher ground.
+  4. The suite as the game is played (`-ownAsPlayed 1`) on this state.
 
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).

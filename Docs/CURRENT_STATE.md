@@ -3,7 +3,7 @@
 **Updated:** October 13, 2026.
 
 - **Step 3 (a step) is in the game since October 13, for Luis to
-  judge: not accepted, and not yet looked at by anyone.** A miner
+  judge: not accepted, and Luis has not yet seen it.** A miner
   standing by its own joints, shoved or pulled harder than it can stand
   through, puts a boot down where its weight is going and brings the
   other after it. On the panel: **"Catches itself with a step"** (on
@@ -24,6 +24,14 @@
     sole's edge its push may act: 4 mm) tips a boot over on the
     meadow, which slopes two degrees.** It is 10 mm now, and that is a
     narrow window.
+  - **Three judges looked at it once** (pictures of each miner shoved
+    from three sides). Two: "reads as real, with a flaw". The third:
+    a person would point at the first step, which is a snap (a boot
+    in the air in one picture, down in the next). All three: once it
+    has caught itself it freezes, and its second step starts out of
+    stillness. **None of that is mended:** it is how the step is
+    made, and Luis has not seen it yet
+    ([each finding, checked](Design/TheBodysOwn.md#what-the-judges-said-october-13-one-round)).
   - **Not mended:** after a fall a miner stands by its own joints as
     its getting up left it, feet apart and staggered, and shoved again
     from there it mostly falls. Getting ready before a step, and

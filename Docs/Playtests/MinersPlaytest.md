@@ -477,15 +477,27 @@ from in front, from behind and from each side (turn the view). Do the
 same with each of the three. Pull it. Then send it somewhere: it should
 walk from where its boots now are.
 
-**What to judge.** It has been measured (how often it stands) and
-never looked at: nobody, and no judge, has seen how it moves.
+**What to judge.** It has been measured (how often it stands), and
+three judges have looked at pictures of it once
+([what they said](../Design/TheBodysOwn.md#what-the-judges-said-october-13-one-round)).
+Nothing was changed after them. What they pointed at is marked "the
+judges" below.
 
 - Does the step read as **a body catching itself**? Or as a leg moved
   for it?
+- **The first step is very quick** (the judges: "a snap"): the boot
+  is off the ground for about a tenth of a second, and for the same
+  time whichever miner it is. Too quick? Should Round's be slower than
+  Small's?
 - **The boot behind follows at once,** about a tenth of a second after
   the first lands. Too quick? Should it stand astride a moment first?
 - After the two steps, does it **stand well**, or stiffly? (Its weight
-  does not go from leg to leg while its boots are astride.)
+  does not go from leg to leg while its boots are astride.) **The
+  judges: between its first step and its second it freezes,** and the
+  second step comes out of stillness, with no gathering to be seen.
+- Small, after its first step from a shove behind it: its knee behind
+  bends far forward, past the leg in front (the judges saw crossed
+  shins).
 - Round, shoved from the side, mostly stands without a step.
 
 **What it does not do, so that it is not taken for a fault.**
@@ -506,6 +518,9 @@ never looked at: nobody, and no judge, has seen how it moves.
   (to 5 cm), or off the walked ground: there it stands or falls as it
   did.
 - It does not step across its own leg.
+- **Now and then it stays with one boot behind the other** after a
+  shove: the boot behind was still bearing weight, and it does not
+  lift a boot it stands on. It stays so until it is sent somewhere.
 
 ## Not yet
 

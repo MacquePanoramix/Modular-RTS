@@ -3214,8 +3214,8 @@ Luis accepted step 1 and its switch on from the start
 What was built, and why each part: [the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun)
 ("October 12 and 13", "October 13"); what the build does:
 [the design page](Design/TheBodysOwn.md#step-3-a-step-as-it-is-built-october-13).
-**Passing tests are not Luis's acceptance: nobody has looked at the
-step.**
+**Passing tests are not Luis's acceptance, and neither is a judge's
+verdict: Luis has not seen the step.**
 
 - **Unity 6000.6.0f1**, in the isolated copy, on the work branch
   `claude/wip-round` (commit 3e8f55e and what follows it). Every figure
@@ -3290,6 +3290,18 @@ step.**
   - other places on the meadow, a steeper slope, the path's edge;
   - a long session of play with the step on (a miner sent, put to
     work, rested, shoved, many times over);
-  - how often it ends astride (in the runs read, never);
+  - how often it ends astride (in the test runs read, never; in one
+    take of the nine recorded for the judges, Small shoved from in
+    front, it did: the boot behind still bore 0.26 of its weight after
+    a second and was not lifted);
   - the suite as the game is played (`-ownAsPlayed 1`) on this state;
-  - **how it looks.**
+  - how it looks, by Luis.
+- **Three judges, one round** (the body, the animator, the sceptic;
+  `OwnBodyRecord` with `-ownShotOnly shoved`: nine takes, each miner
+  shoved at 0.5 m/s from behind, from in front and from its left, from
+  its plain stand; 25 pictures a second; none of the nine fell, and in
+  one it stood astride). Two: "reads as real, with a flaw"; the
+  sceptic: the first step is a snap. Eight findings stand and are open,
+  three were misreadings:
+  [the design page](Design/TheBodysOwn.md#what-the-judges-said-october-13-one-round).
+  A slower swing was tried in the game (0.18 s, and 0.24 s, for 0.12; nothing else changed; one run each): Small stood 2 shoves of 4 both times, where it stands 4 (the test stops at the first miner that fails, so Long and Round were not shoved). A slower step needs the rest searched for it; that is not done.

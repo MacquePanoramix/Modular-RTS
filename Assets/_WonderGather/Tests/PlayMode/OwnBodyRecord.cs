@@ -14,6 +14,8 @@ namespace WonderGather.Tests
     // half a minute; its breath from the side, at rest and tired; its weight going from one leg to the other, from
     // in front; nudged; and the three together from where the game is played, its chest empty and full.
     //   -ownShots <folder> [-ownShotMiner Round] [-ownShotSize 360] [-ownShotBreath 1] [-ownShotOnly stands,breath,shift,nudged,far]
+    // And (S3b, step 3; only when asked for: -ownShotOnly shoved) shoved at half a metre a second, catching itself
+    // with a step: from behind and from in front, seen from its side; from its left, seen from in front.
     [Explicit("A recording for the judges, not a test.")]
     public sealed class OwnBodyRecord
     {
@@ -154,6 +156,37 @@ namespace WonderGather.Tests
                         own.Favour(0);
                         yield return Wait(3);
                         yield return Shoot("nudged", 3, 5, k => { if (k == 25) own.Nudge(-away, .15f); });
+                    }
+                    // S3b, step 3: shoved (set going at half a metre a second) from its plain stand, twenty-five pictures a
+                    // second from a fifth of a second before the shove; what its keeper does about a step is told with them.
+                    if (!string.IsNullOrEmpty(only) && Wanted("shoved"))
+                    {
+                        OwnBody.Told = what => Debug.Log("OWNREC_TOLD " + what);
+                        foreach (var (what, round, way) in new[] { ("shovedon", -90f, away), ("shovedback", -90f, -away), ("shovedside", 0f, right) })
+                        {
+                            look.SetOwn(false);
+                            unit.GetComponent<ProceduralBiped>().SetStance(0, 0);
+                            unit.Motor.Stop();
+                            unit.GetComponent<NavMeshAgent>().Warp(spot);
+                            unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                            unit.GetComponent<ProceduralBiped>().ResetPose();
+                            unit.GetComponent<PhysicalBody>().Refresh();
+                            yield return Wait(2.3f);
+                            look.SetOwn(true);
+                            own = null;
+                            for (float began = Time.time; Time.time - began < 4 && (own == null || !own.Stands);) { unit.TryGetComponent(out own); yield return null; }
+                            Assert.That(own != null && own.Stands, Is.True, name + " did not come to stand by its own joints.");
+                            hips = own.Part(OwnBody.Hips).transform; trunk = own.Part(OwnBody.Trunk).transform; head = own.Part(OwnBody.Head).transform;
+                            hipsBegan = hips.position; headBegan = head.position;
+                            yield return Wait(2);
+                            View(round, 3.2f, .45f);
+                            Debug.Log($"OWNREC_TOLD {name} {what}: shoved at {Time.time + .2f:F2}");
+                            yield return Shoot(what, 2.4f, 2, k => { if (k == 10) own.Nudge(way, MinerWorkPreview.ShoveSpeed); });
+                        }
+                        OwnBody.Told = null;
+                        look.SetOwn(false);
+                        yield return Wait(.6f);
+                        continue;
                     }
                     // Two more looks of breath. Its shoulders drawn rising, from in front and a little aside, nearer:
                     // at rest, then tired.

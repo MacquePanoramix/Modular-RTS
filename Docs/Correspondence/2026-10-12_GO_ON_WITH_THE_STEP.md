@@ -49,3 +49,16 @@ On October 13:
 The work was taken up from that entry (which has since been written
 out in the plan as the account of October 12 and 13, in its place).
 Neither message says anything of the step itself.
+
+Later on October 13, after the step had gone into the build and
+while three judges' findings were being written down:
+
+> Save your current work cause I need to turn off my laptop soon. We can continue  when I turn it back on.
+
+The one run still going (a slower swing, tried for the judges'
+gravest finding) had just ended; its result was written in. Both
+branches were committed and pushed, and where to take it up was
+written into
+[the plan](../NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun)
+("October 13, saved"). **Luis has not seen the step, and said
+nothing of it.**
