@@ -72,7 +72,7 @@ namespace WonderGather
         // the keeper's rule for the step of the physics), damped by Damped of what just stops it swinging. Keeping
         // its weight over its feet, its hips bend Balances degrees more for each second its weight is a whole hip's
         // height too far back, and no more than BalancesAtMost more or less than the pose has them.
-        public static float FullAt = 35, Damped = .7f, Balances = 250, BalancesAtMost = 35;
+        public static float FullAt = 35, Damped = .7f, Balances = 150, BalancesAtMost = 70;
         private const float StillUnder = .2f, StillTurning = 1.2f;
 
         public Way[] Ways = new Way[0];
@@ -234,13 +234,18 @@ namespace WonderGather
             Vector3 hip = JointAt(Thigh + leg);
             float thighLong = (JointAt(Shin + leg) - hip).magnitude, shinLong = (JointAt(Foot + leg) - JointAt(Shin + leg)).magnitude, reach = thighLong + shinLong;
             Vector3 to = Flat(hip) + lies * (stage.stepAhead * reach) + aside * (stage.stepOut * reach);
-            to.y = GroundAt(new Vector3(to.x, hip.y, to.z));
+            // (Once it is there it is pressed down a little: laid exactly on the ground, a boot bore nothing, and the
+            // pose that waits for it to bear waited for ever.)
+            to.y = GroundAt(new Vector3(to.x, hip.y, to.z)) - (along >= 1 ? .03f : 0);
             Vector3 sole = Vector3.Lerp(stepFrom, to, along) + Vector3.up * (stage.stepLifts * Mathf.Sin(Mathf.PI * along));
             Quaternion boot = Quaternion.LookRotation(lies, Vector3.up) * stoodBoot[leg];
-            // Its hip and knee, for its ankle to be there: its knee goes up and ahead.
+            // Its hip and knee, for its ankle to be there: its knee bends the way the front of its hips faces (down,
+            // when it is bowed over on its knees; ahead, when it is up). (Until October 14 "up and ahead" in the
+            // world: bowed over, with its foot still behind it, that sent its knee up over its back.)
             Vector3 ankle = sole + boot * (anchors[Foot + leg] - soleAt[leg]) - hip;
             float far = Mathf.Clamp(ankle.magnitude, Mathf.Abs(thighLong - shinLong) + .01f, reach * .995f);
-            Vector3 line = ankle.normalized, pole = Vector3.ProjectOnPlane(lies + Vector3.up, line).normalized;
+            Vector3 line = ankle.normalized, pole = Vector3.ProjectOnPlane(parts[Hips].transform.forward, line);
+            pole = pole.sqrMagnitude > 1e-6f ? pole.normalized : Vector3.ProjectOnPlane(lies + Vector3.up, line).normalized;
             float opens = Mathf.Acos(Mathf.Clamp((thighLong * thighLong + far * far - shinLong * shinLong) / (2 * thighLong * far), -1, 1));
             Vector3 thighWay = line * Mathf.Cos(opens) + pole * Mathf.Sin(opens);
             Vector3 shinWay = (line * far - thighWay * thighLong).normalized;

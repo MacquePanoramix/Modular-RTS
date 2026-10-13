@@ -207,6 +207,9 @@ namespace WonderGather
         public int GaveUpGettingUp { get; private set; }
         // (For a bench: a body that cannot get up, or goes down, is only put away; the fall does not take it.)
         public static bool FallsBack = true;
+        // (For a bench, to try a thing, and 1 in the game: its arms made so many times as strong as they are. How
+        // strong a miner's arms are is not this file's to say: PhysicalBody, and Luis.)
+        public static float ArmsTimes = 1;
 
         // Whether it is to stand by its own joints when it can (the panel's switch).
         public bool Wanted { get; set; }
@@ -472,10 +475,10 @@ namespace WonderGather
                 Ends(s.upperArms[i], out var shoulder, out var elbow);
                 Ends(s.forearms[i], out _, out var wrist);
                 Vector3 back = Bends(shoulder, elbow, wrist, -(chest * Vector3.forward));
-                Made(UpperArm + i, "Upper arm" + side, s.upperArms[i].position, Along(s.upperArms[i], back), Weighs("UpperArm." + l), physical.ShoulderOf(i), false);
+                Made(UpperArm + i, "Upper arm" + side, s.upperArms[i].position, Along(s.upperArms[i], back), Weighs("UpperArm." + l), physical.ShoulderOf(i) * ArmsTimes, false);
                 Rod(UpperArm + i, s.upperArms[i].localScale.y, arm, surface);
                 anchors[UpperArm + i] = new Vector3(0, -s.upperArms[i].localScale.y, 0);
-                Made(Forearm + i, "Forearm" + side, s.forearms[i].position, Along(s.forearms[i], back), Weighs("Forearm." + l, "Hand." + l), physical.ElbowOf(i), true);
+                Made(Forearm + i, "Forearm" + side, s.forearms[i].position, Along(s.forearms[i], back), Weighs("Forearm." + l, "Hand." + l), physical.ElbowOf(i) * ArmsTimes, true);
                 Rod(Forearm + i, s.forearms[i].localScale.y + arm, arm, surface);
                 anchors[Forearm + i] = new Vector3(0, -s.forearms[i].localScale.y, 0);
 

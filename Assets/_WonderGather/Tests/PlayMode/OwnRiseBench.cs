@@ -185,6 +185,8 @@ namespace WonderGather.Tests
             int every = (int)Number("-riseEvery", 10), size = (int)Number("-riseSize", 360);
             string search = CaptureTools.Argument("-riseSearch");
             bool ticks = CaptureTools.Argument("-riseTick") == "1";
+            // (-riseArms 3: to try a thing: their arms so many times as strong as they are.)
+            float armsWere = OwnBody.ArmsTimes;
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
             CaptureTools.AsItWas();
@@ -335,6 +337,7 @@ namespace WonderGather.Tests
                 yield return null;
 
                 OwnBody.FallsBack = false;
+                OwnBody.ArmsTimes = Number("-riseArms", 1);
                 // (The panel's switch on: with it off, the miner that is chosen is given back to the posed body at the
                 // next frame.)
                 look.SetOwn(true);
@@ -569,6 +572,7 @@ namespace WonderGather.Tests
             {
                 Physics.simulationMode = mode;
                 OwnBody.FallsBack = fellBack;
+                OwnBody.ArmsTimes = armsWere;
                 OwnBody.RiseWays = waysWere;
                 foreach (var body in bodies) { if (body.own != null && body.own.Stands) body.own.Drop(); if (body.fall != null) { body.fall.Gives = true; body.fall.GetsUp = true; } }
             }
