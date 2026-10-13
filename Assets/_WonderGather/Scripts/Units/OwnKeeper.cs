@@ -80,6 +80,16 @@ namespace WonderGather
         // (its fall more than Sideways across it) it steps with the leg on the side it falls to; else with the leg
         // that bears less.
         public static float StepsBeyond = 0.035f, StepsAfter = 0.0389f, UnloadsIn = 0.0123f, SwingsIn = 0.1205f, Clears = 0.0841f;
+        // (Tried on October 13, and off: how long a boot swings going with the leg. SwingsIn would be for a leg of
+        // SwingsLeg metres from hip to ankle (0.544: Small's), and a longer leg take longer, as the root of its
+        // length, as a pendulum does: the judges saw legs of 0.54, 0.64 and 0.88 m all swing in the same time. And
+        // the step that brings the other boot alongside taking ClosesSlower times as long (1.6): they saw that boot
+        // skim the ground. In the game, the three miners shoved four ways at 0.5 and at 0.7 m/s, one run each, of
+        // 12: as it is, 12 and 10 stand; the leg's length alone, 11 (Long down, and five steps where it took two);
+        // the slower second step alone, 12 and 9; both, 11 and 10. A slower step leaves it longer on one boot than
+        // it can yet stand. 0, and 1: as it is.)
+        public static float SwingsLeg = 0;
+        public static float ClosesSlower = 1;
         public static float StepsAhead = 1.7984f, StepsFurther = 0.0219f, Reach = 0.7771f, Sideways = 0.6257f;
         // (How much of what pushes it counts in whether it must step, and where to: a blow is felt as a great push
         // for a moment, and is not one that lasts.)
@@ -148,6 +158,12 @@ namespace WonderGather
         // back, the leg is only thrown: its knee snaps straight and its boot is driven on or flung up.) Loads 0:
         // its whole share at once, as it was until October 13.
         public static float Loads = 2, LoadsFrom = .25f, LoadsFor = .3f;
+        // (Tried on October 13, and off: a boot just put down not lifted again for the next catch; for NotAgain
+        // seconds (0.3) after it lands, the other leg takes it. In nine runs of the game's shove test ten catches
+        // were begun by the boot that had landed within three tenths of a second, the one it then stood on, and
+        // eight of them ended in a fall. But with the rule alone as many stand as without it (12 and 10 of 12, at
+        // 0.5 and 0.7 m/s): those falls were under way already. With the two slower steps above it, 12 and 11.)
+        public static float NotAgain = 0;
         // While its boot swings, that leg's joints give all they have at SwingFullAt degrees from where the boot
         // should be (never stiffer than the rule), damped by SwingDamped of what just stops them swinging.
         public static float SwingFullAt = 36.9916f, SwingDamped = 0.3692f;
@@ -490,6 +506,8 @@ namespace WonderGather
                             swings = Mathf.Abs(aside) > Sideways ? (aside > 0 ? 1 : 0) : (bearing > .5f ? 0 : 1);
                             float leads = Vector3.Dot(apart, way);
                             if (TrailsFrom > 0 && Mathf.Abs(aside) <= Sideways && Mathf.Abs(leads) > TrailsFrom * Mathf.Abs(madeApart.x)) swings = leads > 0 ? 0 : 1;
+                            // (Not the boot it has just put down.)
+                            if (NotAgain > 0 && landed == swings && sinceLanded < NotAgain) swings = 1 - swings;
                             Vector3 stood = Flat(sole[1 - swings]);
                             stepTo = stood + (needs - stood) * StepsAhead + way * StepsFurther;
                             catching = true; readying = false;
@@ -572,7 +590,8 @@ namespace WonderGather
                         if (!catching) rest = Flat(sole[stance]);
                         stepT += step;
                         unloaded = Mathf.Clamp01(stepT / Mathf.Max(1e-3f, UnloadsIn));
-                        float u = (stepT - UnloadsIn) / Mathf.Max(.05f, SwingsIn);
+                        float swingsIn = SwingsIn * (SwingsLeg > 0 ? Mathf.Sqrt((thighLong[swings] + shinLong[swings]) / SwingsLeg) : 1) * (catching ? 1 : Mathf.Max(1, ClosesSlower));
+                        float u = (stepT - UnloadsIn) / Mathf.Max(.05f, swingsIn);
                         if (u >= 0)
                         {
                             single = stance;
@@ -586,7 +605,7 @@ namespace WonderGather
                                 // How low its hips must be for this leg to reach the ground where its boot is to land, from
                                 // where that hip will be by then (it goes on as its weight goes).
                                 Vector3 hipNow = JointAt(Thigh + swings);
-                                Vector3 hipThen = Flat(hipNow) + Flat(goes) * (Mathf.Clamp01(1 - u) * SwingsIn);
+                                Vector3 hipThen = Flat(hipNow) + Flat(goes) * (Mathf.Clamp01(1 - u) * swingsIn);
                                 float ankleUp = Mathf.Abs(parts[Foot + swings].transform.TransformVector(anchors[Foot + swings] - soleAt[swings]).y);
                                 float legLong = .97f * (thighLong[swings] + shinLong[swings]), away = Flat(stepTo - hipThen).magnitude;
                                 float hipMay = ankleUp + Mathf.Sqrt(Mathf.Max(0, legLong * legLong - away * away));
