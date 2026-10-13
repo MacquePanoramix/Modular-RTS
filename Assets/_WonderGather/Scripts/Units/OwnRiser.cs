@@ -51,6 +51,12 @@ namespace WonderGather
             // bears on the ground.
             public int steps = -1;
             public float stepAhead, stepOut, stepLifts = .06f;
+            // If it sits back in this pose (NaN: not): its knees bend further at up to so many degrees a second (and
+            // its hips by sitHips times as much) for as long as its weight is further ahead of the middle between its
+            // soles than sitAhead (a share of its hips' height), and come back when it is behind that; never more
+            // than sitMost degrees beyond the pose. So it sits back as far as brings its weight over its feet on the
+            // ground it is on, and no further.
+            public float sits = float.NaN, sitHips = .5f, sitAhead = .05f, sitMost = 100;
         }
         // One way, for a body whose chest faces the ground by between this and this much. At its end the body is on
         // its feet and the keeper takes it (gives); or it only lies another way, and chooses its way again.
@@ -90,7 +96,7 @@ namespace WonderGather
         private Way way;
         private Stage stage;
         private int at, leads, chosen;
-        private float got, still, leant, bore, toned = -1;
+        private float got, still, leant, bore, toned = -1, sat;
 
         public string WayNow => way != null ? way.name : "";
         public string StageNow => stage != null ? stage.name : "";
@@ -188,8 +194,8 @@ namespace WonderGather
             {
                 case UpperArm: return Quaternion.AngleAxis(-p[a], Vector3.right) * Quaternion.AngleAxis(p[a + 1] * (side == 0 ? 1 : -1), Vector3.forward);
                 case Forearm: return Quaternion.AngleAxis(-p[a + 2], Vector3.right);
-                case Thigh: return Quaternion.AngleAxis(Mathf.Clamp(p[l] + leant, -20, 130), Vector3.right) * Quaternion.AngleAxis(p[l + 1] * (side == 0 ? -1 : 1), Vector3.forward);
-                case Shin: return Quaternion.AngleAxis(-p[l + 2], Vector3.right);
+                case Thigh: return Quaternion.AngleAxis(Mathf.Clamp(p[l] + leant + (float.IsNaN(stage.sits) ? 0 : stage.sitHips * sat), -20, 130), Vector3.right) * Quaternion.AngleAxis(p[l + 1] * (side == 0 ? -1 : 1), Vector3.forward);
+                case Shin: return Quaternion.AngleAxis(-(p[l + 2] + (float.IsNaN(stage.sits) ? 0 : sat)), Vector3.right);
                 default: return Quaternion.AngleAxis(-p[l + 3], Vector3.right);
             }
         }
@@ -248,7 +254,7 @@ namespace WonderGather
 
         private void Begin(int index)
         {
-            at = index; stage = way.stages[index]; got = 0; still = 0; stepBegun = false;
+            at = index; stage = way.stages[index]; got = 0; still = 0; stepBegun = false; sat = 0;
             for (int j = 1; j < Count; j++) aimFrom[j] = aimNow[j];
         }
 
@@ -267,6 +273,7 @@ namespace WonderGather
             got += step; Lasted += step;
             if (float.IsNaN(stage.keeps)) leant = Mathf.MoveTowards(leant, 0, 60 * step);
             else leant = Mathf.Clamp(leant + Balances * (stage.keeps - Measure(Asks.Ahead)) * step, -BalancesAtMost, BalancesAtMost);
+            if (!float.IsNaN(stage.sits)) sat = Mathf.Clamp(sat + stage.sits * Mathf.Clamp((Measure(Asks.Ahead) - stage.sitAhead) / .1f, -1, 1) * step, 0, stage.sitMost);
             bool through = got >= stage.atLeast;
             for (int k = 0; through && k < stage.through.Length; k++)
             {

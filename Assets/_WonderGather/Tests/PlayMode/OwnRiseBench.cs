@@ -80,6 +80,17 @@ namespace WonderGather.Tests
                     foreach (string word in f[7].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (word.StartsWith("keep=")) { stage.keeps = float.Parse(word.Substring(5), Plain); continue; }
+                        // (sit=45,0.5,0.05,100: it sits back at up to so many degrees a second, its hips so much of its knees,
+                        // until its weight is no further ahead than that, and no more than so many degrees.)
+                        if (word.StartsWith("sit="))
+                        {
+                            var sits = word.Substring(4).Split(',');
+                            stage.sits = float.Parse(sits[0], Plain);
+                            if (sits.Length > 1) stage.sitHips = float.Parse(sits[1], Plain);
+                            if (sits.Length > 2) stage.sitAhead = float.Parse(sits[2], Plain);
+                            if (sits.Length > 3) stage.sitMost = float.Parse(sits[3], Plain);
+                            continue;
+                        }
                         // (step=lead,0.2,0.4,0.06: that leg's boot put so far ahead of its hip and so far out, lifted so far.)
                         if (word.StartsWith("step="))
                         {
@@ -116,6 +127,7 @@ namespace WonderGather.Tests
                     foreach (var asked in stage.through)
                         text.Append(string.Format(Plain, " {0}{1}{2:0.##}", asked.what.ToString().ToLowerInvariant(), float.IsNegativeInfinity(asked.least) ? "<" : ">", float.IsNegativeInfinity(asked.least) ? asked.most : asked.least));
                     if (!float.IsNaN(stage.keeps)) text.Append(string.Format(Plain, " keep={0:0.00}", stage.keeps));
+                    if (!float.IsNaN(stage.sits)) text.Append(string.Format(Plain, " sit={0:0},{1:0.00},{2:0.00},{3:0}", stage.sits, stage.sitHips, stage.sitAhead, stage.sitMost));
                     if (stage.steps >= 0) text.Append(string.Format(Plain, " step={0},{1:0.00},{2:0.00},{3:0.00}", stage.steps == 0 ? "lead" : "other", stage.stepAhead, stage.stepOut, stage.stepLifts));
                     text.AppendLine();
                 }
