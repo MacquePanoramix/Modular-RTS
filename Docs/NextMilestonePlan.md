@@ -787,6 +787,34 @@ only; nothing of step 3 is in the game Luis has.
       the three miners, as played; then pictures and fresh judges.
     - **What it leads to.** Getting ready and then stepping is how a
       walk begins. It is the first half of step 4, built here.
+    - **Begun the same evening, and switched off** (on the work
+      branch only, at nought; the builds are as they were).
+      - **On the bench it does what it is meant to.** Small, pulled
+        with 0.08 of its weight: its weight goes onto one leg over
+        0.6 s, and its first step is 13 cm for 22; then it goes on
+        with the pull in such steps. Of 24 bodies, pulls coming on
+        over 1.2 s, standing with it and without: 0.06 to 0.10, 24
+        and 24; 0.12, 22 and 23; 0.14, 22 and 19; a sixth, 8 and 5.
+        Shoves are untouched (24 and 24 at 0.3 and at 0.5 m/s).
+      - **In the game, on the meadow, it is worse than the catch
+        alone.** Small goes down under 0.08. Told step by step:
+        once its weight is on one leg, **that one ankle is asked for
+        what two shared** (0.97 of what it has), its boot tips over
+        its toe (28 degrees) and is thrown from under it. Under 0.10
+        and more it runs out of time getting ready, and catches
+        itself as before.
+      - **What that says.** Standing on one leg against a pull is
+        where it is weakest, and I had it wait there until its other
+        boot bore nothing. A person pulled does not wait on one leg:
+        the getting ready and the step overlap, the boot leaving as
+        the weight is still going over. That is the next thing to
+        try (lifted when the boot bears a third, not a tenth; or the
+        catch itself with its length reckoned). And once more the
+        bench said yes where the meadow said no.
+      - **Seen on the way:** with the tests beginning from the plain
+        stand, Small under the gentle pull went down in 1 run of 7
+        (it went on stepping after its second step, and fell). Long
+        and Round stood all of theirs.
   - **On that state** (the work branch's 1a67a30, and 70848f8 for the test): the standing body's
     tests 11 of 11. The whole PlayMode suite, one run: 198 tests, 174 passed, 1 failed, 23 run only when asked. The one was the shove after getting up, while the test still held all three to standing it (Small went down); the test was changed as said above and run alone twice since: it passes.
     As the game is played, on the same state: 198 tests, 162 passed, 13 failed: twelve of those known since October 10, and that same one.

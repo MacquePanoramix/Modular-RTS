@@ -3290,6 +3290,16 @@ verdict: Luis has not seen the step.**
     pull test, which now begins from the plain stand). As the game is played, on the same state: 198 tests, 162 passed, 13 failed: twelve of those known since October 10, and that same one.
   - **The build** of this state is `Builds/WindowsOrdinaryPlace_Oct13b`,
     beside the morning's. Not opened by me.
+- **A step it has time for, begun and off** (the work branch's
+  4ecb036; not in either build). The bench, 24 bodies, pulls coming on
+  over 1.2 s, standing with it and without: 0.06, 0.08 and 0.10, 24 and
+  24; 0.12, 22 and 23; 0.14, 22 and 19; 0.17, 8 and 5; shoved at 0.3
+  and 0.5 m/s, 24 and 24. In the game, pulled with 0.08: Small goes
+  down (four runs of four with it on, at three settings of it); with
+  0.10, Small and Long stand and Round goes down (one run); with 0.12
+  all three go down (one run). With it off again: the shove test 12 of
+  12 with the same steps; the gentle pull, four runs: Long and Round
+  stood all four, Small three.
 - **A correction.** The work branch's commit 723eec9 says
   "OwnBodyTests: 8 of 8". It was 7 of 8
   (`StandingAMinuteItIsAliveAndDoesNotWobble`: Long and Round, on one

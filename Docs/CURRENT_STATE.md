@@ -13,7 +13,14 @@
   Held against that, the step jumps in two places: its smallest step
   is about 22 cm however little it was needed, and the three step on
   one clock. **Next: getting ready before a first step, and a shorter
-  first step** (the part of step 3 not yet built).
+  first step** (the part of step 3 not yet built). **Begun that
+  evening, and switched off:** on the bench a pulled body shifts its
+  weight for 0.6 s and takes a step of 13 cm for 22; in the game, on
+  the meadow, standing on one leg against the pull, its one ankle is
+  asked for what two shared, its boot tips and it falls. The getting
+  ready and the step have to overlap
+  ([the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun),
+  "Begun the same evening"). On the work branch only.
 - **Two builds, the afternoon of October 13.**
   `Builds/WindowsOrdinaryPlace` is the morning's, left as it was for
   Luis to judge. `Builds/WindowsOrdinaryPlace_Oct13b` steps exactly as
