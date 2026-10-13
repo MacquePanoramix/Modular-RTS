@@ -96,6 +96,7 @@ namespace WonderGather
             choice = GetComponent<MinerChoice>();
             SetBreathLook(0);
             OwnBody.BreathSize = OwnBody.BreathSizeAtFirst;
+            OwnKeeper.Steps = stepsWanted;
             // The interaction click and the panel live beside it: where it is, they are.
             if (GetComponent<InteractionClick>() == null) gameObject.AddComponent<InteractionClick>();
             if (GetComponent<MinerPanel>() == null) gameObject.AddComponent<MinerPanel>();
@@ -630,6 +631,32 @@ namespace WonderGather
         public void SetOwn(bool wanted) => ownWanted = wanted;
         public OwnBody Own => choice != null && choice.Current != null && choice.Current.TryGetComponent<OwnBody>(out var own) ? own : null;
         public bool CanNudge => Own != null && Own.Stands;
+        // S3b, step 3: standing by its own joints, it catches itself with a step (a switch on the panel; on from
+        // the start, to be judged; not accepted). And it can be shoved (set going at half a metre a second), and
+        // pulled at its chest (with 0.08 of its weight for two and a half seconds, the pull coming on over four
+        // tenths of a second), the way the view looks. (The pull was an eighth of its weight until October 13: in
+        // the game that fells them, 5 times of 6. What they stand is what the button gives.)
+        public const float ShoveSpeed = .5f, PullShare = .08f, PullFor = 2.5f, PullOver = .4f;
+        private bool stepsWanted = true;
+        public bool StepsToCatch => stepsWanted;
+        public void SetSteps(bool wanted) { stepsWanted = wanted; OwnKeeper.Steps = wanted; }
+        public void Shove()
+        {
+            var view = Camera.main;
+            Nudge(view != null ? Vector3.ProjectOnPlane(view.transform.forward, Vector3.up) : Vector3.zero, ShoveSpeed);
+        }
+        public void Pull()
+        {
+            var view = Camera.main;
+            Pull(view != null ? Vector3.ProjectOnPlane(view.transform.forward, Vector3.up) : Vector3.zero, PullShare, PullFor, PullOver);
+        }
+        public void Pull(Vector3 way, float share, float seconds, float over)
+        {
+            var own = Own;
+            if (own == null || !own.Stands) return;
+            if (way.sqrMagnitude < 1e-4f) way = own.transform.forward;
+            own.Pull(way, share, seconds, over);
+        }
         public void Nudge()
         {
             var view = Camera.main;

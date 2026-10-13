@@ -327,6 +327,7 @@ namespace WonderGather
         // Braced, the knees bend: the hips sink by so much more, whatever else asks them to sink.
         private float crouchWanted,crouch;
         public void Crouch(float metres)=>crouchWanted=Mathf.Clamp(metres,0,.3f*HipHeight);
+        public float CrouchNow=>crouch;
         // How far each knee stands out from the line between its hip and its ankle, in metres (how bent the leg is);
         // and how far it stands out when the leg is as straight as it goes.
         private readonly float[] kneeOut=new float[2];

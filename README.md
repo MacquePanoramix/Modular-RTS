@@ -35,11 +35,13 @@ physical mining and real hauling. See the [showcase roadmap](Docs/ShowcaseRoadma
   ([plan](Docs/NextMilestonePlan.md); the up-to-date state is in
   [CURRENT_STATE.md](Docs/CURRENT_STATE.md)).
 
-**Now (October 10, 2026):** the work in hand is S3b, a body moved by its
+**Now (October 13, 2026):** the work in hand is S3b, a body moved by its
 own joints: a miner at ease stands so (accepted by Luis on October 10; a
 switch on the panel of the Ordinary Place gives the body as it was),
-breathing and shifting its weight; a step is begun. The last whole
-PlayMode run: 172 passed, none failed, 23 run only when asked. Where things
+breathing and shifting its weight; and, shoved or pulled, it catches
+itself with a step (in the build since October 13, for Luis to judge;
+not accepted). The last whole
+PlayMode run: 175 passed, none failed, 23 run only when asked. Where things
 stand, day by day, is in [CURRENT_STATE.md](Docs/CURRENT_STATE.md); the build
 to open is `Builds/WindowsOrdinaryPlace/WonderGather.exe`.
 

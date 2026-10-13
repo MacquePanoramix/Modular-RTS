@@ -1201,3 +1201,99 @@ finding was checked before it was acted on.
 | Too near its rock it turns about, walks, and turns again | The builder | Stands; it was so before | Said so, under "Not mended" |
 | Other strengths, other boulders, a long stretch for Small and Round were not tried; nor fifty runs of each with the start varied | The sceptic | Stands | Two strengths, two runs each (above). The rest is not done |
 | Every return to its place spends one of its four tries at coming there | The sceptic | Not so: a try is spent only when it stops short of its place | Nothing |
+
+## Step 3: a step, as it is built (October 13)
+
+**For Luis to judge; not accepted.** How it came to be so, what was
+tried and taken out, and what three rounds of reviewers found, is in
+[the plan](../NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun).
+This is only what the build does. It is the keeper's (`OwnKeeper`),
+and acts only while "Catches itself with a step" is on.
+
+### In short
+
+A miner standing by its own joints keeps its balance by where it makes
+the ground push its soles. When that cannot be enough, **it puts a boot
+down where its weight is going,** and then **brings the other boot
+after it.** Nothing places a boot for it: a leg is swung by its own
+hip, knee and ankle, sprung towards where the boot should be at each
+moment, and the body meanwhile falls as a body does.
+
+### When it steps
+
+At every step of the physics the keeper reckons where the ground would
+have to push it for it to stand as it is: where its weight is going,
+and further for a push it feels (as far as that push has lasted for a
+sixth of a second: a shove is over by then, a pull is not). If that
+place is more than 3.5 cm outside what its soles can give, for two
+steps of the physics, it steps. **At ease it never does** (three
+quarters of a minute, each miner: no step).
+
+### Which leg, and where its boot goes
+
+- Falling sideways: the leg on the side it falls to. Else the leg that
+  bears less; astride, the boot behind.
+- Its boot goes beyond where its weight is going (by four fifths
+  again, and 2 cm), no further than three quarters of its leg, and
+  never across the other boot.
+- **Only onto walked ground level with where it stands** (to 5 cm).
+  Else it takes no step, and stands or falls as it did.
+
+### The swing, and the landing
+
+- The leg is unloaded in a hundredth of a second and swung in about an
+  eighth: its boot along the ground in one hump of speed, lifted 8 cm
+  in the middle, then put straight down. Its hips come down as far as
+  the leg needs to reach (to 12 hundredths of its height), and come up
+  again over half a second.
+- It is landed when its boot bears, or a third of a swing after the
+  swing's end.
+- **A boot just put down takes up its share as the ground comes to
+  bear it:** for three tenths of a second its leg is asked for no more
+  than twice what the ground bore that boot with a moment before (and a
+  quarter of its weight to find the ground with). The leg it stood on
+  goes on taking the rest.
+- Against a push that lasts, its trunk leans back (to 22 degrees).
+
+### The boot behind
+
+- After a catch, once nothing more needs catching, **the boot behind
+  follows:** from a tenth of a second after the first boot landed.
+- It is lifted only when it is ready: it bears under 12 hundredths of
+  the miner's weight and the other boot over 60, for three steps of the
+  physics.
+- Not ready within a second, **it is not lifted.** The miner stands as
+  it is, tries once more when it has been at rest for nine tenths of a
+  second, and after that stands astride.
+- Pushed on while it gets ready, it leaves that and catches itself.
+- The boot is brought alongside, or up to 8 cm short of it: no further
+  than leaves where its weight is going between its boots.
+
+### With the rest of it
+
+- **Its place goes with its feet.** After each step the miner's place
+  (where it is picked, where it walks from) is set between its boots.
+- **The life in it waits.** While it steps, and while its boots stand
+  astride after a catch, its weight is not asked from leg to leg, its
+  hips are not rolled, and its legs are the keeper's.
+- **Down** is its weight under four fifths of its standing height over
+  its lower boot, or its hips tipped far. Then the fall takes it, as
+  before.
+- **Its push may act no nearer than 1 cm to a sole's edge.** (It was
+  4 mm, right for a level floor. On the meadow a boot asked for that
+  tips over its edge.)
+
+### What it cannot do
+
+- Step across its own leg; step onto ground more than 5 cm higher or
+  lower; answer a second shove while a boot is in the air.
+- Get ready before a first step, or set off: not built.
+- **Stand well after a fall:** getting up leaves its feet apart and
+  staggered, and the body's own takes that over as its stand.
+- Stand a pull of an eighth of its weight or more (in the game).
+
+### What was run, and what was not
+
+In [the plan](../NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun)
+("October 13", "Where it stands") and in
+[Validation](../Validation.md#s3b-step-3--a-step-in-the-game-october-13).

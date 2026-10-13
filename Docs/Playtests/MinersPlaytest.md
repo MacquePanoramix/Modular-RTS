@@ -434,9 +434,10 @@ look at the same miner standing as it did.
 
 **What it does not do, so that it is not taken for a fault.**
 
-- **It cannot step.** Nudged again and again before it has settled, or
-  harder than the button does, it will go over (into the fall, and get
-  up). It does not lean against a pull as the posed body does.
+- **With "Catches itself with a step" unticked it cannot step** (as it
+  was until October 13). Nudged again and again before it has settled,
+  or harder than the button does, it will go over (into the fall, and
+  get up). It does not lean against a pull as the posed body does.
 - **Only the chosen miner** stands so, and only with empty hands. With
   a pickaxe in its hand, or at its work, it is the posed body.
 - **A miner at work, or resting from its blows with its pickaxe at its
@@ -457,6 +458,54 @@ which miner and which boulder.
 - Long's chin held up, the arms hanging away from the body, Round's
   shut eyes: these are how the models are made, and show more on a
   still body seen from near.
+
+## A step (October 13): for Luis to judge
+
+**"Catches itself with a step" is on from the start.** It is under
+"Stands by its own joints" on the panel, and works only while that is
+on and the miner stands at ease with empty hands. Untick it to see the
+miner as it stood before (it goes over where it now steps).
+
+| On the panel | What it does |
+|---|---|
+| **Catches itself with a step** | A switch, on from the start. On: shoved or pulled harder than it can stand through where it is, the miner puts a boot down where its weight is going, and brings the other after it. Off: it stands or falls as it did |
+| **Shove it** | Sets its whole body going the way the view looks, at 0.5 m/s (the nudge is 0.15). Turn the view to shove it from another side |
+| **Pull it** | Pulls at its chest the way the view looks, with 0.08 of its weight, for two and a half seconds |
+
+**What to try.** Choose a miner, let it come to stand, and shove it
+from in front, from behind and from each side (turn the view). Do the
+same with each of the three. Pull it. Then send it somewhere: it should
+walk from where its boots now are.
+
+**What to judge.** It has been measured (how often it stands) and
+never looked at: nobody, and no judge, has seen how it moves.
+
+- Does the step read as **a body catching itself**? Or as a leg moved
+  for it?
+- **The boot behind follows at once,** about a tenth of a second after
+  the first lands. Too quick? Should it stand astride a moment first?
+- After the two steps, does it **stand well**, or stiffly? (Its weight
+  does not go from leg to leg while its boots are astride.)
+- Round, shoved from the side, mostly stands without a step.
+
+**What it does not do, so that it is not taken for a fault.**
+
+- **Shoved again after it has fallen and got up, it mostly falls.**
+  Getting up leaves its feet set apart and staggered, and it stands so
+  by its own joints until it is sent somewhere. Not mended (it belongs
+  to going down and getting up, a later step).
+- **It can still go down.** In the game the three stood every shove of
+  the button's strength from four sides, in each of five runs; at 0.7
+  m/s they stood 10 of 12, and Small and Round went down shoved
+  sideways towards higher ground. Under the button's pull Small and
+  Long stood 9 runs of 9 and Round 7. A harder pull (an eighth of its
+  weight) fells them.
+- **It does not get ready before a step, and does not set off** by
+  itself: those parts of the plan's step 3 are not built.
+- It takes no step onto ground that is not level with where it stands
+  (to 5 cm), or off the walked ground: there it stands or falls as it
+  did.
+- It does not step across its own leg.
 
 ## Not yet
 

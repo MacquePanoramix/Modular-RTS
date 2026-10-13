@@ -1,7 +1,41 @@
 # Wonder Gather — Current State
 
-**Updated:** October 12, 2026.
+**Updated:** October 13, 2026.
 
+- **Step 3 (a step) is in the game since October 13, for Luis to
+  judge: not accepted, and not yet looked at by anyone.** A miner
+  standing by its own joints, shoved or pulled harder than it can stand
+  through, puts a boot down where its weight is going and brings the
+  other after it. On the panel: **"Catches itself with a step"** (on
+  from the start), **"Shove it"**, **"Pull it"**
+  ([what to try](Playtests/MinersPlaytest.md#a-step-october-13-for-luis-to-judge)).
+  - **In the game, on the meadow, with life in the miners:** shoved at
+    the button's 0.5 m/s from four sides, all three stood every time
+    (12 of 12, in each of five runs); at 0.7 m/s, 10 of 12. Under the
+    button's pull (0.08 of its weight for 2.5 s) Small and Long stood
+    9 runs of 9 and Round 7. An eighth of its weight fells them.
+  - **The bench had said 24 of 24 and the game gave Small one or two of
+    four.** Five things were found by setting the two side by side
+    step by step
+    ([the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun),
+    "October 13"). The two that matter most: **the step that brought
+    the other boot alongside felled it, not the catch;** and **a
+    figure found by a search on the bench's level floor (how near a
+    sole's edge its push may act: 4 mm) tips a boot over on the
+    meadow, which slopes two degrees.** It is 10 mm now, and that is a
+    narrow window.
+  - **Not mended:** after a fall a miner stands by its own joints as
+    its getting up left it, feet apart and staggered, and shoved again
+    from there it mostly falls. Getting ready before a step, and
+    setting off, are not built.
+  - **A false line of mine is put right:** the work branch's commit of
+    the morning said the standing body's tests passed 8 of 8; it was 7
+    of 8 (written before the result was read). They pass 11 of 11 in
+    the last two whole runs.
+  - **One question for Luis, open since October 12:** what a pulled
+    miner is to be held to. The bar was taken from the posed body,
+    which leans against a sixth of its weight without a step; a body
+    moved only by its joints cannot from rest.
 - **Step 1 of the body's own is accepted by Luis (October 10, night):**
   "Indeed yes to both": the miner standing by its own joints, with life
   in it; and its switch on from the start. A miner at ease with empty
@@ -9,7 +43,7 @@
   click away. The looks of breath drawn together: "Yes that's perfect I
   think." ([the message](Correspondence/2026-10-10_STEP_ONE_ACCEPTED.md)).
   **It is the first thing of S3b that is accepted. The step (step 3) is
-  not: it is not in the game.**
+  not.**
 - **The pickaxe miss is found** (Luis: "Yes I think so, good
   suggestion"). Three faults came out of it
   ([the design page](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10);
@@ -44,10 +78,9 @@
   24; an eighth: 18 of 24), and a pull that comes on over a second is
   stood far oftener than one that comes at once. A second round of
   reviewers overturned my conclusion that a sixth could not be done.
-  **Not finished: where to take it up is written in
+  (Taken up and written out on October 13: the entry above, and
   [the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun),
-  "October 12, saved in the middle of the work".** On the work branch
-  only; the step is off in the game.
+  "October 12: three more reviewers".)
 - **Step 3 (a step), October 11: one pulled body traced, three
   reviewers, and two searches set like against like.** A step begun on
   what it feels, as far as that has lasted, and a boot landed only
@@ -57,8 +90,8 @@
   of a sixth of its weight or more is still never stood through, and
   why is not known:** three things are to be measured first
   ([the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun),
-  "Where it stands"). **On the work branch only; the step is off in
-  the game.**
+  "Where it stands"). (As it stood on October 11: the step was then on
+  the work branch only.)
 - **Luis saw step 1 with its switch on, on the evening of October 10:**
   "I am loving the results." (That morning the switch had not been
   ticked: what follows in this entry was said of the body as it was.)
@@ -85,10 +118,11 @@
   done, step 1 is built and accepted, and Luis said on October 10 to go
   on. The looks of breath (its chest, its shoulders rising, its breath
   seen in the dusk air) are drawn together, by Luis's word; each can
-  still be seen alone on the panel. Step 3, a step, is begun on the
-  work branch (not in the
-  game): a shoved body now catches itself with a step far more often;
-  a body pulled and held does not yet** ([the plan](NextMilestonePlan.md);
+  still be seen alone on the panel. Step 3, a step, is in the game
+  since October 13 for Luis to judge (not accepted): shoved, a miner
+  catches itself with a step and brings the other boot after it; pulled
+  gently it steps and stands; pulled with an eighth of its weight or
+  more it still goes down** ([the plan](NextMilestonePlan.md);
   [the design as it is built](Design/TheBodysOwn.md);
   [Luis's answers](Correspondence/2026-10-09_THE_BODYS_OWN_ANSWERS.md)).
   - **Step 1 is built (October 10), accepted, and on from the start**

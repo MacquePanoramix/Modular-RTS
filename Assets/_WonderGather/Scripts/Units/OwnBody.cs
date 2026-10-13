@@ -158,6 +158,20 @@ namespace WonderGather
         private float giving;
         private Vector3 nudge;
         private int nudgeFor;
+        // S3b, step 3: it catches itself with a step (OwnKeeper.Steps). Its place goes with its feet: where the
+        // miner is lies so from the middle of its boots, and is turned so from its hips, as when it began.
+        private UnityEngine.AI.NavMeshAgent agent;
+        private Vector3 placeFromBoots;
+        private Quaternion turnFromHips = Quaternion.identity;
+        private int followed;
+        private const int Ground = 1 << 6;
+        // How often it has stepped since its body became its own, and whether it is stepping now.
+        public int Stepped => keeper != null ? keeper.Stepped : 0;
+        public bool Stepping => keeper != null && keeper.Stepping;
+        public string Tick(Vector3 way, Vector3 from) => keeper != null ? keeper.Tick(way, from) : "";
+        // A pull at its chest that is held: so many newtons one way, until a time, coming on over a time.
+        private Vector3 pull;
+        private float pullFrom, pullUntil = -1, pullOver;
 
         // Whether it is to stand by its own joints when it can (the panel's switch).
         public bool Wanted { get; set; }
@@ -282,6 +296,7 @@ namespace WonderGather
         {
             if (Stands || !CanStand) return false;
             var s = miner.Solved;
+            Told?.Invoke($"{name} takes over at {Time.time:F2}: the posed body sunk {body.SinkNow * 1000:F1} mm, bowed {body.BowNow:F1} deg, going {body.VelocityNow.magnitude:F3} m/s, crouched {body.CrouchNow * 1000:F1} mm, its feet set {body.StanceWider * 1000:F0} mm wider and {body.StanceStagger * 1000:F0} mm staggered, its boots at {s.feet[0].position.y:F3} and {s.feet[1].position.y:F3}; its hips {(s.pelvis.position.y - .5f * (s.feet[0].position.y + s.feet[1].position.y)) * 1000:F0} mm over its boots, knees bent {Vector3.Angle(s.thighs[0].up, s.shins[0].up):F0} and {Vector3.Angle(s.thighs[1].up, s.shins[1].up):F0} deg");
             var shape = body.BodyProportions;
             segments[Hips] = s.pelvis; segments[Trunk] = s.torso; segments[Head] = s.head;
             for (int i = 0; i < 2; i++)
@@ -424,7 +439,14 @@ namespace WonderGather
             balanced = balance != null && balance.Acts;
             if (balance != null) balance.Acts = false;
             body.LetGo = true;
-            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { StandsMid = Alive ? StandsMid : 0, Life = Lived };
+            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { StandsMid = Alive ? StandsMid : 0, Life = Lived, GroundUnder = AnyGround ? null : GroundFor, Tells = what => Told?.Invoke(name + " at " + Time.time.ToString("F2") + ": " + what) };
+            {
+                Vector3 between = Flat(.5f * (parts[Foot].transform.TransformPoint(soleAt[0]) + parts[Foot + 1].transform.TransformPoint(soleAt[1])));
+                Quaternion hipsFace = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);
+                placeFromBoots = Quaternion.Inverse(hipsFace) * (Flat(transform.position) - between);
+                turnFromHips = Quaternion.Inverse(hipsFace) * Quaternion.Euler(0, transform.eulerAngles.y, 0);
+                followed = 0; pullUntil = -1;
+            }
             rollMade = Mathf.Asin(Mathf.Clamp(parts[Hips].transform.right.y, -1, 1)) * Mathf.Rad2Deg; rollSeen = 0;
             nudgeFor = 0; giving = 0;
             Stands = true;
@@ -467,6 +489,53 @@ namespace WonderGather
             giving = 0;
         }
 
+        // The ground where a boot is to be put, for the keeper: only where the walked ground is (within a quarter of
+        // a metre: its place can go with it there), and as high as the ground lies there. NaN: none. (A miner that
+        // has fallen and got up is "off the walked ground" until it is sent somewhere, though it stands on it: that
+        // is not asked.)
+        // (For whoever looks at why it does or does not step: a test.)
+        public static System.Action<string> Told;
+        // (And to try it without: its place left where it was; no ground asked for.)
+        public static bool StaysPut, AnyGround;
+        private bool described;
+        private float GroundFor(Vector3 place)
+        {
+            bool walked = UnityEngine.AI.NavMesh.SamplePosition(place, out _, .25f, UnityEngine.AI.NavMesh.AllAreas);
+            bool found = Physics.Raycast(place + Vector3.up * 1.5f, Vector3.down, out var hit, 4, Ground);
+            if (Told != null && (!walked || !found)) Told($"no ground for a boot of {name} at {place.x:F2} {place.y:F3} {place.z:F2}: walked ground there {walked}; ground found {found}");
+            if (!walked) return float.NaN;
+            return found ? hit.point.y : float.NaN;
+        }
+
+        // Its place goes with its feet: once it has stepped and stands again (or at once, when its body is about
+        // to be given back or let go), the miner is where its body is.
+        private void Follows(bool atOnce = false)
+        {
+            if (StaysPut || keeper == null || keeper.Stepped == followed || (!atOnce && keeper.Stepping)) return;
+            followed = keeper.Stepped;
+            Quaternion hipsFace = Quaternion.LookRotation(keeper.Faces);
+            Vector3 to = Flat(keeper.StandsAt) + hipsFace * placeFromBoots;
+            to.y = transform.position.y;
+            if (agent == null) TryGetComponent(out agent);
+            if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh && UnityEngine.AI.NavMesh.SamplePosition(to, out var walked, .5f, UnityEngine.AI.NavMesh.AllAreas)) agent.Warp(walked.position);
+            else transform.position = to;
+            transform.rotation = hipsFace * turnFromHips;
+        }
+
+        // It is pulled at its chest one way with a share of its weight, for some seconds, the pull coming on over
+        // a time (as a rope draws tight).
+        public void Pull(Vector3 way, float share, float seconds, float over)
+        {
+            if (!Stands) return;
+            way = Flat(way);
+            if (way.sqrMagnitude < 1e-6f) return;
+            float whole = 0;
+            for (int i = 0; i < Count; i++) whole += masses[i];
+            pull = way.normalized * (share * whole * Physics.gravity.magnitude);
+            pullFrom = Time.time; pullUntil = Time.time + seconds; pullOver = over;
+        }
+        public bool Pulled => Stands && Time.time < pullUntil;
+
         // Something pushes it: a force (newtons) at a place, for this step of the physics.
         public void Push(Vector3 force, Vector3 where)
         {
@@ -496,7 +565,7 @@ namespace WonderGather
             if (Stands)
             {
                 // Sent somewhere, given something to do, or no longer wanted so, it gives its body back.
-                if (!Wanted || !Free) GiveBack();
+                if (!Wanted || !Free) { Follows(true); GiveBack(); }
             }
             else
             {
@@ -519,7 +588,10 @@ namespace WonderGather
                 nudgeFor--;
                 for (int i = 0; i < Count; i++) parts[i].AddForce(masses[i] * nudge);
             }
+            if (Time.time < pullUntil) parts[Trunk].AddForceAtPosition(pull * (pullOver > 0 ? Mathf.Clamp01((Time.time - pullFrom) / pullOver) : 1), parts[Trunk].worldCenterOfMass);
             if (!keeper.Keep(Time.fixedDeltaTime)) GoDown();
+            else Follows();
+            if (Told != null && !described && keeper != null) { described = true; Told(name + " is " + keeper.Describe()); }
         }
 
         // A joint is asked for a turn from the pose it was made in: a turn about the body's own lines as it began
@@ -548,10 +620,13 @@ namespace WonderGather
         private readonly float[] turning = new float[Count];
         private void Lived(float step, bool pushed, Vector3 apart)
         {
-            if (Alive) Lives(step, pushed);
-            else Still();
-            keeper.Shift = apart * (.5f * ShiftsBy * favours) + swayed;
-            keeper.Roll = Quaternion.AngleAxis(Rolls * rolled, itsAhead);
+            // (While it steps, and while its boots are astride after a step, it stands square: its weight is not
+            // asked to a leg, its hips are not rolled, and its legs are the keeper's.)
+            bool steps = keeper.Stepping || keeper.LegsHeld;
+            if (Alive) Lives(step, pushed || steps, steps);
+            else if (!steps) Still();
+            keeper.Shift = steps ? Vector3.zero : apart * (.5f * ShiftsBy * favours) + swayed;
+            keeper.Roll = steps ? Quaternion.identity : Quaternion.AngleAxis(Rolls * rolled, itsAhead);
         }
 
         // With no life in it, every joint is asked for the pose it was made in.
@@ -562,7 +637,7 @@ namespace WonderGather
         }
 
         // One step of its life: its breath, the leg it favours, where it looks; and what its joints are asked for.
-        private void Lives(float step, bool pushed)
+        private void Lives(float step, bool pushed, bool legsHeld = false)
         {
             life += step;
             // Its weight, from leg to leg. Pushed, it stands square.
@@ -644,6 +719,7 @@ namespace WonderGather
                 Asks(UpperArm + i, Quaternion.AngleAxis(Shoulders * rolled + side * BreathArms * fills, itsAhead));
                 // The leg it does not stand on: its knee eases forward, its boot staying flat.
                 float bends = KneeEases * Mathf.Clamp01(-side * eased);
+                if (legsHeld) continue;
                 Asks(Thigh + i, rollsBack * Quaternion.AngleAxis(-.5f * bends, itsRight));
                 Asks(Shin + i, Quaternion.AngleAxis(bends, itsRight));
                 Asks(Foot + i, Quaternion.AngleAxis(-.5f * bends, itsRight));
@@ -683,6 +759,8 @@ namespace WonderGather
         private void GoDown()
         {
             WentDown++;
+            Told?.Invoke(name + " at " + Time.time.ToString("F2") + ": goes down");
+            Follows(true);
             // (How each part is going is handed on: the let-go body's eleven parts are this one's first eleven.)
             for (int i = 0; i < Foot; i++) { goesOn[i] = parts[i].GetPointVelocity(parts[i].worldCenterOfMass); turnsOn[i] = parts[i].angularVelocity; }
             PutAway();

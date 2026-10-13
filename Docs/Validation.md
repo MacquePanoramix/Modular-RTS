@@ -3208,3 +3208,88 @@ Luis accepted step 1 and its switch on from the start
   would turn the counts above into odds; the switch on from the start
   in a long session of play (a miner sent, put to work, rested and
   left alone many times over).
+
+## S3b step 3 — a step, in the game (October 13)
+
+What was built, and why each part: [the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun)
+("October 12 and 13", "October 13"); what the build does:
+[the design page](Design/TheBodysOwn.md#step-3-a-step-as-it-is-built-october-13).
+**Passing tests are not Luis's acceptance: nobody has looked at the
+step.**
+
+- **Unity 6000.6.0f1**, in the isolated copy, on the work branch
+  `claude/wip-round` (commit 3e8f55e and what follows it). Every figure
+  below is from the game unless it says the bench: the Ordinary
+  Place's meadow, the miner standing by its own joints with life in
+  it, 50 steps of the physics a second.
+- **New tests** (`OwnBodyTests`):
+  - `AtEaseItTakesNoStep`: each miner at ease for 45 s with the step
+    on. **No step, no fall, its place unmoved,** all three, in each of
+    three whole runs.
+  - `ShovedItCatchesItselfWithAStep`: each miner set going at 0.5 m/s
+    (the panel's "Shove it") from four sides, each time from its plain
+    stand; it must stand three of the four and step at least once, and
+    its place must be within 15 cm of between its boots afterwards.
+    **Small 4 of 4, Long 4 of 4, Round 4 of 4, in each of five runs**
+    (Round stands the two sideways shoves without a step). A boot is
+    tipped 8 degrees at the most when it has come to rest; its place 2
+    to 9 cm from between its boots.
+  - `PulledGentlyItStands`: pulled forwards at its chest with 0.08 of
+    its weight for 2.5 s (the panel's "Pull it"). Small and Long must
+    stand; Round is told and not held to it. **Nine runs: Small 9,
+    Long 9, Round 7** (two steps, mostly).
+- **Changed test:** the fall and getting up
+  (`PushedHarderThanItCanStand…`) shoves at 2 m/s in place of 1.2: at
+  1.2, with the step on, Long catches itself. All three go down within
+  0.5 to 1.2 s, get up, and stand by their own joints again.
+- **`OwnBodyTests` whole: 11 of 11** in the last two runs; 10 of 11 in
+  the run before (Round's gentle pull, before a landed boot took up its
+  share by degrees).
+- **Other strengths** (one run each unless said; not tests):
+
+  | In the game | Small | Long | Round |
+  |---|---|---|---|
+  | Shoved at 0.35 m/s, four sides | 4 | 4 | 4 |
+  | Shoved at 0.7 m/s, four sides | 3 | 4 | 3 |
+  | Pulled with 0.10 | stood | stood | stood |
+  | Pulled with 0.12 (two runs) | 1 of 2 | 0 of 2 | 0 of 2 |
+
+- **How near a sole's edge its push may act** (`Edge`; the three
+  miners shoved at 0.5 m/s from four sides, one run each): 4 mm, 11 of
+  12 stand; 8 mm, 12; 12 mm, 12; 20 mm, 11. It is 10 mm.
+- **The meadow against a level floor** (`-ownFloor 1` lays one over
+  it; Small, no life in it, before the margin was widened): 4 of 4 on
+  the floor, 2 of 4 on the meadow. Where the test stands a miner the
+  meadow is 5 mm lower 0.3 m ahead, 8 mm higher to one side, 5 mm
+  higher behind, 9 mm lower to the other side.
+- **The bench** (`BodysOwnBench.Steps`: a level floor, no life, three
+  bodies, eight ways), with the same keeper: shoved at 0.3, 0.5 and 0.8
+  m/s, 24, 24 and 22 of 24 stand, all with boots flat; pulled with
+  0.08, 24; with a sixth, a quarter, a third: none.
+- **The whole PlayMode suite** (one run, after all of the above): 198 tests; **175 passed, none failed**, 23 are
+  run only when asked. (172 before: the three new tests are the difference.)
+- **The build** was made from this state and copied to `Builds/`. Not
+  opened by me.
+- **A correction.** The work branch's commit 723eec9 says
+  "OwnBodyTests: 8 of 8". It was 7 of 8
+  (`StandingAMinuteItIsAliveAndDoesNotWobble`: Long and Round, on one
+  leg and nudged, went down); the message was written before the result
+  was read. With the keeper of October 11 that test failed in 2 runs of
+  4 as well. It passed in each of the three whole runs of October 13.
+- **Not tested:**
+  - a miner shoved after it has fallen and got up (it stands then with
+    its feet apart and staggered, and was seen to fall when shoved so,
+    before the test was made to begin from the plain stand);
+  - a second shove during a step; shoves from the four diagonals in
+    the game (the bench has them);
+  - why the two sideways shoves of 0.7 m/s end in a fall was read in
+    the keeper's own telling and not mended: the first boot meets the
+    rising ground 12 to 14 cm short of where it was to go, and Small's
+    next steps were refused for 0.8 s (the ground where the boot would
+    go more than 5 cm off level with where it stood);
+  - other places on the meadow, a steeper slope, the path's edge;
+  - a long session of play with the step on (a miner sent, put to
+    work, rested, shoved, many times over);
+  - how often it ends astride (in the runs read, never);
+  - the suite as the game is played (`-ownAsPlayed 1`) on this state;
+  - **how it looks.**

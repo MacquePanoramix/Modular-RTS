@@ -162,7 +162,7 @@ kept as they were, so that what is written elsewhere still points right.
 | 0 (done) | **The ground for it.** Ankles: the boot becomes a part of its own (today the shin and the boot are one, and a body cannot balance at an ankle it does not have). The test that nothing pushes from nowhere. Today's posed body measured for the table above. What a body's own costs in the frame, one miner and a crowd | | Figures |
 | 1 (built October 10; **accepted by Luis** that night) | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
 | 2 | **From its knees onto its feet.** The half second that is posed in the getting up. Then the whole of it, from the fall to standing, is the body's own | Not all on one clock (2) | A pushed miner getting up with nothing taking over |
-| 3 | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
+| 3 (in the game since October 13, **for Luis to judge: not accepted.** Built: shoved or pulled, it catches itself with a step and the boot behind follows. Not built: getting ready before a first step; setting off) | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
 | 4 | **Walking, turning, stopping.** On the path, the meadow and its slopes. No two steps quite the same. The free arm swings. **Its breath shows on its chest and shoulders as it walks** (it waits for this step: [Luis, October 11](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)) | Arcs and one hump of speed (5); does not repeat itself (6) | The walk, beside the walk as it was |
 | 5 | **Down to the ground and up.** Picking a thing up, laying it down | Not all on one clock (2); gets ready (3) | The pick-up, beside the pick-up as it was |
 | 6 | **The work.** The body in the swing is its own, as the tool already is. **Its breath shows on its chest and shoulders at its work, and as it rests from it** (it waits for this step: [Luis, October 11](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)). The swing at a low boulder, which takes a tall miner off its place, is made again here ([what was found](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10)) | Shows its effort (8) | A miner mining |
@@ -436,55 +436,214 @@ only; nothing of step 3 is in the game Luis has.
     one that is exactly one step of the physics long;
   - uneven ground: where a boot is put down is reckoned from the boot
     it stands on.
-- **October 12, saved in the middle of the work** (Luis's machine
-  had to go off; [the message that day](Correspondence/2026-10-12_GO_ON_WITH_THE_STEP.md)).
-  **This entry is notes, not yet the account: the second round of
-  reviewers is not yet written in.**
-  - **The three things were measured,** on five bodies told at every
-    step of the physics. Its joints are below what they have until the
-    last tenth of a second (0.8 to 0.9 at the most, not at their end).
-    What it feels is unsteady for two tenths of a second after a boot
-    lands. **And on one boot its weight is not over that boot:** it
-    lies 2 to 5 cm inside the sole's inner edge, and one traced body
-    went down sideways. (I first wrote that it was; a reviewer read the
-    lines again.)
-  - **The first step under a sixth lands one to three centimetres
-    short of holding,** and the body falls half a second later by
-    creeping. So it is a narrow miss, not a wall. I had concluded that
-    a sixth was beyond a step from a stand; **the sceptic among the
-    reviewers took that apart, and was right.**
-  - **How the pull comes on matters as much as how strong it is.**
-    Coming on over 1.2 s in place of at once, 0.12 is stood by 22 of
-    24 and 0.17 by 8, with settings never searched for it.
-  - **Built since, each off at nought:** it sinks into a catching step
-    (kept: 0.12 stood by 18 of 24, from 13); the hip of a swinging leg
-    sprung as its knee and ankle are; its trunk leaning back against a
-    push that lasts; lowering itself before a step. With the last
-    three free to be found, a search as long as the others gave, pull
-    at once: **0.08: 24; 0.12: 18; 0.17: 2, the first bodies ever to
-    stand a sixth;** shoved at 0.5 and 0.7 m/s: 24 and 20; 112 of 168
-    in all (106 before). It chose the hip sprung and the trunk leaning.
+- **October 12: three more reviewers,** on the three measurements and
+  on my conclusion that a sixth of its weight was beyond a step from a
+  stand (a physicist, a sceptic and a builder, each given the write-up,
+  the code and the uncut lines, and nothing of what I thought).
+  - **The physicist: of my three measurements one was false, one too
+    low, one passed over.** Its joints are asked up to 0.9 of what they
+    have before the last tenth of a second (I had written 0.7). What
+    it feels is not clean as a boot lands: held still for 0.09 s, then
+    it dips or spikes, once with its sign turned, and agrees with what
+    the ground bears only two tenths of a second on. **And on one boot
+    its weight lies 2 to 5 cm outside that sole's inner edge,** in four
+    bodies of five (I had written that it was over it); one of them
+    went down sideways. The reckoning of reach and time does not show
+    that a sixth cannot be held: by the physicist's own, a boot 19 to
+    26 cm ahead, put down in 0.12 to 0.2 s, holds it with one to three
+    centimetres to spare; and the ground bears it 3 to 6 cm behind
+    where the keeper aims its push, which is the whole of that margin.
+  - **The sceptic: a narrow miss, not a wall.** The first step already
+    lands within one to three centimetres of holding, and the body
+    falls half a second later by creeping. A pull at the chest costs a
+    quarter more than its figure. The search was holding three times
+    (before a step, the swing, the unloading) at the edge of what it
+    was let try. The swinging leg is late for its own target and its
+    hip was never sprung. A body that does not stand is worth almost
+    nothing to the search, and the same settings scored 103 and then
+    73: five or six bodies between two arms are inside that. The trunk
+    does nothing against a pull. What it feels reads twice the pull
+    once it is braced. A pull that comes on over a time was never
+    tried. Stepping across is forbidden, which costs the sideways
+    falls. (And "people go with a pull" I had read nowhere: taken
+    out.) Eleven points in all; these are the ones acted on or still
+    open.
+  - **The builder: what will go wrong in the game,** in order. A step
+    stranded when the switch goes off or the body is given back in the
+    middle of one. The miner left where its feet are not. **"Until the
+    ground where a boot is put is asked for: flat ground only."** A
+    sink deeper than the height at which it is taken for down. Life
+    that has never met a step. A step begun by its own breathing.
+- **October 12 and 13: what was built on that,** on the bench (three
+  bodies, eight ways; how many of 24 stand). Each lever is off at
+  nought; each was then taken out alone. (A lever taken out is not
+  searched for again, which favours what is kept: the physicist's
+  caution.)
+
+  | | Pulled with 0.08, 0.12, 0.17 | Shoved at 0.3, 0.5, 0.7 m/s | Of 168 |
+  |---|---|---|---|
+  | **The three levers together** (it sinks into a catching step; the swinging leg's hip sprung; its trunk leaning back against a push that lasts) | 24, 18, 2 | 24, 24, 20 | 112 |
+  | Without sinking | 23, 15, 0 | 24, 24, 19 | 105 |
+  | Without the hip sprung | 23, 13, 1 | 24, 24, 22 | 107 |
+  | Without the trunk leaning | 23, 16, 3 | 24, 24, 20 | 110 |
+  | Without lowering itself before a step | 23, 19, 2 | 24, 24, 21 | 113 |
+
+  The first three are kept; lowering itself before a step is taken
+  out (it was worth nothing). **Two of 24 were the first bodies ever
+  to stand a sixth.**
+  - **How a pull comes on matters as much as how strong it is.**
+    Coming on over 1.2 s in place of at once, with the same settings:
+    0.12 is stood by 24 of 24 and a sixth by 10.
   - **Tried and taken out:** a far boot taking longer (nothing); the
-    step's length reckoned from how long it takes (worse).
-  - **Where to take it up:** (1) put that search's settings into the
-    keeper (they are in the message of the work branch's last commit,
-    and below), run the standing body's tests, and take each of the
-    three levers out in turn; (2) write the reviewers of October 12
-    into this page (the sceptic's eleven points, the physicist's
-    corrections, the builder's order for going into the game); (3)
-    search with pulls that come on over a time as well as at once;
-    (4) the builder's list, then the step into the game with a way to
-    pull on the panel; (5) one thing for Luis: the bar for a pulled
-    body was taken from the posed body, which leans without a step to
-    a sixth of its weight, and a body moved only by its joints cannot
-    (from rest, about 0.09). What it is to be held to is Luis's to say.
-  - The settings that search found:
-    `StepsBeyond=0.035,StepsAfter=0.0389,StepsFelt=0.764,UnloadsIn=0.0123,SwingsIn=0.1205,Clears=0.0841,StepsAhead=1.7984,StepsFurther=0.0219,Reach=0.7771,Sideways=0.6257,SwingFullAt=36.9916,SwingDamped=0.3692,SwingStiff=102.3059,SwingSlows=52.1183,SwingAtMost=1.4859,LandsDeaf=0.1131,Astride=0.1045,CalmUnder=0.0901,ClosesAfter=0.8898,ReadyWithin=0.0134,TakesUp=1.1961,StepRights=1,SwingAnkle=16.2657,Tilts=0.3658,TiltsRate=0.274,StepsFeltOver=0.1652,TrailsFrom=1.0148,LandsBy=1.3392,Sinks=0.2615,SinksReady=0.0033,SwingHip=0.7069,LeansBack=8.3633`
-- **Where the code is:** on the work branch `claude/wip-round`, with
-  the settings of the table's last column. The step is off in the
-  game, and with it off a miner stands exactly as it did (the standing
-  body's eight tests pass). Not run: the whole suite on this state;
-  any of it in the game.
+    step's length reckoned from how long it takes (worse); its hips
+    holding against a tip that lasts (everything fell: it wound itself
+    up at rest); **a push known to last by being there at every step
+    of the physics** for a twentieth of a second. That last stood a
+    sixth 6 times of 24, and was built on one more thing I had not
+    seen: **the bench shoved a body in one step of the physics, and
+    the game's shove lasts a tenth of a second.** Shoved as the game
+    shoves, it took a shove for a pull: 9 of 24 stood 0.5 m/s. Taken
+    out, and the bench shoves over a tenth of a second since.
+  - **With that** (shoves as the game gives them): shoved at 0.15,
+    0.3, 0.5 and 0.7 m/s, 24, 24, 24 and 23 stand; pulled with 0.08,
+    0.12 and a sixth, 23, 20 and 3.
+- **October 13: the step went into the game, and the meadow found
+  what the bench could not.** Luis: "You can continue now please"
+  ([recorded](Correspondence/2026-10-12_GO_ON_WITH_THE_STEP.md)).
+  - **What went in** (the builder's list). Its place goes with its
+    feet: after a step its place, its walking and its picking are
+    where its boots are. A step is taken only onto walked ground
+    level with where it stands (to 5 cm); else it takes none, and
+    stands or falls as it can. The switch turned off in the middle of
+    a step lets the leg go. While it steps, and while its boots are
+    astride after a catch, the life in it leaves its legs alone and it
+    stands square. **At ease for three quarters of a minute, none of
+    the three takes a step** (a test). On the panel: a switch
+    **"Catches itself with a step"**, on from the start, and **"Shove
+    it"** and **"Pull it"**.
+  - **The bench said 24 of 24, and in the game Small stood one or two
+    shoves of four.** A day went on why. The keeper now tells every
+    step of the physics in one line, on the bench and in the game, and
+    the two were set side by side until a line differed. Five things,
+    in the order they were found:
+    1. **The test stood the miner badly.** Put on the path it is 2 cm
+       low for a moment (its knees bent 40 degrees for 26), and the
+       body's own, made then, keeps that as its stand. **After a fall
+       and getting up its feet stay set apart and staggered** (once
+       0.24 m wider and 0.54 m staggered), and the body's own takes
+       that over too. The test now begins each shove from its plain
+       stand. **Not mended, and it is so in the game as played: after
+       a fall a miner stands by its own joints as its getting up left
+       it,** and shoved again from there it falls. That is step 5's
+       (going down and getting up).
+    2. **The catch held every time. What felled it was the step that
+       brings the other boot alongside.** Waiting till it was calm,
+       its weight had settled midway between boots a third of a metre
+       apart. To get ready it could not bring its weight over one of
+       them in a second: astride, its legs stand as struts, and the
+       ground went on bearing both whatever its joints were asked. It
+       lifted the boot all the same, by the clock, and fell onto it.
+       **Now the boot behind follows at once after a catch,** a tenth
+       of a second after the catch's boot lands, while its weight is
+       still going on over that boot. It is ready when the boot to be
+       lifted bears next to nothing and the other most of its weight.
+       Not ready within a second, **it does not lift the boot:** it
+       stands as it is, tries once more when it is at rest, and after
+       that stands astride. Pushed on meanwhile, it catches itself.
+       And the boot is brought no further than leaves its weight
+       between its boots (up to 8 cm short of alongside): brought
+       fully alongside, both boots were ahead of its weight and it
+       had to catch itself backwards.
+    3. **The ground.** With that, on a level floor laid over the
+       meadow, Small stood 4 of 4; on the meadow, 2 of 4. Where the
+       tests stand a miner the meadow slopes about two degrees (5 to
+       9 mm over 0.3 m), and it is a mesh. The keeper let its push act
+       within **4 mm of a sole's edge: a figure a search had found on
+       the bench's level floor.** On the meadow a boot asked for that
+       tips over its own edge, and the leg behind it is thrown. With
+       10 mm it holds. **It is a narrow window** (the three miners,
+       life in them, shoved at 0.5 m/s four ways; one run each):
+
+       | Its push may act to within | 4 mm | 8 mm | 12 mm | 20 mm |
+       |---|---|---|---|---|
+       | Stand, of 12 | 11 (Small down) | 12 | 12 | 11 (Round down) |
+
+       At 20 mm Round's soles are too narrow to stand a sideways shove
+       through; it steps late, out of a slow fall, and goes down.
+    4. **A boot is taken for landed by the clock, mostly, bearing
+       nothing yet** (a few millimetres over the ground, or touching
+       by an edge), and at that step of the physics its leg was asked
+       for its whole share of the push. With no ground under it to
+       push back, the leg is only thrown: a knee from 36 to 7 degrees
+       in four hundredths of a second, a boot driven on 0.3 m or flung
+       0.2 m up. **Now a boot just put down takes up its share as the
+       ground comes to bear it,** and the leg it stood on goes on
+       taking the rest. Round, pulled gently, went down in 3 runs of 6
+       before, and in 2 of 9 since.
+    5. **"Down" was reckoned from the middle of its two soles.** With
+       a boot 0.2 m up behind it, a miner at 0.87 to 0.95 of its
+       height was taken for down and handed to the fall. With the step
+       on it is reckoned from its lower boot.
+  - **Where it stands, in the game** (the meadow, life in the miners,
+    four ways; how many of 12 stand; one run each unless said):
+
+    | | Small | Long | Round |
+    |---|---|---|---|
+    | Shoved at 0.35 m/s | 4 (2 without a step) | 4 (2 without) | 4 (3 without) |
+    | **Shoved at 0.5 m/s ("Shove it")** | 4 | 4 | 4 (2 without a step) |
+    | Shoved at 0.7 m/s | 3 | 4 | 3 |
+    | Pulled with 0.08 for 2.5 s ("Pull it"), nine runs | 9 | 9 | 7 |
+    | Pulled with 0.10, one run | stood | stood | stood |
+    | Pulled with 0.12, two runs | 1 | 0 | 0 |
+
+    At 0.5 m/s all 12 stood in each of the last five runs, mostly by a
+    catch and the boot behind following: two steps. At 0.7 the two
+    that go down are shoved sideways towards the higher ground. **A
+    pull of an eighth of its weight fells them in the game, 5 times of
+    6** (20 of 24 stood it on the bench): the button was set to that,
+    and gives 0.08 now. The test holds Small and Long to standing a
+    gentle pull and tells what Round does.
+  - **On the bench, with all of it** (level floor, no life): shoved
+    at 0.3, 0.5 and 0.8 m/s, 24, 24 and 22 of 24 stand, every one
+    with its boots flat (13 of 141 were not, before); pulled with
+    0.08, 24. **Pulled with a sixth, none** (3 before today): none of
+    today's work is for the hard pull, and it may have cost it.
+  - **The standing body's tests: 11 of 11** in the last two whole
+    runs (10 in the one before: Round's gentle pull). The test of
+    falling and getting up shoves at 2 m/s now: at 1.2, with the step
+    on, Long catches itself.
+  - **One thing I wrote that was false.** The message of the work
+    branch's commit before this (723eec9) says "OwnBodyTests: 8 of 8".
+    That run was 7 of 8: the minute of standing failed (Long and
+    Round, on one leg and nudged, went down). I had written the
+    message before reading the result. That test then failed in about
+    half its runs with the keeper of October 11 too, so it is a thin
+    margin of the standing body Luis accepted, not the step's doing.
+    It passed in each of today's three whole runs, with the wider
+    margin from a sole's edge; three runs do not show that it is
+    mended.
+  - **Not done, and known:**
+    - After a fall, the stand it takes over (above).
+    - Round under a gentle pull; a sideways shove of 0.7 m/s towards
+      higher ground.
+    - The margin from a sole's edge is right for this meadow at this
+      place, by one run for each figure. Steeper or rougher ground has
+      not been stood on.
+    - A second shove while a boot is in the air is still not answered.
+    - It does not step across its own leg: a slow sideways fall onto
+      the loaded leg is caught late or not at all.
+    - How often it ends astride was not counted (in the runs read, it
+      did not).
+    - The lengths and times are still the same for all three miners.
+    - **How the step looks has been seen by nobody:** no frames of it
+      have been drawn, and no judge has looked.
+  - **One thing for Luis,** unanswered since October 12: the bar for a
+    pulled miner was taken from the body as it was posed, which leans
+    against a sixth of its weight without a step. A body moved only by
+    its joints cannot, from rest (about 0.09 without a step). What it
+    is to be held to is Luis's to say.
+- **Where the code is:** on the work branch `claude/wip-round` and,
+  once the whole suite has been run on it, in the game (below).
 
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).
