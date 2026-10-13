@@ -27,7 +27,7 @@ namespace WonderGather.Tests
     {
         private const int Parts = OwnBody.Count, Kept = Parts + 2;
         private static readonly CultureInfo Plain = CultureInfo.InvariantCulture;
-        private struct Lies { public string name; public Vector3[] at; public Quaternion[] turned; }
+        private struct Lies { public string name; public Vector3[] at; public Quaternion[] turned; public Vector3 side, place; public Quaternion faces; }
         private sealed class Body
         {
             public string name;
@@ -39,7 +39,8 @@ namespace WonderGather.Tests
             public List<Lies> starts = new List<Lies>();
             // What came of a try.
             public bool done, up, onFeet;
-            public float feetAt, upAt, peak, stoodFor, hipsHigh, ahead, soles, upright, bears, risen, feetFor;
+            public float feetAt, upAt, peak, stoodFor, hipsHigh, ahead, soles, upright, bears, risen, feetFor, front;
+            public OwnRiser.Way[] ways;
             public string ended;
         }
 
@@ -79,6 +80,15 @@ namespace WonderGather.Tests
                     foreach (string word in f[7].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (word.StartsWith("keep=")) { stage.keeps = float.Parse(word.Substring(5), Plain); continue; }
+                        // (step=lead,0.2,0.4,0.06: that leg's boot put so far ahead of its hip and so far out, lifted so far.)
+                        if (word.StartsWith("step="))
+                        {
+                            var put = word.Substring(5).Split(',');
+                            stage.steps = put[0] == "lead" ? 0 : 1;
+                            stage.stepAhead = float.Parse(put[1], Plain); stage.stepOut = float.Parse(put[2], Plain);
+                            if (put.Length > 3) stage.stepLifts = float.Parse(put[3], Plain);
+                            continue;
+                        }
                         int cut = word.IndexOfAny(new[] { '<', '>' });
                         var what = (OwnRiser.Asks)Enum.Parse(typeof(OwnRiser.Asks), word.Substring(0, cut), true);
                         float value = float.Parse(word.Substring(cut + 1), Plain);
@@ -106,6 +116,7 @@ namespace WonderGather.Tests
                     foreach (var asked in stage.through)
                         text.Append(string.Format(Plain, " {0}{1}{2:0.##}", asked.what.ToString().ToLowerInvariant(), float.IsNegativeInfinity(asked.least) ? "<" : ">", float.IsNegativeInfinity(asked.least) ? asked.most : asked.least));
                     if (!float.IsNaN(stage.keeps)) text.Append(string.Format(Plain, " keep={0:0.00}", stage.keeps));
+                    if (stage.steps >= 0) text.Append(string.Format(Plain, " step={0},{1:0.00},{2:0.00},{3:0.00}", stage.steps == 0 ? "lead" : "other", stage.stepAhead, stage.stepOut, stage.stepLifts));
                     text.AppendLine();
                 }
             }
@@ -183,8 +194,8 @@ namespace WonderGather.Tests
             var bodies = new List<Body>();
             Vector3 Spot(int n, out Vector3 away)
             {
-                var a = ground.Path[3 + n];
-                var b = ground.Path[4 + n];
+                var a = ground.Path[(3 + n) % (ground.Path.Count - 1)];
+                var b = ground.Path[(3 + n) % (ground.Path.Count - 1) + 1];
                 away = (new Vector3(b.x, 0, b.y) - new Vector3(a.x, 0, a.y)).normalized;
                 return new Vector3(a.x, ground.Height(a.x, a.y), a.y);
             }
@@ -241,11 +252,32 @@ namespace WonderGather.Tests
             {
                 // The ways they come to lie (and, if asked, where the fall's own ways then bring them).
                 foreach (var body in bodies) body.standing = Now(body.fall, "standing");
-                foreach (string how in from)
+                foreach (string asked in from)
                 {
-                    foreach (var body in bodies)
+                    // (front@3: laid at another place on the path, so many places on from its own, facing as the path goes
+                    // there. The meadow's ground lies differently at each: a way found at one place is not yet one
+                    // that serves at another.)
+                    string how = asked.Split('@')[0];
+                    int on = asked.Contains("@") ? int.Parse(asked.Split('@')[1], Plain) : 0;
+                    for (int n = 0; n < bodies.Count; n++)
                     {
+                        var body = bodies[n];
                         Put(body.fall, body.standing);
+                        Vector3 own = Spot(n, out Vector3 ownAway);
+                        Quaternion ownTurn = Quaternion.LookRotation(ownAway);
+                        if (on != 0)
+                        {
+                            Vector3 there = Spot(n + on, out Vector3 thereAway);
+                            Quaternion turn = Quaternion.LookRotation(thereAway) * Quaternion.Inverse(ownTurn);
+                            for (int i = 0; i < PhysicalFall.Count; i++)
+                            {
+                                var part = body.fall.Part(i);
+                                part.transform.SetPositionAndRotation(there + turn * (part.transform.position - own), turn * part.transform.rotation);
+                            }
+                            body.unit.transform.SetPositionAndRotation(there, Quaternion.LookRotation(thereAway));
+                        }
+                        else body.unit.transform.SetPositionAndRotation(own, ownTurn);
+                        Physics.SyncTransforms();
                         body.fall.Fell();
                         if (!how.StartsWith("s")) PhysicalFallBench.Lay(body.fall, body.unit.transform, ground, how);
                     }
@@ -278,7 +310,10 @@ namespace WonderGather.Tests
                     }
                     foreach (var body in bodies)
                     {
-                        body.starts.Add(Now(body.fall, how));
+                        var lies = Now(body.fall, asked);
+                        lies.side = Vector3.Cross(Vector3.up, Flat(body.unit.transform.forward).normalized);
+                        lies.place = body.unit.transform.position; lies.faces = body.unit.transform.rotation;
+                        body.starts.Add(lies);
                         Debug.Log(string.Format(Plain, "RISE {0} lies ({1}{2}): its chest to the ground by {3:0.00}, its hips {4:0.00} of their height up; the fall: {5} {6}", body.name, how, knees ? ", then onto its knees" : "",
                             body.fall.Measure(PhysicalFall.Asks.Front), body.fall.Measure(PhysicalFall.Asks.Hips), body.fall.Now, body.fall.Through ? "through" : "not through"));
                     }
@@ -291,8 +326,9 @@ namespace WonderGather.Tests
                 // (The panel's switch on: with it off, the miner that is chosen is given back to the posed body at the
                 // next frame.)
                 look.SetOwn(true);
-                var ways = Read(file);
-                OwnBody.RiseWays = ways;
+                // (-riseWays keep_{0}.txt: each miner its own file, its name in small letters where {0} stands.)
+                foreach (var body in bodies) body.ways = Read(string.Format(file, body.name.ToLowerInvariant()));
+                var ways = bodies[0].ways;
 
                 // One try: from one way of lying, every body made its own as it lies; stepped until each stands, has gone
                 // down, or the time is over. (pictures: of which body, if any.)
@@ -301,8 +337,11 @@ namespace WonderGather.Tests
                     foreach (var body in bodies)
                     {
                         if (body.own.Stands) body.own.Drop();
+                        // (Its own place where this start was made: it goes with its body from there.)
+                        body.unit.transform.SetPositionAndRotation(body.starts[j].place, body.starts[j].faces);
                         Lay(body.miner, body.starts[j]);
                         body.own.Wanted = true;
+                        OwnBody.RiseWays = body.ways;
                         body.done = !body.own.BeginDown();
                         body.up = body.onFeet = false; body.feetAt = body.upAt = -1; body.peak = body.stoodFor = body.risen = body.feetFor = 0; body.ended = body.done ? "could not be made" : "";
                     }
@@ -322,7 +361,7 @@ namespace WonderGather.Tests
                             {
                                 var riser = own.Riser;
                                 body.hipsHigh = riser.Measure(OwnRiser.Asks.Hips); body.ahead = riser.Measure(OwnRiser.Asks.Ahead); body.soles = riser.Measure(OwnRiser.Asks.Soles);
-                                body.upright = riser.Measure(OwnRiser.Asks.Upright); body.bears = riser.Measure(OwnRiser.Asks.Bears);
+                                body.upright = riser.Measure(OwnRiser.Asks.Upright); body.bears = riser.Measure(OwnRiser.Asks.Bears); body.front = riser.Measure(OwnRiser.Asks.Front);
                                 body.ended = riser.WayNow + " " + riser.StageNow;
                             }
                             else if (!body.onFeet) { body.onFeet = true; body.feetAt = step * dt; }
@@ -351,7 +390,7 @@ namespace WonderGather.Tests
                                 Vector3 away = pictured.unit.transform.forward;
                                 float tall = 1.3f * pictured.unit.GetComponent<ProceduralBiped>().StandingHipHeight + .5f;
                                 Vector3 looksAt = new Vector3(hipsAt.x, pictured.starts[j].at[0].y + .3f * tall - .1f, hipsAt.z);
-                                Vector3 right = Vector3.Cross(Vector3.up, Flat(pictured.standing.turned[0] * Vector3.forward).normalized);
+                                Vector3 right = pictured.starts[j].side;
                                 Vector3 fromWhere = looksAt + right * (4.2f * tall) + Vector3.up * (.5f * tall);
                                 camera.transform.SetPositionAndRotation(fromWhere, Quaternion.LookRotation(looksAt - fromWhere));
                                 CaptureTools.Render(camera, Path.Combine(folder, $"{tag}_{shot:000}"), size, size);
@@ -448,6 +487,8 @@ namespace WonderGather.Tests
                         // body with its soles flat, its hips up and its hands and head on the ground a leg's length ahead
                         // was as good as any.)
                         worth += Mathf.Clamp01(body.soles) + 2 * Mathf.Clamp01(body.bears) + 2 * (1 - Mathf.Clamp01(Mathf.Abs(body.ahead) / .7f)) + Mathf.Clamp(body.hipsHigh, 0, .6f) + 2 * Mathf.Clamp01((body.upright + .4f) / 1.2f);
+                        // (And, before any of that, how far it has come over onto its front.)
+                        worth += 3 * Mathf.Clamp01((body.front + 1) / 1.6f);
                         worth -= .5f * Mathf.Max(0, body.peak - 1.5f);
                         return worth;
                     }

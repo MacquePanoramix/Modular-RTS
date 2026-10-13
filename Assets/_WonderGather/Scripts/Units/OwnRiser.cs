@@ -43,6 +43,14 @@ namespace WonderGather
             // If it keeps its weight over its feet in this pose: how far ahead of the middle between its soles (a
             // share of its hips' height). It does so by bowing more or less at the hips.
             public float keeps = float.NaN;
+            // If a foot is put somewhere in this pose (0: the leading leg's foot; 1: the other; -1: none): its boot is
+            // carried, lifted so far in the middle (metres), to lie flat on the ground so far ahead of its own hip
+            // and so far out from it (shares of the leg's length), the way the body lies (from its hips towards its
+            // head). That leg's hip, knee and ankle are then asked for what puts the boot there, whatever the ground
+            // and however the body lies, and not for the pose's turns. The pose is through only once that boot
+            // bears on the ground.
+            public int steps = -1;
+            public float stepAhead, stepOut, stepLifts = .06f;
         }
         // One way, for a body whose chest faces the ground by between this and this much. At its end the body is on
         // its feet and the keeper takes it (gives); or it only lies another way, and chooses its way again.
@@ -71,7 +79,11 @@ namespace WonderGather
         private readonly bool[] hinge;
         private readonly GroundTouch[] touches;
         private readonly Vector3[] soleAt;
-        private readonly Quaternion[] toStood;
+        private readonly Quaternion[] toStood, rested, stoodBoot;
+        private readonly Vector3[] anchors;
+        private readonly float[] bears = new float[2];
+        private Vector3 stepFrom;
+        private bool stepBegun;
         private readonly Quaternion[] aimFrom = new Quaternion[Count], aimNow = new Quaternion[Count];
         private readonly float tall, whole;
         private readonly int ground;
@@ -86,10 +98,14 @@ namespace WonderGather
         public Quaternion Aim(int j) => aimNow[j];
         public float Lasted { get; private set; }
 
-        public OwnRiser(ArticulationBody[] parts, int[] from, float[] masses, float[] strength, bool[] hinge, GroundTouch[] touches, Vector3[] soleAt, Quaternion[] toStood, float[] lighter, float tall, int ground)
+        // rested: each part's turn against what it hangs from, as it was made. anchors: where each part's joint is, in
+        // the part. stoodBoot: how each boot is turned standing, from the way the body faces.
+        public OwnRiser(ArticulationBody[] parts, int[] from, float[] masses, float[] strength, bool[] hinge, GroundTouch[] touches, Vector3[] soleAt, Quaternion[] toStood, float[] lighter, float tall, int ground,
+            Quaternion[] rested, Vector3[] anchors, Quaternion[] stoodBoot)
         {
             this.parts = parts; this.from = from; this.masses = masses; this.strength = strength; this.hinge = hinge;
             this.touches = touches; this.soleAt = soleAt; this.toStood = toStood; this.lighter = lighter; this.tall = Mathf.Max(.1f, tall); this.ground = ground;
+            this.rested = rested; this.anchors = anchors; this.stoodBoot = stoodBoot;
             float all = 0;
             for (int i = 0; i < Count; i++) { all += masses[i]; aimNow[i] = aimFrom[i] = Quaternion.identity; }
             whole = all;
@@ -193,9 +209,46 @@ namespace WonderGather
             return true;
         }
 
+        private Vector3 JointAt(int j) => parts[j].transform.TransformPoint(anchors[j]);
+
+        // The way the body lies along the ground: from its hips towards its head when it is bowed over or lying;
+        // the way its hips face when its trunk is up.
+        public Vector3 Lies()
+        {
+            Vector3 along = Flat(parts[Head].transform.position - parts[Hips].transform.position), faces = Flat(parts[Hips].transform.forward);
+            if (along.magnitude > .25f * tall) return along.normalized;
+            return faces.sqrMagnitude > 1e-6f ? faces.normalized : Vector3.forward;
+        }
+
+        // A foot is put somewhere: its boot carried there, lifted in the middle, and laid flat; its leg's joints asked
+        // for what puts it there.
+        private void Steps(int leg, float along)
+        {
+            Vector3 lies = Lies(), aside = Vector3.Cross(Vector3.up, lies) * (leg == 1 ? 1 : -1);
+            Vector3 hip = JointAt(Thigh + leg);
+            float thighLong = (JointAt(Shin + leg) - hip).magnitude, shinLong = (JointAt(Foot + leg) - JointAt(Shin + leg)).magnitude, reach = thighLong + shinLong;
+            Vector3 to = Flat(hip) + lies * (stage.stepAhead * reach) + aside * (stage.stepOut * reach);
+            to.y = GroundAt(new Vector3(to.x, hip.y, to.z));
+            Vector3 sole = Vector3.Lerp(stepFrom, to, along) + Vector3.up * (stage.stepLifts * Mathf.Sin(Mathf.PI * along));
+            Quaternion boot = Quaternion.LookRotation(lies, Vector3.up) * stoodBoot[leg];
+            // Its hip and knee, for its ankle to be there: its knee goes up and ahead.
+            Vector3 ankle = sole + boot * (anchors[Foot + leg] - soleAt[leg]) - hip;
+            float far = Mathf.Clamp(ankle.magnitude, Mathf.Abs(thighLong - shinLong) + .01f, reach * .995f);
+            Vector3 line = ankle.normalized, pole = Vector3.ProjectOnPlane(lies + Vector3.up, line).normalized;
+            float opens = Mathf.Acos(Mathf.Clamp((thighLong * thighLong + far * far - shinLong * shinLong) / (2 * thighLong * far), -1, 1));
+            Vector3 thighWay = line * Mathf.Cos(opens) + pole * Mathf.Sin(opens);
+            Vector3 shinWay = (line * far - thighWay * thighLong).normalized;
+            Quaternion thigh = Quaternion.LookRotation(Vector3.ProjectOnPlane(pole, thighWay).normalized, thighWay);
+            Quaternion shin = Quaternion.LookRotation(Vector3.ProjectOnPlane(pole, shinWay).normalized, shinWay);
+            aimNow[Thigh + leg] = Quaternion.Inverse(parts[Hips].transform.rotation * rested[Thigh + leg]) * thigh;
+            aimNow[Shin + leg] = Quaternion.Inverse(thigh * rested[Shin + leg]) * shin;
+            aimNow[Foot + leg] = Quaternion.Inverse(shin * rested[Foot + leg]) * boot;
+            for (int j = Thigh + leg; j <= Foot + leg; j += 2) Aims(j, aimNow[j]);
+        }
+
         private void Begin(int index)
         {
-            at = index; stage = way.stages[index]; got = 0; still = 0;
+            at = index; stage = way.stages[index]; got = 0; still = 0; stepBegun = false;
             for (int j = 1; j < Count; j++) aimFrom[j] = aimNow[j];
         }
 
@@ -203,8 +256,8 @@ namespace WonderGather
         public Does Step(float step)
         {
             float g = Physics.gravity.magnitude;
-            bore = (touches[0].Up + touches[1].Up) / Mathf.Max(1e-6f, whole * g * step);
-            touches[0].Clear(); touches[1].Clear();
+            for (int i = 0; i < 2; i++) { bears[i] = touches[i].Up / Mathf.Max(1e-6f, whole * g * step); touches[i].Clear(); }
+            bore = bears[0] + bears[1];
             bool moving = false;
             for (int i = Hips; i <= Head && !moving; i++)
                 moving = parts[i].GetPointVelocity(parts[i].worldCenterOfMass).sqrMagnitude > StillUnder * StillUnder || parts[i].angularVelocity.sqrMagnitude > StillTurning * StillTurning;
@@ -220,6 +273,9 @@ namespace WonderGather
                 float it = Measure(stage.through[k].what);
                 through = it >= stage.through[k].least && it <= stage.through[k].most;
             }
+            // (A foot being put somewhere: only once its boot bears on the ground.)
+            int stepping = stage.steps < 0 ? -1 : stage.steps == 0 ? leads : 1 - leads;
+            if (stepping >= 0 && bears[stepping] < .02f) through = false;
             if (through)
             {
                 if (at + 1 < way.stages.Length) Begin(at + 1);
@@ -229,10 +285,19 @@ namespace WonderGather
             else if (got > stage.within) return Does.GaveUp;
             // The pose it is at, come to from where its joints were asked to be before.
             float share = stage.over > 0 ? Mathf.SmoothStep(0, 1, got / stage.over) : 1;
+            stepping = stage.steps < 0 ? -1 : stage.steps == 0 ? leads : 1 - leads;
             for (int j = 1; j < Count; j++)
             {
+                if (stepping >= 0 && j >= Thigh && (j - Thigh) % 2 == stepping) continue;
+                // (A leg whose hip's turn is not given is left as it is asked now: a foot that was put somewhere stays.)
+                if (j >= Thigh && float.IsNaN(stage.pose[9 + 4 * ((j - Thigh) % 2 == leads ? 0 : 1)])) continue;
                 aimNow[j] = Quaternion.Slerp(aimFrom[j], toStood[j] * Turn(j), share);
                 Aims(j, aimNow[j]);
+            }
+            if (stepping >= 0)
+            {
+                if (!stepBegun) { stepBegun = true; stepFrom = parts[Foot + stepping].transform.TransformPoint(soleAt[stepping]); }
+                Steps(stepping, share);
             }
             return Does.Gathers;
         }

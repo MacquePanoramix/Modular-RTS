@@ -188,6 +188,7 @@ namespace WonderGather
         // was standing in the first step of the physics, its boots 10 cm in the air. A joint's rest stays how the
         // body was made, and what it is asked for is reckoned from there: toStood.)
         private Quaternion stoodHips = Quaternion.identity;
+        private readonly Quaternion[] stoodBoot = { Quaternion.identity, Quaternion.identity };
         private float stoodHeight;
         private Vector2 stoodOver;
         // Whether it can be made low and stand up by its own legs (it has stood by its own joints before), and
@@ -579,12 +580,14 @@ namespace WonderGather
             if (plain)
             {
                 for (int j = 1; j < Count; j++) stoodLocal[j] = rested[j];
-                stoodHips = Quaternion.Inverse(Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized)) * parts[Hips].transform.rotation;
+                Quaternion facesNow = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);
+                stoodHips = Quaternion.Inverse(facesNow) * parts[Hips].transform.rotation;
+                for (int i = 0; i < 2; i++) stoodBoot[i] = Quaternion.Inverse(facesNow) * parts[Foot + i].transform.rotation;
             }
             if (low)
             {
                 for (int j = 1; j < Count; j++) { toStood[j] = Quaternion.Inverse(rested[j]) * stoodLocal[j]; riseFrom[j] = Quaternion.identity; }
-                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground) { Ways = RiseWays };
+                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = RiseWays };
                 else keeper.RisesTo(stoodHeight, Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized) * stoodHips, stoodOver);
                 // (The posed body under it stands, for when it is given its body back.)
                 body.Bow(0, 400); body.Sink(0); body.ResetPose();
@@ -965,6 +968,12 @@ namespace WonderGather
             var s = miner.Solved;
             if (Stands)
             {
+                // (Getting up, its own place goes with its hips, as in the fall: on the ground under them.)
+                if (riser != null && !StaysPut)
+                {
+                    Vector3 hipsAt = parts[Hips].transform.position;
+                    if (Physics.Raycast(new Vector3(hipsAt.x, hipsAt.y + 2, hipsAt.z), Vector3.down, out var under, 8, Ground)) transform.position = new Vector3(hipsAt.x, under.point.y, hipsAt.z);
+                }
                 float between = Mathf.Clamp01((Time.time - Time.fixedTime) / Time.fixedDeltaTime);
                 for (int i = 0; i < Count; i++)
                     segments[i].SetPositionAndRotation(Vector3.Lerp(wasAt[i], nowAt[i], between), Quaternion.Slerp(wasTurned[i], nowTurned[i], between));
