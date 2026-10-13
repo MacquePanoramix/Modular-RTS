@@ -161,8 +161,8 @@ kept as they were, so that what is written elsewhere still points right.
 |---|---|---|---|
 | 0 (done) | **The ground for it.** Ankles: the boot becomes a part of its own (today the shin and the boot are one, and a body cannot balance at an ankle it does not have). The test that nothing pushes from nowhere. Today's posed body measured for the table above. What a body's own costs in the frame, one miner and a crowd | | Figures |
 | 1 (built October 10; **accepted by Luis** that night) | **Standing, with life in it.** It stands by its own ankles, hips and back. It breathes (faster when it has worked); its weight goes from one leg to the other now and then; its head and eyes move. Pulled a little, it leans | Never quite still (1); balance by degrees (7); shows its effort (8) | A miner standing that is alive and does not wobble. A switch on the panel: this, or as it was |
-| 2 | **From its knees onto its feet.** The half second that is posed in the getting up. Then the whole of it, from the fall to standing, is the body's own | Not all on one clock (2) | A pushed miner getting up with nothing taking over |
-| 3 (in the game since October 13, **for Luis to judge: not accepted; three judges looked once, Luis has not.** Built: shoved or pulled, it catches itself with a step and the boot behind follows. Not built: getting ready before a first step; setting off) | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
+| 2 (**next**, widened on October 13 by what Luis said after trying the step: [the message](Correspondence/2026-10-13_THE_STEP_TRIED.md)) | **The getting up, the body's own.** Not only the half second that is posed (from its knees onto its feet): the whole of it. It does not lie as dead until a clock runs out; it stirs less while it recovers, and not at once; then it gets up slowly, by its own limbs and strength, every part of the rise pushed by a limb on the ground | Not all on one clock (2) | A pushed miner getting up with nothing taking over |
+| 3 (in the game since October 13. **Luis tried it that night: "generally looking well"; liked, not said accepted.** Three judges looked once. Built: shoved or pulled, it catches itself with a step and the boot behind follows. Not built: getting ready before a first step; setting off) | **A step.** Pulled hard, it catches itself with a step of its own. Before a first step it shifts its weight and leans; the first step is shorter | Gets ready (3); balance by degrees (7) | A miner pulled, stepping; a miner setting off |
 | 4 | **Walking, turning, stopping.** On the path, the meadow and its slopes. No two steps quite the same. The free arm swings. **Its breath shows on its chest and shoulders as it walks** (it waits for this step: [Luis, October 11](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)) | Arcs and one hump of speed (5); does not repeat itself (6) | The walk, beside the walk as it was |
 | 5 | **Down to the ground and up.** Picking a thing up, laying it down | Not all on one clock (2); gets ready (3) | The pick-up, beside the pick-up as it was |
 | 6 | **The work.** The body in the swing is its own, as the tool already is. **Its breath shows on its chest and shoulders at its work, and as it rests from it** (it waits for this step: [Luis, October 11](Correspondence/2026-10-11_BREATH_AT_WORK_WAITS.md)). The swing at a low boulder, which takes a tall miner off its place, is made again here ([what was found](Design/TheBodysOwn.md#the-miss-at-a-low-boulder-october-10)) | Shows its effort (8) | A miner mining |
@@ -892,6 +892,99 @@ only; nothing of step 3 is in the game Luis has.
     asks for. (3) Round under a gentle pull; a sideways shove
     towards higher ground. (4) New pictures and new judges once the
     step has changed (two rounds are left).
+
+- **October 13, the night after Luis tried it**
+  ([the message](Correspondence/2026-10-13_THE_STEP_TRIED.md)).
+  - **The step: "It is generally looking well."** "I did like so far
+    how the stepping mechanism after being pushed around is like
+    currently generally." Liked; Luis did not say accepted.
+  - **The shove pressed many times: "very whacky buggy physics".**
+    It had been built and tested for one shove. Measured: shoved
+    again and again (twelve times in 1.2 s; six times in 2 s; eight
+    times in 2 s from a side a quarter turn on each time), all three
+    miners, a boot went at 10 to 41 m/s in 8 of 9, and a sole a metre
+    over the ground behind it. **Mended in part.** Two rules are
+    kept, which act only when it is already lost:
+    1. **A catch it cannot make is not tried.** Driven faster than it
+       could catch, it went on stepping: its boot to go 0.6 to 0.8 m
+       in an eighth of a second, for a leg of 0.54. In eleven runs of
+       the shove test, no shove it stood needed a catch longer than
+       0.62 of its leg; those it fell from, 0.61 to 1.29. Past three
+       quarters of its leg it is lost, and goes down into the fall.
+    2. **Nor a fourth catch in a row.** Of 141 trials that ended
+       standing, none had more than three catches one after another
+       with no boot brought alongside between; of 28 that ended in a
+       fall, ten had four to seven, each landing short of the last.
+    With these, pressed twelve times in 1.2 s it goes down after one
+    step and nothing goes faster than 4.5 m/s. **In 3 or 4 of the 9
+    ways a boot still goes at 9 to 20 m/s,** in the last hundredths
+    of a second before the fall takes it. The test
+    (`ShovedAgainAndAgainNothingOfItFlies`) keeps its bar, is not
+    yet met, and is run only when asked. A build of it is
+    `Builds/WindowsOrdinaryPlace_Oct13c`, beside the two, which are
+    as they were. On this state (the work branch's af0346c): the standing body's eleven held tests pass (one run). The whole suite, one run: 199 tests, 174 passed, 1 failed, 24 run only when asked; the one is a test of the house's night light (its windows at 0.887 for 0.9), which nothing of this touches, which passes alone, twice, and passed in the run as played: not explained. As the game is played: 163 passed, 12 failed, the twelve known since October 10.
+    **Tried that night for the rest, and off again, each because it
+    spoilt the step when nothing was wrong:** no leg asked, at any
+    time, for more push than its boot can pass to the ground (it
+    ended the flinging in two runs of three, and under the gentle
+    pull Small then took five to seven steps for two); going down
+    when neither boot has borne anything for three steps of the
+    physics (Round's own catches leave the ground so long: it went
+    down under the gentle pull in two runs of three); no joint
+    turning faster than 860 degrees a second (it could then take no
+    catching step at all, and boots still went at 11 to 18 m/s).
+    What is left is the same thing as the kick at a landing: a leg
+    driven hard with nothing under it.
+  - **The getting up: "super weird".** "It looks like the character
+    just convulsing kinda not moving on the ground until the timer to
+    get up reaches and then it suddenly gets up with a magical not
+    physical animation at all... I want the character to get up
+    naturally with their own limbs and strength... the character
+    shouldn't look dead and then start moving to get up after a
+    timer. It should maybe move less while it's recovering from the
+    fall, and maybe indeed not right away, but it should slowly get
+    to moving up." The step did not change it: it is the getting up
+    of S3. Recorded that night (Small, pushed over at 2 m/s): it lies
+    unchanged from 1.4 s to 7 s; its limbs move from 7 s to 10.6 s
+    (the rows of poses a search found); it kneels at 11.6 s and
+    **stands at 12.0 s, a quarter turn from how it faced** (posed).
+  - **The order now** (Luis: "You can continue then with your
+    plans"). The step is liked as it is, and the getting up is what
+    Luis found wrong: so **the getting up is next** (the plan's step
+    2, widened from its last half second to the whole of it, as step
+    5 would have brought). The step a miner has time for stays off
+    where it is (right for Small and Round, wrong for Long) and is
+    taken up again with walking, which needs the same thing.
+  - **The getting up, as I mean to build it** (written before it is
+    begun: a plan, not a result). Today it is four things one after
+    another: falling; lying slack for a time reckoned from how hard
+    it fell; "gathering", its let-go body driven at full strength
+    through rows of poses a search found; and rising, posed. What Luis
+    asks of each:
+    1. **Lying, it is not dead.** Its strength comes back by degrees
+       over the time it lies, not all at once when a clock runs out:
+       it breathes hard, its head lifts, a hand finds the ground. How
+       long that takes still goes with how hard it fell. No moment at
+       which lying flips into getting up: it begins to get up as it
+       has the strength for the first of it. (The cheapest part, and
+       the first to build.)
+    2. **Gathering, it does not convulse.** The poses are reached at
+       the pace of a body with weight, each begun from where the last
+       left it. Whether the rows of poses themselves are right is
+       judged from pictures once the pace is.
+    3. **Rising, something pushes it.** From its knees onto its
+       feet by its own legs, with its ankles, and facing as it faced.
+       This is the plan's step 2 as it stood, and the hard part: five
+       searches found no way all three bodies do, made without
+       ankles. It is searched again with them, and the keeper that
+       stands it takes over from the kneel, not from a posed stand.
+    **How it is measured:** pictures of the whole of it for each
+    miner, the camera going with it (`OwnBodyRecord`, `-ownShotOnly
+    fallen`), before and after each part; how long each part takes;
+    whether anything moves that nothing pushes (the test that nothing
+    pushes from nowhere, from step 0); then three judges. Fallen
+    forwards, backwards and to a side, and on the meadow's slope, not
+    only on the path.
 
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).

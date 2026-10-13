@@ -3311,6 +3311,17 @@ verdict: Luis has not seen the step.**
   0.10, three runs each: 7 of 9 stand with it, 7 of 9 without. With
   0.12, one run: none. Not run with it on: the bench with these last
   changes, the whole suite, the suite as played.
+- **The shove pressed many times** (after Luis tried it, the night of
+  October 13; `ShovedAgainAndAgainNothingOfItFlies`, new: each miner
+  shoved twelve times in 1.2 s, six times in 2 s, and eight times in 2
+  s from a side a quarter turn on each time; what any part of it does
+  is measured, standing by its own joints and in the fall). Before:
+  its fastest part 6.8 to 41 m/s, over 9 m/s in 8 of 9, turning at up
+  to 143 rad/s. With the two rules kept: under 4.5 m/s in 5 or 6 of
+  the 9, and 9 to 20 m/s in the rest; the test, whose bar is 9 m/s, is
+  not met and is run only when asked. **The build** of this state is
+  `Builds/WindowsOrdinaryPlace_Oct13c`, beside the other two, which
+  are as they were. Not opened by me. On this state (the work branch's af0346c): the standing body's eleven held tests pass (one run). The whole suite, one run: 199 tests, 174 passed, 1 failed, 24 run only when asked; the one is a test of the house's night light (its windows at 0.887 for 0.9), which nothing of this touches, which passes alone, twice, and passed in the run as played: not explained. As the game is played: 163 passed, 12 failed, the twelve known since October 10.
 - **A correction.** The work branch's commit 723eec9 says
   "OwnBodyTests: 8 of 8". It was 7 of 8
   (`StandingAMinuteItIsAliveAndDoesNotWobble`: Long and Round, on one

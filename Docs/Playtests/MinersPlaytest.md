@@ -461,10 +461,19 @@ which miner and which boulder.
 
 ## A step (October 13): for Luis to judge
 
-**There are two builds.** `Builds/WindowsOrdinaryPlace` is the one of
+**Luis tried it on the night of October 13:** "It is generally
+looking well"; liked, not said accepted
+([the message](../Correspondence/2026-10-13_THE_STEP_TRIED.md)).
+
+**There are three builds.** `Builds/WindowsOrdinaryPlace` is the one of
 the morning of October 13. `Builds/WindowsOrdinaryPlace_Oct13b` is of
 the afternoon: **it steps exactly as the first does, and differs only
-after a fall** (below). Either can be judged for the step.
+after a fall** (below). `Builds/WindowsOrdinaryPlace_Oct13c` is of the
+night, after Luis tried it: **shoved once, or pulled, it steps as the
+other two do; it differs when "Shove it" is pressed many times**
+(below). Any of them can be judged for the step. **The getting up is
+the same in all three:** it is what Luis found "super weird", and it
+is what is being made next.
 
 **"Catches itself with a step" is on from the start.** It is under
 "Stands by its own joints" on the panel, and works only while that is
@@ -515,6 +524,19 @@ judges" below.
   it mostly catches itself (Long and Round in 4 runs of 4, Small in
   4 of 6: where it has fallen the meadow often slopes more than on
   the path, and there the step is not yet sure).
+- **"Shove it" pressed many times** (Luis: "very whacky buggy
+  physics"). It was built for one shove. In the first two builds a
+  miner shoved again and again went on trying to catch itself with
+  steps longer than its leg, and a boot was thrown at up to 41 m/s.
+  **In the night's build it is mended in part:** a catch it cannot make
+  is not tried, nor a fourth one after another; it goes down into the
+  fall instead. Pressed quickly (twelve times in a little over a
+  second) it goes down after one step and nothing flies. **Pressed
+  more slowly (six or eight times in two seconds), a boot is still
+  thrown in 3 or 4 of the 6 ways tried, at 9 to 20 m/s,** in the last
+  hundredths of a second before it falls. That is not mended.
+  Shoved once, or pulled, nothing is changed: in the one whole run on
+  it the three stood every shove from four sides, and the pull.
 - **It can still go down.** In the game the three stood every shove of
   the button's strength from four sides, in each of five runs; at 0.7
   m/s they stood 10 of 12, and Small and Round went down shoved

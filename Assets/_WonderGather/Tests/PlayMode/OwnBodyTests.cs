@@ -64,6 +64,20 @@ namespace WonderGather.Tests
             yield return Wait(1.5f);
         }
 
+        // (-ownStepSet "LandsBy=3,Edge=.02": the keeper's settings, by name, for trying a thing. Not a test: what is
+        // changed stays changed for the run.)
+        private static void StepSet()
+        {
+            foreach (string pair in (CaptureTools.Argument("-ownStepSet") ?? "").Split(new[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries))
+            {
+                var sides = pair.Split('=');
+                var field = typeof(OwnKeeper).GetField(sides[0].Trim());
+                Assert.That(field != null, Is.True, sides[0]);
+                float value = float.Parse(sides[1], System.Globalization.CultureInfo.InvariantCulture);
+                field.SetValue(null, field.FieldType == typeof(bool) ? value != 0 : field.FieldType == typeof(int) ? (object)Mathf.RoundToInt(value) : value);
+            }
+        }
+
         // The panel's switch is turned on, and the miner's body becomes its own.
         private IEnumerator Own(SelectableUnit unit, string name, System.Action<OwnBody> got)
         {
@@ -524,13 +538,7 @@ namespace WonderGather.Tests
             // (-ownShove .7: shoved at another speed, to see how far what it does reaches. Not the test.)
             float shove = CaptureTools.Argument("-ownShove") != null ? float.Parse(CaptureTools.Argument("-ownShove"), System.Globalization.CultureInfo.InvariantCulture) : MinerWorkPreview.ShoveSpeed;
             OwnBody.StaysPut = CaptureTools.Argument("-ownStaysPut") == "1"; OwnBody.AnyGround = CaptureTools.Argument("-ownAnyGround") == "1";
-            foreach (string pair in (CaptureTools.Argument("-ownStepSet") ?? "").Split(new[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries))
-            {
-                var sides = pair.Split('=');
-                var field = typeof(OwnKeeper).GetField(sides[0].Trim());
-                Assert.That(field != null, Is.True, sides[0]);
-                field.SetValue(null, float.Parse(sides[1], System.Globalization.CultureInfo.InvariantCulture));
-            }
+            StepSet();
             Assert.That(look.StepsToCatch && OwnKeeper.Steps, Is.True, "The step is not on from the start.");
             for (int index = 0; index < choice.Count; index++)
             {
@@ -623,6 +631,7 @@ namespace WonderGather.Tests
         {
             Time.captureFramerate = 50;
             OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
+            StepSet();
             // (-ownPull .12: with another share of its weight, as the panel's "Pull it" gives. Not the test.)
             float share = CaptureTools.Argument("-ownPull") != null ? float.Parse(CaptureTools.Argument("-ownPull"), System.Globalization.CultureInfo.InvariantCulture) : .08f;
             for (int index = 0; index < choice.Count; index++)
@@ -631,6 +640,7 @@ namespace WonderGather.Tests
                 yield return Wait(.3f);
                 var unit = choice.Current;
                 string name = choice.NameOf(index);
+                if (!string.IsNullOrEmpty(CaptureTools.Argument("-ownOnly")) && CaptureTools.Argument("-ownOnly") != name) continue;
                 Vector3 away = default;
                 yield return StandPlainly(unit, (s, a) => { away = a; });
                 OwnBody own = null;
@@ -640,7 +650,15 @@ namespace WonderGather.Tests
                 look.Pull(away, share, MinerWorkPreview.PullFor, MinerWorkPreview.PullOver);
                 Assert.That(own.Pulled, Is.True, name + " is not pulled.");
                 float furthest = 0;
-                for (float until = Time.time + 7; Time.time < until && own.Stands;) { furthest = Mathf.Max(furthest, Flat(own.HeadAt - before).magnitude); yield return new WaitForFixedUpdate(); }
+                // (-ownTick 1: every step of the physics told, as the bench tells it. Not the test.)
+                bool ticks = CaptureTools.Argument("-ownTick") == "1";
+                Vector3 hipsFrom = own.Part(OwnBody.Hips).transform.position; float pulledAt = Time.time;
+                for (float until = Time.time + 7; Time.time < until && own.Stands;)
+                {
+                    furthest = Mathf.Max(furthest, Flat(own.HeadAt - before).magnitude);
+                    yield return new WaitForFixedUpdate();
+                    if (ticks) Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "OWN_TICK {0:0.00} {1}", Time.time - pulledAt, own.Tick(away.normalized, hipsFrom)));
+                }
                 Debug.Log($"OWN_PULLED {name}, pulled forwards at its chest with {share:F2} of its weight for {MinerWorkPreview.PullFor} s: {own.Stepped} steps; its head went {furthest * 1000:F0} mm at most; down {own.WentDown} times");
                 if (name != "Round" && share <= .08f) Assert.That(own.Stands && own.WentDown == 0, Is.True, name + ", pulled with 0.08 of its weight, went down.");
                 else if (!own.Stands || own.WentDown > 0)
@@ -653,6 +671,72 @@ namespace WonderGather.Tests
                 look.SetOwn(false);
                 yield return Wait(.6f);
             }
+        }
+
+        // Luis, October 13: "I did try pressing also the shove button many times which did lead to some very whacky buggy
+        // physics." Shoved again and again, a miner may well go down; nothing of it may fly, spin, or be thrown into the
+        // air. Three ways of pressing: twelve times a tenth of a second apart from one side; six times a third of a second
+        // apart; eight times a quarter of a second apart, each from a side a quarter turn on.
+        // NOT YET MET, and so run only when asked. Before anything was done a boot went at 10 to 41 m/s in 8 of the 9;
+        // with the two rules that are kept (no catch longer than three quarters of its leg; no fourth catch in a row)
+        // at 9 to 20 m/s in 3 or 4 of the 9, and under 4.5 m/s in the rest.
+        [UnityTest, Explicit, Timeout(2400000)]
+        public IEnumerator ShovedAgainAndAgainNothingOfItFlies()
+        {
+            Time.captureFramerate = 50;
+            StepSet();
+            OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
+            string onlyOne = CaptureTools.Argument("-ownOnly"), wrong = "";
+            var ways = new (string called, int times, int every, float turns)[] { ("twelve times in 1.2 s", 12, 5, 0), ("six times in 2 s", 6, 16, 0), ("eight times in 2 s, a quarter turn on each time", 8, 12, 90) };
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                if (!string.IsNullOrEmpty(onlyOne) && onlyOne != name) continue;
+                foreach (var how in ways)
+                {
+                    Vector3 away = default, spotAt = default;
+                    yield return StandPlainly(unit, (s, a) => { away = a; spotAt = s; });
+                    OwnBody own = null;
+                    yield return Own(unit, name, o => own = o);
+                    yield return Wait(2);
+                    float tall = own.HeadAt.y - spotAt.y + .15f;
+                    float fastest = 0, turnsMost = 0, highest = 0; string fastestWhen = "", highestWhen = "";
+                    int stoodUntil = -1, steps = 0;
+                    var fall = unit.GetComponent<PhysicalFall>();
+                    for (int k = 0; k < 300; k++)
+                    {
+                        if (k < how.times * how.every && k % how.every == 0) Debug.Log($"OWN_TOLD {name} is shoved at {Time.time:F2}");
+                        if (k < how.times * how.every && k % how.every == 0) look.Nudge(Quaternion.AngleAxis(how.turns * (k / how.every), Vector3.up) * away, MinerWorkPreview.ShoveSpeed);
+                        yield return new WaitForFixedUpdate();
+                        if (fall == null) fall = unit.GetComponent<PhysicalFall>();
+                        bool owns = own != null && own.Stands;
+                        if (owns) { stoodUntil = k; steps = Mathf.Max(steps, own.Stepped); }
+                        int count = owns ? OwnBody.Count : fall != null && fall.Now != PhysicalFall.State.Up ? PhysicalFall.Count : 0;
+                        for (int i = 0; i < count; i++)
+                        {
+                            Vector3 goes, turns, at;
+                            if (owns) { var part = own.Part(i); if (part == null) continue; goes = part.linearVelocity; turns = part.angularVelocity; at = part.worldCenterOfMass; }
+                            else { var part = fall.Part(i); if (part == null) continue; goes = part.linearVelocity; turns = part.angularVelocity; at = part.worldCenterOfMass; }
+                            Assert.That(float.IsNaN(goes.x) || float.IsNaN(at.y), Is.False, $"{name}, shoved {how.called}: a part of it is nowhere.");
+                            if (goes.magnitude > fastest) { fastest = goes.magnitude; fastestWhen = $"part {i}, {k * .02f:F2} s, {(owns ? "standing by its own joints" : "in the fall")}"; }
+                            turnsMost = Mathf.Max(turnsMost, turns.magnitude);
+                            if (at.y - spotAt.y > highest) { highest = at.y - spotAt.y; highestWhen = $"part {i}, {k * .02f:F2} s, {(owns ? "standing by its own joints" : "in the fall")}"; }
+                        }
+                    }
+                    Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                        "OWN_SHOVES {0}, shoved {1}: {2}; {3} steps; its fastest part {4:0.0} m/s ({5}); the most any part turned {6:0} rad/s; its highest part {7:0.00} m over the ground ({8}), of {9:0.00} standing",
+                        name, how.called, stoodUntil >= 299 ? "it stands" : $"it went down {stoodUntil * .02f:F2} s after the first", steps, fastest, fastestWhen, turnsMost, highest, highestWhen, tall));
+                    if (fastest >= 9) wrong += $" {name}, shoved {how.called}: a part of it went at {fastest:F1} m/s ({fastestWhen}).";
+                    if (highest >= tall + .35f) wrong += $" {name}, shoved {how.called}: a part of it was {highest:F2} m over the ground ({highestWhen}); it stands {tall:F2} m.";
+                    // (It gets itself up, as it does.)
+                    for (float until = Time.time + 70; Time.time < until && fall != null && fall.Now != PhysicalFall.State.Up;) yield return null;
+                    yield return Wait(1);
+                }
+            }
+            Assert.That(wrong, Is.EqualTo(""), "Shoved again and again:" + wrong);
         }
     }
 }

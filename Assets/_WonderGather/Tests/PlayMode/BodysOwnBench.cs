@@ -1522,7 +1522,7 @@ namespace WonderGather.Tests
             // (October 12: it sinks into a catching step.)
             ("Sinks", 0, 1.5f), ("SwingHip", 0, 1), ("LeansBack", 0, 14),
             // (October 13: how fast it lets itself come down.)
-            ("SinksFree", .3f, .95f), ("FollowsAfter", -1, .4f), ("SwingsLeg", 0, 1), ("NotAgain", 0, .6f), ("ClosesSlower", 1, 2.5f), ("Loads", 0, 4), ("LoadsFrom", .05f, .6f), ("LoadsFor", .05f, .5f), ("Edge", .003f, .03f),
+            ("SinksFree", .3f, .95f), ("FollowsAfter", -1, .4f), ("SwingsLeg", 0, 1), ("StepsAtMost", 0, 1.5f), ("ReadiesAhead", 0, 4), ("ReadyFurther", 0, .08f), ("ReadyUnder", .1f, .6f), ("ReadyMore", 0, 3), ("ReadyAtLeast", 0, 1), ("ReadiesNeeds", 0, 2), ("NotAgain", 0, .6f), ("ClosesSlower", 1, 2.5f), ("Loads", 0, 4), ("LoadsFrom", .05f, .6f), ("LoadsFor", .05f, .5f), ("Edge", .003f, .03f),
         };
 
         [UnityTest, Explicit, Timeout(14400000)]

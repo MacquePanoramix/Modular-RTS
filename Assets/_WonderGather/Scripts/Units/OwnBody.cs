@@ -432,6 +432,8 @@ namespace WonderGather
                     var drive = new ArticulationDrive { stiffness = spring, damping = damper, forceLimit = strength[i], target = 0, targetVelocity = 0, driveType = ArticulationDriveType.Force };
                     link.xDrive = drive;
                     if (!hinge[i]) { link.yDrive = drive; link.zDrive = drive; }
+                    // (No joint turns faster than a joint can.)
+                    if (OwnKeeper.Steps && OwnKeeper.TurnsAtMost > 0) link.maxJointVelocity = OwnKeeper.TurnsAtMost;
                 }
                 parts[i] = link;
             }

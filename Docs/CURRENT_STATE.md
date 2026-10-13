@@ -2,6 +2,33 @@
 
 **Updated:** October 13, 2026.
 
+- **Luis tried the step (October 13, night): "It is generally looking
+  well."** "I did like so far how the stepping mechanism after being
+  pushed around is like currently generally." Liked; not said
+  accepted ([the message](Correspondence/2026-10-13_THE_STEP_TRIED.md)).
+  - **"The getting up is super weird"**: it lies as dead until a
+    timer, convulses, and rises by "a magical not physical animation
+    at all". It is to get up "naturally with their own limbs and
+    strength", stirring less while it recovers, then slowly. **That
+    is next** (the plan's step 2, widened to the whole of it). The
+    step did not change the getting up; it is S3's.
+  - **The shove pressed many times gave "very whacky buggy
+    physics": found that night; mended in part.** A
+    miner driven faster than it could catch went on stepping, and a
+    boot went at up to 41 m/s. Now a catch it cannot make is not
+    tried, nor a fourth in a row: pressed fast it goes down after one
+    step, cleanly; **in 3 or 4 of 9 ways of pressing a boot still goes
+    at 9 to 20 m/s** (it was 10 to 41 in 8 of 9). **It is in a third
+    build, `Builds/WindowsOrdinaryPlace_Oct13c`, beside the two,** which
+    are as they were. Shoved once, or pulled, it steps as they do
+    (the three stood every shove of the button's strength from four
+    sides, one run); it differs when it is shoved again and again.
+    The built game was not opened by me.
+  - **The last whole run** (that state): 199 tests, 174 passed, 1
+    failed, 24 run only when asked. The one is a test of the house's
+    night light (its windows at 0.887 for 0.9), which nothing of this
+    touches; it passes alone, twice. Not explained. As the game is
+    played: 163 passed, 12 failed, the twelve known since October 10.
 - **Luis, October 13, on how a body answers a pull** (direction):
   pulled gently a miner steps along and stays on its feet, pulled hard
   it may fall, for now; and "I don't want anything to be a pre-made
@@ -42,8 +69,8 @@
   cost falls or steps and are switched off
   ([the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun),
   "October 13, afternoon").
-- **Step 3 (a step) is in the game since October 13, for Luis to
-  judge: not accepted, and Luis has not yet seen it.** A miner
+- **Step 3 (a step) is in the game since October 13. Luis tried it
+  that night: liked, not said accepted** (the entry at the top). A miner
   standing by its own joints, shoved or pulled harder than it can stand
   through, puts a boot down where its weight is going and brings the
   other after it. On the panel: **"Catches itself with a step"** (on
