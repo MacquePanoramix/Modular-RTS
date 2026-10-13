@@ -62,3 +62,12 @@ written into
 [the plan](../NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun)
 ("October 13, saved"). **Luis has not seen the step, and said
 nothing of it.**
+
+Back the same afternoon:
+
+> Okay I am back. Please proceed.
+
+It says nothing of the step, and does not answer what a pulled miner
+is to be held to: both stay open. It was taken as: go on with what the
+plan lists under "October 13, saved" that needs neither answer (the
+suite as the game is played, and what the judges pointed at).

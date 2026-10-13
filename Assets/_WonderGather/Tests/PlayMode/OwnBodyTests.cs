@@ -52,6 +52,18 @@ namespace WonderGather.Tests
             at(spot, away);
         }
 
+        // The miner put on the path in its plain stand, the body's own not yet wanted: its feet set as they are made
+        // (a fall and getting up leave them set apart), and a moment for its place to settle on the walked ground
+        // (put there by hand it is 2 to 3 cm low at first, and a body's own made then keeps that as its stand; the
+        // game never puts a miner anywhere by hand).
+        private IEnumerator StandPlainly(SelectableUnit unit, System.Action<Vector3, Vector3> at)
+        {
+            look.SetOwn(false);
+            unit.GetComponent<ProceduralBiped>().SetStance(0, 0);
+            yield return Stand(unit, at);
+            yield return Wait(1.5f);
+        }
+
         // The panel's switch is turned on, and the miner's body becomes its own.
         private IEnumerator Own(SelectableUnit unit, string name, System.Action<OwnBody> got)
         {
@@ -156,6 +168,7 @@ namespace WonderGather.Tests
         public IEnumerator PushedHarderThanItCanStandItFallsGetsUpAndStandsSoAgain()
         {
             Time.captureFramerate = 50;
+            OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
             for (int index = 0; index < choice.Count; index++)
             {
                 choice.Choose(index);
@@ -167,6 +180,7 @@ namespace WonderGather.Tests
                 OwnBody own = null;
                 yield return Own(unit, name, o => own = o);
                 yield return Wait(2);
+                float stoodApart = Flat(own.Part(OwnBody.Foot + 1).transform.position - own.Part(OwnBody.Foot).transform.position).magnitude;
                 // Set going backwards at 2 m/s: far more than it can stand, or catch with a step. (It was 1.2 m/s until
                 // October 13: with the step on, Long catches itself at that.)
                 look.Nudge(-away, 2);
@@ -185,6 +199,20 @@ namespace WonderGather.Tests
                 Assert.That(own.Stands, Is.True, name + " did not stand by its own joints again after getting up: " + look.Status());
                 yield return Wait(2);
                 Assert.That(own.Stands && own.WentDown == 1, Is.True, name + " went down again after getting up.");
+                // It stands by its own joints from its plain stand, not as its getting up left its feet (apart and
+                // staggered, by half a metre and more): its boots are as far apart as they are made. And shoved from
+                // behind where it stands, what it does is told. (It is not held to standing that: where it falls,
+                // a metre from where the tests stand it, the meadow slopes about twice as much. On October 13 Small
+                // stood there in 4 runs of 6, and went down in both runs of the whole suite; Long and Round stood in
+                // 4 of 4.)
+                {
+                    Transform left = own.Part(OwnBody.Foot).transform, right = own.Part(OwnBody.Foot + 1).transform;
+                    float apart = Flat(right.position - left.position).magnitude;
+                    Assert.That(apart, Is.LessThan(stoodApart + .04f), name + " stands by its own joints with its feet as its getting up left them.");
+                    look.Nudge(unit.transform.forward, MinerWorkPreview.ShoveSpeed);
+                    for (float until = Time.time + 6; Time.time < until && own.Stands && own.WentDown == 1;) yield return new WaitForFixedUpdate();
+                    Debug.Log($"OWN_FELL {name}, shoved from behind at {MinerWorkPreview.ShoveSpeed:F1} m/s after it had got up (its boots {apart * 1000:F0} mm apart): " + (own.Stands && own.WentDown == 1 ? $"it stands, after {own.Stepped} steps" : "it went down"));
+                }
                 look.SetOwn(false);
                 yield return Wait(.6f);
             }
@@ -221,6 +249,7 @@ namespace WonderGather.Tests
         public IEnumerator SentSomewhereItGivesItsBodyBackWalksAndStandsSoAgain()
         {
             Time.captureFramerate = 50;
+            OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
             for (int index = 0; index < choice.Count; index++)
             {
                 choice.Choose(index);
@@ -465,7 +494,7 @@ namespace WonderGather.Tests
                 yield return Wait(.3f);
                 var unit = choice.Current;
                 string name = choice.NameOf(index);
-                yield return Stand(unit, (s, a) => { });
+                yield return StandPlainly(unit, (s, a) => { });
                 OwnBody own = null;
                 yield return Own(unit, name, o => own = o);
                 Vector3 began = unit.transform.position;
@@ -516,12 +545,7 @@ namespace WonderGather.Tests
                 {
                     if (!string.IsNullOrEmpty(onlyWay) && onlyWay != (d * 90).ToString()) continue;
                     Vector3 away = default, spotAt = default;
-                    // (From its plain stand: a fall and getting up leave its feet set apart and staggered, and put on
-                    // the path its place takes a moment to settle on the walked ground.)
-                    look.SetOwn(false);
-                    unit.GetComponent<ProceduralBiped>().SetStance(0, 0);
-                    yield return Stand(unit, (s, a) => { away = a; spotAt = s; });
-                    yield return Wait(1.5f);
+                    yield return StandPlainly(unit, (s, a) => { away = a; spotAt = s; });
                     if (told == "")
                     {
                         // (How the ground lies there: its height, in millimetres over where it stands, a step away each way.)
@@ -599,7 +623,6 @@ namespace WonderGather.Tests
         {
             Time.captureFramerate = 50;
             OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
-            OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
             // (-ownPull .12: with another share of its weight, as the panel's "Pull it" gives. Not the test.)
             float share = CaptureTools.Argument("-ownPull") != null ? float.Parse(CaptureTools.Argument("-ownPull"), System.Globalization.CultureInfo.InvariantCulture) : .08f;
             for (int index = 0; index < choice.Count; index++)
@@ -609,7 +632,7 @@ namespace WonderGather.Tests
                 var unit = choice.Current;
                 string name = choice.NameOf(index);
                 Vector3 away = default;
-                yield return Stand(unit, (s, a) => { away = a; });
+                yield return StandPlainly(unit, (s, a) => { away = a; });
                 OwnBody own = null;
                 yield return Own(unit, name, o => own = o);
                 yield return Wait(2);

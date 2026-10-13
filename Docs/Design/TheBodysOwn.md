@@ -1272,6 +1272,14 @@ quarters of a minute, each miner: no step).
 
 ### With the rest of it
 
+- **It takes over only from its plain stand** (since the afternoon of
+  October 13): the posed body's feet set as they are made, to 2 cm.
+  Getting up from a fall leaves them apart and staggered, and in the
+  Ordinary Place no posed balance acts on a miner at ease to bring
+  them together; so the posed body is asked to set them as made, steps
+  them there (posed, as the getting up still is), and then the body's
+  own takes over. Taken over astride, it had kept that as its stand,
+  and shoved again it mostly fell.
 - **Its place goes with its feet.** After each step the miner's place
   (where it is picked, where it walks from) is set between its boots.
 - **The life in it waits.** While it steps, and while its boots stand
@@ -1289,8 +1297,6 @@ quarters of a minute, each miner: no step).
 - Step across its own leg; step onto ground more than 5 cm higher or
   lower; answer a second shove while a boot is in the air.
 - Get ready before a first step, or set off: not built.
-- **Stand well after a fall:** getting up leaves its feet apart and
-  staggered, and the body's own takes that over as its stand.
 - Stand a pull of an eighth of its weight or more (in the game).
 
 ### What the judges said (October 13, one round)
@@ -1308,7 +1314,7 @@ point at the first-step snap".
 
 | What was said | By | Checked against the pictures and the keeper's own telling | Done |
 |---|---|---|---|
-| **The first step is a snap.** A boot is seen in the air in one picture and is down 0.2 to 0.3 m away in the next | The sceptic | Stands. Told to leave the ground at 0.34 s, the boot is still down at 0.40 s, in the air at 0.44 and down again at 0.48: all of it in under a tenth of a second. It trails what it is asked and is then pulled after it | Open. A slower swing was tried in the game (0.18 s, and 0.24 s, for 0.12; nothing else changed; one run each): Small stood 2 shoves of 4 both times, where it stands 4 (the test stops at the first miner that fails, so Long and Round were not shoved). A slower step needs the rest searched for it; that is not done. |
+| **The first step is a snap.** A boot is seen in the air in one picture and is down 0.2 to 0.3 m away in the next | The sceptic | Stands. Told to leave the ground at 0.34 s, the boot is still down at 0.40 s, in the air at 0.44 and down again at 0.48: all of it in under a tenth of a second. It trails what it is asked and is then pulled after it | Open. A slower swing was tried in the game (0.18 s, and 0.24 s, for 0.12; nothing else changed; one run each): Small stood 2 shoves of 4 both times, where it stands 4 (the test stops at the first miner that fails, so Long and Round were not shoved). A slower step needs the rest searched for it; that is not done. Tried again that afternoon (the swing's time going with the leg; the second step slower; a boot just put down not lifted again): each costs falls or steps, and all are off ([the plan](../NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun), "October 13, afternoon") |
 | **The first step runs to one clock for all three:** leaving to landing 0.14 to 0.16 s, whatever the weight and the leg. Weight shows only in the step's length and in how late the second comes | The animator; the sceptic | Stands. Its times are the same for all three (known, and in the list of what is not done) | Open |
 | **Once it has caught itself the body freezes.** Nothing settles. Small, shoved from in front, stays with one boot behind the other, unchanged for 1.4 s | All three | Stands. While its boots are astride the life in it leaves its legs alone and it stands square: built so, and it shows | Open |
 | **The second step starts out of stillness,** with no gathering to be seen, and late (Round's 0.8 s after the first) | All three | Stands. Getting ready is its weight going a few centimetres onto the other boot: too little to see | Open |

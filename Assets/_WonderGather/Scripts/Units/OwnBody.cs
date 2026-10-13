@@ -53,6 +53,10 @@ namespace WonderGather
         // this long (seconds). It is at
         // ease when the posed body moves slower than this (metres a second), sunk less than this and bowed less.
         private const float GivesBackIn = .25f, AtEase = .02f, SunkAtMost = .02f, BowedAtMost = 3;
+        // (And only from its plain stand: its feet set as they are made, to PlainWithin metres. Getting up from a
+        // fall leaves them set apart and staggered; the posed balance brings them together again by itself, and
+        // until it has the body's own does not take over: taken over astride, it kept that as its stand.)
+        private const float PlainWithin = .02f;
         // And it must have been at ease so, both boots on the ground, for this long (seconds): begun as the posed body
         // came to rest from a walk, one boot still in the air on its closing step, Small went down at once.
         private const float AtEaseFor = .4f;
@@ -207,8 +211,24 @@ namespace WonderGather
                 if (!body.Ready || !miner.Ready || !physical.Ready || body.LetGo) return false;
                 if (body.VelocityNow.magnitude > AtEase || body.SinkNow > SunkAtMost || Mathf.Abs(body.BowNow) > BowedAtMost) return false;
                 if (!body.FootPlanted(0) || !body.FootPlanted(1)) return false;
+                if (body.StanceWider > PlainWithin || Mathf.Abs(body.StanceStagger) > PlainWithin) return false;
                 return Free;
             }
+        }
+
+        private float toldWhyAt;
+        private string WhyNot()
+        {
+            if (giving > 0) return "it is still giving its body back";
+            if (!body.Ready || !miner.Ready || !physical.Ready) return "its body is not ready";
+            if (body.LetGo) return "its body is let go";
+            if (!Free) return "something else asks its body (sent somewhere, fallen, a thing in hand)";
+            if (body.VelocityNow.magnitude > AtEase) return $"it is moving ({body.VelocityNow.magnitude:F3} m/s)";
+            if (body.SinkNow > SunkAtMost) return $"it is sunk {body.SinkNow * 1000:F0} mm";
+            if (Mathf.Abs(body.BowNow) > BowedAtMost) return $"it is bowed {body.BowNow:F1} degrees";
+            if (!body.FootPlanted(0) || !body.FootPlanted(1)) return "a foot is in the air";
+            if (body.StanceWider > PlainWithin || Mathf.Abs(body.StanceStagger) > PlainWithin) return $"its feet are set {body.StanceWider * 1000:F0} mm wider and {body.StanceStagger * 1000:F0} mm staggered; its balance acts: {balance != null && balance.Acts}";
+            return "nothing: it is coming to ease";
         }
 
         // Nothing else asks anything of its body: it is not sent anywhere, has not fallen, holds nothing, and is not
@@ -569,7 +589,14 @@ namespace WonderGather
             }
             else
             {
+                // (Left astride by getting up, and no posed balance acting to bring its feet together: the posed body
+                // is asked to set its feet as they are made. It steps them there, as it does whenever its stance is
+                // changed, and the body's own takes over from the plain stand.)
+                if (Wanted && giving <= 0 && body.Ready && !body.LetGo && (body.StanceWider > PlainWithin || Mathf.Abs(body.StanceStagger) > PlainWithin)
+                    && Free && (!TryGetComponent<PhysicalBalance>(out var acting) || !acting.Acts)) body.SetStance(0, 0);
                 easeFor = Wanted && giving <= 0 && CanStand ? easeFor + Time.deltaTime : 0;
+                // (For whoever looks at why it does not stand by its own joints: what keeps it, every two seconds.)
+                if (Told != null && Wanted && easeFor <= 0 && Time.time >= toldWhyAt) { toldWhyAt = Time.time + 2; Told(name + " at " + Time.time.ToString("F2") + " does not take over: " + WhyNot()); }
                 if (easeFor >= AtEaseFor) { easeFor = 0; Begin(); }
             }
         }

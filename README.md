@@ -41,9 +41,13 @@ switch on the panel of the Ordinary Place gives the body as it was),
 breathing and shifting its weight; and, shoved or pulled, it catches
 itself with a step (in the build since October 13, for Luis to judge;
 not accepted). The last whole
-PlayMode run: 175 passed, none failed, 23 run only when asked. Where things
-stand, day by day, is in [CURRENT_STATE.md](Docs/CURRENT_STATE.md); the build
-to open is `Builds/WindowsOrdinaryPlace/WonderGather.exe`.
+PlayMode run (the afternoon of October 13): 174 passed, 1 failed, 23 run
+only when asked; the one was a new check that asked more than is so, since
+changed and passing. Where things stand, day by day, is in
+[CURRENT_STATE.md](Docs/CURRENT_STATE.md); the build to open is
+`Builds/WindowsOrdinaryPlace/WonderGather.exe` (the morning of October 13),
+or `Builds/WindowsOrdinaryPlace_Oct13b/WonderGather.exe` (the afternoon: the
+same steps, and a miner that has fallen stands plainly again).
 
 What follows is an earlier milestone, kept as it was written (September 30).
 

@@ -623,7 +623,8 @@ only; nothing of step 3 is in the game Luis has.
     margin from a sole's edge; three runs do not show that it is
     mended.
   - **Not done, and known:**
-    - After a fall, the stand it takes over (above).
+    - After a fall, the stand it takes over (above). **Mended that
+      afternoon** (below).
     - Round under a gentle pull; a sideways shove of 0.7 m/s towards
       higher ground.
     - The margin from a sole's edge is right for this meadow at this
@@ -651,11 +652,19 @@ only; nothing of step 3 is in the game Luis has.
       Each finding, checked:
       [the design page](Design/TheBodysOwn.md#what-the-judges-said-october-13-one-round).
       A slower swing was tried in the game (0.18 s, and 0.24 s, for 0.12; nothing else changed; one run each): Small stood 2 shoves of 4 both times, where it stands 4 (the test stops at the first miner that fails, so Long and Round were not shoved). A slower step needs the rest searched for it; that is not done.
-  - **One thing for Luis,** unanswered since October 12: the bar for a
-    pulled miner was taken from the body as it was posed, which leans
-    against a sixth of its weight without a step. A body moved only by
-    its joints cannot, from rest (about 0.09 without a step). What it
-    is to be held to is Luis's to say.
+  - **What a pulled miner is to be held to: answered by Luis on
+    October 13**
+    ([the two messages](Correspondence/2026-10-13_HOW_A_PULLED_MINER_ANSWERS.md)).
+    Pulled gently, it steps along with the pull and stays on its
+    feet; pulled hard it may fall, for now. The bar taken from the
+    posed body (leaning against a sixth of its weight with its feet
+    unmoved) is given up. **And direction for all of it:** nothing
+    pre-made; "it should not switch from one kind of response to the
+    other at a certain threshold. It should be a smooth transition
+    that follows how a person is expected to really react to pulls";
+    "based on their capabilities". Held against that, the step as
+    built jumps in two places: its smallest step is about 22 cm
+    however little it was needed, and the three step on one clock.
 - **Where the code is:** on the work branch `claude/wip-round`, and in
   the game: the main branch's `Assets/_WonderGather/Scripts` and
   `Tests` are the work branch's, and the build in `Builds/` was made
@@ -677,6 +686,120 @@ only; nothing of step 3 is in the game Luis has.
   3. The stand a miner takes over after a fall; Round under a gentle
      pull; the sideways shove towards higher ground.
   4. The suite as the game is played (`-ownAsPlayed 1`) on this state.
+- **October 13, afternoon** (Luis: "Okay I am back. Please proceed.";
+  then, on what a pulled miner is to be held to:
+  [the two messages](Correspondence/2026-10-13_HOW_A_PULLED_MINER_ANSWERS.md)).
+  - **The suite as the game is played, on the morning's build** (it
+    had been handed over without that run): 198 tests, 161 passed, 14
+    failed. Thirteen of the 14 are those known since October 10 (tests
+    that take the body by hand, or measure against the body as it
+    was). **One was new, and a fault of my test, not of the game:** run
+    so, the pull test put the miner on the path with the body's own
+    already wanted, which took over four tenths of a second later,
+    while the miner's place was still settling (its hips 552 mm over
+    its boots for 585), and Small, pulled from that stand, went down.
+    The step's tests now all begin from the plain stand. **After a
+    walk, as the game does it, the body's own takes over from the
+    plain stand** (585, 909 and 679 mm, measured).
+  - **After a fall: found and mended.** Getting up left the miner's
+    feet set apart and staggered (0.6 m, in the run that was told),
+    and in the Ordinary Place no posed balance acts on a miner at ease
+    to bring them together: so they stayed, and the body's own took
+    that over as its stand. Now **the body's own takes over only from
+    the plain stand,** and, left astride so, the posed body is asked to
+    set its feet as they are made: it steps them there (posed, as the
+    getting up itself still is), about a second and a half, and then
+    stands by its own joints. **Shoved from behind after getting up,**
+    Long and Round stood in 4 runs of 4 and Small in 4 of 6 (in two
+    steps, mostly). Small went down in both runs of the whole suite:
+    it had fallen a metre off, where the meadow slopes about twice as
+    much as on the path (its boots 9 mm apart in height), and the step
+    is not yet sure of itself there. The test of falling and getting
+    up holds each miner to its plain stand, and tells what the shove
+    comes to (I first made it hold all three to standing, which was more than is so).
+  - **Tried for what the judges pointed at, and switched off** (each
+    is in the keeper at nought). In the game, the three miners shoved
+    from four sides, one run each; how many of 12 stand:
+
+    | | At 0.5 m/s | At 0.7 m/s |
+    |---|---|---|
+    | As it is | 12 | 10 |
+    | The swing's time going with the leg (as the root of its length: Long's 1.27 times Small's) | 11 (Long down; five steps where it took two) | |
+    | The second step 1.6 times as long | 12 | 9 |
+    | Both | 11 | 10 |
+    | A boot just put down not lifted again for the next catch | 12 | 10 |
+    | All three | 12 (Long: five steps where it took two) | 11 |
+
+    **A slower step leaves it longer on one boot than it can yet
+    stand.** That is the same thing the walk needs (step 4), and it is
+    where "the first step is a snap" and "one clock for all three"
+    will be mended, not here. The third rule came from counting: in
+    nine runs, ten catches were begun by the boot that had landed
+    within three tenths of a second, and eight of those ended in a
+    fall. Alone it changes nothing: those falls were under way already.
+  - **Luis's direction of that afternoon, held against the step:**
+    nothing in it is pre-made, and its lean and the length of its step
+    grow with the push. Where it jumps: **its smallest step is about
+    22 cm, however little it was needed,** and the three step on one
+    clock. What the plan's step 3 still lacks is the very thing that
+    would close the first: **getting ready before a first step (its
+    weight shifted, a lean) and a shorter first step.** That is what
+    comes next.
+  - **What is to be built next, as I mean to build it** (written
+    before it is begun; a plan, not a result). Luis's direction asks
+    that the answer grow with the push, and the plan's step 3 already
+    names what is missing: getting ready before a first step, and a
+    shorter first step. Today a miner has one kind of step, the catch:
+    its leg is unloaded in a hundredth of a second and its boot put
+    down about 22 cm away or more, whether it was shoved by surprise
+    or pulled on for a second before it had to move. A person pulled
+    on for a second has time, and uses it.
+    - **One rule in place of two, by how much time it has.** At every
+      step of the physics the keeper already knows where the ground
+      would have to push it and how fast that place is moving towards
+      the edge of its soles. From those it can reckon **how long it
+      has until it must step.** With no time (a shove), it steps as it
+      does now. With time (a pull that grows), it gets ready for as
+      long as it has: its weight goes onto the leg it will stand on,
+      until the other boot bears next to nothing (the readiness the
+      second step already uses), and only then is that boot lifted. So
+      there is no line with one answer below it and another above:
+      the same step, got ready for by as much as there is time.
+    - **The length of the step reckoned, not fixed.** Its boot goes
+      where its weight will be going when the boot lands, and a sole's
+      margin beyond: reckoned from how fast it is falling and how long
+      the swing takes. For a body barely past what it can lean
+      against, that is about 10 cm, not 22; for a hard shove, what it
+      is now. (A length "reckoned from how long the step takes" was
+      tried on October 12 and was worse; it was tried with the catch
+      alone, lifted at once, on the bench. It is to be tried again
+      with the getting ready, and in the game.)
+    - **A step it is ready for can be slower.** Standing on one boot
+      with its weight over it, it is not falling while it swings: that
+      is where a swing as long as the leg asks, which felled it this
+      afternoon, may hold. If it does, the judges' "snap" and "one
+      clock" are met for the prepared step, and the catch stays the
+      quick thing a surprise calls for.
+    - **How it will be measured:** on the bench first with pulls that
+      come on over a time (the lean, the readiness, the step's length
+      and how many steps, against the pull's strength: the curve
+      should have no jump in it); then **in the game on the meadow**,
+      the three miners, as played; then pictures and fresh judges.
+    - **What it leads to.** Getting ready and then stepping is how a
+      walk begins. It is the first half of step 4, built here.
+  - **On that state** (the work branch's 1a67a30, and 70848f8 for the test): the standing body's
+    tests 11 of 11. The whole PlayMode suite, one run: 198 tests, 174 passed, 1 failed, 23 run only when asked. The one was the shove after getting up, while the test still held all three to standing it (Small went down); the test was changed as said above and run alone twice since: it passes.
+    As the game is played, on the same state: 198 tests, 162 passed, 13 failed: twelve of those known since October 10, and that same one.
+    A build was made from it and put **beside** the morning's, as
+    `Builds/WindowsOrdinaryPlace_Oct13b`: Luis had not yet judged
+    the morning's, and it is left as it was. The two step alike;
+    the newer one differs only after a fall.
+  - **Where to take it up:** (1) Luis's look at the step. (2)
+    Getting ready before a first step, and a shorter first step:
+    the part of step 3 not yet built, and what Luis's direction
+    asks for. (3) Round under a gentle pull; a sideways shove
+    towards higher ground. (4) New pictures and new judges once the
+    step has changed (two rounds are left).
 
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).

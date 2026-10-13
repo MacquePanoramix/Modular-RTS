@@ -2,6 +2,30 @@
 
 **Updated:** October 13, 2026.
 
+- **Luis, October 13, on how a body answers a pull** (direction):
+  pulled gently a miner steps along and stays on its feet, pulled hard
+  it may fall, for now; and "I don't want anything to be a pre-made
+  animation, and it should not switch from one kind of response to the
+  other at a certain threshold. It should be a smooth transition that
+  follows how a person is expected to really react to pulls... It
+  should also be based on their capabilities of course."
+  ([the messages](Correspondence/2026-10-13_HOW_A_PULLED_MINER_ANSWERS.md)).
+  Held against that, the step jumps in two places: its smallest step
+  is about 22 cm however little it was needed, and the three step on
+  one clock. **Next: getting ready before a first step, and a shorter
+  first step** (the part of step 3 not yet built).
+- **Two builds, the afternoon of October 13.**
+  `Builds/WindowsOrdinaryPlace` is the morning's, left as it was for
+  Luis to judge. `Builds/WindowsOrdinaryPlace_Oct13b` steps exactly as
+  it does and differs only after a fall: a miner that has got up now
+  steps its feet together before it stands by its own joints, and
+  shoved again it mostly catches itself (Long and Round 4 runs of 4,
+  Small 4 of 6: where it falls the meadow slopes more). Three things
+  tried for what the judges pointed at (a swing as long as the leg
+  asks, a slower second step, a boot just put down not lifted again)
+  cost falls or steps and are switched off
+  ([the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun),
+  "October 13, afternoon").
 - **Step 3 (a step) is in the game since October 13, for Luis to
   judge: not accepted, and Luis has not yet seen it.** A miner
   standing by its own joints, shoved or pulled harder than it can stand
@@ -32,18 +56,17 @@
     stillness. **None of that is mended:** it is how the step is
     made, and Luis has not seen it yet
     ([each finding, checked](Design/TheBodysOwn.md#what-the-judges-said-october-13-one-round)).
-  - **Not mended:** after a fall a miner stands by its own joints as
-    its getting up left it, feet apart and staggered, and shoved again
-    from there it mostly falls. Getting ready before a step, and
-    setting off, are not built.
+  - **Not mended in the morning's build** (mended in the afternoon's)**:**
+    after a fall a miner stands by its own joints as its getting up
+    left it, feet apart and staggered, and shoved again from there it
+    mostly falls. Getting ready before a step, and setting off, are
+    not built.
   - **A false line of mine is put right:** the work branch's commit of
     the morning said the standing body's tests passed 8 of 8; it was 7
     of 8 (written before the result was read). They pass 11 of 11 in
     the last two whole runs.
-  - **One question for Luis, open since October 12:** what a pulled
-    miner is to be held to. The bar was taken from the posed body,
-    which leans against a sixth of its weight without a step; a body
-    moved only by its joints cannot from rest.
+  - The question open since October 12 (what a pulled miner is to be
+    held to) was answered by Luis that afternoon: the entry above.
 - **Step 1 of the body's own is accepted by Luis (October 10, night):**
   "Indeed yes to both": the miner standing by its own joints, with life
   in it; and its switch on from the start. A miner at ease with empty

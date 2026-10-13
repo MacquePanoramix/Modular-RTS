@@ -461,6 +461,11 @@ which miner and which boulder.
 
 ## A step (October 13): for Luis to judge
 
+**There are two builds.** `Builds/WindowsOrdinaryPlace` is the one of
+the morning of October 13. `Builds/WindowsOrdinaryPlace_Oct13b` is of
+the afternoon: **it steps exactly as the first does, and differs only
+after a fall** (below). Either can be judged for the step.
+
 **"Catches itself with a step" is on from the start.** It is under
 "Stands by its own joints" on the panel, and works only while that is
 on and the miner stands at ease with empty hands. Untick it to see the
@@ -502,10 +507,14 @@ judges" below.
 
 **What it does not do, so that it is not taken for a fault.**
 
-- **Shoved again after it has fallen and got up, it mostly falls.**
-  Getting up leaves its feet set apart and staggered, and it stands so
-  by its own joints until it is sent somewhere. Not mended (it belongs
-  to going down and getting up, a later step).
+- **In the morning's build, shoved again after it has fallen and got
+  up, it mostly falls:** getting up leaves its feet set apart and
+  staggered, and it stood so by its own joints. **In the afternoon's
+  build** it first steps its feet together (posed, as its getting up
+  still is), then stands by its own joints, and shoved from behind
+  it mostly catches itself (Long and Round in 4 runs of 4, Small in
+  4 of 6: where it has fallen the meadow often slopes more than on
+  the path, and there the step is not yet sure).
 - **It can still go down.** In the game the three stood every shove of
   the button's strength from four sides, in each of five runs; at 0.7
   m/s they stood 10 of 12, and Small and Round went down shoved

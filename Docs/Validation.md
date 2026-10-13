@@ -3270,6 +3270,26 @@ verdict: Luis has not seen the step.**
   run only when asked. (172 before: the three new tests are the difference.)
 - **The build** was made from this state and copied to `Builds/`. Not
   opened by me.
+- **The afternoon of October 13** (the work branch's 1a67a30; how it
+  steps is unchanged, shove for shove):
+  - **After a fall** (new, in `PushedHarderThanItCanStand…`): each
+    miner, standing by its own joints again after getting up, is
+    shoved from behind at 0.5 m/s. Held to: its boots as far apart as
+    they are made (before the mending, a stand 0.6 m staggered). Told,
+    not held to: the shove. Long and Round stood it in 4 runs of 4,
+    Small in 4 of 6 (down in both runs of the whole suite, on ground
+    sloping about twice as much as the path).
+  - **Tried and switched off** (the three miners, four sides, one run
+    each; standing of 12 at 0.5 and at 0.7 m/s): as it is, 12 and 10;
+    the swing's time going with the leg, 11; the second step 1.6 times
+    as long, 12 and 9; both, 11 and 10; a boot just put down not
+    lifted again, 12 and 10; all three, 12 and 11.
+  - `OwnBodyTests`: 11 of 11 (one run). The whole PlayMode suite, one run: 198 tests, 174 passed, 1 failed, 23 run only when asked. The one was the shove after getting up, while the test still held all three to standing it (Small went down); the test was changed as said above and run alone twice since: it passes.
+  - **As the game is played:** the morning's build, 198 tests, 161
+    passed, 14 failed (13 known since October 10; one a fault of the
+    pull test, which now begins from the plain stand). As the game is played, on the same state: 198 tests, 162 passed, 13 failed: twelve of those known since October 10, and that same one.
+  - **The build** of this state is `Builds/WindowsOrdinaryPlace_Oct13b`,
+    beside the morning's. Not opened by me.
 - **A correction.** The work branch's commit 723eec9 says
   "OwnBodyTests: 8 of 8". It was 7 of 8
   (`StandingAMinuteItIsAliveAndDoesNotWobble`: Long and Round, on one
@@ -3277,9 +3297,8 @@ verdict: Luis has not seen the step.**
   was read. With the keeper of October 11 that test failed in 2 runs of
   4 as well. It passed in each of the three whole runs of October 13.
 - **Not tested:**
-  - a miner shoved after it has fallen and got up (it stands then with
-    its feet apart and staggered, and was seen to fall when shoved so,
-    before the test was made to begin from the plain stand);
+  - a miner shoved after it has fallen and got up: tested since the
+    afternoon (above), from behind only;
   - a second shove during a step; shoves from the four diagonals in
     the game (the bench has them);
   - why the two sideways shoves of 0.7 m/s end in a fall was read in
@@ -3294,7 +3313,6 @@ verdict: Luis has not seen the step.**
     take of the nine recorded for the judges, Small shoved from in
     front, it did: the boot behind still bore 0.26 of its weight after
     a second and was not lifted);
-  - the suite as the game is played (`-ownAsPlayed 1`) on this state;
   - how it looks, by Luis.
 - **Three judges, one round** (the body, the animator, the sceptic;
   `OwnBodyRecord` with `-ownShotOnly shoved`: nine takes, each miner
