@@ -16,6 +16,7 @@ namespace WonderGather.Tests
         private MinerChoice choice;
         private MinerWorkPreview look;
         private OrdinaryGround ground;
+        private GameObject floorLaid;
 
         [UnitySetUp]
         public IEnumerator Load()
@@ -28,7 +29,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.BreathShoulders = 1; OwnBody.BreathSeenInAir = true; OwnBody.BreathSize = OwnBody.BreathSizeAtFirst; }
+        public void Restore() { OwnBody.Told = null; OwnBody.StaysPut = false; OwnBody.AnyGround = false; Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.BreathShoulders = 1; OwnBody.BreathSeenInAir = true; OwnBody.BreathSize = OwnBody.BreathSizeAtFirst; }
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
@@ -166,11 +167,12 @@ namespace WonderGather.Tests
                 OwnBody own = null;
                 yield return Own(unit, name, o => own = o);
                 yield return Wait(2);
-                // Set going backwards at 1.2 m/s: far more than it can stand.
-                look.Nudge(-away, 1.2f);
+                // Set going backwards at 2 m/s: far more than it can stand, or catch with a step. (It was 1.2 m/s until
+                // October 13: with the step on, Long catches itself at that.)
+                look.Nudge(-away, 2);
                 float began = Time.time;
                 while (own.WentDown == 0 && Time.time - began < 4) yield return null;
-                Assert.That(own.WentDown, Is.EqualTo(1), name + ", set going at 1.2 m/s, did not go down.");
+                Assert.That(own.WentDown, Is.EqualTo(1), name + ", set going at 2 m/s, did not go down.");
                 Assert.That(own.Stands, Is.False);
                 var fall = unit.GetComponent<PhysicalFall>();
                 Assert.That(fall != null && fall.Now != PhysicalFall.State.Up, Is.True, name + " went down, and the fall did not take it.");
@@ -179,7 +181,7 @@ namespace WonderGather.Tests
                 Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Up), name + " did not get up.");
                 float up = Time.time - began;
                 while (!own.Stands && Time.time - began < 70) yield return null;
-                Debug.Log($"OWN_FELL {name}, set going backwards at 1.2 m/s: it went down {down:F1} s after, into the fall; it was up {up:F1} s after, and stood by its own joints again {Time.time - began:F1} s after");
+                Debug.Log($"OWN_FELL {name}, set going backwards at 2 m/s: it went down {down:F1} s after, into the fall; it was up {up:F1} s after, and stood by its own joints again {Time.time - began:F1} s after");
                 Assert.That(own.Stands, Is.True, name + " did not stand by its own joints again after getting up: " + look.Status());
                 yield return Wait(2);
                 Assert.That(own.Stands && own.WentDown == 1, Is.True, name + " went down again after getting up.");
@@ -447,6 +449,187 @@ namespace WonderGather.Tests
             look.SetOwn(false);
             yield return Wait(.6f);
             Assert.That(own.Stands, Is.False, "The body as it was is not one click away.");
+        }
+
+        // S3b, step 3 (October 13; for Luis to judge, not accepted): the step is on from the start, and a miner
+        // standing at ease takes none: its breath, its weight going from leg to leg and its looking about do not
+        // set it stepping.
+        [UnityTest, Timeout(900000)]
+        public IEnumerator AtEaseItTakesNoStep()
+        {
+            Time.captureFramerate = 50;
+            Assert.That(look.StepsToCatch && OwnKeeper.Steps, Is.True, "The step is not on from the start.");
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                yield return Stand(unit, (s, a) => { });
+                OwnBody own = null;
+                yield return Own(unit, name, o => own = o);
+                Vector3 began = unit.transform.position;
+                for (float until = Time.time + 45; Time.time < until && own.Stands;) yield return new WaitForFixedUpdate();
+                Debug.Log($"OWN_AT_EASE {name}, three quarters of a minute at ease with the step on: {own.Stepped} steps; down {own.WentDown} times; its place moved {Flat(unit.transform.position - began).magnitude * 1000:F0} mm");
+                Assert.That(own.Stands && own.WentDown == 0, Is.True, name + ", at ease with the step on, went down.");
+                Assert.That(own.Stepped, Is.EqualTo(0), name + ", at ease, took a step.");
+                look.SetOwn(false);
+                yield return Wait(.6f);
+            }
+        }
+
+        // Shoved harder than it can stand through where it is (set going at half a metre a second, four ways), it
+        // catches itself with a step, and its place goes with its feet.
+        [UnityTest, Timeout(1800000)]
+        public IEnumerator ShovedItCatchesItselfWithAStep()
+        {
+            Time.captureFramerate = 50;
+            OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
+            // (-ownStill 1: with no life in it, to see what the life in it does to a step. Not the test.)
+            if (CaptureTools.Argument("-ownStill") == "1") OwnBody.Alive = false;
+            // (-ownOnly Small: one miner. -ownStaysPut 1: its place does not go with it. -ownAnyGround 1: no ground asked for.
+            // -ownStepSet "LandsBy=3": the keeper's settings, by name. Not the test: what is changed stays changed for the run.)
+            // -ownWay 90: one way only. -ownTick 1: every step of the physics told, as the bench tells it.)
+            string onlyOne = CaptureTools.Argument("-ownOnly"), onlyWay = CaptureTools.Argument("-ownWay");
+            bool ticks = CaptureTools.Argument("-ownTick") == "1";
+            // (-ownShove .7: shoved at another speed, to see how far what it does reaches. Not the test.)
+            float shove = CaptureTools.Argument("-ownShove") != null ? float.Parse(CaptureTools.Argument("-ownShove"), System.Globalization.CultureInfo.InvariantCulture) : MinerWorkPreview.ShoveSpeed;
+            OwnBody.StaysPut = CaptureTools.Argument("-ownStaysPut") == "1"; OwnBody.AnyGround = CaptureTools.Argument("-ownAnyGround") == "1";
+            foreach (string pair in (CaptureTools.Argument("-ownStepSet") ?? "").Split(new[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries))
+            {
+                var sides = pair.Split('=');
+                var field = typeof(OwnKeeper).GetField(sides[0].Trim());
+                Assert.That(field != null, Is.True, sides[0]);
+                field.SetValue(null, float.Parse(sides[1], System.Globalization.CultureInfo.InvariantCulture));
+            }
+            Assert.That(look.StepsToCatch && OwnKeeper.Steps, Is.True, "The step is not on from the start.");
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                if (!string.IsNullOrEmpty(onlyOne) && onlyOne != name) continue;
+                int stood = 0, stepped = 0;
+                string told = "";
+                for (int d = 0; d < 4; d++)
+                {
+                    if (!string.IsNullOrEmpty(onlyWay) && onlyWay != (d * 90).ToString()) continue;
+                    Vector3 away = default, spotAt = default;
+                    // (From its plain stand: a fall and getting up leave its feet set apart and staggered, and put on
+                    // the path its place takes a moment to settle on the walked ground.)
+                    look.SetOwn(false);
+                    unit.GetComponent<ProceduralBiped>().SetStance(0, 0);
+                    yield return Stand(unit, (s, a) => { away = a; spotAt = s; });
+                    yield return Wait(1.5f);
+                    if (told == "")
+                    {
+                        // (How the ground lies there: its height, in millimetres over where it stands, a step away each way.)
+                        string lies = "";
+                        for (int w = 0; w < 4; w++)
+                        {
+                            Vector3 to = Quaternion.AngleAxis(w * 90, Vector3.up) * away;
+                            lies += $" [{w * 90}:";
+                            foreach (float far in new[] { .15f, .3f, .45f }) lies += $" {(ground.Height(spotAt.x + to.x * far, spotAt.z + to.z * far) - ground.Height(spotAt.x, spotAt.z)) * 1000:F0}";
+                            lies += "]";
+                        }
+                        Debug.Log($"OWN_GROUND where {name} stands, the ground 0.15, 0.3 and 0.45 m away, each way from ahead (mm over where it stands):{lies}");
+                    }
+                    // (-ownFloor 1: a level floor laid where it stands, at the ground's own height, to see what the meadow's
+                    // own ground does to a step. Not the test.)
+                    if (CaptureTools.Argument("-ownFloor") == "1" && floorLaid == null && Physics.Raycast(spotAt + Vector3.up * 2, Vector3.down, out var under, 5, 1 << 6))
+                    {
+                        floorLaid = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        floorLaid.layer = 6;
+                        floorLaid.transform.localScale = new Vector3(8, .4f, 8);
+                        floorLaid.transform.position = under.point + Vector3.down * .199f;
+                        floorLaid.GetComponent<Renderer>().enabled = false;
+                        Physics.SyncTransforms();
+                    }
+                    if (CaptureTools.Argument("-ownWaits") != null) { look.SetOwn(false); yield return Wait(float.Parse(CaptureTools.Argument("-ownWaits"), System.Globalization.CultureInfo.InvariantCulture)); }
+                    OwnBody own = null;
+                    yield return Own(unit, name, o => own = o);
+                    yield return Wait(2);
+                    int downs = own.WentDown;
+                    Vector3 way = Quaternion.AngleAxis(d * 90, Vector3.up) * away, from = unit.transform.position;
+                    Debug.Log($"OWN_TOLD {name} is shoved {d * 90} degrees from ahead at {Time.time:F2}");
+                    look.Nudge(way, shove);
+                    int most = 0;
+                    Vector3 hipsFrom = own.Part(OwnBody.Hips).transform.position; float shovedAt = Time.time;
+                    for (float until = Time.time + 7; Time.time < until && own.WentDown == downs && own.Stands;)
+                    {
+                        most = Mathf.Max(most, own.Stepped);
+                        yield return new WaitForFixedUpdate();
+                        if (ticks) Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "OWN_TICK {0:0.00} {1}", Time.time - shovedAt, own.Tick(way.normalized, hipsFrom)));
+                    }
+                    if (own.Stands && own.WentDown == downs)
+                    {
+                        stood++;
+                        if (most > 0) stepped++;
+                        Transform left = own.Part(OwnBody.Foot).transform, right = own.Part(OwnBody.Foot + 1).transform;
+                        float place = Flat(unit.transform.position - .5f * (left.position + right.position)).magnitude;
+                        float tipped = Mathf.Max(Vector3.Angle(Vector3.up, left.up), Vector3.Angle(Vector3.up, right.up));
+                        float went = Flat(unit.transform.position - from).magnitude;
+                        told += $" [{d * 90}: {most} steps, went {went * 1000:F0} mm, its place {place * 1000:F0} mm from between its boots, a boot tipped {tipped:F0} deg at most, boots {Flat(right.position - left.position).magnitude * 1000:F0} mm apart]";
+                        Assert.That(place, Is.LessThan(.15f), $"{name}, shoved {d * 90} degrees from ahead: its place did not go with its feet.");
+                        look.SetOwn(false);
+                        yield return Wait(.6f);
+                    }
+                    else
+                    {
+                        told += $" [{d * 90}: down after {most} steps]";
+                        // (It gets itself up, as it does; then it is stood on the path again.)
+                        look.SetOwn(false);
+                        var fall = unit.GetComponent<PhysicalFall>();
+                        for (float until = Time.time + 60; Time.time < until && fall != null && fall.Now != PhysicalFall.State.Up;) yield return null;
+                        yield return Wait(1);
+                    }
+                }
+                Debug.Log($"OWN_SHOVED {name}, set going at {shove:F2} m/s four ways: stood {stood} of 4, stepping in {stepped}:{told}");
+                Assert.That(stood, Is.GreaterThanOrEqualTo(3), name + ", shoved four ways, went down more than once.");
+                Assert.That(stepped, Is.GreaterThanOrEqualTo(1), name + ", shoved four ways, never took a step.");
+            }
+        }
+
+        // Pulled at its chest with 0.08 of its weight for two and a half seconds, it leans (or steps) and stands.
+        // (Small and Long are held to it. Round is told and not yet held to it: on October 13 it went down in 2 runs of
+        // 7, falling forward out of its second catch while the pull was still on.)
+        [UnityTest, Timeout(900000)]
+        public IEnumerator PulledGentlyItStands()
+        {
+            Time.captureFramerate = 50;
+            OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
+            OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
+            // (-ownPull .12: with another share of its weight, as the panel's "Pull it" gives. Not the test.)
+            float share = CaptureTools.Argument("-ownPull") != null ? float.Parse(CaptureTools.Argument("-ownPull"), System.Globalization.CultureInfo.InvariantCulture) : .08f;
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                Vector3 away = default;
+                yield return Stand(unit, (s, a) => { away = a; });
+                OwnBody own = null;
+                yield return Own(unit, name, o => own = o);
+                yield return Wait(2);
+                Vector3 before = own.HeadAt;
+                look.Pull(away, share, MinerWorkPreview.PullFor, MinerWorkPreview.PullOver);
+                Assert.That(own.Pulled, Is.True, name + " is not pulled.");
+                float furthest = 0;
+                for (float until = Time.time + 7; Time.time < until && own.Stands;) { furthest = Mathf.Max(furthest, Flat(own.HeadAt - before).magnitude); yield return new WaitForFixedUpdate(); }
+                Debug.Log($"OWN_PULLED {name}, pulled forwards at its chest with {share:F2} of its weight for {MinerWorkPreview.PullFor} s: {own.Stepped} steps; its head went {furthest * 1000:F0} mm at most; down {own.WentDown} times");
+                if (name != "Round" && share <= .08f) Assert.That(own.Stands && own.WentDown == 0, Is.True, name + ", pulled with 0.08 of its weight, went down.");
+                else if (!own.Stands || own.WentDown > 0)
+                {
+                    // (It gets itself up, as it does.)
+                    Debug.Log($"OWN_PULLED {name} went down: it is not yet held to standing this pull.");
+                    var fall = unit.GetComponent<PhysicalFall>();
+                    for (float until = Time.time + 60; Time.time < until && fall != null && fall.Now != PhysicalFall.State.Up;) yield return null;
+                }
+                look.SetOwn(false);
+                yield return Wait(.6f);
+            }
         }
     }
 }

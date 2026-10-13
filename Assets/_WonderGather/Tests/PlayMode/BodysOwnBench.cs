@@ -1305,8 +1305,11 @@ namespace WonderGather.Tests
             float pullFor = Numbers("-stepPullFor", 2.5f)[0];
             // (-stepPullOver 0.5: the pull comes on over so long, as a rope draws tight; as it is, all at once.)
             float pullOver = Numbers("-stepPullOver", 0)[0];
+            // (-stepJoltOver 0.1: a shove sets it going over so long, as the game's nudge does; 0: in one step of the physics.)
+            int joltSteps = Mathf.Max(1, Mathf.RoundToInt(Numbers("-stepJoltOver", .1f)[0] / Step));
             string say = CaptureTools.Argument("-stepSay");
             float sayPull = Numbers("-stepSayPull", .17f)[0]; int sayWay = (int)Numbers("-stepSayWay", 0)[0];
+            float sayJolt = Numbers("-stepSayJolt", 0)[0];
             var culture = CultureInfo.InvariantCulture;
             var was = new Dictionary<string, float>();
             bool steps = Numbers("-stepOff", 0)[0] < .5f;
@@ -1392,11 +1395,14 @@ namespace WonderGather.Tests
                     Physics.SyncTransforms();
                     int count = Mathf.RoundToInt(lasts / Step), begins = Mathf.RoundToInt(1 / Step), ends = Mathf.RoundToInt((1 + pullFor) / Step);
                     bool told = !string.IsNullOrEmpty(say) && string.Equals(say, names[m], StringComparison.OrdinalIgnoreCase);
+                    bool described = false;
+                    // (Which body is told: the one pulled so, or with -stepSayJolt .5 the one shoved so, that way.)
+                    bool Said(Stepper one) => one.wayIs == sayWay && (sayJolt > 0 ? Mathf.Abs(one.jolt - sayJolt) < 1e-4f : one.jolt <= 0 && Mathf.Abs(one.pull - sayPull * whole * 9.81f) <= .01f);
                     for (int k = 0; k < count; k++)
                     {
                         foreach (var one in crowd)
                         {
-                            if (k == begins && one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
+                            if (one.jolt > 0 && k >= begins && k < begins + joltSteps) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / (joltSteps * Step) * one.way, one.body.Centre(i));
                             if (one.pull > 0 && k >= begins && k < ends)
                             {
                                 float on = pullOver > 0 ? Mathf.Clamp01((k - begins + 1) * Step / pullOver) : 1;
@@ -1410,7 +1416,7 @@ namespace WonderGather.Tests
                         if (told && k >= begins && k < begins + 40)
                             foreach (var one in crowd)
                             {
-                                if (one.wayIs != sayWay || Mathf.Abs(one.pull - sayPull * whole * 9.81f) > .01f || one.jolt > 0 || one.keeper.Swings < 0) continue;
+                                if (!Said(one) || one.keeper.Swings < 0) continue;
                                 var kp = one.keeper; int sw = kp.Swings;
                                 Transform th = one.body.Of(Thigh + sw), sh = one.body.Of(Shin + sw), hp = one.body.Of(Hips);
                                 Debug.Log(string.Format(culture, "SWING {0:0.00} s leg {1}: to go {2:0} mm; wanted {3:0} along {4:0} up; is {5:0} along {6:0} up; thigh {7:0} deg from the hips' down, forward {8:0}; knee {9:0}",
@@ -1424,7 +1430,7 @@ namespace WonderGather.Tests
                         if (told && tick[0] >= 0 && k * Step >= tick[0] - 1e-4f && k * Step <= tick[1] + 1e-4f)
                             foreach (var one in crowd)
                             {
-                                if (one.wayIs != sayWay || Mathf.Abs(one.pull - sayPull * whole * 9.81f) > .01f || one.jolt > 0) continue;
+                                if (!Said(one)) continue;
                                 var kp = one.keeper; Vector3 side = Vector3.Cross(Vector3.up, one.way), o = one.madeHips;
                                 float A(Vector3 v) => Vector3.Dot(v - o, one.way) * 1000; float S(Vector3 v) => Vector3.Dot(v - o, side) * 1000;
                                 float R(int j) => kp.Asked[j] / Mathf.Max(1e-4f, kp.Has(j));
@@ -1439,11 +1445,12 @@ namespace WonderGather.Tests
                                     (hp.position.y - one.madeHips.y) * 1000,
                                     Mathf.Asin(Mathf.Clamp(Vector3.Dot(hp.up, one.way), -1, 1)) * Mathf.Rad2Deg, Mathf.Asin(Mathf.Clamp(Vector3.Dot(hp.up, side), -1, 1)) * Mathf.Rad2Deg,
                                     Mathf.Asin(Mathf.Clamp(Vector3.Dot(tr.up, one.way), -1, 1)) * Mathf.Rad2Deg));
+                                Debug.Log(string.Format(culture, "STEPTICK2 {0:0.00} {1}", k * Step, kp.Tick(one.way, one.madeHips)));
                             }
                         if (told && k >= begins - 5 && k % 5 == 0)
                             foreach (var one in crowd)
                             {
-                                if (one.wayIs != sayWay || Mathf.Abs(one.pull - sayPull * whole * 9.81f) > .01f || one.jolt > 0) continue;
+                                if (!Said(one)) continue;
                                 Transform hips = one.body.Of(Hips), left = one.body.Of(Foot), right = one.body.Of(Foot + 1);
                                 Vector3 side = Vector3.Cross(Vector3.up, one.way);
                                 Debug.Log(string.Format(culture, "STEPSAY {0} {1:0.0} s: steps {2}, swings {3}{4}; hips {5:0} mm along, {6:0} aside, {7:0} up, leaning {8:0} deg; left boot {9:0} along {10:0} aside {11:0} up tipped {12:0}; right boot {13:0} along {14:0} aside {15:0} up tipped {16:0}; outside {17:0} mm; feels {18:0.00}; leans {19:0} mm | along: weight {20:0}, going {21:0}, wants {22:0}, can act {23:0}, bore {24:0}, holds {25:0}, felt {26:0} (of {27:0.00} m/s2), soles {28:0} and {29:0}, falls {30:0.00}",
@@ -1458,6 +1465,7 @@ namespace WonderGather.Tests
                                     Vector3.Dot(one.keeper.Felt, one.way) / (one.keeper.FallsAt * one.keeper.FallsAt) * 1000, Vector3.Dot(one.keeper.Felt, one.way),
                                     Vector3.Dot(one.keeper.SoleAt(0) - one.madeHips, one.way) * 1000, Vector3.Dot(one.keeper.SoleAt(1) - one.madeHips, one.way) * 1000, one.keeper.FallsAt));
                             }
+                        if (!described && k == 5) { described = true; Debug.Log("STEPBODY " + names[m] + " is " + crowd[0].keeper.Describe()); }
                         Physics.Simulate(Step);
                         if (k % 100 == 99) yield return null;
                     }
@@ -1507,14 +1515,14 @@ namespace WonderGather.Tests
             ("StepsBeyond", 0, .06f), ("StepsAfter", 0, .12f), ("StepsFelt", 0, 1.2f), ("UnloadsIn", .01f, .15f), ("SwingsIn", .06f, .45f),
             ("Clears", .02f, .1f), ("StepsAhead", 1, 3), ("StepsFurther", 0, .12f), ("Reach", .5f, .95f), ("Sideways", .3f, .9f),
             ("SwingFullAt", 5, 60), ("SwingDamped", .1f, 1.2f), ("SwingStiff", 50, 800), ("SwingSlows", 5, 60), ("SwingAtMost", 1, 8),
-            ("LandsDeaf", 0, .3f), ("Astride", .03f, .15f), ("CalmUnder", .03f, .2f), ("ClosesAfter", .2f, 1.5f), ("ReadyWithin", .01f, .06f),
+            ("LandsDeaf", 0, .3f), ("Astride", .03f, .15f), ("CalmUnder", .03f, .2f), ("ClosesAfter", .2f, 1.5f), ("LiftsUnder", .03f, .3f),
             ("TakesUp", 0, 1.2f), ("StepRights", 1, 5), ("SwingAnkle", 1, 40), ("Tilts", 0, 2.5f), ("TiltsRate", 0, .6f),
             // (October 11: what it feels only as far as it lasts; the boot behind steps; a boot lands when it bears.)
-            ("StepsFeltOver", 0, .2f), ("TrailsFrom", 0, 2), ("LandsBy", 1, 3),
+            ("StepsFeltOver", 0, .35f), ("TrailsFrom", 0, 2), ("LandsBy", 1, 3),
             // (October 12: it sinks into a catching step.)
             ("Sinks", 0, 1.5f), ("SwingHip", 0, 1), ("LeansBack", 0, 14),
-            // (October 13: a push known to last by being there at every step; how fast it lets itself come down.)
-            ("StepsFeltHeld", 0, .14f), ("SinksFree", .3f, .95f),
+            // (October 13: how fast it lets itself come down.)
+            ("SinksFree", .3f, .95f), ("FollowsAfter", -1, .4f), ("Loads", 0, 4), ("LoadsFrom", .05f, .6f), ("LoadsFor", .05f, .5f), ("Edge", .003f, .03f),
         };
 
         [UnityTest, Explicit, Timeout(14400000)]
@@ -1532,6 +1540,10 @@ namespace WonderGather.Tests
             float slowOver = Numbers("-stepSearchSlowOver", 1.2f)[0];
             // (-stepSearchPullFor 3: how long the search's pulls are held; two seconds as it was.)
             float searchPullFor = Numbers("-stepSearchPullFor", 2)[0];
+            // (-stepSearchJoltOver 0.1: as -stepJoltOver. -stepSearchNudges .15: gentle shoves as well, which it is to
+            // stand through; they count as the others do.)
+            int searchJoltSteps = Mathf.Max(1, Mathf.RoundToInt(Numbers("-stepSearchJoltOver", .1f)[0] / Step));
+            float[] nudges = CaptureTools.Argument("-stepSearchNudges") != null ? Numbers("-stepSearchNudges", .15f) : new float[0];
             string outFile = CaptureTools.Argument("-stepSearchOut");
             var culture = CultureInfo.InvariantCulture;
             var random = new System.Random((int)Numbers("-stepSearchSeed", 3)[0]);
@@ -1631,6 +1643,7 @@ namespace WonderGather.Tests
                         }
                         foreach (float pull in pulls) for (int w = 0; w < ways; w++) Add(pull * whole * 9.81f, 0, w);
                         foreach (float pull in slows) for (int w = 0; w < ways; w++) { Add(pull * whole * 9.81f, 0, w); crowd[crowd.Count - 1].over = slowOver; }
+                        foreach (float nudge in nudges) for (int w = 0; w < ways; w++) Add(0, nudge, w);
                         foreach (float jolt in jolts) for (int w = 0; w < ways; w++) Add(0, jolt, w);
                         Physics.SyncTransforms();
                         int count = Mathf.RoundToInt(lasts / Step), begins = Mathf.RoundToInt(.6f / Step), ends = Mathf.RoundToInt((.6f + searchPullFor) / Step);
@@ -1640,7 +1653,7 @@ namespace WonderGather.Tests
                         {
                             foreach (var one in crowd)
                             {
-                                if (k == begins && one.jolt > 0) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / Step * one.way, one.body.Centre(i));
+                                if (one.jolt > 0 && k >= begins && k < begins + searchJoltSteps) for (int i = 0; i < Count; i++) one.body.Push(i, one.body.Mass(i) * one.jolt / (searchJoltSteps * Step) * one.way, one.body.Centre(i));
                                 if (one.pull > 0 && k >= begins && k < ends) one.body.Push(Trunk, one.way * (one.pull * (one.over > 0 ? Mathf.Clamp01((k - begins + 1) * Step / one.over) : searchPullOver > 0 ? Mathf.Clamp01((k - begins + 1) * Step / searchPullOver) : 1)), one.body.Centre(Trunk));
                                 if (!one.down && (float.IsNaN(one.body.Of(Hips).position.x) || !one.keeper.Keep(Step))) { one.down = true; one.downAt = k * Step; }
                             }
