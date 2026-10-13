@@ -3209,6 +3209,46 @@ Luis accepted step 1 and its switch on from the start
   in a long session of play (a miner sent, put to work, rested and
   left alone many times over).
 
+## S3b step 2 — the getting up, begun (October 14; the work branch and the bench only)
+
+Nothing of this is in the main project's code, the game or a build: the
+main project's scripts and tests are as on October 13 (the work
+branch's af0346c). What was run is on the work branch (`claude/wip-round`,
+32c8fbc), in the copy the tests are run in.
+
+- **As it was, recorded first** (`OwnBodyRecord`, `-ownShotOnly fallen
+  -ownFallWay 0|90|180`): the three miners pushed over at 2 m/s three
+  ways, a picture every fifth of a second, every change of what the fall
+  does told. The figures are in
+  [the design](Design/TheBodysOwn.md#what-was-there-recorded-october-13-before-anything-was-changed).
+- **A miner's own legs stand it up from a crouch**
+  (`OwnBodyTests.MadeLowItStandsUpByItsOwnLegs`, run only when asked;
+  it tells, and holds nothing): 18 of 18 from a crouch of 0.15 to 0.55 of
+  its hips' height bowed 30 and 45 degrees; 5 of 9 bowed 65; 2 of 12
+  deeper or further bowed. One run of each. After the rise was made one
+  movement, six of six again (0.30 and 0.45, bowed 45).
+- **The bench of getting up** (`OwnRiseBench`, run only when asked;
+  script-stepped, the miners on the path of the Ordinary Place):
+  - each miner's own way, where it was searched: Small 7 tries of 8
+    stand; Round 2 of 2; Long 2 of 2;
+  - the same ways, the three miners laid at six places on the path:
+    **0 of 18 stand**;
+  - Small, searched from six places at once, 70 rounds: 0 of 6 stand;
+  - Small, with its feet put under it by its legs' joints, six places:
+    at five its soles are flat (0.96 to 0.97) and its hips at 0.44 to
+    0.46 of their standing height, its boots bearing under a tenth of
+    its weight; **none stands**.
+- **The standing body's tests, after the day's changes**
+  (`OwnBodyTests`, the whole class, one run): 13 run, 12 passed, 1
+  failed. The one is `ShovedAgainAndAgainNothingOfItFlies`, which is run
+  only when asked and was not met before either (a boot at 9.6 to 16.4
+  m/s). The eleven that are held pass.
+- **Not run:** the whole PlayMode suite on the work branch after the
+  day's changes; anything as the game is played; any build. **Not
+  tested at all:** getting up from its back or its sides on the body's
+  own; anything off the path; the getting up in the game (it is not in
+  it). **Not looked at by Luis or by judges.**
+
 ## S3b step 3 — a step, in the game (October 13)
 
 What was built, and why each part: [the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun)
