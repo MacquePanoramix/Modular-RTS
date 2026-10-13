@@ -91,6 +91,29 @@ namespace WonderGather
         public static float SwingsLeg = 0;
         public static float ClosesSlower = 1;
         public static float StepsAhead = 1.7984f, StepsFurther = 0.0219f, Reach = 0.7771f, Sideways = 0.6257f;
+        // A catch it cannot make is not tried: when its boot would have to go further along the ground than
+        // StepsAtMost of its leg's length, it is lost, and goes down into the fall. (Shoved again and again, it had
+        // gone on catching itself with steps of one and a half times its leg in an eighth of a second: a boot at
+        // 41 m/s, a sole 1.1 m over the ground behind it. Of the shoves it stood in eleven runs of the game's shove
+        // test, none needed a catch longer than 0.62 of its leg; those it fell from needed 0.61 to 1.29.) 0: every
+        // catch is tried, as it was until October 13.
+        public static float StepsAtMost = .75f;
+        // Nor a catch after CatchesAtMost catches one after another, with no boot brought alongside between and no
+        // half second stood: it is lost. (Of 141 trials in the game that ended standing, none had more than three
+        // in a row; of 28 that ended in a fall, ten had four to seven, each landing short of the last.) 0: as many
+        // as it takes, as it was until October 13.
+        public static int CatchesAtMost = 3;
+        // Nor does it go on when neither boot has borne anything for OffGroundAtMost steps of the physics: it is off
+        // the ground and falling. (There, a swinging leg, sprung towards a place on the ground its body was tumbling
+        // away from, was whipped at 23 m/s in the last six hundredths of a second before it was taken for down.) 0:
+        // not asked, as it was until October 13.
+        // (Off since the same night: Round's own catches leave the ground for so long, and with it Round went down
+        // under the gentle pull in two runs of three.)
+        public static int OffGroundAtMost = 0;
+        // (Tried the same night, and off: no joint turning faster than TurnsAtMost radians a second. At 15, which is
+        // 860 degrees a second, it could not take a catching step at all: Small stood 0 shoves of 4. And boots still
+        // went at 11 to 18 m/s when it was shoved again and again.)
+        public static float TurnsAtMost = 0;
         // (How much of what pushes it counts in whether it must step, and where to: a blow is felt as a great push
         // for a moment, and is not one that lasts.)
         public static float StepsFelt = 0.764f;
@@ -158,6 +181,14 @@ namespace WonderGather
         // back, the leg is only thrown: its knee snaps straight and its boot is driven on or flung up.) Loads 0:
         // its whole share at once, as it was until October 13.
         public static float Loads = 2, LoadsFrom = .25f, LoadsFor = .3f;
+        // And (LoadsBoth) so it is for either leg at any time, not only for a boot just put down: what one leg
+        // cannot take the other does, as far as it can itself, and what neither can is not asked for. (Shoved again
+        // and again, the leg it stood on was thrown: its body tipping over a boot that bore nothing any more, that
+        // leg was still asked for the whole push, and its sole went a metre over the ground at 18 m/s.) False: only
+        // the boot just put down, as it was until the night of October 13.
+        // (Off since the same night: it changed how it steps when nothing is wrong. Pulled gently, Small then took
+        // five to seven steps for two, its head going 46 to 58 cm for 33.)
+        public static bool LoadsBoth = false;
         // (Tried on October 13, and off: a boot just put down not lifted again for the next catch; for NotAgain
         // seconds (0.3) after it lands, the other leg takes it. In nine runs of the game's shove test ten catches
         // were begun by the boot that had landed within three tenths of a second, the one it then stood on, and
@@ -234,7 +265,8 @@ namespace WonderGather
         private readonly Quaternion[] rested = new Quaternion[Count], madeTurned = new Quaternion[Count], madeLay = new Quaternion[Count];
         private readonly float[] stoodSpring = new float[Count], stoodDamper = new float[Count], thighLong = new float[2], shinLong = new float[2], bears = new float[2];
         private Vector2 madeApart;
-        private int swings = -1, stoodLast = -1, closesTried, lightFor, landed = -1, hasFor;
+        private int swings = -1, stoodLast = -1, closesTried, lightFor, landed = -1, hasFor, catchesRun, offGround;
+        private bool hasBorne;
         private bool prepared, hadNeeds;
         private Vector3 needsBefore;
         private float needsRate, hasNow;
@@ -443,6 +475,9 @@ namespace WonderGather
             {
                 Vector3 bore = Vector3.zero; float lifted = 0;
                 for (int i = 0; i < 2; i++) { bore += touches[i].Where; lifted += touches[i].Up; bears[i] = touches[i].Up; touches[i].Clear(); }
+                // (Neither boot bearing anything: it is off the ground.)
+                if (bears[0] + bears[1] > .5f * whole * g * step) hasBorne = true;
+                offGround = bears[0] + bears[1] < .02f * whole * g * step ? offGround + 1 : 0;
                 realKnown = lifted > 1e-6f;
                 if (realKnown) realAt = bore / lifted;
             }
@@ -458,6 +493,11 @@ namespace WonderGather
                 standsBy = new Vector2(Vector3.Dot(rest - between, beside0), (1 - StandsMid) * Vector3.Dot(rest - between, Vector3.Cross(beside0, Vector3.up)));
                 Vector3 ahead0 = Flat(upright * Vector3.forward).normalized, across0 = Vector3.Cross(Vector3.up, ahead0);
                 madeApart = new Vector2(Vector3.Dot(sole[1] - sole[0], across0), Vector3.Dot(sole[1] - sole[0], ahead0));
+            }
+            if (Steps && hasBorne && OffGroundAtMost > 0 && offGround >= OffGroundAtMost)
+            {
+                Tells?.Invoke($"lost: neither boot has borne anything for {offGround} steps of the physics");
+                return false;
             }
             // Down: it goes over into the fall that is built. (With the step on, by its weight's height over its lower
             // boot: a boot off the ground, trailing behind it or flung up, is not the ground. Taken from the middle of
@@ -563,6 +603,7 @@ namespace WonderGather
                         Vector3 madeNow = acrossNow * madeApart.x + aheadNow * madeApart.y;
                         bool calm = beyond <= 1e-4f && Flat(goes).magnitude < CalmUnder && felt.magnitude / (falls * falls) < Comfort;
                         bool astride = (apart - madeNow).magnitude > Astride;
+                        if (beyond <= 1e-4f && sinceLanded > .5f) catchesRun = 0;
                         calmFor = calm && astride ? calmFor + step : 0;
                         // (After a catch the boot behind follows at once, its weight still going on over the boot put down.)
                         bool follows = FollowsAfter >= 0 && followDue && astride && beyond <= StepsBeyond && sinceLanded >= FollowsAfter;
@@ -616,6 +657,20 @@ namespace WonderGather
                                     Tells?.Invoke($"no step by leg {swings}: the ground where its boot would go is {there:F3}, where it stands {here:F3}");
                                     swings = -1; catching = false; readying = false; beyondFor = 0; calmFor = 0;
                                 }
+                            }
+                            // (Stood half a second, or a boot brought alongside: the catches before it are done with.)
+                            if (swings >= 0 && !catching) catchesRun = 0;
+                            if (swings >= 0 && catching && !prepared && CatchesAtMost > 0 && catchesRun >= CatchesAtMost)
+                            {
+                                Tells?.Invoke($"lost: {catchesRun} catches one after another have not caught it");
+                                return false;
+                            }
+                            if (swings >= 0 && catching && !prepared) catchesRun++;
+                            // (A catch it cannot make is not tried: it is lost.)
+                            if (swings >= 0 && catching && !prepared && StepsAtMost > 0 && Flat(stepTo - sole[swings]).magnitude > StepsAtMost * (thighLong[swings] + shinLong[swings]))
+                            {
+                                Tells?.Invoke($"lost: to catch itself the boot of leg {swings} would have to go {Flat(stepTo - sole[swings]).magnitude * 1000:F0} mm, of a leg of {(thighLong[swings] + shinLong[swings]) * 1000:F0}");
+                                return false;
                             }
                             if (swings >= 0)
                             {
@@ -824,7 +879,15 @@ namespace WonderGather
             for (int j = 0; j < Count; j++) torque[j] = Vector3.zero;
             // (A boot just put down takes up its share as the ground comes to bear it.)
             float takes0 = 1 - share, takes1 = share;
-            if (Steps && Loads > 0 && landed >= 0 && swings < 0 && sinceLanded < LoadsFor)
+            if (Steps && Loads > 0 && LoadsBoth)
+            {
+                float all = Mathf.Max(1e-3f, push.magnitude);
+                float most0 = (Loads * bears[0] / step + LoadsFrom * whole * g) / all, most1 = (Loads * bears[1] / step + LoadsFrom * whole * g) / all;
+                float lacks0 = Mathf.Max(0, takes0 - most0), lacks1 = Mathf.Max(0, takes1 - most1);
+                takes0 -= lacks0; takes1 -= lacks1;
+                takes0 += Mathf.Min(lacks1, Mathf.Max(0, most0 - takes0)); takes1 += Mathf.Min(lacks0, Mathf.Max(0, most1 - takes1));
+            }
+            else if (Steps && Loads > 0 && landed >= 0 && swings < 0 && sinceLanded < LoadsFor)
             {
                 float most = (Loads * bears[landed] / step + LoadsFrom * whole * g) / Mathf.Max(1e-3f, push.magnitude);
                 float lacks = Mathf.Max(0, (landed == 0 ? takes0 : takes1) - most);

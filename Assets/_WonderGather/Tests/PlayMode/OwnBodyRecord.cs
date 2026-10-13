@@ -159,6 +159,70 @@ namespace WonderGather.Tests
                         yield return Wait(3);
                         yield return Shoot("nudged", 3, 5, k => { if (k == 25) own.Nudge(-away, .15f); });
                     }
+                    // What Luis described on October 13: pushed over, lying, and getting up, the whole of it (five pictures a
+                    // second, sixteen seconds, from its side, from further off); and shoved six times in two seconds from
+                    // behind (twelve and a half pictures a second, seven seconds). What state it is in is told with each.
+                    if (!string.IsNullOrEmpty(only) && (Wanted("fallen") || Wanted("shoves")))
+                    {
+                        OwnBody.Told = what => Debug.Log("OWNREC_TOLD " + what);
+                        foreach (string what in new[] { "fallen", "shoves" })
+                        {
+                            if (!Wanted(what)) continue;
+                            look.SetOwn(false);
+                            unit.GetComponent<ProceduralBiped>().SetStance(0, 0);
+                            unit.Motor.Stop();
+                            unit.GetComponent<NavMeshAgent>().Warp(spot);
+                            unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                            unit.GetComponent<ProceduralBiped>().ResetPose();
+                            unit.GetComponent<PhysicalBody>().Refresh();
+                            yield return Wait(2.3f);
+                            look.SetOwn(true);
+                            own = null;
+                            for (float began = Time.time; Time.time - began < 4 && (own == null || !own.Stands);) { unit.TryGetComponent(out own); yield return null; }
+                            Assert.That(own != null && own.Stands, Is.True, name + " did not come to stand by its own joints.");
+                            yield return Wait(2);
+                            // (The camera stays where it is: a pushed miner goes a metre and more.)
+                            {
+                                Vector3 looksAt = spot - away * (what == "fallen" ? .6f : -.5f) + Vector3.up * (.4f * tall);
+                                Vector3 from = looksAt + Quaternion.AngleAxis(-90, Vector3.up) * away * (5.2f * tall) + Vector3.up * (.5f * tall);
+                                camera.transform.SetPositionAndRotation(from, Quaternion.LookRotation(looksAt - from));
+                                camera.fieldOfView = 30;
+                            }
+                            var fall = unit.GetComponent<PhysicalFall>();
+                            int steps = what == "fallen" ? 800 : 350, every = what == "fallen" ? 10 : 4, shot = 0;
+                            for (int k = 0; k <= steps; k++)
+                            {
+                                if (what == "fallen" && k == 10) look.Nudge(-away, 2);
+                                // (-ownShoveEvery 5 -ownShoveTimes 12: so many steps of the physics apart, so many times; -ownShoveTurns 90: each
+                                // one turned so many degrees from the last.)
+                                if (what == "shoves" && k >= 10 && k < 10 + (int)Number("-ownShoveTimes", 6) * (int)Number("-ownShoveEvery", 16) && (k - 10) % (int)Number("-ownShoveEvery", 16) == 0)
+                                    look.Nudge(Quaternion.AngleAxis(Number("-ownShoveTurns", 0) * ((k - 10) / (int)Number("-ownShoveEvery", 16)), Vector3.up) * away, MinerWorkPreview.ShoveSpeed);
+                                if (k % every == 0)
+                                {
+                                    if (fall == null) fall = unit.GetComponent<PhysicalFall>();
+                                    // (The camera goes with it, level: where its hips are over the ground.)
+                                    {
+                                        Vector3 hipsAt = own != null && own.Stands ? own.Part(OwnBody.Hips).transform.position : fall != null && fall.Now != PhysicalFall.State.Up && fall.Part(0) != null ? fall.Part(0).position : unit.transform.position + Vector3.up * (.5f * tall);
+                                        Vector3 looksAt = new Vector3(hipsAt.x, spot.y + .4f * tall, hipsAt.z);
+                                        Vector3 from = looksAt + Quaternion.AngleAxis(-90, Vector3.up) * away * (4.4f * tall) + Vector3.up * (.35f * tall);
+                                        camera.transform.SetPositionAndRotation(from, Quaternion.LookRotation(looksAt - from));
+                                    }
+                                    CaptureTools.Render(camera, Path.Combine(folder, $"{tag}_{what}_{shot:000}"), size, size);
+                                    Debug.Log(string.Format(CultureInfo.InvariantCulture, "OWNREC {0} {1} {2:000} {3:F2} s: {4}", name, what, shot, k * .02f,
+                                        own != null && own.Stands ? $"it stands by its own joints, {own.Stepped} steps" : fall != null && fall.Now != PhysicalFall.State.Up ? "the fall has it: " + fall.Now : "it stands, posed"));
+                                    shot++;
+                                }
+                                yield return new WaitForFixedUpdate();
+                            }
+                            // (It is let get up before the next.)
+                            for (float until = Time.time + 60; Time.time < until && fall != null && fall.Now != PhysicalFall.State.Up;) yield return null;
+                            yield return Wait(1);
+                        }
+                        OwnBody.Told = null;
+                        look.SetOwn(false);
+                        yield return Wait(.6f);
+                        continue;
+                    }
                     // S3b, step 3: pulled gently at its chest from its plain stand (what the panel's "Pull it" gives), twenty-
                     // five pictures a second from a fifth of a second before the pull begins.
                     if (!string.IsNullOrEmpty(only) && Wanted("pulled"))
