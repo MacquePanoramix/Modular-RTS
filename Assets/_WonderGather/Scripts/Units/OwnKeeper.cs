@@ -180,6 +180,13 @@ namespace WonderGather
         // slowly, and it stopped meaning to be higher while its weight was 3 cm under that. From a deep tuck its
         // joints, sprung towards the tuck still, held it 10 cm under: it stood folded over and waited for ever.)
         public static float RisesAt = .3f, RiseEases = .55f, RiseBears = .95f, RiseLeads = .03f, RisenFor = .3f, RisenShort = .07f, GivesUpAfter = 4;
+        // Before it rises it has its weight on its feet: it only keeps itself (which brings its weight back over its
+        // soles, and takes it off its hands if they are on the ground) until its boots have borne RiseOnFeet of its
+        // weight, the push it wants no further than a centimetre outside its soles, for RiseSettles seconds. Not so
+        // within SettlesWithin seconds, it cannot, and goes down.
+        public static float RiseOnFeet = .85f, RiseSettles = .2f, SettlesWithin = 3;
+        private bool settled;
+        private float settledFor, unsettledFor;
         private bool rising;
         private float risesFrom, risesEffort, risenCalm, stoodHigh, risingFor, risesAlong, atEndFor;
         private Quaternion uprightFrom, uprightTo;
@@ -597,7 +604,18 @@ namespace WonderGather
                 float effort = 0;
                 for (int j = Thigh; j < Count; j++) effort = Mathf.Max(effort, asked[j] / Mathf.Max(1e-3f, strength[j]));
                 risesEffort = Mathf.Lerp(risesEffort, effort, Mathf.Clamp01(step / .15f));
-                float pace = RisesAt * height * Mathf.Clamp01((RiseBears - risesEffort) / Mathf.Max(1e-3f, RiseBears - RiseEases));
+                if (!settled)
+                {
+                    settledFor = bears[0] + bears[1] >= RiseOnFeet * whole * g * step && Outside < .01f ? settledFor + step : 0;
+                    unsettledFor += step;
+                    if (settledFor >= RiseSettles) { settled = true; Tells?.Invoke($"its weight is on its feet, {unsettledFor:F2} s after the keeper took it"); }
+                    else if (unsettledFor > SettlesWithin)
+                    {
+                        Tells?.Invoke($"could not get its weight onto its feet in {unsettledFor:F2} s: its boots bear {(bears[0] + bears[1]) / (whole * g * step):F2} of it, the push it wants {Outside * 1000:F0} mm outside its soles");
+                        return false;
+                    }
+                }
+                float pace = settled ? RisesAt * height * Mathf.Clamp01((RiseBears - risesEffort) / Mathf.Max(1e-3f, RiseBears - RiseEases)) : 0;
                 risesAlong = Mathf.Min(1, risesAlong + pace / Mathf.Max(.05f, risesFrom) * step);
                 float up = risesAlong, gone = up * up * up * (10 + up * (6 * up - 15));
                 sinksBy = Mathf.Max(risesFrom * (1 - gone), height - high - RiseLeads);
