@@ -177,6 +177,20 @@ namespace WonderGather
         private Vector3 pull;
         private float pullFrom, pullUntil = -1, pullOver;
 
+        // S3b, step 2: how it stands, kept from when it last became its own from its plain stand: each part's turn
+        // against what it hangs from, its hips' turn from the way they face, how high its weight was and where over
+        // its boots it held it. Made low after a fall (BeginLow), it stands up to that.
+        private bool stoodKnown, stoodNoted = true;
+        private readonly Quaternion[] stoodLocal = new Quaternion[Count], toStood = new Quaternion[Count];
+        private Quaternion stoodHips = Quaternion.identity;
+        private float stoodHeight;
+        private Vector2 stoodOver;
+        // Whether it can be made low and stand up by its own legs (it has stood by its own joints before), and
+        // whether it is doing so now.
+        public bool CanRise => stoodKnown && !Stands && body.Ready && miner.Ready && physical.Ready;
+        public bool Rising => Stands && keeper != null && keeper.Rising;
+        public float Risen => keeper != null ? keeper.Risen : 1;
+
         // Whether it is to stand by its own joints when it can (the panel's switch).
         public bool Wanted { get; set; }
         // Whether its body is its own now.
@@ -315,6 +329,33 @@ namespace WonderGather
         public bool Begin()
         {
             if (Stands || !CanStand) return false;
+            Make(false, true);
+            return true;
+        }
+
+        // Crouched where a fall left it, it becomes its own, and stands up by what its legs give against the ground.
+        public bool BeginLow()
+        {
+            if (!CanRise) return false;
+            Make(true, false);
+            return true;
+        }
+
+        // Risen, it is made afresh as it stands, so that from here it stands as at any other time: its joints sprung
+        // towards how it stands now, not towards the crouch it was made in.
+        private void Remake()
+        {
+            Follows(true);
+            for (int i = 0; i < Count; i++) segments[i].SetPositionAndRotation(parts[i].transform.position, parts[i].transform.rotation);
+            PutAway();
+            if (balance != null) balance.Acts = balanced;
+            Make(false, false);
+        }
+
+        // Its parts are made where the posed body's segments are. (low: crouched, to stand up. plain: from its plain
+        // stand, which is then kept as how it stands.)
+        private void Make(bool low, bool plain)
+        {
             var s = miner.Solved;
             Told?.Invoke($"{name} takes over at {Time.time:F2}: the posed body sunk {body.SinkNow * 1000:F1} mm, bowed {body.BowNow:F1} deg, going {body.VelocityNow.magnitude:F3} m/s, crouched {body.CrouchNow * 1000:F1} mm, its feet set {body.StanceWider * 1000:F0} mm wider and {body.StanceStagger * 1000:F0} mm staggered, its boots at {s.feet[0].position.y:F3} and {s.feet[1].position.y:F3}; its hips {(s.pelvis.position.y - .5f * (s.feet[0].position.y + s.feet[1].position.y)) * 1000:F0} mm over its boots, knees bent {Vector3.Angle(s.thighs[0].up, s.shins[0].up):F0} and {Vector3.Angle(s.thighs[1].up, s.shins[1].up):F0} deg");
             var shape = body.BodyProportions;
@@ -473,7 +514,19 @@ namespace WonderGather
             nudgeFor = 0; giving = 0;
             Stands = true;
             Began++;
-            return true;
+            stoodNoted = !plain;
+            if (plain)
+            {
+                for (int j = 1; j < Count; j++) stoodLocal[j] = rested[j];
+                stoodHips = Quaternion.Inverse(Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized)) * parts[Hips].transform.rotation;
+            }
+            if (low)
+            {
+                for (int j = 1; j < Count; j++) toStood[j] = Quaternion.Inverse(rested[j]) * stoodLocal[j];
+                keeper.RisesTo(stoodHeight, Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized) * stoodHips, stoodOver);
+                // (The posed body under it stands, for when it is given its body back.)
+                body.Bow(0, 400); body.Sink(0); body.ResetPose();
+            }
         }
 
         // Its parts are put away, and nothing else: for whoever takes the body next.
@@ -618,8 +671,15 @@ namespace WonderGather
                 for (int i = 0; i < Count; i++) parts[i].AddForce(masses[i] * nudge);
             }
             if (Time.time < pullUntil) parts[Trunk].AddForceAtPosition(pull * (pullOver > 0 ? Mathf.Clamp01((Time.time - pullFrom) / pullOver) : 1), parts[Trunk].worldCenterOfMass);
+            bool rose = keeper.Rising;
             if (!keeper.Keep(Time.fixedDeltaTime)) GoDown();
-            else Follows();
+            else
+            {
+                Follows();
+                // (How it stands, from its plain stand: kept for when it is made low.)
+                if (!stoodNoted && keeper.Begun) { stoodNoted = true; stoodHeight = keeper.Height; stoodOver = keeper.StandsBy; stoodKnown = true; }
+                if (rose && !keeper.Rising) Remake();
+            }
             if (Told != null && !described && keeper != null) { described = true; Told(name + " is " + keeper.Describe()); }
         }
 
@@ -649,6 +709,14 @@ namespace WonderGather
         private readonly float[] turning = new float[Count];
         private void Lived(float step, bool pushed, Vector3 apart)
         {
+            // (Rising, its joints are asked for how it stands, by as far as it has risen; and nothing else of it.)
+            if (keeper.Rising)
+            {
+                float up = Hump(keeper.Risen);
+                for (int j = 1; j < Count; j++) Aims(j, Quaternion.Slerp(Quaternion.identity, toStood[j], up));
+                keeper.Shift = Vector3.zero; keeper.Roll = Quaternion.identity;
+                return;
+            }
             // (While it steps, and while its boots are astride after a step, it stands square: its weight is not
             // asked to a leg, its hips are not rolled, and its legs are the keeper's.)
             bool steps = keeper.Stepping || keeper.LegsHeld;
