@@ -167,15 +167,21 @@ namespace WonderGather
         public static float LeansBack = 8.3633f, LeansBackAtMost = 22;
         private float sinksBy, sinkWants, leansNow, lastingAsked;
         // ---- Rising (S3b, step 2). Made low (crouched, after a fall), it stands up by what its legs give against the
-        // ground, as it stands by them. How high it means its weight to be goes from where it is to how high it
-        // stood: at RisesAt of that height a second; slower as its legs give more of what they have (at its whole
-        // pace while no joint of a leg gives more than RiseEases of its strength, not at all once one gives
-        // RiseBears); and never more than RiseLeads metres above where its weight really is. Its hips come upright
-        // with it. It has risen when it is as high as it stood and has been at rest for RisenFor seconds. While it
-        // rises it takes no step: pushed over, it goes down again.
-        public static float RisesAt = .3f, RiseEases = .55f, RiseBears = .95f, RiseLeads = .03f, RisenFor = .3f;
+        // ground, as it stands by them. It goes from how it is to how it stands in one movement, begun and ended
+        // gently: how far along that it is goes on at RisesAt of its height a second for a rise as high as this one;
+        // slower as its legs give more of what they have (at its whole pace while no joint of a leg gives more than
+        // RiseEases of its strength, not at all once one gives RiseBears). By how far along it is, its joints are
+        // asked for how it stands (whoever owns it: Risen), its hips come upright, and it means its weight to be
+        // higher: but never more than RiseLeads metres above where its weight really is. It has risen when it is
+        // at the end of that, within RisenShort of how high it stood, and has been at rest for RisenFor seconds;
+        // at the end of it for GivesUpAfter seconds and still not so high, it cannot, and goes down. While it rises
+        // it takes no step: pushed over, it goes down again.
+        // (Until October 14 how high it meant to be went on steadily while what its joints were asked for began
+        // slowly, and it stopped meaning to be higher while its weight was 3 cm under that. From a deep tuck its
+        // joints, sprung towards the tuck still, held it 10 cm under: it stood folded over and waited for ever.)
+        public static float RisesAt = .3f, RiseEases = .55f, RiseBears = .95f, RiseLeads = .03f, RisenFor = .3f, RisenShort = .07f, GivesUpAfter = 4;
         private bool rising;
-        private float risesFrom, risesEffort, risenCalm, stoodHigh, risingFor;
+        private float risesFrom, risesEffort, risenCalm, stoodHigh, risingFor, risesAlong, atEndFor;
         private Quaternion uprightFrom, uprightTo;
         private Vector2 stoodOver;
         public bool Rising => rising;
@@ -191,7 +197,7 @@ namespace WonderGather
             }
         }
         // How far it has risen (0: as low as it began; 1: as high as it stood).
-        public float Risen => rising ? 1 - sinksBy / Mathf.Max(1e-4f, risesFrom) : 1;
+        public float Risen => !rising ? 1 : risesAlong;
         // How high its weight stood when it began, and where over its boots it held it: for whoever makes it low
         // another time. (Known once it has kept itself for a step.)
         public bool Begun => begun;
@@ -592,17 +598,24 @@ namespace WonderGather
                 for (int j = Thigh; j < Count; j++) effort = Mathf.Max(effort, asked[j] / Mathf.Max(1e-3f, strength[j]));
                 risesEffort = Mathf.Lerp(risesEffort, effort, Mathf.Clamp01(step / .15f));
                 float pace = RisesAt * height * Mathf.Clamp01((RiseBears - risesEffort) / Mathf.Max(1e-3f, RiseBears - RiseEases));
-                if (height - sinksBy - high > RiseLeads) pace = 0;
-                sinksBy = Mathf.MoveTowards(sinksBy, 0, pace * step);
+                risesAlong = Mathf.Min(1, risesAlong + pace / Mathf.Max(.05f, risesFrom) * step);
+                float up = risesAlong, gone = up * up * up * (10 + up * (6 * up - 15));
+                sinksBy = Mathf.Max(risesFrom * (1 - gone), height - high - RiseLeads);
                 sinkWants = sinksBy;
-                float up = Mathf.Clamp01(Risen);
-                upright = Quaternion.Slerp(uprightFrom, uprightTo, up * up * up * (10 + up * (6 * up - 15)));
+                upright = Quaternion.Slerp(uprightFrom, uprightTo, gone);
                 risingFor += step;
-                risenCalm = sinksBy <= 0 && goes.magnitude < CalmUnder ? risenCalm + step : 0;
+                bool high0 = height - high < RisenShort * height;
+                risenCalm = risesAlong >= 1 && high0 && goes.magnitude < CalmUnder ? risenCalm + step : 0;
+                atEndFor = risesAlong >= 1 && !high0 ? atEndFor + step : 0;
                 if (risenCalm >= RisenFor)
                 {
-                    rising = false;
+                    rising = false; sinksBy = sinkWants = 0;
                     Tells?.Invoke($"risen, {risingFor:F2} s after it began: its weight {high:F3} m up");
+                }
+                else if (atEndFor >= GivesUpAfter)
+                {
+                    Tells?.Invoke($"could not rise: its weight {high:F3} m up, of {height:F3} standing, {risingFor:F2} s after it began");
+                    return false;
                 }
             }
             else

@@ -39,7 +39,7 @@ namespace WonderGather.Tests
             public List<Lies> starts = new List<Lies>();
             // What came of a try.
             public bool done, up, onFeet;
-            public float feetAt, upAt, peak, stoodFor, hipsHigh, ahead, soles, upright, bears;
+            public float feetAt, upAt, peak, stoodFor, hipsHigh, ahead, soles, upright, bears, risen, feetFor;
             public string ended;
         }
 
@@ -161,6 +161,7 @@ namespace WonderGather.Tests
             string shots = CaptureTools.Argument("-riseShots");
             int every = (int)Number("-riseEvery", 10), size = (int)Number("-riseSize", 360);
             string search = CaptureTools.Argument("-riseSearch");
+            bool ticks = CaptureTools.Argument("-riseTick") == "1";
             Directory.CreateDirectory(folder);
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
             CaptureTools.AsItWas();
@@ -303,7 +304,7 @@ namespace WonderGather.Tests
                         Lay(body.miner, body.starts[j]);
                         body.own.Wanted = true;
                         body.done = !body.own.BeginDown();
-                        body.up = body.onFeet = false; body.feetAt = body.upAt = -1; body.peak = body.stoodFor = 0; body.ended = body.done ? "could not be made" : "";
+                        body.up = body.onFeet = false; body.feetAt = body.upAt = -1; body.peak = body.stoodFor = body.risen = body.feetFor = 0; body.ended = body.done ? "could not be made" : "";
                     }
                     Physics.SyncTransforms();
                     int shot = 0;
@@ -325,6 +326,12 @@ namespace WonderGather.Tests
                                 body.ended = riser.WayNow + " " + riser.StageNow;
                             }
                             else if (!body.onFeet) { body.onFeet = true; body.feetAt = step * dt; }
+                            if (body.onFeet)
+                            {
+                                body.feetFor += dt; body.risen = Mathf.Max(body.risen, own.Risen);
+                                // (-riseTick 1: what the keeper reckons, every tenth step of the physics.)
+                                if (ticks && step % 10 == 0) Debug.Log(string.Format(Plain, "RISE_TICK {0} {1:0.00} s risen {2:0.00} | {3}", body.name, step * dt, own.Risen, own.Tick(Flat(own.Part(OwnBody.Hips).transform.forward).normalized, new Vector3(own.Part(OwnBody.Foot).transform.position.x, body.starts[j].at[0].y - .2f, own.Part(OwnBody.Foot).transform.position.z))));
+                            }
                             if (body.onFeet && !own.Rising)
                             {
                                 if (!body.up) { body.up = true; body.upAt = step * dt; }
@@ -359,8 +366,8 @@ namespace WonderGather.Tests
                     }
                 }
 
-                string Told(Body body, int j) => string.Format(Plain, "RISE {0} from {1}: {2}; on its feet at {3:0.00} s, up at {4:0.00} s; fastest {5:0.0} m/s; last, getting up: hips {6:0.00} high, weight {7:0.00} ahead of its soles, soles {8:0.00} flat, trunk {9:0.00} upright, boots bearing {10:0.00}",
-                    body.name, from[j], body.ended, body.feetAt, body.upAt, body.peak, body.hipsHigh, body.ahead, body.soles, body.upright, body.bears);
+                string Told(Body body, int j) => string.Format(Plain, "RISE {0} from {1}: {2}; on its feet at {3:0.00} s, up at {4:0.00} s; fastest {5:0.0} m/s; last, getting up: hips {6:0.00} high, weight {7:0.00} ahead of its soles, soles {8:0.00} flat, trunk {9:0.00} upright, boots bearing {10:0.00}; on its feet {11:0.00} s, risen {12:0.00}",
+                    body.name, from[j], body.ended, body.feetAt, body.upAt, body.peak, body.hipsHigh, body.ahead, body.soles, body.upright, body.bears, body.feetFor, body.risen);
 
                 if (string.IsNullOrEmpty(search))
                 {
@@ -368,7 +375,7 @@ namespace WonderGather.Tests
                     {
                         Body pictured = null;
                         foreach (var body in bodies) if (!string.IsNullOrEmpty(shots) && string.Equals(shots, body.name, StringComparison.OrdinalIgnoreCase)) pictured = body;
-                        yield return Try(j, pictured, pictured != null ? pictured.name.ToLowerInvariant() + "_" + from[j] : "");
+                        yield return Try(j, pictured, pictured != null ? pictured.name.ToLowerInvariant() + "_" + from[j] + j : "");
                         foreach (var body in bodies) Debug.Log(Told(body, j));
                         yield return null;
                     }
@@ -432,11 +439,15 @@ namespace WonderGather.Tests
                     // How well a body was left.
                     float Worth(Body body)
                     {
-                        if (body.ended == "stands") return 6 - .5f * Mathf.Max(0, body.peak - 1.5f) - hurry * body.upAt;
+                        if (body.ended == "stands") return 12 - .5f * Mathf.Max(0, body.peak - 1.5f) - hurry * body.upAt;
                         float worth = 0;
-                        if (body.onFeet) worth += 3;
+                        // (On its feet, and the keeper has it: how far it rose, and how long it kept its feet.)
+                        if (body.onFeet) worth += 3 + 3 * Mathf.Clamp01(body.risen) + Mathf.Clamp01(body.feetFor / 3);
                         // (Towards being on its feet: its soles flat, its boots bearing it, its weight over them, its hips up.)
-                        worth += Mathf.Clamp01(body.soles) + Mathf.Clamp01(body.bears) + Mathf.Exp(-Mathf.Pow(body.ahead / .15f, 2)) + Mathf.Clamp(body.hipsHigh, 0, .6f);
+                        // (Its weight's way to over its soles counts all the way: asked for only when it is nearly there, a
+                        // body with its soles flat, its hips up and its hands and head on the ground a leg's length ahead
+                        // was as good as any.)
+                        worth += Mathf.Clamp01(body.soles) + 2 * Mathf.Clamp01(body.bears) + 2 * (1 - Mathf.Clamp01(Mathf.Abs(body.ahead) / .7f)) + Mathf.Clamp(body.hipsHigh, 0, .6f) + 2 * Mathf.Clamp01((body.upright + .4f) / 1.2f);
                         worth -= .5f * Mathf.Max(0, body.peak - 1.5f);
                         return worth;
                     }
