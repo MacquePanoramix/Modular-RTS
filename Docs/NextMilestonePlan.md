@@ -847,7 +847,7 @@ only; nothing of step 3 is in the game Luis has.
         | | With the rule | Without it |
         |---|---|---|
         | Small | steps of 8 and 12 cm; its head goes 14 cm (five runs of five) | steps of 22 and 22 cm; 27 to 34 cm |
-        | Round | steps of 11 and 13 to 17 cm; 21 to 23 cm (four runs) | 24 and 29 cm; 30 to 38 cm |
+        | Round | steps of 11 and 13 to 17 cm; 21 to 23 cm in four runs, and 38 cm in a fifth, where it had to catch itself after them | 24 and 29 cm; 30 to 38 cm |
         | Long, four runs each | **3 of 4 stand, in five to seven steps; 43 to 45 cm** | **4 of 4, in two steps; 31 to 34 cm** |
 
         Recording them for the judges showed Long, before any judge
