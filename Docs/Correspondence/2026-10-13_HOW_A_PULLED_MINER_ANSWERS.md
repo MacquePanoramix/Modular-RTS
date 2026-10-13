@@ -69,6 +69,17 @@ Written by me; Luis has not seen the build.
     looked at for that.
   - Its tiredness is not in it: a tired miner steps as a fresh one.
 
+## Later the same day (verbatim)
+
+> Also I need to turn off my computer now. Please save your progress and we can continue once I can turn it on again.
+
+Nothing was running. The work in hand (a second try at a step a
+miner has time for, switched off) was committed and pushed on the
+work branch, and where to take it up was written into
+[the plan](../NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun)
+("A second try, later that evening"). The two builds are as they
+were.
+
 ## What Luis did not say
 
 - That the step is accepted: "I still need to try and judge the last

@@ -811,6 +811,29 @@ only; nothing of step 3 is in the game Luis has.
         try (lifted when the boot bears a third, not a tenth; or the
         catch itself with its length reckoned). And once more the
         bench said yes where the meadow said no.
+      - **A second try, later that evening: the getting ready and the
+        step overlap** (the boot is lifted while it still bears 0.4
+        of its weight). Still off, on the work branch only (eb8f594).
+        In the game, on the meadow, with it on:
+
+        | Pulled with | Small | Long | Round |
+        |---|---|---|---|
+        | 0.06 | leans; no step (its head goes 45 mm) | a step of 9.5 cm, and the other boot brought up | leans; no step (25 mm) |
+        | 0.08 | **a step of 8 cm for 22, then one of 12; its head goes 14 cm for 30** (four runs of four) | **goes down, two runs of two** (it stands with the rule off) | steps of 11 and 17 cm (two runs) |
+        | 0.10 | stands, 4 steps for 2 | stands, 7 steps | stands, 5 steps |
+        | 0.12 | goes down | goes down | goes down |
+
+        **It is what Luis asked for when the step is finished in
+        time, and worse than the catch alone when it is not.** Long
+        (and all three at 0.10) run out of time getting ready, catch
+        themselves from there with their weight half on one leg, and
+        need more steps or fall. **Where to take it up:** (1) out of
+        time, the boot it was getting ready goes at once, as that
+        step, in place of the getting ready being dropped; (2) how
+        long it looks ahead going with the body (Long needs longer);
+        (3) then shoves, standing at ease, the bench and the suite
+        with it on, none of which has been run; (4) pictures and
+        fresh judges.
       - **Seen on the way:** with the tests beginning from the plain
         stand, Small under the gentle pull went down in 1 run of 7
         (it went on stepping after its second step, and fell). Long

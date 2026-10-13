@@ -20,7 +20,12 @@
   asked for what two shared, its boot tips and it falls. The getting
   ready and the step have to overlap
   ([the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun),
-  "Begun the same evening"). On the work branch only.
+  "Begun the same evening"). On the work branch only. **A second try,
+  with the two overlapping, does it for Small and Round** (pulled
+  gently in the game, Small's first step is 8 cm for 22 and it moves
+  14 cm in all for 30) **and fells Long,** which runs out of time
+  getting ready. Off; saved there on October 13 when Luis's machine
+  had to go off; where to take it up is in the plan.
 - **Two builds, the afternoon of October 13.**
   `Builds/WindowsOrdinaryPlace` is the morning's, left as it was for
   Luis to judge. `Builds/WindowsOrdinaryPlace_Oct13b` steps exactly as
