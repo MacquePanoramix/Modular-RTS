@@ -834,6 +834,47 @@ only; nothing of step 3 is in the game Luis has.
         (3) then shoves, standing at ease, the bench and the suite
         with it on, none of which has been run; (4) pictures and
         fresh judges.
+      - **That night (Luis: "Okay I turned my laptop back on. You can
+        proceed now again."): right for Small and Round, wrong for
+        Long, and off again** (the work branch's 64ae7b6). Three things
+        were added: out of time, the boot it was getting ready goes at
+        once; the step is longer the further its need already is; and
+        how far ahead it looks is counted in the body's own falling
+        time. With them it was switched on, and the standing body's
+        tests passed (11 of 11; at ease no step; shoves the same).
+        In the game, pulled with 0.08 of its weight:
+
+        | | With the rule | Without it |
+        |---|---|---|
+        | Small | steps of 8 and 12 cm; its head goes 14 cm (five runs of five) | steps of 22 and 22 cm; 27 to 34 cm |
+        | Round | steps of 11 and 13 to 17 cm; 21 to 23 cm (four runs) | 24 and 29 cm; 30 to 38 cm |
+        | Long, four runs each | **3 of 4 stand, in five to seven steps; 43 to 45 cm** | **4 of 4, in two steps; 31 to 34 cm** |
+
+        Recording them for the judges showed Long, before any judge
+        saw it. **For Long the gentle pull is already more than its
+        feet can lean against** (it is pulled higher up, and its soles
+        are shorter for its height), so it is always out of time
+        getting ready, and half ready and out of time it catches
+        itself worse than from standing square. (Small and Round are
+        in the same case under a tenth of their weight: 7 of 9 stand
+        with the rule and 7 of 9 without, in more steps with it.)
+        Tried for it and no good: its boot going where a catch would
+        once it is out of time (Long 0 of 4); beginning only when it
+        reckons it has time enough (what it reckons does not tell).
+        The recording also showed Small, pulled to its side, lifting a
+        boot and putting it down a few centimetres inward: mended (no
+        step is begun when the boot already stands about where its
+        weight is going; and such a step is no shorter than half its
+        boot).
+      - **Where to take it up.** The rule must not make any of the
+        three worse than the catch alone. What Long shows is that
+        getting ready costs something when the time runs out: so (1)
+        get ready in a way that costs nothing if it is cut short (the
+        weight shifted less far, or only as the boot is lifted); or (2)
+        know sooner that there will be no time (from how far the pull
+        is beyond what its soles can lean against, not from how fast
+        it is going there). Then the bench, the suite, pictures and
+        fresh judges, none of which has been run with the rule on.
       - **Seen on the way:** with the tests beginning from the plain
         stand, Small under the gentle pull went down in 1 run of 7
         (it went on stepping after its second step, and fell). Long

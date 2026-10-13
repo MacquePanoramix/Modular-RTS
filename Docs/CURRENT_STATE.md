@@ -24,8 +24,12 @@
   with the two overlapping, does it for Small and Round** (pulled
   gently in the game, Small's first step is 8 cm for 22 and it moves
   14 cm in all for 30) **and fells Long,** which runs out of time
-  getting ready. Off; saved there on October 13 when Luis's machine
-  had to go off; where to take it up is in the plan.
+  getting ready. **That night it was made to stand for all three and
+  switched on, and then off again:** Long, alone, stood 3 runs of 4
+  in five to seven steps with it, and 4 of 4 in two steps without.
+  It is right for Small and Round and wrong for Long, and stays off
+  (on the work branch) until it is right for all three; where to
+  take it up is in the plan. **Both builds are as they were.**
 - **Two builds, the afternoon of October 13.**
   `Builds/WindowsOrdinaryPlace` is the morning's, left as it was for
   Luis to judge. `Builds/WindowsOrdinaryPlace_Oct13b` steps exactly as

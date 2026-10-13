@@ -3300,6 +3300,17 @@ verdict: Luis has not seen the step.**
   all three go down (one run). With it off again: the shove test 12 of
   12 with the same steps; the gentle pull, four runs: Long and Round
   stood all four, Small three.
+- **The same, that night** (the work branch's 5d530fa with the rule
+  on, 64ae7b6 with it off again; not in either build). With it on:
+  `OwnBodyTests` 11 of 11 (one run: at ease no step; it came to it
+  three times in the class, in the three pulls); shoved at 0.5 m/s, 12
+  of 12 with the same steps. Pulled with 0.08: Small's steps 8 and 12
+  cm for 22 and 22, five runs of five standing; Round's 11 and 13 to
+  17, four of four; Long alone, four runs each, 3 of 4 standing in
+  five to seven steps with it and 4 of 4 in two without. Pulled with
+  0.10, three runs each: 7 of 9 stand with it, 7 of 9 without. With
+  0.12, one run: none. Not run with it on: the bench with these last
+  changes, the whole suite, the suite as played.
 - **A correction.** The work branch's commit 723eec9 says
   "OwnBodyTests: 8 of 8". It was 7 of 8
   (`StandingAMinuteItIsAliveAndDoesNotWobble`: Long and Round, on one

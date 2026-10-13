@@ -80,6 +80,13 @@ work branch, and where to take it up was written into
 ("A second try, later that evening"). The two builds are as they
 were.
 
+That night, back again:
+
+> Okay I turned my laptop back on. You can proceed now again.
+
+Taken up from the plan's "Where to take it up" under that second
+try. It says nothing of the step, which Luis has still to judge.
+
 ## What Luis did not say
 
 - That the step is accepted: "I still need to try and judge the last
