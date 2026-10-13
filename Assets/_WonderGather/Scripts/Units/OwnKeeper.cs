@@ -179,6 +179,17 @@ namespace WonderGather
         private Quaternion uprightFrom, uprightTo;
         private Vector2 stoodOver;
         public bool Rising => rising;
+        // Every joint sprung again as it stands (whoever got it up had them stiffer).
+        public void Soften()
+        {
+            for (int j = 1; j < Count; j++)
+            {
+                var drive = parts[j].xDrive; drive.stiffness = stoodSpring[j]; drive.damping = stoodDamper[j]; drive.forceLimit = strength[j]; parts[j].xDrive = drive;
+                if (hinge[j]) continue;
+                drive = parts[j].yDrive; drive.stiffness = stoodSpring[j]; drive.damping = stoodDamper[j]; drive.forceLimit = strength[j]; parts[j].yDrive = drive;
+                drive = parts[j].zDrive; drive.stiffness = stoodSpring[j]; drive.damping = stoodDamper[j]; drive.forceLimit = strength[j]; parts[j].zDrive = drive;
+            }
+        }
         // How far it has risen (0: as low as it began; 1: as high as it stood).
         public float Risen => rising ? 1 - sinksBy / Mathf.Max(1e-4f, risesFrom) : 1;
         // How high its weight stood when it began, and where over its boots it held it: for whoever makes it low

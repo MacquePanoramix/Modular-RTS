@@ -259,6 +259,13 @@ namespace WonderGather
         public State Now { get; private set; }
         public float Since { get; private set; }
         public Rigidbody Part(int index) => parts[index];
+        // Where a boot is, and its toe, while it is let go (they go with the shin).
+        public void BootNow(int i, out Vector3 at, out Quaternion turned, out Vector3 toeIs, out Quaternion toeTurned)
+        {
+            var shin = parts[Shin + i].transform;
+            at = shin.TransformPoint(footAt[i]); turned = shin.rotation * footTurn[i];
+            toeIs = shin.TransformPoint(toeAt[i]); toeTurned = shin.rotation * toeTurn[i];
+        }
         // Where its hips are, and its head, while it is let go.
         public Vector3 HipsAt => parts[Hips] != null ? parts[Hips].position : segments[Hips] != null ? segments[Hips].position : transform.position;
         public Vector3 HeadAt => parts[Head] != null ? parts[Head].position : segments[Head] != null ? segments[Head].position : transform.position;
