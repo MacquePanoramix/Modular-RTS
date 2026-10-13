@@ -190,27 +190,32 @@ namespace WonderGather
         public static float Astride = 0.1045f, CalmUnder = 0.0901f, ClosesAfter = 0.8898f, LiftsUnder = .12f, LiftsOver = .6f, ReadiesAtMost = 1, FollowsAfter = .1f, ClosesShort = .8f;
         // A step it has time for. A push that lasts moves the place where the ground would have to push it towards
         // the edge of what its soles can give. From how far that still is, the way it is pushed, and how fast it goes
-        // there, it reckons how long it has. Under ReadiesAhead seconds (for three steps of the physics), it gets
-        // ready as it does to bring a boot alongside: its weight onto the leg it will stand on, leaning against the
-        // push still, until the boot to be lifted bears next to nothing. That boot then goes where its weight will
-        // be going when it lands (from how fast it falls and how long the swing takes), and ReadyFurther metres
-        // beyond: a short step for a small need, a longer one for a greater. Out of time meanwhile, it catches
-        // itself as it does when shoved. So it has one step, got ready for by as much as there is time, and not one
+        // there, it reckons how long it has. Under ReadiesAhead times the time it falls in (the root of its height
+        // over gravity: 1.8 of those is half a second for Small, 0.57 s for Long), for three steps of the physics, it gets
+        // ready: its weight goes towards the leg it will stand on, leaning against the push still, until the boot to
+        // be lifted bears no more than ReadyUnder of its weight. That boot then goes where its weight will be going
+        // when it lands (from how fast it falls and how long the swing takes), further by ReadyMore times what its
+        // need already lies beyond the sole it stands on, and ReadyFurther metres: a short step for a small need, a
+        // longer one for a greater. Out of time meanwhile, that boot goes at once. Shoved, it has no time at all,
+        // and catches itself as before. So it has one step, got ready for by as much as there is time, and not one
         // answer below a line and another above it (Luis, October 13). ReadiesAhead 0: only the catch, as it was.
+        // How it came to this, on October 13. First it waited until the boot to be lifted bore next to nothing: on
+        // the bench (a level floor) that did what was meant, and in the game, on the meadow, it was worse than the
+        // catch alone: on one leg against the pull, that one ankle was asked for what two shared (0.97 of what it
+        // has), its boot tipped over its toe (28 degrees) and was thrown. So the boot is lifted while it still bears
+        // ReadyUnder of its weight (for three steps of the physics): the getting ready and the step overlap, as a
+        // person's do. Out of time before that, the boot it was getting ready goes at once, as that step (dropped
+        // for a catch begun afresh, Long went down). And its boot goes ReadyMore times as far again as its need
+        // already lies beyond the sole it stands on: a short step when it was ready in time, one as long as a catch
+        // when it was not (reckoned from the fall alone it was 6 cm shorter than a catch for the same need, and
+        // under a tenth of their weight Small and Long went down).
+        // In the game, on the meadow, life in the miners, pulled at the chest for 2.5 s: with 0.06 of its weight
+        // Small and Round lean and take no step, Long takes one of 9.5 cm; with 0.08 Small's steps are 8 and 12 cm
+        // for 22 and 22 and its head goes 14 cm for 30, Round's 11 and 13 cm, and Long, out of time, 25 and 28; with
+        // 0.10, 7 of 9 stand with it and 7 of 9 without, in more steps with it. Shoved, it never comes to it.
         // (Getting ready for it, where it holds its weight goes over ReadiesQuick times as fast as when it only
         // leans.)
-        // BEGUN ON OCTOBER 13, AND OFF. On the bench (a level floor) it does what it is meant to: pulled with 0.08
-        // of its weight, Small's weight goes onto one leg over 0.6 s and its first step is 13 cm for 22; of 24
-        // bodies, pulls coming on over 1.2 s, 22 stand 0.14 (19 without it) and 8 stand 0.17 (5). In the game, on
-        // the meadow, it is worse than the catch alone: Small goes down under 0.08, which it stands without it.
-        // Told step by step: once its weight is on one leg, that one ankle is asked for all that two shared (0.97
-        // of what it has), its boot tips over its toe (28 degrees) and is thrown. And under 0.10 and more it runs
-        // out of time getting ready. A person pulled does not wait on one leg either. Not to be switched on as it
-        // is.
-        // (October 13, later: the boot of such a step is lifted while it still bears ReadyUnder of its weight, for
-        // three steps of the physics: the getting ready and the step overlap. In the game, pulled with 0.08, with
-        // 0.35 and with 0.5: Small's first step 8 cm, its second 12, its head going 13 cm in all for 30.)
-        public static float ReadiesAhead = 0, ReadyFurther = .02f, ReadiesQuick = 3, ReadyUnder = .4f;
+        public static float ReadiesAhead = 1.8f, ReadyFurther = .02f, ReadiesQuick = 3, ReadyUnder = .4f, ReadyMore = 1.6f;
 
         private readonly float[] lighter;
         private readonly Quaternion[] rested = new Quaternion[Count], madeTurned = new Quaternion[Count], madeLay = new Quaternion[Count];
@@ -479,6 +484,7 @@ namespace WonderGather
             // alongside (that one is got ready: its weight goes onto the leg it will stand on first).
             int single = -1, stance = -1;
             Vector3 needsNow = going;
+            bool outOfTime = false;
             // (How low it means to be: in a catching step, by what its leg needs; standing, as it stands.)
             if (swings < 0) sinkWants = 0;
             if (sinksBy != sinkWants) sinksBy = Mathf.MoveTowards(sinksBy, sinkWants, (sinkWants > sinksBy ? SinksDown : SinksAtMost * height / Mathf.Max(.05f, SinksBack)) * step);
@@ -520,12 +526,20 @@ namespace WonderGather
                     }
                     else needsRate = 0;
                     needsBefore = needs; hadNeeds = true;
-                    hasFor = lastingAsked > Comfort && has < ReadiesAhead ? hasFor + 1 : 0;
+                    // (Counted in the time this body falls in: a taller one needs longer to get its weight over.)
+                    hasFor = lastingAsked > Comfort && has * falls < ReadiesAhead ? hasFor + 1 : 0;
                     Vector3 kept = Borne(new Vector3(needs.x, ground, needs.z), -1, -1, 0, out float bearing);
                     float beyond = Flat(needs - kept).magnitude;
                     beyondFor = beyond > StepsBeyond ? beyondFor + step : 0;
+                    // (Out of time while it gets ready for a step it had time for: the boot it was getting ready goes at
+                    // once, as that step.)
+                    if (readying && prepared && beyondFor >= StepsAfter)
+                    {
+                        Tells?.Invoke($"out of time getting leg {swings} ready: its boot goes at once; it bears {bears[0]:F2} and {bears[1]:F2}");
+                        outOfTime = true; beyondFor = 0;
+                    }
                     // (Pushed on while it gets ready for a boot to come alongside: it leaves that, and catches itself.)
-                    if (readying && beyondFor >= StepsAfter)
+                    else if (readying && beyondFor >= StepsAfter)
                     {
                         Tells?.Invoke($"pushed on while leg {swings} got ready: it leaves that");
                         swings = -1; readying = false; prepared = false; Stepped--;
@@ -609,7 +623,7 @@ namespace WonderGather
                         // have for three steps of the physics.)
                         float bearsOf = bears[swings] / (whole * g * step);
                         lightFor = (prepared ? bearsOf < ReadyUnder : bearsOf < LiftsUnder && bears[stance] > LiftsOver * whole * g * step) ? lightFor + 1 : 0;
-                        if (lightFor >= 3)
+                        if (lightFor >= 3 || outOfTime)
                         {
                             readying = false;
                             Vector3 lead = Flat(sole[stance]), line = Flat(stepTo - sole[swings]);
@@ -622,7 +636,7 @@ namespace WonderGather
                                 Vector3 onSole = Flat(Borne(new Vector3(needsNow.x, ground, needsNow.z), stance, stance, 1, out _));
                                 Vector3 beyondSole = Flat(needsNow) - onSole;
                                 Vector3 wayNow = beyondSole.sqrMagnitude > 1e-8f ? beyondSole.normalized : line.normalized;
-                                stepTo = onSole + beyondSole * Mathf.Exp(falls * swingFor) + wayNow * ReadyFurther;
+                                stepTo = onSole + beyondSole * (Mathf.Exp(falls * swingFor) + ReadyMore) + wayNow * ReadyFurther;
                                 // (Its boots are not put across each other, nor further than the leg reaches.)
                                 Vector3 own = swings == 1 ? acrossNow : -acrossNow;
                                 float clear = Vector3.Dot(stepTo - lead, own), least = .6f * Mathf.Abs(madeApart.x);
