@@ -986,6 +986,42 @@ only; nothing of step 3 is in the game Luis has.
     forwards, backwards and to a side, and on the meadow's slope, not
     only on the path.
 
+- **October 14: the getting up, begun** (the work branch and the
+  bench only; nothing of it is in the game or a build;
+  [what is built, with pictures](Design/TheBodysOwn.md#step-2-the-getting-up-the-bodys-own-begun-october-14-not-in-the-game)).
+  - **Recorded first, as it was** (all three miners, pushed over three
+    ways): it lies with nothing moving for 0.9 to 3.1 s, rolls over in
+    1.8 to 2.3 s, sits folded for 2.6 to 3.1 s, and the posed body
+    has it on its feet in half a second. Long is not on its knees
+    when that happens: it is curled on its side.
+  - **Its last part first: a miner's own legs stand it up.** The
+    keeper can raise a crouched miner. Posed crouched with its weight
+    over its soles, bowed up to 45 degrees: 18 of 18 stood up, in 0.9
+    to 2.0 s, their legs giving a third to a half of what they have.
+    Bowed 65: 5 of 9. Deeper or further bowed: hardly any.
+  - **The crouch the posed body takes a fallen miner over in is not
+    one:** bowed 80 degrees, its weight 10 to 19 cm ahead of its
+    soles. So the way from its knees to a crouch its weight is over
+    its feet in had to be built, and that is the part five searches
+    failed at on October 9.
+  - **It is built on the body that stands** (thirteen parts, with
+    ankles), made as the miner lies: one body from lying to standing.
+    A way of poses (turns from how it stands, each joint with no more
+    than it has) brings it onto its feet; the keeper takes it the
+    moment its boots bear it. The poses are searched on a bench, each
+    miner its own.
+  - **Small, from its front: seven tries of eight stand,** about
+    11.5 s after they begin, with nothing posed anywhere. Too long,
+    one miner, one way of lying.
+  - **The plan's third part is changed in one thing:** I had written
+    that it would rise "facing as it faced". It rises facing as its
+    feet are when it comes onto them. What turned it a quarter round
+    in the build was the posed body taking over, not the miner.
+  - **Still to do, in this order:** Long's and Round's own ways; from
+    its back and its sides; the lying (its strength back by degrees,
+    its breath, the first stir, no clock); a shorter and plainer
+    middle; into the game; then judges, and Luis.
+
 **All three were answered the same day:** Luis approved what was
 suggested for each ([Luis, October 10](Correspondence/2026-10-10_STEP_ONE_THREE_ANSWERS.md)).
 

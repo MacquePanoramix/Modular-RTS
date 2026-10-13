@@ -1350,3 +1350,185 @@ this movement.
 In [the plan](../NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun)
 ("October 13", "Where it stands") and in
 [Validation](../Validation.md#s3b-step-3--a-step-in-the-game-october-13).
+
+## Step 2: the getting up, the body's own (begun October 14; not in the game)
+
+*Written while it is being built. What is said here is of the work
+branch and the bench, not of the game or a build. Luis has seen none
+of it.*
+
+### In short
+
+Luis, October 13, of the getting up in the build
+([the message](../Correspondence/2026-10-13_THE_STEP_TRIED.md)): "the
+character just convulsing kinda not moving on the ground until the
+timer to get up reaches and then it suddenly gets up with a magical not
+physical animation at all... I want the character to get up naturally
+with their own limbs and strength in a natural manner and the character
+shouldn't look dead and then start moving to get up after a timer."
+
+So far: **one miner (Small), from lying on its front, gets up with
+nothing posed anywhere**: it draws its knees under, comes onto its feet
+in a low tuck, and its legs raise it; it uncurls and stands. On the
+bench, the same start tried eight times: **seven stand**, about 11.5 s
+after they began. That is too long, it is one miner from one way of
+lying, and it is not in the game. It is the first time any miner has
+gone from lying to standing by its joints alone.
+
+![Small getting up from its front by its own joints](../Images/GettingUp_2026-10-14/Small_FromItsFront_FirstWholeGetUp.jpg)
+
+*Small on the bench, laid on its front (a picture every three tenths of
+a second). Top row: its knees come under it. Second row: on its knees
+and hands, it works its feet under it. Third row: on its feet in a tuck,
+its head down; from 8.3 s the keeper has it. Bottom row: it uncurls and
+stands. The second row is the part that is too long, and reads as
+fussing.*
+
+### What was there (recorded October 13, before anything was changed)
+
+The three miners, pushed over at 2 m/s backwards, forwards and
+sideways; a picture every fifth of a second; what the fall was doing
+told at every change.
+
+| | Small | Long | Round |
+|---|---|---|---|
+| Lies, nothing moving | 1.3 to 1.6 s | 0.9 to 3.1 s | 1.0 to 2.0 s |
+| Onto its front (three poses) | 1.8 to 1.9 s | 1.8 to 2.3 s | 1.8 s (not needed when it fell on its front) |
+| Knees under (three poses) | 2.6 to 2.7 s | 2.6 to 2.8 s | 2.9 to 3.1 s |
+| The posed body takes over | 0.52 s | 0.52 s | 0.52 s |
+| Stands, posed | about half a second later | the same | the same |
+| From the push to standing | 7.9 to 8.9 s | 9.2 to 11.0 s | 7.8 to 9.0 s |
+
+![As it was: Small pushed over backwards](../Images/GettingUp_2026-10-14/AsItWas_Small_PushedOverBackwards.jpg)
+
+*As it was (Small): it lies, kicks into a ball and rolls over in under
+two seconds, sits folded for two and a half with almost nothing
+changing, and is on its feet half a second later.*
+
+![As it was: on their knees](../Images/GettingUp_2026-10-14/AsItWas_OnTheirKnees.jpg)
+
+*As it was, the moment before the posed body took over: Small (left)
+and Round (right) on their knees with their heads on the ground; Long
+(middle) not on its knees at all, but curled on its side. What the posed
+body did from there, in half a second, was put each on its feet.*
+
+Luis's words fit it: nothing moves, then it moves fast, then it is up
+with nothing having pushed it.
+
+### What stands a miner up: the keeper, rising
+
+The keeper that keeps a miner standing (step 1) can now raise one.
+Made crouched, it goes from how it is to how it stands in one movement,
+begun and ended gently:
+
+- how far along that movement it is goes on at its legs' pace: slower
+  as they give more of what they have, and not at all once a joint of a
+  leg gives nearly all of it;
+- by how far along it is, its joints are asked for how it stands, its
+  hips come upright, and it means its weight to be higher (never more
+  than 3 cm above where its weight really is);
+- all the while it keeps itself as it does standing: where the ground
+  pushes its soles, by what its hips, knees and ankles give;
+- before it begins, it has its weight on its feet: it only keeps itself
+  until its boots have borne 0.85 of its weight for a fifth of a second
+  (which also takes its weight off its hands, if they are on the
+  ground);
+- risen and at rest, it is made afresh as it stands, and from there it
+  is the standing body of step 1, steps and all. At the end of the
+  movement and still not up after four seconds, it cannot, and goes
+  down.
+
+**Measured** (the three miners on the meadow, posed crouched with their
+weight brought over their soles, then made their own;
+`MadeLowItStandsUpByItsOwnLegs`, run only when asked):
+
+| Crouched (of its hips' height) | Bowed | Stood up | In | Its legs gave, of what they have |
+|---|---|---|---|---|
+| 0.15 to 0.55 | 30 and 45 degrees | 18 of 18 | 0.9 to 2.0 s | 0.32 to 0.50 |
+| 0.15 to 0.45 | 65 degrees | 5 of 9 | 1.5 to 6.1 s | 0.38 to 1.00 |
+| 0.45 and 0.6 | 55 and 80 degrees | 2 of 12 | | 1.00 in those that went down |
+
+Its boots moved 0 to 5 mm. So: from a half crouch with its trunk no
+further forward than about 45 degrees and its weight over its soles, a
+miner's own legs stand it up, every time tried. From deeper or further
+bowed, not reliably.
+
+**What the posed body takes a fallen miner over in is not such a
+crouch.** It is its kneeling pose mapped onto a standing body: bowed 80
+degrees, its weight 10 to 19 cm ahead of its soles. Made its own there,
+all three went straight over. That half second was never a crouch a
+body could stand in; it only looked like one for half a second.
+
+### What gets it onto its feet: a way, on the body that stands
+
+Until now the fall and the getting up were another body (eleven parts,
+no ankles: the let-go body of S3), and the standing body took over when
+it was up. The getting up now happens **on the body that stands**
+(thirteen parts, each boot on an ankle of its own): it is made as the
+miner lies, and from there to standing it is one body, kept by one
+keeper at the end. Nothing takes over from anything in the middle of a
+movement.
+
+A way is a row of poses. Each pose is a set of turns from how the body
+stands (the trunk's bow, the head's, and for each arm and leg its
+joints'), come to over a time, and each joint is held towards it with
+no more than that joint has. What moves the body is its limbs and its
+weight on the ground. A way ends when its boots bear it (its soles
+flat, at least 0.55 of its weight on them, its weight no further than
+0.16 of its hips' height ahead of them); the keeper takes it at that
+moment.
+
+**The poses are not drawn and not recorded.** They are found by a
+search on a bench (`OwnRiseBench`): the miner is laid down, a row of
+poses is tried with the physics stepped by hand (about fourteen tries a
+second, nothing drawn), and the poses are varied towards those that
+leave it best, as the fall's ways were found on October 9. This time
+each miner has its own (Luis, October 13: "based on their capabilities
+of course"): Small's way does not get Long or Round up, and was not
+meant to.
+
+**What the search is asked for, it games** (as on October 9). Three
+times so far:
+
+| Asked for | It found |
+|---|---|
+| Its soles flat, its hips up, some of its weight on its boots | Its feet flat, its hips in the air, its hands and head on the ground a leg's length ahead |
+| Its weight back over its soles | A ball, its head tucked under between its knees |
+| Its weight over its soles, its trunk up | Sat back on its seat, its boots in the air |
+
+What ended that was asking for the thing itself: **does it stand**, the
+keeper taking it and raising it, in the same try.
+
+### Three faults found on the way, and mended
+
+| | What was seen | Why | What was done |
+|---|---|---|---|
+| R1 | Taken from a deep tuck, it rose a little, then stood folded right over with its head by its knees, quite still, for as long as it was watched | How high it meant to be went on steadily, while what its joints were asked for began slowly; its joints, sprung towards the tuck still, held it 10 cm under where it meant to be; and it did not mean to be any higher while it was 3 cm under | One movement: how far along it is sets all three together |
+| R2 | The same start, the same way: four tries of six stood, two never had their weight back far enough for the keeper | The way handed it over when its last pose had been reached; by then, in those two, it had sat back past its feet | It is handed over the moment its boots bear it |
+| R3 | A miner made its own in the posed body's crouch was standing in the first step of the physics, its boots 10 cm in the air | I had given each joint's rest by hand as how the body stands; the engine puts every part where that rest has it, at once | A joint's rest stays how the body was made; what it is asked for is reckoned from there |
+
+![A fault: folded over and waiting](../Images/GettingUp_2026-10-14/Small_FoldedOverAndWaiting_AFault.jpg)
+
+*R1. Left: the tuck the way leaves it in. The other three: on its feet,
+folded over, a second, four seconds and nine seconds after the keeper
+took it.*
+
+### What is not done
+
+- **Long and Round.** Their own ways are being searched.
+- **From its back and its sides.** Only from its front so far. As it
+  was, a miner on its back kicked into a ball and rolled over in under
+  two seconds; that is the "convulsing".
+- **The lying itself.** Luis: "the character shouldn't look dead and
+  then start moving to get up after a timer. It should maybe move less
+  while it's recovering from the fall, and maybe indeed not right away,
+  but it should slowly get to moving up." Not begun: its strength
+  coming back by degrees, its breath, the first stir.
+- **How long it takes.** Small is on its feet 8.4 s after it begins and
+  up at 11.5; people take three to six. The four poses between its
+  knees coming under and the tuck are what a search left, and read as
+  fussing.
+- **One try in eight still goes down** once the keeper has it.
+- **In the game.** None of it. The fall still hands a lying miner to
+  the old getting up.
+- **Not looked at by Luis, nor by judges.**

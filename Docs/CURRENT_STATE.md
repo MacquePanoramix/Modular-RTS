@@ -1,6 +1,21 @@
 # Wonder Gather — Current State
 
-**Updated:** October 13, 2026.
+**Updated:** October 14, 2026.
+
+- **The getting up is being built (October 14; on the work branch
+  and the bench only; not in the game, not in a build; Luis has seen
+  none of it).** For the first time a miner goes from lying to
+  standing with nothing posed anywhere: Small, from its front, draws
+  its knees under, comes onto its feet in a tuck, and its own legs
+  raise it. On the bench, the same start eight times: seven stand,
+  about 11.5 s after they begin (too long). It is done on the body
+  that stands (with ankles), made as the miner lies, so one body goes
+  from lying to standing; the poses are searched, each miner its own.
+  **Not done:** Long and Round; from its back and sides; the lying
+  itself (what Luis asked for first: not dead until a clock runs
+  out); a shorter middle; the game
+  ([what is built](Design/TheBodysOwn.md#step-2-the-getting-up-the-bodys-own-begun-october-14-not-in-the-game)).
+  The three builds are as they were on October 13.
 
 - **Luis tried the step (October 13, night): "It is generally looking
   well."** "I did like so far how the stepping mechanism after being
