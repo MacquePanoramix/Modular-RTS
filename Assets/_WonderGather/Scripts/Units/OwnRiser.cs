@@ -91,6 +91,8 @@ namespace WonderGather
         private const float StillUnder = .2f, StillTurning = 1.2f;
 
         public Way[] Ways = new Way[0];
+        // (Its toes' touches, if it has toes: what the ground bears them with counts as its boots'.)
+        public GroundTouch[] ToeTouches;
         // How hard it holds itself (1: with all the strength it has).
         public float Tone = 1;
 
@@ -339,7 +341,13 @@ namespace WonderGather
         public Does Step(float step)
         {
             float g = Physics.gravity.magnitude;
-            for (int i = 0; i < 2; i++) { bears[i] = touches[i].Up / Mathf.Max(1e-6f, whole * g * step); touches[i].Clear(); }
+            for (int i = 0; i < 2; i++)
+            {
+                float up = touches[i].Up;
+                touches[i].Clear();
+                if (ToeTouches != null && ToeTouches[i] != null) { up += ToeTouches[i].Up; ToeTouches[i].Clear(); }
+                bears[i] = up / Mathf.Max(1e-6f, whole * g * step);
+            }
             bore = bears[0] + bears[1];
             bool moving = false;
             for (int i = Hips; i <= Head && !moving; i++)

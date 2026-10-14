@@ -152,6 +152,15 @@ namespace WonderGather
         private readonly GroundTouch[] touches = new GroundTouch[2];
         private readonly Vector3[] soleAt = new Vector3[2], soleSize = new Vector3[2], toeAt = new Vector3[2];
         private readonly Quaternion[] toeTurn = new Quaternion[2];
+        // Getting up, it has toes (Luis, October 14: "adding more muscles in another body part that doesn't yet have
+        // muscles"): each a part of its own on a hinge at the ball of the foot, sprung flat with ToeGives of what its
+        // ankle has, bending up to ToeBendsUp degrees and down to ToeBendsDown. Kneeling on tucked toes, or coming up
+        // onto the balls of its feet, it stands on them as a person does, not on the front edge of a boot. Standing,
+        // the boot ends at the ball of the foot and its toes are only drawn, as before. (ToesGettingUp false: none.)
+        public static bool ToesGettingUp = true;
+        public static float ToeGives = .3f, ToeBendsUp = 80, ToeBendsDown = 20;
+        private readonly ArticulationBody[] toeLinks = new ArticulationBody[2];
+        private readonly GroundTouch[] toeTouches = new GroundTouch[2];
         // Where each part was a step of the physics ago and is now: drawn between them (an articulation is not
         // smoothed between steps by the engine).
         private readonly Vector3[] wasAt = new Vector3[Count], nowAt = new Vector3[Count];
@@ -490,7 +499,8 @@ namespace WonderGather
                 Rod(Thigh + i, s.thighs[i].localScale.y, leg * 1.25f, surface);
                 anchors[Thigh + i] = new Vector3(0, -s.thighs[i].localScale.y, 0);
                 // (Its boot is a part of its own, with its own weight: in the let-go body it is one with the shin.)
-                float bootWeighs = Weighs("Foot." + l, "Toe." + l), shinWeighs = Weighs("Shin." + l);
+                bool toed = down && ToesGettingUp && s.toes != null && s.toes.Length == 2 && s.toes[0] != null && s.toes[1] != null;
+                float bootWeighs = toed ? Weighs("Foot." + l) : Weighs("Foot." + l, "Toe." + l), shinWeighs = Weighs("Shin." + l);
                 Made(Shin + i, "Shin" + side, s.shins[i].position, Along(s.shins[i], forward), shinWeighs, knee, true);
                 Rod(Shin + i, s.shins[i].localScale.y, leg, surface);
                 anchors[Shin + i] = new Vector3(0, -s.shins[i].localScale.y, 0);
@@ -543,6 +553,33 @@ namespace WonderGather
                 parts[i] = link;
             }
             for (int i = 0; i < 2; i++) touches[i] = segmentsMade[Foot + i].AddComponent<GroundTouch>();
+            for (int i = 0; i < 2; i++) { toeLinks[i] = null; toeTouches[i] = null; }
+            if (down && ToesGettingUp && s.toes != null && s.toes.Length == 2 && s.toes[0] != null && s.toes[1] != null)
+                for (int i = 0; i < 2; i++)
+                {
+                    string l = i == 0 ? "L" : "R";
+                    var toe = new GameObject("Toe" + (i == 0 ? " (left)" : " (right)"));
+                    toe.transform.SetParent(segmentsMade[Foot + i].transform, true);
+                    toe.transform.SetPositionAndRotation(s.toes[i].position, s.toes[i].rotation);
+                    Vector3 size = s.toes[i].localScale;
+                    var box = toe.AddComponent<BoxCollider>();
+                    box.size = size; box.sharedMaterial = surface;
+                    var link = toe.AddComponent<ArticulationBody>();
+                    float kilograms = Weighs("Toe." + l);
+                    link.mass = kilograms;
+                    link.linearDamping = 0; link.angularDamping = 0; link.jointFriction = 0;
+                    link.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                    link.jointType = ArticulationJointType.RevoluteJoint;
+                    // (It turns about the line across the ball of the foot, at the sole.)
+                    link.anchorPosition = new Vector3(0, -.5f * size.y, -.5f * size.z); link.anchorRotation = Quaternion.identity;
+                    link.matchAnchors = true;
+                    link.twistLock = ArticulationDofLock.LimitedMotion;
+                    float has = knee * AnkleGives * ToeGives, turns = kilograms * size.z * size.z / 3, step = Time.fixedDeltaTime;
+                    float spring = Mathf.Min(has / (OwnRiser.FullAt * Mathf.Deg2Rad), OwnRiser.RuleTimes * OwnKeeper.Rule * OwnKeeper.Rule / (step * step) * turns);
+                    link.xDrive = new ArticulationDrive { stiffness = spring, damping = OwnRiser.Damped * 2 * Mathf.Sqrt(spring * turns), forceLimit = has, target = 0, lowerLimit = -ToeBendsUp, upperLimit = ToeBendsDown, driveType = ArticulationDriveType.Force };
+                    toeLinks[i] = link;
+                    toeTouches[i] = toe.AddComponent<GroundTouch>();
+                }
             // Its own parts do not strike one another while it only stands; nor the unit's own solid, which stays
             // where it is to be picked by.
             var solids = held.GetComponentsInChildren<Collider>();
@@ -590,7 +627,7 @@ namespace WonderGather
             if (low)
             {
                 for (int j = 1; j < Count; j++) { toStood[j] = Quaternion.Inverse(rested[j]) * stoodLocal[j]; riseFrom[j] = Quaternion.identity; }
-                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = RiseWays };
+                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = RiseWays, ToeTouches = toeLinks[0] != null ? toeTouches : null };
                 else keeper.RisesTo(stoodHeight, Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized) * stoodHips, stoodOver);
                 // (The posed body under it stands, for when it is given its body back.)
                 body.Bow(0, 400); body.Sink(0); body.ResetPose();
@@ -602,7 +639,7 @@ namespace WonderGather
         {
             if (held != null) { held.SetActive(false); Destroy(held); }
             held = null;
-            keeper = null; riser = null;
+            keeper = null; riser = null; toeLinks[0] = toeLinks[1] = null;
             for (int i = 0; i < Count; i++) parts[i] = null;
             Stands = false;
         }
@@ -982,7 +1019,11 @@ namespace WonderGather
                     segments[i].SetPositionAndRotation(Vector3.Lerp(wasAt[i], nowAt[i], between), Quaternion.Slerp(wasTurned[i], nowTurned[i], between));
                 for (int i = 0; i < 2; i++)
                     if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null)
-                        s.toes[i].SetPositionAndRotation(segments[Foot + i].TransformPoint(toeAt[i]), segments[Foot + i].rotation * toeTurn[i]);
+                    {
+                        // (Toes of its own are drawn where they are.)
+                        if (toeLinks[i] != null) s.toes[i].SetPositionAndRotation(toeLinks[i].transform.position, toeLinks[i].transform.rotation);
+                        else s.toes[i].SetPositionAndRotation(segments[Foot + i].TransformPoint(toeAt[i]), segments[Foot + i].rotation * toeTurn[i]);
+                    }
                 return;
             }
             if (giving <= 0 || segments[Hips] == null) return;
