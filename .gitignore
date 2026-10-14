@@ -24,3 +24,7 @@ crashlytics-build.properties
 
 # Python caches from the Blender scripts
 __pycache__/
+
+# Claude Code: personal hook settings and the outlook counter stay local
+.claude/settings.local.json
+.claude/hooks/outlook-count
