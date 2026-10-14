@@ -22,6 +22,18 @@ namespace WonderGather
         // How briskly the muscles answer (1/s): a held thing closes on where it is meant to be at this rate, without
         // overshooting, when nothing limits them. About a fifth of a second.
         private const float Quick = 14, QuickTurn = 16;
+        // Tired, it holds a thing less steadily and less evenly (Luis, October 14: tiredness takes precision as well
+        // as strength; Research, October 14, W6). Less steadily: the muscles about each joint pull less against each
+        // other, so it closes on where the thing is meant to be SteadiesLess times less briskly for each share of its
+        // arms that is spent. Less evenly: what its arms give wavers, by ShakesFresh of it fresh and ShakesTired more
+        // for each share spent, the waver changing its way about every ShakesEvery seconds.
+        public static float SteadiesLess = .5f, ShakesFresh = .02f, ShakesTired = .35f, ShakesEvery = .12f;
+        private Vector3 shake, shakeFrom, shakeTo;
+        private float shakeAlong = 1;
+        private uint shakeSeed;
+        private float ShakeChance() { shakeSeed = shakeSeed * 1664525u + 1013904223u; return (shakeSeed >> 8) / 16777216f; }
+        // How spent the more spent arm is now (0: fresh), for whoever tells of it.
+        public float ArmsSpent => physical != null ? Mathf.Max(physical.Spent(PhysicalBody.Muscles.LeftArm), physical.Spent(PhysicalBody.Muscles.RightArm)) : 0;
         // An all-out push is as urgent as the physics' clock allows: it asks for more than the arms have, so they give
         // all they have.
         private const float Hard = 30;
@@ -552,8 +564,20 @@ namespace WonderGather
             if (angle > 180) angle -= 360;
             Vector3 turn = float.IsFinite(axis.x) && float.IsFinite(angle) ? axis * (angle * Mathf.Deg2Rad) : Vector3.zero;
             // What would bring it there without overshoot (briskly, or as urgently as can be), and holds it up meanwhile.
-            float quick = hard ? Hard : Quick, quickTurn = hard ? Hard : QuickTurn;
+            // (Tired, less briskly: less steadily held.)
+            float tired = ArmsSpent;
+            float quick = (hard ? Hard : Quick) * (1 - SteadiesLess * tired), quickTurn = (hard ? Hard : QuickTurn) * (1 - SteadiesLess * tired);
             Vector3 force = held.mass * (quick * quick * (wantCentre - centre) + 2 * quick * (wantVelocity - velocity) - Physics.gravity * carry);
+            // (And what it gives wavers, more when tired.)
+            if (shakeSeed == 0) shakeSeed = (uint)name.GetHashCode() | 1u;
+            shakeAlong += dt / Mathf.Max(.02f, ShakesEvery);
+            if (shakeAlong >= 1)
+            {
+                shakeAlong = 0; shakeFrom = shake;
+                shakeTo = new Vector3(ShakeChance() - .5f, ShakeChance() - .5f, ShakeChance() - .5f) * 3.4f;
+            }
+            shake = Vector3.Lerp(shakeFrom, shakeTo, shakeAlong * shakeAlong * (3 - 2 * shakeAlong));
+            force += shake * (force.magnitude * (ShakesFresh + ShakesTired * tired));
             Quaternion principal = held.rotation * held.inertiaTensorRotation;
             Vector3 torque = principal * Vector3.Scale(held.inertiaTensor, Quaternion.Inverse(principal) * (quickTurn * quickTurn * turn + 2 * quickTurn * (wantSpin - spin)));
 

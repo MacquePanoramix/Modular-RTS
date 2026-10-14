@@ -291,6 +291,27 @@ namespace WonderGather.Tests
             finally { Time.captureFramerate = 0; }
             Assert.That(tried.swings, Is.EqualTo(64), "It did not get through its swings.");
             Debug.Log($"PHYSICAL_TIRED it rested {tried.rests} times in {tried.swings} swings; its balance: least margin {tried.margin * 1000:F0} mm, {tried.steps} steps");
+            // Where its blows landed, against where it stood and faced: how far they spread fresh (its first eight) and
+            // tired (the eight before its first rest).
+            float Spread(int from, int count)
+            {
+                var points = new System.Collections.Generic.List<Vector3>();
+                for (int k = from; k < from + count && k < tried.all.Count; k++)
+                {
+                    var r = tried.all[k];
+                    Quaternion facing = Quaternion.LookRotation(Vector3.ProjectOnPlane(r.faced, Vector3.up).normalized);
+                    points.Add(Quaternion.Inverse(facing) * (r.landed - r.stood));
+                }
+                Vector3 middle = Vector3.zero;
+                foreach (var q in points) middle += q;
+                middle /= Mathf.Max(1, points.Count);
+                float sum = 0;
+                foreach (var q in points) sum += (q - middle).sqrMagnitude;
+                return Mathf.Sqrt(sum / Mathf.Max(1, points.Count));
+            }
+            int firstRest = tried.all.FindIndex(r => r.afterRests > 0);
+            float freshSpread = Spread(0, 8), tiredSpread = firstRest > 8 ? Spread(firstRest - 8, 8) : float.NaN;
+            Debug.Log($"PHYSICAL_TIRED_AIM its blows spread {freshSpread * 1000:F0} mm fresh (its first eight) and {tiredSpread * 1000:F0} mm tired (the eight before its rest, at swing {firstRest})");
             Assert.That(tried.rests, Is.InRange(1, 3), "Sixty-four swings should ask for a rest or two.");
             int rested = tried.all.FindIndex(1, r => r.spent < tried.all[tried.all.IndexOf(r) - 1].spent - .1f);
             Assert.That(rested, Is.GreaterThan(10), "It rested too soon.");
@@ -304,7 +325,11 @@ namespace WonderGather.Tests
             // most of what a swing asks: its blow came down 9.7% weaker, its hand higher up the handle, its arms giving
             // 39% where they gave 29%.)
             Assert.That(last.upright, Is.LessThan(first.upright * .93f), "A tired blow should come down more weakly.");
-            Assert.That(last.choked, Is.GreaterThan(first.choked + .2f), "Tired, it should take the tool nearer the head.");
+            // (A fifth of the way until October 14. With arms as strong as its body needs, Round fresh holds the tool at its
+            // own place, and two fifths spent about a fifth of the way up: 18 to 24% in the runs of that day.)
+            Assert.That(last.choked, Is.GreaterThan(first.choked + .12f), "Tired, it should take the tool nearer the head.");
+            // Tired, its blows land less surely where they were meant (Luis, October 14: tiredness takes precision too).
+            Assert.That(tiredSpread, Is.GreaterThan(freshSpread * 1.4f), "Tired, its blows should spread more.");
             Assert.That(last.liftEffort, Is.GreaterThan(first.liftEffort + .1f), "Tired, the same lift should take more of what is left.");
             Assert.That(after.spent, Is.LessThan(PhysicalSwing.GoesOnAt + .06f), "It went on before it was rested.");
             Assert.That(after.upright, Is.GreaterThan(last.upright + .15f), "Rested, it should come down harder again.");
