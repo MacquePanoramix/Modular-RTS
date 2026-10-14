@@ -44,6 +44,22 @@ stage and dance, sport, children), for what reads as natural in
 general:
 [Research, October 14](../Research/2026-10-14_HowPeopleGetUp.md).
 
+## Later the same day: muscles where it has none, and one body (verbatim)
+
+While the arms were being changed and the getting up searched:
+
+> You can ignore my advice if it's not useful, but do you think maybe adding more muscles in another body part that doesn't yet have muscles could maybe the the difference maker?
+
+And soon after:
+
+> Oh by the way, in the final version I want the same body to do all, so if you add toes, you should add it to the standing body and eventually retune it for this. We are patient. I don't mind re-doing stuff. I just want the hishest quality possible following my vision.
+
+| | Luis | What follows |
+|---|---|---|
+| More muscles | Where the body has none | The body has them at its waist, neck, shoulders, elbows, hips, knees and ankles. It has **no toes** (each boot is one box; the toes are only drawn) and **no wrists** (each hand is the rounded end of its forearm). Toes are where getting up keeps failing (kneeling on tucked toes, coming up onto the balls of the feet); flat hands are where pushing up rolls. Toes are tried first |
+| One body | "the same body to do all" | **Direction from Luis:** whatever the body that gets up is given (toes), the body that stands and steps is given too, and its balance and step are tuned again for it. Not two bodies for two things |
+| Patience | "We are patient. I don't mind re-doing stuff." | Doing it right is wanted over doing it soon: the highest quality, following Luis's vision |
+
 ## What Luis did not say
 
 - How strong "as its own body needs" is, in figures. That is set by a

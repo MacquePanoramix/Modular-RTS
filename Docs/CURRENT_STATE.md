@@ -26,6 +26,16 @@
   on how people get up and how it is animated, in games and every
   other medium: [done](Research/2026-10-14_HowPeopleGetUp.md). It
   ends in twelve things our getting up is held to (G1 to G12).
+  **Done on the work branch since:** the arms (Small's shoulder 24 ->
+  42 N m, Long's 31 -> 76, Round's 61 -> 85); the work measured again
+  (they swing harder and truer and rest about half as often: Round's
+  first rest at swing 48, not 19; a question to Luis whether to keep
+  that); a cap found that held arms and ankles to a fifth of what they
+  have while getting up (loosened: Small now pushes itself up onto its
+  hands and knees, its head up); toes tried on the body that gets up
+  (Luis: whatever is kept goes on the standing body too, and it is
+  tuned again). **Still missing: balance on hands, knees and feet**
+  (built next). Not in the game.
   **Not done:** a way that holds wherever it lies; from its back and
   sides; the lying itself (what Luis asked for first: not dead until
   a clock runs out); a shorter middle; the game

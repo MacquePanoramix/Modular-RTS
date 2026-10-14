@@ -3249,6 +3249,29 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
   own; anything off the path; the getting up in the game (it is not in
   it). **Not looked at by Luis or by judges.**
 
+## S3b step 2 — the arms, the cap, toes (October 14, later)
+
+- **October 14, later (work branch 52dc660 and 421d846):**
+  - **The whole PlayMode suite with the stronger arms, one run:** 201
+    tests, 173 passed, 2 failed, 26 run only when asked. The two were
+    the work (`PhysicalBodyTests.ATiredMinerWeakensRestsAndGoesOn`: no
+    rest in 32 swings; `StrengthAndWeightDecideTheSwing`: a body at half
+    its strength no longer too weak). Both adapted (what they check
+    kept: a too-weak body, a tire-and-rest cycle). `PhysicalBodyTests`,
+    the whole class, after: 6 of 7 in one run, the seventh (the tired
+    miner, its line moved from a tenth to 7%) passing on its own. The
+    whole suite was not run again after that.
+  - **The work, before and after** (the same suite lines): in
+    [the design](Design/TheBodysOwn.md#after-luiss-answer-arms-as-strong-as-the-body-needs-october-14).
+  - **The cap on the springs** (`OwnRiseBench`, a pose with the arms
+    under the shoulders, one try each): at the keeper's rule Small stays
+    folded; at ten times it is up on its hands and knees.
+  - **Toes** (the body that gets up only; three places, three miners):
+    two of nine tries taken by the keeper, both down again; none stood.
+  - **Not tested:** the stronger arms in the game as played; any build;
+    toes on the standing body; the standing body's tests with the arms
+    (they use no arm strength of their own: the arms hang, sprung).
+
 ## S3b step 3 — a step, in the game (October 13)
 
 What was built, and why each part: [the plan](NextMilestonePlan.md#step-3-as-it-is-to-be-built-written-october-10-before-it-is-begun)

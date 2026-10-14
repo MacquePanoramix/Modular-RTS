@@ -1620,3 +1620,110 @@ says, I go on with B.
 - **In the game.** None of it. The fall still hands a lying miner to
   the old getting up.
 - **Not looked at by Luis, nor by judges.**
+
+### After Luis's answer: arms as strong as the body needs (October 14)
+
+Luis chose A ([the messages](../Correspondence/2026-10-14_ARMS_AS_ITS_BODY_NEEDS.md)),
+and asked first for deep reference research, which is
+[here](../Research/2026-10-14_HowPeopleGetUp.md) and ends in twelve
+things the getting up is held to (G1 to G12).
+
+**The rule, beside the legs':** an arm's shoulder holds 1.6 times its
+share of its upper body (half of everything above its hips) with its
+upper arm level, and its elbow the same at its forearm's length: what
+pushing its chest off the ground asks, with the margin its knees have.
+Never less than its thickness gave.
+
+| | Shoulder (N m) | Elbow (N m) |
+|---|---|---|
+| Small | 24 -> **42** | 21 -> **36** |
+| Long | 31 -> **76** | 27 -> **65** |
+| Round | 61 -> **85** | 53 -> **74** |
+
+(An ordinary grown person's arm, the old reference: 70 and 60.)
+
+**What it changed in the work** (the whole PlayMode suite, one run,
+set beside the run of October 13):
+
+| | Before | After |
+|---|---|---|
+| Struck at (Small / Long / Round) | 5.9 / 5.6 / 7.0 m/s | 6.9 / 8.1 / 7.7 m/s |
+| Share of its arms raising its pickaxe asks | 42 / 68 / 38% | 29 / 41 / 29% |
+| Long's upper hand up the handle (a weak body takes the tool nearer its head) | all the way | 11% of the way |
+| How far its blows land from where they were aimed | Small 61 to 71 mm, Long 75 to 159, Round 44 to 135 | 51 to 56, 57 to 67, 35 to 37 |
+| Round swinging on: its first rest | at swing 19 | at swing 48 |
+| Carrying, taking a tool up | | unchanged |
+
+So the miners now swing harder and truer and tire about half as fast.
+Two tests were written around the old arms and were adapted, keeping
+what they check: the "too weak" body is a third of its strength now
+(half was no longer too weak), and the tired miner swings 64 times (in
+32 it no longer needed a rest), its tired blow 9.7% weaker. **Whether
+the work should keep its new pace, or be brought back to the old one
+another way, is Luis's to say** (a question below).
+
+### A cap that held the arms and ankles back (found October 14)
+
+With the stronger arms, a pose with its arms straight under its
+shoulders still did not lift Small's chest. The cause was not strength.
+Each joint is held towards its pose by a spring, and the keeper's rule
+caps that spring by how heavy the lighter side of the joint is (at the
+game's fifty steps a second, a stiff spring between a heavy body and a
+light boot did not hold). Standing, that never mattered: what holds the
+body up is the keeper's own torques, and the springs only hold its pose
+softly. Getting up, the springs are all there is, and for an elbow or an
+ankle the cap was about a fifth of what the joint has. At ten times the
+rule, getting up only, **Small pushes itself up onto its hands and knees
+with its head up**; nothing shakes.
+
+![The cap, then loosened](../Images/GettingUp_2026-10-14/Small_SpringsCapped_Then_Loosened.jpg)
+
+*Small with arms as strong as its body needs. Left two: the springs
+capped as before; it stays folded, its head on the ground, and tips
+over. Right two: the cap ten times looser; it is up on its hands and
+knees, its head up (and, when that pose's time ran out, it tipped over).*
+
+![Onto hands and knees](../Images/GettingUp_2026-10-14/Small_OntoHandsAndKnees_StrongerArms.jpg)
+
+*From lying on its front: its knees come under it, it pushes itself up
+onto its hands and knees, its head up, and its hips go up onto its hands
+and feet, as a small child's do. A picture every four tenths of a
+second. The way on from there to its feet is not found yet.*
+
+### Muscles where it has none: toes (Luis, October 14)
+
+Luis asked whether muscles in a part that has none might be what is
+missing. The body has them at its waist, neck, shoulders, elbows, hips,
+knees and ankles; it has **no toes** (each boot ends at the ball of the
+foot, and its toes are only drawn) and **no wrists** (each hand is the
+rounded end of its forearm). Toes are where getting up kept failing:
+kneeling on tucked toes, and coming up onto the balls of its feet, it had
+nothing to stand on but the front edge of a box.
+
+**Tried first on the body that gets up:** each toe a part of its own on a
+hinge at the ball of the foot, sprung flat with 0.3 of what its ankle
+has, bending 80 degrees up and 20 down. A foot can now be put flat well
+forward. But putting a foot forward from hands and knees threw Small
+onto its back, and two tries the keeper took went down again.
+
+**Luis, the same day:** in the end the same body does everything; if it
+has toes, the standing body has them too, and its balance and step are
+tuned again for them. So toes, if they are kept, go on the one body, and
+the standing tests are measured again.
+
+### What is missing now
+
+**Balance on its hands, knees and feet.** Every stage so far is a pose
+held at a pace; what keeps the body from tipping over is only that the
+pose happens to be steady. On two feet the keeper does what a body does:
+it keeps its weight over what bears it, by what its joints give. Getting
+up needs the same on whatever bears it at the time (hands and knees; two
+hands and a foot; feet and hands), and to move its weight from one to
+the next only when it is over the next (G2, G3). That is what is built
+next: the keeper, on more than two feet.
+
+### Questions for Luis
+
+| | Question | What I would do |
+|---|---|---|
+| R1 | With arms as strong as their bodies need, the miners swing harder and truer and rest about half as often (Round's first rest at swing 48, not 19). Keep that, or bring the old rhythm of work back another way (for instance, the arms tiring faster)? | Keep it, as what such arms do; it is not tested in the game yet |

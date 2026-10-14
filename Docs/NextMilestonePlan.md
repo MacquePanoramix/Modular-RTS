@@ -1026,6 +1026,18 @@ only; nothing of step 3 is in the game Luis has.
     that it would rise "facing as it faced". It rises facing as its
     feet are when it comes onto them. What turned it a quarter round
     in the build was the posed body taking over, not the miner.
+  - **October 14, after Luis's answers** (arms as strong as the body
+    needs; research first; then "the same body to do all"):
+    [the research](Research/2026-10-14_HowPeopleGetUp.md) (G1 to
+    G12); the arms changed and the work measured again
+    ([figures](Design/TheBodysOwn.md#after-luiss-answer-arms-as-strong-as-the-body-needs-october-14));
+    a cap on the springs found and loosened for getting up (onto
+    hands and knees now); toes tried. **One body for everything**
+    (Luis): whatever is kept goes on the standing body, and the
+    standing tests are measured and tuned again; in the end the fall
+    too should be the same body (today the let-go body of S3 falls,
+    and the getting up begins from it as it lies). **Next: balance
+    on hands, knees and feet** (the keeper, on more than two feet).
   - **Still to do, in this order:** a way that holds wherever it
     lies (searched and counted at many places, never at one); from
     its back and its sides; the lying (its strength back by degrees,
