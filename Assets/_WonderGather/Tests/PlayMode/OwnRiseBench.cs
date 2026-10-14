@@ -44,6 +44,7 @@ namespace WonderGather.Tests
             // weight within what bears it at the last pose.)
             public float depth = float.NaN, stageAt, stages, heldFor;
             public bool upOff;
+            public float stepFurthest;
             public Vector3 shakeFrom, shakeTo;
             public OwnRiser.Way[] ways;
             public string ended;
@@ -91,6 +92,8 @@ namespace WonderGather.Tests
                         // there at so much of their height a second.)
                         // (flat=30: its boots kept on the ground let down flat about their toes, so many degrees a second.)
                         if (word.StartsWith("flat=")) { stage.flattens = float.Parse(word.Substring(5), Plain); continue; }
+                        // (kneel=0.9: its knees drawn up under it along the ground, its ankles so many shins behind its hips.)
+                        if (word.StartsWith("kneel=")) { stage.kneels = float.Parse(word.Substring(6), Plain); continue; }
                         if (word.StartsWith("hold="))
                         {
                             var hold = word.Substring(5).Split(',');
@@ -170,6 +173,7 @@ namespace WonderGather.Tests
                     if (!float.IsNaN(stage.balance)) text.Append(string.Format(Plain, " bal={0:0.00},{1:0.00}", stage.balance, stage.balanceFeet));
                     if (stage.holds) text.Append(string.Format(Plain, " hold={0:0.00},{1:0.00}{2}", stage.holdHigh, stage.holdRate, stage.holdsFeet ? ",feet" : ""));
                     if (stage.flattens > 0) text.Append(string.Format(Plain, " flat={0:0}", stage.flattens));
+                    if (stage.kneels > 0) text.Append(string.Format(Plain, " kneel={0:0.00}", stage.kneels));
                     if (!float.IsNaN(stage.handStep)) text.Append(string.Format(Plain, " walk={0:0.000},{1:0.00},{2:0.000},{3:0.00}", stage.handStep, stage.handOver, stage.handLift, stage.handNearest));
                     if (!float.IsNaN(stage.sits)) text.Append(string.Format(Plain, " sit={0:0},{1:0.00},{2:0.00},{3:0}", stage.sits, stage.sitHips, stage.sitAhead, stage.sitMost));
                     if (stage.steps >= 0) text.Append(string.Format(Plain, " step={0},{1:0.00},{2:0.00},{3:0.00}{4}", stage.steps == 0 ? "lead" : "other", stage.stepAhead, stage.stepOut, stage.stepLifts, stage.stepUnder > 0 ? string.Format(Plain, ",{0:0.00}", stage.stepUnder) : ""));
@@ -476,7 +480,7 @@ namespace WonderGather.Tests
                         OwnBody.RiseWays = body.ways;
                         body.done = !body.own.BeginDown();
                         body.up = body.onFeet = false; body.feetAt = body.upAt = -1; body.peak = body.stoodFor = body.risen = body.feetFor = 0; body.ended = body.done ? "could not be made" : "";
-                        body.depth = float.NaN; body.stageAt = body.stages = body.heldFor = 0; body.upOff = false;
+                        body.depth = float.NaN; body.stageAt = body.stages = body.heldFor = 0; body.upOff = false; body.stepFurthest = 0;
                     }
                     Physics.SyncTransforms();
                     int shot = 0;
@@ -527,7 +531,7 @@ namespace WonderGather.Tests
                                 body.hipsHigh = riser.Measure(OwnRiser.Asks.Hips); body.ahead = riser.Measure(OwnRiser.Asks.Ahead); body.soles = riser.Measure(OwnRiser.Asks.Soles);
                                 body.upright = riser.Measure(OwnRiser.Asks.Upright); body.bears = riser.Measure(OwnRiser.Asks.Bears); body.front = riser.Measure(OwnRiser.Asks.Front);
                                 body.ended = riser.WayNow + " " + riser.StageNow;
-                                body.depth = riser.BalanceDepth; body.stageAt = riser.StageAt; body.stages = riser.Stages;
+                                body.depth = riser.BalanceDepth; body.stageAt = riser.StageAt; body.stages = riser.Stages; body.stepFurthest = riser.StepFurthest;
                                 // (Held only up off the ground: its head and hips up. Lying on its back with its hands and boots on
                                 // the ground, its weight is within them too, and a search took that.)
                                 body.upOff = riser.Measure(OwnRiser.Asks.Head) >= .5f && riser.Measure(OwnRiser.Asks.Hips) >= .3f;
@@ -598,7 +602,7 @@ namespace WonderGather.Tests
                         foreach (var body in bodies) if (!string.IsNullOrEmpty(shots) && string.Equals(shots, body.name, StringComparison.OrdinalIgnoreCase)) pictured = body;
                         yield return Try(j, pictured, pictured != null ? pictured.name.ToLowerInvariant() + "_" + from[j] + j : "");
                         foreach (var body in bodies) Debug.Log(Told(body, j));
-                        foreach (var body in bodies) Debug.Log(string.Format(Plain, "RISE_HELD {0} from {1}: at pose {2} of {3}, kept its weight within what bears it there, up off the ground, {4:0.00} s; {5:0} mm within at the end, {6}", body.name, from[j], body.stageAt + 1, body.stages, body.heldFor, body.depth * 1000, body.upOff ? "up" : "down"));
+                        foreach (var body in bodies) Debug.Log(string.Format(Plain, "RISE_HELD {0} from {1}: at pose {2} of {3}, kept its weight within what bears it there, up off the ground, {4:0.00} s; {5:0} mm within at the end, {6}; furthest foot {7:0.00} legs forward", body.name, from[j], body.stageAt + 1, body.stages, body.heldFor, body.depth * 1000, body.upOff ? "up" : "down", body.stepFurthest));
                         yield return null;
                     }
                 }
@@ -715,6 +719,9 @@ namespace WonderGather.Tests
                             // when its way ends on its feet, on its feet, risen, and standing.)
                             if (body.stages > 0 && body.stageAt == body.stages - 1 && body.upOff && body.depth > OwnRiser.BalanceMargin) got += 5;
                             if (body.onFeet) got += 8 + 3 * Mathf.Clamp01(body.risen);
+                            // (A foot put down counts by how far forward it went: a search kept its balance by hardly moving
+                            // its foot at all.)
+                            got += 4 * Mathf.Clamp01(body.stepFurthest / .6f);
                             if (body.ended == "stands") got += 10;
                             if (body.stages > 0 && body.stageAt == body.stages - 1 && !float.IsNaN(body.depth)) got += body.upOff ? 10 * Mathf.Clamp(body.depth, -.1f, .15f) : -1;
                             return got - .5f * Mathf.Max(0, body.peak - 2.5f);
