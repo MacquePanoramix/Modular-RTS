@@ -161,6 +161,8 @@ namespace WonderGather
         public static float ToeGives = .3f, ToeBendsUp = 80, ToeBendsDown = 20;
         private readonly ArticulationBody[] toeLinks = new ArticulationBody[2];
         private readonly GroundTouch[] toeTouches = new GroundTouch[2];
+        // (Getting up, what the ground bears its forearms, thighs and shins with: it leans on them.)
+        private readonly GroundTouch[] leanTouches = new GroundTouch[Count];
         // Where each part was a step of the physics ago and is now: drawn between them (an articulation is not
         // smoothed between steps by the engine).
         private readonly Vector3[] wasAt = new Vector3[Count], nowAt = new Vector3[Count];
@@ -552,7 +554,10 @@ namespace WonderGather
                 }
                 parts[i] = link;
             }
-            for (int i = 0; i < 2; i++) touches[i] = segmentsMade[Foot + i].AddComponent<GroundTouch>();
+            for (int i = 0; i < 2; i++) { touches[i] = segmentsMade[Foot + i].AddComponent<GroundTouch>(); touches[i].StillOnly = down; }
+            for (int i = 0; i < Count; i++) leanTouches[i] = null;
+            if (down)
+                foreach (int i in new[] { Forearm, Forearm + 1, Thigh, Thigh + 1, Shin, Shin + 1 }) { leanTouches[i] = segmentsMade[i].AddComponent<GroundTouch>(); leanTouches[i].StillOnly = true; }
             for (int i = 0; i < 2; i++) { toeLinks[i] = null; toeTouches[i] = null; }
             if (down && ToesGettingUp && s.toes != null && s.toes.Length == 2 && s.toes[0] != null && s.toes[1] != null)
                 for (int i = 0; i < 2; i++)
@@ -579,6 +584,7 @@ namespace WonderGather
                     link.xDrive = new ArticulationDrive { stiffness = spring, damping = OwnRiser.Damped * 2 * Mathf.Sqrt(spring * turns), forceLimit = has, target = 0, lowerLimit = -ToeBendsUp, upperLimit = ToeBendsDown, driveType = ArticulationDriveType.Force };
                     toeLinks[i] = link;
                     toeTouches[i] = toe.AddComponent<GroundTouch>();
+                    toeTouches[i].StillOnly = true;
                 }
             // Its own parts do not strike one another while it only stands; nor the unit's own solid, which stays
             // where it is to be picked by.
@@ -627,7 +633,7 @@ namespace WonderGather
             if (low)
             {
                 for (int j = 1; j < Count; j++) { toStood[j] = Quaternion.Inverse(rested[j]) * stoodLocal[j]; riseFrom[j] = Quaternion.identity; }
-                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = RiseWays, ToeTouches = toeLinks[0] != null ? toeTouches : null };
+                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = RiseWays, ToeTouches = toeLinks[0] != null ? toeTouches : null, PartTouches = leanTouches };
                 else keeper.RisesTo(stoodHeight, Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized) * stoodHips, stoodOver);
                 // (The posed body under it stands, for when it is given its body back.)
                 body.Bow(0, 400); body.Sink(0); body.ResetPose();

@@ -9,11 +9,15 @@ namespace WonderGather
     {
         public Vector3 Where { get; private set; }
         public float Up { get; private set; }
+        // (Getting up, only what does not move bears it: not another of its own parts, which strike each other then,
+        // nor anything else that moves.)
+        public bool StillOnly;
 
         public void Clear() { Where = Vector3.zero; Up = 0; }
 
         private void Take(Collision touch)
         {
+            if (StillOnly && touch.body != null) return;
             for (int k = 0; k < touch.contactCount; k++)
             {
                 var point = touch.GetContact(k);

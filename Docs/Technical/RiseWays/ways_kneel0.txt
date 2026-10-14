@@ -1,0 +1,8 @@
+# Set by hand, for a search to begin from (arms as strong as the body needs): hands by its shoulders, knees under, pushed up onto hands and knees, hips up onto hands and feet (a bear), sat back until its boots bear it.
+way feet 0.4 1 gives
+hands | 0.90 1.00 4.0 | 0 -15 0 | 30 35 125 | 30 35 125 | 0 0 0 30 | 0 0 0 30 |
+under | 1.20 1.40 5.0 | 30 -10 0 | 60 20 70 | 60 20 70 | 105 10 105 30 | 105 10 105 30 |
+prop | 1.00 1.10 5.0 | 10 -25 0 | 95 5 -10 | 95 5 -10 | 85 10 100 30 | 85 10 100 30 |
+footA | 1.00 1.05 4.0 | 10 -20 0 | 95 8 -10 | 95 8 -10 | 85 10 100 30 | 85 10 100 30 | step=lead,0.45,0.30,0.08
+footB | 1.00 1.05 4.0 | 15 -15 0 | 95 8 -10 | 95 8 -10 | NaN NaN NaN NaN | 85 10 100 30 | step=other,0.45,0.30,0.08
+walk | 1.00 0.10 8.0 | 30 -10 0 | 100 5 -10 | 100 5 -10 | NaN NaN NaN NaN | NaN NaN NaN NaN | walk=0.06,0.6,0.04,0.2 soles>0.9 bears>0.55 ahead>-0.08 ahead<0.16
