@@ -176,7 +176,10 @@ namespace WonderGather.Tests
             yield return Try(1, 1, t => ordinary = t);
             yield return Try(1, 2, t => heavy = t);
             yield return Try(2, 1, t => strong = t);
-            yield return Try(.5f, 2, t => feeble = t);
+            // (Too weak for it: a third of its strength. Until October 14 half was, when an arm's strength came from its
+            // thickness alone; Round's arms are now 1.4 times as strong, and at half its strength it raised its pickaxe as
+            // fast as an ordinary body does.)
+            yield return Try(.35f, 2, t => feeble = t);
             Debug.Log($"PHYSICAL_SWING ordinary: raised {ordinary.first.lifted:F2} m in {ordinary.first.liftTime:F2} s at {ordinary.first.liftEffort:P0}, struck at {ordinary.first.speed:F1} m/s; "
                 + $"heavy: {heavy.first.liftEffort:P0}, {heavy.first.speed:F1} m/s; strong: {strong.first.liftEffort:P0}, {strong.first.speed:F1} m/s; "
                 + $"feeble: {feeble.first.lifted:F2} m in {feeble.first.liftTime:F2} s at {feeble.first.liftEffort:P0}, {feeble.first.speed:F1} m/s; "
@@ -282,11 +285,13 @@ namespace WonderGather.Tests
         {
             Tried tried = default;
             Time.captureFramerate = 50;
-            try { yield return Try("Round", 1, 1, 0, t => tried = t, 32); }
+            // (Sixty-four swings: until October 14, thirty-two. With arms as strong as its body needs it gives less of
+            // what they have to each swing, and tires about half as fast: in thirty-two it no longer needed a rest.)
+            try { yield return Try("Round", 1, 1, 0, t => tried = t, 64); }
             finally { Time.captureFramerate = 0; }
-            Assert.That(tried.swings, Is.EqualTo(32), "It did not get through its swings.");
+            Assert.That(tried.swings, Is.EqualTo(64), "It did not get through its swings.");
             Debug.Log($"PHYSICAL_TIRED it rested {tried.rests} times in {tried.swings} swings; its balance: least margin {tried.margin * 1000:F0} mm, {tried.steps} steps");
-            Assert.That(tried.rests, Is.InRange(1, 2), "Thirty-two swings should ask for a rest or two.");
+            Assert.That(tried.rests, Is.InRange(1, 3), "Sixty-four swings should ask for a rest or two.");
             int rested = tried.all.FindIndex(1, r => r.spent < tried.all[tried.all.IndexOf(r) - 1].spent - .1f);
             Assert.That(rested, Is.GreaterThan(10), "It rested too soon.");
             var first = tried.all[0];
@@ -295,7 +300,10 @@ namespace WonderGather.Tests
             Debug.Log($"PHYSICAL_TIRED first: {first.speed:F1} m/s, upper hand {first.choked:P0}, arms {first.liftEffort:P0}; swing {rested}, before its rest: {last.spent:P0} spent, {last.speed:F1} m/s (through upright at {last.upright:F2}; the first {first.upright:F2}, the one after {after.upright:F2}), upper hand {last.choked:P0}, arms {last.liftEffort:P0}; "
                 + $"after it: {after.spent:P0} spent, {after.speed:F1} m/s");
             Assert.That(last.spent, Is.InRange(PhysicalSwing.RestsAt - .06f, PhysicalSwing.RestsAt + .03f));
-            Assert.That(last.upright, Is.LessThan(first.upright * .9f), "A tired blow should come down more weakly.");
+            // (A tenth weaker until October 14. With arms as strong as its body needs, an arm two fifths spent still has
+            // most of what a swing asks: its blow came down 9.7% weaker, its hand higher up the handle, its arms giving
+            // 39% where they gave 29%.)
+            Assert.That(last.upright, Is.LessThan(first.upright * .93f), "A tired blow should come down more weakly.");
             Assert.That(last.choked, Is.GreaterThan(first.choked + .2f), "Tired, it should take the tool nearer the head.");
             Assert.That(last.liftEffort, Is.GreaterThan(first.liftEffort + .1f), "Tired, the same lift should take more of what is left.");
             Assert.That(after.spent, Is.LessThan(PhysicalSwing.GoesOnAt + .06f), "It went on before it was rested.");
