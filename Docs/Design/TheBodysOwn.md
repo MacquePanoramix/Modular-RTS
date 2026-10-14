@@ -1722,6 +1722,56 @@ hands and a foot; feet and hands), and to move its weight from one to
 the next only when it is over the next (G2, G3). That is what is built
 next: the keeper, on more than two feet.
 
+### Balance on hands, knees and feet (Luis: "I like your idea"; October 14, night; in progress)
+
+Built on the work branch (04ad06d), on the bench only; not in the game,
+not in a build, not looked at by Luis.
+
+- **What bears it is felt.** Its forearms, thighs, shins and boots (with
+  their toes) tell what the ground bears them with, and where; only
+  ground that does not move counts (getting up, its own parts strike one
+  another, and that is not the ground). Felt over a little time, so a
+  touch that comes and goes does not make a support come and go.
+- **Before a hand or a foot is lifted, its weight goes over the others**
+  (G2, G3), and the limb is lifted only once its weight is over the
+  others by a margin and the limb bears little; if that has not come in
+  2.5 s, it is lifted all the same, and the bench counts it.
+- **What bears it stays where it is.** Its hands, knees and boots that
+  bear it are kept where they are on the ground, and each limb's joints
+  are asked for what reaches them from where its hips are asked to be:
+  over where its weight should be, so high if the pose says, turned as
+  they were when it was put down, and level across. So its joints carry
+  its body over its hands and feet, which stay put, as a body shifts its
+  weight. A foot that is put somewhere is aimed once, and once it bears,
+  it is kept with the rest.
+
+**What did not work, and why.** Pushing with its limbs from where they
+bear (the keeper's way on two feet) moved nothing: the stiff springs that
+hold its pose held its body where it was. Holding its limbs from where
+its hips were (not where they should be) let its hips pitch, and it went
+over its hands. An arm a little bent asked to be straight pushed its
+shoulder up and tipped it. A kneeling leg brought forward drove its knee
+into the ground and lifted its hips: its hips are now raised first, to
+give the leg room.
+
+**Where it stands.** Small comes from its front onto its hands and knees
+and holds there, its arms straight under its shoulders and its head up,
+at 7 of 9 places along the path (the way found by the bench's search,
+which now asks for "held, up off the ground"). Its weight goes off a leg
+before the leg is lifted at every place tried. **But bringing the feet
+forward still throws it over at most places**: with both feet brought
+forward to a squat it held at 0 of 9. A search first said otherwise; its
+measure counted lying on its back with hands and feet on the ground as
+"held", and was mended. Long and Round not tried with the balance yet.
+Sometimes a body on the bench goes wild (its parts fly apart); not yet
+found why, and nothing goes into the game before it is.
+
+**Next:** the step from hands and knees (where the foot goes, how the
+knee comes up under the chest, the weight over the hands and the other
+knee meanwhile), then the second foot and the weight back over the feet,
+then the hand-over to the keeper; Long and Round; then the lying itself
+(no dead body then a timer) and the game.
+
 ### Questions for Luis
 
 | | Question | What I would do |

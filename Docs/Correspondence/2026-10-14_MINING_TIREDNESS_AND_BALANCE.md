@@ -21,3 +21,14 @@ question R1: keep the new pace of work, or bring the old one back).
 
 - What the balance of work and rest should be, in figures: that is for
   the research and for me to set, and for Luis to judge.
+
+## Later that night (verbatim)
+
+> I'll turn off my laptop soon. Please save your progress and continue later when I turn it back on.
+
+What was done: the balance work was stopped where it stood (one bench run
+cut short), committed and pushed on the work branch (`claude/wip-round`,
+04ad06d), the ways found so far kept with it (`Docs/Technical/RiseWays`),
+and where it stands written here and in
+[The body's own](../Design/TheBodysOwn.md) ("Balance on hands, knees and
+feet"). Work goes on from there when the laptop is on again.

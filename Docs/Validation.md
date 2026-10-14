@@ -3249,6 +3249,21 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
   own; anything off the path; the getting up in the game (it is not in
   it). **Not looked at by Luis or by judges.**
 
+## S3b step 2 — balance on hands, knees and feet (October 14, night; in progress)
+
+- **Work branch 04ad06d; bench only** (`OwnRiseBench`, Small, from its front,
+  9 places along the path, `-riseBalPushes 0`). Onto hands and knees and held
+  (its weight within what bears it, head and hips up, at the end): 7 of 9.
+  Both feet brought forward to a squat with hands down, held: 0 of 9.
+  Weight moved off a leg before it was lifted: at every place tried.
+- A search measure that counted lying on its back as "held" was found
+  and mended; the numbers above are from after.
+- Bodies sometimes go wild on the bench (`RISE_WILD`); cause not found.
+- **Not run:** any test suite after these changes; Long and Round with the
+  balance; anything in the game; any build. The last bench run (one step,
+  9 places, pictures) was stopped before it ended when the laptop was to be
+  turned off.
+
 ## The work: tiredness takes precision; breaths between blows (October 14, evening)
 
 - **Work branch b726e8c.** `PhysicalBodyTests` and `BoulderTests`

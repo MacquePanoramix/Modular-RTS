@@ -10,8 +10,15 @@
   Built on the work branch: **tired, a miner's blows spread more** (Round:
   10 mm fresh, 26 mm tired) and come down weaker (it did already);
   **breaths between blows**, more often as it tires. Not in a build, not
-  looked at in pictures. Balance for the getting up: next (Luis: "I
-  like your idea").
+  looked at in pictures.
+- **Balance for the getting up (Luis: "I like your idea"; October 14,
+  night; work branch only, in progress, saved when Luis turned the laptop
+  off).** What bears the miner (hands, knees, boots) stays where it is and
+  its joints carry its body over it; its weight goes over the others
+  before a limb is lifted. Small comes onto hands and knees and holds
+  there at 7 of 9 places; bringing its feet forward still throws it over
+  at most places. See [The body's own](Design/TheBodysOwn.md), "Balance
+  on hands, knees and feet". Not in a build.
 - **The getting up is being built (October 14; on the work branch
   and the bench only; not in the game, not in a build; Luis has seen
   none of it).** For the first time a miner goes from lying to
