@@ -3249,6 +3249,24 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
   own; anything off the path; the getting up in the game (it is not in
   it). **Not looked at by Luis or by judges.**
 
+## S3b step 2 — one step from hands and knees (October 14, later; in progress)
+
+- **Work branch 8e44001 and after; bench only** (`OwnRiseBench`, Small, from its
+  front). Each try laid turned up to 20 degrees and moved up to 30 cm by chance
+  (`-riseJitter 20,0.3 -riseSeed 9`), 36 starts (18 places, and the same turned a
+  quarter), counted when the try ends: one foot brought forward from hands and
+  knees, and still up off the ground (head and hips up): **25 of 36 with a frame of
+  the game between every step of the physics, 27 without** (the way found by a
+  search with chance starts and pushes). The way found before, without chances:
+  17 to 21 (frames), 20 to 26 (none).
+- Found on the way: with frames the results differ from without; no frame-only
+  cause was found (no contact counted twice, nothing else touching the body, no
+  behaviour on the miner that changes it alone); a way searched without chances
+  had learnt its exact courses.
+- The whole way onto the feet: at most 3 of 18 in searches; nothing counted yet.
+- **Not run:** any test suite after these changes; Long and Round; the game; a
+  build.
+
 ## S3b step 2 — balance on hands, knees and feet (October 14, night; in progress)
 
 - **Work branch 04ad06d; bench only** (`OwnRiseBench`, Small, from its front,

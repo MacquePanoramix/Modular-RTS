@@ -16,8 +16,10 @@
   off).** What bears the miner (hands, knees, boots) stays where it is and
   its joints carry its body over it; its weight goes over the others
   before a limb is lifted. Small comes onto hands and knees and holds
-  there at 7 of 9 places; bringing its feet forward still throws it over
-  at most places. See [The body's own](Design/TheBodysOwn.md), "Balance
+  there at 7 of 9 places; since the laptop was on again, **one foot
+  brought forward from there and held at 25 of 36 starts** laid by chance
+  (with the game's frames). From there onto its feet: not yet (1 to 3 of
+  18 in searches). See [The body's own](Design/TheBodysOwn.md), "Balance
   on hands, knees and feet". Not in a build.
 - **The getting up is being built (October 14; on the work branch
   and the bench only; not in the game, not in a build; Luis has seen

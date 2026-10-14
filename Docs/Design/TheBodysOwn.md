@@ -1772,6 +1772,45 @@ knee meanwhile), then the second foot and the weight back over the feet,
 then the hand-over to the keeper; Long and Round; then the lying itself
 (no dead body then a timer) and the game.
 
+#### The step from hands and knees (October 14, after the laptop was on again)
+
+Work branch 8e44001 and on; bench only.
+
+- **How it is measured now.** A way that held at the very places it was
+  searched at did not hold elsewhere: the bench was deterministic, and a
+  search learns its exact courses. So every try is now laid turned up to
+  20 degrees either way and moved up to 30 cm, by chance, and a search is
+  also given small pushes on the trunk by chance (3% of its weight), the
+  chances new each round; and a way is counted at 36 starts it was not
+  searched at, with the game's frames between the steps of the physics as
+  well as without.
+- **What the foot does.** Brought forward from kneeling, it goes by way of
+  under its hip (its knee coming forward under its chest), its boot
+  turning flat over the whole step; it is aimed once, set down gently, and
+  kept as soon as it bears anything. Pressed down three centimetres, a leg
+  out to the side shoved the body over onto its other arm; reckoned anew
+  from the hip at every step, the foot chased the body.
+- **Moving the weight off a limb,** that limb now goes slack (held as
+  stiffly as before it bore the body like a prop and the weight could not
+  go over the others), and a straight arm bends once the body comes over
+  its hand (held straight whatever, it held the body off its hands).
+- **Numbers searched** (Small): how far within what bears it its weight is
+  kept (41 mm), how fast it moves its weight (0.43 m/s, 12 cm at a time),
+  where its knees bend (three quarters of the way to the way its hips
+  face).
+- **Result:** one foot brought forward from hands and knees, and still up
+  on its hands, that foot and the other knee (head and hips off the ground)
+  when the try ends: **25 of 36** starts with the game's frames, 27
+  without. Before the search under chance: 17 to 21.
+- **The second foot and onto the feet: not working yet.** Bringing the
+  other foot forward too, it ends kneeling on both shins, not on its feet;
+  with its hands let go it falls forward. Going instead from hands and
+  knees up onto hands and feet (its hips pushed up, its heels let down) and
+  walking its hands back towards its feet: the first part works (its knees
+  come off the ground, its feet come flat), the hands' walk does not yet.
+  A search over both (with "stands" in its measure) is running. In all of
+  it a search has stood Small up at 1 to 3 of 18 chance starts so far.
+
 ### Questions for Luis
 
 | | Question | What I would do |

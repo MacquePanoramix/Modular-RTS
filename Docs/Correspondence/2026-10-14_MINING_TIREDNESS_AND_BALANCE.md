@@ -32,3 +32,9 @@ cut short), committed and pushed on the work branch (`claude/wip-round`,
 and where it stands written here and in
 [The body's own](../Design/TheBodysOwn.md) ("Balance on hands, knees and
 feet"). Work goes on from there when the laptop is on again.
+
+## When the laptop was on again (verbatim)
+
+> Okay you can resume now please
+
+The balance work goes on from where it was saved (work branch 04ad06d).
