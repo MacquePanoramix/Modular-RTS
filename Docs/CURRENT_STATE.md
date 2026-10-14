@@ -19,12 +19,13 @@
   now comes to the same place at five places of six: its feet flat
   under it, its weight still on its head and arms. Getting its weight
   from there onto its feet is what is left of that.
-  **A question for Luis** (not answered; I go on without it): Small
-  cannot push its chest off the ground with its arms, which give a
-  third of an ordinary arm's. Should a miner's arms be as strong as
-  its own body needs, as its legs are? It would also make its work
-  stronger
-  ([the question](Design/TheBodysOwn.md#a-question-for-luis-its-arms)).
+  **Luis decided (October 14): a miner's arms are to be as strong as
+  its own body needs, as its legs are,** "and adapt the rest to it
+  as necessary" ([the message](Correspondence/2026-10-14_ARMS_AS_ITS_BODY_NEEDS.md)).
+  **Before that is changed, Luis asked for deep reference research**
+  on how people get up and how it is animated, in games and every
+  other medium: [done](Research/2026-10-14_HowPeopleGetUp.md). It
+  ends in twelve things our getting up is held to (G1 to G12).
   **Not done:** a way that holds wherever it lies; from its back and
   sides; the lying itself (what Luis asked for first: not dead until
   a clock runs out); a shorter middle; the game
