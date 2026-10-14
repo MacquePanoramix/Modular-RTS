@@ -164,8 +164,38 @@ namespace WonderGather
 
         // How a limb's thickness scales what its joints give (torque), and what its hand holds (force).
         private float Build => Mathf.Pow(armRadius / ArmReference, 3);
-        public float ShoulderCapacity => ShoulderReference * Build * strength;
-        public float ElbowCapacity => ElbowReference * Build * strength;
+        // But a miner's arms are as strong as its own body needs, as its legs are (Luis, October 14: "we can go with
+        // A and adapt the rest to it as necessary"): an arm's shoulder holds ArmHolds times its share of its upper
+        // body (half of everything above its hips) with its upper arm level, and its elbow the same at the length of
+        // its forearm. That is what pushing its chest off the ground asks, with the margin its knees have (KneeHolds).
+        // Never less than its thickness gives. (Until then an arm's strength came from its thickness alone: Small's
+        // gave a third of an ordinary arm's, its head is a quarter of its weight, and it could not push its chest off
+        // the ground. ArmsAsBodyNeeds false: so again, to compare.)
+        private const float ArmHolds = 1.6f;
+        public static bool ArmsAsBodyNeeds = true;
+        private float shoulderNeeds = -1, elbowNeeds = -1;
+        private void ArmNeeds()
+        {
+            if (shoulderNeeds >= 0 || !Ready) return;
+            float upperKilograms = 0;
+            foreach (int i in upper) upperKilograms += parts[i].mass;
+            float upperArm = 0, forearm = 0;
+            for (int side = 0; side < 2; side++)
+            {
+                Vector3 shoulder = parts[arms[side * 3]].bone.position, elbow = parts[arms[side * 3 + 1]].bone.position, hand = parts[arms[side * 3 + 2]].bone.position;
+                upperArm += .5f * Vector3.Distance(shoulder, elbow); forearm += .5f * Vector3.Distance(elbow, hand);
+            }
+            float share = .5f * upperKilograms * Physics.gravity.magnitude;
+            shoulderNeeds = ArmHolds * share * upperArm;
+            elbowNeeds = ArmHolds * share * forearm;
+        }
+        // What an arm's thickness alone gives, and what its body needs (newton metres): for whoever tells of it.
+        public float ShoulderOfThickness => ShoulderReference * Build * strength;
+        public float ElbowOfThickness => ElbowReference * Build * strength;
+        public float ShoulderNeeds { get { ArmNeeds(); return Mathf.Max(0, shoulderNeeds) * strength; } }
+        public float ElbowNeeds { get { ArmNeeds(); return Mathf.Max(0, elbowNeeds) * strength; } }
+        public float ShoulderCapacity => ArmsAsBodyNeeds ? Mathf.Max(ShoulderOfThickness, ShoulderNeeds) : ShoulderOfThickness;
+        public float ElbowCapacity => ArmsAsBodyNeeds ? Mathf.Max(ElbowOfThickness, ElbowNeeds) : ElbowOfThickness;
         public float WristCapacity => WristReference * Build * strength;
         public float HoldCapacity => HoldReference * Mathf.Pow(armRadius / ArmReference, 2) * strength;
         // The most a knee gives, in newton metres: fresh, and now.

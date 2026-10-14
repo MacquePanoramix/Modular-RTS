@@ -91,6 +91,17 @@ namespace WonderGather.Tests
                             if (sits.Length > 3) stage.sitMost = float.Parse(sits[3], Plain);
                             continue;
                         }
+                        // (walk=0.1,0.6,0.05,0.25: its hands walked back so far each, over so long, lifted so high, no nearer its
+                        // feet than so much of its leg.)
+                        if (word.StartsWith("walk="))
+                        {
+                            var walk = word.Substring(5).Split(',');
+                            stage.handStep = float.Parse(walk[0], Plain);
+                            if (walk.Length > 1) stage.handOver = float.Parse(walk[1], Plain);
+                            if (walk.Length > 2) stage.handLift = float.Parse(walk[2], Plain);
+                            if (walk.Length > 3) stage.handNearest = float.Parse(walk[3], Plain);
+                            continue;
+                        }
                         // (step=lead,0.2,0.4,0.06: that leg's boot put so far ahead of its hip and so far out, lifted so far.)
                         if (word.StartsWith("step="))
                         {
@@ -127,6 +138,7 @@ namespace WonderGather.Tests
                     foreach (var asked in stage.through)
                         text.Append(string.Format(Plain, " {0}{1}{2:0.##}", asked.what.ToString().ToLowerInvariant(), float.IsNegativeInfinity(asked.least) ? "<" : ">", float.IsNegativeInfinity(asked.least) ? asked.most : asked.least));
                     if (!float.IsNaN(stage.keeps)) text.Append(string.Format(Plain, " keep={0:0.00}", stage.keeps));
+                    if (!float.IsNaN(stage.handStep)) text.Append(string.Format(Plain, " walk={0:0.000},{1:0.00},{2:0.000},{3:0.00}", stage.handStep, stage.handOver, stage.handLift, stage.handNearest));
                     if (!float.IsNaN(stage.sits)) text.Append(string.Format(Plain, " sit={0:0},{1:0.00},{2:0.00},{3:0}", stage.sits, stage.sitHips, stage.sitAhead, stage.sitMost));
                     if (stage.steps >= 0) text.Append(string.Format(Plain, " step={0},{1:0.00},{2:0.00},{3:0.00}", stage.steps == 0 ? "lead" : "other", stage.stepAhead, stage.stepOut, stage.stepLifts));
                     text.AppendLine();
@@ -237,6 +249,9 @@ namespace WonderGather.Tests
                 for (float until = Time.time + .8f; Time.time < until;) yield return null;
                 Assert.That(own.CanRise, Is.True, who[n] + ": how it stands is not known.");
                 bodies.Add(new Body { name = choice.NameOf(index), unit = unit, own = own, miner = unit.GetComponent<MinerBody>() });
+                var weighs = unit.GetComponent<PhysicalBody>();
+                Debug.Log(string.Format(Plain, "RISE_ARMS {0}: {1:0.0} kg; shoulder {2:0} N m by its thickness, {3:0} as its body needs, {4:0} it has; elbow {5:0}, {6:0}, {7:0}", choice.NameOf(index), weighs.Mass,
+                    weighs.ShoulderOfThickness, weighs.ShoulderNeeds, weighs.ShoulderCapacity, weighs.ElbowOfThickness, weighs.ElbowNeeds, weighs.ElbowCapacity));
             }
             for (int n = 0; n < bodies.Count; n++)
             {
@@ -338,6 +353,8 @@ namespace WonderGather.Tests
 
                 OwnBody.FallsBack = false;
                 OwnBody.ArmsTimes = Number("-riseArms", 1);
+                // (-riseRule 10: the getting up's springs capped by a rule so many times looser.)
+                OwnRiser.RuleTimes = Number("-riseRule", OwnRiser.RuleTimes);
                 // (The panel's switch on: with it off, the miner that is chosen is given back to the posed body at the
                 // next frame.)
                 look.SetOwn(true);
