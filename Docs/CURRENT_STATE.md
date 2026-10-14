@@ -2,6 +2,16 @@
 
 **Updated:** October 14, 2026.
 
+- **Luis, October 14: "You can make what feels right"** (the pace of
+  work), with deep research on mining in media first, and **tiredness
+  to take strength and precision**: [the research](Research/2026-10-14_MiningAndTiredness.md)
+  (what the work is held to, W1 to W8) and
+  [the message](Correspondence/2026-10-14_MINING_TIREDNESS_AND_BALANCE.md).
+  Built on the work branch: **tired, a miner's blows spread more** (Round:
+  10 mm fresh, 26 mm tired) and come down weaker (it did already);
+  **breaths between blows**, more often as it tires. Not in a build, not
+  looked at in pictures. Balance for the getting up: next (Luis: "I
+  like your idea").
 - **The getting up is being built (October 14; on the work branch
   and the bench only; not in the game, not in a build; Luis has seen
   none of it).** For the first time a miner goes from lying to

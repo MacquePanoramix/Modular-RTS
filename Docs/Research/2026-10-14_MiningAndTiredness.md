@@ -243,3 +243,24 @@ law; a game's day is shorter than a real one):
   their animators: not found.
 - Whether tiredness spoils aim in *Kingdom Come* or *Red Dead Redemption
   2*: not documented.
+
+## 8. What was built from it (the same day; work branch, not in a build)
+
+- **W6, tiredness takes precision** (Luis: "tiredness should also
+  influence strength and precision"; strength it did already). Tired, a
+  miner holds its tool less steadily (it closes on where the tool is
+  meant to be less briskly: by half for arms wholly spent) and less
+  evenly (what its arms give wavers: 2% fresh, 35% more for arms wholly
+  spent). Round, 64 swings: its fresh blows (6, under a tenth spent)
+  spread 10 mm, its tired ones (24, over three tenths) 26 mm, and came
+  down 8% slower (6.30 against 5.81 m/s through upright).
+- **W3, breaths between blows.** Now and then it lets its pick's head
+  rest where the blow left it, straightens a little and breathes, 0.9 to
+  2.2 s: none while fresh, then more often the more spent it is, up to
+  three blows in ten when nearly spent enough to rest; each miner on its
+  own chances. With them Round first rests at swing 55 (49 without).
+- **The pace** (R1, left to me): the arms' tiring is left as the physics
+  gives it.
+- **Not yet:** W2 (the breath with the blow), W4 (leaning on the pickaxe,
+  a hand to the knee in a rest), W7 as a whole; and none of it looked at
+  in pictures or played.

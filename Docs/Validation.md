@@ -3249,6 +3249,17 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
   own; anything off the path; the getting up in the game (it is not in
   it). **Not looked at by Luis or by judges.**
 
+## The work: tiredness takes precision; breaths between blows (October 14, evening)
+
+- **Work branch b726e8c.** `PhysicalBodyTests` and `BoulderTests`
+  together, one run: 12 of 12. The tired miner (Round, 64 swings):
+  first rest at swing 55; fresh blows (6) spread 10 mm, 6.30 m/s
+  through upright; tired blows (24) spread 26 mm, 5.81 m/s. Its test
+  now compares blows by how spent it was, and holds the tired spread
+  to more than 1.4 times the fresh.
+- **Not run:** the whole suite after these; anything as played; any
+  build. **Not looked at** in pictures.
+
 ## S3b step 2 — the arms, the cap, toes (October 14, later)
 
 - **October 14, later (work branch 52dc660 and 421d846):**
