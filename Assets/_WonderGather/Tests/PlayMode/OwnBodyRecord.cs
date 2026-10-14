@@ -189,10 +189,27 @@ namespace WonderGather.Tests
                                 camera.fieldOfView = 30;
                             }
                             var fall = unit.GetComponent<PhysicalFall>();
-                            int steps = what == "fallen" ? 800 : 350, every = what == "fallen" ? 10 : 4, shot = 0;
+                            // (-ownFallWay 90: pushed over that many degrees round from "from in front"; -ownFallAt 2: so fast;
+                            // -ownFallFor 800: so many steps of the physics are recorded; -ownFallEvery 10: a picture every so many.)
+                            int steps = what == "fallen" ? (int)Number("-ownFallFor", 800) : 350, every = what == "fallen" ? (int)Number("-ownFallEvery", 10) : 4, shot = 0;
+                            string was = "";
                             for (int k = 0; k <= steps; k++)
                             {
-                                if (what == "fallen" && k == 10) look.Nudge(-away, 2);
+                                if (what == "fallen" && k == 10) look.Nudge(Quaternion.AngleAxis(Number("-ownFallWay", 0), Vector3.up) * -away, Number("-ownFallAt", 2));
+                                if (what == "fallen")
+                                {
+                                    if (fall == null) fall = unit.GetComponent<PhysicalFall>();
+                                    string now = own != null && own.Stands ? (own.Rising ? "rises by its own legs" : "stands by its own joints") : fall != null && fall.Now != PhysicalFall.State.Up ? $"{fall.Now} {fall.WayNow} {fall.StageNow}".Trim() : "stands, posed";
+                                    // (Rising: what the keeper reckons, every fifth step of the physics.)
+                                    if (own != null && own.Rising && k % 5 == 0)
+                                        Debug.Log(string.Format(CultureInfo.InvariantCulture, "OWNREC_RISE {0} {1:F2} s: risen {2:F2} | {3}", name, k * .02f, own.Risen, own.Tick(Flat(own.Part(OwnBody.Hips).transform.forward).normalized, Flat(.5f * (own.Part(OwnBody.Foot).transform.position + own.Part(OwnBody.Foot + 1).transform.position)) + Vector3.up * spot.y)));
+                                    if (now != was)
+                                    {
+                                        was = now;
+                                        Debug.Log(string.Format(CultureInfo.InvariantCulture, "OWNREC_NOW {0} {1:F2} s: {2}{3}", name, k * .02f, now,
+                                            fall != null && fall.Now != PhysicalFall.State.Up ? string.Format(CultureInfo.InvariantCulture, " (blow {0:F1} m/s, head {1:F1}; lies for {2:F1} s; tone {3:F2}; chest to the ground {4:F2}; hips {5:F2} of standing height)", fall.Blow, fall.HeadStruck, fall.LiesFor, fall.Tone, fall.Measure(PhysicalFall.Asks.Front), fall.Measure(PhysicalFall.Asks.Hips)) : ""));
+                                    }
+                                }
                                 // (-ownShoveEvery 5 -ownShoveTimes 12: so many steps of the physics apart, so many times; -ownShoveTurns 90: each
                                 // one turned so many degrees from the last.)
                                 if (what == "shoves" && k >= 10 && k < 10 + (int)Number("-ownShoveTimes", 6) * (int)Number("-ownShoveEvery", 16) && (k - 10) % (int)Number("-ownShoveEvery", 16) == 0)

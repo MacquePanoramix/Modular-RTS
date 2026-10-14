@@ -259,6 +259,13 @@ namespace WonderGather
         public State Now { get; private set; }
         public float Since { get; private set; }
         public Rigidbody Part(int index) => parts[index];
+        // Where a boot is, and its toe, while it is let go (they go with the shin).
+        public void BootNow(int i, out Vector3 at, out Quaternion turned, out Vector3 toeIs, out Quaternion toeTurned)
+        {
+            var shin = parts[Shin + i].transform;
+            at = shin.TransformPoint(footAt[i]); turned = shin.rotation * footTurn[i];
+            toeIs = shin.TransformPoint(toeAt[i]); toeTurned = shin.rotation * toeTurn[i];
+        }
         // Where its hips are, and its head, while it is let go.
         public Vector3 HipsAt => parts[Hips] != null ? parts[Hips].position : segments[Hips] != null ? segments[Hips].position : transform.position;
         public Vector3 HeadAt => parts[Head] != null ? parts[Head].position : segments[Head] != null ? segments[Head].position : transform.position;
@@ -732,10 +739,18 @@ namespace WonderGather
             if (balance != null) { balance.Afresh(); balance.Acts = balanced; }
             if (TryGetComponent<ThingsInHand>(out var things)) things.enabled = true;
             if (TryGetComponent<PhysicalBack>(out var back)) back.Want(0);
-            body.Bow(0); body.Sink(0);
             Now = State.Up; beforeTime = latelyTime = -1;
             GotUp++; gaveUpRunning = 0;
+            // S3b, step 2: a miner that stands by its own joints stands up by them too. Crouched as it is, its body
+            // becomes its own, and its legs raise it against the ground. (RisesItself off, or a miner that does not
+            // stand so: the posed body stands it up, at its legs' pace, as it did.)
+            if (RisesItself && TryGetComponent<OwnBody>(out var itsOwn) && itsOwn.Wanted && itsOwn.BeginLow()) { RoseItself++; return; }
+            body.Bow(0); body.Sink(0);
         }
+        // (Off until the crouch it is taken over in is one its weight is over its feet in: the posed body's, from its
+        // knees, has its weight 10 to 19 cm ahead of its soles, and made its own there it went straight over.)
+        public static bool RisesItself = false;
+        public int RoseItself { get; private set; }
 
         private int Which(Collider solid)
         {

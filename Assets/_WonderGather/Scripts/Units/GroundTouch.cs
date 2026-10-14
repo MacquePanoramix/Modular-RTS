@@ -9,11 +9,21 @@ namespace WonderGather
     {
         public Vector3 Where { get; private set; }
         public float Up { get; private set; }
+        // (Getting up, only what does not move bears it: not another of its own parts, which strike each other then,
+        // nor anything else that moves.)
+        public bool StillOnly;
+        // (For whoever looks at what else touches it: anything that moves.)
+        public static System.Action<GroundTouch, Collider> Touched;
 
         public void Clear() { Where = Vector3.zero; Up = 0; }
 
+        // (How many touches have been taken, ever: for whoever counts them.)
+        public static int Taken;
+
         private void Take(Collision touch)
         {
+            Taken++;
+            if (StillOnly && touch.body != null) { Touched?.Invoke(this, touch.collider); return; }
             for (int k = 0; k < touch.contactCount; k++)
             {
                 var point = touch.GetContact(k);

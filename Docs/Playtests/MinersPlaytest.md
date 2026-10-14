@@ -459,6 +459,42 @@ which miner and which boulder.
   shut eyes: these are how the models are made, and show more on a
   still body seen from near.
 
+## The work, with arms as strong as the body needs (October 14): for Luis to play
+
+**A fourth build: `Builds/WindowsOrdinaryPlace_Oct14`**, beside the three of
+October 13, which are as they were. Nothing needs switching on: what is new is
+how a miner works.
+
+**What is new in it** (all on the work branch since October 14, now in the game):
+
+- **Arms as strong as the body needs** (Luis decided, October 14:
+  [the message](../Correspondence/2026-10-14_ARMS_AS_ITS_BODY_NEEDS.md)). Each
+  miner's shoulders and elbows have what pushing its own upper body up asks
+  (Small's shoulder 24 -> 42 N m, Long's 31 -> 76, Round's 61 -> 85). At the
+  rock they swing harder and truer and tire more slowly: Round first rests at
+  about its 50th blow, where it rested at its 19th.
+- **Tiredness takes precision as well as strength** (Luis: "tiredness should
+  also influence strength and precision"). Tired, its blows come down weaker
+  (as before) and land less true: Round's spread from 10 mm fresh to 26 mm
+  tired.
+- **A breath between blows** now and then, more often the more tired it is:
+  it lets the pick's head rest where the blow left it, straightens a little
+  and breathes for one to two seconds
+  ([the research behind both](../Research/2026-10-14_MiningAndTiredness.md)).
+
+**What to try.** Choose a miner, put its own pickaxe beside it (the panel's
+middle button), send it to a boulder, and let it work a minute or two: watch
+how its blows land as it tires, when it takes a breath, and when it rests. Do
+the same with the other two. The strength slider still works.
+
+**What is the same.** The step (as in the builds of October 13). **The
+getting up is the old one** that Luis found "super weird": the new one is being
+built on the bench only, and is not in this build.
+
+**Questions to judge.** Does the pace of work feel right (Luis: "You can make
+what feels right")? Do the breaths read as a tired body, or as a pause? Is the
+loss of precision when tired visible, too much, too little?
+
 ## A step (October 13): for Luis to judge
 
 **Luis tried it on the night of October 13:** "It is generally

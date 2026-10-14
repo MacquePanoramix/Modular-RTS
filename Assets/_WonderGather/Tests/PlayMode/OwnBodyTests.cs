@@ -623,6 +623,86 @@ namespace WonderGather.Tests
             }
         }
 
+        // S3b, step 2 (run only when asked: it tells, and holds nothing yet). Each miner, posed crouched so deep (a
+        // share of its hips' height) and bowed so far (degrees), is made its own as it is, and is to stand up by what
+        // its legs give. Told for each: where its weight was over its soles, whether it rose, how long that took, the
+        // most its legs gave of what they have, how far its boots moved.
+        // (-ownLow ".3,.45": how deep. -ownBow "20,40": how bowed. -ownOnly Small. -ownTick 1: every fifth step told.)
+        [UnityTest, Explicit, Timeout(900000)]
+        public IEnumerator MadeLowItStandsUpByItsOwnLegs()
+        {
+            Time.captureFramerate = 50;
+            OwnBody.Told = what => Debug.Log("OWN_TOLD " + what);
+            StepSet();
+            var c = System.Globalization.CultureInfo.InvariantCulture;
+            string onlyOne = CaptureTools.Argument("-ownOnly");
+            bool ticks = CaptureTools.Argument("-ownTick") == "1";
+            float[] Numbers(string argument, string otherwise) => System.Array.ConvertAll((CaptureTools.Argument(argument) ?? otherwise).Split(','), x => float.Parse(x, c));
+            float[] lows = Numbers("-ownLow", ".25,.4,.55"), bows = Numbers("-ownBow", "30");
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                if (!string.IsNullOrEmpty(onlyOne) && onlyOne != name) continue;
+                var body = unit.GetComponent<ProceduralBiped>();
+                foreach (float low in lows)
+                    foreach (float bowed in bows)
+                    {
+                        Vector3 away = default, spotAt = default;
+                        yield return StandPlainly(unit, (s0, a0) => { away = a0; spotAt = s0; });
+                        OwnBody own = null;
+                        yield return Own(unit, name, o => own = o);
+                        yield return Wait(1);
+                        // The posed body again, crouched.
+                        look.SetOwn(false);
+                        yield return Wait(.6f);
+                        body.Sink(low * body.StandingHipHeight);
+                        if (unit.TryGetComponent<PhysicalBack>(out var back)) back.Want(bowed); else body.Bow(bowed);
+                        // (Its hips go back until its weight is over the middle of its soles, as far as they go.)
+                        var solved = unit.GetComponent<MinerBody>().Solved;
+                        var weighed = unit.GetComponent<PhysicalBody>();
+                        float aheadNow = 0;
+                        for (float until = Time.time + 3; Time.time < until;)
+                        {
+                            aheadNow = Vector3.Dot(Flat(weighed.CentreOfMass() - .5f * (solved.feet[0].position + solved.feet[1].position)), away);
+                            body.SetBack(body.BackWanted + .1f * aheadNow);
+                            yield return null;
+                        }
+                        Debug.Log(string.Format(c, "OWN_LOW {0}, posed crouched {1:0.00} and bowed {2:0}: its hips {3:0} mm back, its weight {4:0} mm ahead of the middle of its soles; a back that works: {5}", name, low, bowed, body.BackNow * 1000, aheadNow * 1000, back != null));
+                        int downs = own.WentDown;
+                        look.SetOwn(true); own.Wanted = true;
+                        bool made = own.BeginLow();
+                        Assert.That(made, Is.True, name + " could not be made low.");
+                        Vector3 bootsFrom = .5f * (own.Part(OwnBody.Foot).transform.position + own.Part(OwnBody.Foot + 1).transform.position);
+                        float began = Time.time, most = 0, rose = -1;
+                        for (float until = Time.time + 12; Time.time < until && own.WentDown == downs && own.Stands;)
+                        {
+                            yield return new WaitForFixedUpdate();
+                            if (!own.Stands) break;
+                            if (own.Rising)
+                            {
+                                most = Mathf.Max(most, Mathf.Max(own.Asked(0), own.Asked(1)));
+                                if (ticks && Time.frameCount % 5 == 0) Debug.Log(string.Format(c, "OWN_TICK {0:0.00} risen {1:0.00} | {2}", Time.time - began, own.Risen, own.Tick(away, spotAt)));
+                            }
+                            else if (rose < 0) { rose = Time.time - began; until = Time.time + 3; }
+                        }
+                        bool stands = own.Stands && own.WentDown == downs && rose >= 0;
+                        Vector3 bootsNow = stands ? .5f * (own.Part(OwnBody.Foot).transform.position + own.Part(OwnBody.Foot + 1).transform.position) : bootsFrom;
+                        Debug.Log(string.Format(c, "OWN_ROSE {0}, crouched {1:0.00} of its hips' height and bowed {2:0}: {3}; its legs gave {4:0.00} of what they have at the most; its boots moved {5:0} mm",
+                            name, low, bowed, stands ? string.Format(c, "stood up in {0:0.00} s, and stood 3 s more", rose) : rose >= 0 ? "stood up and went down after" : "went down", most, Flat(bootsNow - bootsFrom).magnitude * 1000));
+                        look.SetOwn(false);
+                        if (unit.TryGetComponent<PhysicalBack>(out var straight)) straight.Want(0);
+                        body.Bow(0); body.Sink(0); body.SetBack(0);
+                        var fall = unit.GetComponent<PhysicalFall>();
+                        for (float until = Time.time + 60; Time.time < until && fall != null && fall.Now != PhysicalFall.State.Up;) yield return null;
+                        yield return Wait(1);
+                    }
+            }
+            OwnBody.Told = null;
+        }
+
         // Pulled at its chest with 0.08 of its weight for two and a half seconds, it leans (or steps) and stands.
         // (Small and Long are held to it. Round is told and not yet held to it: on October 13 it went down in 2 runs of
         // 7, falling forward out of its second catch while the pull was still on.)

@@ -166,6 +166,53 @@ namespace WonderGather
         // chest folds it forward.
         public static float LeansBack = 8.3633f, LeansBackAtMost = 22;
         private float sinksBy, sinkWants, leansNow, lastingAsked;
+        // ---- Rising (S3b, step 2). Made low (crouched, after a fall), it stands up by what its legs give against the
+        // ground, as it stands by them. It goes from how it is to how it stands in one movement, begun and ended
+        // gently: how far along that it is goes on at RisesAt of its height a second for a rise as high as this one;
+        // slower as its legs give more of what they have (at its whole pace while no joint of a leg gives more than
+        // RiseEases of its strength, not at all once one gives RiseBears). By how far along it is, its joints are
+        // asked for how it stands (whoever owns it: Risen), its hips come upright, and it means its weight to be
+        // higher: but never more than RiseLeads metres above where its weight really is. It has risen when it is
+        // at the end of that, within RisenShort of how high it stood, and has been at rest for RisenFor seconds;
+        // at the end of it for GivesUpAfter seconds and still not so high, it cannot, and goes down. While it rises
+        // it takes no step: pushed over, it goes down again.
+        // (Until October 14 how high it meant to be went on steadily while what its joints were asked for began
+        // slowly, and it stopped meaning to be higher while its weight was 3 cm under that. From a deep tuck its
+        // joints, sprung towards the tuck still, held it 10 cm under: it stood folded over and waited for ever.)
+        public static float RisesAt = .3f, RiseEases = .55f, RiseBears = .95f, RiseLeads = .03f, RisenFor = .3f, RisenShort = .07f, GivesUpAfter = 4;
+        // Before it rises it has its weight on its feet: it only keeps itself (which brings its weight back over its
+        // soles, and takes it off its hands if they are on the ground) until its boots have borne RiseOnFeet of its
+        // weight, the push it wants no further than a centimetre outside its soles, for RiseSettles seconds. Not so
+        // within SettlesWithin seconds, it cannot, and goes down.
+        public static float RiseOnFeet = .85f, RiseSettles = .2f, SettlesWithin = 3;
+        private bool settled;
+        private float settledFor, unsettledFor;
+        private bool rising;
+        private float risesFrom, risesEffort, risenCalm, stoodHigh, risingFor, risesAlong, atEndFor;
+        private Quaternion uprightFrom, uprightTo;
+        private Vector2 stoodOver;
+        public bool Rising => rising;
+        // Every joint sprung again as it stands (whoever got it up had them stiffer).
+        public void Soften()
+        {
+            for (int j = 1; j < Count; j++)
+            {
+                var drive = parts[j].xDrive; drive.stiffness = stoodSpring[j]; drive.damping = stoodDamper[j]; drive.forceLimit = strength[j]; parts[j].xDrive = drive;
+                if (hinge[j]) continue;
+                drive = parts[j].yDrive; drive.stiffness = stoodSpring[j]; drive.damping = stoodDamper[j]; drive.forceLimit = strength[j]; parts[j].yDrive = drive;
+                drive = parts[j].zDrive; drive.stiffness = stoodSpring[j]; drive.damping = stoodDamper[j]; drive.forceLimit = strength[j]; parts[j].zDrive = drive;
+            }
+        }
+        // How far it has risen (0: as low as it began; 1: as high as it stood).
+        public float Risen => !rising ? 1 : risesAlong;
+        // How high its weight stood when it began, and where over its boots it held it: for whoever makes it low
+        // another time. (Known once it has kept itself for a step.)
+        public bool Begun => begun;
+        public float Height => height;
+        public Vector2 StandsBy => standsBy;
+        // It is made low and is to stand up: how high its weight stands, how its hips are turned when it stands, and
+        // where over its boots it holds its weight then. (Said before it keeps itself for the first time.)
+        public void RisesTo(float stoodHeight, Quaternion stoodUpright, Vector2 stoodBy) { rising = true; stoodHigh = stoodHeight; uprightTo = stoodUpright; stoodOver = stoodBy; }
         private Vector3 lastingFelt;
         private bool leaned;
         private readonly Vector3[] feltLately = new Vector3[16];
@@ -493,6 +540,14 @@ namespace WonderGather
                 standsBy = new Vector2(Vector3.Dot(rest - between, beside0), (1 - StandsMid) * Vector3.Dot(rest - between, Vector3.Cross(beside0, Vector3.up)));
                 Vector3 ahead0 = Flat(upright * Vector3.forward).normalized, across0 = Vector3.Cross(Vector3.up, ahead0);
                 madeApart = new Vector2(Vector3.Dot(sole[1] - sole[0], across0), Vector3.Dot(sole[1] - sole[0], ahead0));
+                if (rising)
+                {
+                    // (Made low: it means to be as high as it stood, and is so far under that now.)
+                    height = stoodHigh; sinksBy = Mathf.Max(0, stoodHigh - high); risesFrom = sinksBy; sinkWants = sinksBy;
+                    uprightFrom = upright; standsBy = stoodOver;
+                    Tells?.Invoke($"rises: its weight {high:F3} m up, of {stoodHigh:F3} standing; its hips tipped {Vector3.Angle(Vector3.up, upright * Vector3.up):F0} degrees; its weight {Vector3.Dot(rest - between, Vector3.Cross(beside0, Vector3.up)) * 1000:F0} mm ahead of the middle between its soles, which are {soleSize[0].z * 1000:F0} long");
+                    if (risesFrom < 1e-3f) rising = false;
+                }
             }
             if (Steps && hasBorne && OffGroundAtMost > 0 && offGround >= OffGroundAtMost)
             {
@@ -503,7 +558,11 @@ namespace WonderGather
             // boot: a boot off the ground, trailing behind it or flung up, is not the ground. Taken from the middle of
             // its two soles, a miner with a boot 0.2 m up read 0.1 m lower than it stood, and was taken for down.)
             float highOver = Steps ? weight.y - Mathf.Min(sole[0].y, sole[1].y) : high;
-            if (float.IsNaN(high) || highOver < DownAt * height || Vector3.Angle(Vector3.up, parts[Hips].transform.up) > DownLeaning)
+            // (Rising, it is down by where it means to be: a fifth lower than that, or its hips tipped so far from how
+            // it means them.)
+            bool isDown = rising ? highOver < DownAt * (height - sinksBy) || Vector3.Angle(upright * Vector3.up, parts[Hips].transform.up) > DownLeaning
+                : highOver < DownAt * height || Vector3.Angle(Vector3.up, parts[Hips].transform.up) > DownLeaning;
+            if (float.IsNaN(high) || isDown)
             {
                 Tells?.Invoke($"down: its weight {highOver:F3} m over its lower boot ({ground:F3} the ground it reckons from; its soles at {sole[0].y:F3} and {sole[1].y:F3}), of {height:F3} standing; its hips tipped {Vector3.Angle(Vector3.up, parts[Hips].transform.up):F0} degrees; swinging leg {swings}");
                 return false;
@@ -539,13 +598,54 @@ namespace WonderGather
             Vector3 needsNow = going;
             bool outOfTime = false;
             // (How low it means to be: in a catching step, by what its leg needs; standing, as it stands.)
-            if (swings < 0) sinkWants = 0;
-            if (sinksBy != sinkWants) sinksBy = Mathf.MoveTowards(sinksBy, sinkWants, (sinkWants > sinksBy ? SinksDown : SinksAtMost * height / Mathf.Max(.05f, SinksBack)) * step);
+            if (rising)
+            {
+                // It rises at its legs' own pace: slower as they give more of what they have.
+                float effort = 0;
+                for (int j = Thigh; j < Count; j++) effort = Mathf.Max(effort, asked[j] / Mathf.Max(1e-3f, strength[j]));
+                risesEffort = Mathf.Lerp(risesEffort, effort, Mathf.Clamp01(step / .15f));
+                if (!settled)
+                {
+                    settledFor = bears[0] + bears[1] >= RiseOnFeet * whole * g * step && Outside < .01f ? settledFor + step : 0;
+                    unsettledFor += step;
+                    if (settledFor >= RiseSettles) { settled = true; Tells?.Invoke($"its weight is on its feet, {unsettledFor:F2} s after the keeper took it"); }
+                    else if (unsettledFor > SettlesWithin)
+                    {
+                        Tells?.Invoke($"could not get its weight onto its feet in {unsettledFor:F2} s: its boots bear {(bears[0] + bears[1]) / (whole * g * step):F2} of it, the push it wants {Outside * 1000:F0} mm outside its soles");
+                        return false;
+                    }
+                }
+                float pace = settled ? RisesAt * height * Mathf.Clamp01((RiseBears - risesEffort) / Mathf.Max(1e-3f, RiseBears - RiseEases)) : 0;
+                risesAlong = Mathf.Min(1, risesAlong + pace / Mathf.Max(.05f, risesFrom) * step);
+                float up = risesAlong, gone = up * up * up * (10 + up * (6 * up - 15));
+                sinksBy = Mathf.Max(risesFrom * (1 - gone), height - high - RiseLeads);
+                sinkWants = sinksBy;
+                upright = Quaternion.Slerp(uprightFrom, uprightTo, gone);
+                risingFor += step;
+                bool high0 = height - high < RisenShort * height;
+                risenCalm = risesAlong >= 1 && high0 && goes.magnitude < CalmUnder ? risenCalm + step : 0;
+                atEndFor = risesAlong >= 1 && !high0 ? atEndFor + step : 0;
+                if (risenCalm >= RisenFor)
+                {
+                    rising = false; sinksBy = sinkWants = 0;
+                    Tells?.Invoke($"risen, {risingFor:F2} s after it began: its weight {high:F3} m up");
+                }
+                else if (atEndFor >= GivesUpAfter)
+                {
+                    Tells?.Invoke($"could not rise: its weight {high:F3} m up, of {height:F3} standing, {risingFor:F2} s after it began");
+                    return false;
+                }
+            }
+            else
+            {
+                if (swings < 0) sinkWants = 0;
+                if (sinksBy != sinkWants) sinksBy = Mathf.MoveTowards(sinksBy, sinkWants, (sinkWants > sinksBy ? SinksDown : SinksAtMost * height / Mathf.Max(.05f, SinksBack)) * step);
+            }
             carrying = -1;
             float unloaded = 0;
             // (The step switched off while one is under way: the leg is let go of, as it stands.)
             if (!Steps && swings >= 0) { Springs(swings, false, step); swings = -1; catching = false; readying = false; prepared = false; sinkWants = 0; LegsHeld = false; }
-            if (Steps && lighter != null)
+            if (Steps && lighter != null && !rising)
             {
                 Vector3 aheadNow = Flat(parts[Hips].transform.forward).normalized, acrossNow = Vector3.Cross(Vector3.up, aheadNow);
                 if (swings < 0 || readying)

@@ -3249,6 +3249,19 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
   own; anything off the path; the getting up in the game (it is not in
   it). **Not looked at by Luis or by judges.**
 
+## The build of October 14 (late)
+
+- **Work branch 32fa949.** The whole PlayMode suite: 201 tests, 175 passed, 0
+  failed, 26 run only when asked. As played (`-ownAsPlayed 1`): 162 passed, 13
+  failed: the 12 known since October 10 (the same list as the run before) and
+  `NightLightsTheHouseAndDayRestsIt` (0.896 for 0.9; it passed in the first
+  run the same night).
+- **Build:** `OrdinaryPlaceSetup.BuildWindows`, "Build Finished, Result:
+  Success", copied to `Builds/WindowsOrdinaryPlace_Oct14`. The scripts and
+  tests of the main project brought to the same commit.
+- **Not done:** the built game was not opened by me; the getting up's new code
+  is in it but off (`PhysicalFall.RisesItself` false), as before.
+
 ## S3b step 2 — one step from hands and knees (October 14, later; in progress)
 
 - **Work branch 8e44001 and after; bench only** (`OwnRiseBench`, Small, from its

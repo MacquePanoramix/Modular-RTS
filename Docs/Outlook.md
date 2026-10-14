@@ -93,3 +93,6 @@ work goes back to the task in hand.
   arms, the tiredness, the breaths; the getting up stays off), so Luis can play
   the work as it now is. Keep the judges on the getting up (Luis asked), and
   research rising from one knee before building it.
+- **Done the same night:** the suite clean (as played, the known failures
+  only); `Builds/WindowsOrdinaryPlace_Oct14` made; the judges looked at the
+  getting up (round 1); rising from one knee researched.

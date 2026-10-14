@@ -2,6 +2,17 @@
 
 **Updated:** October 14, 2026.
 
+- **A build for Luis to play, October 14 (late): `Builds/WindowsOrdinaryPlace_Oct14`**
+  (beside the three of October 13). In it: arms as strong as the body needs
+  (Luis's decision), tiredness taking precision, breaths between blows. The
+  getting up in it is the old one; the new one stays on the bench. Nothing to
+  switch on. [What to try](Playtests/MinersPlaytest.md#the-work-with-arms-as-strong-as-the-body-needs-october-14-for-luis-to-play).
+  The whole suite before it: 201 tests, 175 passed, 0 failed, 26 run only
+  when asked; as played, the 12 failures known since October 10 and the
+  house's night-light test, which comes and goes. The built game was not
+  opened by me.
+- **The outlook habit (Luis, October 14):** now and then a general look at
+  the whole project, then back to the task: [Outlook.md](Outlook.md).
 - **Luis, October 14: "You can make what feels right"** (the pace of
   work), with deep research on mining in media first, and **tiredness
   to take strength and precision**: [the research](Research/2026-10-14_MiningAndTiredness.md)
