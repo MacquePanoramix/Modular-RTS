@@ -154,8 +154,24 @@ namespace WonderGather
         public static float BalanceDamps = .19f, BalancePushes = .13f;
         // (An arm whose hand is that share of its length or more from its shoulder when the hand is put is kept straight.)
         public static float ArmStraight = .985f;
+        // Moving its weight off a limb: to the nearest place over the others deep enough (true), or along the line
+        // towards their middle (false).
+        public static bool BalanceShiftsNearest = false;
+        // Its hold learns what its pose holds back: asked BalanceHoldLearns metres further for each second its weight
+        // stays a metre short of where it is asked to be (up to BalanceShiftsAtMost).
+        public static float BalanceHoldLearns = 0;
+        private Vector3 holdMore;
         private bool planting, landed, handsLet;
         private float limbAtShift;
+        private Vector3 askedBy, hipsAtPlant;
+        // How much of what it bore when it began to move its weight off it the limb still bears (1: all of it).
+        private float OffLoad()
+        {
+            if ((offLeg < 0 && offHand < 0) || limbAtShift <= 1e-3f) return 1;
+            float limbNow = offLeg >= 0 ? leanFelt[Thigh + offLeg] + leanFelt[Shin + offLeg] + leanFelt[Foot + offLeg]
+                : offHand == 2 ? leanFelt[Forearm] + leanFelt[Forearm + 1] : leanFelt[Forearm + offHand];
+            return Mathf.Clamp01(limbNow / limbAtShift);
+        }
         // (How its hips are turned standing, from the way it faces: given by whoever makes it.)
         public Quaternion StoodHips = Quaternion.identity;
         private readonly bool[] plantedHand = new bool[2], plantedLeg = new bool[2], plantedStraight = new bool[2], plantedKnee = new bool[2];
@@ -176,6 +192,8 @@ namespace WonderGather
         private readonly Vector3[] sup = new Vector3[16], supAt = new Vector3[16], outline = new Vector3[33], sorted = new Vector3[16];
         private readonly int[] supPart = new int[16];
         private readonly float[] supW = new float[16], supF = new float[16], shareW = new float[16];
+        // (Of the limb it moves its weight off: never one of the others its weight goes over, whatever it still bears.)
+        private readonly bool[] supOff = new bool[16];
         // (Each boot's sole, as the keeper has it: a box about the boot's middle, so wide, high and long.)
         public Vector3[] SoleSize;
         // (A boot that bears it and lies this flat or flatter bears it over its whole sole: its four corners.)
@@ -383,7 +401,7 @@ namespace WonderGather
                 if (one != null && one.stages.Length > 0 && front >= one.frontLeast && front <= one.frontMost) { way = one; break; }
             if (way == null) return false;
             leads = Vector3.Dot(parts[Trunk].transform.right, Vector3.up) >= 0 ? 1 : 0;
-            leant = 0; leansMore = Vector3.zero;
+            leant = 0; leansMore = Vector3.zero; holdMore = Vector3.zero;
             Begin(0);
             return true;
         }
@@ -703,7 +721,10 @@ namespace WonderGather
             {
                 if (leanFelt[j] < BalanceBorne) continue;
                 bool off = (offLeg >= 0 && (j == Thigh + offLeg || j == Shin + offLeg || j == Foot + offLeg)) || (offHand >= 0 && (j == Forearm + offHand || (offHand == 2 && j >= Forearm && j < Thigh)));
-                float w = off ? (all ? offW : 0) : 1;
+                // (The limb it moves its weight off is given what it really still bears, not what the clock says: given
+                // nothing while its knee still bore a third of it, the others pushed as if it bore nothing, and pushed
+                // its weight back onto it.)
+                float w = off ? (all ? Mathf.Max(offW, OffLoad()) : 0) : 1;
                 if (w <= 0) continue;
                 Transform boot = j >= Foot ? parts[j].transform : null;
                 if (boot != null && SoleSize != null && boot.up.y >= SoleFlat)
@@ -712,31 +733,31 @@ namespace WonderGather
                     for (int c = 0; c < 4; c++)
                     {
                         supAt[n] = boot.TransformPoint(new Vector3((c & 1) == 0 ? -half.x : half.x, -half.y, (c & 2) == 0 ? -half.z : half.z));
-                        sup[n] = Flat(supAt[n]); supPart[n] = j; supW[n] = w; n++;
+                        sup[n] = Flat(supAt[n]); supPart[n] = j; supW[n] = w; supOff[n] = off; n++;
                     }
                     continue;
                 }
-                supAt[n] = leanFeltAt[j]; sup[n] = Flat(leanFeltAt[j]); supPart[n] = j; supW[n] = w; n++;
+                supAt[n] = leanFeltAt[j]; sup[n] = Flat(leanFeltAt[j]); supPart[n] = j; supW[n] = w; supOff[n] = off; n++;
             }
             return n;
         }
 
-        // The middle of what bears it, limb by limb (a boot's corners together are one): of those wholly given their
-        // share (full), or of all; of its boots only (boots).
+        // The middle of what bears it, limb by limb (a boot's corners together are one): of all but the limb it moves its
+        // weight off (full), or of all; of its boots only (boots).
         private Vector3 MiddleOf(int n, bool full, bool boots, out int limbs)
         {
             Vector3 sum = Vector3.zero;
             limbs = 0;
             for (int i = 0; i < n; i++)
             {
-                if (full && supW[i] < 1) continue;
+                if (full && supOff[i]) continue;
                 if (boots && supPart[i] < Foot) continue;
                 // (A limb's points together count once.)
                 int same = 0; Vector3 at = Vector3.zero;
                 bool first = true;
                 for (int k = 0; k < n; k++)
                 {
-                    if (supPart[k] != supPart[i] || (full && supW[k] < 1)) continue;
+                    if (supPart[k] != supPart[i] || (full && supOff[k])) continue;
                     if (k < i) { first = false; break; }
                     at += sup[k]; same++;
                 }
@@ -794,6 +815,41 @@ namespace WonderGather
             return m >= 3 ? depth : -closest;
         }
 
+        // The nearest place to a flat point as deep as d within the outline: on one of its edges' lines moved d inwards,
+        // or where two of them cross (false if no place is that deep).
+        private bool Nearest(int m, Vector3 p, float d, out Vector3 q)
+        {
+            q = p;
+            if (m < 3) return false;
+            Vector3 Inward(int i)
+            {
+                Vector3 ab = outline[(i + 1) % m] - outline[i];
+                return new Vector3(-ab.z, 0, ab.x) / Mathf.Max(1e-6f, ab.magnitude);
+            }
+            bool Deep(Vector3 x)
+            {
+                for (int i = 0; i < m; i++) if (Vector3.Dot(x - outline[i], Inward(i)) < d - 1e-4f) return false;
+                return true;
+            }
+            float best = float.PositiveInfinity;
+            for (int i = 0; i < m; i++)
+            {
+                Vector3 ni = Inward(i);
+                Vector3 x = p + (d - Vector3.Dot(p - outline[i], ni)) * ni;
+                if ((x - p).sqrMagnitude < best && Deep(x)) { best = (x - p).sqrMagnitude; q = x; }
+                for (int k = i + 1; k < m; k++)
+                {
+                    Vector3 nk = Inward(k);
+                    float det = ni.x * nk.z - ni.z * nk.x;
+                    if (Mathf.Abs(det) < 1e-6f) continue;
+                    float ci = ni.x * outline[i].x + ni.z * outline[i].z + d, ck = nk.x * outline[k].x + nk.z * outline[k].z + d;
+                    Vector3 y = new Vector3((ci * nk.z - ck * ni.z) / det, p.y, (ni.x * ck - nk.x * ci) / det);
+                    if ((y - p).sqrMagnitude < best && Deep(y)) { best = (y - p).sqrMagnitude; q = y; }
+                }
+            }
+            return best < float.PositiveInfinity;
+        }
+
         // Before it lifts a limb, its weight goes over the others: true once it is (or it has tried long enough).
         private bool ShiftedOff(int leg, int hand, float step)
         {
@@ -840,6 +896,7 @@ namespace WonderGather
             }
             bodyTo = Flat(Weight());
             highTo = parts[Hips].transform.position.y;
+            hipsAtPlant = parts[Hips].transform.position;
             // (Its hips kept turned as they are, but level across.)
             Transform hips = parts[Hips].transform;
             Vector3 level = Flat(hips.right);
@@ -871,7 +928,8 @@ namespace WonderGather
                 wanderTo = new Vector3(Mathf.Cos(turn), 0, Mathf.Sin(turn)) * far;
             }
             wander = Vector3.Lerp(wanderFrom, wanderTo, Mathf.SmoothStep(0, 1, wanderAlong));
-            Vector3 by = Vector3.ClampMagnitude(bodyTo + wander - at - BalanceDamps * Flat(WeightGoes()), BalanceShiftsAtMost);
+            holdMore = Vector3.ClampMagnitude(holdMore + BalanceHoldLearns * Flat(bodyTo + wander - at) * step, BalanceShiftsAtMost);
+            Vector3 by = Vector3.ClampMagnitude(bodyTo + wander - at - BalanceDamps * Flat(WeightGoes()) + holdMore, BalanceShiftsAtMost);
             // (Its boots let down flat about their toes, if the pose says.)
             if (stage.flattens > 0 && SoleSize != null)
                 for (int i = 0; i < 2; i++)
@@ -893,6 +951,7 @@ namespace WonderGather
                 up = Mathf.Clamp(highTo - hips.position.y - BalanceDamps * parts[Hips].velocity.y, -BalanceShiftsAtMost, BalanceShiftsAtMost);
             }
             Vector3 hipsTo = hips.position + by + Vector3.up * up;
+            askedBy = by;
             // (Turned as they were when what bears it was put: nothing else keeps its hips from pitching or rolling,
             // its limbs reaching for where they are kept from wherever its hips are.)
             // (Only once no hand is kept on the ground: turned upright with its hands still down, its arms held its
@@ -977,7 +1036,7 @@ namespace WonderGather
             // or so far towards over its boots; or, keeping its weight over its feet, there.
             Vector3 to = MiddleOf(n, true, false, out int fullLimbs), boots = MiddleOf(n, false, true, out int onBoots);
             int full = 0;
-            for (int i = 0; i < n; i++) if (supW[i] >= 1) full++;
+            for (int i = 0; i < n; i++) if (!supOff[i]) full++;
             if (fullLimbs == 0) to = MiddleOf(n, false, false, out _);
             bool moving = offLeg >= 0 || offHand >= 0;
             // (Moving off a limb: only as far as over the others, by twice the margin, from where it is towards their
@@ -985,10 +1044,11 @@ namespace WonderGather
             if (full >= 3 && (moving || BalanceLeastMove))
             {
                 int others = 0;
-                for (int i = 0; i < n; i++) if (supW[i] >= 1) sorted[others++] = sup[i];
+                for (int i = 0; i < n; i++) if (!supOff[i]) sorted[others++] = sup[i];
                 int m0 = Outline(sorted, others);
                 float now = Within(m0, at, out _);
-                if (now < 2 * BalanceMargin)
+                if (now < 2 * BalanceMargin && BalanceShiftsNearest && Nearest(m0, at, 2 * BalanceMargin, out Vector3 near)) to = near;
+                else if (now < 2 * BalanceMargin)
                 {
                     // (Along the line to their middle, the nearest place that deep.)
                     float lo = 0, hi = 1;
@@ -1088,7 +1148,19 @@ namespace WonderGather
                 Bend(Forearm), Bend(Forearm + 1), Off(Forearm), Off(Forearm + 1), Off(UpperArm), Off(UpperArm + 1), Bend(Shin), Bend(Shin + 1), Off(Shin), Off(Shin + 1), Off(Thigh), Off(Thigh + 1));
         }
 
-        public string Tick() => Told() + Where();
+        public string Tick() => Told() + Where() + Slips();
+
+        // (How far each thing kept on the ground has slid from where it was put, mm, flat; - where nothing is kept.)
+        private string Slips()
+        {
+            if (!planting) return "";
+            Vector3 lies0 = Lies(), right0 = Vector3.Cross(Vector3.up, lies0), moved = Flat(parts[Hips].transform.position - hipsAtPlant);
+            string asked = string.Format(System.Globalization.CultureInfo.InvariantCulture, "; hips asked {0:0} ahead {1:0} right, gone {2:0} ahead {3:0} right since kept", Vector3.Dot(askedBy, lies0) * 1000, Vector3.Dot(askedBy, right0) * 1000, Vector3.Dot(moved, lies0) * 1000, Vector3.Dot(moved, right0) * 1000);
+            string One(bool kept, Vector3 put, Vector3 now) => kept ? (Flat(now - put).magnitude * 1000).ToString("0", System.Globalization.CultureInfo.InvariantCulture) : "-";
+            return asked + "; slid: hands " + One(plantedHand[0], plantHand[0], HandEnd(0)) + " " + One(plantedHand[1], plantHand[1], HandEnd(1))
+                + ", boots " + One(plantedLeg[0], plantSole[0], parts[Foot].transform.TransformPoint(soleAt[0])) + " " + One(plantedLeg[1], plantSole[1], parts[Foot + 1].transform.TransformPoint(soleAt[1]))
+                + ", knees " + One(plantedKnee[0], plantKnee[0], JointAt(Shin)) + " " + One(plantedKnee[1], plantKnee[1], JointAt(Shin + 1));
+        }
         private string Told() => string.Format(System.Globalization.CultureInfo.InvariantCulture,
             "{0} {1:0.00} s: on {2} (hands {11:0.00} {12:0.00} knees {13:0.00} {14:0.00} boots {15:0.00} {16:0.00}), its weight {3:0} mm within them; moving off leg {4} hand {5} (giving it {6:0.00}); moved off {7} times, lifted all the same {8}; learnt {9:0} mm; bears {10:0.00}",
             StageNow, got, Supports, BalanceDepth * 1000, offLeg, offHand, offW, Shifts, ShiftsFailed, leansMore.magnitude * 1000, bore,
