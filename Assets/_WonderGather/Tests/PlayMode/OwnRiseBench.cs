@@ -92,6 +92,9 @@ namespace WonderGather.Tests
                         // there at so much of their height a second.)
                         // (flat=30: its boots kept on the ground let down flat about their toes, so many degrees a second.)
                         if (word.StartsWith("flat=")) { stage.flattens = float.Parse(word.Substring(5), Plain); continue; }
+                        // (hands=off: its weight off both hands, then they let go. rights=40: its hips turned towards standing.)
+                        if (word == "hands=off") { stage.letsHandsGo = true; continue; }
+                        if (word.StartsWith("rights=")) { stage.risesHips = float.Parse(word.Substring(7), Plain); continue; }
                         // (kneel=0.9: its knees drawn up under it along the ground, its ankles so many shins behind its hips.)
                         if (word.StartsWith("kneel=")) { stage.kneels = float.Parse(word.Substring(6), Plain); continue; }
                         if (word.StartsWith("hold="))
@@ -108,6 +111,7 @@ namespace WonderGather.Tests
                             var bal = word.Substring(4).Split(',');
                             stage.balance = float.Parse(bal[0], Plain);
                             if (bal.Length > 1) stage.balanceFeet = float.Parse(bal[1], Plain);
+                            if (bal.Length > 2) stage.balanceLead = float.Parse(bal[2], Plain);
                             continue;
                         }
                         // (sit=45,0.5,0.05,100: it sits back at up to so many degrees a second, its hips so much of its knees,
@@ -170,7 +174,9 @@ namespace WonderGather.Tests
                     foreach (var asked in stage.through)
                         text.Append(string.Format(Plain, " {0}{1}{2:0.##}", asked.what.ToString().ToLowerInvariant(), float.IsNegativeInfinity(asked.least) ? "<" : ">", float.IsNegativeInfinity(asked.least) ? asked.most : asked.least));
                     if (!float.IsNaN(stage.keeps)) text.Append(string.Format(Plain, " keep={0:0.00}", stage.keeps));
-                    if (!float.IsNaN(stage.balance)) text.Append(string.Format(Plain, " bal={0:0.00},{1:0.00}", stage.balance, stage.balanceFeet));
+                    if (!float.IsNaN(stage.balance)) text.Append(string.Format(Plain, " bal={0:0.00},{1:0.00}{2}", stage.balance, stage.balanceFeet, stage.balanceLead > 0 ? string.Format(Plain, ",{0:0.00}", stage.balanceLead) : ""));
+                    if (stage.letsHandsGo) text.Append(" hands=off");
+                    if (stage.risesHips > 0) text.Append(string.Format(Plain, " rights={0:0}", stage.risesHips));
                     if (stage.holds) text.Append(string.Format(Plain, " hold={0:0.00},{1:0.00}{2}", stage.holdHigh, stage.holdRate, stage.holdsFeet ? ",feet" : ""));
                     if (stage.flattens > 0) text.Append(string.Format(Plain, " flat={0:0}", stage.flattens));
                     if (stage.kneels > 0) text.Append(string.Format(Plain, " kneel={0:0.00}", stage.kneels));
