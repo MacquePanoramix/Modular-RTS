@@ -104,8 +104,8 @@ work look like work that is lived, not performed.**
 - **Short pauses, often.** Moving boxes, a minute's rest (or stretching)
   every ten minutes cut muscle fatigue markedly against none
   (a University of Alberta study, from summaries); short breaks of under
-  ten minutes go with less fatigue in a review of 22 studies
-  ([Albulescu and others](https://journals.plos.org/plosone/), from a summary).
+  ten minutes go with less fatigue in a review of 22 studies (Albulescu
+  and others, *PLOS ONE*; from a summary, the paper itself not read).
 - **How strength comes back.** Pushing a demolition hammer to
   exhaustion and then resting: strength came back as an exponential, a
   seventh of what was still missing each minute; **from 59% of full it
@@ -131,14 +131,15 @@ work look like work that is lived, not performed.**
   and more variably**, and the change went with **less co-contraction**
   (the muscles on both sides of a joint pulling against each other to
   hold it steady) rather than with a lack of force
-  ([elbow aiming study](https://pubmed.ncbi.nlm.nih.gov/18327575/) and the
-  related work in that search). **Variability rose most at the joints
+  ([the role of co-contraction, Montpellier](https://esploro.umontpellier.fr/esploro/outputs/journalArticle/The-role-of-cocontraction-in-the/99136689309311);
+  from its summary). **Variability rose most at the joints
   nearest the trunk** (the shoulder) ([PMC5325574](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5325574/)).
   Dart throwers were less accurate after muscular fatigue; baseball
   pitchers lost speed after any fatigue, and accuracy after throwing
   fatigue. **But people also change how they move to protect the goal**:
   in tracking and in repeated reaching, fatigued people kept what
-  mattered steady while the rest of the movement varied more.
+  mattered steady while the rest of the movement varied more
+  ([repetitive goal-directed movements](https://pubmed.ncbi.nlm.nih.gov/18327575/)).
 - **So, for a miner:** a tired blow comes down weaker (as ours does
   already), and lands less surely where it was aimed, more so for the
   shoulder than the wrist; and a tired miner partly makes up for it (it
