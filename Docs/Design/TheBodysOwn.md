@@ -1811,6 +1811,29 @@ Work branch 8e44001 and on; bench only.
   A search over both (with "stands" in its measure) is running. In all of
   it a search has stood Small up at 1 to 3 of 18 chance starts so far.
 
+**Later the same evening.**
+
+- The search over the second half found nothing that stands (a way with
+  hands and feet, then weight back over the feet: none of 18). What fails,
+  read in the pictures: moving its weight back over its feet with its
+  hands still down, it tips over sideways; with its hands let go before
+  its weight is over its feet, it falls on its face.
+- **Long and Round on Small's way** (one foot forward from hands and
+  knees, 36 chance starts, with frames, all three at once), kept their
+  balance throughout: Small 28, Long 28, Round 17. Round mostly never got
+  its weight off the leg in time (it put a foot forward at 14). Long alone,
+  at three of Small's places: none; not yet understood.
+- **Faults seen in the pictures and mended:** its feet went up into the air
+  behind it as it drew its knees under ([picture](../Images/GettingUp_2026-10-14/Small_LegsKickedUpBehind_AFault.jpg));
+  its legs now stay lying while its hands are placed, and its knees are
+  drawn up along the ground (a little lift remains while its hips are
+  still low). With that, one foot forward held at 12 of 18 chance starts
+  (14 before); the way before it was searched with the kick.
+- **How far the foot goes:** about half a leg's length forward, from behind
+  its knee to under its hip ([picture](../Images/GettingUp_2026-10-14/Small_HandsAndKneesThenAFootForward_Balance.jpg)).
+  A search now counts how far forward a foot went, so it cannot keep its
+  balance by hardly moving its foot.
+
 ### Questions for Luis
 
 | | Question | What I would do |
