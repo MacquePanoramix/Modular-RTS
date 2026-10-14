@@ -3269,8 +3269,8 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
   - **Toes** (the body that gets up only; three places, three miners):
     two of nine tries taken by the keeper, both down again; none stood.
   - **Not tested:** the stronger arms in the game as played; any build;
-    toes on the standing body; the standing body's tests with the arms
-    (they use no arm strength of their own: the arms hang, sprung).
+    toes on the standing body. (The standing body's own tests ran in
+    that whole suite, with the stronger arms, and passed.)
 
 ## S3b step 3 — a step, in the game (October 13)
 
