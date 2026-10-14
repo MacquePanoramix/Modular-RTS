@@ -51,6 +51,11 @@ namespace WonderGather
             // bears on the ground.
             public int steps = -1;
             public float stepAhead, stepOut, stepLifts = .06f;
+            // (stepUnder above nothing: its boot goes forward by way of under its hip, so high there (a share of its
+            // hip's height over the ground), the way a leg is brought forward from kneeling: its knee comes forward
+            // under its chest and its foot passes under it, not over the ground behind. Its boot turns from how it was
+            // to flat over the whole of it.)
+            public float stepUnder;
             // If it sits back in this pose (NaN: not): its knees bend further at up to so many degrees a second (and
             // its hips by sitHips times as much) for as long as its weight is further ahead of the middle between its
             // soles than sitAhead (a share of its hips' height), and come back when it is behind that; never more
@@ -100,6 +105,9 @@ namespace WonderGather
         // could not lift its chest off the ground with arms that have what pushing it up asks; at 10 it pushes itself
         // up onto its hands and knees, its head up, and nothing shakes.)
         public static float RuleTimes = 10;
+        // (Where a leg reached for the ground bends its knee: 0, the way the body lies along the ground; 1, the way the
+        // front of its hips faces; between, so much of the way from one to the other.)
+        public static float KneeFaces = .67f;
         private const float StillUnder = .2f, StillTurning = 1.2f;
         // Balance on hands, knees and feet (Luis, October 14: "I like your idea to implement balance"): the keeper on
         // more than two feet. It works out where the ground must push each hand, knee and boot that bears it, so that
@@ -112,21 +120,24 @@ namespace WonderGather
         // over the others, giving that limb's share to them over BalanceUnloads seconds, and lifts it once its weight is
         // over them (by BalanceMargin) and the limb bears less than BalanceLifts of it; if that has not come in
         // BalanceShiftsWithin seconds, it lifts it all the same.
-        public static float BalanceQuick = 3, BalanceMargin = .03f, BalanceSlides = .3f, BalanceLeans = .6f, BalanceLeansAtMost = .12f;
+        public static float BalanceQuick = 3, BalanceMargin = .037f, BalanceSlides = .3f, BalanceLeans = .6f, BalanceLeansAtMost = .12f;
         // (What bears each part is felt over BalanceFeels seconds; a part bears it once that is BalanceBorne of its
         // weight.)
         public static float BalanceFeels = .08f, BalanceBorne = .02f;
-        public static float BalanceUnloads = .5f, BalanceLifts = .15f, BalanceShiftsWithin = 2.5f;
+        // (Not moving off a limb, its weight only as far as over what bears it, not to their middle. October 14: held
+        // after one step at 5 of 36 places so, at 12 of 36 to their middle; off.)
+        public static bool BalanceLeastMove = false;
+        public static float BalanceUnloads = .64f, BalanceLifts = .15f, BalanceShiftsWithin = 2.5f;
         // Moving its weight off a limb, while that limb is lifted, and once it is put down, the hands and boots that
         // bear it stay where they are on the ground (each arm's and leg's joints asked for what keeps it there), and
         // its body is asked to be where its weight is meant to be: where it is asked to be goes there at up to BalanceShiftsAt metres a second, and it is
         // asked to be no more than BalanceShiftsAtMost from where it is. (Pushing with its limbs alone fought its pose,
         // which held its body where it was: October 14.)
-        public static float BalanceShiftsAt = .3f, BalanceShiftsAtMost = .12f;
+        public static float BalanceShiftsAt = .38f, BalanceShiftsAtMost = .057f;
         // (Asked to be where it is going to be in BalanceDamps seconds less far: so it comes there without overshoot.
         // BalancePushes: how much of the push that would bring its weight there its limbs give besides, from where they
         // bear; 0: they only bear it up.)
-        public static float BalanceDamps = .15f, BalancePushes = 1;
+        public static float BalanceDamps = .23f, BalancePushes = 0;
         // (An arm whose hand is that share of its length or more from its shoulder when the hand is put is kept straight.)
         public static float ArmStraight = .985f;
         private bool planting, landed;
@@ -176,7 +187,7 @@ namespace WonderGather
         private readonly Vector3[] anchors;
         private readonly float[] bears = new float[2];
         private Vector3 stepFrom, stepTo;
-        private Quaternion stepBoot;
+        private Quaternion stepBoot, stepBootFrom = Quaternion.identity;
         private bool stepBegun, stepAimed;
         private readonly Quaternion[] aimFrom = new Quaternion[Count], aimNow = new Quaternion[Count];
         private readonly float tall, whole;
@@ -348,8 +359,21 @@ namespace WonderGather
             if (aimed) { to = stepTo; boot = stepBoot; }
             // (Once it is there it is pressed down a little: laid exactly on the ground, a boot bore nothing, and the
             // pose that waits for it to bear waited for ever.)
-            to.y = GroundAt(new Vector3(to.x, hip.y, to.z)) - (along >= 1 ? .03f : 0);
-            Vector3 sole = Vector3.Lerp(stepFrom, to, along) + Vector3.up * (stage.stepLifts * Mathf.Sin(Mathf.PI * along));
+            // (Keeping its balance, it is pressed only a little, and kept where it is as soon as it bears anything:
+            // pressed three centimetres, a leg out to the side shoved its body over onto its other arm.)
+            to.y = GroundAt(new Vector3(to.x, hip.y, to.z)) - (along >= 1 ? (aimed ? .008f : .03f) : 0);
+            Vector3 sole;
+            if (stage.stepUnder > 0)
+            {
+                // (A curve from where it was to where it goes that passes under its hip, so high, half way.)
+                float ground = GroundAt(hip);
+                Vector3 under = new Vector3(hip.x, ground + stage.stepUnder * (hip.y - ground), hip.z);
+                Vector3 bend = 2 * under - .5f * (stepFrom + to);
+                float u = along;
+                sole = (1 - u) * (1 - u) * stepFrom + 2 * u * (1 - u) * bend + u * u * to;
+                boot = Quaternion.Slerp(stepBootFrom, boot, Mathf.SmoothStep(0, 1, along));
+            }
+            else sole = Vector3.Lerp(stepFrom, to, along) + Vector3.up * (stage.stepLifts * Mathf.Sin(Mathf.PI * along));
             LegTo(leg, sole, boot);
         }
 
@@ -369,7 +393,7 @@ namespace WonderGather
             // ahead; a foot brought forward under it, its knee comes up towards its chest. Until October 14, evening,
             // the way the front of its hips faced: bowed over, that is down, and a foot brought forward came with its
             // knee on the ground and its shin flat.)
-            Vector3 line = ankle.normalized, pole = Vector3.ProjectOnPlane(lies, line);
+            Vector3 line = ankle.normalized, pole = Vector3.ProjectOnPlane(Vector3.Lerp(lies, parts[Hips].transform.forward, KneeFaces), line);
             pole = pole.sqrMagnitude > 1e-6f ? pole.normalized : Vector3.ProjectOnPlane(parts[Hips].transform.forward, line).normalized;
             float opens = Mathf.Acos(Mathf.Clamp((thighLong * thighLong + far * far - shinLong * shinLong) / (2 * thighLong * far), -1, 1));
             Vector3 thighWay = line * Mathf.Cos(opens) + pole * Mathf.Sin(opens);
@@ -524,11 +548,11 @@ namespace WonderGather
                 // (Keeping its balance, its weight goes off that leg first; the leg is held as it is meanwhile.)
                 if (stepBegun || !balancing || ShiftedOff(stepping, -1, step))
                 {
-                    if (!stepBegun) { stepBegun = true; liftAt = got; stepFrom = parts[Foot + stepping].transform.TransformPoint(soleAt[stepping]); }
+                    if (!stepBegun) { stepBegun = true; liftAt = got; stepFrom = parts[Foot + stepping].transform.TransformPoint(soleAt[stepping]); stepBootFrom = parts[Foot + stepping].transform.rotation; }
                     float along = !balancing ? share : stage.over > 0 ? Mathf.SmoothStep(0, 1, (got - liftAt) / stage.over) : 1;
                     if (balancing && along < 1) { offLeg = stepping; offW = 0; }
                     // (Once it is down and bears, it is kept where it is with the rest that bears it.)
-                    else if (balancing && !landed && leanFelt[Foot + stepping] >= BalanceBorne) { landed = true; Plant(-1, -1); }
+                    else if (balancing && !landed && leanFelt[Foot + stepping] >= .25f * BalanceBorne) { landed = true; Plant(-1, -1); }
                     Steps(stepping, along, balancing);
                 }
             }
@@ -647,7 +671,7 @@ namespace WonderGather
                     float upper = (JointAt(Forearm + i) - JointAt(UpperArm + i)).magnitude, fore = (HandEnd(i) - JointAt(Forearm + i)).magnitude;
                     plantedStraight[i] = (plantHand[i] - JointAt(UpperArm + i)).magnitude >= ArmStraight * (upper + fore);
                 }
-                plantedLeg[i] = i != leg && leanFelt[Foot + i] >= BalanceBorne;
+                plantedLeg[i] = i != leg && (leanFelt[Foot + i] >= BalanceBorne || (landed && stage.steps >= 0 && i == (stage.steps == 0 ? leads : 1 - leads) && leanFelt[Foot + i] > 0));
                 if (plantedLeg[i]) { plantSole[i] = parts[Foot + i].transform.TransformPoint(soleAt[i]); plantBoot[i] = parts[Foot + i].transform.rotation; }
                 // (A leg that bears it on its knee, not its boot: its knee kept where it is.)
                 plantedKnee[i] = i != leg && !plantedLeg[i] && leanFelt[Thigh + i] + leanFelt[Shin + i] >= BalanceBorne;
@@ -773,9 +797,10 @@ namespace WonderGather
             if (full == 0) { for (int i = 0; i < n; i++) to += sup[i]; full = n; }
             to /= full;
             bool moving = offLeg >= 0 || offHand >= 0;
-            if (moving && full >= 3)
+            // (Moving off a limb: only as far as over the others, by twice the margin, from where it is towards their
+            // middle.)
+            if (full >= 3 && (moving || BalanceLeastMove))
             {
-                // (Only as far as over the others, by twice the margin: from where it is, towards their middle.)
                 int others = 0;
                 for (int i = 0; i < n; i++) if (supW[i] >= 1) sorted[others++] = sup[i];
                 int m0 = Outline(sorted, others);
@@ -798,7 +823,7 @@ namespace WonderGather
                 Vector3 toes = Flat(parts[Foot].transform.forward + parts[Foot + 1].transform.forward);
                 Vector3 feet = Flat(.5f * (parts[Foot].transform.TransformPoint(soleAt[0]) + parts[Foot + 1].transform.TransformPoint(soleAt[1])));
                 if (!float.IsNaN(stage.keeps) && onBoots == 2 && toes.sqrMagnitude > 1e-6f) to = feet + toes.normalized * (stage.keeps * tall);
-                else to = Vector3.Lerp(to, boots / onBoots, stage.balanceFeet);
+                else if (stage.balanceFeet > 0) to = Vector3.Lerp(to, boots / onBoots, stage.balanceFeet);
             }
             weightTo = to;
             // What would bring it there without overshoot, with what it has learnt its pose holds back; and so where the
@@ -859,8 +884,12 @@ namespace WonderGather
             for (int i = 0; i < n; i++) middle += sup[i];
             middle /= n;
             Vector3 lies = Lies(), right = Vector3.Cross(Vector3.up, lies), at = Flat(Weight());
-            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "; weight from their middle {0:0} ahead {1:0} right, to go {2:0} ahead {3:0} right; head {4:0.00}, hips {5:0.00} high",
-                Vector3.Dot(at - middle, lies) * 1000, Vector3.Dot(at - middle, right) * 1000, Vector3.Dot(Flat(weightTo) - at, lies) * 1000, Vector3.Dot(Flat(weightTo) - at, right) * 1000, Measure(Asks.Head), Measure(Asks.Hips));
+            // (Its elbows' and knees' bend now and as asked, degrees; its shoulders' and hips' turn from as asked.)
+            float Bend(int j) => Vector3.Angle(parts[from[j]].transform.up, parts[j].transform.up);
+            float Off(int j) => Quaternion.Angle(JointNow(j), aimNow[j]);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "; weight from their middle {0:0} ahead {1:0} right, to go {2:0} ahead {3:0} right; head {4:0.00}, hips {5:0.00} high; elbows {6:0} {7:0} (off {8:0} {9:0}), shoulders off {10:0} {11:0}, knees {12:0} {13:0} (off {14:0} {15:0}), hips off {16:0} {17:0}",
+                Vector3.Dot(at - middle, lies) * 1000, Vector3.Dot(at - middle, right) * 1000, Vector3.Dot(Flat(weightTo) - at, lies) * 1000, Vector3.Dot(Flat(weightTo) - at, right) * 1000, Measure(Asks.Head), Measure(Asks.Hips),
+                Bend(Forearm), Bend(Forearm + 1), Off(Forearm), Off(Forearm + 1), Off(UpperArm), Off(UpperArm + 1), Bend(Shin), Bend(Shin + 1), Off(Shin), Off(Shin + 1), Off(Thigh), Off(Thigh + 1));
         }
 
         public string Tick() => Told() + Where();

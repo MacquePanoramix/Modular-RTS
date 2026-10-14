@@ -133,6 +133,8 @@ namespace WonderGather.Tests
                             stage.steps = put[0] == "lead" ? 0 : 1;
                             stage.stepAhead = float.Parse(put[1], Plain); stage.stepOut = float.Parse(put[2], Plain);
                             if (put.Length > 3) stage.stepLifts = float.Parse(put[3], Plain);
+                            // (a fifth: by way of under its hip, so high there.)
+                            if (put.Length > 4) stage.stepUnder = float.Parse(put[4], Plain);
                             continue;
                         }
                         int cut = word.IndexOfAny(new[] { '<', '>' });
@@ -166,7 +168,7 @@ namespace WonderGather.Tests
                     if (stage.holds) text.Append(string.Format(Plain, " hold={0:0.00},{1:0.00}{2}", stage.holdHigh, stage.holdRate, stage.holdsFeet ? ",feet" : ""));
                     if (!float.IsNaN(stage.handStep)) text.Append(string.Format(Plain, " walk={0:0.000},{1:0.00},{2:0.000},{3:0.00}", stage.handStep, stage.handOver, stage.handLift, stage.handNearest));
                     if (!float.IsNaN(stage.sits)) text.Append(string.Format(Plain, " sit={0:0},{1:0.00},{2:0.00},{3:0}", stage.sits, stage.sitHips, stage.sitAhead, stage.sitMost));
-                    if (stage.steps >= 0) text.Append(string.Format(Plain, " step={0},{1:0.00},{2:0.00},{3:0.00}", stage.steps == 0 ? "lead" : "other", stage.stepAhead, stage.stepOut, stage.stepLifts));
+                    if (stage.steps >= 0) text.Append(string.Format(Plain, " step={0},{1:0.00},{2:0.00},{3:0.00}{4}", stage.steps == 0 ? "lead" : "other", stage.stepAhead, stage.stepOut, stage.stepLifts, stage.stepUnder > 0 ? string.Format(Plain, ",{0:0.00}", stage.stepUnder) : ""));
                     text.AppendLine();
                 }
             }
@@ -228,6 +230,22 @@ namespace WonderGather.Tests
             // (-riseNear 0.5: pictures from so much nearer; -riseAngle 45: from so many degrees round from its side,
             // towards its head.)
             float near = Number("-riseNear", 1), angle = Number("-riseAngle", 0);
+            int frames = (int)Number("-riseFrames", 0);
+            float jitterTurn = 0, jitterMove = 0;
+            int jitterSeed = (int)Number("-riseSeed", 1);
+            {
+                var jitter = (CaptureTools.Argument("-riseJitter") ?? "").Split(',');
+                if (jitter[0].Length > 0) jitterTurn = float.Parse(jitter[0], Plain);
+                if (jitter.Length > 1) jitterMove = float.Parse(jitter[1], Plain);
+            }
+            // (-riseStrangers 1: what else, that moves, touches a body getting up: each pair once.)
+            var strangers = new HashSet<string>();
+            if (Number("-riseStrangers", 0) > 0)
+                GroundTouch.Touched = (part, other) =>
+                {
+                    string what = part.name + " | " + (other.attachedRigidbody != null ? "body " : other.GetComponentInParent<ArticulationBody>() != null ? "articulation " : "") + other.name + " (" + (other.transform.root != null ? other.transform.root.name : "") + ")";
+                    if (strangers.Add(what)) Debug.Log("RISE_STRANGER " + what + " at " + Time.time.ToString("0.00", Plain));
+                };
             // (-riseArms 3: to try a thing: their arms so many times as strong as they are.)
             float armsWere = OwnBody.ArmsTimes;
             Directory.CreateDirectory(folder);
@@ -317,17 +335,21 @@ namespace WonderGather.Tests
                     // (front@3: laid at another place on the path, so many places on from its own, facing as the path goes
                     // there. The meadow's ground lies differently at each: a way found at one place is not yet one
                     // that serves at another.)
+                    // (front@3~90: and turned so many degrees from the way the path goes there.)
                     string how = asked.Split('@')[0];
-                    int on = asked.Contains("@") ? int.Parse(asked.Split('@')[1], Plain) : 0;
+                    string onWord = asked.Contains("@") ? asked.Split('@')[1] : "0";
+                    float turned = onWord.Contains("~") ? float.Parse(onWord.Split('~')[1], Plain) : 0;
+                    int on = int.Parse(onWord.Split('~')[0], Plain);
                     for (int n = 0; n < bodies.Count; n++)
                     {
                         var body = bodies[n];
                         Put(body.fall, body.standing);
                         Vector3 own = Spot(n, out Vector3 ownAway);
                         Quaternion ownTurn = Quaternion.LookRotation(ownAway);
-                        if (on != 0)
+                        if (on != 0 || turned != 0)
                         {
                             Vector3 there = Spot(n + on, out Vector3 thereAway);
+                            thereAway = Quaternion.AngleAxis(turned, Vector3.up) * thereAway;
                             Quaternion turn = Quaternion.LookRotation(thereAway) * Quaternion.Inverse(ownTurn);
                             for (int i = 0; i < PhysicalFall.Count; i++)
                             {
@@ -393,6 +415,15 @@ namespace WonderGather.Tests
                 OwnRiser.BalanceUnloads = Number("-riseBalUnloads", OwnRiser.BalanceUnloads);
                 OwnRiser.BalanceShiftsWithin = Number("-riseBalWithin", OwnRiser.BalanceShiftsWithin);
                 OwnRiser.BalanceDamps = Number("-riseBalDamps", OwnRiser.BalanceDamps);
+                OwnRiser.KneeFaces = Number("-riseKneeFaces", OwnRiser.KneeFaces);
+                // (-riseQuiet PhysicalHands,Breath: those behaviours on each miner switched off, to find what frames change.)
+                foreach (string quiet in (CaptureTools.Argument("-riseQuiet") ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (var body in bodies)
+                        foreach (var part in body.unit.GetComponentsInChildren<Behaviour>(true))
+                            if (part.GetType().Name == quiet) { part.enabled = false; Debug.Log("RISE_QUIET " + body.name + " " + quiet); }
+                // (-riseStaysPut 1: the unit's own place does not go with the body getting up, to find what frames change.)
+                if (Number("-riseStaysPut", 0) > 0) OwnBody.StaysPut = true;
+                OwnRiser.BalanceLeastMove = Number("-riseLeastMove", OwnRiser.BalanceLeastMove ? 1 : 0) > 0;
                 OwnRiser.BalancePushes = Number("-riseBalPushes", OwnRiser.BalancePushes);
                 OwnRiser.BalanceShiftsAt = Number("-riseBalShiftsAt", OwnRiser.BalanceShiftsAt);
                 OwnRiser.BalanceShiftsAtMost = Number("-riseBalShiftsAtMost", OwnRiser.BalanceShiftsAtMost);
@@ -412,7 +443,28 @@ namespace WonderGather.Tests
                         if (body.own.Stands) body.own.Drop();
                         // (Its own place where this start was made: it goes with its body from there.)
                         body.unit.transform.SetPositionAndRotation(body.starts[j].place, body.starts[j].faces);
-                        Lay(body.miner, body.starts[j]);
+                        // (-riseJitter 20,0.3: each try laid turned up to so many degrees either way about its hips, and moved up to
+                        // so far, by chance (the same chances for every candidate in a round of a search, others the next round):
+                        // a way that serves only the very place it was searched at is not a way.)
+                        var laid = body.starts[j];
+                        if (jitterTurn > 0 || jitterMove > 0)
+                        {
+                            var chance = new System.Random(jitterSeed * 7919 + j * 31 + body.name.Length);
+                            float yaw = (float)(chance.NextDouble() * 2 - 1) * jitterTurn;
+                            Vector3 move = new Vector3((float)(chance.NextDouble() * 2 - 1), 0, (float)(chance.NextDouble() * 2 - 1)) * jitterMove;
+                            Vector3 hipsWere = laid.at[OwnBody.Hips];
+                            Vector3 hipsGo = hipsWere + move;
+                            float Under(Vector3 at) => Physics.Raycast(at + Vector3.up * 3, Vector3.down, out var hit, 8, 1 << 6) ? hit.point.y : at.y;
+                            move.y = Under(hipsGo) - Under(hipsWere);
+                            Quaternion turn = Quaternion.AngleAxis(yaw, Vector3.up);
+                            var at = (Vector3[])laid.at.Clone(); var turned = (Quaternion[])laid.turned.Clone();
+                            for (int k = 0; k < at.Length; k++) { at[k] = hipsWere + move + turn * (laid.at[k] - hipsWere); turned[k] = turn * laid.turned[k]; }
+                            laid.at = at; laid.turned = turned;
+                            laid.place = hipsWere + move + turn * (laid.place - hipsWere); laid.faces = turn * laid.faces;
+                            laid.side = turn * laid.side;
+                        }
+                        body.unit.transform.SetPositionAndRotation(laid.place, laid.faces);
+                        Lay(body.miner, laid);
                         body.own.Wanted = true;
                         OwnBody.RiseWays = body.ways;
                         body.done = !body.own.BeginDown();
@@ -421,6 +473,21 @@ namespace WonderGather.Tests
                     }
                     Physics.SyncTransforms();
                     int shot = 0;
+                    // (-riseNear 1 and -riseSurvey 1: every collider within a metre and a half of a body getting up that is not
+                    // its own, once, at the first try: what else is there that frames could move.)
+                    if (j == 0 && Number("-riseSurvey", 0) > 0)
+                        foreach (var body in bodies)
+                        {
+                            if (!body.own.Stands) continue;
+                            foreach (var part in body.unit.GetComponentsInChildren<Behaviour>(true)) Debug.Log("RISE_SURVEY " + body.name + " has " + part.GetType().Name + " on " + part.name + (part.enabled ? "" : " (off)"));
+                            Vector3 hipsAt = body.own.Part(OwnBody.Hips).transform.position;
+                            foreach (var near in Physics.OverlapSphere(hipsAt, 1.5f, ~0, QueryTriggerInteraction.Collide))
+                            {
+                                if (near.transform.root.name.EndsWith("(its own)")) continue;
+                                string path = near.name; for (var up = near.transform.parent; up != null; up = up.parent) path = up.name + "/" + path;
+                                Debug.Log("RISE_SURVEY " + body.name + ": " + path + " " + near.GetType().Name + (near.isTrigger ? " trigger" : "") + (near.attachedRigidbody != null ? " body" + (near.attachedRigidbody.isKinematic ? " kinematic" : "") : "") + (near.enabled ? "" : " off"));
+                            }
+                        }
                     for (int step = 0; step * dt < lasts; step++)
                     {
                         bool going = false;
@@ -462,7 +529,18 @@ namespace WonderGather.Tests
                             going = true;
                         }
                         if (!going) break;
+                        int takenBefore = GroundTouch.Taken;
                         Physics.Simulate(dt);
+                        int takenBySimulate = GroundTouch.Taken - takenBefore;
+                        // (-riseFrames 5: a frame of the game every so many steps of the physics, pictures or not, as the game
+                        // has them between its steps.)
+                        if (frames > 0 && step % frames == 0 && !(pictured != null && step % every == 0))
+                        {
+                            int takenBeforeFrame = GroundTouch.Taken;
+                            yield return null;
+                            // (-riseSurvey 1: how many touches the physics told of, and how many more the frame did.)
+                            if (j == 0 && step % 50 == 0 && Number("-riseSurvey", 0) > 0) Debug.Log("RISE_TAKEN step " + step + ": " + takenBySimulate + " by the physics, " + (GroundTouch.Taken - takenBeforeFrame) + " by the frame");
+                        }
                         if (pictured != null && step % every == 0)
                         {
                             yield return null;
@@ -513,8 +591,19 @@ namespace WonderGather.Tests
                     var way = ways[at];
                     // (Each pose's turns, how long it is come to over and kept; and where a foot is put (ahead, out) and how
                     // high its hips are held, where the pose has them.)
-                    const int Each = OwnRiser.Turns + 5;
+                    const int Each = OwnRiser.Turns + 7;
                     int stages = way.stages.Length, count = stages * Each;
+                    // (-riseTune BalanceMargin:0.01:0.1,KneeFaces:0:1: the getting up's own numbers, varied too, each
+                    // between so little and so much.)
+                    var tunes = new List<(System.Reflection.FieldInfo field, float least, float most)>();
+                    foreach (string word in (CaptureTools.Argument("-riseTune") ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        var bits = word.Split(':');
+                        var field = typeof(OwnRiser).GetField(bits[0], System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                        Assert.That(field, Is.Not.Null, "No number called " + bits[0]);
+                        tunes.Add((field, float.Parse(bits[1], Plain), float.Parse(bits[2], Plain)));
+                    }
+                    int all = count + tunes.Count;
                     Vector2 Limits(int k)
                     {
                         switch (k)
@@ -533,11 +622,18 @@ namespace WonderGather.Tests
                             case OwnRiser.Turns + 2: return new Vector2(.1f, .9f);
                             case OwnRiser.Turns + 3: return new Vector2(-.1f, .5f);
                             case OwnRiser.Turns + 4: return new Vector2(.2f, .8f);
+                            case OwnRiser.Turns + 5: return new Vector2(0, .35f);
+                            case OwnRiser.Turns + 6: return new Vector2(0, .9f);
                             default: return new Vector2(0, 1.5f);
                         }
                     }
                     bool same = Number("-riseSame", 1) > 0;
-                    float[] mean = new float[count], wide = new float[count];
+                    float[] mean = new float[all], wide = new float[all];
+                    for (int t = 0; t < tunes.Count; t++)
+                    {
+                        mean[count + t] = Convert.ToSingle(tunes[t].field.GetValue(null));
+                        wide[count + t] = .25f * (tunes[t].most - tunes[t].least);
+                    }
                     for (int s = 0; s < stages; s++)
                     {
                         for (int k = 0; k < OwnRiser.Turns; k++) mean[s * Each + k] = way.stages[s].pose[k];
@@ -548,9 +644,12 @@ namespace WonderGather.Tests
                         mean[s * Each + OwnRiser.Turns + 2] = steps ? st.stepAhead : 0;
                         mean[s * Each + OwnRiser.Turns + 3] = steps ? st.stepOut : 0;
                         mean[s * Each + OwnRiser.Turns + 4] = high ? st.holdHigh : 0;
+                        mean[s * Each + OwnRiser.Turns + 5] = steps ? st.stepLifts : 0;
+                        mean[s * Each + OwnRiser.Turns + 6] = steps ? st.stepUnder : 0;
                         for (int k = 0; k < Each; k++)
                             wide[s * Each + k] = s < first ? 0 : k < OwnRiser.Turns ? spread : k < OwnRiser.Turns + 2 ? .2f * spread / 15
-                                : k < OwnRiser.Turns + 4 ? (steps ? .08f * spread / 15 : 0) : (high ? .06f * spread / 15 : 0);
+                                : k < OwnRiser.Turns + 4 ? (steps ? .08f * spread / 15 : 0) : k == OwnRiser.Turns + 4 ? (high ? .06f * spread / 15 : 0)
+                                : (steps ? .05f * spread / 15 : 0);
                     }
                     void Into(float[] numbers)
                     {
@@ -570,8 +669,16 @@ namespace WonderGather.Tests
                             stage.atLeast = stage.over + numbers[s * Each + OwnRiser.Turns + 1];
                             if (stage.steps >= 0) { stage.stepAhead = numbers[s * Each + OwnRiser.Turns + 2]; stage.stepOut = numbers[s * Each + OwnRiser.Turns + 3]; }
                             if (stage.holds && !float.IsNaN(stage.holdHigh)) stage.holdHigh = numbers[s * Each + OwnRiser.Turns + 4];
+                            if (stage.steps >= 0) { stage.stepLifts = numbers[s * Each + OwnRiser.Turns + 5]; stage.stepUnder = numbers[s * Each + OwnRiser.Turns + 6]; }
+                        }
+                        for (int t = 0; t < tunes.Count; t++)
+                        {
+                            numbers[count + t] = Mathf.Clamp(numbers[count + t], tunes[t].least, tunes[t].most);
+                            if (tunes[t].field.FieldType == typeof(bool)) tunes[t].field.SetValue(null, numbers[count + t] > .5f);
+                            else tunes[t].field.SetValue(null, numbers[count + t]);
                         }
                     }
+                    string Tuned() { var told = new StringBuilder(); for (int t = 0; t < tunes.Count; t++) told.Append(string.Format(Plain, "{0}={1:0.000} ", tunes[t].field.Name, tunes[t].field.GetValue(null))); return told.ToString(); }
                     // How well a body was left.
                     // (-riseGoal hold: how well it came to its way's last pose and kept its weight within what bears it
                     // there: how far it came over onto its front, how far along its way it got, how long it kept its
@@ -582,6 +689,8 @@ namespace WonderGather.Tests
                         if (holding)
                         {
                             float got = 3 * Mathf.Clamp01((body.front + 1) / 1.6f) + 3 * body.stageAt / Mathf.Max(1, body.stages - 1) + 3 * Mathf.Clamp01(body.heldFor / 2);
+                            // (Most of all: at the last pose at the end, up off the ground, its weight within what bears it.)
+                            if (body.stages > 0 && body.stageAt == body.stages - 1 && body.upOff && body.depth > OwnRiser.BalanceMargin) got += 5;
                             if (body.stages > 0 && body.stageAt == body.stages - 1 && !float.IsNaN(body.depth)) got += body.upOff ? 10 * Mathf.Clamp(body.depth, -.1f, .15f) : -1;
                             return got - .5f * Mathf.Max(0, body.peak - 2.5f);
                         }
@@ -624,32 +733,36 @@ namespace WonderGather.Tests
                     var order = new int[many];
                     for (int round = 0; round < rounds; round++)
                     {
+                        jitterSeed = seed * 1000 + round + 1;
+                        // (With chances that change from round to round, the best is the best of this round, the one before
+                        // tried again among them: a lucky draw once is not kept for ever.)
+                        if (jitterTurn > 0 || jitterMove > 0) best = float.NegativeInfinity;
                         for (int n = 0; n < many; n++)
                         {
-                            var numbers = new float[count];
-                            for (int k = 0; k < count; k++) numbers[k] = mean[k] + wide[k] * Bell();
-                            if (n == 0) Array.Copy(bestNumbers, numbers, count);
+                            var numbers = new float[all];
+                            for (int k = 0; k < all; k++) numbers[k] = mean[k] + wide[k] * Bell();
+                            if (n == 0) Array.Copy(bestNumbers, numbers, all);
                             yield return All(numbers);
                             worths[n] = total; numbersOf[n] = numbers; order[n] = n;
-                            if (total > best) { best = total; bestStood = stood; Array.Copy(numbers, bestNumbers, count); }
+                            if (total > best) { best = total; bestStood = stood; Array.Copy(numbers, bestNumbers, all); }
                         }
                         Array.Sort(order, (x, y) => worths[y].CompareTo(worths[x]));
-                        for (int k = 0; k < count; k++)
+                        for (int k = 0; k < all; k++)
                         {
-                            if (k / Each < first) continue;
+                            if (k < count && k / Each < first) continue;
                             float middle = 0;
                             for (int n = 0; n < keep; n++) middle += numbersOf[order[n]][k];
                             middle /= keep;
                             float differ = 0;
                             for (int n = 0; n < keep; n++) differ += (numbersOf[order[n]][k] - middle) * (numbersOf[order[n]][k] - middle);
                             differ = Mathf.Sqrt(differ / keep);
-                            float least = k % Each >= OwnRiser.Turns ? (wide[k] > 0 ? .02f : 0) : 1.5f;
+                            float least = k >= count ? .02f * (tunes[k - count].most - tunes[k - count].least) : k % Each >= OwnRiser.Turns ? (wide[k] > 0 ? .02f : 0) : 1.5f;
                             mean[k] = Mathf.Lerp(mean[k], middle, .7f);
                             wide[k] = Mathf.Max(least, Mathf.Lerp(wide[k], differ, .7f));
                         }
                         Into((float[])bestNumbers.Clone());
                         Write(ways, Path.Combine(folder, "best.txt"), string.Format(Plain, "found for {0} after {1} rounds: worth {2:0.00}, {3} of {4} stand", string.Join(",", who), round + 1, best, bestStood, tries));
-                        Debug.Log(string.Format(Plain, "RISE_SEARCH round {0}: best {1:0.00} ({2} of {3} stand), this round's best {4:0.00}; {5:0.0} s a round", round + 1, best, bestStood, tries, worths[order[0]], clock.Elapsed.TotalSeconds / (round + 1)));
+                        Debug.Log(string.Format(Plain, "RISE_SEARCH round {0}: best {1:0.00} ({2} of {3} stand), this round's best {4:0.00}; {5:0.0} s a round; {6}", round + 1, best, bestStood, tries, worths[order[0]], clock.Elapsed.TotalSeconds / (round + 1), Tuned()));
                         yield return null;
                     }
                     Into((float[])bestNumbers.Clone());
