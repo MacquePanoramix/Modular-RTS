@@ -458,3 +458,39 @@ their bodies need** (Luis, October 14):
   learned bodies do.
 - **These twelve go to the judges** with the pictures, in place of what
   they were given before, and they are what I check before Luis sees it.
+
+## 8. Rising from one knee (added October 14, late)
+
+Asked for before building it (Luis: "You can do more research loops
+whenever needed"). The way chosen next is the common adult one: from hands
+and knees, one foot forward, then up over that foot.
+
+- **No study of half-kneeling to standing itself was found**; the nearest is
+  standing up from a seat, read across to it.
+- **The phases** (from sit-to-stand): the weight shifts as the trunk bows
+  forward; the knee straightens as the bow ends; the body is lifted and the
+  trunk straightens to standing
+  ([a review, figure 29](https://arxiv.org/pdf/2207.01487)). Loaded, people
+  bow further and bend their ankles more, and the knee works hardest
+  ([children with packs](https://pubmed.ncbi.nlm.nih.gov/18187221/)).
+- **What each joint does**: hips, knees and ankles all push the body up; the
+  knee slows its forward travel while hips and ankles drive it forward
+  ([Marquette, 2025](https://epublications.marquette.edu/exsci_fac/253/)).
+  People with weak knees bring their weight further forward, so the knee
+  has less to do ([knee osteoarthritis, the centre of mass's path](https://experts.umn.edu/en/publications/the-centre-of-mass-trajectory-is-a-sensitive-and-responsive-measu/)).
+- **How it is taught** (exercise instructions, not studies): weight onto the
+  front leg, then push up; the front foot far enough ahead that its shin is
+  near upright (tucked too close, the knee goes far past the toes and loses
+  its strength); the trunk leans a little over the front leg; push through
+  the whole foot
+  ([Physitrack](https://ca.physitrack.com/home-exercise-video/half-kneeling-to-standing-with-dorsiflexion),
+  [Fitwill](https://fitwill.app/exercise/10750/kneeling-to-stand/)).
+- **A hand on the front thigh** (my reading, no source): a lever that helps
+  the trunk over the front foot and takes work off the front knee; tired or
+  weak bodies do it.
+
+**What it adds to ours:** the front foot goes well forward (shin near
+upright) before the rise; the weight goes over it, the trunk bowing, before
+the back knee leaves the ground (G3); the front leg lifts, the back foot
+pushes and then comes up beside it; a weak or tired miner pushes on its
+front thigh with a hand.
