@@ -16,7 +16,7 @@ namespace WonderGather
     // Still by intention only: the legs (they bend and straighten at a set pace, whatever they carry).
     public sealed class PhysicalSwing : MonoBehaviour
     {
-        public enum Phase { Ready, Lift, Top, Drive, Struck, Recover, Rest }
+        public enum Phase { Ready, Lift, Top, Drive, Struck, Recover, Rest, Breath }
 
         public struct Result
         {
@@ -62,6 +62,17 @@ namespace WonderGather
         // It rests after a blow when its arms or its back are this spent, and goes on when they are this fresh
         // again. Resting, it stands up straight with the tool in one hand at its side, the arm hanging.
         public const float RestsAt = .4f, GoesOnAt = .15f;
+        // Between blows it takes a breath now and then, as a body at heavy work does (Research, October 14: breaking
+        // rock, and tiredness, W3): it lets the tool's head rest where the blow left it, straightens a little
+        // (PauseStraightens of its bow), and breathes for PauseShortest to PauseLongest seconds, then goes on. None
+        // while it is fresh (under PausesFrom spent); then more often the more spent it is, up to PausesAtMost of its
+        // blows when it is nearly spent enough to rest. Never on a clock: each miner on its own chances. 0: never.
+        public static float PausesFrom = .08f, PausesAtMost = .3f, PauseShortest = .9f, PauseLongest = 2.2f, PauseStraightens = .35f;
+        private uint pauseSeed;
+        private float pauseFor;
+        private float PauseChance() { if (pauseSeed == 0) pauseSeed = (uint)name.GetHashCode() * 2654435761u | 1u; pauseSeed = pauseSeed * 1664525u + 1013904223u; return (pauseSeed >> 8) / 16777216f; }
+        // How many breaths it has taken between blows.
+        public int Pauses { get; private set; }
         // A rest is a way of standing in which nothing works harder than it can go on working. Holding a tool is
         // still work for the hand that holds it, and a heavy one is given back its strength slowly, and not all of
         // it. So the rest is looked back on every so many seconds, once the body has stood up (after the first of
@@ -410,6 +421,12 @@ namespace WonderGather
                     if (clock >= .35f)
                     {
                         if (Spent >= RestsAt) { rests++; lookedBackAt = -1; NoRest = false; Go(Phase.Rest); }
+                        else if (PausesAtMost > 0 && PauseChance() < PausesAtMost * Mathf.SmoothStep(0, 1, Mathf.InverseLerp(PausesFrom, RestsAt, Spent)))
+                        {
+                            pauseFor = Mathf.Lerp(PauseShortest, PauseLongest, PauseChance());
+                            Pauses++;
+                            Go(Phase.Breath);
+                        }
                         else Go(Phase.Recover);
                     }
                     break;
@@ -443,6 +460,15 @@ namespace WonderGather
                     else if (given) NoRest = true;
                     break;
                 }
+                case Phase.Breath:
+                {
+                    // It straightens a little and comes down again, its hands on the tool where the blow left it.
+                    float up = Mathf.Sin(Mathf.PI * Mathf.Clamp01(clock / Mathf.Max(.1f, pauseFor)));
+                    back.Want(Mathf.Lerp(restBow, restBow * (1 - PauseStraightens), up));
+                    body.Sink(sink * (1 - .5f * up));
+                    if (clock >= pauseFor) Go(Phase.Recover);
+                    break;
+                }
                 case Phase.Recover:
                     back.Want(restBow);
                     body.Sink(sink);
@@ -456,7 +482,7 @@ namespace WonderGather
             }
             float bears = 1;
             if (phase != Phase.Rest) body.HangsAtSide(0, false);
-            if (phase == Phase.Struck) { position = from; rotation = fromTurn; }
+            if (phase == Phase.Struck || phase == Phase.Breath) { position = from; rotation = fromTurn; }
             else if (phase == Phase.Rest)
             {
                 AtSide(hips, posture, out var to, out var toTurn);
