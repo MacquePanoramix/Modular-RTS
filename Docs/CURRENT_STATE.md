@@ -2,6 +2,20 @@
 
 **Updated:** October 15, 2026.
 
+- **The satchel through the coat (the judges of the getting up, finding 4),
+  partly mended on its own branch `claude/satchel-stop`, not merged, not in a
+  build** ([what was found and how it was tested](Validation.md#hung-things-stopped-however-the-body-is-turned--october-15);
+  [before and after](Images/SatchelStop_2026-10-15/);
+  [its judges](Reviews/2026-10-15_SatchelStop_Judges.md)). Whatever way the
+  body is turned, what hangs on a hook is now stopped by the hips, by the
+  cloth it rests on and by the thigh on its side; standing and walking it
+  hangs and swings as before (2.6 mm at most). Three judges: "reads as real,
+  with a flaw". **Still open:** the coat still cuts the bag's top as it
+  pushes onto hands and knees (the bag is held out by its weight, but turned
+  rigidly about its rings); the bag is lost behind the thigh as a foot comes
+  forward; a fall onto the bag; Small's lantern, Long's mug and Round's
+  hammer, which read inside the coat when bowed, as before. For Luis to look
+  at.
 - **A build for Luis to play, October 14 (late): `Builds/WindowsOrdinaryPlace_Oct14`**
   (beside the three of October 13). In it: arms as strong as the body needs
   (Luis's decision), tiredness taking precision, breaths between blows. The

@@ -3509,3 +3509,123 @@ verdict: Luis has not seen the step.**
   three were misreadings:
   [the design page](Design/TheBodysOwn.md#what-the-judges-said-october-13-one-round).
   A slower swing was tried in the game (0.18 s, and 0.24 s, for 0.12; nothing else changed; one run each): Small stood 2 shoves of 4 both times, where it stands 4 (the test stops at the first miner that fails, so Long and Round were not shoved). A slower step needs the rest searched for it; that is not done.
+
+## Hung things stopped however the body is turned — October 15
+
+The fault: the judges of the getting up (round 2, finding 4) saw Small's
+satchel show through its coat as it pushed onto hands and knees, then hang
+outside it. Worked on its own branch (`claude/satchel-stop`, from
+`claude/worker-showcase` at ee19ba1), in an isolated copy (`D:/Dev/WG-bag`),
+Unity 6000.6.0f1. **Not merged, not in a build. Luis has not seen it; the
+judges' verdict is not his.**
+
+- **A measure of its own** (`ClothesDepth`, tests): how far the satchel's own
+  skin is under the clothes, read from the skinned mesh as posed (the hips,
+  the thighs and the coat's skirt; not the trunk, the arms or the shins),
+  never from how the game stops it. Checked against pictures before it was
+  trusted: its first form read 100 mm everywhere (a far limb beyond the bag
+  counted as clothes), and later a shin folded under its thigh did; both were
+  put right. What it still counts that a picture does not show as wrong: the
+  bag's top under the coat's edge while the body lies on the ground, the
+  bag's bottom back corner pressed a few centimetres into the skirt, and the
+  strap's ends above the rings (counted apart).
+- **Why it went through** (Small pushed over onto its front, lying, getting
+  up its fall's way; and the work branch's getting up onto hands and knees):
+  - the swing's limit (so far from straight down *in the world*) was put
+    right after the body's stop, and won once the body was turned over: the
+    bag went into the hips lying, by up to 40 mm of its stop;
+  - the stop was one plane fixed in the hips. Bowed, the skirt's flap hangs
+    by its own weight and turns against the hips (to 80° and more), and the
+    thigh comes up under the bag (to 150° with a foot brought forward): both
+    moved into where the bag hangs, and nothing in the stop moved with them.
+- **What was built** (`MinerBody`, things on their hooks only): the body has
+  the last word over the swing's limit, turning the thing about where it
+  hangs from, its length kept; out of the hips' face; out of the cloth it
+  rests on, which turns with its flap but comes in only past what a stride
+  turns it (60° to 90°); out of the thigh on its side, as far as a stride
+  leaves room, and further as the thigh is drawn up past a stride (65° to 95°,
+  the skirt gathered on it), and kept on its own side of that thigh.
+- **Tried and dropped, with why:**
+  - the cloth's face turned from as modelled at all times: it moved what
+    hangs while standing (Round's hammer 38 mm) and walking (to 134 mm). Read
+    so, the old stop had things inside the pusher's push in a stride, which
+    the swing's limit had overruled; that is how they have looked, and was
+    kept;
+  - the thigh as far off as the thing was modelled, at all times: it moved
+    Small's lantern 50 mm and Round's hammer 90 mm in a walk (they hang 20 cm
+    in front of the thigh);
+  - the cloth turned by its flap's whole turn: the face went out of the
+    strap's reach (the bag then 90 mm inside it).
+- **Standing and walking, as before** (each miner standing 3 s, then walking
+  6 m and back with a turn; the same course run with the old stop and the
+  new, frame by frame): Small's satchel moved by 2.6 mm at most (4 frames of
+  715), everything else 0.1 mm at most; standing, 0.0. Standing by its own
+  joints with life in it (as played), 6 s: 0.5 mm at most.
+- **Falls and getting up** (`HungThingBench.Bowed`, each way one course;
+  frames read every 0.04 s; "many": more than 5 mm under the clothes for a
+  tenth of the points read). Small's satchel, the old stop then the new:
+
+  | Pushed onto its | going over | curled | on hands and knees |
+  |---|---|---|---|
+  | front | 47 → 5 of 93 | 37 → 13 of 57 | 48 → 10 of 65 |
+  | back | 7 → 7 of 30 | 16 → 9 of 46 | 53 → 11 of 70 |
+  | left | 34 → 6 of 72 | 50 → 7 of 103 | 53 → 10 of 68 |
+  | right (onto it) | 28 → 30 of 34 | 17 → 19 of 44 | 69 → 40 of 69 |
+
+  Lying on its front, the satchel went from inside the hips (24 of 38) to
+  outside them (0).
+- **The judges' own try** (the work branch's getting up, `c11d060`, its way
+  `ways_laid_small.txt`, from its front, `-riseSeed 21 -riseJitter 20,0.3
+  -riseFrames 1`, the work branch's three scripts copied in for this only;
+  pictured from the bag's side, a front quarter and behind,
+  [before and after](Images/SatchelStop_2026-10-15/)): as the knees come
+  under and it pushes up (2.9 to 3.9 s), before, the whole bag was inside the
+  coat with orange showing through; now it hangs outside it, **but from the
+  front quarter the coat's hem still cuts across the bag's top (2.5 to 3.5 s,
+  found by the judges, not by me)**. With a foot brought forward (7.1 to
+  12 s), before, the bag was inside the thigh; now it hangs beside it. **Still
+  wrong:** as the foot comes forward (6.3 to 7.1 s) the bag is lost behind the
+  thigh and the skirt's flap. Over the whole try the skin measure hardly falls
+  (some of the bag 2 cm or more under the clothes in 253 frames of 301,
+  against 262): it counts these, and the bag's top under the coat's edge
+  while it lies.
+- **At work** (each miner goes down for a pickaxe laid beside it and mines a
+  boulder, 25 s): the same before and after. Bowed in its blows, the
+  satchel's bottom back corner is pressed 45 mm into the skirt (5% of its
+  points), hidden behind the bag from the side.
+- **Tests** (`HungThingTests`, new):
+  - `WhatHangsOnAHookStaysOutOfTheCoatHoweverTheBodyIsTurned`: Small pushed
+    over onto its front, back, left and right; the satchel through its
+    clothes (a tenth of it, 2 cm or more) in no more than a tenth of the
+    looks, onto its front, back and left; onto its right, told only. With the
+    new stop 2 of 171, 9 of 123, 4 of 159 (right 52 of 121); with
+    `-hungAsBefore 1` it fails (front 23 of 170).
+  - `StandingAndWalkingWhatHangsIsAsItWas`: the last word moves nothing
+    standing, less than 5 mm walking (Small 2.7, Long 0.0, Round 0.0).
+- **The whole PlayMode suite** (one run, in the isolated copy, with this
+  change): 206 tests, 176 passed, 1 failed, 29 run only when asked (before
+  this work: 201, 175, 0, 26; the new ones are the two tests and the bench's
+  three). The one that failed,
+  `EquippedWorkerTests.ObstructionEnteringAnActiveSwingCannotBecomeAnInvisibleHit`
+  (a worker's swing into something put in its way: 2 strikes taken where 0
+  were to be), passed run alone twice; it reads nothing of what hangs on a
+  miner. Not run: the suite as played (`-ownAsPlayed 1`).
+- **Three judges, round 1** (the body, the animator, the sceptic; the new
+  stop only, the judges' try, two views, 0.08 s apart): all three "reads as
+  real, with a flaw"; the free swing right; the coat through the bag's top
+  (2.5 to 3.5 s) and the bag lost behind the thigh (6.3 to 7.1 s), both true
+  ([their page](Reviews/2026-10-15_SatchelStop_Judges.md)).
+- **Not tested, or not mended:**
+  - the bag is held out by its weight only, and is turned rigidly about its
+    rings: its top's back edge goes into the coat (the judges' first finding);
+  - falling onto the satchel's side: it is caught under the hip and pressed
+    into the ground, as before (what hangs is not stopped by the ground);
+  - Small's lantern, Long's mug and Round's hammer: the skin measure reads
+    them under the clothes in most bowed and lying frames, before as after;
+    pictures of Long's fall show the mug hidden under the body lying, as
+    before. Not looked into further;
+  - the strap's ends above the satchel's rings turn into the hips when it
+    swings out (the bag is turned rigidly about its rings), before as after;
+  - Long and Round on the work branch's getting up (it is Small's way);
+  - a build; the game as played beyond standing by its own joints;
+  - how it looks, by Luis.
