@@ -529,6 +529,8 @@ namespace WonderGather
         // Its knees drawn up under it along the ground.
         private readonly Vector3[] kneelFrom = new Vector3[2];
         private readonly Quaternion[] kneelBootFrom = { Quaternion.identity, Quaternion.identity };
+        // (How far each boot rolls over its toes, not lying on its top: wholly while its knee bears nothing.)
+        private readonly float[] bootRolls = { 1, 1 };
         // (Not the leg being stepped with: the other one's shin stays on the ground while it steps.)
         private void Kneels(float share, int stepping)
         {
@@ -552,7 +554,23 @@ namespace WonderGather
                 }
                 to.y = GroundAt(new Vector3(to.x, hip.y, to.z)) + over;
                 Vector3 ankle = Vector3.Lerp(kneelFrom[leg], to, share) + Vector3.up * (.02f * Mathf.Sin(Mathf.PI * share));
-                if (stage.laysBoots) AnkleFrom(leg, hip, parts[Hips].transform.rotation, ankle, Quaternion.Slerp(kneelBootFrom[leg], laid, share), true);
+                // (Its boots laid: down to the ground first, then drawn along it.)
+                if (stage.laysBoots) ankle.y = Mathf.Lerp(kneelFrom[leg].y, to.y, Mathf.SmoothStep(0, 1, Mathf.Clamp01(3 * share)));
+                if (stage.laysBoots)
+                {
+                    // (Rolled over its toes: the tip of its toes, laid, is so far below and behind its ankle; with its
+                    // ankle higher than that, its toes go down about its ankle until their tip is on the ground.)
+                    Vector3 half = .5f * SoleSize[leg], a = anchors[Foot + leg];
+                    float below = half.y - a.y, behind = half.z - a.z, far = Mathf.Sqrt(below * below + behind * behind);
+                    float high = ankle.y - GroundAt(ankle), slant = Mathf.Atan2(behind, below);
+                    float down = far > 1e-4f ? slant - Mathf.Acos(Mathf.Clamp(high / far, -1, 1)) : 0;
+                    // (Only while its knee bears nothing: rolled whatever, its toes bore its weight and held its knee off
+                    // the ground. Once its knee bears, it lies.)
+                    bool kneeBears = leanFelt[Thigh + leg] + leanFelt[Shin + leg] >= BalanceBorne;
+                    bootRolls[leg] = Mathf.MoveTowards(bootRolls[leg], kneeBears ? 0 : 1, 4 * lastStep);
+                    Quaternion rolled = Quaternion.AngleAxis(bootRolls[leg] * Mathf.Clamp(down, 0, slant) * Mathf.Rad2Deg, Vector3.Cross(lies, Vector3.up).normalized) * laid;
+                    AnkleFrom(leg, hip, parts[Hips].transform.rotation, ankle, Quaternion.Slerp(kneelBootFrom[leg], rolled, Mathf.SmoothStep(0, 1, Mathf.Clamp01(4 * share))), true);
+                }
                 else AnkleFrom(leg, hip, parts[Hips].transform.rotation, ankle, Quaternion.identity, false);
             }
         }
