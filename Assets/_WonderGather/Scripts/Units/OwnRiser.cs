@@ -169,6 +169,8 @@ namespace WonderGather
         // limb is lifted once it is three quarters of the way there: a shift a person can see.
         public static float BalanceShiftsDeep = 0;
         private float ShiftDeep => Mathf.Max(2 * BalanceMargin, BalanceShiftsDeep);
+        // (How deep its weight is asked to go now: less over an outline too thin for ShiftDeep.)
+        private float shiftDeepNow = .04f;
         // Its knee bends the way its hip's bend takes it (true), or between the way it lies and the way its hips face
         // (false: with its hips facing the ground on hands and knees, that turned over once a foot went ahead of its
         // hip, and its knee was asked to bend backwards; KneeFaces says how far between).
@@ -932,7 +934,7 @@ namespace WonderGather
             float limb = leg >= 0 ? leanFelt[Thigh + leg] + leanFelt[Shin + leg] + leanFelt[Foot + leg] : hand == 2 ? leanFelt[Forearm] + leanFelt[Forearm + 1] : leanFelt[Forearm + hand];
             // (Its weight over the others is what counts: a knee on the ground bears its share however slack its leg,
             // until it is lifted.)
-            bool over = depth >= Mathf.Max(BalanceMargin, .75f * BalanceShiftsDeep) && (limb < BalanceLifts || shiftT >= BalanceUnloads) && shiftT >= .5f * BalanceUnloads;
+            bool over = depth >= Mathf.Min(Mathf.Max(BalanceMargin, .75f * BalanceShiftsDeep), .75f * shiftDeepNow) && (limb < BalanceLifts || shiftT >= BalanceUnloads) && shiftT >= .5f * BalanceUnloads;
             if (!over && shiftT < BalanceShiftsWithin) return false;
             if (over) Shifts++; else ShiftsFailed++;
             shiftT = 0;
@@ -1113,7 +1115,14 @@ namespace WonderGather
                 for (int i = 0; i < n; i++) if (!supOff[i]) sorted[others++] = sup[i];
                 int m0 = Outline(sorted, others);
                 float now = Within(m0, at, out _);
-                if (now < ShiftDeep && BalanceShiftsNearest && Nearest(m0, at, ShiftDeep, out Vector3 near)) to = near;
+                // (As deep as the outline allows, if it is thinner than that.)
+                float deep = ShiftDeep;
+                Vector3 near = at;
+                bool found = false;
+                if (BalanceShiftsNearest)
+                    for (int k = 0; k < 8 && !(found = Nearest(m0, at, deep, out near)); k++) deep *= .7f;
+                shiftDeepNow = found ? deep : ShiftDeep;
+                if (found) to = now < deep ? near : at;
                 else if (now < ShiftDeep)
                 {
                     // (Along the line to their middle, the nearest place that deep.)
