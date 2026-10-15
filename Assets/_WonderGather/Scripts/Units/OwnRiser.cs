@@ -93,6 +93,8 @@ namespace WonderGather
             // lay to so many of its shin's lengths behind its own hip, over the pose's time; its feet as the pose has
             // them.)
             public float kneels;
+            // (laysBoots: kneeling so, its boots laid on their tops, toes back, its shins flat on the ground.)
+            public bool laysBoots;
             // (holdsFeet: on its feet alone, its hands let go.)
             public bool holds, holdsFeet;
         }
@@ -492,27 +494,41 @@ namespace WonderGather
                 Vector3 bends = -Vector3.Dot(line, up) * front + Vector3.Dot(line, front) * up;
                 if (bends.sqrMagnitude > 1e-4f) faces = bends;
             }
-            // (A leg folded tight keeps its knee facing the way it faces: with its ankle by its hip, the way from one to
-            // the other says nothing of where its knee is, and its thigh was asked to turn half round about its own
-            // length; lifted so, its leg kicked up behind it. Wholly so with its ankle within FoldedUnder of a leg's
-            // length of its hip, not at all from twice that.)
-            float folded = Mathf.InverseLerp(2 * FoldedUnder, FoldedUnder, ankle.magnitude / Mathf.Max(.05f, reach));
-            if (folded > 0) faces = Vector3.Lerp(faces, parts[Thigh + leg].transform.forward, folded);
             Vector3 pole = Vector3.ProjectOnPlane(faces, line);
             pole = pole.sqrMagnitude > 1e-6f ? pole.normalized : Vector3.ProjectOnPlane(parts[Hips].transform.forward, line).normalized;
             float opens = Mathf.Acos(Mathf.Clamp((thighLong * thighLong + far * far - shinLong * shinLong) / (2 * thighLong * far), -1, 1));
             Vector3 thighWay = line * Mathf.Cos(opens) + pole * Mathf.Sin(opens);
-            Vector3 shinWay = (line * far - thighWay * thighLong).normalized;
-            Quaternion thigh = Quaternion.LookRotation(Vector3.ProjectOnPlane(pole, thighWay).normalized, thighWay);
-            Quaternion shin = Quaternion.LookRotation(Vector3.ProjectOnPlane(pole, shinWay).normalized, shinWay);
+            // (A leg folded tight, its ankle by its hip, says nothing by the way from one to the other of where its
+            // thigh goes or which way its knee faces: built from ways lying almost along one another, they were left to
+            // chance, and its leg kicked up behind it as it was lifted. Folded so, its thigh stays where it is and faces
+            // the way it faces: wholly with its ankle within FoldedUnder of a leg's length of its hip, not at all from
+            // twice that.)
+            float folded = Mathf.InverseLerp(2 * FoldedUnder, FoldedUnder, ankle.magnitude / Mathf.Max(.05f, reach));
+            Vector3 thighNow = (JointAt(Shin + leg) - JointAt(Thigh + leg)).normalized;
+            if (folded > 0 && thighNow.sqrMagnitude > .5f) thighWay = Vector3.Slerp(thighWay, thighNow, folded).normalized;
+            Vector3 kneeAt = hip + thighWay * thighLong, shinWay = ankleAt - kneeAt;
+            shinWay = shinWay.sqrMagnitude > 1e-8f ? shinWay.normalized : -thighWay;
+            // (Its knee faces away from where its shin goes, as a hinge does; where its shin goes along its thigh, the
+            // way its pose says, or, folded, the way it faces now.)
+            Vector3 aside = Vector3.ProjectOnPlane(shinWay, thighWay), poseFaces = Vector3.ProjectOnPlane(pole, thighWay).normalized;
+            Vector3 nowFaces = Vector3.ProjectOnPlane(parts[Thigh + leg].transform.forward, thighWay).normalized;
+            Vector3 otherwise = Vector3.Slerp(poseFaces, nowFaces.sqrMagnitude > .5f ? nowFaces : poseFaces, folded);
+            Vector3 kneeFaces = -aside + (1 - aside.magnitude) * otherwise;
+            kneeFaces = kneeFaces.sqrMagnitude > 1e-8f ? kneeFaces.normalized : poseFaces;
+            Quaternion thigh = Quaternion.LookRotation(kneeFaces, thighWay);
+            // (Its shin turned about its knee's hinge alone, so far that it points at its ankle.)
+            Quaternion unbent = thigh * rested[Shin + leg];
+            Vector3 wants = Quaternion.Inverse(unbent) * shinWay;
+            Quaternion shin = unbent * Quaternion.AngleAxis(Mathf.Atan2(wants.z, wants.y) * Mathf.Rad2Deg, Vector3.right);
             aimNow[Thigh + leg] = Quaternion.Inverse(hips * rested[Thigh + leg]) * thigh;
-            aimNow[Shin + leg] = Quaternion.Inverse(thigh * rested[Shin + leg]) * shin;
+            aimNow[Shin + leg] = Quaternion.Inverse(unbent) * shin;
             if (turnsBoot) aimNow[Foot + leg] = Quaternion.Inverse(shin * rested[Foot + leg]) * boot;
             for (int j = Thigh + leg; j <= Foot + leg; j += 2) Aims(j, aimNow[j]);
         }
 
         // Its knees drawn up under it along the ground.
         private readonly Vector3[] kneelFrom = new Vector3[2];
+        private readonly Quaternion[] kneelBootFrom = { Quaternion.identity, Quaternion.identity };
         // (Not the leg being stepped with: the other one's shin stays on the ground while it steps.)
         private void Kneels(float share, int stepping)
         {
@@ -526,9 +542,18 @@ namespace WonderGather
                 // (At a boot's height over the ground, as an ankle is with its boot lying on the ground: kept at the
                 // height it began at, it stayed in the air if its feet had risen before.)
                 float over = SoleSize != null ? 1.2f * SoleSize[leg].y : .08f;
+                // (Its boot laid on its top, toes back, if the pose says: its ankle as high as that puts it, its shin's
+                // thickness at least.)
+                Quaternion laid = Quaternion.LookRotation(lies, Vector3.up) * Quaternion.AngleAxis(180, Vector3.right) * stoodBoot[leg];
+                if (stage.laysBoots && SoleSize != null)
+                {
+                    var rod = parts[Shin + leg].GetComponent<CapsuleCollider>();
+                    over = Mathf.Max(rod != null ? rod.radius : .03f, .5f * SoleSize[leg].y - anchors[Foot + leg].y) + .005f;
+                }
                 to.y = GroundAt(new Vector3(to.x, hip.y, to.z)) + over;
                 Vector3 ankle = Vector3.Lerp(kneelFrom[leg], to, share) + Vector3.up * (.02f * Mathf.Sin(Mathf.PI * share));
-                AnkleFrom(leg, hip, parts[Hips].transform.rotation, ankle, Quaternion.identity, false);
+                if (stage.laysBoots) AnkleFrom(leg, hip, parts[Hips].transform.rotation, ankle, Quaternion.Slerp(kneelBootFrom[leg], laid, share), true);
+                else AnkleFrom(leg, hip, parts[Hips].transform.rotation, ankle, Quaternion.identity, false);
             }
         }
 
@@ -597,7 +622,7 @@ namespace WonderGather
         private void Begin(int index)
         {
             at = index; stage = way.stages[index]; got = 0; still = 0; stepBegun = false; sat = 0; shiftT = 0; liftAt = 0; planting = false; landed = false; stepAimed = false; handsLet = false;
-            walkHand = -1; for (int i = 0; i < 2; i++) { handAt[i] = HandEnd(i); kneelFrom[i] = JointAt(Foot + i); }
+            walkHand = -1; for (int i = 0; i < 2; i++) { handAt[i] = HandEnd(i); kneelFrom[i] = JointAt(Foot + i); kneelBootFrom[i] = parts[Foot + i].transform.rotation; }
             for (int j = 1; j < Count; j++) aimFrom[j] = aimNow[j];
         }
 

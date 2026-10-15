@@ -99,6 +99,8 @@ namespace WonderGather.Tests
                         if (word.StartsWith("rights=")) { stage.risesHips = float.Parse(word.Substring(7), Plain); continue; }
                         // (kneel=0.9: its knees drawn up under it along the ground, its ankles so many shins behind its hips.)
                         if (word.StartsWith("kneel=")) { stage.kneels = float.Parse(word.Substring(6), Plain); continue; }
+                        // (laid: kneeling so, its boots laid on their tops, toes back.)
+                        if (word == "laid") { stage.laysBoots = true; continue; }
                         if (word.StartsWith("hold="))
                         {
                             var hold = word.Substring(5).Split(',');
@@ -182,6 +184,7 @@ namespace WonderGather.Tests
                     if (stage.holds) text.Append(string.Format(Plain, " hold={0:0.00},{1:0.00}{2}", stage.holdHigh, stage.holdRate, stage.holdsFeet ? ",feet" : ""));
                     if (stage.flattens > 0) text.Append(string.Format(Plain, " flat={0:0}", stage.flattens));
                     if (stage.kneels > 0) text.Append(string.Format(Plain, " kneel={0:0.00}", stage.kneels));
+                    if (stage.laysBoots) text.Append(" laid");
                     if (!float.IsNaN(stage.handStep)) text.Append(string.Format(Plain, " walk={0:0.000},{1:0.00},{2:0.000},{3:0.00}", stage.handStep, stage.handOver, stage.handLift, stage.handNearest));
                     if (!float.IsNaN(stage.sits)) text.Append(string.Format(Plain, " sit={0:0},{1:0.00},{2:0.00},{3:0}", stage.sits, stage.sitHips, stage.sitAhead, stage.sitMost));
                     if (stage.steps >= 0) text.Append(string.Format(Plain, " step={0},{1:0.00},{2:0.00},{3:0.00}{4}", stage.steps == 0 ? "lead" : "other", stage.stepAhead, stage.stepOut, stage.stepLifts, stage.stepUnder > 0 ? string.Format(Plain, ",{0:0.00}", stage.stepUnder) : ""));
