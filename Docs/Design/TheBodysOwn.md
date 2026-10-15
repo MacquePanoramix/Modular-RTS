@@ -1920,6 +1920,37 @@ Work branch f5d4bfb and after; bench only (Small).
 - Research for it: [how a body moves its weight off a limb](../Research/2026-10-14_HowPeopleGetUp.md#9-moving-the-weight-off-a-knee-added-october-15)
   (the limb about to lift pushes first; it takes about half a second fresh).
 
+#### Breath after effort, and the way up for Small (October 15, evening)
+
+Luis, October 15 ([the message](../Correspondence/2026-10-15_BREATH_AFTER_EFFORT_AND_THE_SATCHEL.md)):
+"Sure" (right after a fall and the work of getting up its breath shows more,
+then eases), "you can proceed".
+
+- **One breath for one body.** The getting up's trunk now breathes by the
+  miner's own breath (`MinerBreath`: the clock that already breathes faster and
+  deeper the more its muscles have spent, and after a fall), not a clock of its
+  own. And the work of getting up now counts: how hard its joints push for their
+  strength (`OwnBody.Exertion`, taken up over 1.5 s, let go over 20 s) makes it
+  breathe harder. On the bench: a breath every 1.8 to 2 s while it gets up, its
+  back straightening by up to 2 degrees, easing to 2.4 s and 1.3 degrees by 12 s
+  (its chest and shoulders drawn as before). Nothing changes in the game while
+  the getting up is off. For Luis to judge in motion.
+- **The bench's frames keep the physics' time now** (they kept the wall's
+  clock): with that, one foot forward and up at the end is 30 of 36 with frames
+  and without alike (the difference frames made since October 14 nearly gone).
+- **Up over the front foot does not suit Small.** Its weight sits near its
+  hands (a heavy head, short arms): rising over its front foot asked its weight
+  to go some 30 cm back, and every try failed there (kneeling up, its hands
+  stayed loaded; rising forward, it pivoted over its hands, head down; a foot
+  put further forward changed nothing). **So for Small: the toddler way** the
+  research of October 14 foresaw for Small and Round (G4): one foot forward (as
+  before), then the other (it works: its weight off that knee first), then back
+  over both feet into a squat, its hands let go, and up. Being searched; in its
+  first rounds Small **stood up** at 2 and 3 of 18 chance starts. The half-kneel
+  stays the way for Long. Told to Luis, his to overrule.
+- Also mended: over a thin outline (a boot and a knee) its weight goes as deep
+  as the outline allows (it was sent to the middle of the two, behind it).
+
 ### Questions for Luis
 
 | | Question | What I would do |
