@@ -1948,6 +1948,18 @@ then eases), "you can proceed".
   over both feet into a squat, its hands let go, and up. Being searched; in its
   first rounds Small **stood up** at 2 and 3 of 18 chance starts. The half-kneel
   stays the way for Long. Told to Luis, his to overrule.
+- **Searched (40 rounds), Small stands up at 7 and 4 of 36 chance starts it
+  was not searched at** (with the game's frames, two sets of starts): from its
+  front, hands, knees under, onto hands and knees, one foot forward, the other,
+  back into a squat with its hands let go, a bow over its feet and up, handed to
+  its standing balance ([the whole](../Images/GettingUp_2026-10-15/Small_StandsUp_ToddlerWay_Whole.jpg),
+  [the squat to standing](../Images/GettingUp_2026-10-15/Small_StandsUp_ToddlerWay_SquatToStanding.jpg)).
+  On its feet at about 10.5 s, standing at about 13: too slow (G6 asks three to
+  six). Most of the rest fall in the squat as they let go of their hands: its
+  weight too far ahead of its soles (0.2 to 0.5 of its height, where standing
+  takes it at 0.16), its boots on their toes. Handing it to standing straight
+  from the squat, letting its boots down flat, holding its hips lower: none
+  better. Being searched again, with the game's frames in the search.
 - Also mended: over a thin outline (a boot and a knee) its weight goes as deep
   as the outline allows (it was sent to the middle of the two, behind it).
 

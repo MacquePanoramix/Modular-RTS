@@ -38,7 +38,10 @@
   after the judges (round 2: "reads as real, with a flaw", three of three):
   **one foot forward and still up at the end, 31 and 34 of 36** chance
   starts with the game's frames, its weight off the knee first in 35.
-  Onto its feet: being searched.
+  **Onto its feet (October 15, evening): Small stands up by its own body
+  at 7 and 4 of 36 chance starts**, the toddler way (both feet forward,
+  back into a squat, up); about 13 s, too slow; most of the rest fall as
+  they let go of their hands in the squat. Being searched again.
   See [The body's own](Design/TheBodysOwn.md), "Its weight off a knee,
   and a leg that kicked". Not in a build.
 - **The getting up is being built (October 14; on the work branch

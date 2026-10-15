@@ -3249,6 +3249,24 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
   own; anything off the path; the getting up in the game (it is not in
   it). **Not looked at by Luis or by judges.**
 
+## S3b step 2 — breath after effort; the bench's frames; Small stands up, the toddler way (October 15, evening; in progress)
+
+- **Work branch 7dfc570 to dd30219; bench only.** The bench's frames now keep the
+  physics' time (`Time.captureDeltaTime`): one foot forward and up at the end, 36
+  chance starts, 30 with frames (seed 21), 30 (seed 9), 30 without (31, 34, 28 before).
+  Breath on the bench: a breath every 1.8 to 2 s while it gets up, up to 2 degrees,
+  easing to 2.4 s and 1.3 degrees by 12 s.
+- **Up over the front foot (the half-kneel), Small:** 0 of 3 to 0 of 36 in every form
+  tried (kneeling up, rising forward, the foot put 0.4, 0.55, 0.8, 0.95 of a leg
+  ahead): its weight stayed 110 to 340 mm from over the foot and knee.
+- **The toddler way, Small**, searched 40 rounds (18 starts): at the search's own
+  starts 4 of 18 stand; **at 36 chance starts not searched at, with frames: 7 stand
+  (seed 21), 4 (seed 9)**; the rest mostly end down after letting go of their hands in
+  the squat (28 and 31 "not on its feet when the time was over"). Variants (handed
+  over straight from the squat; boots let down flat at 60 or 120 degrees a second;
+  hips held at 0.38 or 0.45): 2, 1, 0, 0 of 36.
+- **Not run:** the test suite; Long and Round; the game; a build.
+
 ## S3b step 2 — the weight off a knee; the leg's reach; shins down (October 15, after midnight; in progress)
 
 - **Work branch f5d4bfb, e48afc2, da67eeb; bench only** (`OwnRiseBench`, Small, from
