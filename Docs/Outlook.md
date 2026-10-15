@@ -58,6 +58,36 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 15, 2026 (evening) — the fourth (the third was the satchel session's, on its own branch)
+
+- **Where we are.** S3b step 2, the getting up. Done since the second: on the
+  bench, Small comes onto hands and knees as a child does (shins down, boots on
+  their tops) and brings one foot forward with its weight off that knee first:
+  31 and 34 of 36 chance starts with the game's frames. The judges (round 2 of
+  3): "reads as real, with a flaw". Reported to Luis; he answered (October 15,
+  evening): "Sure" (breath shows more after a fall and effort, then eases),
+  "you can proceed". **Next in hand:** rising over the front foot, which needs
+  designing anew (the poses of October 14 bow it onto its face).
+- **Two lines of work now.** The satchel is mended in part on its own branch
+  (`claude/satchel-stop`, pushed): the body stops what hangs however it is
+  turned. Its code touches `MinerBody.cs` and tests only; its docs touch the
+  same pages as mine (this log, the current state, validation), so bringing it
+  into the game's branch needs those merged by hand. Merging is Luis's call; it
+  offered two more tasks of its own (the satchel lying flat; the lantern, mug,
+  hammer and the ground).
+- **Waiting on Luis:** S3 (since October 8); the builds of October 13 and 14
+  (no word on the arms, tiredness and breaths yet); question R1.
+- **Put off, not forgotten:** a weight shift a person can see before a lift;
+  straight arms; lying not dead (G1); from the back and sides; Long and Round on
+  the new getting up; toes on the standing body; bodies flying apart on the
+  bench (none seen tonight, cause never found); the suite not run since October
+  14; the twelve known failures as played.
+- **Does the task serve the stage?** Yes, and it is moving: three faults found
+  and mended in a night, the first half robust. Watch the time it takes (G6):
+  6.8 s to one foot forward is too slow, and the rise is still to come.
+- **What Luis would want next:** the getting up whole, to standing, even
+  imperfect, in pictures; then in a build, behind a switch, when it is safe.
+
 ### October 15, 2026 (after midnight) — the second
 
 - **Where we are.** Still S3b step 2, the getting up, on the bench only. The
