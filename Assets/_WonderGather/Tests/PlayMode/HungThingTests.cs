@@ -239,5 +239,122 @@ namespace WonderGather.Tests
             Assert.That(Offers("Take in hand"), Is.True);
             click.Close();
         }
+
+        // October 15: what hangs on a hook is stopped by the body however the body is turned. Small, pushed over onto
+        // its front, its back, its left and its right, falls, lies, and gets up its fall's own way (curled, on hands
+        // and knees). Read from the skin itself (ClothesDepth: how far the satchel's own points are under the clothes
+        // of the hips, the thighs and the coat's skirt), never from how the game stops it. Until that day the swing's
+        // limit had the last word and the stop turned only with the hips: bowed, the satchel went through the coat's
+        // skirt (the judges of the getting up, finding 4), lying, into the hips. Then (one run each): through it in 23
+        // of 170 looks onto its front, 17 of 128 onto its back, 25 of 149 onto its left; since, 1, 8 and 4. Pushed
+        // onto its right side it lies on its satchel, which is caught under its hip and pressed into the ground: 50 of
+        // 121, as before (52 of 134); that is told and not held, as it is not mended.
+        // (-hungAsBefore 1: as it was, to see the test fail.)
+        [UnityTest, Timeout(900000)]
+        public IEnumerator WhatHangsOnAHookStaysOutOfTheCoatHoweverTheBodyIsTurned()
+        {
+            Time.captureFramerate = 50;
+            MinerBody.HungAsBefore = CaptureTools.Argument("-hungAsBefore") == "1";
+            try
+            {
+                int index = -1;
+                for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == "Small") index = i;
+                Assert.That(index, Is.GreaterThanOrEqualTo(0));
+                choice.Choose(index);
+                yield return Wait(.4f);
+                var unit = choice.Current;
+                var miner = unit.GetComponent<MinerBody>();
+                int satchel = -1;
+                for (int k = 0; k < miner.Things.Count; k++) if (miner.Things[k].bone != null && miner.Things[k].bone.name == "Satchel") satchel = k;
+                Assert.That(satchel, Is.GreaterThanOrEqualTo(0), "Small has no satchel.");
+                var a = ground.Path[4];
+                var b = ground.Path[5];
+                var spot = OnGround(new Vector3(a.x, 0, a.y));
+                var away = OnGround(new Vector3(b.x, 0, b.y)) - spot;
+                away.y = 0;
+                away.Normalize();
+                foreach (string way in new[] { "front", "back", "left", "right" })
+                {
+                    unit.Motor.Stop();
+                    unit.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(spot);
+                    unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                    unit.GetComponent<ProceduralBiped>().ResetPose();
+                    yield return Wait(1.2f);
+                    var depth = new ClothesDepth(miner, satchel) { Stride = 3 };
+                    int frame = 0, read = 0, through = 0;
+                    float worst = 0;
+                    var after = new GameObject("After everything").AddComponent<AfterEverything>();
+                    after.Then = () =>
+                    {
+                        if (frame++ % 4 != 0) return;
+                        depth.HangsFrom = miner.Things[satchel].bone.position;
+                        depth.HangsWay = (miner.HangingWeight(satchel) - depth.HangsFrom).normalized;
+                        float deep = depth.Deepest(.02f, out int under, out _, null, out _);
+                        read++;
+                        // Through the coat: a tenth or more of the satchel's points read, two centimetres or more under it.
+                        if (under * 10 >= depth.Points / depth.Stride) through++;
+                        worst = Mathf.Max(worst, deep);
+                    };
+                    look.PushOver(way == "front" ? unit.transform.forward : way == "back" ? -unit.transform.forward : way == "left" ? -unit.transform.right : unit.transform.right);
+                    yield return null;
+                    var fall = unit.GetComponent<PhysicalFall>();
+                    Assert.That(fall, Is.Not.Null);
+                    float began = Time.time;
+                    while (fall.Now != PhysicalFall.State.Up && Time.time - began < 40) yield return null;
+                    yield return Wait(1);
+                    after.Then = null;
+                    Object.Destroy(after.gameObject);
+                    Debug.Log($"HUNG_TURNED Small pushed over onto its {way}: the satchel through its clothes in {through} of {read} looks (a tenth of it or more, 2 cm or more under them); its deepest point {worst * 1000:F0} mm under them; {(fall.Now == PhysicalFall.State.Up ? "it got up" : "it did not get up")}");
+                    Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Up), "Small did not get up.");
+                    if (way != "right")
+                        Assert.That(through * 10, Is.LessThanOrEqualTo(read), $"Pushed over onto its {way}, Small's satchel went through its clothes in {through} of {read} looks.");
+                }
+            }
+            finally
+            {
+                MinerBody.HungAsBefore = false;
+            }
+        }
+
+        // Standing and walking, what hangs on a hook hangs and swings as it did before October 15: the body's last word
+        // (the stops past what a stride does) moves it no more than a few millimetres, if at all.
+        [UnityTest, Timeout(600000)]
+        public IEnumerator StandingAndWalkingWhatHangsIsAsItWas()
+        {
+            Time.captureFramerate = 50;
+            var a = ground.Path[4];
+            var b = ground.Path[5];
+            var spot = OnGround(new Vector3(a.x, 0, a.y));
+            var away = OnGround(new Vector3(b.x, 0, b.y)) - spot;
+            away.y = 0;
+            away.Normalize();
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.4f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                unit.Motor.Stop();
+                unit.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(spot);
+                unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                unit.GetComponent<ProceduralBiped>().ResetPose();
+                yield return Wait(1.5f);
+                MinerBody.HungMovedMost = 0;
+                yield return Wait(2);
+                float standing = MinerBody.HungMovedMost;
+                MinerBody.HungMovedMost = 0;
+                Assert.That(unit.Motor.TryMove(OnGround(spot + away * 6)), Is.True);
+                float began = Time.time;
+                while ((unit.Motor.IsMoving || Time.time - began < .5f) && Time.time - began < 12) yield return null;
+                Assert.That(unit.Motor.TryMove(OnGround(spot - away)), Is.True);
+                began = Time.time;
+                while ((unit.Motor.IsMoving || Time.time - began < .5f) && Time.time - began < 14) yield return null;
+                yield return Wait(1);
+                float walking = MinerBody.HungMovedMost;
+                Debug.Log($"HUNG_AS_IT_WAS {name}: the body's last word moved what hangs on it {standing * 1000:F1} mm standing, {walking * 1000:F1} mm walking there and back");
+                Assert.That(standing, Is.LessThan(.001f), name + ": standing, what hangs on it is held otherwise than it was.");
+                Assert.That(walking, Is.LessThan(.005f), name + ": walking, what hangs on it is held otherwise than it was.");
+            }
+        }
     }
 }

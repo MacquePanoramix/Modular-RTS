@@ -58,6 +58,32 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 15, 2026 (afternoon) — the third, from a side session
+
+- **Where we are.** S3b step 2, the getting up, goes on in its own session on
+  the work branch. This session was given one fault from that round's judges
+  (finding 4): the satchel passing through the coat when the body is bowed
+  low. It is worked on its own branch, from `claude/worker-showcase`, and
+  touches only how a hung thing is stopped (`MinerBody`), not the getting up.
+- **Waiting on Luis** (as far as this branch shows): S3 (since October 8),
+  the builds of October 13 and 14, question R1. This session has seen no
+  message from Luis since October 14.
+- **Built but not in a build:** this fix, when it is done; and the getting
+  up's balance (bench, the other session).
+- **Put off, not forgotten** (found on the way, not asked for): Small's
+  lantern, Long's mug and Round's hammer also read inside the coat when the
+  body is bowed or lying, before as after; what hangs goes into the ground
+  when the body lies on it; the satchel's strap ends turn into the hips when
+  it swings out (it is turned rigidly about its rings). Each to be told to
+  Luis and proposed, not done unasked.
+- **Does the task serve the stage?** Yes: the rule that what hangs is
+  stopped by the body is Luis's, and the judges saw it fail on the very
+  movement being built. It must stay the size it was asked: the satchel,
+  however the body is turned, with standing and walking as they were.
+- **What Luis would want to know:** before and after pictures of the
+  bowed miner; that walking and standing are measured unchanged; what still
+  clips, plainly.
+
 ### October 15, 2026 (after midnight) — the second
 
 - **Where we are.** Still S3b step 2, the getting up, on the bench only. The

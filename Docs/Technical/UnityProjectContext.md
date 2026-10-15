@@ -1036,10 +1036,29 @@ the round's log is in
     square to the load; the give is shown, not fed back. `hinged` things swing
     only square to their handle's direction. `riders` place the bone on the
     cloth it is sewn to.
+  - **However the body is turned (October 15).** On its hook, the body has
+    the last word over the swing's limit (`OutOfBody`, after `Held`'s own
+    passes): the thing is turned about where it hangs from, its length kept,
+    out of the hips' face, out of the cloth it rests on (`Cloth`: the hips'
+    face carried by its pusher's share of the flap's turn and movement, which
+    comes in only as the flap turns past what a stride turns it, 60° to 90°),
+    and out of the thigh on its side (as far as a stride leaves it room, and
+    further as the thigh is drawn up past a stride, 65° to 95°, gathering the
+    skirt; kept on its own side of that thigh). Within a stride it does
+    nothing the old stop did not: walking, things move by at most 2.7 mm.
+    `HungAsBefore` (tests) puts it as it was; `HungMovedMost` (tests) says how
+    far the last word has moved a thing. Why: Small's satchel went through
+    the coat's skirt bowed low and into the hips lying (the judges of the
+    getting up, finding 4).
   - **`Flap`.** Skirt flaps turn with the thigh that moves into them, after
     the measured slack, and fall back when it leaves.
   - **For tests:** `HangingWay`, `HangingIntoBody`, `HangingAskew` report what
-    was last posed, as one moment.
+    was last posed, as one moment (`HangingIntoBody` against the hips' face,
+    and the cloth's once it has come in); `ClothTurned` how far the cloth a
+    thing rests on has turned from as modelled. `ClothesDepth` (tests) reads
+    from the skin itself how far a hung thing is under the clothes of the
+    hips, thighs and skirt; `HungThingBench` runs it through falls, work and
+    walks.
 - **`ProceduralBiped`.**
   - `Proportions.armCarry` and `armSwingSide`, per arm.
   - **Boots keep clear of each other.** `BootGap` measures two boots as
