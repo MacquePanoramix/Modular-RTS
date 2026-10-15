@@ -60,7 +60,10 @@ namespace WonderGather
             float spent = Mathf.Max(Mathf.Max(physical.Spent(PhysicalBody.Muscles.Legs), physical.Spent(PhysicalBody.Muscles.Back)),
                 Mathf.Max(physical.Spent(PhysicalBody.Muscles.LeftArm), physical.Spent(PhysicalBody.Muscles.RightArm))) / .85f;
             if (fall == null) TryGetComponent(out fall);
+            if (own == null) TryGetComponent(out own);
             Hard = Mathf.Clamp01(fall != null && fall.Now != PhysicalFall.State.Up ? Mathf.Max(spent, Mathf.Max(fall.OutOfBreath, fall.Shaken)) : spent);
+            // (And how hard it has been working its own body: getting up, and a while after.)
+            if (own != null) Hard = Mathf.Max(Hard, own.Exertion);
             float dt = Mathf.Min(Time.deltaTime, .1f);
             breath.Goes(dt, Hard);
 

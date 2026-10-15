@@ -268,14 +268,13 @@ namespace WonderGather
         public Quaternion Aim(int j) => aimNow[j];
         public float Lasted { get; private set; }
 
-        // It breathes while it gets up (G1, G8): its trunk bows and straightens a little with each breath, harder and
-        // quicker just after its fall (BreathFirst degrees, a breath each BreathFastest seconds), easing over BreathEases
-        // seconds to BreathLast degrees each BreathSlowest seconds. And while it holds itself on what bears it, its
-        // weight wanders a little and slowly (up to WandersBy metres, changing its way about every WandersEvery
-        // seconds): a body holding still is never quite still.
-        public static float BreathFirst = 2.5f, BreathLast = 1, BreathFastest = 1.4f, BreathSlowest = 3.2f, BreathEases = 25;
+        // It breathes while it gets up (G1, G8): its back straightens a little as its chest fills, by BreathBends
+        // degrees now (given by its body, from the miner's own breath: deeper and quicker the harder it has worked, and
+        // after a fall). And while it holds itself on what bears it, its weight wanders a little and slowly (up to
+        // WandersBy metres, changing its way about every WandersEvery seconds): a body holding still is never quite
+        // still.
+        public float BreathBends;
         public static float WandersBy = .012f, WandersEvery = 2.5f;
-        private float breathAlong;
         private Vector3 wander, wanderFrom, wanderTo;
         private float wanderAlong = 1;
         private uint wanderSeed = 2463534242u;
@@ -719,12 +718,7 @@ namespace WonderGather
                 Aims(j, aimNow[j]);
             }
             // (Its breath, on its trunk.)
-            {
-                float eased = Mathf.Clamp01(Lasted / Mathf.Max(1, BreathEases));
-                breathAlong += step / Mathf.Lerp(BreathFastest, BreathSlowest, eased);
-                float breath = Mathf.Lerp(BreathFirst, BreathLast, eased) * .5f * (1 - Mathf.Cos(2 * Mathf.PI * breathAlong));
-                Aims(Trunk, aimNow[Trunk] * Quaternion.AngleAxis(-breath, Vector3.right));
-            }
+            Aims(Trunk, aimNow[Trunk] * Quaternion.AngleAxis(-BreathBends, Vector3.right));
             if (stage.holds && !float.IsNaN(stage.balance) && !planting) Plant(-1, -1);
             // (Its weight off both hands first; then they let go.)
             if (stage.letsHandsGo && !handsLet && !float.IsNaN(stage.balance) && ShiftedOff(-1, 2, step)) { handsLet = true; Plant(-1, -1); }
@@ -1220,7 +1214,7 @@ namespace WonderGather
                 Bend(Forearm), Bend(Forearm + 1), Off(Forearm), Off(Forearm + 1), Off(UpperArm), Off(UpperArm + 1), Bend(Shin), Bend(Shin + 1), Off(Shin), Off(Shin + 1), Off(Thigh), Off(Thigh + 1));
         }
 
-        public string Tick() => Told() + Where() + Slips();
+        public string Tick() => Told() + Where() + Slips() + string.Format(System.Globalization.CultureInfo.InvariantCulture, "; breath {0:0.0} deg", BreathBends);
 
         // (How far each thing kept on the ground has slid from where it was put, mm, flat; - where nothing is kept.)
         private string Slips()

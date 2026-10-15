@@ -347,6 +347,12 @@ namespace WonderGather.Tests
             var mode = Physics.simulationMode;
             Physics.simulationMode = SimulationMode.Script;
             float dt = Time.fixedDeltaTime;
+            // (The game's frames, where there are frames, are as long as the physics between them, as in the game: so
+            // what runs by the frame (its breath, its hands, what hangs on it) keeps the physics' time. Before October
+            // 15 they kept the clock on the wall, and the bench ran faster or slower than that; -riseWallClock 1: so
+            // again.)
+            float timeWas = Time.captureDeltaTime;
+            if (Number("-riseWallClock", 0) <= 0) Time.captureDeltaTime = dt * Mathf.Max(1, frames > 0 ? frames : every);
             bool fellBack = OwnBody.FallsBack;
             var waysWere = OwnBody.RiseWays;
             try
@@ -839,6 +845,7 @@ namespace WonderGather.Tests
             finally
             {
                 Physics.simulationMode = mode;
+                Time.captureDeltaTime = timeWas;
                 OwnBody.FallsBack = fellBack;
                 OwnBody.ArmsTimes = armsWere;
                 OwnBody.RiseWays = waysWere;

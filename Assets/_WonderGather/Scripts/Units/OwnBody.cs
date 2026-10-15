@@ -148,6 +148,11 @@ namespace WonderGather
         private readonly Vector3[] anchors = new Vector3[Count];
         private readonly Quaternion[] rested = new Quaternion[Count];
         private readonly float[] strength = new float[Count], masses = new float[Count], lengths = new float[Count];
+        // How hard it has been working its own body (0 to 1): the hardest any of its joints pushes for its strength,
+        // taken up over ExertsIn seconds and let go over RecoversIn. Getting up, it is out of breath by so much
+        // (MinerBreath). (Luis, October 15: after a fall and the work of getting up its breath shows more, then eases.)
+        public float Exertion { get; private set; }
+        public static float ExertsIn = 1.5f, RecoversIn = 20;
         private readonly bool[] hinge = new bool[Count];
         private readonly GroundTouch[] touches = new GroundTouch[2];
         private readonly Vector3[] soleAt = new Vector3[2], soleSize = new Vector3[2], toeAt = new Vector3[2];
@@ -789,9 +794,24 @@ namespace WonderGather
                 for (int i = 0; i < Count; i++) parts[i].AddForce(masses[i] * nudge);
             }
             if (Time.time < pullUntil) parts[Trunk].AddForceAtPosition(pull * (pullOver > 0 ? Mathf.Clamp01((Time.time - pullFrom) / pullOver) : 1), parts[Trunk].worldCenterOfMass);
+            // (How hard it is working: getting up, the hardest of its joints for its strength; then it recovers.)
+            {
+                float effort = 0;
+                if (riser != null)
+                    for (int j = 1; j < Count; j++)
+                    {
+                        var push = parts[j].driveForce;
+                        float most = 0;
+                        for (int d = 0; d < push.dofCount; d++) most = Mathf.Max(most, Mathf.Abs(push[d]));
+                        effort = Mathf.Max(effort, most / Mathf.Max(1e-3f, strength[j]));
+                    }
+                effort = Mathf.Clamp01(effort);
+                Exertion = Mathf.MoveTowards(Exertion, effort, dt / (effort > Exertion ? ExertsIn : RecoversIn));
+            }
             // (Getting up, it is the way's; the keeper has it only once it is on its feet.)
             if (riser != null)
             {
+                riser.BreathBends = BreathBack * breath.Full * breath.Deep * BreathShown;
                 var does = riser.Step(dt);
                 if (does == OwnRiser.Does.Ready) OnItsFeet();
                 else if (does == OwnRiser.Does.GaveUp)
