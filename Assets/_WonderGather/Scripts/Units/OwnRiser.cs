@@ -160,6 +160,13 @@ namespace WonderGather
         // Its hold learns what its pose holds back: asked BalanceHoldLearns metres further for each second its weight
         // stays a metre short of where it is asked to be (up to BalanceShiftsAtMost).
         public static float BalanceHoldLearns = 0;
+        // A leg folded so that its ankle is within FoldedUnder of a leg's length of its hip keeps its knee facing the
+        // way it faces.
+        public static float FoldedUnder = .2f;
+        // Its knee bends the way its hip's bend takes it (true), or between the way it lies and the way its hips face
+        // (false: with its hips facing the ground on hands and knees, that turned over once a foot went ahead of its
+        // hip, and its knee was asked to bend backwards; KneeFaces says how far between).
+        public static bool KneeBendsAsHips = true;
         private Vector3 holdMore;
         private bool planting, landed, handsLet;
         private float limbAtShift;
@@ -475,7 +482,23 @@ namespace WonderGather
             // ahead; a foot brought forward under it, its knee comes up towards its chest. Until October 14, evening,
             // the way the front of its hips faced: bowed over, that is down, and a foot brought forward came with its
             // knee on the ground and its shin flat.)
-            Vector3 line = ankle.normalized, pole = Vector3.ProjectOnPlane(Vector3.Lerp(lies, parts[Hips].transform.forward, KneeFaces), line);
+            Vector3 line = ankle.normalized, faces = Vector3.Lerp(lies, parts[Hips].transform.forward, KneeFaces);
+            // (Or the way its hip's bend takes it: in the plane its hips bow in, a quarter turn on from the way its leg
+            // goes, on the side its hips face. Standing, a leg straight down: ahead. On hands and knees, a thigh straight
+            // down: towards its head. A knee drawn up to its chest: towards its head and up. It never turns over.)
+            if (KneeBendsAsHips)
+            {
+                Vector3 front = hips * Vector3.forward, up = hips * Vector3.up;
+                Vector3 bends = -Vector3.Dot(line, up) * front + Vector3.Dot(line, front) * up;
+                if (bends.sqrMagnitude > 1e-4f) faces = bends;
+            }
+            // (A leg folded tight keeps its knee facing the way it faces: with its ankle by its hip, the way from one to
+            // the other says nothing of where its knee is, and its thigh was asked to turn half round about its own
+            // length; lifted so, its leg kicked up behind it. Wholly so with its ankle within FoldedUnder of a leg's
+            // length of its hip, not at all from twice that.)
+            float folded = Mathf.InverseLerp(2 * FoldedUnder, FoldedUnder, ankle.magnitude / Mathf.Max(.05f, reach));
+            if (folded > 0) faces = Vector3.Lerp(faces, parts[Thigh + leg].transform.forward, folded);
+            Vector3 pole = Vector3.ProjectOnPlane(faces, line);
             pole = pole.sqrMagnitude > 1e-6f ? pole.normalized : Vector3.ProjectOnPlane(parts[Hips].transform.forward, line).normalized;
             float opens = Mathf.Acos(Mathf.Clamp((thighLong * thighLong + far * far - shinLong * shinLong) / (2 * thighLong * far), -1, 1));
             Vector3 thighWay = line * Mathf.Cos(opens) + pole * Mathf.Sin(opens);
@@ -490,11 +513,13 @@ namespace WonderGather
 
         // Its knees drawn up under it along the ground.
         private readonly Vector3[] kneelFrom = new Vector3[2];
-        private void Kneels(float share)
+        // (Not the leg being stepped with: the other one's shin stays on the ground while it steps.)
+        private void Kneels(float share, int stepping)
         {
             Vector3 lies = Lies();
             for (int leg = 0; leg < 2; leg++)
             {
+                if (leg == stepping) continue;
                 Vector3 hip = JointAt(Thigh + leg);
                 float shinLong = (JointAt(Foot + leg) - JointAt(Shin + leg)).magnitude;
                 Vector3 to = Flat(hip) - lies * (stage.kneels * shinLong);
@@ -680,7 +705,7 @@ namespace WonderGather
                 }
             }
             if (walks) WalksHands(step);
-            if (stage.kneels > 0 && stepping < 0) Kneels(share);
+            if (stage.kneels > 0) Kneels(share, stepping);
             if (!float.IsNaN(stage.balance))
             {
                 Balance(step);
@@ -1157,7 +1182,17 @@ namespace WonderGather
             Vector3 lies0 = Lies(), right0 = Vector3.Cross(Vector3.up, lies0), moved = Flat(parts[Hips].transform.position - hipsAtPlant);
             string asked = string.Format(System.Globalization.CultureInfo.InvariantCulture, "; hips asked {0:0} ahead {1:0} right, gone {2:0} ahead {3:0} right since kept", Vector3.Dot(askedBy, lies0) * 1000, Vector3.Dot(askedBy, right0) * 1000, Vector3.Dot(moved, lies0) * 1000, Vector3.Dot(moved, right0) * 1000);
             string One(bool kept, Vector3 put, Vector3 now) => kept ? (Flat(now - put).magnitude * 1000).ToString("0", System.Globalization.CultureInfo.InvariantCulture) : "-";
-            return asked + "; slid: hands " + One(plantedHand[0], plantHand[0], HandEnd(0)) + " " + One(plantedHand[1], plantHand[1], HandEnd(1))
+            string Thighs()
+            {
+                string said = "";
+                for (int i = 0; i < 2; i++)
+                {
+                    Quaternion asks = parts[Hips].transform.rotation * rested[Thigh + i] * aimNow[Thigh + i], now = parts[Thigh + i].transform.rotation;
+                    said += string.Format(System.Globalization.CultureInfo.InvariantCulture, " {0:0}/{1:0}", Vector3.Angle(asks * Vector3.up, now * Vector3.up), Quaternion.Angle(asks, now));
+                }
+                return "; thighs off (along/all):" + said;
+            }
+            return asked + Thighs() + "; slid: hands " + One(plantedHand[0], plantHand[0], HandEnd(0)) + " " + One(plantedHand[1], plantHand[1], HandEnd(1))
                 + ", boots " + One(plantedLeg[0], plantSole[0], parts[Foot].transform.TransformPoint(soleAt[0])) + " " + One(plantedLeg[1], plantSole[1], parts[Foot + 1].transform.TransformPoint(soleAt[1]))
                 + ", knees " + One(plantedKnee[0], plantKnee[0], JointAt(Shin)) + " " + One(plantedKnee[1], plantKnee[1], JointAt(Shin + 1));
         }
