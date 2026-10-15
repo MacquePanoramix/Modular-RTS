@@ -3271,6 +3271,14 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
 - **Tried and taken out, with figures:** carrying the foot only as fast as its boot
   followed (up at the end 4 to 6 of 36, from 15; with a small lead the foot never came
   down); the knee's facing alone, before the folded leg was mended (6 of 36, from 19).
+- **After the judges (round 2), work branch e51f19d and c11d060:** the boots roll
+  over their toes and stay low (in pictures: a lift of a few centimetres); then up at
+  the end 20 to 22 of 36 with the way searched before. A deeper shift before the lift
+  (`BalanceShiftsDeep` 0.05, 0.07, 0.09 m): 17, 6, 2 of 36 (to the middle of the
+  others), 21, 9 (to the nearest place). Searched from its hands on, with quickness in
+  the measure: **up at the end 31 of 36 (seed 21) and 34 (seed 9) with frames, 28
+  without**; its weight off the knee first 35, 35, 31; leg kicks 0, 0, 3; its hips 34 mm
+  before the lift (median).
 - **Not run:** any test suite after these changes; Long and Round; the game; a build.
   The judges (round 2) looked at one try; their verdict is in
   `Docs/Reviews/2026-10-15_GettingUp_Judges.md`.

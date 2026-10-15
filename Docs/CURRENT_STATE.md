@@ -34,10 +34,11 @@
   before it lifts (19 of 36, from 6; a fault of mine mended); the kick of
   the leg behind it, which the judges saw, was found in how a leg is
   reached for and mended; its shins now lie on the ground on hands and
-  knees (they were folded up, its boots in the air). Searched again so:
-  **one foot forward and still up at the end, 27 of 36** chance starts
-  with the game's frames (26 at October 14's starts), its weight off the
-  knee first in 28. Onto its feet: not yet.
+  knees (they were folded up, its boots in the air). Searched again so,
+  after the judges (round 2: "reads as real, with a flaw", three of three):
+  **one foot forward and still up at the end, 31 and 34 of 36** chance
+  starts with the game's frames, its weight off the knee first in 35.
+  Onto its feet: being searched.
   See [The body's own](Design/TheBodysOwn.md), "Its weight off a knee,
   and a leg that kicked". Not in a build.
 - **The getting up is being built (October 14; on the work branch

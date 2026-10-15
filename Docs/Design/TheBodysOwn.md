@@ -1898,6 +1898,21 @@ Work branch f5d4bfb and after; bench only (Small).
   frames); its weight off the knee before it lifts 28 (29); the kick 2 (0);
   the foot half a leg's length forward. Way: `ways_laid_small.txt` on the work
   branch.
+- **The judges, round 2** ([their findings](../Reviews/2026-10-15_GettingUp_Judges.md)):
+  all three "reads as real, with a flaw". Mended since: **the boot that swung up
+  as its knees came under** (it now rolls over its toes while its knee bears
+  nothing, then lies; its ankles come down first, then are drawn along the
+  ground: a lift of a few centimetres for a moment); **too slow**, in part (a
+  search told to be quick reaches the step 0.4 s sooner). Searched again from
+  its hands on (work branch c11d060): **one foot forward and up at the end, 31
+  and 34 of 36** chance starts with the game's frames (two sets), 28 without;
+  its weight off the knee before the lift in 35; no leg kicks. **Still open:**
+  a shift a person can see before the knee lifts (a deeper one went forward
+  over the hands and cost its balance; the search kept it small, its hips about
+  34 mm); dead holds (its breath is kept small, as Luis asked on October 10:
+  his to judge in motion); straight arms; the satchel through the coat (a
+  separate task: how hung things are stopped by a bowed body); lying still at
+  first (G1, not built).
 - **Tried and taken out:** carrying the foot only as fast as its boot followed
   (it was slower to follow than any lead allowed, and the foot never came
   down); its weight to the nearest place over the others instead of towards
