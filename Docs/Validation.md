@@ -3629,3 +3629,52 @@ judges' verdict is not his.**
   - Long and Round on the work branch's getting up (it is Small's way);
   - a build; the game as played beyond standing by its own joints;
   - how it looks, by Luis.
+
+## The other hung things, bowed, lying and getting up — October 15 (night)
+
+The question (from the satchel's work, not from Luis or the judges): do
+Small's lantern, Long's mug and Round's hammer go through the coat or the
+body when a miner is bowed, lies or gets up, and does what hangs go into the
+ground when a miner lies on it? Branch `claude/hung-things-stop` (from
+`claude/satchel-stop` at 752fb07), isolated copy `D:/Dev/WG-hung`, Unity
+6000.6.0f1. `HungThingBench.Bowed`, all three miners pushed over onto their
+front, back, left and right, one course each way (and Small's satchel onto
+its right and front once more); pictures every 0.2 s from the thing's side, a
+front quarter, behind, and **from below with the ground not drawn** (new:
+`-bagThing`, `-bagViews 0,45,-110,below`), set beside the skin measure.
+**Found, not mended. Luis has not seen it.**
+([pictures](Images/HungThings_2026-10-15/))
+
+- **Into the ground: all four, in every getting up but Long's from its
+  right.** Nothing stops a thing on a hook at the ground (the skirt's flaps
+  have a stop there; what hangs has none). Deepest below the ground over a
+  course: Small's lantern 92 to 176 mm (wholly under it), Round's hammer 123
+  to 146 mm (its handle), Long's mug 62 to 79 mm, Small's satchel 22 to 76 mm;
+  mostly face down with the knees tucked to get up (`curl-more`,
+  `knees-tuck`), and lying. Seen so: from above the thing is not there; from
+  below, it hangs whole under the ground's face.
+- **Lying on it: inside the coat and into the ground.** Small on its left
+  (the lantern): hidden from every side and from below, its light glowing on
+  the ground under the belly (81 mm under the skirt by the measure, 39% of
+  it). Long on its left and on its front (the mug): a sliver at the belly or
+  nothing, hidden from below, 23 to 44 mm into the ground. Small on its right
+  (the satchel, known): under the hip, 58 to 76 mm into the ground.
+- **Round's hammer through its thigh** on hands and knees after a fall onto
+  its right (8.7 to 10.3 s): the head in its loop at the belt, the handle
+  through the thigh drawn up under it, its end out of the trouser. The stop
+  keeps only the weight's point clear of the thigh (115 to 128 mm clear,
+  on the far side): the thigh came up between the head and the weight. In
+  the other three getting ups the handle lies on the thigh or hangs before
+  it.
+- **Not wrong, though the measure read it so:** Small's lantern bowed and
+  kneeling (going down onto its front, 0.9 to 1.5 s; pushing onto hands and
+  knees from its back, 7.5 s) hangs outside, by the shin or on the thigh,
+  where the measure read 93 to 100 mm under the skirt or the leg. Most of the
+  lantern's and the mug's "under the clothes" readings while bowed are of
+  this kind; the measure is not to be trusted for them without pictures.
+- **Odd, not through:** Long lying on its back has its mug standing on the
+  coat at the hip, its weight level with its hook, not hanging off its side.
+- **Not looked at:** the work (going down for the pickaxe, the blows) for
+  these three; the work branch's getting up for Long and Round; more than one
+  course a way (the falls differ from run to run: Small's satchel onto its
+  right lay 77 mm above the ground in one run, 64 mm into it in the next).

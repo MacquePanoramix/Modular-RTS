@@ -19,7 +19,7 @@ namespace WonderGather.Tests
     //
     // Run on its own: -runTests -testPlatform PlayMode -testFilter WonderGather.Tests.HungThingBench.Bowed
     //   [-bagMiner Small,Long,Round] [-bagWays front,back,left,right] [-bagOut <folder> -bagShots 1 -bagEvery 5
-    //   -bagSize 320 -bagView 1.0 -bagFrom <s> -bagTo <s>]
+    //   -bagSize 320 -bagView 1.0 -bagFrom <s> -bagTo <s> -bagThing Lantern -bagViews 0,45,-110,below]
     // ...HungThingBench.AtWork [-bagMiner ...] [-bagBoulders 1,3,4] [-bagFor 25] [-bagOut <folder>] [-bagThing Satchel]
     // ...HungThingBench.Walks [-bagMiner ...] [-bagOwn 1]
     public sealed class HungThingBench
@@ -32,7 +32,7 @@ namespace WonderGather.Tests
         {
             var pelvis = miner.Rig.pelvis;
             int k0 = -1;
-            for (int k = 0; k < miner.Things.Count && k0 < 0; k++) if (miner.Things[k].hand == null && miner.Things[k].bone != null && (which == null || miner.Things[k].bone.name == which)) k0 = k;
+            for (int k = 0; k < miner.Things.Count && k0 < 0; k++) if (miner.Things[k].hand == null && miner.Things[k].bone != null && (which == null || Array.IndexOf(which.Split(','), miner.Things[k].bone.name) >= 0)) k0 = k;
             if (k0 < 0) return;
             var thing = miner.Things[k0];
             Vector3 bodyRight = (miner.Rig.thighs[1].position - miner.Rig.thighs[0].position).normalized;
@@ -43,6 +43,25 @@ namespace WonderGather.Tests
             dir = Quaternion.AngleAxis(around * -s, Vector3.up) * dir.normalized;
             camera.transform.SetPositionAndRotation(target + dir * view, Quaternion.LookRotation(-dir));
             CaptureTools.Render(camera, path, size, size);
+        }
+
+        // A picture of the same thing from under the ground, looking up at it with the ground not drawn: what lies on
+        // the ground, or is pressed into it, is seen from beneath.
+        public static void Below(Camera camera, MinerBody miner, string path, float view, int size, string which = null)
+        {
+            int k0 = -1;
+            for (int k = 0; k < miner.Things.Count && k0 < 0; k++) if (miner.Things[k].hand == null && miner.Things[k].bone != null && (which == null || Array.IndexOf(which.Split(','), miner.Things[k].bone.name) >= 0)) k0 = k;
+            if (k0 < 0) return;
+            Vector3 target = Vector3.Lerp(miner.Rig.pelvis.position, miner.HangingWeight(k0), .5f);
+            Vector3 ahead = Vector3.ProjectOnPlane(miner.transform.forward, Vector3.up).normalized;
+            Vector3 dir = (Vector3.down + ahead * .15f).normalized;
+            var hidden = new List<Renderer>();
+            foreach (var ground in UnityEngine.Object.FindObjectsByType<OrdinaryGround>(FindObjectsSortMode.None))
+                foreach (var r in ground.GetComponentsInChildren<Renderer>())
+                    if (r.enabled) { r.enabled = false; hidden.Add(r); }
+            camera.transform.SetPositionAndRotation(target + dir * view, Quaternion.LookRotation(-dir, ahead));
+            CaptureTools.Render(camera, path, size, size);
+            foreach (var r in hidden) r.enabled = true;
         }
 
         // How far a thing's weight is from the line of the thigh on its side.
@@ -284,6 +303,10 @@ namespace WonderGather.Tests
             float shootFrom = float.Parse(CaptureTools.Argument("-bagFrom") ?? "-1", Plain), shootTo = float.Parse(CaptureTools.Argument("-bagTo") ?? "-1", Plain);
             string[] who = (CaptureTools.Argument("-bagMiner") ?? "Small,Long,Round").Split(',');
             string[] ways = (CaptureTools.Argument("-bagWays") ?? "front,back,left,right").Split(',');
+            // Which thing is pictured (by its bone's name; the first on a hook if none), and from where: degrees round
+            // from its side (towards the front, positive), or "below" (from under the ground, the ground not drawn).
+            string shootThing = CaptureTools.Argument("-bagThing");
+            string[] views = (CaptureTools.Argument("-bagViews") ?? "0").Split(',');
             foreach (var grass in UnityEngine.Object.FindObjectsByType<GrassField>(FindObjectsSortMode.None)) grass.enabled = false;
             var choice = UnityEngine.Object.FindAnyObjectByType<MinerChoice>();
             var look = UnityEngine.Object.FindAnyObjectByType<MinerWorkPreview>();
@@ -328,19 +351,12 @@ namespace WonderGather.Tests
                         {
                             float now = Time.time - began;
                             if (!shots || !(frame % every == 0 || (now >= shootFrom && now <= shootTo))) return;
-                            var pelvis = miner.Rig.pelvis;
-                            int k0 = -1;
-                            for (int k = 0; k < miner.Things.Count && k0 < 0; k++) if (miner.Things[k].hand == null && miner.Things[k].bone != null) k0 = k;
-                            if (k0 < 0) return;
-                            var thing = miner.Things[k0];
-                            Vector3 bodyRight = (miner.Rig.thighs[1].position - miner.Rig.thighs[0].position).normalized;
-                            int s = Vector3.Dot(thing.bone.position - pelvis.position, bodyRight) < 0 ? -1 : 1;
-                            Vector3 target = Vector3.Lerp(pelvis.position, miner.HangingWeight(k0), .5f);
-                            Vector3 dir = Vector3.ProjectOnPlane(bodyRight * s, Vector3.up);
-                            dir = (dir.sqrMagnitude > .04f ? dir.normalized : unit.transform.right * s) + Vector3.up * .35f;
-                            dir.Normalize();
-                            camera.transform.SetPositionAndRotation(target + dir * view, Quaternion.LookRotation(-dir));
-                            CaptureTools.Render(camera, Path.Combine(folder, $"{name.ToLowerInvariant()}_{way}_{shot++:000}_{phase}_{now:00.00}"), size, size);
+                            string stem = Path.Combine(folder, $"{name.ToLowerInvariant()}_{way}_{shot++:000}_{phase}_{now:00.00}");
+                            foreach (string v in views)
+                            {
+                                if (v == "below") { Below(camera, miner, stem + "_below", view, size, shootThing); continue; }
+                                Shoot(camera, miner, stem + "_" + v.Replace("-", "m"), view, size, shootThing, float.Parse(v, Plain));
+                            }
                         });
                         for (float until = Time.time + .6f; Time.time < until;) yield return null;
                         Vector3 push = way == "front" ? -unit.transform.forward : way == "back" ? unit.transform.forward : way == "left" ? unit.transform.right : -unit.transform.right;
