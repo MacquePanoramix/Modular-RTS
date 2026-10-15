@@ -1,6 +1,6 @@
 # Wonder Gather — Current State
 
-**Updated:** October 14, 2026.
+**Updated:** October 15, 2026.
 
 - **A build for Luis to play, October 14 (late): `Builds/WindowsOrdinaryPlace_Oct14`**
   (beside the three of October 13). In it: arms as strong as the body needs
@@ -27,11 +27,19 @@
   off).** What bears the miner (hands, knees, boots) stays where it is and
   its joints carry its body over it; its weight goes over the others
   before a limb is lifted. Small comes onto hands and knees and holds
-  there at 7 of 9 places; since the laptop was on again, **one foot
-  brought forward from there and held at 25 of 36 starts** laid by chance
-  (with the game's frames). From there onto its feet: not yet (1 to 3 of
-  18 in searches). See [The body's own](Design/TheBodysOwn.md), "Balance
-  on hands, knees and feet". Not in a build.
+  there; on October 14 (afternoon) one foot brought forward from there
+  held at 25 of 36 starts laid by chance (with the game's frames), **but
+  the way searched after the judges' mends holds at 8 to 19 of 36**.
+  **October 15, after midnight:** its weight now really goes off the knee
+  before it lifts (19 of 36, from 6; a fault of mine mended); the kick of
+  the leg behind it, which the judges saw, was found in how a leg is
+  reached for and mended; its shins now lie on the ground on hands and
+  knees (they were folded up, its boots in the air). Searched again so:
+  **one foot forward and still up at the end, 27 of 36** chance starts
+  with the game's frames (26 at October 14's starts), its weight off the
+  knee first in 28. Onto its feet: not yet.
+  See [The body's own](Design/TheBodysOwn.md), "Its weight off a knee,
+  and a leg that kicked". Not in a build.
 - **The getting up is being built (October 14; on the work branch
   and the bench only; not in the game, not in a build; Luis has seen
   none of it).** For the first time a miner goes from lying to

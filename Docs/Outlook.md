@@ -58,6 +58,44 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 15, 2026 (after midnight) — the second
+
+- **Where we are.** Still S3b step 2, the getting up, on the bench only. The
+  stretch in hand is one foot forward from hands and knees. Tonight: the
+  weight never went off the knee before it lifted. My own change of the night
+  before caused it (a knee that still bore its load counted as one of "the
+  others"). Mended; and the hold now learns the steady gap its pose leaves.
+  Searched again and counted at 36 starts it had not seen, with the game's
+  frames: the weight goes off before the knee lifts at 19 (6 before); the
+  miner is still up at the end at 14 (8 before). The kick of the leg behind
+  it, which the judges saw, was then found to be the leg's reach itself:
+  the way the knee bends turns over once the foot goes ahead of the hip.
+  Being tested.
+- **Not to hide:** on October 14 (afternoon) one foot forward held at **25
+  of 36**, with an older way and before the mends that followed the judges
+  (the kick, breath, the wander, the knees drawn at a boot's height). The
+  way searched after them holds at 8 to 19. The current-state page still
+  says 25; it must say what it is now.
+- **Waiting on Luis:** S3 (since October 8), the three builds of October 13,
+  `WindowsOrdinaryPlace_Oct14` (arms, tiredness, breaths), question R1. No
+  message from Luis since "Okay sounds good" (October 14, late).
+- **Built but not in a build:** only the getting up's balance (bench).
+- **Put off, not forgotten:** bodies flying apart on the bench (cause not
+  found); toes on the standing body; lying, not dead (G1, what Luis asked
+  first); from the back and the sides; Long and Round on the balance; the
+  step's getting ready for Long; the twelve known failures as played; S4's
+  open questions Q2 to Q6. Steps 4 (walking), 5, 6 and "the fall, again"
+  not begun.
+- **Does the task serve the stage?** Yes, but it has been two days on the
+  bench with nothing Luis can see, and nothing yet stands. G6 asks three to
+  six seconds to stand; the way so far takes eight to twelve to reach one
+  knee. Keep the next stretch short: mend the kick, count it, send the
+  judges (round 2, with pictures), then tell Luis plainly where it is, with
+  pictures, before building the rise over the front foot.
+- **What Luis would want to know:** the fault I made and mended, the kick's
+  cause, the honest numbers (25 then, 8 to 19 now), and that nothing stands
+  yet.
+
 ### October 14, 2026 (late) — the first
 
 - **Where we are.** Stage S3b, the body's own. Step 1 (standing, alive) is

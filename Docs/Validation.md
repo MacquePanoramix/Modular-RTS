@@ -3249,6 +3249,32 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
   own; anything off the path; the getting up in the game (it is not in
   it). **Not looked at by Luis or by judges.**
 
+## S3b step 2 — the weight off a knee; the leg's reach; shins down (October 15, after midnight; in progress)
+
+- **Work branch f5d4bfb, e48afc2, da67eeb; bench only** (`OwnRiseBench`, Small, from
+  its front, one foot brought forward from hands and knees). Counted at 36 starts not
+  searched at (`starts36.txt`, each laid turned up to 20 degrees and moved up to 30 cm
+  by chance), with a frame of the game between every step of the physics unless said.
+- **Its weight moved off the knee before it is lifted** (not lifted "all the same"
+  after 2.5 s): the way of October 14 evening, 6 of 36; after the fault in "the others"
+  was mended and the hold learns its steady gap, and a search, 19; with the leg's reach
+  made sound and the shins down, 28 (29 at the October 14 chance starts, seed 9).
+- **Lifts with the thigh more than 90 degrees from what it was asked** (the kick): 27
+  of 36 without frames before; 4 without frames and 19 with them after the first mend;
+  1 and 1 after the reach was made sound; 2 (seed 21) and 0 (seed 9) with the way now.
+- **Up on its hands, a knee and the foot brought forward at the end** (head and hips
+  up, its weight within what bears it): **27 of 36** (seed 21), **26 of 36** (seed 9,
+  the chance starts of October 14's 25), 21 without frames. Foot brought forward 0.50 to
+  0.56 of a leg's length on average. On hands and knees: knees bent about 117 degrees,
+  knees bearing 0.72 of its weight, boots 0, head 0.86 (shares of its standing hip
+  height); on October 14 its knees were folded to about 177 degrees, its boots in the air.
+- **Tried and taken out, with figures:** carrying the foot only as fast as its boot
+  followed (up at the end 4 to 6 of 36, from 15; with a small lead the foot never came
+  down); the knee's facing alone, before the folded leg was mended (6 of 36, from 19).
+- **Not run:** any test suite after these changes; Long and Round; the game; a build.
+  The judges (round 2) looked at one try; their verdict is in
+  `Docs/Reviews/2026-10-15_GettingUp_Judges.md`.
+
 ## The build of October 14 (late)
 
 - **Work branch 32fa949.** The whole PlayMode suite: 201 tests, 175 passed, 0

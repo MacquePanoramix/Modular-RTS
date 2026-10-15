@@ -1834,6 +1834,77 @@ Work branch 8e44001 and on; bench only.
   A search now counts how far forward a foot went, so it cannot keep its
   balance by hardly moving its foot.
 
+#### Its weight off a knee, and a leg that kicked (October 15, after midnight)
+
+Work branch f5d4bfb and after; bench only (Small).
+
+- **Its weight never went off the knee it was about to lift.** My own change
+  of the night before caused it: told what a knee really still bore, a knee
+  that bore again what it bore at first counted as one of "the others" its
+  weight was to go over, so it was "over the others" already and nothing more
+  was asked. Mended: the limb being lifted is never one of the others.
+- **Asked to go further, its body stayed a steady way short** (asked 45 mm
+  further for two seconds, it went none of it): what holds it on its hands
+  and knees has no memory of a gap that lasts. It now learns that gap and
+  asks for it as well (`BalanceHoldLearns`). Weight off the knee before it
+  lifts, at six chance starts: none before, four after.
+- **Searched again and counted at 36 starts it had not seen**, with the
+  game's frames: weight moved off before the knee lifts 19 (6 before); still
+  up on hands, knee and foot at the end 14 (8 before); without frames 26 and
+  19. **Honestly beside October 14:** one foot forward then held at 25 of 36,
+  with an older way, before the mends after the judges. The way searched
+  since holds at 8 to 19.
+- **The leg kicked up behind it as it was lifted** (the judges saw it). Read
+  in pictures and in how far each thigh was from what it was asked: as the
+  knee lifted, its thigh was asked to turn some 150 degrees about its own
+  length, and turned the long way round. Two faults in how a leg is reached
+  for, both mended:
+  - **folded tight, its knee faced any way.** On hands and knees Small sat
+    almost on its heels, its shins folded up along its thighs and its boots
+    in the air (the judges' "boots in the air"): its ankle 14 mm from its
+    hip, which says nothing of where its knee faces. A leg folded tight now
+    keeps its knee facing the way it faces.
+  - **brought forward, its knee was asked to bend backwards.** Where the knee
+    faces was reckoned between the way the body lies and the way its hips
+    face; on hands and knees its hips face the ground, and once the foot went
+    a little ahead of its hip that turned over. Its knee now faces the way
+    its hip's bend takes it (towards its head on hands and knees, up towards
+    its chest as the foot comes forward), which never turns over.
+  With both: lifts with a thigh more than 90 degrees from what it was asked,
+  27 of 36 before, 5 after; but with the game's frames still 17 to 19
+  ([the kick, in pictures](../Images/GettingUp_2026-10-15/Small_LegKickedUpAsItLifted_AFault.jpg)).
+- **Then made sound** (work branch da67eeb): folded tight, the turns of its
+  thigh and shin had been built from ways lying almost along one another, and
+  noise decided them, which the frames changed. Now a folded thigh stays
+  where it is and faces the way it faces, its knee faces away from where its
+  shin goes (as a hinge does), and its shin turns about its knee's hinge
+  alone. Lifts with a thigh far off: 1 of 36, with frames and without. For a
+  leg bent as legs usually are, it asks for what was asked before.
+- **Its shins now lie on the ground on hands and knees, its boots on their
+  tops**, as a child's when it crawls
+  ([pictures](../Images/GettingUp_2026-10-15/Small_HandsAndKnees_ShinsDown_BootsLaid.jpg)):
+  knees bent about 100 to 115 degrees (they were folded to 177, its boots in
+  the air), its knees bearing, its head up; the other shin stays down while
+  it steps. Drawn under with its boots as the pose had them, their toes dug
+  in and held its knees off the ground (it was on hands and toes); searched
+  that way, it put its head on the ground. Held so a second or more at 23 to
+  27 of 36 chance starts with the poses searched before; the foot comes up
+  and forward as a person brings a knee through, and then it often tips over
+  sideways ([pictures](../Images/GettingUp_2026-10-15/Small_FootForward_ThenTipsOver.jpg)).
+- **Searched again for it** (the hold and the step, 35 rounds, chance starts
+  and pushes), and counted at 36 starts not searched at, with the game's
+  frames: **still up on its hands, a knee and the foot brought forward at the
+  end, 27 of 36** (26 at the chance starts of October 14's 25; 21 without
+  frames); its weight off the knee before it lifts 28 (29); the kick 2 (0);
+  the foot half a leg's length forward. Way: `ways_laid_small.txt` on the work
+  branch.
+- **Tried and taken out:** carrying the foot only as fast as its boot followed
+  (it was slower to follow than any lead allowed, and the foot never came
+  down); its weight to the nearest place over the others instead of towards
+  their middle (no better on its own).
+- Research for it: [how a body moves its weight off a limb](../Research/2026-10-14_HowPeopleGetUp.md#9-moving-the-weight-off-a-knee-added-october-15)
+  (the limb about to lift pushes first; it takes about half a second fresh).
+
 ### Questions for Luis
 
 | | Question | What I would do |

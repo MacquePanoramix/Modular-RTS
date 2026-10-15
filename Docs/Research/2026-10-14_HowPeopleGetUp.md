@@ -494,3 +494,37 @@ upright) before the rise; the weight goes over it, the trunk bowing, before
 the back knee leaves the ground (G3); the front leg lifts, the back foot
 pushes and then comes up beside it; a weak or tired miner pushes on its
 front thigh with a hand.
+
+## 9. Moving the weight off a knee (added October 15)
+
+Asked when the miners, on hands and knees, would not move their weight off
+the knee they were about to bring forward.
+
+- **No study of hands and knees itself was found.** The nearest are bodies
+  about to lift a foot or reach with an arm.
+- **Before a limb lifts, the weight goes onto the limbs that stay**, and it is
+  seen: adults reaching from a crouch first move their weight onto the leg
+  that stays, more so the less steady they are
+  ([crouched reaching](https://pmc.ncbi.nlm.nih.gov/articles/PMC3688725));
+  toddlers about to step tilt their pelvis over the standing leg so the other
+  is unloaded just before it swings
+  ([advances in the study of anticipatory adjustments](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11726838/)).
+- **The limb about to lift pushes first.** Starting to walk, the pressure
+  under the feet goes back and towards the leg that will swing, and that push
+  sends the body forward and over the leg that stays
+  ([Parkinson's and gait initiation, 2019](https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2019.00352/full);
+  [obesity and gait initiation](https://pubmed.ncbi.nlm.nih.gov/24885764/)).
+- **It is quick:** the muscles begin about half a second before the step in
+  children, and the body moves about 0.3 s after they begin
+  ([a review of children's adjustments](https://world.physio/congress-proceeding/anticipatory-postural-adjustments-childrena-systematic-review)).
+  A fresh body takes well under a second over it, not two.
+- **How the move from hands and knees to one knee is taught** (exercise
+  instructions, not studies): arms kept straight, the trunk rises as the knee
+  comes forward, the low back kept steady
+  ([Functional Movement](https://www.functionalmovement.com/exercises/918/quadruped_to_half-kneeling_transitions);
+  [the Prehab Guys](https://library.theprehabguys.com/vimeo-video/quadruped-to-half-kneeling/)).
+
+**What it adds to ours:** the weight goes over the hands and the other knee
+before the knee lifts (G3), forward and to the side of the knee that stays;
+the knee about to lift may push to start that move rather than go slack at
+once; for a fresh miner it takes about half a second, longer tired.
