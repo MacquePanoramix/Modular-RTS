@@ -165,6 +165,10 @@ namespace WonderGather
         // A leg folded so that its ankle is within FoldedUnder of a leg's length of its hip keeps its knee facing the
         // way it faces.
         public static float FoldedUnder = .2f;
+        // Before it lifts a limb its weight goes so far within the others (metres; 0: twice the margin), and the
+        // limb is lifted once it is three quarters of the way there: a shift a person can see.
+        public static float BalanceShiftsDeep = 0;
+        private float ShiftDeep => Mathf.Max(2 * BalanceMargin, BalanceShiftsDeep);
         // Its knee bends the way its hip's bend takes it (true), or between the way it lies and the way its hips face
         // (false: with its hips facing the ground on hands and knees, that turned over once a foot went ahead of its
         // hip, and its knee was asked to bend backwards; KneeFaces says how far between).
@@ -934,7 +938,7 @@ namespace WonderGather
             float limb = leg >= 0 ? leanFelt[Thigh + leg] + leanFelt[Shin + leg] + leanFelt[Foot + leg] : hand == 2 ? leanFelt[Forearm] + leanFelt[Forearm + 1] : leanFelt[Forearm + hand];
             // (Its weight over the others is what counts: a knee on the ground bears its share however slack its leg,
             // until it is lifted.)
-            bool over = depth >= BalanceMargin && (limb < BalanceLifts || shiftT >= BalanceUnloads) && shiftT >= .5f * BalanceUnloads;
+            bool over = depth >= Mathf.Max(BalanceMargin, .75f * BalanceShiftsDeep) && (limb < BalanceLifts || shiftT >= BalanceUnloads) && shiftT >= .5f * BalanceUnloads;
             if (!over && shiftT < BalanceShiftsWithin) return false;
             if (over) Shifts++; else ShiftsFailed++;
             shiftT = 0;
@@ -1115,15 +1119,15 @@ namespace WonderGather
                 for (int i = 0; i < n; i++) if (!supOff[i]) sorted[others++] = sup[i];
                 int m0 = Outline(sorted, others);
                 float now = Within(m0, at, out _);
-                if (now < 2 * BalanceMargin && BalanceShiftsNearest && Nearest(m0, at, 2 * BalanceMargin, out Vector3 near)) to = near;
-                else if (now < 2 * BalanceMargin)
+                if (now < ShiftDeep && BalanceShiftsNearest && Nearest(m0, at, ShiftDeep, out Vector3 near)) to = near;
+                else if (now < ShiftDeep)
                 {
                     // (Along the line to their middle, the nearest place that deep.)
                     float lo = 0, hi = 1;
                     for (int k = 0; k < 12; k++)
                     {
                         float mid = .5f * (lo + hi);
-                        if (Within(m0, Vector3.Lerp(at, to, mid), out _) >= 2 * BalanceMargin) hi = mid; else lo = mid;
+                        if (Within(m0, Vector3.Lerp(at, to, mid), out _) >= ShiftDeep) hi = mid; else lo = mid;
                     }
                     to = Vector3.Lerp(at, to, hi);
                 }

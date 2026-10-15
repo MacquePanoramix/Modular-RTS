@@ -47,6 +47,8 @@ namespace WonderGather.Tests
             public float stepFurthest;
             // (How many times it moved its weight off a limb before lifting it, and how many it lifted it all the same.)
             public int shifts, shiftsFailed;
+            // (When it first came to its last pose; NaN: not yet.)
+            public float lastAt = float.NaN;
             public Vector3 shakeFrom, shakeTo;
             public OwnRiser.Way[] ways;
             public string ended;
@@ -501,7 +503,7 @@ namespace WonderGather.Tests
                         OwnBody.RiseWays = body.ways;
                         body.done = !body.own.BeginDown();
                         body.up = body.onFeet = false; body.feetAt = body.upAt = -1; body.peak = body.stoodFor = body.risen = body.feetFor = 0; body.ended = body.done ? "could not be made" : "";
-                        body.depth = float.NaN; body.stageAt = body.stages = body.heldFor = 0; body.upOff = false; body.stepFurthest = 0; body.shifts = body.shiftsFailed = 0;
+                        body.depth = float.NaN; body.stageAt = body.stages = body.heldFor = 0; body.upOff = false; body.stepFurthest = 0; body.shifts = body.shiftsFailed = 0; body.lastAt = float.NaN;
                     }
                     Physics.SyncTransforms();
                     int shot = 0;
@@ -553,6 +555,7 @@ namespace WonderGather.Tests
                                 body.upright = riser.Measure(OwnRiser.Asks.Upright); body.bears = riser.Measure(OwnRiser.Asks.Bears); body.front = riser.Measure(OwnRiser.Asks.Front);
                                 body.ended = riser.WayNow + " " + riser.StageNow;
                                 body.depth = riser.BalanceDepth; body.stageAt = riser.StageAt; body.stages = riser.Stages; body.stepFurthest = riser.StepFurthest; body.shifts = riser.Shifts; body.shiftsFailed = riser.ShiftsFailed;
+                                if (float.IsNaN(body.lastAt) && riser.Stages > 0 && riser.StageAt == riser.Stages - 1) body.lastAt = step * dt;
                                 // (Held only up off the ground: its head and hips up. Lying on its back with its hands and boots on
                                 // the ground, its weight is within them too, and a search took that.)
                                 body.upOff = riser.Measure(OwnRiser.Asks.Head) >= .5f && riser.Measure(OwnRiser.Asks.Hips) >= .3f;
@@ -631,7 +634,7 @@ namespace WonderGather.Tests
                 {
                     // A search of one way's poses: varied towards those that leave the bodies best.
                     int rounds = (int)Number("-riseRounds", 40), many = (int)Number("-riseMany", 32), keep = (int)Number("-riseKeep", 6), seed = (int)Number("-riseSeed", 1), first = (int)Number("-riseFirst", 0);
-                    float spread = Number("-riseSpread", 15), hurry = Number("-riseHurry", .05f);
+                    float spread = Number("-riseSpread", 15), hurry = Number("-riseHurry", .05f), holdHurry = Number("-riseHoldHurry", 0);
                     int at = -1;
                     for (int i = 0; i < ways.Length; i++) if (ways[i].name == search) at = i;
                     Assert.That(at, Is.GreaterThanOrEqualTo(0), "No way called " + search + " in " + file);
@@ -746,6 +749,8 @@ namespace WonderGather.Tests
                             // (A limb lifted with its weight over the others counts; one lifted all the same, with its weight
                             // still on it, does not.)
                             if (body.shifts + body.shiftsFailed > 0) got += 3f * body.shifts / (body.shifts + body.shiftsFailed);
+                            // (-riseHoldHurry: quicker counts, by when it came to its last pose.)
+                            if (holdHurry > 0) got -= holdHurry * (float.IsNaN(body.lastAt) ? 12 : body.lastAt);
                             if (body.ended == "stands") got += 10;
                             if (body.stages > 0 && body.stageAt == body.stages - 1 && !float.IsNaN(body.depth)) got += body.upOff ? 10 * Mathf.Clamp(body.depth, -.1f, .15f) : -1;
                             return got - .5f * Mathf.Max(0, body.peak - 2.5f);

@@ -1,7 +1,7 @@
-# found for Small after 35 rounds: worth 19.50, 0 of 18 stand
+# found for Small after 40 rounds: worth 18.63, 0 of 18 stand
 way feet 0.4 1 gives
-hands | 1.45 1.68 4.0 | -4 -9 0 | 35 52 129 | 35 52 129 | NaN NaN NaN NaN | NaN NaN NaN NaN |
-under | 1.39 1.46 5.0 | 0 -14 0 | 70 39 102 | 70 39 102 | 91 34 108 28 | 91 34 108 28 | kneel=0.90 laid
-prop | 1.50 1.61 5.0 | 4 -25 0 | 105 28 7 | 105 28 7 | 55 31 112 25 | 55 31 112 25 | kneel=0.50 laid
-stay | 0.66 0.84 20.0 | -9 -37 0 | 112 31 12 | 112 31 12 | 66 19 117 23 | 66 19 117 23 | bal=1.00,0.00 hold=NaN,0.30 kneel=0.50 laid
-footA | 0.92 1.02 20.0 | -21 -39 0 | 85 -17 10 | 85 -17 10 | 85 -14 88 12 | 85 -14 88 12 | still>99 bal=1.00,0.00 hold=NaN,0.30 kneel=0.50 laid step=lead,0.29,0.44,0.14,0.54
+hands | 1.40 1.58 4.0 | 1 -4 0 | 36 51 129 | 36 51 129 | NaN NaN NaN NaN | NaN NaN NaN NaN |
+under | 1.21 1.36 5.0 | -4 -15 0 | 70 41 101 | 70 41 101 | 87 28 109 27 | 87 28 109 27 | kneel=0.90 laid
+prop | 1.41 1.59 5.0 | 11 -15 0 | 102 44 3 | 102 44 3 | 66 32 116 28 | 66 32 116 28 | kneel=0.50 laid
+stay | 0.62 0.68 20.0 | -2 -38 0 | 111 36 6 | 111 36 6 | 61 22 118 24 | 61 22 118 24 | bal=1.00,0.00 hold=NaN,0.30 kneel=0.50 laid
+footA | 0.89 0.94 20.0 | -24 -40 0 | 79 -18 11 | 79 -18 11 | 81 -13 90 18 | 81 -13 90 18 | still>99 bal=1.00,0.00 hold=NaN,0.30 kneel=0.50 laid step=lead,0.25,0.36,0.12,0.57

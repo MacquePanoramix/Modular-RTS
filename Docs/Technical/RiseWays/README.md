@@ -19,14 +19,16 @@ Bench arguments used: `-riseMiner Small -riseStarts front,front@1,...,front@8 -r
 
 - `ways_laid_small.txt`: Small, from its front onto hands and knees with its shins on the
   ground and its boots laid on their tops (`kneel=0.50 laid`), then one foot forward, its
-  weight off that knee first. Searched with chance starts and pushes (35 rounds, from the
-  hold on). Use with `-riseSet BalanceHoldLearns=1.570,BalanceMargin=0.020,KneeFaces=0.759,
-  BalanceShiftsAt=0.115,BalanceShiftsAtMost=0.078,BalanceUnloads=0.335,LetsGo=0.314,
-  FoldedUnder=0.163`. At `starts36.txt` with `-riseFrames 1`: up at the end 27 of 36
-  (`-riseSeed 21`), 26 (`-riseSeed 9`).
+  weight off that knee first. Searched from its hands on (40 rounds, chance starts and
+  pushes, `-riseHoldHurry 0.4`). Use with `-riseSet BalanceHoldLearns=1.734,
+  BalanceMargin=0.021,KneeFaces=0.759,BalanceShiftsAt=0.114,BalanceShiftsAtMost=0.072,
+  BalanceUnloads=0.362,LetsGo=0.250,FoldedUnder=0.163,BalanceShiftsNearest=1,
+  BalanceShiftsDeep=0.040`. At `starts36.txt` with `-riseFrames 1`: up at the end 31 of 36
+  (`-riseSeed 21`), 34 (`-riseSeed 9`); 28 without frames. Its weight off the knee first in 35.
 - `ways_folded_small.txt`: the way before it (its legs folded tight on hands and knees,
   its boots in the air), searched before the leg's reach was made sound.
 - `shiftsum.py`: per try, whether its weight was moved off the leg before it was lifted.
   `liftkick.py`: per try, how far the lifted leg's thigh was from what it was asked just
   after the lift. `stance.py`: how it stands on hands and knees (heights, knees bent, what
   bears it). `holdlook.py`: a short line per tick (what bears it, hips asked and gone).
+- `shiftgone.py`: how far its hips went before the limb was lifted.
