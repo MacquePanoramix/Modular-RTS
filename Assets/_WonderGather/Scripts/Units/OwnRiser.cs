@@ -1223,7 +1223,7 @@ namespace WonderGather
                 Bend(Forearm), Bend(Forearm + 1), Off(Forearm), Off(Forearm + 1), Off(UpperArm), Off(UpperArm + 1), Bend(Shin), Bend(Shin + 1), Off(Shin), Off(Shin + 1), Off(Thigh), Off(Thigh + 1));
         }
 
-        public string Tick() => Told() + Where() + Slips() + string.Format(System.Globalization.CultureInfo.InvariantCulture, "; breath {0:0.0} deg", BreathBends);
+        public string Tick() => Told() + Where() + Slips() + string.Format(System.Globalization.CultureInfo.InvariantCulture, "; breath {0:0.0} deg; soles {1:0.00} flat, weight {2:0.00} ahead of them", BreathBends, Measure(Asks.Soles), Measure(Asks.Ahead));
 
         // (How far each thing kept on the ground has slid from where it was put, mm, flat; - where nothing is kept.)
         private string Slips()
