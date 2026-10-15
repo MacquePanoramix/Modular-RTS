@@ -1,0 +1,7 @@
+# found for Small after 35 rounds: worth 19.50, 0 of 18 stand
+way feet 0.4 1 gives
+hands | 1.45 1.68 4.0 | -4 -9 0 | 35 52 129 | 35 52 129 | NaN NaN NaN NaN | NaN NaN NaN NaN |
+under | 1.39 1.46 5.0 | 0 -14 0 | 70 39 102 | 70 39 102 | 91 34 108 28 | 91 34 108 28 | kneel=0.90 laid
+prop | 1.50 1.61 5.0 | 4 -25 0 | 105 28 7 | 105 28 7 | 55 31 112 25 | 55 31 112 25 | kneel=0.50 laid
+stay | 0.66 0.84 20.0 | -9 -37 0 | 112 31 12 | 112 31 12 | 66 19 117 23 | 66 19 117 23 | bal=1.00,0.00 hold=NaN,0.30 kneel=0.50 laid
+footA | 0.92 1.02 20.0 | -21 -39 0 | 85 -17 10 | 85 -17 10 | 85 -14 88 12 | 85 -14 88 12 | still>99 bal=1.00,0.00 hold=NaN,0.30 kneel=0.50 laid step=lead,0.29,0.44,0.14,0.54
