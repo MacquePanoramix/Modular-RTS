@@ -316,6 +316,80 @@ namespace WonderGather.Tests
             }
         }
 
+        // October 20: what hangs on a hook lies on the ground, not in it. Each miner pushed over onto its front and onto
+        // the side its things hang on, falls, lies and gets up its fall's way; each thing's own skin is read against the
+        // ground as it is drawn (its collider), never from how the game stops it. Until that day nothing stopped a hung
+        // thing at the ground: face down with the knees tucked to get up, Small's lantern went 176 mm under it, Round's
+        // hammer 146, Long's mug 79, Small's satchel 76 (one course each way). Since, over four courses each way, at most
+        // 20 mm, in a frame or two, and 13 to 16 mm where the lantern's hook is itself pressed into the ground.
+        // (-hungAsOn15 1: as it was, to see the test fail.)
+        [UnityTest, Timeout(1800000)]
+        public IEnumerator WhatHangsOnAHookLiesOnTheGroundNotInIt()
+        {
+            Time.captureFramerate = 50;
+            MinerBody.HungAsOn15 = CaptureTools.Argument("-hungAsOn15") == "1";
+            var a = ground.Path[4];
+            var b = ground.Path[5];
+            var spot = OnGround(new Vector3(a.x, 0, a.y));
+            var away = OnGround(new Vector3(b.x, 0, b.y)) - spot;
+            away.y = 0;
+            away.Normalize();
+            float Drawn(float x, float z) => HungThingBench.Drawn(ground, x, z);
+            var told = new System.Text.StringBuilder();
+            float worst = 0;
+            int looks = 0, deep = 0;
+            foreach (var (who, ways) in new[] { ("Small", new[] { "front", "left", "right" }), ("Long", new[] { "front", "left" }), ("Round", new[] { "front", "right" }) })
+            {
+                int index = -1;
+                for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == who) index = i;
+                Assert.That(index, Is.GreaterThanOrEqualTo(0), who);
+                choice.Choose(index);
+                yield return Wait(.4f);
+                var unit = choice.Current;
+                var miner = unit.GetComponent<MinerBody>();
+                foreach (string way in ways)
+                {
+                    unit.Motor.Stop();
+                    unit.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(spot);
+                    unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                    unit.GetComponent<ProceduralBiped>().ResetPose();
+                    yield return Wait(1.2f);
+                    var depths = new System.Collections.Generic.List<(int k, ClothesDepth d)>();
+                    for (int k = 0; k < miner.Things.Count; k++)
+                        if (miner.Things[k].bone != null && miner.Things[k].hand == null) depths.Add((k, new ClothesDepth(miner, k) { Stride = 3 }));
+                    var worstHere = new float[miner.Things.Count];
+                    int frame = 0;
+                    var after = new GameObject("After everything").AddComponent<AfterEverything>();
+                    after.Then = () =>
+                    {
+                        if (frame++ % 4 != 0) return;
+                        foreach (var (k, d) in depths)
+                        {
+                            d.Deepest(1, out _, out _, Drawn, out float below);
+                            looks++;
+                            if (below > .01f) deep++;
+                            worstHere[k] = Mathf.Max(worstHere[k], below);
+                            worst = Mathf.Max(worst, below);
+                        }
+                    };
+                    look.PushOver(way == "front" ? unit.transform.forward : way == "left" ? -unit.transform.right : unit.transform.right);
+                    yield return null;
+                    var fall = unit.GetComponent<PhysicalFall>();
+                    Assert.That(fall, Is.Not.Null);
+                    float began = Time.time;
+                    while (fall.Now != PhysicalFall.State.Up && Time.time - began < 40) yield return null;
+                    yield return Wait(1);
+                    after.Then = null;
+                    Object.Destroy(after.gameObject);
+                    foreach (var (k, d) in depths) told.Append($" {who} onto its {way}: its {miner.Things[k].bone.name} {worstHere[k] * 1000:F0} mm;");
+                    Assert.That(fall.Now, Is.EqualTo(PhysicalFall.State.Up), who + " did not get up.");
+                }
+            }
+            Debug.Log($"HUNG_GROUND deepest below the ground:{told} in all {worst * 1000:F0} mm; more than 10 mm under it in {deep} of {looks} looks");
+            Assert.That(worst, Is.LessThan(.035f), "What hangs on a hook went into the ground:" + told);
+            Assert.That(deep * 20, Is.LessThanOrEqualTo(looks), $"What hangs on a hook was more than 10 mm under the ground in {deep} of {looks} looks.");
+        }
+
         // Standing and walking, what hangs on a hook hangs and swings as it did before October 15: the body's last word
         // (the stops past what a stride does) moves it no more than a few millimetres, if at all.
         [UnityTest, Timeout(600000)]
