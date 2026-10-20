@@ -1970,7 +1970,15 @@ then eases), "you can proceed".
   small children rise first through a bear stance or a squat, hands pushing;
   heels rising in a squat mean the weight is too far forward (Small's, exactly).
   So the **bear way** (hips up, hands pushing, the trunk rolling up over the feet
-  as the hands come away) is being searched: by hand, 4 of 36.
+  as the hands come away) is being searched: by hand, 4 of 36. **Searched (30
+  rounds, with the game's frames): Small stands up at 17 and 17 of 36 chance
+  starts** ([the whole](../Images/GettingUp_2026-10-20/Small_StandsUp_BearWay_Whole.jpg),
+  [the roll-up](../Images/GettingUp_2026-10-20/Small_StandsUp_BearWay_RollUpToStanding.jpg));
+  on its feet at about 10.4 s, standing at about 13. The judges, round 3 (the
+  last for this movement; [their findings](../Reviews/2026-10-20_GettingUp_Judges.md)):
+  all three "reads as real, with a flaw": a real small child's get-up, every
+  stage held up; the flaws are holds of 0.7 to 1 s where nothing changes, and
+  the pace (13 s, every stage about as long).
 - **Bodies that fly apart ("went wild")**, 0 to 2 in 36 tries: the load felt
   through a knee climbs to two, then three times its weight, then its boots' to
   twelve, before it fails. Not the balance's pushes (bounded by its weight and
