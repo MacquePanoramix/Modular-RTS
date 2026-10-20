@@ -58,6 +58,31 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 20, 2026 — the fifth (after five days away)
+
+- **Where we are.** S3b step 2. Since the fourth: breath after effort (Luis's
+  "Sure") made one breath for one body; the bench's frames keep the physics'
+  time; for Small the half-kneel failed in every form, and the toddler way (both
+  feet forward, a squat, up) **stood Small up by its own body at 7 and 4 of 36
+  chance starts**. A search with the game's frames finished on October 15 (8 to
+  10 of its 18 starts stand); not yet counted at unseen starts. Reported to Luis
+  on October 15; his only word since: "Try again" (October 20, as the session
+  came back).
+- **Nothing moved elsewhere:** the satchel's branch is as it was on October 15
+  (its two further tasks not run); `main` and the game's branch unchanged but for
+  my docs.
+- **Waiting on Luis:** S3 (since October 8); the builds of October 13 and 14;
+  R1; whether Small keeps the toddler way (told October 15, his to overrule).
+- **Put off, not forgotten:** too slow (about 13 s to standing; G6 asks three to
+  six); lying not dead (G1); the judges' round 3 (the last for this movement);
+  Long and Round on the new getting up (the half-kneel meant for Long); straight
+  arms; the suite not run since October 14; merging the satchel branch.
+- **Does the task serve the stage?** Yes. The getting up now exists end to end
+  for Small, rarely; the next stretch is making it hold more often and quicker,
+  then the judges, then Long and Round, before anything goes into a build.
+- **What Luis would want next:** the whole get-up holding at most places, in
+  pictures, judged; then in a build behind a switch.
+
 ### October 15, 2026 (evening) — the fourth (the third was the satchel session's, on its own branch)
 
 - **Where we are.** S3b step 2, the getting up. Done since the second: on the
