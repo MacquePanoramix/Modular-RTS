@@ -58,6 +58,30 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 20, 2026 — from a side session (hung things)
+
+- **Where we are.** Nothing has been committed on any branch since October
+  15 evening: the getting up (work branch `dd30219`, Small up at 7 and 4 of
+  36) and its showcase (`6d6e786`) are where they were. This session was
+  asked (by its starting session, on Luis's behalf) to mend what it found:
+  the lantern, the mug, the hammer and the satchel go into the ground, the
+  lantern and the mug into the coat when lain on, the hammer through a thigh.
+- **Waiting on Luis:** S3 (since October 8), the builds of October 13 and
+  14, question R1; and now the satchel's stop and this finding, neither
+  merged nor seen.
+- **At risk of being lost:** the sibling session on the satchel lying on the
+  body stopped with its work uncommitted in its worktree (`elated-fermat`:
+  `MinerBody`, `ClothesDepth`, `HungThingBench`, and an outlook entry of
+  October 15 evening). It is not this session's to commit; Luis or that
+  session should.
+- **Does the task serve the stage?** Yes, by Luis's rule that what hangs is
+  stopped by the body; but the last outlook's warning holds: no cloth
+  simulation built case by case. Two stops (the ground; the thigh against
+  the whole thing), standing and walking unchanged, what still clips said.
+- **What Luis would want to know:** pictures before and after; that walking
+  and standing are measured unchanged; that three branches of small mends
+  (satchel stop, satchel lies, hung things) wait on one look from him.
+
 ### October 15, 2026 (afternoon) — the third, from a side session
 
 - **Where we are.** S3b step 2, the getting up, goes on in its own session on

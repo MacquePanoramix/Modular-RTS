@@ -203,6 +203,41 @@ namespace WonderGather.Editor
             Debug.Log($"MINER_TAKEN {thing.name}: its handle {grip * 1000:F1} mm round, {deep * 1000:F0} mm deep, {wide * 1000:F0} mm to each side");
         }
 
+        // A thing's skin at its furthest each way: of its own points (its bone's by half or more), the furthest out along
+        // each of 64 ways spread evenly round, from the place it hangs from, in its bone's frame (metres; the frame turns
+        // with the bone, its scale left out). However the thing is turned, its lowest point is one of these, to within
+        // a few millimetres.
+        private static Vector3[] Outermost(SkinnedMeshRenderer renderer, Transform thing)
+        {
+            var mesh = renderer.sharedMesh;
+            var vertices = mesh.vertices;
+            var weights = mesh.boneWeights;
+            int own = Array.IndexOf(renderer.bones, thing);
+            if (own < 0) return new Vector3[0];
+            var mine = new List<Vector3>();
+            Quaternion toBone = Quaternion.Inverse(thing.rotation);
+            for (int v = 0; v < vertices.Length; v++)
+            {
+                var w = weights[v];
+                float share = (w.boneIndex0 == own ? w.weight0 : 0) + (w.boneIndex1 == own ? w.weight1 : 0)
+                              + (w.boneIndex2 == own ? w.weight2 : 0) + (w.boneIndex3 == own ? w.weight3 : 0);
+                if (share >= .5f) mine.Add(toBone * (renderer.transform.TransformPoint(vertices[v]) - thing.position));
+            }
+            var outer = new List<Vector3>();
+            const int Ways = 64;
+            for (int i = 0; i < Ways; i++)
+            {
+                // (Evenly round a sphere: a spiral of equal areas.)
+                float y = 1 - 2 * (i + .5f) / Ways, ring = Mathf.Sqrt(1 - y * y), turn = i * Mathf.PI * (3 - Mathf.Sqrt(5));
+                Vector3 way = new Vector3(Mathf.Cos(turn) * ring, y, Mathf.Sin(turn) * ring);
+                int best = -1;
+                for (int p = 0; p < mine.Count; p++) if (best < 0 || Vector3.Dot(mine[p], way) > Vector3.Dot(mine[best], way)) best = p;
+                if (best >= 0 && !outer.Contains(mine[best])) outer.Add(mine[best]);
+            }
+            Debug.Log($"MINER_OUTERMOST {thing.name}: {mine.Count} points of its own, {outer.Count} outermost; it reaches {outer.Select(p => p.magnitude).DefaultIfEmpty(0).Max() * 1000:F0} mm from where it hangs");
+            return outer.ToArray();
+        }
+
         // How far the body's clothes reach to one side (from the pelvis), over the heights at which a thing so deep
         // hangs from the hand of a relaxed arm: where the body's side would stop it. Read from the body's own skin,
         // leaving out the arms and whatever hangs on it.
@@ -232,7 +267,8 @@ namespace WonderGather.Editor
             return reach;
         }
 
-        // What a hand needs to know of each thing that hangs on a miner by a handle, measured on the finished miner.
+        // What a hand needs to know of each thing that hangs on a miner by a handle, and where each thing's skin reaches
+        // furthest, measured on the finished miner.
         private static void MeasureThings(GameObject root, Entry e)
         {
             var miner = root.GetComponent<MinerBody>();
@@ -248,6 +284,8 @@ namespace WonderGather.Editor
                 int k = Array.FindIndex(things, t => t.bone != null && t.bone.name == h.bone);
                 if (k < 0) continue;
                 things[k].bar = Vector3.zero; things[k].grip = things[k].deep = things[k].wide = things[k].clear = 0;
+                // Every thing, taken in hand or not: where its skin reaches furthest, which is what of it meets the ground.
+                things[k].skin = Outermost(renderer, things[k].bone);
                 if (!Taken(h)) continue;
                 var bone = things[k].bone;
                 Vector3 bar = Quaternion.Inverse(bone.rotation) * (root.transform.rotation * new Vector3(h.handle[0], h.handle[1], h.handle[2]).normalized);

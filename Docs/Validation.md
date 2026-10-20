@@ -3678,3 +3678,44 @@ front quarter, behind, and **from below with the ground not drawn** (new:
   these three; the work branch's getting up for Long and Round; more than one
   course a way (the falls differ from run to run: Small's satchel onto its
   right lay 77 mm above the ground in one run, 64 mm into it in the next).
+
+### Mended, October 20 (in progress: tests and judges not done)
+
+Asked for (through the starting session): a ground stop, and the thigh kept
+off the whole of a thing. Built in `MinerBody` (things on hooks only); each
+thing's outermost skin points measured onto the prefabs by the setup's
+"Measure What Hangs On The Miners" (`skin`; nothing else in the prefabs).
+`-hungAsOn15 1` gives the October 15 behaviour.
+
+- **The ground:** a thing is turned about its hook until its lowest skin point
+  lies on the drawn ground, never past level; then tips about its own line (a
+  mug onto its side); and where its hook is itself pressed to the ground,
+  what it hangs by gives, 5 cm at most. Deepest below the ground over the 12
+  falls (one course each, read against the drawn ground): lantern 92-176 mm
+  before, 13 mm after (6 frames, its hook under the ground with the skirt's
+  flap, whose own ground stop guesses from the feet); hammer 123-146 before,
+  20 (one frame); mug 62-79 before, 11 (one frame); satchel to 76 before, 4.
+  Pictures: `5_after_ground.jpg`.
+- **The thigh:** for things hung from the cloth (lantern, mug, hammer), the
+  line from below the hook to the far end of the skin is kept on the hook's
+  side of the thigh, no nearer than a stride brings it. Round's hammer no
+  longer goes through its thigh on hands and knees (`6_after_hammer_thigh`),
+  nor in its squat for the pickaxe, where the handle is now pushed up and out
+  for about 0.2 s (`8_after_round_squat_work`). A first form kept the line
+  as far off as it hung when modelled; it squeezed Small's lantern into the
+  belly in its squat, and was narrowed (`9_after_small_squat_work`).
+- **Standing and walking, unchanged:** the same course with `-hungAsOn15 1`
+  and without, every frame: 0.00 mm for all four things (Long's and Round's
+  courses aligned by one frame). Standing by its own joints as played: the
+  new stops never acted (0.00 mm moved).
+- **The work:** Small's satchel within 10 mm of before; the lantern lies on
+  the ground at the pickup where it was 14 mm in it.
+- **Not mended: lying on it** (`7_after_lying_on_it_not_mended`). The lantern's
+  and mug's hooks ride the skirt's flap, which hangs under the hip when the
+  miner lies on that side; no turn about the hook can bring them out. Needs
+  the hook kept out from under the body.
+- **Found, not from this change:** Small's lantern flicks straight out from
+  the hip for single frames when bowing fast (1.96, 3.48, 9.36-9.48 s of the
+  work), before as after.
+- **Not done:** a test for the ground in `HungThingTests`; `HungThingTests`
+  and the whole suite; the judges.

@@ -37,7 +37,8 @@ namespace WonderGather.Tests
             var thing = miner.Things[k0];
             Vector3 bodyRight = (miner.Rig.thighs[1].position - miner.Rig.thighs[0].position).normalized;
             int s = Vector3.Dot(thing.bone.position - pelvis.position, bodyRight) < 0 ? -1 : 1;
-            Vector3 target = Vector3.Lerp(pelvis.position, miner.HangingWeight(k0), .5f);
+            // (-bagAim hips: aimed at the hips, not half way to the thing, so that two runs are framed alike.)
+            Vector3 target = Vector3.Lerp(pelvis.position, miner.HangingWeight(k0), CaptureTools.Argument("-bagAim") == "hips" ? 0 : .5f);
             Vector3 dir = Vector3.ProjectOnPlane(bodyRight * s, Vector3.up);
             dir = (dir.sqrMagnitude > .04f ? dir.normalized : miner.transform.right * s) + Vector3.up * .35f;
             dir = Quaternion.AngleAxis(around * -s, Vector3.up) * dir.normalized;
@@ -63,6 +64,11 @@ namespace WonderGather.Tests
             CaptureTools.Render(camera, path, size, size);
             foreach (var r in hidden) r.enabled = true;
         }
+
+        // The ground as it is drawn (its collider has the same triangles in the meadow), not as its formula has it: they
+        // differ by a few centimetres between the triangles' corners, most at the path's edge.
+        public static float Drawn(OrdinaryGround ground, float x, float z)
+            => Physics.Raycast(new Vector3(x, 60, z), Vector3.down, out var hit, 200, 1 << 6, QueryTriggerInteraction.Ignore) ? hit.point.y : ground.Height(x, z);
 
         // How far a thing's weight is from the line of the thigh on its side.
         public static float LegAt(MinerBody miner, int k)
@@ -92,7 +98,7 @@ namespace WonderGather.Tests
                 {
                     depths.Add((k, new ClothesDepth(miner, k)));
                     var t = miner.Things[k];
-                    Debug.Log($"BAGTHING {name} {t.bone.name}: parent {t.bone.parent?.name}, pusher {t.pusher?.name} share {t.pushShare}, riders {(t.riders != null ? string.Join(",", Array.ConvertAll(t.riders, r => r != null ? r.name : "-")) : "-")} shares {(t.rideShares != null ? string.Join(",", t.rideShares) : "-")}, length {t.length}, limit {t.limit}, stop {t.stopDistance}");
+                    Debug.Log($"BAGTHING {name} {t.bone.name}: parent {t.bone.parent?.name}, pusher {t.pusher?.name} share {t.pushShare}, riders {(t.riders != null ? string.Join(",", Array.ConvertAll(t.riders, r => r != null ? r.name : "-")) : "-")} shares {(t.rideShares != null ? string.Join(",", t.rideShares) : "-")}, length {t.length}, limit {t.limit}, stop {t.stopDistance}, reach {miner.HangingReach(k):F3}, line room {miner.HangingLineRoom(k):F3}, skin points {(t.skin != null ? t.skin.Length : 0)}");
                 }
             int frame = 0;
             var after = new GameObject("After everything").AddComponent<AfterEverything>();
@@ -125,7 +131,8 @@ namespace WonderGather.Tests
                     if (worst != null) { string key = now + " " + thing.bone.name; worst[key] = Mathf.Max(worst.TryGetValue(key, out var was) ? was : 0, deep); }
                     Debug.Log(string.Format(Plain, "BAG {0} {1} {2} {3} {4:0.00}s tilt {5:0} flex {6:0} weight(r,u,f) {7:0.000} {8:0.000} {9:0.000} plane {10:0.0} mm skin {11:0.0} mm ({12}/{13} pts) hips {15:0.0}/{16} skirt {17:0.0}/{18} leg {19:0.0}/{20} ground {14:0.0} mm",
                         name, way, now, thing.bone.name, clock(), tilt, flex, inP.x, inP.y, inP.z, miner.HangingIntoBody(k) * 1000, deep * 1000, under, d.Points, below * 1000,
-                        d.DeepIn[0] * 1000, d.PointsIn[0], d.DeepIn[1] * 1000, d.PointsIn[1], d.DeepIn[2] * 1000, d.PointsIn[2]) + where + string.Format(Plain, " above {0:0.0} legat {1:0.0} cloth {2:0.0}", d.DeepAbove * 1000, LegAt(miner, k) * 1000, miner.ClothTurned(k)));
+                        d.DeepIn[0] * 1000, d.PointsIn[0], d.DeepIn[1] * 1000, d.PointsIn[1], d.DeepIn[2] * 1000, d.PointsIn[2]) + where + string.Format(Plain, " above {0:0.0} legat {1:0.0} cloth {2:0.0} hook {3:0.0}", d.DeepAbove * 1000, LegAt(miner, k) * 1000, miner.ClothTurned(k),
+                        ground != null ? (ground(thing.bone.position.x, thing.bone.position.z) - thing.bone.position.y) * 1000 : float.NaN));
                 }
                 then?.Invoke(frame);
             };
@@ -144,6 +151,7 @@ namespace WonderGather.Tests
             yield return null;
             Time.captureFramerate = 50;
             MinerBody.HungAsBefore = CaptureTools.Argument("-hungAsBefore") == "1";
+            MinerBody.HungAsOn15 = CaptureTools.Argument("-hungAsOn15") == "1";
             string[] who = (CaptureTools.Argument("-bagMiner") ?? "Small,Long,Round").Split(',');
             var choice = UnityEngine.Object.FindAnyObjectByType<MinerChoice>();
             var ground = UnityEngine.Object.FindAnyObjectByType<OrdinaryGround>();
@@ -211,7 +219,7 @@ namespace WonderGather.Tests
             }
             finally
             {
-                MinerBody.HungAsBefore = false;
+                MinerBody.HungAsBefore = MinerBody.HungAsOn15 = false;
                 Time.captureFramerate = 0;
             }
         }
@@ -226,6 +234,7 @@ namespace WonderGather.Tests
             yield return null;
             Time.captureFramerate = 50;
             MinerBody.HungAsBefore = CaptureTools.Argument("-hungAsBefore") == "1";
+            MinerBody.HungAsOn15 = CaptureTools.Argument("-hungAsOn15") == "1";
             string[] who = (CaptureTools.Argument("-bagMiner") ?? "Small,Long,Round").Split(',');
             string[] which = (CaptureTools.Argument("-bagBoulders") ?? "1,3,4").Split(',');
             float lasts = float.Parse(CaptureTools.Argument("-bagFor") ?? "25", Plain);
@@ -233,6 +242,13 @@ namespace WonderGather.Tests
             var look = UnityEngine.Object.FindAnyObjectByType<MinerWorkPreview>();
             var ground = UnityEngine.Object.FindAnyObjectByType<OrdinaryGround>();
             var boulders = Boulder.All();
+            if (CaptureTools.Argument("-bagOut") != null)
+            {
+                // (Pictures as the falls' are: the grass off, at midday.)
+                foreach (var grass in UnityEngine.Object.FindObjectsByType<GrassField>(FindObjectsSortMode.None)) grass.enabled = false;
+                var time = UnityEngine.Object.FindAnyObjectByType<TimeOfDay>();
+                if (time != null) time.Hour = 13;
+            }
             try
             {
                 for (int m = 0; m < who.Length; m++)
@@ -268,8 +284,22 @@ namespace WonderGather.Tests
                     if (camera.TryGetComponent<RtsCamera>(out var rig)) rig.enabled = false;
                     camera.nearClipPlane = .01f;
                     if (folder != null) Directory.CreateDirectory(folder);
-                    var after = Watch(miner, name, "work", () => look.Carry != null && look.Carry.Fetching ? "pickup" : look.Mining != null ? "work" : "going", () => Time.time - began, (x, z) => ground.Height(x, z), null,
-                        frame => { if (folder != null && frame % 10 == 1) Shoot(camera, miner, Path.Combine(folder, $"bag_{name.ToLowerInvariant()}_{Time.time - began:00.00}"), .8f, 360, shootThing); });
+                    // (-bagFrom, -bagTo: every look between, from -bagViews, in the bench's other pictures' names.)
+                    float shootFrom = float.Parse(CaptureTools.Argument("-bagFrom") ?? "-1", Plain), shootTo = float.Parse(CaptureTools.Argument("-bagTo") ?? "-1", Plain);
+                    string[] views = (CaptureTools.Argument("-bagViews") ?? "0").Split(',');
+                    int shot = 0;
+                    var after = Watch(miner, name, "work", () => look.Carry != null && look.Carry.Fetching ? "pickup" : look.Mining != null ? "work" : "going", () => Time.time - began, (x, z) => Drawn(ground, x, z), null,
+                        frame =>
+                        {
+                            if (folder == null) return;
+                            float now = Time.time - began;
+                            if (now >= shootFrom && now <= shootTo)
+                            {
+                                string stem = Path.Combine(folder, $"{name.ToLowerInvariant()}_work_{shot++:000}_{(look.Mining != null ? "work" : "pickup")}_{now:00.00}");
+                                foreach (string v in views) Shoot(camera, miner, stem + "_" + v.Replace("-", "m"), .9f, 320, shootThing, float.Parse(v, Plain));
+                            }
+                            else if (shootFrom < 0 && frame % 10 == 1) Shoot(camera, miner, Path.Combine(folder, $"bag_{name.ToLowerInvariant()}_{now:00.00}"), .8f, 360, shootThing);
+                        });
                     look.Mine(boulder);
                     for (float until = Time.time + lasts; Time.time < until;) yield return null;
                     after.Then = null;
@@ -281,7 +311,7 @@ namespace WonderGather.Tests
             }
             finally
             {
-                MinerBody.HungAsBefore = false;
+                MinerBody.HungAsBefore = MinerBody.HungAsOn15 = false;
                 Time.captureFramerate = 0;
             }
         }
@@ -294,6 +324,7 @@ namespace WonderGather.Tests
             yield return null;
             Time.captureFramerate = 50;
             MinerBody.HungAsBefore = CaptureTools.Argument("-hungAsBefore") == "1";
+            MinerBody.HungAsOn15 = CaptureTools.Argument("-hungAsOn15") == "1";
             string folder = CaptureTools.Argument("-bagOut");
             bool shots = CaptureTools.Argument("-bagShots") == "1" && folder != null;
             if (folder != null) Directory.CreateDirectory(folder);
@@ -347,7 +378,7 @@ namespace WonderGather.Tests
                         float began = Time.time;
                         int shot = 0;
                         var worst = new Dictionary<string, float>();
-                        var after = Watch(miner, name, way, () => phase, () => Time.time - began, (x, z) => ground.Height(x, z), worst, frame =>
+                        var after = Watch(miner, name, way, () => phase, () => Time.time - began, (x, z) => Drawn(ground, x, z), worst, frame =>
                         {
                             float now = Time.time - began;
                             if (!shots || !(frame % every == 0 || (now >= shootFrom && now <= shootTo))) return;
@@ -384,7 +415,7 @@ namespace WonderGather.Tests
             }
             finally
             {
-                MinerBody.HungAsBefore = false;
+                MinerBody.HungAsBefore = MinerBody.HungAsOn15 = false;
                 Time.captureFramerate = 0;
             }
         }

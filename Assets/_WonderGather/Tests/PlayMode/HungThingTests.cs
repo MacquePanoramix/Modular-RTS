@@ -28,7 +28,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; }
+        public void Restore() { Time.captureFramerate = 0; MinerBody.HungAsBefore = MinerBody.HungAsOn15 = false; }
 
         private Vector3 OnGround(Vector3 p) => new Vector3(p.x, ground.Height(p.x, p.z), p.z);
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
