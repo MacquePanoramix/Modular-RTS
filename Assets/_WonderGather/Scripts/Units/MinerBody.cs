@@ -197,7 +197,7 @@ namespace WonderGather
         // the stop's measure of it crosses its bounds (the hips lifting off the ground fold the flap from 100 to 80
         // degrees in a tenth of a second, and the bag was thrown 110 degrees in a twenty-fifth: October 20).
         private const float FoldsFrom = 80, FoldsOver = 20, ThighFrom = .15f, SkirtGathered = .02f, LiesWithin = .03f, LiesIn = .08f, LiesMost = 120,
-            TurnsAtMost = 360, RidesIn = .1f, ClothSettles = .15f;
+            TurnsAtMost = 360, RidesIn = .1f, ClothSettles = .15f, HemFrom = .8f, HemBy = 1;
         // For tests: what hangs on a hook is stopped as it was until October 15 (by the hips' face as modelled and its
         // pusher, the swing's limit last).
         public static bool HungAsBefore;
@@ -269,13 +269,7 @@ namespace WonderGather
             Vector3 hips = bones.pelvis.rotation * thing.stopNormal;
             return Vector3.Angle(hips, thing.pusher.rotation * Quaternion.Inverse(bones.pelvis.rotation * hangClothRest[index]) * hips);
         }
-        public float ClothHemUp(int index)
-        {
-            var thing = hanging[index];
-            if (thing.pusher == null) return 0;
-            float ground = Mathf.Min(bones.feet[0].position.y, bones.feet[1].position.y) - ankleUp;
-            return (thing.pusher.position.y - ground) / Mathf.Max(.01f, flapLong);
-        }
+        public float ClothHemUp(int index) => HemUp(hanging[index]);
         // The cloth it rests on, as the body stops it now: its way out, a place on it, and how far out from there its
         // weight is kept. False: the cloth has not come in (only the hips' face stops it).
         public bool ClothFace(int index, out Vector3 way, out Vector3 at, out float stop) => Cloth(hanging[index], index, out way, out at, out stop);
@@ -949,15 +943,27 @@ namespace WonderGather
             return true;
         }
 
-        // How far the cloth has come in under a thing on a strap now: past what a stride turns its flap, and not folded
-        // back from the hips' face.
+        // How far the cloth has come in under a thing on a strap now: past what a stride turns its flap, not folded back
+        // from the hips' face, and with its hem off the ground (HemFrom to HemBy flap lengths over it, as the skirt's Drape
+        // reckons the ground). Lying face down the flap lies on the ground beside the bag, and coming in there it lifted
+        // the bag onto the coat's back (the judges of the satchel, round 2: hem 0.52 to 0.76 lying, 1.13 and more on hands
+        // and knees, October 20).
         private float ClothComesNow(Hanging thing, int k)
         {
             if (thing.pusher == null || thing.pushShare <= 0 || k >= hangClothRest.Length) return 0;
             Quaternion turned = thing.pusher.rotation * Quaternion.Inverse(bones.pelvis.rotation * hangClothRest[k]);
             Vector3 hips = bones.pelvis.rotation * thing.stopNormal;
             return Mathf.SmoothStep(0, 1, Mathf.InverseLerp(ClothRoom, ClothRoom + ClothComes, Quaternion.Angle(Quaternion.identity, turned)))
-                   * (1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(FoldsFrom, FoldsFrom + FoldsOver, Vector3.Angle(hips, turned * hips))));
+                   * (1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(FoldsFrom, FoldsFrom + FoldsOver, Vector3.Angle(hips, turned * hips))))
+                   * Mathf.SmoothStep(0, 1, Mathf.InverseLerp(HemFrom, HemBy, HemUp(thing)));
+        }
+
+        // How high the hem of the flap a thing rests on is over the ground, in flap lengths (under 1: it lies on it).
+        private float HemUp(Hanging thing)
+        {
+            if (thing.pusher == null) return 0;
+            float ground = Mathf.Min(bones.feet[0].position.y, bones.feet[1].position.y) - ankleUp;
+            return (thing.pusher.position.y - ground) / Mathf.Max(.01f, flapLong);
         }
 
         private static Vector3 OnSegment(Vector3 p, Vector3 a, Vector3 b)
