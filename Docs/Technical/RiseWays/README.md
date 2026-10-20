@@ -32,3 +32,10 @@ Bench arguments used: `-riseMiner Small -riseStarts front,front@1,...,front@8 -r
   after the lift. `stance.py`: how it stands on hands and knees (heights, knees bent, what
   bears it). `holdlook.py`: a short line per tick (what bears it, hips asked and gone).
 - `shiftgone.py`: how far its hips went before the limb was lifted.
+- `ways_toddler_small.txt` (October 20): Small, the toddler way to standing: onto hands and
+  knees, one foot forward, the other, back into a squat with its hands let go, handed to its
+  standing balance (soles at least 0.75 flat, its weight within 0.25 of them). Use with
+  `-riseSet BalanceHoldLearns=1.395,BalanceMargin=0.021,KneeFaces=0.759,BalanceShiftsAt=0.132,
+  BalanceShiftsAtMost=0.065,BalanceUnloads=0.487,LetsGo=0.379,FoldedUnder=0.163,
+  BalanceShiftsNearest=1,BalanceShiftsDeep=0.040`. At `starts36.txt` with `-riseFrames 1`:
+  stands 9 of 36 (`-riseSeed 21`), 11 (`-riseSeed 9`); most of the rest fall in the squat.
