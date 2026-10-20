@@ -317,7 +317,8 @@ namespace WonderGather.Tests
         }
 
         // Standing and walking, what hangs on a hook hangs and swings as it did before October 15: the body's last word
-        // (the stops past what a stride does) moves it no more than a few millimetres, if at all.
+        // (the stops past what a stride does) moves it no more than a few millimetres, if at all; a strap's rings do not
+        // ride and its bag is not turned to lie on the body.
         [UnityTest, Timeout(600000)]
         public IEnumerator StandingAndWalkingWhatHangsIsAsItWas()
         {
@@ -339,10 +340,10 @@ namespace WonderGather.Tests
                 unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
                 unit.GetComponent<ProceduralBiped>().ResetPose();
                 yield return Wait(1.5f);
-                MinerBody.HungMovedMost = 0;
+                MinerBody.HungMovedMost = MinerBody.HungRodeMost = MinerBody.HungTurnedMost = 0;
                 yield return Wait(2);
-                float standing = MinerBody.HungMovedMost;
-                MinerBody.HungMovedMost = 0;
+                float standing = MinerBody.HungMovedMost, standingRode = MinerBody.HungRodeMost, standingTurned = MinerBody.HungTurnedMost;
+                MinerBody.HungMovedMost = MinerBody.HungRodeMost = MinerBody.HungTurnedMost = 0;
                 Assert.That(unit.Motor.TryMove(OnGround(spot + away * 6)), Is.True);
                 float began = Time.time;
                 while ((unit.Motor.IsMoving || Time.time - began < .5f) && Time.time - began < 12) yield return null;
@@ -350,10 +351,15 @@ namespace WonderGather.Tests
                 began = Time.time;
                 while ((unit.Motor.IsMoving || Time.time - began < .5f) && Time.time - began < 14) yield return null;
                 yield return Wait(1);
-                float walking = MinerBody.HungMovedMost;
-                Debug.Log($"HUNG_AS_IT_WAS {name}: the body's last word moved what hangs on it {standing * 1000:F1} mm standing, {walking * 1000:F1} mm walking there and back");
+                float walking = MinerBody.HungMovedMost, walkingRode = MinerBody.HungRodeMost, walkingTurned = MinerBody.HungTurnedMost;
+                Debug.Log($"HUNG_AS_IT_WAS {name}: the body's last word moved what hangs on it {standing * 1000:F1} mm standing, {walking * 1000:F1} mm walking there and back; "
+                    + $"a strap's rings ridden {standingRode * 1000:F2} and {walkingRode * 1000:F2} mm, turned to lie {standingTurned:F2} and {walkingTurned:F2} degrees");
                 Assert.That(standing, Is.LessThan(.001f), name + ": standing, what hangs on it is held otherwise than it was.");
                 Assert.That(walking, Is.LessThan(.005f), name + ": walking, what hangs on it is held otherwise than it was.");
+                // (October 15, night: a strap's rings ride on what comes up under them past a stride, and the bag turns to lie
+                // on what holds it; in a stride, neither.)
+                Assert.That(Mathf.Max(standingRode, walkingRode), Is.LessThan(.0005f), name + ": a strap's rings rode out standing or walking.");
+                Assert.That(Mathf.Max(standingTurned, walkingTurned), Is.LessThan(.5f), name + ": what hangs on a strap was turned to lie on the body standing or walking.");
             }
         }
     }

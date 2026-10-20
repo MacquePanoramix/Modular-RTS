@@ -38,6 +38,21 @@ namespace WonderGather.Tests
         private Vector3[] world;
 
         public int Points => points.Length;
+        // As last read (Deepest): where each of the thing's points is, and the body's triangles near a place (their
+        // corners, and which part of the body each is of).
+        public Vector3 Point(int n) => world[points[n]];
+        public void NearBy(Vector3 place, float within, List<Vector3> triangles, List<int> parts)
+        {
+            triangles.Clear();
+            parts.Clear();
+            for (int c = 0; c + 2 < corners.Length; c += 3)
+            {
+                Vector3 ca = world[corners[c]];
+                if ((ca - place).sqrMagnitude > within * within) continue;
+                triangles.Add(ca); triangles.Add(world[corners[c + 1]]); triangles.Add(world[corners[c + 2]]);
+                parts.Add(part[c / 3]);
+            }
+        }
         // Which way the skin's faces are turned, by the order of their corners (found on the body as it stands: 1 or -1).
         public float Facing = 1;
         public int Triangles => corners.Length / 3;
