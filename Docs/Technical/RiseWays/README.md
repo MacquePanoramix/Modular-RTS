@@ -39,3 +39,9 @@ Bench arguments used: `-riseMiner Small -riseStarts front,front@1,...,front@8 -r
   BalanceShiftsAtMost=0.065,BalanceUnloads=0.487,LetsGo=0.379,FoldedUnder=0.163,
   BalanceShiftsNearest=1,BalanceShiftsDeep=0.040`. At `starts36.txt` with `-riseFrames 1`:
   stands 9 of 36 (`-riseSeed 21`), 11 (`-riseSeed 9`); most of the rest fall in the squat.
+- `ways_bear_small.txt` (October 20): Small, the bear way to standing: onto hands and knees,
+  one foot forward, the other, hips up on hands and feet, then its hands let go as its trunk
+  rolls up over its feet, handed to its standing balance. Searched from the second foot on
+  (30 rounds, with the game's frames). Same `-riseSet` as `ways_toddler_small.txt`. At
+  `starts36.txt` with `-riseFrames 1`: **stands 17 of 36 (`-riseSeed 21`) and 17 (`-riseSeed 9`)**;
+  on its feet at about 10.4 s, standing at about 13.
