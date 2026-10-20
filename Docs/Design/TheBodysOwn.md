@@ -1960,6 +1960,22 @@ then eases), "you can proceed".
   takes it at 0.16), its boots on their toes. Handing it to standing straight
   from the squat, letting its boots down flat, holding its hips lower: none
   better. Being searched again, with the game's frames in the search.
+- **October 20.** Searched again with the game's frames (40 rounds): 8 to 10 of
+  its own 18 starts stand, but 6 and 8 of 36 unseen (no better). Handed to its
+  standing balance a little sooner (its soles at least 0.75 flat, its weight
+  within 0.25 of them): **9 and 11 of 36** (`ways_toddler_small.txt`). Other
+  tries (boots let down flat in the last stage; looser hand-over still) no
+  better than chance: with 36 starts, differences of about 3 are chance.
+  Research ([section 10](../Research/2026-10-14_HowPeopleGetUp.md#10-a-small-child-from-the-floor-to-standing-added-october-20)):
+  small children rise first through a bear stance or a squat, hands pushing;
+  heels rising in a squat mean the weight is too far forward (Small's, exactly).
+  So the **bear way** (hips up, hands pushing, the trunk rolling up over the feet
+  as the hands come away) is being searched: by hand, 4 of 36.
+- **Bodies that fly apart ("went wild")**, 0 to 2 in 36 tries: the load felt
+  through a knee climbs to two, then three times its weight, then its boots' to
+  twelve, before it fails. Not the balance's pushes (bounded by its weight and
+  each joint's strength). To be caught step by step; nothing goes into the game
+  before it is found.
 - Also mended: over a thin outline (a boot and a knee) its weight goes as deep
   as the outline allows (it was sent to the middle of the two, behind it).
 

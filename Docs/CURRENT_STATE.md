@@ -41,7 +41,9 @@
   **Onto its feet (October 15, evening): Small stands up by its own body
   at 7 and 4 of 36 chance starts**, the toddler way (both feet forward,
   back into a squat, up); about 13 s, too slow; most of the rest fall as
-  they let go of their hands in the squat. Being searched again.
+  they let go of their hands in the squat. October 20: 9 and 11 of 36 with
+  a sooner hand-over to standing; the bear way (hips up, rolling up over
+  the feet) being searched; bodies that sometimes fly apart being chased.
   See [The body's own](Design/TheBodysOwn.md), "Its weight off a knee,
   and a leg that kicked". Not in a build.
 - **The getting up is being built (October 14; on the work branch
