@@ -121,6 +121,10 @@ namespace WonderGather
         // could not lift its chest off the ground with arms that have what pushing it up asks; at 10 it pushes itself
         // up onto its hands and knees, its head up, and nothing shakes.)
         public static float RuleTimes = 10;
+        // (Its ankles and toes: so many times the keeper's rule. At RuleTimes a boot, the lightest part on a strong joint,
+        // sometimes began to spin, 36 then 120 radians a second, and its shin and then its whole body flew apart:
+        // October 20.)
+        public static float RuleTimesFeet = 10;
         // (Where a leg reached for the ground bends its knee: 0, the way the body lies along the ground; 1, the way the
         // front of its hips faces; between, so much of the way from one to the other.)
         public static float KneeFaces = .74f;
@@ -337,7 +341,7 @@ namespace WonderGather
             for (int j = 1; j < Count; j++)
             {
                 float has = strength[j] * Mathf.Clamp01(Tone);
-                float spring = Mathf.Min(has / (FullAt * Mathf.Deg2Rad), RuleTimes * OwnKeeper.Rule * OwnKeeper.Rule / (step * step) * lighter[j]);
+                float spring = Mathf.Min(has / (FullAt * Mathf.Deg2Rad), (j >= Foot ? RuleTimesFeet : RuleTimes) * OwnKeeper.Rule * OwnKeeper.Rule / (step * step) * lighter[j]);
                 springOf[j] = spring; hasOf[j] = has;
                 Drive(j, 1);
             }
@@ -463,10 +467,21 @@ namespace WonderGather
                 Vector3 bend = 2 * under - .5f * (stepFrom + to);
                 float u = along;
                 sole = (1 - u) * (1 - u) * stepFrom + 2 * u * (1 - u) * bend + u * u * to;
-                boot = Quaternion.Slerp(stepBootFrom, boot, Mathf.SmoothStep(0, 1, along));
+                boot = BootTurn(stepBootFrom, boot, Mathf.SmoothStep(0, 1, along));
             }
             else sole = Vector3.Lerp(stepFrom, to, along) + Vector3.up * (stage.stepLifts * Mathf.Sin(Mathf.PI * along));
             LegTo(leg, sole, boot);
+        }
+
+        // A boot turned from one way to another, so far along (0 to 1), as a foot turns: more than 120 degrees to go,
+        // by way of its toes pointing down (half a turn apart, which way round was left to chance, and the boot whipped).
+        private static Quaternion BootTurn(Quaternion from, Quaternion to, float along)
+        {
+            if (Quaternion.Angle(from, to) <= 120) return Quaternion.Slerp(from, to, along);
+            // (Half way, its toes pointing down: turned from where it was by the least turn that does that, which for a
+            // boot lying on its top, toes back, is a quarter turn about the line across its foot.)
+            Quaternion down = Quaternion.FromToRotation(from * Vector3.forward, Vector3.down) * from;
+            return along < .5f ? Quaternion.Slerp(from, down, 2 * along) : Quaternion.Slerp(down, to, 2 * along - 1);
         }
 
         // A leg's joints asked for what puts its boot's sole at a place, the boot turned so.

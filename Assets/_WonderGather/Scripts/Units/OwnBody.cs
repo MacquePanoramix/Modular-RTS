@@ -585,7 +585,7 @@ namespace WonderGather
                     link.matchAnchors = true;
                     link.twistLock = ArticulationDofLock.LimitedMotion;
                     float has = knee * AnkleGives * ToeGives, turns = kilograms * size.z * size.z / 3, step = Time.fixedDeltaTime;
-                    float spring = Mathf.Min(has / (OwnRiser.FullAt * Mathf.Deg2Rad), OwnRiser.RuleTimes * OwnKeeper.Rule * OwnKeeper.Rule / (step * step) * turns);
+                    float spring = Mathf.Min(has / (OwnRiser.FullAt * Mathf.Deg2Rad), OwnRiser.RuleTimesFeet * OwnKeeper.Rule * OwnKeeper.Rule / (step * step) * turns);
                     link.xDrive = new ArticulationDrive { stiffness = spring, damping = OwnRiser.Damped * 2 * Mathf.Sqrt(spring * turns), forceLimit = has, target = 0, lowerLimit = -ToeBendsUp, upperLimit = ToeBendsDown, driveType = ArticulationDriveType.Force };
                     toeLinks[i] = link;
                     toeTouches[i] = toe.AddComponent<GroundTouch>();

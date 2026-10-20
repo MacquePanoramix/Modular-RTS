@@ -49,6 +49,12 @@ namespace WonderGather.Tests
             public int shifts, shiftsFailed;
             // (When it first came to its last pose; NaN: not yet.)
             public float lastAt = float.NaN;
+            // (-riseWildTrace 1: its last steps, told only if it goes wild.)
+            public readonly Queue<string> recent = new Queue<string>();
+            // (How fast its boots have turned at most, radians a second: a boot spinning is what went before a body
+            // flew apart, October 20.)
+            public float bootSpin;
+            public string bootSpinAt = "";
             public Vector3 shakeFrom, shakeTo;
             public OwnRiser.Way[] ways;
             public string ended;
@@ -252,6 +258,9 @@ namespace WonderGather.Tests
             // towards its head.)
             float near = Number("-riseNear", 1), angle = Number("-riseAngle", 0);
             int frames = (int)Number("-riseFrames", 0);
+            // (-riseTickEvery 1: what the getting up does at every step of the physics, not every tenth.)
+            int tickEvery = Mathf.Max(1, (int)Number("-riseTickEvery", 10));
+            bool wildTrace = Number("-riseWildTrace", 0) > 0;
             float shake = Number("-riseShake", 0);
             var shakeChance = new System.Random(7);
             float jitterTurn = 0, jitterMove = 0;
@@ -509,7 +518,7 @@ namespace WonderGather.Tests
                         OwnBody.RiseWays = body.ways;
                         body.done = !body.own.BeginDown();
                         body.up = body.onFeet = false; body.feetAt = body.upAt = -1; body.peak = body.stoodFor = body.risen = body.feetFor = 0; body.ended = body.done ? "could not be made" : "";
-                        body.depth = float.NaN; body.stageAt = body.stages = body.heldFor = 0; body.upOff = false; body.stepFurthest = 0; body.shifts = body.shiftsFailed = 0; body.lastAt = float.NaN;
+                        body.depth = float.NaN; body.stageAt = body.stages = body.heldFor = 0; body.upOff = false; body.stepFurthest = 0; body.shifts = body.shiftsFailed = 0; body.lastAt = float.NaN; body.recent.Clear(); body.bootSpin = 0; body.bootSpinAt = "";
                     }
                     Physics.SyncTransforms();
                     int shot = 0;
@@ -551,9 +560,32 @@ namespace WonderGather.Tests
                                 own.Part(OwnBody.Trunk).AddForce(Vector3.Lerp(body.shakeFrom, body.shakeTo, u * u * (3 - 2 * u)) * (shake * weighs * Physics.gravity.magnitude));
                             }
                             own.Advance(dt);
-                            if (own.Stands && float.IsNaN(own.Part(OwnBody.Hips).transform.position.x)) { body.done = true; body.ended = "went wild"; Debug.Log("RISE_WILD " + body.name + " at " + (step * dt).ToString("0.00", Plain) + " s, " + (own.GettingUp ? own.Riser.WayNow + " " + own.Riser.StageNow : "")); continue; }
+                            if (own.Stands && float.IsNaN(own.Part(OwnBody.Hips).transform.position.x))
+                            {
+                                body.done = true; body.ended = "went wild";
+                                foreach (string was in body.recent) Debug.Log("RISE_BEFORE " + was);
+                                body.recent.Clear();
+                                Debug.Log("RISE_WILD " + body.name + " at " + (step * dt).ToString("0.00", Plain) + " s, " + (own.GettingUp ? own.Riser.WayNow + " " + own.Riser.StageNow : ""));
+                                continue;
+                            }
+                            if (wildTrace && own.GettingUp)
+                            {
+                                int fastest = 0; float most = 0;
+                                for (int i = 0; i < OwnBody.Count; i++)
+                                {
+                                    float v = own.Part(i).GetPointVelocity(own.Part(i).worldCenterOfMass).magnitude;
+                                    if (v > most) { most = v; fastest = i; }
+                                }
+                                body.recent.Enqueue(string.Format(Plain, "{0} {1:0.00} s | fastest {2} {3:0.00} m/s, turning {4:0.0} rad/s | {5}", body.name, step * dt, own.Part(fastest).name, most, own.Part(fastest).angularVelocity.magnitude, own.Riser.Tick()));
+                                while (body.recent.Count > 80) body.recent.Dequeue();
+                            }
                             if (!own.Stands) { body.done = true; body.ended = own.GaveUpGettingUp > 0 && !body.onFeet ? "gave up" : "went down"; continue; }
                             for (int i = OwnBody.Hips; i <= OwnBody.Head; i++) body.peak = Mathf.Max(body.peak, own.Part(i).GetPointVelocity(own.Part(i).worldCenterOfMass).magnitude);
+                            for (int i = 0; i < 2; i++)
+                            {
+                                float spin = own.Part(OwnBody.Foot + i).angularVelocity.magnitude;
+                                if (spin > body.bootSpin) { body.bootSpin = spin; body.bootSpinAt = (step * dt).ToString("0.00", Plain) + " s, " + (own.GettingUp ? own.Riser.StageNow + " " + own.Riser.Measure(OwnRiser.Asks.Front).ToString("0.00", Plain) : "standing") + (i == 0 ? ", left" : ", right"); }
+                            }
                             if (own.GettingUp)
                             {
                                 var riser = own.Riser;
@@ -567,14 +599,14 @@ namespace WonderGather.Tests
                                 body.upOff = riser.Measure(OwnRiser.Asks.Head) >= .5f && riser.Measure(OwnRiser.Asks.Hips) >= .3f;
                                 if (riser.Stages > 0 && riser.StageAt == riser.Stages - 1 && riser.BalanceDepth > OwnRiser.BalanceMargin && body.upOff) body.heldFor += dt;
                                 // (-riseTick 1: what the getting up does, every tenth step of the physics.)
-                                if (ticks && step % 10 == 0) Debug.Log(string.Format(Plain, "RISE_GETTING {0} {1:0.00} s | {2}", body.name, step * dt, riser.Tick()));
+                                if (ticks && step % tickEvery == 0) Debug.Log(string.Format(Plain, "RISE_GETTING {0} {1:0.00} s | {2}", body.name, step * dt, riser.Tick()));
                             }
                             else if (!body.onFeet) { body.onFeet = true; body.feetAt = step * dt; }
                             if (body.onFeet)
                             {
                                 body.feetFor += dt; body.risen = Mathf.Max(body.risen, own.Risen);
                                 // (-riseTick 1: what the keeper reckons, every tenth step of the physics.)
-                                if (ticks && step % 10 == 0) Debug.Log(string.Format(Plain, "RISE_TICK {0} {1:0.00} s risen {2:0.00} | {3}", body.name, step * dt, own.Risen, own.Tick(Flat(own.Part(OwnBody.Hips).transform.forward).normalized, new Vector3(own.Part(OwnBody.Foot).transform.position.x, body.starts[j].at[0].y - .2f, own.Part(OwnBody.Foot).transform.position.z))));
+                                if (ticks && step % tickEvery == 0) Debug.Log(string.Format(Plain, "RISE_TICK {0} {1:0.00} s risen {2:0.00} | {3}", body.name, step * dt, own.Risen, own.Tick(Flat(own.Part(OwnBody.Hips).transform.forward).normalized, new Vector3(own.Part(OwnBody.Foot).transform.position.x, body.starts[j].at[0].y - .2f, own.Part(OwnBody.Foot).transform.position.z))));
                             }
                             if (body.onFeet && !own.Rising)
                             {
@@ -622,7 +654,7 @@ namespace WonderGather.Tests
                 }
 
                 string Told(Body body, int j) => string.Format(Plain, "RISE {0} from {1}: {2}; on its feet at {3:0.00} s, up at {4:0.00} s; fastest {5:0.0} m/s; last, getting up: hips {6:0.00} high, weight {7:0.00} ahead of its soles, soles {8:0.00} flat, trunk {9:0.00} upright, boots bearing {10:0.00}; on its feet {11:0.00} s, risen {12:0.00}",
-                    body.name, from[j], body.ended, body.feetAt, body.upAt, body.peak, body.hipsHigh, body.ahead, body.soles, body.upright, body.bears, body.feetFor, body.risen);
+                    body.name, from[j], body.ended, body.feetAt, body.upAt, body.peak, body.hipsHigh, body.ahead, body.soles, body.upright, body.bears, body.feetFor, body.risen) + string.Format(Plain, "; boots turned at most {0:0.0} rad/s at {1}", body.bootSpin, body.bootSpinAt);
 
                 if (string.IsNullOrEmpty(search))
                 {
