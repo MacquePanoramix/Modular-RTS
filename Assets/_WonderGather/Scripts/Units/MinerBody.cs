@@ -260,6 +260,22 @@ namespace WonderGather
             ? Quaternion.Angle(hanging[index].pusher.rotation, bones.pelvis.rotation * hangClothRest[index]) : 0;
         // The way a thing's back faces out now (the side it was modelled resting on the body with).
         public Vector3 HangingBack(int index) => hanging[index].bone.rotation * hangBack[index];
+        // How far the cloth a thing rests on is folded back from the hips' face (degrees), and how high its flap's hem is
+        // over the ground, in flap lengths (under 1: the hem lies on the ground; as the skirt's Drape reckons it).
+        public float ClothFolded(int index)
+        {
+            var thing = hanging[index];
+            if (thing.pusher == null || index >= hangClothRest.Length) return 0;
+            Vector3 hips = bones.pelvis.rotation * thing.stopNormal;
+            return Vector3.Angle(hips, thing.pusher.rotation * Quaternion.Inverse(bones.pelvis.rotation * hangClothRest[index]) * hips);
+        }
+        public float ClothHemUp(int index)
+        {
+            var thing = hanging[index];
+            if (thing.pusher == null) return 0;
+            float ground = Mathf.Min(bones.feet[0].position.y, bones.feet[1].position.y) - ankleUp;
+            return (thing.pusher.position.y - ground) / Mathf.Max(.01f, flapLong);
+        }
         // The cloth it rests on, as the body stops it now: its way out, a place on it, and how far out from there its
         // weight is kept. False: the cloth has not come in (only the hips' face stops it).
         public bool ClothFace(int index, out Vector3 way, out Vector3 at, out float stop) => Cloth(hanging[index], index, out way, out at, out stop);

@@ -111,7 +111,7 @@ namespace WonderGather.Tests
                         Vector3 b = Vector3.ProjectOnPlane(back, hangs), f = Vector3.ProjectOnPlane(face, hangs);
                         return b.sqrMagnitude > 1e-6f && f.sqrMagnitude > 1e-6f ? Vector3.SignedAngle(b, f, hangs) : float.NaN;
                     }
-                    string faces = string.Format(Plain, " backs hips {0:0} ({1:0.00} along)", Twist(outward), Vector3.Dot(hangs, outward));
+                    string faces = string.Format(Plain, " backs hips {0:0} ({1:0.00} along) folded {2:0} hem {3:0.00}", Twist(outward), Vector3.Dot(hangs, outward), miner.ClothFolded(k), miner.ClothHemUp(k));
                     if (miner.ClothFace(k, out var clothOut, out var clothAt, out float clothStop))
                         faces += string.Format(Plain, " cloth {0:0} ({1:0.00} along) rings {2:0} mm", Twist(clothOut), Vector3.Dot(hangs, clothOut), (Vector3.Dot(thing.bone.position - clothAt, clothOut) - clothStop) * 1000);
                     {
