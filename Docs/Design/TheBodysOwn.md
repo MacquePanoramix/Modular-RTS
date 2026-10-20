@@ -1982,8 +1982,16 @@ then eases), "you can proceed".
 - **Bodies that fly apart ("went wild")**, 0 to 2 in 36 tries: the load felt
   through a knee climbs to two, then three times its weight, then its boots' to
   twelve, before it fails. Not the balance's pushes (bounded by its weight and
-  each joint's strength). To be caught step by step; nothing goes into the game
-  before it is found.
+  each joint's strength). **Caught step by step** (the bench keeps each try's
+  last steps and tells them if it goes wild): a boot began to spin, 36 then 120
+  radians a second, then its shin, then all of it. Holding the ankles and toes
+  less stiffly slowed the spin but cost the standing and did not stop it. **The
+  cause:** in every step the boot carried forward spun at about 130 radians a
+  second: lying on its top, toes back, and to be set down on its sole, toes
+  forward, it was half a turn from where it was going, and which way round was
+  left to chance. It now turns as a foot does, toes down, then forward (its
+  fastest spin 24 to 47). The bear way was searched with the whipping boot (0
+  of 8 stand with it mended) and is being searched again.
 - Also mended: over a thin outline (a boot and a knee) its weight goes as deep
   as the outline allows (it was sent to the middle of the two, behind it).
 
