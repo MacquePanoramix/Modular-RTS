@@ -1,21 +1,28 @@
 # Wonder Gather — Current State
 
-**Updated:** October 15, 2026.
+**Updated:** October 20, 2026.
 
-- **The satchel through the coat (the judges of the getting up, finding 4),
-  partly mended on its own branch `claude/satchel-stop`, not merged, not in a
-  build** ([what was found and how it was tested](Validation.md#hung-things-stopped-however-the-body-is-turned--october-15);
-  [before and after](Images/SatchelStop_2026-10-15/);
-  [its judges](Reviews/2026-10-15_SatchelStop_Judges.md)). Whatever way the
-  body is turned, what hangs on a hook is now stopped by the hips, by the
-  cloth it rests on and by the thigh on its side; standing and walking it
-  hangs and swings as before (2.6 mm at most). Three judges: "reads as real,
-  with a flaw". **Still open:** the coat still cuts the bag's top as it
-  pushes onto hands and knees (the bag is held out by its weight, but turned
-  rigidly about its rings); the bag is lost behind the thigh as a foot comes
-  forward; a fall onto the bag; Small's lantern, Long's mug and Round's
-  hammer, which read inside the coat when bowed, as before. For Luis to look
-  at.
+- **The satchel lies on the body (October 20), on its own branch
+  `claude/satchel-lies` (on `claude/satchel-stop`), not merged, not pushed, not
+  in a build** ([what was found and how it was tested](Validation.md#the-satchel-lies-on-the-body--october-20);
+  [first stop and now, three views](Images/SatchelLies_2026-10-20/);
+  [its judges, round 2](Reviews/2026-10-20_SatchelLies_Judges.md)). Round 1's
+  two flaws are gone: on hands and knees the bag no longer has the coat across
+  its top, and as a foot comes forward it is no longer lost behind the thigh.
+  Its rings ride out on what comes up under them (the coat's skirt bulged 15 to
+  40 mm over them; the drawn-up thigh came within a centimetre), it turns to lay
+  its back on what holds it, and the thigh, shin and boot keep it off. In the
+  judges' try a tenth of it is under the clothes in 5 frames of 158 (the first
+  stop: 101); at work 53 of 529 (288). Standing and walking as before, frame by
+  frame; the lantern, mug and hammer untouched. The whole suite: 206, 177
+  passed, 0 failed. Three new judges (on the version before the lying flip was
+  mended): "reads as real, with a flaw". **Still
+  open:** as the hips leave the ground (2.2 to 2.4 s) the bag sits under the
+  skirt's hem and comes out in one step (the first stop too); the boot's top
+  grazes it for about 0.4 s as the foot swings forward; the strap's end may look
+  cut by the coat (not checked); lying, it goes into the ground, as before. The
+  "hung things" session changes the same code (`MinerBody`): merging both is by
+  hand. For Luis to look at.
 - **A build for Luis to play, October 14 (late): `Builds/WindowsOrdinaryPlace_Oct14`**
   (beside the three of October 13). In it: arms as strong as the body needs
   (Luis's decision), tiredness taking precision, breaths between blows. The

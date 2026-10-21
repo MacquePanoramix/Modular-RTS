@@ -1059,8 +1059,12 @@ the round's log is in
       turn), a thigh drawn up past a stride (from `ThighFrom` of its
       length, `hangLegGathered` + `SkirtGathered`, out to its side), and its
       shin as the knee comes up by them. Eased over `RidesIn`; the cloth's
-      coming in for a strap thing is eased too (`hangComes`, `ClothSettles`)
-      and goes as the flap folds back past `FoldsFrom` (lying).
+      coming in for a strap thing is eased too (`hangComes`, `ClothSettles`),
+      goes as the flap folds back past `FoldsFrom`, and comes only as the
+      flap's hem leaves the ground (`HemUp`, `HemFrom` to `HemBy` flap
+      lengths, the ground as `Drape` reckons it): lying face down, the flap
+      lies on the ground beside the bag, and letting it in there lifted the
+      bag onto the coat's back (the judges of the satchel, round 2).
     - `OutOfBody`: its weight rests on the flap as the flap's whole turn
       carries it (`Cloth(..., whole)`); the drawn-up thigh keeps it from
       `ThighFrom` down; its shin and boot keep it off (`Shin`: the
@@ -1082,7 +1086,8 @@ the round's log is in
     was last posed, as one moment (`HangingIntoBody` against the hips' face,
     and the cloth's once it has come in); `ClothTurned` how far the cloth a
     thing rests on has turned from as modelled; `HangingBack` which way its
-    back faces; `ClothFace` the cloth face that stops it now. `ClothesDepth`
+    back faces; `ClothFace` the cloth face that stops it now; `ClothFolded`
+    and `ClothHemUp` how far its flap is folded back and how high its hem is. `ClothesDepth`
     (tests) reads from the skin itself how far a hung thing is under the
     clothes of the hips, thighs and skirt (not the shins or boots), and
     gives its points and the body's triangles near a place (`Point`,
