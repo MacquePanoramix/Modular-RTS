@@ -45,7 +45,9 @@
   up, rolling up over the feet) stands Small up at 17 and 17 of 36**; the
   judges (round 3, the last): "reads as real, with a flaw" (holds where
   nothing changes; 13 s, too slow). Bodies that sometimes fly apart: a boot
-  spinning goes first; being mended.
+  that whipped half round in every step (130 radians a second) was found and
+  mended; with the boot turning as a foot does, 6 and 10 of 36 stand (the
+  whip had helped it); searched again.
   See [The body's own](Design/TheBodysOwn.md), "Its weight off a knee,
   and a leg that kicked". Not in a build.
 - **The getting up is being built (October 14; on the work branch

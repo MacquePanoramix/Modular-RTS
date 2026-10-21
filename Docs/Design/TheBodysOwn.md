@@ -1991,7 +1991,10 @@ then eases), "you can proceed".
   forward, it was half a turn from where it was going, and which way round was
   left to chance. It now turns as a foot does, toes down, then forward (its
   fastest spin 24 to 47). The bear way was searched with the whipping boot (0
-  of 8 stand with it mended) and is being searched again.
+  of 8 stand with it mended) and is being searched again. **Searched again (30
+  rounds) with the boot turning as a foot does: 6 and 10 of 36 stand** (17 and
+  17 with the whipping boot, which helped it as a flick would, and was not its
+  own); no body went wild in 72. A wider search is running.
 - Also mended: over a thin outline (a boot and a knee) its weight goes as deep
   as the outline allows (it was sent to the middle of the two, behind it).
 
