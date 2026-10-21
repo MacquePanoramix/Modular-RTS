@@ -45,3 +45,10 @@ Bench arguments used: `-riseMiner Small -riseStarts front,front@1,...,front@8 -r
   (30 rounds, with the game's frames). Same `-riseSet` as `ways_toddler_small.txt`. At
   `starts36.txt` with `-riseFrames 1`: **stands 17 of 36 (`-riseSeed 21`) and 17 (`-riseSeed 9`)**;
   on its feet at about 10.4 s, standing at about 13.
+- `ways_bear_small.txt` (October 21, replacing October 20's): searched again with the boot
+  turning as a foot does (40 rounds, from the first foot on, wider). Use with `-riseSet
+  BalanceHoldLearns=1.862,BalanceMargin=0.021,KneeFaces=0.759,BalanceShiftsAt=0.122,
+  BalanceShiftsAtMost=0.040,BalanceUnloads=0.429,LetsGo=0.357,FoldedUnder=0.163,
+  BalanceShiftsNearest=1,BalanceShiftsDeep=0.040`. At `starts36.txt` with `-riseFrames 1`:
+  stands 12 of 36 (`-riseSeed 21`), 8 (`-riseSeed 9`); standing at about 13.8 s; no body went
+  wild (October 20's, with the whipping boot: 17 and 17).
