@@ -18,7 +18,7 @@ namespace WonderGather
         // The least and the most strength the slider gives (1: ordinary for its build), and the step it moves by.
         public const float Weakest = .3f, Strongest = 3, Step = .05f;
         // Its size on the screen, and how far it stands from the screen's lower left corner.
-        private const float Width = 400, Height = 280, Margin = 12;
+        private const float Width = 400, Height = 306, Margin = 12;
 
         private MinerChoice choice;
         private MinerWorkPreview look;
@@ -83,6 +83,11 @@ namespace WonderGather
             if (GUI.Button(new Rect(x + inner - 196, y - 2, 96, 22), "Shove it", button)) look.Shove();
             if (GUI.Button(new Rect(x + inner - 96, y - 2, 96, 22), "Pull it", button)) look.Pull();
             GUI.enabled = could;
+            y += 26;
+            // Getting up by its own body (S3b, step 2; October 21): every miner that knows a way up (Small, so far; the
+            // others as before), pushed over, gets up so, and tries again if it goes down.
+            bool rises = GUI.Toggle(new Rect(x, y, inner, 20), PhysicalFall.GetsUpByItsOwn, " Gets up by its own body (Small; the others as before)", toggle);
+            if (rises != PhysicalFall.GetsUpByItsOwn) PhysicalFall.GetsUpByItsOwn = rises;
             y += 26;
             // Its breath: how it is drawn (a look to choose between), and a miner tired at once to see it breathe so.
             GUI.Label(new Rect(x, y + 2, 50, 20), "Breath:", text);

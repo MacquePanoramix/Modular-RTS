@@ -127,7 +127,7 @@ namespace WonderGather
         public static float RuleTimesFeet = 10;
         // (Where a leg reached for the ground bends its knee: 0, the way the body lies along the ground; 1, the way the
         // front of its hips faces; between, so much of the way from one to the other.)
-        public static float KneeFaces = .74f;
+        public static float KneeFaces = .759f;
         private const float StillUnder = .2f, StillTurning = 1.2f;
         // Balance on hands, knees and feet (Luis, October 14: "I like your idea to implement balance"): the keeper on
         // more than two feet. It works out where the ground must push each hand, knee and boot that bears it, so that
@@ -140,20 +140,20 @@ namespace WonderGather
         // over the others, giving that limb's share to them over BalanceUnloads seconds, and lifts it once its weight is
         // over them (by BalanceMargin) and the limb bears less than BalanceLifts of it; if that has not come in
         // BalanceShiftsWithin seconds, it lifts it all the same.
-        public static float BalanceQuick = 3.36f, BalanceMargin = .041f, BalanceSlides = .3f, BalanceLeans = .6f, BalanceLeansAtMost = .12f;
+        public static float BalanceQuick = 3.36f, BalanceMargin = .021f, BalanceSlides = .3f, BalanceLeans = .6f, BalanceLeansAtMost = .12f;
         // (What bears each part is felt over BalanceFeels seconds; a part bears it once that is BalanceBorne of its
         // weight.)
         public static float BalanceFeels = .08f, BalanceBorne = .02f;
         // (Not moving off a limb, its weight only as far as over what bears it, not to their middle. October 14: held
         // after one step at 5 of 36 places so, at 12 of 36 to their middle; off.)
         public static bool BalanceLeastMove = false;
-        public static float BalanceUnloads = .61f, BalanceLifts = .15f, BalanceShiftsWithin = 2.5f;
+        public static float BalanceUnloads = .429f, BalanceLifts = .15f, BalanceShiftsWithin = 2.5f;
         // Moving its weight off a limb, while that limb is lifted, and once it is put down, the hands and boots that
         // bear it stay where they are on the ground (each arm's and leg's joints asked for what keeps it there), and
         // its body is asked to be where its weight is meant to be: where it is asked to be goes there at up to BalanceShiftsAt metres a second, and it is
         // asked to be no more than BalanceShiftsAtMost from where it is. (Pushing with its limbs alone fought its pose,
         // which held its body where it was: October 14.)
-        public static float BalanceShiftsAt = .43f, BalanceShiftsAtMost = .117f;
+        public static float BalanceShiftsAt = .122f, BalanceShiftsAtMost = .04f;
         // (Asked to be where it is going to be in BalanceDamps seconds less far: so it comes there without overshoot.
         // BalancePushes: how much of the push that would bring its weight there its limbs give besides, from where they
         // bear; 0: they only bear it up.)
@@ -162,16 +162,16 @@ namespace WonderGather
         public static float ArmStraight = .985f;
         // Moving its weight off a limb: to the nearest place over the others deep enough (true), or along the line
         // towards their middle (false).
-        public static bool BalanceShiftsNearest = false;
+        public static bool BalanceShiftsNearest = true;
         // Its hold learns what its pose holds back: asked BalanceHoldLearns metres further for each second its weight
         // stays a metre short of where it is asked to be (up to BalanceShiftsAtMost).
-        public static float BalanceHoldLearns = 0;
+        public static float BalanceHoldLearns = 1.862f;
         // A leg folded so that its ankle is within FoldedUnder of a leg's length of its hip keeps its knee facing the
         // way it faces.
-        public static float FoldedUnder = .2f;
+        public static float FoldedUnder = .163f;
         // Before it lifts a limb its weight goes so far within the others (metres; 0: twice the margin), and the
         // limb is lifted once it is three quarters of the way there: a shift a person can see.
-        public static float BalanceShiftsDeep = 0;
+        public static float BalanceShiftsDeep = .04f;
         private float ShiftDeep => Mathf.Max(2 * BalanceMargin, BalanceShiftsDeep);
         // (How deep its weight is asked to go now: less over an outline too thin for ShiftDeep.)
         private float shiftDeepNow = .04f;
@@ -362,7 +362,7 @@ namespace WonderGather
 
         // Moving its weight off a limb, that limb goes slack as it gives its share to the others (down to LetsGo of how it
         // held itself); every other joint, and that limb once it is lifted, holds itself as before.
-        public static float LetsGo = .25f;
+        public static float LetsGo = .357f;
         private void Slacken(int leg, int hand, float share)
         {
             for (int j = 1; j < Count; j++)
@@ -1237,6 +1237,118 @@ namespace WonderGather
                 Vector3.Dot(at - middle, lies) * 1000, Vector3.Dot(at - middle, right) * 1000, Vector3.Dot(Flat(weightTo) - at, lies) * 1000, Vector3.Dot(Flat(weightTo) - at, right) * 1000, Measure(Asks.Head), Measure(Asks.Hips),
                 Bend(Forearm), Bend(Forearm + 1), Off(Forearm), Off(Forearm + 1), Off(UpperArm), Off(UpperArm + 1), Bend(Shin), Bend(Shin + 1), Off(Shin), Off(Shin + 1), Off(Thigh), Off(Thigh + 1));
         }
+
+        // Ways as written (each miner's in Resources/RiseWays, a bench's in its file). A line "way <name> <front least>
+        // <front most> gives|turns", then a line for each pose:
+        //   name | over atLeast within | trunk head twist | shoulder out elbow | shoulder out elbow |
+        //   hip out knee ankle | hip out knee ankle | soles>0.9 bears>0.8 ahead<0.05 keep=0.02
+        // (the leading side first; turns from standing, in degrees). Read here, so the game and a bench read them alike.
+        private static readonly System.Globalization.CultureInfo Plain = System.Globalization.CultureInfo.InvariantCulture;
+        public static Way[] Read(string text)
+        {
+            var ways = new System.Collections.Generic.List<Way>();
+            var stages = new System.Collections.Generic.List<Stage>();
+            Way way = null;
+            void Close() { if (way != null) { way.stages = stages.ToArray(); ways.Add(way); stages.Clear(); } }
+            foreach (string raw in text.Split('\n'))
+            {
+                string line = raw.Trim();
+                if (line.Length == 0 || line.StartsWith("#")) continue;
+                if (line.StartsWith("way "))
+                {
+                    Close();
+                    var w = line.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+                    way = new Way { name = w[1], frontLeast = float.Parse(w[2], Plain), frontMost = float.Parse(w[3], Plain), gives = w.Length > 4 && w[4] == "gives" };
+                    continue;
+                }
+                var f = line.Split('|');
+                float[] N(string s) => System.Array.ConvertAll(s.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries), x => float.Parse(x, Plain));
+                var times = N(f[1]);
+                var stage = new Stage { name = f[0].Trim(), over = times[0], atLeast = times[1], within = times[2] };
+                var numbers = new System.Collections.Generic.List<float>();
+                for (int k = 2; k <= 6; k++) numbers.AddRange(N(f[k]));
+                if (numbers.Count != Turns) throw new System.FormatException("A pose of " + stage.name + " has " + numbers.Count + " turns, not " + Turns + ".");
+                stage.pose = numbers.ToArray();
+                var asked = new System.Collections.Generic.List<Asked>();
+                if (f.Length > 7)
+                    foreach (string word in f[7].Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (word.StartsWith("keep=")) { stage.keeps = float.Parse(word.Substring(5), Plain); continue; }
+                        // (bal=1,0.3: it keeps its weight over what bears it, carrying so much of it by the balance, so far
+                        // from over the middle of them towards over its boots.)
+                        // (hold=0.6,0.3: it holds itself on what bears it, its hips asked to be so high (NaN: as they are), going
+                        // there at so much of their height a second.)
+                        // (flat=30: its boots kept on the ground let down flat about their toes, so many degrees a second.)
+                        if (word.StartsWith("flat=")) { stage.flattens = float.Parse(word.Substring(5), Plain); continue; }
+                        // (hands=off: its weight off both hands, then they let go. rights=40: its hips turned towards standing.)
+                        if (word == "hands=off") { stage.letsHandsGo = true; continue; }
+                        if (word.StartsWith("rights=")) { stage.risesHips = float.Parse(word.Substring(7), Plain); continue; }
+                        // (kneel=0.9: its knees drawn up under it along the ground, its ankles so many shins behind its hips.)
+                        if (word.StartsWith("kneel=")) { stage.kneels = float.Parse(word.Substring(6), Plain); continue; }
+                        // (laid: kneeling so, its boots laid on their tops, toes back.)
+                        if (word == "laid") { stage.laysBoots = true; continue; }
+                        if (word.StartsWith("hold="))
+                        {
+                            var hold = word.Substring(5).Split(',');
+                            stage.holds = true;
+                            stage.holdHigh = float.Parse(hold[0], Plain);
+                            if (hold.Length > 1) stage.holdRate = float.Parse(hold[1], Plain);
+                            stage.holdsFeet = hold.Length > 2 && hold[2] == "feet";
+                            continue;
+                        }
+                        if (word.StartsWith("bal="))
+                        {
+                            var bal = word.Substring(4).Split(',');
+                            stage.balance = float.Parse(bal[0], Plain);
+                            if (bal.Length > 1) stage.balanceFeet = float.Parse(bal[1], Plain);
+                            if (bal.Length > 2) stage.balanceLead = float.Parse(bal[2], Plain);
+                            continue;
+                        }
+                        // (sit=45,0.5,0.05,100: it sits back at up to so many degrees a second, its hips so much of its knees,
+                        // until its weight is no further ahead than that, and no more than so many degrees.)
+                        if (word.StartsWith("sit="))
+                        {
+                            var sits = word.Substring(4).Split(',');
+                            stage.sits = float.Parse(sits[0], Plain);
+                            if (sits.Length > 1) stage.sitHips = float.Parse(sits[1], Plain);
+                            if (sits.Length > 2) stage.sitAhead = float.Parse(sits[2], Plain);
+                            if (sits.Length > 3) stage.sitMost = float.Parse(sits[3], Plain);
+                            continue;
+                        }
+                        // (walk=0.1,0.6,0.05,0.25: its hands walked back so far each, over so long, lifted so high, no nearer its
+                        // feet than so much of its leg.)
+                        if (word.StartsWith("walk="))
+                        {
+                            var walk = word.Substring(5).Split(',');
+                            stage.handStep = float.Parse(walk[0], Plain);
+                            if (walk.Length > 1) stage.handOver = float.Parse(walk[1], Plain);
+                            if (walk.Length > 2) stage.handLift = float.Parse(walk[2], Plain);
+                            if (walk.Length > 3) stage.handNearest = float.Parse(walk[3], Plain);
+                            continue;
+                        }
+                        // (step=lead,0.2,0.4,0.06: that leg's boot put so far ahead of its hip and so far out, lifted so far.)
+                        if (word.StartsWith("step="))
+                        {
+                            var put = word.Substring(5).Split(',');
+                            stage.steps = put[0] == "lead" ? 0 : 1;
+                            stage.stepAhead = float.Parse(put[1], Plain); stage.stepOut = float.Parse(put[2], Plain);
+                            if (put.Length > 3) stage.stepLifts = float.Parse(put[3], Plain);
+                            // (a fifth: by way of under its hip, so high there.)
+                            if (put.Length > 4) stage.stepUnder = float.Parse(put[4], Plain);
+                            continue;
+                        }
+                        int cut = word.IndexOfAny(new[] { '<', '>' });
+                        var what = (Asks)System.Enum.Parse(typeof(Asks), word.Substring(0, cut), true);
+                        float value = float.Parse(word.Substring(cut + 1), Plain);
+                        asked.Add(word[cut] == '>' ? new Asked { what = what, least = value, most = float.PositiveInfinity } : new Asked { what = what, least = float.NegativeInfinity, most = value });
+                    }
+                stage.through = asked.ToArray();
+                stages.Add(stage);
+            }
+            Close();
+            return ways.ToArray();
+        }
+
 
         public string Tick() => Told() + Where() + Slips() + string.Format(System.Globalization.CultureInfo.InvariantCulture, "; breath {0:0.0} deg; soles {1:0.00} flat, weight {2:0.00} ahead of them", BreathBends, Measure(Asks.Soles), Measure(Asks.Ahead));
 

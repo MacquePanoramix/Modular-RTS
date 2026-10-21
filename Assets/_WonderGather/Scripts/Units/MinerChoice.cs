@@ -26,6 +26,13 @@ namespace WonderGather
         public int Count => miners != null ? miners.Length : 0;
         public bool Open => open;
         public string NameOf(int index) => names[index];
+        // (The name of a miner of the choice; none if it is not one.)
+        public string NameFor(SelectableUnit unit)
+        {
+            if (miners == null || names == null) return null;
+            for (int i = 0; i < miners.Length && i < names.Length; i++) if (miners[i] == unit) return names[i];
+            return null;
+        }
 
         public void Configure(SelectableUnit[] units, string[] labels, string[] descriptions, SelectionController controller, int initial)
         {

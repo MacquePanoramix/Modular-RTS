@@ -740,7 +740,7 @@ namespace WonderGather
             if (TryGetComponent<ThingsInHand>(out var things)) things.enabled = true;
             if (TryGetComponent<PhysicalBack>(out var back)) back.Want(0);
             Now = State.Up; beforeTime = latelyTime = -1;
-            GotUp++; gaveUpRunning = 0;
+            GotUp++; gaveUpRunning = 0; triedByItsOwn = 0;
             // S3b, step 2: a miner that stands by its own joints stands up by them too. Crouched as it is, its body
             // becomes its own, and its legs raise it against the ground. (RisesItself off, or a miner that does not
             // stand so: the posed body stands it up, at its legs' pace, as it did.)
@@ -751,6 +751,45 @@ namespace WonderGather
         // knees, has its weight 10 to 19 cm ahead of its soles, and made its own there it went straight over.)
         public static bool RisesItself = false;
         public int RoseItself { get; private set; }
+
+        // S3b, step 2, the getting up by its own body (Luis, October 13: "its own limbs and strength, not dead until a
+        // timer"): lying where its fall left it, a miner that stands by its own joints and knows a way up (each miner
+        // its own; Small's so far) becomes its own as it lies and gets up by its own limbs (OwnBody.BeginDown). Gone
+        // down again on the way, its fall has it again, it lies a while, and tries again, as a child does (G12). Off:
+        // as before. (A switch on the panel; October 21.)
+        public static bool GetsUpByItsOwn = false;
+        // (So many tries in one fall, then the old way: it rests and tries again, but does not lie there for ever.)
+        public const int TriesByItsOwn = 4;
+        public int RoseByItsOwn { get; private set; }
+        private int triedByItsOwn, onItsFeetWas;
+        // (Why it last got up, or did not get up, by its own body: for whoever measures it.)
+        public string ByItsOwnSaid { get; private set; } = "";
+        private bool ByItsOwn()
+        {
+            if (!GetsUpByItsOwn) return false;
+            if (!TryGetComponent<OwnBody>(out var itsOwn) || !itsOwn.Wanted) { ByItsOwnSaid = "it does not stand by its own joints"; return false; }
+            // (Come onto its feet since the last try: this is a new fall.)
+            if (itsOwn.OnItsFeetFromLying != onItsFeetWas) { triedByItsOwn = 0; onItsFeetWas = itsOwn.OnItsFeetFromLying; }
+            // (Only lying as one of its ways is for: lying so that none is, it gets up the old way.)
+            float front = Measure(Asks.Front);
+            if (triedByItsOwn >= TriesByItsOwn) { ByItsOwnSaid = "tried " + triedByItsOwn + " times"; triedByItsOwn = 0; return false; }
+            if (!itsOwn.KnowsAWayUpFrom(front)) { ByItsOwnSaid = "no way up for lying so (front " + front.ToString("0.00") + ")"; return false; }
+            triedByItsOwn++;
+            // (Made where its body is drawn now, which is where its let-go body lies.)
+            if (!itsOwn.BeginDown()) { ByItsOwnSaid = "its own body could not be made"; return false; }
+            ByItsOwnSaid = "try " + triedByItsOwn + " by its own body";
+            Destroy(held);
+            held = null;
+            for (int i = 0; i < Count; i++) { parts[i] = null; joints[i] = null; }
+            body.LetGo = false;
+            if (own != null) own.enabled = true;
+            if (balance != null) { balance.Afresh(); balance.Acts = balanced; }
+            if (TryGetComponent<ThingsInHand>(out var things)) things.enabled = true;
+            if (TryGetComponent<PhysicalBack>(out var back)) back.Want(0);
+            Now = State.Up; beforeTime = latelyTime = -1; stage = null;
+            RoseByItsOwn++;
+            return true;
+        }
 
         private int Which(Collider solid)
         {
@@ -871,6 +910,7 @@ namespace WonderGather
                 lain += dt;
                 if (GetsUp && lain >= liesFor)
                 {
+                    if (ByItsOwn()) return;
                     Rouse();
                     if (Now != State.Gathering) return;
                 }

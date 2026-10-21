@@ -216,11 +216,41 @@ namespace WonderGather
         // (OwnRiser), until it is on its feet and the keeper raises it. The ways it knows; whether it is getting up
         // so now; how often a way did not serve.
         public static OwnRiser.Way[] RiseWays = new OwnRiser.Way[0];
+        // The ways it knows itself: Resources/RiseWays/<its name, as the miners are named>.txt, read once (none: it
+        // gets up the old way). A bench's RiseWays come first.
+        private OwnRiser.Way[] waysOwn;
+        public OwnRiser.Way[] WaysUp
+        {
+            get
+            {
+                if (RiseWays.Length > 0) return RiseWays;
+                if (waysOwn == null)
+                {
+                    waysOwn = new OwnRiser.Way[0];
+                    var choice = FindAnyObjectByType<MinerChoice>(FindObjectsInactive.Include);
+                    string called = choice != null && TryGetComponent<SelectableUnit>(out var unit) ? choice.NameFor(unit) : null;
+                    var text = Resources.Load<TextAsset>("RiseWays/" + (string.IsNullOrEmpty(called) ? name : called));
+                    if (text != null)
+                        try { waysOwn = OwnRiser.Read(text.text); }
+                        catch (System.FormatException wrong) { Debug.LogError(name + ": its ways up cannot be read: " + wrong.Message); }
+                }
+                return waysOwn;
+            }
+        }
+        public bool KnowsAWayUp => WaysUp.Length > 0;
+        // (Whether one of its ways is for lying so: how far its chest faces the ground, -1 to 1, as the ways ask.)
+        public bool KnowsAWayUpFrom(float front)
+        {
+            foreach (var way in WaysUp) if (way != null && way.stages.Length > 0 && front >= way.frontLeast && front <= way.frontMost) return true;
+            return false;
+        }
         private OwnRiser riser;
         private readonly Quaternion[] riseFrom = new Quaternion[Count];
         public bool GettingUp => Stands && riser != null;
         public OwnRiser Riser => riser;
         public int GaveUpGettingUp { get; private set; }
+        // (How often it has come onto its feet from lying, by its own body.)
+        public int OnItsFeetFromLying { get; private set; }
         // (For a bench: a body that cannot get up, or goes down, is only put away; the fall does not take it.)
         public static bool FallsBack = true;
         // (For a bench, to try a thing, and 1 in the game: its arms made so many times as strong as they are. How
@@ -408,6 +438,7 @@ namespace WonderGather
         private void OnItsFeet()
         {
             Told?.Invoke($"{name} at {Time.time:F2}: on its feet after {riser.Lasted:F2} s of getting up; the keeper takes it");
+            OnItsFeetFromLying++;
             for (int j = 1; j < Count; j++) riseFrom[j] = riser.Aim(j);
             riser = null;
             keeper.Soften();
@@ -638,7 +669,7 @@ namespace WonderGather
             if (low)
             {
                 for (int j = 1; j < Count; j++) { toStood[j] = Quaternion.Inverse(rested[j]) * stoodLocal[j]; riseFrom[j] = Quaternion.identity; }
-                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = RiseWays, ToeTouches = toeLinks[0] != null ? toeTouches : null, PartTouches = leanTouches, SoleSize = soleSize, StoodHips = stoodHips };
+                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = WaysUp, ToeTouches = toeLinks[0] != null ? toeTouches : null, PartTouches = leanTouches, SoleSize = soleSize, StoodHips = stoodHips };
                 else keeper.RisesTo(stoodHeight, Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized) * stoodHips, stoodOver);
                 // (The posed body under it stands, for when it is given its body back.)
                 body.Bow(0, 400); body.Sink(0); body.ResetPose();
