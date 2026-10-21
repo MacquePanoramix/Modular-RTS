@@ -1994,7 +1994,20 @@ then eases), "you can proceed".
   of 8 stand with it mended) and is being searched again. **Searched again (30
   rounds) with the boot turning as a foot does: 6 and 10 of 36 stand** (17 and
   17 with the whipping boot, which helped it as a flick would, and was not its
-  own); no body went wild in 72. A wider search is running.
+  own); no body went wild in 72. A wider search (40 rounds): **12 and 8 of 36**;
+  no body wild in 216 tries since the boot was mended.
+- **In the game, behind a switch (off; October 21, work branch 42daabb).** The
+  panel's "Gets up by its own body": lying where its fall left it, a miner that
+  stands by its own joints and has a way for lying so becomes its own as it lies
+  and gets up by its own limbs; gone down on the way, it lies a while and tries
+  again (G12), up to four times in a fall, then the old way. Each miner's ways
+  in `Resources/RiseWays/<its name>.txt` (Small's bear way; Long and Round none
+  yet, so the old way). **Measured in the ordinary place:** pushed over, Small
+  lands on its back (front -1.00, every push backwards) or its side far more
+  often than on its front, and its only way is from its front: up the old way
+  at 11 pushes of 11. **Next: a way from the back and the sides** (rolling onto
+  its front first, a knee coming up and across and an arm reaching over, as the
+  research says most people do).
 - Also mended: over a thin outline (a boot and a knee) its weight goes as deep
   as the outline allows (it was sent to the middle of the two, behind it).
 

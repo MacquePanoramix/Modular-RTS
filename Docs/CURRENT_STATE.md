@@ -47,7 +47,11 @@
   nothing changes; 13 s, too slow). Bodies that sometimes fly apart: a boot
   that whipped half round in every step (130 radians a second) was found and
   mended; with the boot turning as a foot does, 6 and 10 of 36 stand (the
-  whip had helped it); searched again.
+  whip had helped it); searched again: 12 and 8 of 36. In the game behind a
+  switch (off): "Gets up by its own body" (tries again if it goes down); but
+  pushed over in the game Small lands on its back or side, and its only way
+  is from its front, so it rarely starts. Next: a way from the back and
+  sides (rolling onto its front).
   See [The body's own](Design/TheBodysOwn.md), "Its weight off a knee,
   and a leg that kicked". Not in a build.
 - **The getting up is being built (October 14; on the work branch
