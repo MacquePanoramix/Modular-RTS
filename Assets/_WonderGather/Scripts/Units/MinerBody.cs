@@ -197,6 +197,9 @@ namespace WonderGather
         // keeps from the thigh on its side (the room a stride leaves it); and the ground under it this frame, if it can
         // reach it (a place on it, and its way up).
         private float[] hangFar = new float[0], hangLineRound = new float[0];
+        // Which side of the thigh on its side a thing's line was on last frame, near the thigh (in the pelvis' frame;
+        // zero: not near it). The thigh pushes it on from there; it is never put across to the other side at once.
+        private Vector3[] hangLineSide = new Vector3[0];
         private bool[] hangGrounded = new bool[0];
         // Whether the ground stopped the thing this frame: lying on it, it is held there by friction, and keeps no swing of
         // its own (only what its hook carries); lifted off it, it starts from rest.
@@ -466,6 +469,7 @@ namespace WonderGather
             hangGroundAt = new Vector3[count];
             hangGroundUp = new Vector3[count];
             hangTouched = new bool[count];
+            hangLineSide = new Vector3[count];
             hangTwist = new float[count];
             hangGiven = new bool[count];
             hangPlace = new Vector3[count];
@@ -828,6 +832,7 @@ namespace WonderGather
             }
             hangFrom[k] = pivot;
             Vector3 shown = pivot + hangOffset[k];
+            if (k < hangLineSide.Length) hangLineSide[k] = LineSide(thing, k, pivot, shown);
             if (thing.hand != null)
             {
                 // The wrist gives with the weight: the hand turns so the handle stays square to the way the thing
@@ -1056,6 +1061,22 @@ namespace WonderGather
             return GroundRoom - lowest;
         }
 
+        // Which side of the thigh on its side a thing's line is on now, in the pelvis' frame, if it is near that thigh (within
+        // a stride's room and a hand's breadth more); zero if not, or if it has no line.
+        private Vector3 LineSide(Hanging thing, int k, Vector3 pivot, Vector3 weight)
+        {
+            if (HungAsOn15 || stopSide != 0 || thing.riders == null || thing.riders.Length == 0 || k >= hangFar.Length || hangFar[k] <= LineFrom
+                || k >= hangLeg.Length || hangLegRound[k] <= 0) return Vector3.zero;
+            Vector3 way = weight - pivot;
+            if (way.sqrMagnitude < 1e-8f) return Vector3.zero;
+            way.Normalize();
+            Vector3 hip = bones.thighs[hangLeg[k]].position, knee = bones.shins[hangLeg[k]].position;
+            Nearest(pivot + way * LineFrom, pivot + way * hangFar[k], hip, knee, out var onThing, out var onThigh, out _);
+            Vector3 apart = Vector3.ProjectOnPlane(onThing - onThigh, knee - hip);
+            if (apart.sqrMagnitude < 1e-8f || apart.sqrMagnitude > (hangLineRound[k] + .1f) * (hangLineRound[k] + .1f)) return Vector3.zero;
+            return Quaternion.Inverse(bones.pelvis.rotation) * apart.normalized;
+        }
+
         // How far a thing on the ground tips about its own line: the least turn that lifts it out of the ground (the way
         // it has tipped already first), or, if none does, the one that lifts it most.
         private float Tips(Hanging thing, int k, Vector3 pivot, Vector3 way)
@@ -1216,6 +1237,14 @@ namespace WonderGather
                         Vector3 hook = Vector3.ProjectOnPlane(pivot - OnSegment(pivot, hip, knee), thigh);
                         if (hook.sqrMagnitude < 1e-4f) hook = Vector3.ProjectOnPlane(hips, thigh);
                         hook = hook.sqrMagnitude > 1e-8f ? hook.normalized : hips;
+                        // (The side it was on last frame, if it was near the thigh: a thigh drawn up fast passes the line
+                        // between two frames, and put across to the hook's side at once the hammer's handle flicked 50 to
+                        // 80 degrees in a look as Round squatted, judges' round 2.)
+                        if (k < hangLineSide.Length && hangLineSide[k] != Vector3.zero)
+                        {
+                            Vector3 was = Vector3.ProjectOnPlane(bones.pelvis.rotation * hangLineSide[k], thigh);
+                            if (was.sqrMagnitude > 1e-4f) hook = was.normalized;
+                        }
                         float lineRound = hangLineRound[k];
                         bool through = alongThigh > .02f && alongThigh < .98f && Vector3.Dot(apart, hook) < 0;
                         if (through) apart -= 2 * Vector3.Dot(apart, hook) * hook;
