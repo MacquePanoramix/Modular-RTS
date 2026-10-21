@@ -3679,43 +3679,81 @@ front quarter, behind, and **from below with the ground not drawn** (new:
   course a way (the falls differ from run to run: Small's satchel onto its
   right lay 77 mm above the ground in one run, 64 mm into it in the next).
 
-### Mended, October 20 (in progress: tests and judges not done)
+### Mended, October 20 and 21
 
-Asked for (through the starting session): a ground stop, and the thigh kept
-off the whole of a thing. Built in `MinerBody` (things on hooks only); each
-thing's outermost skin points measured onto the prefabs by the setup's
-"Measure What Hangs On The Miners" (`skin`; nothing else in the prefabs).
-`-hungAsOn15 1` gives the October 15 behaviour.
+Asked for (Luis, through the starting session): a ground stop, the thigh kept
+off the whole of a thing, and then the things lain on. Built in `MinerBody`,
+things on hooks only; each thing's outermost skin points measured onto the
+prefabs by the setup's "Measure What Hangs On The Miners" (new field `skin`;
+nothing else in the prefabs changed). `-hungAsOn15 1` gives the October 15
+behaviour. Branch `claude/hung-things-stop`, isolated copy `D:/Dev/WG-hung`.
+**Not merged, not in a build; Luis has not seen it.**
 
-- **The ground:** a thing is turned about its hook until its lowest skin point
-  lies on the drawn ground, never past level; then tips about its own line (a
-  mug onto its side); and where its hook is itself pressed to the ground,
-  what it hangs by gives, 5 cm at most. Deepest below the ground over the 12
-  falls (one course each, read against the drawn ground): lantern 92-176 mm
-  before, 13 mm after (6 frames, its hook under the ground with the skirt's
-  flap, whose own ground stop guesses from the feet); hammer 123-146 before,
-  20 (one frame); mug 62-79 before, 11 (one frame); satchel to 76 before, 4.
-  Pictures: `5_after_ground.jpg`.
-- **The thigh:** for things hung from the cloth (lantern, mug, hammer), the
-  line from below the hook to the far end of the skin is kept on the hook's
+- **The ground (all four things):** a thing is turned about its hook until its
+  lowest skin point lies on the ground as drawn (by a ray on the ground's
+  layer), never past level; if still in it, it tips about its own line (a mug
+  onto its side); and where its hook is itself pressed to the ground, what it
+  hangs by gives, 5 cm at most. Deepest below the ground over one course each
+  way (12 falls, read from each thing's own skin against the drawn ground):
+  lantern 92-176 mm before, 1-16 mm after (the 16 mm for 6 frames, where its
+  hook is under the ground with the skirt's flap, whose own ground stop guesses
+  the ground from the feet); hammer 123-146 before, at most 20 (one frame);
+  mug 62-79 before, at most 11 (one frame); satchel to 76 before, at most 8.
+  Pictures: `5_after_ground.jpg`. (The bench first read the ground from its
+  formula, which differs from the drawn triangles by a few centimetres at the
+  path's edge; it reads the drawn ground since.)
+- **The thigh (things hung from the cloth: lantern, mug, hammer):** the line
+  from just below the hook to the far end of the skin is kept on the hook's
   side of the thigh, no nearer than a stride brings it. Round's hammer no
-  longer goes through its thigh on hands and knees (`6_after_hammer_thigh`),
-  nor in its squat for the pickaxe, where the handle is now pushed up and out
-  for about 0.2 s (`8_after_round_squat_work`). A first form kept the line
-  as far off as it hung when modelled; it squeezed Small's lantern into the
-  belly in its squat, and was narrowed (`9_after_small_squat_work`).
-- **Standing and walking, unchanged:** the same course with `-hungAsOn15 1`
-  and without, every frame: 0.00 mm for all four things (Long's and Round's
-  courses aligned by one frame). Standing by its own joints as played: the
-  new stops never acted (0.00 mm moved).
-- **The work:** Small's satchel within 10 mm of before; the lantern lies on
-  the ground at the pickup where it was 14 mm in it.
-- **Not mended: lying on it** (`7_after_lying_on_it_not_mended`). The lantern's
-  and mug's hooks ride the skirt's flap, which hangs under the hip when the
-  miner lies on that side; no turn about the hook can bring them out. Needs
-  the hook kept out from under the body.
-- **Found, not from this change:** Small's lantern flicks straight out from
-  the hip for single frames when bowing fast (1.96, 3.48, 9.36-9.48 s of the
-  work), before as after.
-- **Not done:** a test for the ground in `HungThingTests`; `HungThingTests`
-  and the whole suite; the judges.
+  longer goes through its thigh on hands and knees
+  (`6_after_hammer_thigh.jpg`), nor in its squat for the pickaxe, where the
+  handle is now pushed up and out for about 0.2 s
+  (`8_after_round_squat_work.jpg`). A first form kept the line as far off as it
+  hung when modelled: it squeezed Small's lantern into the belly in its squat,
+  and moved the satchel 141 mm; it was narrowed to the stride's room and to
+  things hung from the cloth (`9_after_small_squat_work.jpg`). The satchel's
+  thigh is left to the satchel's own branch.
+- **Lain on (lantern, mug):** a flap of the skirt lying along the ground under
+  the body no longer stops what hangs over it, nor carries its hook under the
+  hip (Long's mug rode the flap by half); where the way out of the hips points
+  down into the ground, the thing goes out along the ground. By pictures:
+  Small's lantern (on its left) lies on the ground in front of the body; Long's
+  mug (on its left, and face down) lies on the ground at the hip and the belly;
+  before, both were hidden inside the coat from every side and from below
+  (`7_after_lying_on_it.jpg`). The game's own "inside the body" reading for
+  these frames still uses the hips' face pointing into the ground, and reads
+  them inside; it is not a judge of them.
+- **Standing and walking, unchanged:** the same course with `-hungAsOn15 1` and
+  without, every frame: 0.00 mm for all four things (twice, before and after
+  the lain-on change). Standing by its own joints as played: the new stops
+  never acted (0.00 mm moved).
+- **The work** (each miner down for a pickaxe and mining; one run each way):
+  Small's satchel within 10 mm of before; the lantern lies on the ground at the
+  pickup where it was 14 mm in it; the hammer as above. The work's bodies are
+  not exactly repeatable from run to run, so frames were compared only where
+  the bodies were posed alike.
+- **Tests** (`HungThingTests`, read from the results file): 5 of 5 pass. New:
+  `WhatHangsOnAHookLiesOnTheGroundNotInIt` (each miner onto its front and onto
+  the side its things hang on; each thing's skin against the drawn ground): at
+  most 2 mm under it, 0 of 1483 looks more than 10 mm; with `-hungAsOn15 1` it
+  fails (the lantern 176 mm, 503 of 1603 looks). The satchel lain on (onto its
+  right) is now through its clothes in 31 of 121 looks, where it was 50-52.
+- **The whole PlayMode suite** (no filter, one run, the satchel session's Unity
+  running beside it): 207 tests, 177 passed, 1 failed, 29 run only when asked.
+  The failure, `PhysicalBodyTests.TheBodyAdaptsToItsStrengthAndToWhereItStrikes`
+  (where a weak miner's upper hand takes the pickaxe: 0.59992 where more than
+  0.6 was asked), passed run alone twice (60%); it reads nothing of what hangs.
+- **The falls are not repeatable from run to run** (the courses part at the
+  push, 0.64 s): before-and-after pictures are set side by side at like
+  moments, not identical ones.
+- **Found, not from this change:** Small's lantern flicks straight out from the
+  hip for single frames when bowing fast (the work: 1.96, 3.48, 9.36-9.48 s),
+  before as after.
+- **Where it meets the satchel's branch** (`claude/satchel-lies`, 2b6b198, not
+  merged into this): the same functions (`Hang`, `Held`, `OutOfBody`, `Cloth`)
+  and two fields of the same name with different meanings (`hangTwist`,
+  `hangPlace`); the ground stop acts on the satchel too, after that branch's
+  stops, and both turn the bag after it is hung. To be read as meaning, not
+  only text, when they are merged.
+- **Not done:** a build; the game as played (`-ownAsPlayed 1`) beyond standing;
+  Long and Round on the work branch's getting up; how it looks, by Luis.

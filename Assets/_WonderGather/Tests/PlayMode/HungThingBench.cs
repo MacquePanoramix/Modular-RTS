@@ -40,6 +40,9 @@ namespace WonderGather.Tests
             // (-bagAim hips: aimed at the hips, not half way to the thing, so that two runs are framed alike.)
             Vector3 target = Vector3.Lerp(pelvis.position, miner.HangingWeight(k0), CaptureTools.Argument("-bagAim") == "hips" ? 0 : .5f);
             Vector3 dir = Vector3.ProjectOnPlane(bodyRight * s, Vector3.up);
+            // (-bagSide root: from the miner's root's own side, which does not turn with a fallen body: the views stay
+            // put as the body falls and rolls, where the hips' own right swings round, and stands near upright lying.)
+            if (CaptureTools.Argument("-bagSide") == "root") dir = miner.transform.right * s;
             dir = (dir.sqrMagnitude > .04f ? dir.normalized : miner.transform.right * s) + Vector3.up * .35f;
             dir = Quaternion.AngleAxis(around * -s, Vector3.up) * dir.normalized;
             camera.transform.SetPositionAndRotation(target + dir * view, Quaternion.LookRotation(-dir));

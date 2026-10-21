@@ -1,6 +1,6 @@
 # Wonder Gather — Current State
 
-**Updated:** October 15, 2026.
+**Updated:** October 21, 2026.
 
 - **The satchel through the coat (the judges of the getting up, finding 4),
   partly mended on its own branch `claude/satchel-stop`, not merged, not in a
@@ -16,6 +16,19 @@
   forward; a fall onto the bag; Small's lantern, Long's mug and Round's
   hammer, which read inside the coat when bowed, as before. For Luis to look
   at.
+- **The lantern, the mug, the hammer and the ground (October 15 to 21), on
+  their own branch `claude/hung-things-stop` (from `claude/satchel-stop`), not
+  merged, not in a build**
+  ([what was found, built and tested](Validation.md#the-other-hung-things-bowed-lying-and-getting-up--october-15-night);
+  [pictures](Images/HungThings_2026-10-15/)). Found by pictures from four
+  sides: all four hung things went into the ground (the lantern to 176 mm),
+  the lantern and the mug hid inside the coat when lain on, Round's hammer went
+  through its thigh on hands and knees; the lantern bowed was a misreading of
+  the measure, not a fault. Mended: what hangs lies on the ground (at most
+  2 mm under it in the test), out along it when lain on, and the thigh is kept
+  off a thing's whole line; standing and walking unchanged (0.00 mm). Touches
+  the same code as the satchel's second branch (`claude/satchel-lies`): to be
+  merged with care. For Luis to look at.
 - **A build for Luis to play, October 14 (late): `Builds/WindowsOrdinaryPlace_Oct14`**
   (beside the three of October 13). In it: arms as strong as the body needs
   (Luis's decision), tiredness taking precision, breaths between blows. The
