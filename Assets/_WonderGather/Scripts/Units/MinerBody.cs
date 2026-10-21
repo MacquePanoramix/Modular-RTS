@@ -152,7 +152,8 @@ namespace WonderGather
         // far inside its thigh's outer side it hangs as modelled. The front of each thigh, in its bone's frame.
         private Vector3[] flapHangs = new Vector3[0], flapDown = new Vector3[0];
         private float[] flapInside = new float[0];
-        // How much of each flap lies along the ground (0: its hem is clear of it; 1: all of it, from the hip).
+        // How much of each flap lies along the ground: how far its hem would go under it, hanging as the flap does, in flap
+        // lengths, eased (0: the hem clear of it).
         private float[] flapLies = new float[0];
         private readonly Vector3[] thighFront = new Vector3[2];
         private float ankleUp, flapLong;
@@ -197,6 +198,9 @@ namespace WonderGather
         // reach it (a place on it, and its way up).
         private float[] hangFar = new float[0], hangLineRound = new float[0];
         private bool[] hangGrounded = new bool[0];
+        // Whether the ground stopped the thing this frame: lying on it, it is held there by friction, and keeps no swing of
+        // its own (only what its hook carries); lifted off it, it starts from rest.
+        private bool[] hangTouched = new bool[0];
         private Vector3[] hangGroundAt = new Vector3[0], hangGroundUp = new Vector3[0];
         // On the ground: how far each thing is turned about its own line (a mug tipped onto its side about its handle),
         // whether the place it hangs from has given this frame (a bail turned, a strap slack), and that place as
@@ -209,7 +213,7 @@ namespace WonderGather
         // Lain on: the cloth a thing rests on no longer stops it, nor carries its hook, once that much of the flap lies
         // on the ground (between ClothLiesFrom and ClothLiesBy); and the way out of the hips is turned level along the
         // ground as it points down into it (between LainFrom and LainBy, the share of it that points down).
-        private const float ClothLiesFrom = .1f, ClothLiesBy = .5f, LainFrom = .5f, LainBy = .8f;
+        private const float ClothLiesFrom = .1f, ClothLiesBy = .5f, LainFrom = .5f, LainBy = .8f, FlapSettles = .1f;
         // Where its hook is (the place it hangs from when nothing has taken it) and how its bar lies there; where the
         // hook was modelled, in the pelvis' space; and how its bar lies now.
         private Vector3[] hangHook = new Vector3[0], hangHookBar = new Vector3[0], hangHome = new Vector3[0], hangBar = new Vector3[0];
@@ -461,6 +465,7 @@ namespace WonderGather
             hangGrounded = new bool[count];
             hangGroundAt = new Vector3[count];
             hangGroundUp = new Vector3[count];
+            hangTouched = new bool[count];
             hangTwist = new float[count];
             hangGiven = new bool[count];
             hangPlace = new Vector3[count];
@@ -719,7 +724,9 @@ namespace WonderGather
                 // Stopped by the ground: its hem lies on it, out the way it hangs (or the way it is worn).
                 flap.bone.localRotation = flapRest[k];
                 float room = (flap.bone.position.y - ground) / Mathf.Max(.01f, flapLong);
-                flapLies[k] = -hangs.y > room && room < 1 ? Mathf.Clamp01(1 - room) : 0;
+                // (How far its hem would go under the ground, hanging as it does: from nothing as the hem first touches, eased.
+                // Taken at once, it went from nothing to half the flap in a frame, and what rests on the flap jumped.)
+                flapLies[k] += (Mathf.Clamp01(-hangs.y - room) - flapLies[k]) * (1 - Mathf.Exp(-dt / FlapSettles));
                 if (-hangs.y > room && room < 1)
                 {
                     Vector3 level = Vector3.ProjectOnPlane(hangs, Vector3.up);
@@ -783,6 +790,7 @@ namespace WonderGather
             }
             // On its hook, the ground under it, if it can reach it.
             hangGrounded[k] = false;
+            hangTouched[k] = false;
             if (stopSide == 0 && !HungAsBefore && !HungAsOn15 && thing.skin != null && thing.skin.Length > 0)
             {
                 float reach = 0;
@@ -812,6 +820,9 @@ namespace WonderGather
                 swing = (offset - hangOffset[k]) / dt;
                 // What the body stops rests against it: the push is not kept as swing, or it would bounce off the coat.
                 if (against != Vector3.zero) swing -= against * Vector3.Dot(swing, against);
+                // (Turned out of the ground, the turn was along the ground as much as up from it; kept as swing, it flung
+                // the thing round as the hips rose: Round's hammer at 2 to 3 m/s. The ground holds what lies on it.)
+                if (hangTouched[k]) swing = Vector3.zero;
                 hangSpeed[k] = carried + swing;
                 hangOffset[k] = offset;
             }
@@ -1028,6 +1039,7 @@ namespace WonderGather
             }
             if (!moved) return tip;
             against = up;
+            hangTouched[k] = true;
             Vector3 lies = pivot + way * Mathf.Max(1e-4f, thing.length);
             HungMovedMost = Mathf.Max(HungMovedMost, Vector3.Distance(lies, tip));
             return lies;

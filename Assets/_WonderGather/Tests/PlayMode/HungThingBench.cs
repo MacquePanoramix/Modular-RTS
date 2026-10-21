@@ -135,7 +135,9 @@ namespace WonderGather.Tests
                     Debug.Log(string.Format(Plain, "BAG {0} {1} {2} {3} {4:0.00}s tilt {5:0} flex {6:0} weight(r,u,f) {7:0.000} {8:0.000} {9:0.000} plane {10:0.0} mm skin {11:0.0} mm ({12}/{13} pts) hips {15:0.0}/{16} skirt {17:0.0}/{18} leg {19:0.0}/{20} ground {14:0.0} mm",
                         name, way, now, thing.bone.name, clock(), tilt, flex, inP.x, inP.y, inP.z, miner.HangingIntoBody(k) * 1000, deep * 1000, under, d.Points, below * 1000,
                         d.DeepIn[0] * 1000, d.PointsIn[0], d.DeepIn[1] * 1000, d.PointsIn[1], d.DeepIn[2] * 1000, d.PointsIn[2]) + where + string.Format(Plain, " above {0:0.0} legat {1:0.0} cloth {2:0.0} hook {3:0.0}", d.DeepAbove * 1000, LegAt(miner, k) * 1000, miner.ClothTurned(k),
-                        ground != null ? (ground(thing.bone.position.x, thing.bone.position.z) - thing.bone.position.y) * 1000 : float.NaN));
+                        ground != null ? (ground(thing.bone.position.x, thing.bone.position.z) - thing.bone.position.y) * 1000 : float.NaN)
+                        + string.Format(Plain, " at {0:0.0000} {1:0.0000} {2:0.0000} hookat {3:0.0000} {4:0.0000} {5:0.0000}", miner.HangingWeight(k).x, miner.HangingWeight(k).y, miner.HangingWeight(k).z,
+                            thing.bone.position.x, thing.bone.position.y, thing.bone.position.z));
                 }
                 then?.Invoke(frame);
             };
