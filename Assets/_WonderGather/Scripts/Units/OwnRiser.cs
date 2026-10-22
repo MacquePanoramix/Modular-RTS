@@ -753,7 +753,12 @@ namespace WonderGather
             if (through)
             {
                 if (at + 1 < way.stages.Length) Begin(at + 1);
-                else if (way.gives) return Does.Ready;
+                else if (way.gives)
+                {
+                    int n = Supporting(false), m = Outline(sup, n);
+                    HandedOver = Heading(m, "handed over");
+                    return Does.Ready;
+                }
                 else if (!Choose()) return Does.GaveUp;
             }
             else if (got > stage.within) return Does.GaveUp;
@@ -971,6 +976,23 @@ namespace WonderGather
             return best < float.PositiveInfinity;
         }
 
+        // (What it was like when both hands let go of the ground, and when it was handed to its standing balance: told,
+        // for the bench. October 22.)
+        public string Released { get; private set; } = "";
+        public string HandedOver { get; private set; } = "";
+        // (Where its weight is heading for: its capture point, its weight's place and its speed times the root of its
+        // height over gravity, flat.)
+        private string Heading(int m, string what)
+        {
+            Vector3 w = Weight(), v = WeightGoes();
+            float high = Mathf.Max(.05f, w.y - GroundAt(w));
+            Vector3 heads = Flat(w) + Flat(v) * Mathf.Sqrt(high / Physics.gravity.magnitude);
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                "{0} at {1:0.00} s of {2}: weight {3:0} mm within, heading {4:0} mm within; moving {5:0.00} m/s ({6:0.00} up); hands bore {7:0.00}, boots {8:0.00}",
+                what, got, stage != null ? stage.name : "", Within(m, Flat(w), out _) * 1000, Within(m, heads, out _) * 1000, Flat(v).magnitude, v.y,
+                leanFelt[Forearm] + leanFelt[Forearm + 1], bore);
+        }
+
         // Before it lifts a limb, its weight goes over the others: true once it is (or it has tried long enough).
         private bool ShiftedOff(int leg, int hand, float step)
         {
@@ -990,6 +1012,7 @@ namespace WonderGather
             bool over = depth >= Mathf.Min(Mathf.Max(BalanceMargin, .75f * BalanceShiftsDeep), .75f * shiftDeepNow) && (limb < BalanceLifts || shiftT >= BalanceUnloads) && shiftT >= .5f * BalanceUnloads;
             if (!over && shiftT < BalanceShiftsWithin) return false;
             if (over) Shifts++; else ShiftsFailed++;
+            if (hand == 2) Released = Heading(m, over ? "hands let go, its weight over the rest" : "hands let go all the same") + string.Format(System.Globalization.CultureInfo.InvariantCulture, " (they bore {0:0.00} as it began)", limbAtShift);
             shiftT = 0;
             return true;
         }

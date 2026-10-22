@@ -248,6 +248,8 @@ namespace WonderGather
         private readonly Quaternion[] riseFrom = new Quaternion[Count];
         public bool GettingUp => Stands && riser != null;
         public OwnRiser Riser => riser;
+        // (What it was like when its getting up handed it to its standing balance, as the riser told it: for the bench.)
+        public string HandedOver { get; private set; } = "";
         public int GaveUpGettingUp { get; private set; }
         // (How often it has come onto its feet from lying, by its own body.)
         public int OnItsFeetFromLying { get; private set; }
@@ -440,6 +442,7 @@ namespace WonderGather
             Told?.Invoke($"{name} at {Time.time:F2}: on its feet after {riser.Lasted:F2} s of getting up; the keeper takes it");
             OnItsFeetFromLying++;
             for (int j = 1; j < Count; j++) riseFrom[j] = riser.Aim(j);
+            HandedOver = riser.HandedOver;
             riser = null;
             keeper.Soften();
             Quaternion hipsFace = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);
