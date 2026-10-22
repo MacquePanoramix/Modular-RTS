@@ -2,6 +2,19 @@
 
 **Updated:** October 22, 2026.
 
+- **Where it was left for the night (October 22, late; Luis turned the laptop off).**
+  The getting up (work branch `claude/wip-round`, behind the switch, off): the hands
+  let go only when the weight is over the boots, and the standing balance raises it
+  legs first (79% of those handed over stand); about a third of tries reach the
+  hand-over. **The third path, a learned correction (Luis approved it and the
+  downloads), is begun, not trained:** ML-Agents 4.0.3 on the work branch, the
+  trainer in `D:/Dev/mlagents-env` (outside the project), the agent and its
+  teaching written (`Assets/_WonderGather/Learning`), a training build made
+  (`Builds/RiseTrain` on the work branch's copy). Proved: it connects and learns in
+  the editor, but alone it is too slow (each decision waits ~36 ms on the trainer).
+  **Next:** see the build train with many copies at once
+  (`Docs/Technical/RiseWays/README.md` on the work branch), then a night's training,
+  then the bench and the game with what it learnt.
 - **Luis, October 22: never the backup animation; extra tries rather than help
   from outside the body** ([the message](Correspondence/2026-10-22_NEVER_THE_BACKUP_ANIMATION.md)).
   On the work branch, behind the panel's switch "Gets up by its own body"
