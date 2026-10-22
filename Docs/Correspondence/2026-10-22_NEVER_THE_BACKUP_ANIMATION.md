@@ -67,3 +67,14 @@ His answer, with a screenshot of the side sessions:
 | Changes to the body | "Yes they are, although they should all be checked by a team of aesthetic agents following the aesthetic guide of the game" | **Decided by Luis:** a smaller head share, more ankle range, a longer heel or broader sole are open; each is checked by a team of aesthetic judges against the game's established aesthetic guide before it stays |
 | One hand first, a hand on the knee | "I guess so? I don't see why not" | Allowed, as a way to try |
 | The side sessions' work | "if you think it's reasonable, can you merge the work" | Merged by hand where the two branches touch the same code (below, and in the validation history) |
+
+## Luis, after the merge and the first test (October 22, night) (verbatim)
+
+The report: the side work merged and pushed (the whole suite passes); the first
+test of the research's first path (every try that let its hands go with its
+weight outside its boots failed; all that stood let go with it over them); next,
+the hands kept down until the weight is over the boots, helped by the toddler's
+ways (hips back, a hand walked nearer, one hand first, the other on the knee),
+then what tips over a third of the hand-overs.
+
+> Okay sounds perfect to me. You can proceed please.
