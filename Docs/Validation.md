@@ -4021,3 +4021,14 @@ judges' verdict is not his.**
 - **Where it stands now:** about a third of tries come to the hand-over, and about three quarters of those stand.
   Most of the rest give up rolling up, their weight far ahead of their boots after the pike. Not run: the game,
   the suite, Long and Round; not looked at by judges or Luis.
+- **Later the same night, each 72 tries as above, the gate and legs first in place:**
+  - the last three stages searched again (25 rounds, each round's starts laid by new chance): the search began at 4
+    of 18 standing and ended at 4, wandering 4 to 8; nothing kept;
+  - the hips lowered towards a squat before the hands let go (to 0.45 or 0.55 of their height): 16 and 13 stood;
+    the hand-over reached in 21 and 25 (as before); two bodies flew apart at 0.55;
+  - **the head lighter (bench only, to learn; Small unchanged): 7 kg, 17 stood; 5 kg, 18** (its own 10 kg: 13 to
+    26 in the runs above). The head's weight is not what holds it back; no body change is brought to the judges for it;
+  - **the bench's speed:** one Small, nothing drawn, about 540 s of getting up and standing simulated in 14 s
+    without the game's frames between steps (about 40 times real time) and in 23 s with them (about 22 times).
+- **Bodies flying apart** (a part's speed beyond any number): 1 in about 70 to 150 tries in several of tonight's
+  runs. Not yet looked into; in the game it shows as an error (October 22, a lantern's place NaN).
