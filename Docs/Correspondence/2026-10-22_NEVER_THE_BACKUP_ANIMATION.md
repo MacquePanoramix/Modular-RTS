@@ -78,3 +78,19 @@ ways (hips back, a hand walked nearer, one hand first, the other on the knee),
 then what tips over a third of the hand-overs.
 
 > Okay sounds perfect to me. You can proceed please.
+
+## Luis, on the third path (October 22, late night) (verbatim)
+
+The report: hands kept down until the weight is over the boots, and raised legs
+first, three quarters of those handed over stand; but only a third come to the
+hand-over, and searched poses have reached their ceiling there. The question: a
+learned controller for that one moment (the third path of the research; Unity's
+ML-Agents and a Python trainer to be downloaded, a major new tool), or a
+hand-built one.
+
+> I approve we try the third path and you do the downloads then.
+
+| | Luis | What follows |
+|---|---|---|
+| The approach | "we try the third path" | **Decided by Luis:** a learned controller for the moment from hands and feet to the squat, trained offline; in the game it only sets the body's joint targets |
+| The downloads | "you do the downloads" | **Approved by Luis:** Unity's ML-Agents package (work branch only) and its Python trainer with what it needs |
