@@ -3249,6 +3249,24 @@ branch's af0346c). What was run is on the work branch (`claude/wip-round`,
   own; anything off the path; the getting up in the game (it is not in
   it). **Not looked at by Luis or by judges.**
 
+## S3b step 2 — breath after effort; the bench's frames; Small stands up, the toddler way (October 15, evening; in progress)
+
+- **Work branch 7dfc570 to dd30219; bench only.** The bench's frames now keep the
+  physics' time (`Time.captureDeltaTime`): one foot forward and up at the end, 36
+  chance starts, 30 with frames (seed 21), 30 (seed 9), 30 without (31, 34, 28 before).
+  Breath on the bench: a breath every 1.8 to 2 s while it gets up, up to 2 degrees,
+  easing to 2.4 s and 1.3 degrees by 12 s.
+- **Up over the front foot (the half-kneel), Small:** 0 of 3 to 0 of 36 in every form
+  tried (kneeling up, rising forward, the foot put 0.4, 0.55, 0.8, 0.95 of a leg
+  ahead): its weight stayed 110 to 340 mm from over the foot and knee.
+- **The toddler way, Small**, searched 40 rounds (18 starts): at the search's own
+  starts 4 of 18 stand; **at 36 chance starts not searched at, with frames: 7 stand
+  (seed 21), 4 (seed 9)**; the rest mostly end down after letting go of their hands in
+  the squat (28 and 31 "not on its feet when the time was over"). Variants (handed
+  over straight from the squat; boots let down flat at 60 or 120 degrees a second;
+  hips held at 0.38 or 0.45): 2, 1, 0, 0 of 36.
+- **Not run:** the test suite; Long and Round; the game; a build.
+
 ## S3b step 2 — the weight off a knee; the leg's reach; shins down (October 15, after midnight; in progress)
 
 - **Work branch f5d4bfb, e48afc2, da67eeb; bench only** (`OwnRiseBench`, Small, from
@@ -3905,3 +3923,31 @@ judges' verdict is not his.**
   - lying on it and lying face down, the bag goes into the ground, as before;
   - Long and Round have nothing on a strap; the work branch's getting up for
     them; a build; how it looks, by Luis.
+
+## S3b step 2 — the roll from the back; the boot that whipped round; in the game (October 22; in progress)
+
+- **Work branch (`claude/wip-round`); the bench (`OwnRiseBench`), and the game's measure
+  (`GettingUpByItsOwnTests`, run only when asked).** Small only. Each count is one run;
+  with the same code, a count of 36 differs by up to 7 from run to run.
+- **The roll** (`Docs/Technical/RiseWays/ways_roll_small.txt` on the work branch), at starts
+  not searched at, `-riseGoal turn`: onto its front and still at **29 of 36 laid on its back**
+  and **13 of the 17 side starts** not already on their front; about 2.6 s.
+- **Boots turning faster than 100 rad/s** (a boot thrown round by its ankle), 36 starts each:
+  before, 5 (front) and 10 (back), fastest 139 to 196; with an ankle asked no further than 110
+  degrees from how it stands, 2 to 4, fastest 105 to 118. No body went wild in any of these runs.
+  Tried and taken out, each one run of 36 from the front: a cap on the ankle's joint speed
+  (6 stood; whips 9, 5 before); joints counted from how it stands (12 starts: its boots
+  snapped at the start); slowing what the ankle is asked (0 stood).
+- **To standing**, 36 starts, `-riseFrames 1 -riseFor 30`: from its front 8 (before the day's
+  changes), 6, 3, 1, 7 (after, in turn); from its back 2, 1, 0, 1. Of 36 from the front with all
+  of the day's changes: 14 came onto their feet, 7 stood, 7 fell as they were raised; 22 never
+  came onto their feet (21 of them rolling up from hands and feet). The roll-up searched again (25 rounds): 5 and 1 of 36. Without
+  the bottom-up stance: 0 of 36 (10 on their feet, all fell).
+- **In the game** (the ordinary place, Small, the switch on), pushed straight ahead once: **11
+  tries by its own body in 300 s, none up** (lying on its front, side and back at the tries;
+  seven ended rolling up, two settling after the roll, two at the feet). An earlier run of the
+  same: 13 tries in 300 s, none up, then a body went wild (its lantern's place NaN). The tests'
+  other pushes were not reached (the second could not push it over while it lay).
+- **Judges, round 1 of the roll** (three, `Docs/Reviews/2026-10-22_Roll_Judges.md`): all "reads as
+  real, with a flaw".
+- **Not run:** the test suite (since October 14); Long and Round; a build. Not looked at by Luis.

@@ -528,3 +528,28 @@ the knee they were about to bring forward.
 before the knee lifts (G3), forward and to the side of the knee that stays;
 the knee about to lift may push to start that move rather than go slack at
 once; for a fresh miner it takes about half a second, longer tired.
+
+## 10. A small child from the floor to standing (added October 20)
+
+Asked when Small, on the toddler way, fell in the squat as it let go of its
+hands. No measured study of toddlers' floor-to-stand was found; these are
+clinical and coaching sources.
+
+- **The order children learn it in:** first up through a bear stance (hands
+  and feet, bottom up) or a squat, the hands pushing; later through a
+  half-kneel; hands needed at first, not later
+  ([Starfish Therapies](https://starfishtherapies.com/2020/07/floor-to-stand)).
+  Squat to standing is harder than standing to squat and comes later, about
+  14 months, and asks more strength; a toddler's large head makes balance
+  harder; they overshoot and undershoot as they learn
+  ([Kinedu](https://blog.kinedu.com/the-not-so-simple-action-of-standing-up-part-3)).
+- **Heels rising in a squat mean the weight is too far forward**, most often
+  because the hips do not fold enough, so the knees go forward and the body
+  leans over the feet; the arms brought forward are one counterweight
+  ([Yoga International](https://yogainternational.com/article/view/why-your-heels-might-not-reach-the-ground-in-malasana-squat);
+  [Powerlifting Technique](https://powerliftingtechnique.com/heel-rising-during-squats/)).
+
+**What it adds to ours:** for a body built like Small, the bear stance is the
+easier way up: hips high, hands pushing, the trunk rolling up over the feet as
+the hands come away, ending bowed over its feet, from where it rises as from a
+chair. In a squat its heels rising is the sign its weight is too far forward.

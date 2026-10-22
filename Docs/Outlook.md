@@ -58,6 +58,93 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 22, 2026 (evening) — a short one, before a choice of approach
+
+- Luis asked, before any approach is chosen, for research of every option that
+  keeps the body wholly responsible; it is done ([the report](Research/reports/Getting%20up%20by%20its%20own%20joints.md)).
+  Nothing is decided until he has read it. The side branches (satchel, hung things)
+  are finished and unmerged; merging them is his. The suite is still not run since
+  October 14. Nothing else has moved since the sixth, this morning.
+
+### October 22, 2026 — the sixth (after the context was compacted)
+
+- **Where we are.** S3b step 2, the getting up by its own body. Since the fifth:
+  the bear way (pike, then roll up over the feet) stands Small up at 12 and 8 of
+  36 chance starts with the real boot turn; no body flew apart in 216 tries; the
+  judges' round 3 (the last) is done. In the game behind a switch (off), Small
+  tries by its own body when it lies on its front, again if it goes down, four
+  times, then the old way. Pushed over in the game it **lands on its back or
+  side**, where it knows no way, so every push ended the old way.
+- **Luis, October 22:** never the backup animation; extra tries rather than any
+  help from outside the body, which is the absolute last resort. So the next
+  stretch is: **a way up from the back and the sides** (rolling onto its front
+  first), then **trying again without a cap**, with more effort through its own
+  joints from the third try; then the judges' holds and pace (13 s; G6 asks
+  three to six), lying not dead (G1), Long and Round.
+- **Waiting on Luis:** S3 (since October 8); the builds of October 13 and 14;
+  R1; merging the satchel branch (unchanged since October 15, two tasks unrun).
+- **Drifting:** the whole suite not run since October 14 (eight days); the
+  current state's header still says October 15; the getting up is Small's
+  alone, and the stage's three miners must all have it.
+- **Does the task serve the stage?** Yes: real weight and strength at work need
+  a body that gets itself up by its own limbs wherever it fell; the roll is the
+  piece that makes the game's falls reach the way Small already has.
+
+### October 20, 2026 — the fifth (after five days away)
+
+- **Where we are.** S3b step 2. Since the fourth: breath after effort (Luis's
+  "Sure") made one breath for one body; the bench's frames keep the physics'
+  time; for Small the half-kneel failed in every form, and the toddler way (both
+  feet forward, a squat, up) **stood Small up by its own body at 7 and 4 of 36
+  chance starts**. A search with the game's frames finished on October 15 (8 to
+  10 of its 18 starts stand); not yet counted at unseen starts. Reported to Luis
+  on October 15; his only word since: "Try again" (October 20, as the session
+  came back).
+- **Nothing moved elsewhere:** the satchel's branch is as it was on October 15
+  (its two further tasks not run); `main` and the game's branch unchanged but for
+  my docs.
+- **Waiting on Luis:** S3 (since October 8); the builds of October 13 and 14;
+  R1; whether Small keeps the toddler way (told October 15, his to overrule).
+- **Put off, not forgotten:** too slow (about 13 s to standing; G6 asks three to
+  six); lying not dead (G1); the judges' round 3 (the last for this movement);
+  Long and Round on the new getting up (the half-kneel meant for Long); straight
+  arms; the suite not run since October 14; merging the satchel branch.
+- **Does the task serve the stage?** Yes. The getting up now exists end to end
+  for Small, rarely; the next stretch is making it hold more often and quicker,
+  then the judges, then Long and Round, before anything goes into a build.
+- **What Luis would want next:** the whole get-up holding at most places, in
+  pictures, judged; then in a build behind a switch.
+
+### October 15, 2026 (evening) — the fourth (the third was the satchel session's, on its own branch)
+
+- **Where we are.** S3b step 2, the getting up. Done since the second: on the
+  bench, Small comes onto hands and knees as a child does (shins down, boots on
+  their tops) and brings one foot forward with its weight off that knee first:
+  31 and 34 of 36 chance starts with the game's frames. The judges (round 2 of
+  3): "reads as real, with a flaw". Reported to Luis; he answered (October 15,
+  evening): "Sure" (breath shows more after a fall and effort, then eases),
+  "you can proceed". **Next in hand:** rising over the front foot, which needs
+  designing anew (the poses of October 14 bow it onto its face).
+- **Two lines of work now.** The satchel is mended in part on its own branch
+  (`claude/satchel-stop`, pushed): the body stops what hangs however it is
+  turned. Its code touches `MinerBody.cs` and tests only; its docs touch the
+  same pages as mine (this log, the current state, validation), so bringing it
+  into the game's branch needs those merged by hand. Merging is Luis's call; it
+  offered two more tasks of its own (the satchel lying flat; the lantern, mug,
+  hammer and the ground).
+- **Waiting on Luis:** S3 (since October 8); the builds of October 13 and 14
+  (no word on the arms, tiredness and breaths yet); question R1.
+- **Put off, not forgotten:** a weight shift a person can see before a lift;
+  straight arms; lying not dead (G1); from the back and sides; Long and Round on
+  the new getting up; toes on the standing body; bodies flying apart on the
+  bench (none seen tonight, cause never found); the suite not run since October
+  14; the twelve known failures as played.
+- **Does the task serve the stage?** Yes, and it is moving: three faults found
+  and mended in a night, the first half robust. Watch the time it takes (G6):
+  6.8 s to one foot forward is too slow, and the rise is still to come.
+- **What Luis would want next:** the getting up whole, to standing, even
+  imperfect, in pictures; then in a build, behind a switch, when it is safe.
+
 ### October 21, 2026 — from a side session (hung things), closing it
 
 - **Where we are.** S3b step 2, the getting up, moved on the work branch

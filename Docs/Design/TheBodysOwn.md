@@ -1920,6 +1920,155 @@ Work branch f5d4bfb and after; bench only (Small).
 - Research for it: [how a body moves its weight off a limb](../Research/2026-10-14_HowPeopleGetUp.md#9-moving-the-weight-off-a-knee-added-october-15)
   (the limb about to lift pushes first; it takes about half a second fresh).
 
+#### Breath after effort, and the way up for Small (October 15, evening)
+
+Luis, October 15 ([the message](../Correspondence/2026-10-15_BREATH_AFTER_EFFORT_AND_THE_SATCHEL.md)):
+"Sure" (right after a fall and the work of getting up its breath shows more,
+then eases), "you can proceed".
+
+- **One breath for one body.** The getting up's trunk now breathes by the
+  miner's own breath (`MinerBreath`: the clock that already breathes faster and
+  deeper the more its muscles have spent, and after a fall), not a clock of its
+  own. And the work of getting up now counts: how hard its joints push for their
+  strength (`OwnBody.Exertion`, taken up over 1.5 s, let go over 20 s) makes it
+  breathe harder. On the bench: a breath every 1.8 to 2 s while it gets up, its
+  back straightening by up to 2 degrees, easing to 2.4 s and 1.3 degrees by 12 s
+  (its chest and shoulders drawn as before). Nothing changes in the game while
+  the getting up is off. For Luis to judge in motion.
+- **The bench's frames keep the physics' time now** (they kept the wall's
+  clock): with that, one foot forward and up at the end is 30 of 36 with frames
+  and without alike (the difference frames made since October 14 nearly gone).
+- **Up over the front foot does not suit Small.** Its weight sits near its
+  hands (a heavy head, short arms): rising over its front foot asked its weight
+  to go some 30 cm back, and every try failed there (kneeling up, its hands
+  stayed loaded; rising forward, it pivoted over its hands, head down; a foot
+  put further forward changed nothing). **So for Small: the toddler way** the
+  research of October 14 foresaw for Small and Round (G4): one foot forward (as
+  before), then the other (it works: its weight off that knee first), then back
+  over both feet into a squat, its hands let go, and up. Being searched; in its
+  first rounds Small **stood up** at 2 and 3 of 18 chance starts. The half-kneel
+  stays the way for Long. Told to Luis, his to overrule.
+- **Searched (40 rounds), Small stands up at 7 and 4 of 36 chance starts it
+  was not searched at** (with the game's frames, two sets of starts): from its
+  front, hands, knees under, onto hands and knees, one foot forward, the other,
+  back into a squat with its hands let go, a bow over its feet and up, handed to
+  its standing balance ([the whole](../Images/GettingUp_2026-10-15/Small_StandsUp_ToddlerWay_Whole.jpg),
+  [the squat to standing](../Images/GettingUp_2026-10-15/Small_StandsUp_ToddlerWay_SquatToStanding.jpg)).
+  On its feet at about 10.5 s, standing at about 13: too slow (G6 asks three to
+  six). Most of the rest fall in the squat as they let go of their hands: its
+  weight too far ahead of its soles (0.2 to 0.5 of its height, where standing
+  takes it at 0.16), its boots on their toes. Handing it to standing straight
+  from the squat, letting its boots down flat, holding its hips lower: none
+  better. Being searched again, with the game's frames in the search.
+- **October 20.** Searched again with the game's frames (40 rounds): 8 to 10 of
+  its own 18 starts stand, but 6 and 8 of 36 unseen (no better). Handed to its
+  standing balance a little sooner (its soles at least 0.75 flat, its weight
+  within 0.25 of them): **9 and 11 of 36** (`ways_toddler_small.txt`). Other
+  tries (boots let down flat in the last stage; looser hand-over still) no
+  better than chance: with 36 starts, differences of about 3 are chance.
+  Research ([section 10](../Research/2026-10-14_HowPeopleGetUp.md#10-a-small-child-from-the-floor-to-standing-added-october-20)):
+  small children rise first through a bear stance or a squat, hands pushing;
+  heels rising in a squat mean the weight is too far forward (Small's, exactly).
+  So the **bear way** (hips up, hands pushing, the trunk rolling up over the feet
+  as the hands come away) is being searched: by hand, 4 of 36. **Searched (30
+  rounds, with the game's frames): Small stands up at 17 and 17 of 36 chance
+  starts** ([the whole](../Images/GettingUp_2026-10-20/Small_StandsUp_BearWay_Whole.jpg),
+  [the roll-up](../Images/GettingUp_2026-10-20/Small_StandsUp_BearWay_RollUpToStanding.jpg));
+  on its feet at about 10.4 s, standing at about 13. The judges, round 3 (the
+  last for this movement; [their findings](../Reviews/2026-10-20_GettingUp_Judges.md)):
+  all three "reads as real, with a flaw": a real small child's get-up, every
+  stage held up; the flaws are holds of 0.7 to 1 s where nothing changes, and
+  the pace (13 s, every stage about as long).
+- **Bodies that fly apart ("went wild")**, 0 to 2 in 36 tries: the load felt
+  through a knee climbs to two, then three times its weight, then its boots' to
+  twelve, before it fails. Not the balance's pushes (bounded by its weight and
+  each joint's strength). **Caught step by step** (the bench keeps each try's
+  last steps and tells them if it goes wild): a boot began to spin, 36 then 120
+  radians a second, then its shin, then all of it. Holding the ankles and toes
+  less stiffly slowed the spin but cost the standing and did not stop it. **The
+  cause:** in every step the boot carried forward spun at about 130 radians a
+  second: lying on its top, toes back, and to be set down on its sole, toes
+  forward, it was half a turn from where it was going, and which way round was
+  left to chance. It now turns as a foot does, toes down, then forward (its
+  fastest spin 24 to 47). The bear way was searched with the whipping boot (0
+  of 8 stand with it mended) and is being searched again. **Searched again (30
+  rounds) with the boot turning as a foot does: 6 and 10 of 36 stand** (17 and
+  17 with the whipping boot, which helped it as a flick would, and was not its
+  own); no body went wild in 72. A wider search (40 rounds): **12 and 8 of 36**;
+  no body wild in 216 tries since the boot was mended.
+- **In the game, behind a switch (off; October 21, work branch 42daabb).** The
+  panel's "Gets up by its own body": lying where its fall left it, a miner that
+  stands by its own joints and has a way for lying so becomes its own as it lies
+  and gets up by its own limbs; gone down on the way, it lies a while and tries
+  again (G12), up to four times in a fall, then the old way. Each miner's ways
+  in `Resources/RiseWays/<its name>.txt` (Small's bear way; Long and Round none
+  yet, so the old way). **Measured in the ordinary place:** pushed over, Small
+  lands on its back (front -1.00, every push backwards) or its side far more
+  often than on its front, and its only way is from its front: up the old way
+  at 11 pushes of 11. **Next: a way from the back and the sides** (rolling onto
+  its front first, a knee coming up and across and an arm reaching over, as the
+  research says most people do).
+- Also mended: over a thin outline (a boot and a knee) its weight goes as deep
+  as the outline allows (it was sent to the middle of the two, behind it).
+
+### Never the backup animation (Luis, October 22; work branch, in progress)
+
+Luis: "make it so we never have to use the backup animation", and asked to
+choose, **extra tries rather than help from outside the body**, which is the
+absolute last resort ([the message](../Correspondence/2026-10-22_NEVER_THE_BACKUP_ANIMATION.md)).
+
+- **A roll from the back and the sides** (`way roll -1 0.4 turns`): its
+  uppermost knee comes up with its foot planted, then goes over and across as
+  that foot pushes; its uppermost arm reaches across; its trunk twists that side
+  forward; then it lies on its front, still, and goes on by the bear way.
+  Searched on the bench (both sides and the twist free; the end asking that it
+  lies on its front *and still*: asked only that its chest faced the ground, a
+  search found a roll whose chest passed that way for a moment and fell back).
+  On starts it was not searched at: **onto its front and still from 29 of 36 on
+  its back, and from 13 of the 17 side starts not already on their front**,
+  in about 2.6 s. In the game, pushed over, it rolls from its back too.
+  **The judges, round 1** ([their findings](../Reviews/2026-10-22_Roll_Judges.md)):
+  all three "reads as real, with a flaw": the gather and the leg swung over are
+  real; the arm that reaches over is flung up and waved and never braces the
+  roll; it ends with its boots held up in the air and its hands under its face;
+  on a timetable; its trunk drops flat in about 0.2 s.
+- **The boot that whipped round, found to its cause.** Boots still turned faster
+  than 100 radians a second in 5 to 10 tries of 36 (up to 200), after the mend
+  of October 20. Traced step by step: the getting up asked an ankle to hold its
+  boot about 175 degrees from how a foot sits on its shin; past half a turn the
+  turn asked was written the other way round from one step to the next (169
+  degrees, then -169), and the joint threw its boot round the long way. **An
+  ankle is now asked no further than 110 degrees from how it stands** (a boot
+  laid on its top, kneeling, is ninety): such whips in 2 to 4 tries of 36, the
+  fastest about 105 to 118. Tried and taken out: a cap on the ankle's speed (the
+  joint's own drive went past it); counting the joints from how it stands (the
+  boot was already made so; the physics did not keep the body where it lay);
+  slowing what the ankle is asked (a boot kept flat on the ground could not
+  follow its shin: 0 of 36 stood).
+- **It knows when it has gone down.** Fallen as it rolled up onto its feet, it
+  lay in its pose until the pose's time was out, twenty seconds: Luis's "dead
+  until a timer". Now, up when a pose began, its hips as low as lying for 0.8 s,
+  it gives that try up at once. (Its hips lower than when the pose began was
+  tried first, and stopped good tries: rolling up, a body brings its hips down
+  into a squat on the way.) And its last pose hands it to its standing balance
+  as soon as all it asks is so: rolling up, it was ready 0.28 s in, waited out
+  the pose's 1.8 s, and sat back onto its heels in the wait.
+- **Extra tries in the game:** no more handing it to the old way after four;
+  it lies a little longer after each try (0.7 s more, up to five) and tries
+  again from however it lies; after twelve, the old way, and it says so.
+- **Where it fails, plainly.** At 36 chance starts, to standing: 1 to 8 from its
+  front and 0 to 2 from its back (the same code differs that much from run to
+  run). **Nearly every try fails in one place: rolling up from hands and feet
+  onto its feet**, and half of those that come onto their feet fall as their
+  standing balance raises them. Searching that stage again did not change it
+  (5 and 1 of 36); without the bottom-up stance, none stood. **In the game,
+  pushed over: 11 tries in 300 s, none up** (from its back, its side and its
+  front; seven ended rolling up); tries 20 to 40 s apart. The switch stays off.
+- **Next:** the old getting up ends with its own legs raising it from a crouch,
+  and that did not fail (11 pushes of 11, October 21). What fails is between hands and feet and that
+  crouch: the hand-over is to be brought to the crouch the standing body already
+  rises from, and measured there. Then the judges' points on the roll.
+
 ### Questions for Luis
 
 | | Question | What I would do |

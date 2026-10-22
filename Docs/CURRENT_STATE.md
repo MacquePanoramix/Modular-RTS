@@ -1,6 +1,19 @@
 # Wonder Gather — Current State
 
-**Updated:** October 21, 2026.
+**Updated:** October 22, 2026.
+
+- **Luis, October 22: never the backup animation; extra tries rather than help
+  from outside the body** ([the message](Correspondence/2026-10-22_NEVER_THE_BACKUP_ANIMATION.md)).
+  On the work branch, behind the panel's switch "Gets up by its own body"
+  (**off**; not in a build): Small now rolls from its back or side onto its
+  front (on the bench 29 of 36 from its back; the judges, round 1: "reads as
+  real, with a flaw"), its boots no longer whip round in most tries, it gives a
+  try up as soon as it has gone down, and it tries again without the cap of
+  four. **But it does not get up yet:** rolling up from hands and feet onto its
+  feet fails nearly every time (1 to 8 of 36 stand from its front, 0 to 2 from
+  its back), and in the game 11 tries in 300 s brought it up none. Next: bring
+  that hand-over to the crouch the standing body already rises from.
+  [The design page](Design/TheBodysOwn.md#never-the-backup-animation-luis-october-22-work-branch-in-progress).
 
 - **The satchel through the coat (the judges of the getting up, finding 4),
   partly mended on its own branch `claude/satchel-stop`, not merged, not in a
@@ -94,7 +107,20 @@
   after the judges (round 2: "reads as real, with a flaw", three of three):
   **one foot forward and still up at the end, 31 and 34 of 36** chance
   starts with the game's frames, its weight off the knee first in 35.
-  Onto its feet: being searched.
+  **Onto its feet (October 15, evening): Small stands up by its own body
+  at 7 and 4 of 36 chance starts**, the toddler way (both feet forward,
+  back into a squat, up); about 13 s, too slow; most of the rest fall as
+  they let go of their hands in the squat. **October 20: the bear way (hips
+  up, rolling up over the feet) stands Small up at 17 and 17 of 36**; the
+  judges (round 3, the last): "reads as real, with a flaw" (holds where
+  nothing changes; 13 s, too slow). Bodies that sometimes fly apart: a boot
+  that whipped half round in every step (130 radians a second) was found and
+  mended; with the boot turning as a foot does, 6 and 10 of 36 stand (the
+  whip had helped it); searched again: 12 and 8 of 36. In the game behind a
+  switch (off): "Gets up by its own body" (tries again if it goes down); but
+  pushed over in the game Small lands on its back or side, and its only way
+  is from its front, so it rarely starts. Next: a way from the back and
+  sides (rolling onto its front).
   See [The body's own](Design/TheBodysOwn.md), "Its weight off a knee,
   and a leg that kicked". Not in a build.
 - **The getting up is being built (October 14; on the work branch
