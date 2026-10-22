@@ -759,7 +759,15 @@ namespace WonderGather
         // as before. (A switch on the panel; October 21.)
         public static bool GetsUpByItsOwn = false;
         // (So many tries in one fall, then the old way: it rests and tries again, but does not lie there for ever.)
-        public const int TriesByItsOwn = 4;
+        // (Luis, October 22: "never the backup animation", and extra tries rather than help from outside its body. So it
+        // tries again as often as it goes down, resting RestsAfterATry seconds longer after each try, up to five; only
+        // after TriesByItsOwn tries, which no measure has reached, the old way, and it says so.)
+        public const int TriesByItsOwn = 12;
+        public const float RestsAfterATry = .7f;
+        // (How it lay, its chest to the ground, when its last try began.)
+        public float LayAtTry { get; private set; }
+        // (Its tries since it was last on its feet by its own body.)
+        private int TriedSinceUp() => TryGetComponent<OwnBody>(out var itsOwn) && itsOwn.OnItsFeetFromLying != onItsFeetWas ? 0 : triedByItsOwn;
         public int RoseByItsOwn { get; private set; }
         private int triedByItsOwn, onItsFeetWas;
         // (Why it last got up, or did not get up, by its own body: for whoever measures it.)
@@ -775,6 +783,7 @@ namespace WonderGather
             if (triedByItsOwn >= TriesByItsOwn) { ByItsOwnSaid = "tried " + triedByItsOwn + " times"; triedByItsOwn = 0; return false; }
             if (!itsOwn.KnowsAWayUpFrom(front)) { ByItsOwnSaid = "no way up for lying so (front " + front.ToString("0.00") + ")"; return false; }
             triedByItsOwn++;
+            LayAtTry = front;
             // (Made where its body is drawn now, which is where its let-go body lies.)
             if (!itsOwn.BeginDown()) { ByItsOwnSaid = "its own body could not be made"; return false; }
             ByItsOwnSaid = "try " + triedByItsOwn + " by its own body";
@@ -895,7 +904,7 @@ namespace WonderGather
             if (Now != State.Falling) eases = false;
             else if (!eases) eases = still > 0 && (parts[Trunk].rotation * Vector3.up).y < DownWhen;
             else for (int i = Hips; i <= Head && eases; i++) eases = parts[i].linearVelocity.sqrMagnitude <= Thrown * Thrown;
-            if (Now == State.Falling && still >= LiesAfter) { Now = State.Lying; lain = 0; liesFor = HowLongItLies(); }
+            if (Now == State.Falling && still >= LiesAfter) { Now = State.Lying; lain = 0; liesFor = Mathf.Min(LiesAtMost, HowLongItLies() + RestsAfterATry * Mathf.Min(TriedSinceUp(), 5)); }
             else if (Now == State.Lying || Now == State.Gathering)
             {
                 bool thrown = false;

@@ -125,6 +125,12 @@ namespace WonderGather
         // sometimes began to spin, 36 then 120 radians a second, and its shin and then its whole body flew apart:
         // October 20.)
         public static float RuleTimesFeet = 10;
+        // (An ankle is asked to be no further than AnkleAtMost degrees from how it stands, and what it is asked moves no
+        // faster than AnkleTurnsAtMost radians a second: asked for nearly half a turn, the turn was written the other way
+        // round from one step to the next, and the boot whipped round at up to 200 radians a second. October 22.
+        // AnkleAtMost 0: as before.)
+        public static float AnkleAtMost = 110, AnkleTurnsAtMost = 0;
+        private readonly Quaternion[] ankleAsked = { Quaternion.identity, Quaternion.identity };
         // (Where a leg reached for the ground bends its knee: 0, the way the body lies along the ground; 1, the way the
         // front of its hips faces; between, so much of the way from one to the other.)
         public static float KneeFaces = .759f;
@@ -379,6 +385,7 @@ namespace WonderGather
             float size = own.x * own.x + own.y * own.y + own.z * own.z + own.w * own.w;
             if (float.IsNaN(size) || size < .5f || size > 1.5f) return;
             own = Quaternion.Normalize(own);
+            if (j >= Foot && AnkleAtMost > 0) own = AnkleCan(j - Foot, own);
             own.ToAngleAxis(out float angle, out Vector3 axis);
             if (angle > 180) angle -= 360;
             if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.right; angle = 0; }
@@ -387,6 +394,22 @@ namespace WonderGather
             if (hinge[j]) return;
             parts[j].SetDriveTarget(ArticulationDriveAxis.Y, by.y);
             parts[j].SetDriveTarget(ArticulationDriveAxis.Z, by.z);
+        }
+
+        // What an ankle can be asked: no further from how it stands than AnkleAtMost, and moving towards it no faster
+        // than AnkleTurnsAtMost (a turn from how it was made, in its own frame).
+        private Quaternion AnkleCan(int leg, Quaternion own)
+        {
+            Quaternion stood = toStood[Foot + leg], fromStood = Quaternion.Inverse(stood) * own;
+            fromStood.ToAngleAxis(out float far, out Vector3 about);
+            if (far > 180) far -= 360;
+            if (Mathf.Abs(far) > AnkleAtMost && !float.IsNaN(about.x)) fromStood = Quaternion.AngleAxis(Mathf.Sign(far) * AnkleAtMost, about);
+            // (AnkleTurnsAtMost above nothing: what it is asked moves no faster. Off: a boot kept flat on the ground is asked
+            // to turn against its shin as fast as its shin turns, and slowed so it lost its footing: 0 of 36 stood.)
+            Quaternion can = stood * fromStood;
+            if (AnkleTurnsAtMost > 0) can = Quaternion.RotateTowards(ankleAsked[leg], can, AnkleTurnsAtMost * Mathf.Rad2Deg * Mathf.Max(lastStep, 1e-3f));
+            ankleAsked[leg] = can;
+            return can;
         }
 
         // A joint's turn from how it stands, in its own frame, for the pose it is at. (A limb's part lies along its
@@ -659,10 +682,23 @@ namespace WonderGather
 
         private void Begin(int index)
         {
-            at = index; stage = way.stages[index]; got = 0; still = 0; stepBegun = false; sat = 0; shiftT = 0; liftAt = 0; planting = false; landed = false; stepAimed = false; handsLet = false;
+            at = index; stage = way.stages[index]; got = 0; still = 0; hipsBegan = Measure(Asks.Hips); downFor = 0; stepBegun = false; sat = 0; shiftT = 0; liftAt = 0; planting = false; landed = false; stepAimed = false; handsLet = false;
             walkHand = -1; for (int i = 0; i < 2; i++) { handAt[i] = HandEnd(i); kneelFrom[i] = JointAt(Foot + i); kneelBootFrom[i] = parts[Foot + i].transform.rotation; }
             for (int j = 1; j < Count; j++) aimFrom[j] = aimNow[j];
         }
+
+        // (Gone down: up off the ground when a pose began, its hips UpFrom of their standing height or more, and now its
+        // hips as low as lying, under DownUnder of it, for DownFor seconds. It gives up that try at once: fallen as it
+        // rolled up onto its feet, it lay in its pose until the pose's time was out, twenty seconds. (Taken first: its
+        // hips lower than when the pose began, by .15; but rolling up from its bottom-up stance, a body brings its hips
+        // down into a squat on the way. Then also its boots bearing little on their sides; but kneeling, its boots lie
+        // on their tops bearing nothing.) October 22.)
+        public static float UpFrom = .4f, DownUnder = .3f, DownFor = .8f;
+        // (The last pose of a way that ends on its feet is through as soon as all it asks is so, and no sooner than
+        // ReadyAfter seconds: rolling up, it was ready 0.28 s in and waited out the pose's 1.8 s, and sat back onto its
+        // heels in the wait.)
+        public static float ReadyAfter = .2f;
+        private float hipsBegan, downFor;
 
         // One step of getting up.
         public Does Step(float step)
@@ -703,7 +739,7 @@ namespace WonderGather
             if (float.IsNaN(stage.keeps)) leant = Mathf.MoveTowards(leant, 0, 60 * step);
             else leant = Mathf.Clamp(leant + Balances * (stage.keeps - Measure(Asks.Ahead)) * step, -BalancesAtMost, BalancesAtMost);
             if (!float.IsNaN(stage.sits)) sat = Mathf.Clamp(sat + stage.sits * Mathf.Clamp((Measure(Asks.Ahead) - stage.sitAhead) / .1f, -1, 1) * step, 0, stage.sitMost);
-            bool through = got >= stage.atLeast;
+            bool through = got >= stage.atLeast || (way.gives && at == way.stages.Length - 1 && ReadyAfter > 0 && got >= ReadyAfter);
             for (int k = 0; through && k < stage.through.Length; k++)
             {
                 float it = Measure(stage.through[k].what);
@@ -721,6 +757,8 @@ namespace WonderGather
                 else if (!Choose()) return Does.GaveUp;
             }
             else if (got > stage.within) return Does.GaveUp;
+            if (hipsBegan >= UpFrom && Measure(Asks.Hips) < DownUnder) downFor += step; else downFor = 0;
+            if (downFor > DownFor) return Does.GaveUp;
             // The pose it is at, come to from where its joints were asked to be before.
             float share = stage.over > 0 ? Mathf.SmoothStep(0, 1, got / stage.over) : 1;
             stepping = stage.steps < 0 ? -1 : stage.steps == 0 ? leads : 1 - leads;

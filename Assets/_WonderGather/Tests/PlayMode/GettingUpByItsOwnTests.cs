@@ -27,7 +27,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; }
+        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; }
 
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
 
@@ -36,6 +36,10 @@ namespace WonderGather.Tests
         {
             Time.captureFramerate = 50;
             PhysicalFall.GetsUpByItsOwn = true;
+            // (A measure, not a test that must pass: what the engine says of a body gone wild is told, and it goes on.
+            // And what its own body says as it goes: where each try ended.)
+            LogAssert.ignoreFailingMessages = true;
+            OwnBody.Told = said => { if (said.Contains("gave up") || said.Contains("on its feet") || said.Contains("goes down")) Debug.Log("OWN_TOLD " + said); };
             int index = -1;
             for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == "Small") index = i;
             Assert.That(index, Is.GreaterThanOrEqualTo(0), "No miner called Small.");
@@ -60,19 +64,35 @@ namespace WonderGather.Tests
                 var fall = unit.GetComponent<PhysicalFall>();
                 int roseBefore = fall != null ? fall.RoseByItsOwn : 0, feetBefore = own.OnItsFeetFromLying, oldBefore = fall != null ? fall.GotUp : 0;
                 // (Forward, so that it falls onto its front; a little aside, each push its own.)
-                // (-ownPushBack 1: pushed the other way.)
+                // (-ownPushBack 1: pushed the other way. -ownPushWays 0,180,90,270: so many degrees round from straight
+                // ahead, one push after another in turn, each a little aside as well.)
                 bool back = CaptureTools.Argument("-ownPushBack") == "1";
-                Vector3 way = Quaternion.AngleAxis((k % 3 - 1) * 20, Vector3.up) * (back ? -unit.transform.forward : unit.transform.forward);
+                float round = back ? 180 : 0;
+                string ways = CaptureTools.Argument("-ownPushWays");
+                if (!string.IsNullOrEmpty(ways))
+                {
+                    var each = ways.Split(',');
+                    round = float.Parse(each[k % each.Length], System.Globalization.CultureInfo.InvariantCulture);
+                }
+                Vector3 way = Quaternion.AngleAxis(round + ((k / Mathf.Max(1, string.IsNullOrEmpty(ways) ? 1 : ways.Split(',').Length)) % 3 - 1) * 20, Vector3.up) * unit.transform.forward;
                 Assert.That(look.CanPushOver, Is.True, "Small cannot be pushed over (push " + k + ").");
                 look.PushOver(way);
                 fall = unit.GetComponent<PhysicalFall>();
                 float began = Time.time;
                 bool lay = false;
+                string lying = "";
+                int triesSeen = 0;
                 // (Up, by either body, and standing still: by its own joints, done getting up; or the posed body up.)
                 bool Up() => fall.Now == PhysicalFall.State.Up && (own.Stands ? !own.GettingUp && !own.Rising : true);
-                while (Time.time - began < 2 || (!Up() && Time.time - began < 120))
+                while (Time.time - began < 2 || (!Up() && Time.time - began < 300))
                 {
                     lay |= fall.Now == PhysicalFall.State.Lying;
+                    // (How it lay as each try began.)
+                    if (fall.RoseByItsOwn - roseBefore > triesSeen)
+                    {
+                        triesSeen = fall.RoseByItsOwn - roseBefore;
+                        lying += (lying.Length > 0 ? ", " : "") + fall.LayAtTry.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+                    }
                     yield return null;
                 }
                 int tries = fall.RoseByItsOwn - roseBefore, feet = own.OnItsFeetFromLying - feetBefore;
@@ -80,8 +100,8 @@ namespace WonderGather.Tests
                 bool old = !itsOwn && fall.GotUp > oldBefore;
                 if (itsOwn) byItsOwn++; else if (old) oldWay++; else never++;
                 Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                    "OWN_UP push {0}: it lay {1}; tries by its own body {2}; {3} after {4:0.0} s; the fall said: {5}",
-                    k, lay, tries, itsOwn ? "up by its own body" : old ? "up the old way" : "not up", Time.time - began, fall.ByItsOwnSaid));
+                    "OWN_UP push {0} ({6:0} degrees): it lay {1}; tries by its own body {2} (its chest to the ground at each: {7}); {3} after {4:0.0} s; the fall said: {5}",
+                    k, lay, tries, itsOwn ? "up by its own body" : old ? "up the old way" : "not up", Time.time - began, fall.ByItsOwnSaid, round, lying));
             }
             Debug.Log($"OWN_UP Small, {pushes} pushes: up by its own body {byItsOwn}, the old way {oldWay}, not up {never}");
             Assert.That(never, Is.EqualTo(0), "Small did not get up after a push.");

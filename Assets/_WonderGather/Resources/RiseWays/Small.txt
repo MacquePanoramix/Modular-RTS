@@ -1,4 +1,9 @@
-# Small's way up by its own body (the bear way), found by the bench's search (October 21, 2026); read by OwnBody.
+# Small's ways up (October 22): from its back or side, a roll onto its front (searched on the bench, rollS2); from
+# its front, the bear way (October 21). Docs/Technical/RiseWays.
+way roll -1 0.4 turns
+plant | 0.50 0.56 3.0 | 6 43 -22 | 52 53 68 | -28 32 10 | 54 43 110 10 | -2 -32 43 27 |
+push | 0.59 0.77 4.0 | 60 45 46 | 67 -39 39 | 159 67 52 | 7 -35 95 40 | 24 24 27 -16 | front>0
+front | 0.76 0.80 4.0 | -2 -35 -24 | 43 49 107 | 37 50 120 | -8 -20 12 14 | -13 15 21 32 | front>0.6 still>0.25
 way feet 0.4 1 gives
 hands | 1.40 1.58 4.0 | 1 -4 0 | 36 51 129 | 36 51 129 | NaN NaN NaN NaN | NaN NaN NaN NaN |
 under | 1.21 1.36 5.0 | -4 -15 0 | 70 41 101 | 70 41 101 | 87 28 109 27 | 87 28 109 27 | kneel=0.90 laid

@@ -52,3 +52,21 @@ Bench arguments used: `-riseMiner Small -riseStarts front,front@1,...,front@8 -r
   BalanceShiftsNearest=1,BalanceShiftsDeep=0.040`. At `starts36.txt` with `-riseFrames 1`:
   stands 12 of 36 (`-riseSeed 21`), 8 (`-riseSeed 9`); standing at about 13.8 s; no body went
   wild (October 20's, with the whipping boot: 17 and 17).
+- `ways_roll_small.txt` (October 22): Small, a roll from its back or side onto its front
+  (`way roll -1 0.4 turns`: its uppermost knee up, then over and across as that foot pushes, its
+  uppermost arm across, its trunk twisting that side forward; then lying on its front, still),
+  followed by the bear way of October 21. The roll searched with `-riseSearch roll -riseGoal turn
+  -riseSame 0` (both sides free, the twist free) from 12 starts on its back and sides, 30 rounds.
+  With the defaults of October 22 (the riser's numbers as searched on October 21), at `backs36.txt`
+  and `sides36.txt`, `-riseGoal turn`: **onto its front and still at 29 of 36 from its back, and 13
+  of the 17 side starts that did not already lie on their front**; about 2.6 s. Then to standing,
+  at `starts36.txt` (front) and `backs36.txt`, `-riseFrames 1 -riseFor 30`: 1 to 8 of 36 and 0 to 2
+  of 36 (each count with the same code differs by that much from run to run); most give up rolling
+  up from the bottom-up stance.
+- `backs36.txt`, `sides36.txt`: 36 starts laid on its back (18 places along the path, then the same
+  turned a quarter), and 36 on its sides.
+- `-riseGoal turn` (the bench): a try ends as soon as the body goes on by another way than it
+  began with, and counts how soon. `-riseSpinTrace 40`: the steps before and after a boot first
+  turns faster than that, with each ankle's joint speed and how far its asked turn moved;
+  `spinlook.py <log>` shows them. `sumrise.sh <run>`: what a run came to (stands, turned, wild,
+  boot whips over 30 and over 100 rad/s, how the tries ended).
