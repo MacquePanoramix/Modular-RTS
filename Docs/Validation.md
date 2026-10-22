@@ -3998,3 +3998,26 @@ judges' verdict is not his.**
   80 to 211; moving 0.10 m/s against 0.14). What makes a third of the hand-overs fall is not yet found.
 - **What follows** (not done): the hands not let go until the weight is over the boots, and what brings it there
   while they still bear (the hips back, a hand walked nearer, one hand first); then the hand-over.
+
+## S3b step 2 — the hands let go only over the boots; the rise from the squat, legs first (October 22, night)
+
+- **Work branch d1419dc; the bench only; Small; each condition 72 tries** (`starts36.txt` plain, and the same laid
+  by chance, `-riseJitter 20,0.3 -riseSeed 21`; `-riseFrames 1 -riseFor 30`). With the same code a count of 72
+  moves by about ten from run to run (tries given up before the rise, which nothing here changed, went 38 to 50),
+  so the rise is judged by the share of those handed over that stood.
+- **The hands let go only when the weight is over the boots** (not "all the same" when the time to move it runs
+  out): 16 of 72 stood before, 14 with it; the hands let go with the weight outside the boots 26 times before (all
+  failed) and never with it; the rest waited and gave the try up. A hand walked 8 cm nearer while waiting: 15 of 72
+  against 13 (no difference; the weight was 0.2 to 1 hip's height ahead of the boots, more than a hand's walk
+  brings back). Kept off.
+- **Why a third to a half of those handed over fell** (the standing balance's own words, `-riseTold`): most fell
+  as it raised them, their hips tipped 36 to 76 degrees; a few never got their weight onto their feet in 3 s; in
+  pictures, deep in the squat with its head forward, the trunk folded down onto its face.
+- **Raised legs first** (the trunk and head come upright only after a share of the rise): of those handed over,
+  stood **54%** all together (two runs), **57%** after 0.25 of the rise, **79%** after 0.4, **71%** after 0.6.
+  Kept at 0.4. **Held firm and eased to standing softness over the rise: 1 of 72 stood** (2 with legs first as
+  well; a body flew apart once): its standing balance needs its softness. Taken out.
+- **Without the bottom-up stance** (the pike), legs first: 5 of 72 stood (a body flew apart once). The pike stays.
+- **Where it stands now:** about a third of tries come to the hand-over, and about three quarters of those stand.
+  Most of the rest give up rolling up, their weight far ahead of their boots after the pike. Not run: the game,
+  the suite, Long and Round; not looked at by judges or Luis.

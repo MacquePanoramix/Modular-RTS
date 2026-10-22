@@ -2064,6 +2064,18 @@ absolute last resort ([the message](../Correspondence/2026-10-22_NEVER_THE_BACKU
   (5 and 1 of 36); without the bottom-up stance, none stood. **In the game,
   pushed over: 11 tries in 300 s, none up** (from its back, its side and its
   front; seven ended rolling up); tries 20 to 40 s apart. The switch stays off.
+- **After the research (Luis: "sounds perfect", proceed), October 22, night.**
+  Measured first, changed nothing: **every try that let its hands go with its
+  weight outside its boots failed, and every one that stood had let go with it
+  over them.** So: the hands let go only when the weight is over the boots (a
+  try that cannot get it there in 4 s is given up and tried again). And the
+  hand-over: the standing balance raised it from the squat with every joint at
+  once, and its trunk came up before its legs and it fell; raised **legs first**,
+  its trunk and head forward over its feet until 0.4 of the rise, **of those
+  handed over 79% stood, from 54%**. Held firm as it rose instead: 1 of 72. Now
+  about a third of tries reach the hand-over; most of the rest give up after the
+  pike, their weight far ahead of their boots. Being searched again under these
+  rules.
 - **Next:** the old getting up ends with its own legs raising it from a crouch,
   and that did not fail (11 pushes of 11, October 21). What fails is between hands and feet and that
   crouch: the hand-over is to be brought to the crouch the standing body already
