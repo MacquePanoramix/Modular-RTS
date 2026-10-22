@@ -3527,3 +3527,31 @@ verdict: Luis has not seen the step.**
   three were misreadings:
   [the design page](Design/TheBodysOwn.md#what-the-judges-said-october-13-one-round).
   A slower swing was tried in the game (0.18 s, and 0.24 s, for 0.12; nothing else changed; one run each): Small stood 2 shoves of 4 both times, where it stands 4 (the test stops at the first miner that fails, so Long and Round were not shoved). A slower step needs the rest searched for it; that is not done.
+
+## S3b step 2 — the roll from the back; the boot that whipped round; in the game (October 22; in progress)
+
+- **Work branch (`claude/wip-round`); the bench (`OwnRiseBench`), and the game's measure
+  (`GettingUpByItsOwnTests`, run only when asked).** Small only. Each count is one run;
+  with the same code, a count of 36 differs by up to 7 from run to run.
+- **The roll** (`Docs/Technical/RiseWays/ways_roll_small.txt` on the work branch), at starts
+  not searched at, `-riseGoal turn`: onto its front and still at **29 of 36 laid on its back**
+  and **13 of the 17 side starts** not already on their front; about 2.6 s.
+- **Boots turning faster than 100 rad/s** (a boot thrown round by its ankle), 36 starts each:
+  before, 5 (front) and 10 (back), fastest 139 to 196; with an ankle asked no further than 110
+  degrees from how it stands, 2 to 4, fastest 105 to 118. No body went wild in any of these runs.
+  Tried and taken out, each one run of 36 from the front: a cap on the ankle's joint speed
+  (6 stood; whips 9, 5 before); joints counted from how it stands (12 starts: its boots
+  snapped at the start); slowing what the ankle is asked (0 stood).
+- **To standing**, 36 starts, `-riseFrames 1 -riseFor 30`: from its front 8 (before the day's
+  changes), 6, 3, 1, 7 (after, in turn); from its back 2, 1, 0, 1. Of 36 from the front with all
+  of the day's changes: 14 came onto their feet, 7 stood, 7 fell as they were raised; 22 never
+  came onto their feet (21 of them rolling up from hands and feet). The roll-up searched again (25 rounds): 5 and 1 of 36. Without
+  the bottom-up stance: 0 of 36 (10 on their feet, all fell).
+- **In the game** (the ordinary place, Small, the switch on), pushed straight ahead once: **11
+  tries by its own body in 300 s, none up** (lying on its front, side and back at the tries;
+  seven ended rolling up, two settling after the roll, two at the feet). An earlier run of the
+  same: 13 tries in 300 s, none up, then a body went wild (its lantern's place NaN). The tests'
+  other pushes were not reached (the second could not push it over while it lay).
+- **Judges, round 1 of the roll** (three, `Docs/Reviews/2026-10-22_Roll_Judges.md`): all "reads as
+  real, with a flaw".
+- **Not run:** the test suite (since October 14); Long and Round; a build. Not looked at by Luis.

@@ -2011,6 +2011,64 @@ then eases), "you can proceed".
 - Also mended: over a thin outline (a boot and a knee) its weight goes as deep
   as the outline allows (it was sent to the middle of the two, behind it).
 
+### Never the backup animation (Luis, October 22; work branch, in progress)
+
+Luis: "make it so we never have to use the backup animation", and asked to
+choose, **extra tries rather than help from outside the body**, which is the
+absolute last resort ([the message](../Correspondence/2026-10-22_NEVER_THE_BACKUP_ANIMATION.md)).
+
+- **A roll from the back and the sides** (`way roll -1 0.4 turns`): its
+  uppermost knee comes up with its foot planted, then goes over and across as
+  that foot pushes; its uppermost arm reaches across; its trunk twists that side
+  forward; then it lies on its front, still, and goes on by the bear way.
+  Searched on the bench (both sides and the twist free; the end asking that it
+  lies on its front *and still*: asked only that its chest faced the ground, a
+  search found a roll whose chest passed that way for a moment and fell back).
+  On starts it was not searched at: **onto its front and still from 29 of 36 on
+  its back, and from 13 of the 17 side starts not already on their front**,
+  in about 2.6 s. In the game, pushed over, it rolls from its back too.
+  **The judges, round 1** ([their findings](../Reviews/2026-10-22_Roll_Judges.md)):
+  all three "reads as real, with a flaw": the gather and the leg swung over are
+  real; the arm that reaches over is flung up and waved and never braces the
+  roll; it ends with its boots held up in the air and its hands under its face;
+  on a timetable; its trunk drops flat in about 0.2 s.
+- **The boot that whipped round, found to its cause.** Boots still turned faster
+  than 100 radians a second in 5 to 10 tries of 36 (up to 200), after the mend
+  of October 20. Traced step by step: the getting up asked an ankle to hold its
+  boot about 175 degrees from how a foot sits on its shin; past half a turn the
+  turn asked was written the other way round from one step to the next (169
+  degrees, then -169), and the joint threw its boot round the long way. **An
+  ankle is now asked no further than 110 degrees from how it stands** (a boot
+  laid on its top, kneeling, is ninety): such whips in 2 to 4 tries of 36, the
+  fastest about 105 to 118. Tried and taken out: a cap on the ankle's speed (the
+  joint's own drive went past it); counting the joints from how it stands (the
+  boot was already made so; the physics did not keep the body where it lay);
+  slowing what the ankle is asked (a boot kept flat on the ground could not
+  follow its shin: 0 of 36 stood).
+- **It knows when it has gone down.** Fallen as it rolled up onto its feet, it
+  lay in its pose until the pose's time was out, twenty seconds: Luis's "dead
+  until a timer". Now, up when a pose began, its hips as low as lying for 0.8 s,
+  it gives that try up at once. (Its hips lower than when the pose began was
+  tried first, and stopped good tries: rolling up, a body brings its hips down
+  into a squat on the way.) And its last pose hands it to its standing balance
+  as soon as all it asks is so: rolling up, it was ready 0.28 s in, waited out
+  the pose's 1.8 s, and sat back onto its heels in the wait.
+- **Extra tries in the game:** no more handing it to the old way after four;
+  it lies a little longer after each try (0.7 s more, up to five) and tries
+  again from however it lies; after twelve, the old way, and it says so.
+- **Where it fails, plainly.** At 36 chance starts, to standing: 1 to 8 from its
+  front and 0 to 2 from its back (the same code differs that much from run to
+  run). **Nearly every try fails in one place: rolling up from hands and feet
+  onto its feet**, and half of those that come onto their feet fall as their
+  standing balance raises them. Searching that stage again did not change it
+  (5 and 1 of 36); without the bottom-up stance, none stood. **In the game,
+  pushed over: 11 tries in 300 s, none up** (from its back, its side and its
+  front; seven ended rolling up); tries 20 to 40 s apart. The switch stays off.
+- **Next:** the old getting up ends with its own legs raising it from a crouch,
+  and that did not fail (11 pushes of 11, October 21). What fails is between hands and feet and that
+  crouch: the hand-over is to be brought to the crouch the standing body already
+  rises from, and measured there. Then the judges' points on the roll.
+
 ### Questions for Luis
 
 | | Question | What I would do |

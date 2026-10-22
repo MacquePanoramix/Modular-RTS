@@ -1,6 +1,19 @@
 # Wonder Gather — Current State
 
-**Updated:** October 15, 2026.
+**Updated:** October 22, 2026.
+
+- **Luis, October 22: never the backup animation; extra tries rather than help
+  from outside the body** ([the message](Correspondence/2026-10-22_NEVER_THE_BACKUP_ANIMATION.md)).
+  On the work branch, behind the panel's switch "Gets up by its own body"
+  (**off**; not in a build): Small now rolls from its back or side onto its
+  front (on the bench 29 of 36 from its back; the judges, round 1: "reads as
+  real, with a flaw"), its boots no longer whip round in most tries, it gives a
+  try up as soon as it has gone down, and it tries again without the cap of
+  four. **But it does not get up yet:** rolling up from hands and feet onto its
+  feet fails nearly every time (1 to 8 of 36 stand from its front, 0 to 2 from
+  its back), and in the game 11 tries in 300 s brought it up none. Next: bring
+  that hand-over to the crouch the standing body already rises from.
+  [The design page](Design/TheBodysOwn.md#never-the-backup-animation-luis-october-22-work-branch-in-progress).
 
 - **A build for Luis to play, October 14 (late): `Builds/WindowsOrdinaryPlace_Oct14`**
   (beside the three of October 13). In it: arms as strong as the body needs

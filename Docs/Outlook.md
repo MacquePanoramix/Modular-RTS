@@ -58,6 +58,30 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 22, 2026 — the sixth (after the context was compacted)
+
+- **Where we are.** S3b step 2, the getting up by its own body. Since the fifth:
+  the bear way (pike, then roll up over the feet) stands Small up at 12 and 8 of
+  36 chance starts with the real boot turn; no body flew apart in 216 tries; the
+  judges' round 3 (the last) is done. In the game behind a switch (off), Small
+  tries by its own body when it lies on its front, again if it goes down, four
+  times, then the old way. Pushed over in the game it **lands on its back or
+  side**, where it knows no way, so every push ended the old way.
+- **Luis, October 22:** never the backup animation; extra tries rather than any
+  help from outside the body, which is the absolute last resort. So the next
+  stretch is: **a way up from the back and the sides** (rolling onto its front
+  first), then **trying again without a cap**, with more effort through its own
+  joints from the third try; then the judges' holds and pace (13 s; G6 asks
+  three to six), lying not dead (G1), Long and Round.
+- **Waiting on Luis:** S3 (since October 8); the builds of October 13 and 14;
+  R1; merging the satchel branch (unchanged since October 15, two tasks unrun).
+- **Drifting:** the whole suite not run since October 14 (eight days); the
+  current state's header still says October 15; the getting up is Small's
+  alone, and the stage's three miners must all have it.
+- **Does the task serve the stage?** Yes: real weight and strength at work need
+  a body that gets itself up by its own limbs wherever it fell; the roll is the
+  piece that makes the game's falls reach the way Small already has.
+
 ### October 20, 2026 — the fifth (after five days away)
 
 - **Where we are.** S3b step 2. Since the fourth: breath after effort (Luis's
