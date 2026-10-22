@@ -131,13 +131,29 @@ namespace WonderGather.Tests
                     Vector3 outSquare = Vector3.Cross(across, hangs);
                     Vector3 rel = at - thing.bone.position;
                     string where = deep > 0 ? string.Format(Plain, " deepest at below {0:0} out {1:0} across {2:0} mm", Vector3.Dot(rel, hangs) * 1000, Vector3.Dot(rel, outSquare) * 1000, Vector3.Dot(rel, across) * 1000) : "";
+                    // How its back is turned about the way it hangs from the faces that may hold it (the hips', the cloth's,
+                    // the thigh's outer side; degrees), and how far its rings are out from where the cloth keeps its weight.
+                    Vector3 back = miner.HangingBack(k);
+                    float Twist(Vector3 face)
+                    {
+                        Vector3 b = Vector3.ProjectOnPlane(back, hangs), f = Vector3.ProjectOnPlane(face, hangs);
+                        return b.sqrMagnitude > 1e-6f && f.sqrMagnitude > 1e-6f ? Vector3.SignedAngle(b, f, hangs) : float.NaN;
+                    }
+                    string faces = string.Format(Plain, " backs hips {0:0} ({1:0.00} along) folded {2:0} hem {3:0.00}", Twist(outward), Vector3.Dot(hangs, outward), miner.ClothFolded(k), miner.ClothHemUp(k));
+                    if (miner.ClothFace(k, out var clothOut, out var clothAt, out float clothStop))
+                        faces += string.Format(Plain, " cloth {0:0} ({1:0.00} along) rings {2:0} mm", Twist(clothOut), Vector3.Dot(hangs, clothOut), (Vector3.Dot(thing.bone.position - clothAt, clothOut) - clothStop) * 1000);
+                    {
+                        Vector3 thighWay = miner.Rig.shins[side].position - miner.Rig.thighs[side].position;
+                        Vector3 lateral = Vector3.ProjectOnPlane(outward, thighWay);
+                        if (lateral.sqrMagnitude > 1e-6f) faces += string.Format(Plain, " thigh {0:0}", Twist(lateral.normalized));
+                    }
                     if (worst != null) { string key = now + " " + thing.bone.name; worst[key] = Mathf.Max(worst.TryGetValue(key, out var was) ? was : 0, deep); }
                     Debug.Log(string.Format(Plain, "BAG {0} {1} {2} {3} {4:0.00}s tilt {5:0} flex {6:0} weight(r,u,f) {7:0.000} {8:0.000} {9:0.000} plane {10:0.0} mm skin {11:0.0} mm ({12}/{13} pts) hips {15:0.0}/{16} skirt {17:0.0}/{18} leg {19:0.0}/{20} ground {14:0.0} mm",
                         name, way, now, thing.bone.name, clock(), tilt, flex, inP.x, inP.y, inP.z, miner.HangingIntoBody(k) * 1000, deep * 1000, under, d.Points, below * 1000,
                         d.DeepIn[0] * 1000, d.PointsIn[0], d.DeepIn[1] * 1000, d.PointsIn[1], d.DeepIn[2] * 1000, d.PointsIn[2]) + where + string.Format(Plain, " above {0:0.0} legat {1:0.0} cloth {2:0.0} hook {3:0.0}", d.DeepAbove * 1000, LegAt(miner, k) * 1000, miner.ClothTurned(k),
                         ground != null ? (ground(thing.bone.position.x, thing.bone.position.z) - thing.bone.position.y) * 1000 : float.NaN)
                         + string.Format(Plain, " at {0:0.0000} {1:0.0000} {2:0.0000} hookat {3:0.0000} {4:0.0000} {5:0.0000}", miner.HangingWeight(k).x, miner.HangingWeight(k).y, miner.HangingWeight(k).z,
-                            thing.bone.position.x, thing.bone.position.y, thing.bone.position.z));
+                            thing.bone.position.x, thing.bone.position.y, thing.bone.position.z) + faces);
                 }
                 then?.Invoke(frame);
             };
@@ -200,24 +216,29 @@ namespace WonderGather.Tests
                             Vector3 hip = miner.Rig.thighs[leg].position, knee = miner.Rig.shins[leg].position, ab = knee - hip;
                             Vector3 near = hip + ab * Mathf.Clamp01(Vector3.Dot(miner.HangingWeight(k) - hip, ab) / ab.sqrMagnitude);
                             Vector3 down = -(miner.Rig.spine.position - pelvis.position);
-                            Debug.Log(string.Format(Plain, "BAGPATH {0} {1} {2} {3:0.00} {4:0.0000} {5:0.0000} {6:0.0000} leg {7:0.0000} flex {8:0.0} cloth {9:0.0}", name, miner.Things[k].bone.name, part, Time.time - began, w.x, w.y, w.z,
-                                Vector3.Distance(miner.HangingWeight(k), near), Vector3.Angle(ab, Vector3.ProjectOnPlane(down, miner.Rig.thighs[1].position - miner.Rig.thighs[0].position)), miner.ClothTurned(k)));
+                            // (And where it hangs from, and which way its back faces, in the same frame: October 15, a strap's
+                            // rings may ride out and its bag turn to lie on what holds it.)
+                            Vector3 from = Quaternion.Inverse(pelvis.rotation) * (miner.HangsFrom(k) - pelvis.position);
+                            Vector3 back = Quaternion.Inverse(pelvis.rotation) * miner.HangingBack(k);
+                            Debug.Log(string.Format(Plain, "BAGPATH {0} {1} {2} {3:0.00} {4:0.0000} {5:0.0000} {6:0.0000} leg {7:0.0000} flex {8:0.0} cloth {9:0.0} from {10:0.0000} {11:0.0000} {12:0.0000} back {13:0.0000} {14:0.0000} {15:0.0000}", name, miner.Things[k].bone.name, part, Time.time - began, w.x, w.y, w.z,
+                                Vector3.Distance(miner.HangingWeight(k), near), Vector3.Angle(ab, Vector3.ProjectOnPlane(down, miner.Rig.thighs[1].position - miner.Rig.thighs[0].position)), miner.ClothTurned(k),
+                                from.x, from.y, from.z, back.x, back.y, back.z));
                         }
                     };
-                    MinerBody.HungMovedMost = 0;
+                    MinerBody.HungMovedMost = MinerBody.HungRodeMost = MinerBody.HungTurnedMost = 0;
                     for (float until = Time.time + (own ? 6 : 3); Time.time < until;) yield return null;
-                    Debug.Log(string.Format(Plain, "BAGMOVED {0} standing: the last word moved a thing {1:0.00} mm at most; into the body at most {2}", name, MinerBody.HungMovedMost * 1000, string.Join(", ", Array.ConvertAll(into, x => (x * 1000).ToString("0.0", Plain)))));
+                    Debug.Log(string.Format(Plain, "BAGMOVED {0} standing: the last word moved a thing {1:0.00} mm at most; into the body at most {2}; rings ridden {3:0.00} mm, turned to lie {4:0.00} deg", name, MinerBody.HungMovedMost * 1000, string.Join(", ", Array.ConvertAll(into, x => (x * 1000).ToString("0.0", Plain))), MinerBody.HungRodeMost * 1000, MinerBody.HungTurnedMost));
                     if (own) { after.Then = null; UnityEngine.Object.Destroy(after.gameObject); continue; }
                     // There and back along the path, turning round between.
                     for (int k = 0; k < into.Length; k++) into[k] = 0;
-                    MinerBody.HungMovedMost = 0;
+                    MinerBody.HungMovedMost = MinerBody.HungRodeMost = MinerBody.HungTurnedMost = 0;
                     part = "walk";
                     unit.Motor.TryMove(OnGround(spot + away * 6));
                     for (float until = Time.time + 12; Time.time < until && (unit.Motor.IsMoving || Time.time - began < 4);) yield return null;
                     unit.Motor.TryMove(OnGround(spot - away * 1));
                     for (float until = Time.time + 14; Time.time < until && unit.Motor.IsMoving;) yield return null;
                     for (float until = Time.time + 1.5f; Time.time < until;) yield return null;
-                    Debug.Log(string.Format(Plain, "BAGMOVED {0} walking: the last word moved a thing {1:0.00} mm at most; into the body at most {2}", name, MinerBody.HungMovedMost * 1000, string.Join(", ", Array.ConvertAll(into, x => (x * 1000).ToString("0.0", Plain)))));
+                    Debug.Log(string.Format(Plain, "BAGMOVED {0} walking: the last word moved a thing {1:0.00} mm at most; into the body at most {2}; rings ridden {3:0.00} mm, turned to lie {4:0.00} deg", name, MinerBody.HungMovedMost * 1000, string.Join(", ", Array.ConvertAll(into, x => (x * 1000).ToString("0.0", Plain))), MinerBody.HungRodeMost * 1000, MinerBody.HungTurnedMost));
                     after.Then = null;
                     UnityEngine.Object.Destroy(after.gameObject);
                 }

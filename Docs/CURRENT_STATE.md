@@ -36,6 +36,28 @@
   ([their page](Reviews/2026-10-21_HungThings_Judges.md)). Touches
   the same code as the satchel's second branch (`claude/satchel-lies`): to be
   merged with care. For Luis to look at.
+
+- **The satchel lies on the body (October 20), on its own branch
+  `claude/satchel-lies` (on `claude/satchel-stop`), not merged, not pushed, not
+  in a build** ([what was found and how it was tested](Validation.md#the-satchel-lies-on-the-body--october-20);
+  [first stop and now, three views](Images/SatchelLies_2026-10-20/);
+  [its judges, round 2](Reviews/2026-10-20_SatchelLies_Judges.md)). Round 1's
+  two flaws are gone: on hands and knees the bag no longer has the coat across
+  its top, and as a foot comes forward it is no longer lost behind the thigh.
+  Its rings ride out on what comes up under them (the coat's skirt bulged 15 to
+  40 mm over them; the drawn-up thigh came within a centimetre), it turns to lay
+  its back on what holds it, and the thigh, shin and boot keep it off. In the
+  judges' try a tenth of it is under the clothes in 5 frames of 158 (the first
+  stop: 101); at work 53 of 529 (288). Standing and walking as before, frame by
+  frame; the lantern, mug and hammer untouched. The whole suite: 206, 177
+  passed, 0 failed. Three new judges (on the version before the lying flip was
+  mended): "reads as real, with a flaw". **Still
+  open:** as the hips leave the ground (2.2 to 2.4 s) the bag sits under the
+  skirt's hem and comes out in one step (the first stop too); the boot's top
+  grazes it for about 0.4 s as the foot swings forward; the strap's end may look
+  cut by the coat (not checked); lying, it goes into the ground, as before. The
+  "hung things" session changes the same code (`MinerBody`): merging both is by
+  hand. For Luis to look at.
 - **A build for Luis to play, October 14 (late): `Builds/WindowsOrdinaryPlace_Oct14`**
   (beside the three of October 13). In it: arms as strong as the body needs
   (Luis's decision), tiredness taking precision, breaths between blows. The

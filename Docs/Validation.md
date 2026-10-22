@@ -3798,3 +3798,110 @@ behaviour. Branch `claude/hung-things-stop`, isolated copy `D:/Dev/WG-hung`.
   only text, when they are merged.
 - **Not done:** a build; the game as played (`-ownAsPlayed 1`) beyond standing;
   Long and Round on the work branch's getting up; how it looks, by Luis.
+
+## The satchel lies on the body — October 20
+
+The two things the satchel's judges (round 1) still saw after the first stop:
+the coat's hem across the bag's top as Small pushes onto hands and knees, and
+the bag lost behind the thigh and the skirt's flap as a foot comes forward.
+Branch `claude/satchel-lies` (on `claude/satchel-stop`), isolated copy
+`D:/Dev/WG-bag`, Unity 6000.6.0f1; begun October 15 (night), finished October
+20. **Not merged, not in a build, not pushed. Luis has not seen it; the
+judges' verdict is not his.**
+
+- **Measured on the skin, outside the game** (scratch, not committed: the body's
+  skin round the bag dumped each frame, and `ClothesDepth` ported to numpy,
+  checked to give the game's own numbers to the tenth of a millimetre):
+  - on hands and knees the skirt bulges **15 to 40 mm out over the rings
+    themselves**: no turning of the bag about its rings could keep its top out;
+  - the bag was also turned about the way it hangs with its end, not its back,
+    to the coat (40° to 80° off);
+  - with a foot brought forward the thigh passes **within 1 cm of where the
+    rings are fixed to the hips**, and the shin and boot swing through the bag
+    (the skin measure leaves out the shins and boots; measured from the shin's
+    line against its thickness on the skin, 50 to 56 mm).
+- **What was built** (`MinerBody`, for a thing on a strap only, that is with no
+  `riders`: today Small's satchel; the lantern, the mug and the hammer are
+  untouched):
+  - its rings ride out of what comes up under them (the cloth, a thigh drawn
+    up past a stride, its shin as the knee comes up by them), eased;
+  - its weight rests on the flap as the flap's whole turn carries it, the cloth
+    coming in eased, only as the flap's hem leaves the ground and not once it is
+    folded back past the hips' face;
+  - a drawn-up thigh keeps it off from 15% of its length down (not a sphere
+    round the hip joint), and its shin and boot keep it off, out to its own
+    side (the trousers' thickness as the model makes them);
+  - it turns about the way it hangs to face what holds it (the drawn-up thigh's
+    way out, else the cloth), eased and no faster than 360° a second;
+  - in a stride none of this acts.
+- **Tried and dropped, with why:** the flap's face alone (share 1) for the
+  rings (rode them out 40 to 165 mm where the bag was already clear); the bag
+  turned to face the cloth on hands and knees (facing the thigh's way out, with
+  the rings 20 mm further off it, fits the skin better: 181 points under the
+  clothes over the try, against 1662 facing the cloth); the shin's
+  push the nearest way (threw the bag 2600° a second as the boot passed) and
+  remembered sides (pushed it into the skirt); the fold of the flap alone as
+  the cloth's gate (lying face down it let the cloth lift the bag onto the
+  coat's back: the judges' round 2, finding 2).
+- **The judges' try** (the work branch's getting up `dd30219`, its scripts copied
+  in for measuring only; one run each), a tenth or more of the satchel under the
+  clothes, 2.0 to 8.3 s: **5 frames of 158** (2.22 to 2.38 s, the hips leaving
+  the ground), against 101 with the first stop; its deepest point more than
+  20 mm under them in 6 against 104. Lying (0 to 2 s) it stays on the ground
+  beside the hip as with the first stop.
+  [Before and after, three views](Images/SatchelLies_2026-10-20/).
+- **Standing and walking, as before** (each miner standing 3 s, walking 6 m and
+  back with a turn, frame by frame against the stop as it was before October
+  15): Small's satchel 2.58 mm at most (4 frames of 715, the same frames as with
+  the first stop), its rings 0.00 mm, its back turned 1.6° at most; the lantern,
+  the mug and the hammer 0.14 mm at most; standing 0.00. A strap's rings ridden
+  and its bag turned to lie: 0.00 standing and walking, all three miners.
+  Standing by its own joints with life (as played), 6 s: the satchel 0.51 mm, the
+  others up to 2.28 mm (the lantern; the two runs' bodies stand a little
+  differently, and nothing of this change acts on the lantern).
+- **Falls** (`HungThingBench.Bowed`, Small, one course each way, the first stop
+  run the same day in the same copy): frames with the satchel more than 5 mm
+  under the clothes over a tenth of its points read, first stop → now:
+
+  | Pushed onto its | going over | curled | on hands and knees | up again |
+  |---|---|---|---|---|
+  | front | 5 → 5 of 93 | 13 → 11 of 57 | 10 → 11 of 65 | 8 → 7 of 38 |
+  | back | 6 → 7 of 31 | 9 → 6 of 46 | 11 → 10 of 70 | 8 → 10 of 38 |
+  | left | 6 → 5 of 73 | 9 → 5 of 103 | 9 → 10 of 67 | 8 → 5 of 38 |
+  | right (onto it) | 30 → 30 of 35 | 20 → 13 of 44 | 69 → 30 of 69 | 7 → 6 of 37 |
+
+  The version before the hem's gate (2b6b198) had curled 4, 2 and 3 of these;
+  the gate gives some of that back, lying low with the knees tucked.
+- **At work** (each miner goes down for a pickaxe and mines, 25 s): the satchel
+  under the clothes in its blows **288 → 53 of 529 frames**; the lantern, the
+  mug and the hammer as before (400, 405, 26).
+- **Tests** (`HungThingTests`, 4 of 4 pass, one run): pushed over its own falls,
+  the satchel through its clothes in 2 of 171 looks onto its front (first stop:
+  2), 8 of 123 onto its back (9), 3 of 159 onto its left (4); onto its right, 44
+  of 121 (52), told only. `StandingAndWalkingWhatHangsIsAsItWas` now also holds
+  that a strap's rings never ride and its bag never turns standing or walking.
+- **The whole PlayMode suite** (one run, no filter, in the isolated copy at
+  3827f98, October 20, 24 minutes; another session ran Unity beside it): **206
+  tests, 177 passed, 0 failed**, 29 run only when asked (the benches). With the
+  first stop: 206, 176, 1 (a stall, passed alone), 29. Not run: the suite as
+  played (`-ownAsPlayed 1`).
+- **Three judges, round 2** (new; the body, the animator, the sceptic; the
+  version before the hem's gate, three views): all three "reads as real, with a
+  flaw"; round 1's two findings not seen again
+  ([their page](Reviews/2026-10-20_SatchelLies_Judges.md)).
+- **Where this and the "hung things" session touch the same code:** its branch
+  `claude/hung-things-stop` (a ground stop, the thigh kept off a thing's whole
+  line) also changes `MinerBody.Hang`, `Held` (the call to the last word),
+  `OutOfBody`'s thigh and `CaptureRest`, and adds fields named `hangTwist` and
+  `hangPlace` meaning other things. Bringing both in needs that code merged by
+  hand.
+- **Not mended, or not tested:**
+  - the hips leaving the ground (2.18 to 2.42 s): the bag sits on the ground under
+    the skirt's hem as the hips lift, then comes out in one step (all three
+    judges); the first stop had it too;
+  - the boot's top grazes the bag's edge for about 0.4 s as the foot swings
+    forward; the strap's end follows the rings, which ride out up to 10 cm, and
+    may look cut by the coat or go into the knee (not checked);
+  - lying on it and lying face down, the bag goes into the ground, as before;
+  - Long and Round have nothing on a strap; the work branch's getting up for
+    them; a build; how it looks, by Luis.

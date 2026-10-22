@@ -107,6 +107,41 @@ work goes back to the task in hand.
   and standing are measured unchanged; that three branches of small mends
   (satchel stop, satchel lies, hung things) wait on one look from him.
 
+### October 20, 2026 — from the satchel's second side session, resumed
+
+- **Nothing moved since October 15** on any branch, and no message from Luis
+  since his of October 15 (evening), which started this task himself ("I also
+  clicked the button suggesting to fix the satchel"). The game's branch is at
+  Small standing up the toddler way (7 and 4 of 36), on the bench.
+- **This task:** half done (below). Keep it to the satchel; the lantern, the
+  mug, the hammer and the ground are the sibling session's, found and not
+  mended, waiting for a go-ahead.
+- **Waiting on Luis**, as on October 15; and now two satchel branches
+  (`claude/satchel-stop`, this one on it) and the sibling's, none merged.
+
+### October 15, 2026 (evening) — from the satchel's second side session
+
+- **Where we are.** S3b step 2, the getting up, goes on in its own session on
+  the work branch (now `dd30219`: Small stands up at 7 and 4 of 36 chance
+  starts, the "toddler way"). This side session finishes the satchel through
+  the coat (`claude/satchel-lies`, from `claude/satchel-stop`): the round 1
+  judges' two findings (the coat across the bag's top on hands and knees; the
+  bag lost behind the thigh as a foot comes forward). A sibling session looks
+  at the lantern, the mug and the hammer (`claude/hung-things-stop`).
+- **Waiting on Luis:** S3 (since October 8), the builds of October 13 and 14,
+  question R1. No message from Luis since October 14 is in this branch.
+- **Built but not in a build:** the satchel's stop (not merged), this mend,
+  the getting up's balance (bench).
+- **Put off, not forgotten:** the bag pressed into the ground when the body
+  lies on it; the satchel's strap ends turning into the hips; the coat's
+  skirt is four rigid boards, which every hung thing must be stopped around.
+- **Does the task serve the stage?** Yes, but it must stay small: one bag, on
+  the movement being built, by Luis's rule. The risk is building a cloth
+  simulation around rigid flaps, case by case. Keep to what the bag rests on
+  and where its rings ride; say plainly what still clips, and stop.
+- **What Luis would want to know:** before and after pictures from three
+  sides; that walking and standing are unchanged; what is still wrong.
+
 ### October 15, 2026 (afternoon) — the third, from a side session
 
 - **Where we are.** S3b step 2, the getting up, goes on in its own session on

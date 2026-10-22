@@ -1050,15 +1050,50 @@ the round's log is in
     far the last word has moved a thing. Why: Small's satchel went through
     the coat's skirt bowed low and into the hips lying (the judges of the
     getting up, finding 4).
+  - **A thing on a strap (October 20).** A thing with no `riders` (today
+    only Small's satchel; the lantern, mug and hammer ride their cloth and
+    are untouched) lies on the body past a stride:
+    - `Ride`: its rings (the bone's place) ride out of what comes up under
+      them, as far out as they were from the cloth as modelled
+      (`hangRingsOff`): the `Cloth` face (the pusher's share of the flap's
+      turn), a thigh drawn up past a stride (from `ThighFrom` of its
+      length, `hangLegGathered` + `SkirtGathered`, out to its side), and its
+      shin as the knee comes up by them. Eased over `RidesIn`; the cloth's
+      coming in for a strap thing is eased too (`hangComes`, `ClothSettles`),
+      goes as the flap folds back past `FoldsFrom`, and comes only as the
+      flap's hem leaves the ground (`HemUp`, `HemFrom` to `HemBy` flap
+      lengths, the ground as `Drape` reckons it): lying face down, the flap
+      lies on the ground beside the bag, and letting it in there lifted the
+      bag onto the coat's back (the judges of the satchel, round 2).
+    - `OutOfBody`: its weight rests on the flap as the flap's whole turn
+      carries it (`Cloth(..., whole)`); the drawn-up thigh keeps it from
+      `ThighFrom` down; its shin and boot keep it off (`Shin`: the
+      trousers' thickness as the model makes them, the leg's radius × 1.25
+      + 12 mm, from `PhysicalBody.LegRadius`), out to its own side.
+    - `Lie`: turned about the way it hangs to face what holds it (the
+      drawn-up thigh's way out, else the cloth), the nearer way round, eased
+      (`LiesIn`) and no faster than `TurnsAtMost`.
+    - None of it acts in a stride (the same gates as the stop's last word);
+      `HungRodeMost` and `HungTurnedMost` (tests) say how far rings have
+      ridden and a thing been turned. Why: the judges of the satchel (round
+      1) saw the coat across the bag's top on hands and knees and the bag
+      behind the thigh as a foot came forward; on the skin, the coat bulged
+      15 to 40 mm out over the rings themselves, so no turn about them could
+      clear it.
   - **`Flap`.** Skirt flaps turn with the thigh that moves into them, after
     the measured slack, and fall back when it leaves.
   - **For tests:** `HangingWay`, `HangingIntoBody`, `HangingAskew` report what
     was last posed, as one moment (`HangingIntoBody` against the hips' face,
     and the cloth's once it has come in); `ClothTurned` how far the cloth a
-    thing rests on has turned from as modelled. `ClothesDepth` (tests) reads
-    from the skin itself how far a hung thing is under the clothes of the
-    hips, thighs and skirt; `HungThingBench` runs it through falls, work and
-    walks.
+    thing rests on has turned from as modelled; `HangingBack` which way its
+    back faces; `ClothFace` the cloth face that stops it now; `ClothFolded`
+    and `ClothHemUp` how far its flap is folded back and how high its hem is. `ClothesDepth`
+    (tests) reads from the skin itself how far a hung thing is under the
+    clothes of the hips, thighs and skirt (not the shins or boots), and
+    gives its points and the body's triangles near a place (`Point`,
+    `NearBy`); `HungThingBench` runs it through falls, work and walks (its
+    walks log where a thing hangs from and how its back faces, frame by
+    frame).
 - **`ProceduralBiped`.**
   - `Proportions.armCarry` and `armSwingSide`, per arm.
   - **Boots keep clear of each other.** `BootGap` measures two boots as

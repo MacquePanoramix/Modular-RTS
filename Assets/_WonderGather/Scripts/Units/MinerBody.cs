@@ -173,6 +173,19 @@ namespace WonderGather
         private Quaternion[] hangClothRest = new Quaternion[0];
         private int[] hangLeg = new int[0];
         private float[] hangLegRound = new float[0], hangLegGathered = new float[0];
+        // A thing on a strap (not sewn to the clothes): where its rings are on the pelvis as modelled, and how far out they
+        // were from where it rests on the cloth (along the hips' way out). Its back (the side it rests on the body with: its
+        // stop's way out) in its bone's frame, and how far it is turned now about the way it hangs, from as its strap holds
+        // it, to lie on what holds it (degrees).
+        private Vector3[] hangPlace = new Vector3[0], hangBack = new Vector3[0];
+        private float[] hangRingsOff = new float[0], hangLies = new float[0];
+        // How far its rings have ridden out from where the strap holds them, in the pelvis' frame; and how far the cloth
+        // has come in under it (Cloth), as it has come in over time.
+        private Vector3[] hangRide = new Vector3[0];
+        private float[] hangComes = new float[0];
+        // How thick a shin is in its trouser, as the model's trousers are made (its leg's radius by 1.25, and 12 mm:
+        // Art/Blender/Worker/outfits.py; Small's skin, measured: 50 to 56 mm).
+        private float shinRound;
         // Each thigh's way from hip to knee as modelled, in the pelvis' frame.
         private readonly Vector3[] thighRestIn = new Vector3[2];
         // How far a thigh swings forward and back about the hip in a stride, and how far a flap of the skirt turns
@@ -180,6 +193,18 @@ namespace WonderGather
         // forward, flaps to 58). Past a stride, a thigh drawn up gathers the skirt on it (all of it by GathersBy), and
         // the cloth comes up against what rests on it (over ClothComes more).
         private const float StrideAhead = 60, StrideBack = 30, ClothRoom = 60, ClothComes = 30, GathersFrom = 65, GathersBy = 95;
+        // A thing on a strap, past a stride (October 15 and 20: the satchel bowed low, and with a foot brought forward):
+        // the cloth under it is its flap carried by the flap's whole turn, until the flap folds back from the hips' face
+        // past FoldsFrom degrees (gone by FoldsFrom + FoldsOver: lying, the flap lies on the ground, not under the bag). A
+        // thigh drawn up is a limb of its own from ThighFrom of its length (above, the hips' face keeps it), and the skirt
+        // gathered on it stands SkirtGathered metres further off it than the thing's weight was modelled from it
+        // (measured on Small's skin, October 15). It lies on the cloth once within LiesWithin metres of it, turning so over
+        // LiesIn seconds, by LiesMost degrees at most and no faster than TurnsAtMost degrees a second. Its rings are carried
+        // out over RidesIn seconds, and the cloth comes in under it over ClothSettles seconds: as the cloth moves, not as
+        // the stop's measure of it crosses its bounds (the hips lifting off the ground fold the flap from 100 to 80
+        // degrees in a tenth of a second, and the bag was thrown 110 degrees in a twenty-fifth: October 20).
+        private const float FoldsFrom = 80, FoldsOver = 20, ThighFrom = .15f, SkirtGathered = .02f, LiesWithin = .03f, LiesIn = .08f, LiesMost = 120,
+            TurnsAtMost = 360, RidesIn = .1f, ClothSettles = .15f, HemFrom = .8f, HemBy = 1;
         // For tests: what hangs on a hook is stopped as it was until October 15 (by the hips' face as modelled and its
         // pusher, the swing's limit last).
         public static bool HungAsBefore;
@@ -189,6 +214,9 @@ namespace WonderGather
         // For tests: the furthest the body's last word (the ground's too) has moved a thing's weight since this was set
         // to 0 (metres).
         public static float HungMovedMost;
+        // For tests: how far a strap's rings have ridden out, and how far a thing has been turned to lie on what holds it
+        // (degrees).
+        public static float HungRodeMost, HungTurnedMost;
         // How far beyond where it hangs from the line of a thing begins (below its handle, its loop, its rings), and how
         // far above the ground the lowest of its skin is kept (metres).
         private const float LineFrom = .03f, GroundRoom = .002f;
@@ -211,7 +239,7 @@ namespace WonderGather
         // far what it hangs by gives (metres).
         private float[] hangTwist = new float[0];
         private bool[] hangGiven = new bool[0];
-        private Vector3[] hangPlace = new Vector3[0];
+        // (That place: hangPlace, kept with a strap's thing's, above.)
         private const float TwistsBy = 540, Gives = .05f;
         // Lain on: the cloth a thing rests on no longer stops it, nor carries its hook, once that much of the flap lies
         // on the ground (between ClothLiesFrom and ClothLiesBy); and the way out of the hips is turned level along the
@@ -274,6 +302,21 @@ namespace WonderGather
         // How far the cloth a thing rests on has turned from as it was modelled, against the hips (degrees).
         public float ClothTurned(int index) => index < hangClothRest.Length && hanging[index].pusher != null
             ? Quaternion.Angle(hanging[index].pusher.rotation, bones.pelvis.rotation * hangClothRest[index]) : 0;
+        // The way a thing's back faces out now (the side it was modelled resting on the body with).
+        public Vector3 HangingBack(int index) => hanging[index].bone.rotation * hangBack[index];
+        // How far the cloth a thing rests on is folded back from the hips' face (degrees), and how high its flap's hem is
+        // over the ground, in flap lengths (under 1: the hem lies on the ground; as the skirt's Drape reckons it).
+        public float ClothFolded(int index)
+        {
+            var thing = hanging[index];
+            if (thing.pusher == null || index >= hangClothRest.Length) return 0;
+            Vector3 hips = bones.pelvis.rotation * thing.stopNormal;
+            return Vector3.Angle(hips, thing.pusher.rotation * Quaternion.Inverse(bones.pelvis.rotation * hangClothRest[index]) * hips);
+        }
+        public float ClothHemUp(int index) => HemUp(hanging[index]);
+        // The cloth it rests on, as the body stops it now: its way out, a place on it, and how far out from there its
+        // weight is kept. False: the cloth has not come in (only the hips' face stops it).
+        public bool ClothFace(int index, out Vector3 way, out Vector3 at, out float stop) => Cloth(hanging[index], index, out way, out at, out stop);
         public void ConfigureThings(Hanging[] things) { hanging = things ?? new Hanging[0]; ready = false; CaptureRest(); }
 
         // Whether a hung thing is made to be taken in a hand.
@@ -473,6 +516,12 @@ namespace WonderGather
             hangTwist = new float[count];
             hangGiven = new bool[count];
             hangPlace = new Vector3[count];
+            hangBack = new Vector3[count];
+            hangRingsOff = new float[count];
+            hangLies = new float[count];
+            hangRide = new Vector3[count];
+            hangComes = new float[count];
+            shinRound = TryGetComponent<PhysicalBody>(out var weighed) && weighed.LegRadius > 0 ? weighed.LegRadius * 1.25f + .012f : 0;
             for (int i = 0; i < 2; i++) thighRestIn[i] = Quaternion.Inverse(bones.pelvis.rotation) * (bones.shins[i].position - bones.thighs[i].position).normalized;
             for (int k = 0; k < count; k++)
             {
@@ -483,6 +532,9 @@ namespace WonderGather
                 if (thing.bone == null) continue;
                 hangRest[k] = thing.bone.localRotation;
                 hangPlace[k] = thing.bone.localPosition;
+                hangBack[k] = thing.stopDistance > 0 ? Quaternion.Inverse(thing.bone.rotation) * (bones.pelvis.rotation * thing.stopNormal) : Vector3.zero;
+                hangRingsOff[k] = thing.pusher != null && thing.stopDistance > 0
+                    ? Vector3.Dot(thing.bone.position - bones.pelvis.TransformPoint(thing.pushRest), bones.pelvis.rotation * thing.stopNormal) : 0;
                 hangHook[k] = thing.bone.position;
                 hangHookBar[k] = hangBar[k] = thing.bone.rotation * thing.bar;
                 hangHome[k] = Quaternion.Inverse(bones.pelvis.rotation) * (thing.bone.position - bones.pelvis.position);
@@ -752,7 +804,9 @@ namespace WonderGather
             float dt = Mathf.Clamp(Time.deltaTime, 0, 1 / 20f);
             // From its modelled place under its parent, each frame (so no turn about its own axis ever builds up).
             thing.bone.localRotation = hangRest[k];
-            if (hangGiven[k]) { thing.bone.localPosition = hangPlace[k]; hangGiven[k] = false; }
+            bool strap = Strap(thing);
+            if (strap || hangGiven[k]) thing.bone.localPosition = hangPlace[k];
+            hangGiven[k] = false;
             if (thing.riders != null && thing.riders.Length > 0)
             {
                 Vector3 place = Vector3.zero;
@@ -767,6 +821,12 @@ namespace WonderGather
                     shares += share;
                 }
                 if (shares > 1e-4f) thing.bone.position = place / shares;
+            }
+            // On a strap, its rings are carried out by what comes up under them (Ride).
+            if (strap && hangHand[k] < 0 && hangTaken[k] <= 0 && thing.stopDistance > 0 && !HungAsBefore)
+            {
+                hangComes[k] += (ClothComesNow(thing, k) - hangComes[k]) * (1 - Mathf.Exp(-dt / ClothSettles));
+                thing.bone.position = Ride(thing, k, thing.bone.position, dt);
             }
             // Its hook, and how its bar lies on it. Taken in a hand, the thing hangs from its handle's place in the
             // closed fingers instead: it passes from the one to the other as the fingers close on it, and back.
@@ -883,6 +943,9 @@ namespace WonderGather
                 hangInto[k] = Mathf.Min(hangInto[k], thing.clear - Vector3.Dot(shown - bones.pelvis.position, bones.pelvis.rotation * pelvisAcross * stopSide));
             hangAskew[k] = thing.hand != null ? Mathf.Abs(Vector3.Dot(hangWay[k].normalized, thing.hand.rotation * thing.handle)) : 0;
             thing.bone.rotation = Quaternion.FromToRotation(thing.bone.rotation * thing.aim, (shown - pivot).normalized) * thing.bone.rotation;
+            // On a strap, on its hook, it lies on what holds it; then, on the ground, it tips about its line from there
+            // (both turn it about the way it hangs; the ground has the last word against the ground).
+            if (strap && stopSide == 0 && !taken && thing.stopDistance > 0 && !HungAsBefore) Lie(thing, k, pivot, shown, dt);
             if (hangTwist[k] != 0) thing.bone.rotation = Quaternion.AngleAxis(hangTwist[k], (shown - pivot).normalized) * thing.bone.rotation;
             if (taken)
             {
@@ -1006,7 +1069,7 @@ namespace WonderGather
             bool moved = false;
             for (int pass = 0; pass < 8; pass++)
             {
-                Quaternion turned = Quaternion.FromToRotation(aimed, way) * rest;
+                Quaternion turned = Quaternion.AngleAxis(Lies(k), way) * Quaternion.FromToRotation(aimed, way) * rest;
                 float lowest = float.MaxValue;
                 Vector3 low = Vector3.zero;
                 foreach (var p in thing.skin)
@@ -1055,7 +1118,7 @@ namespace WonderGather
         // bone is as modelled under what carries it.
         private float Sinks(Hanging thing, int k, Vector3 pivot, Vector3 way, float twist)
         {
-            Quaternion turned = Quaternion.AngleAxis(twist, way) * Quaternion.FromToRotation((thing.bone.rotation * thing.aim).normalized, way) * thing.bone.rotation;
+            Quaternion turned = Quaternion.AngleAxis(twist + Lies(k), way) * Quaternion.FromToRotation((thing.bone.rotation * thing.aim).normalized, way) * thing.bone.rotation;
             float lowest = float.MaxValue;
             foreach (var p in thing.skin) lowest = Mathf.Min(lowest, Vector3.Dot(pivot + turned * p - hangGroundAt[k], hangGroundUp[k]));
             return GroundRoom - lowest;
@@ -1076,6 +1139,10 @@ namespace WonderGather
             if (apart.sqrMagnitude < 1e-8f || apart.sqrMagnitude > (hangLineRound[k] + .1f) * (hangLineRound[k] + .1f)) return Vector3.zero;
             return Quaternion.Inverse(bones.pelvis.rotation) * apart.normalized;
         }
+
+        // How far a thing on a strap is turned to lie on what holds it (degrees; none for anything else): the ground's tip
+        // and stop are reckoned on top of it.
+        private float Lies(int k) => k < hangLies.Length ? hangLies[k] : 0;
 
         // How far a thing on the ground tips about its own line: the least turn that lifts it out of the ground (the way
         // it has tipped already first), or, if none does, the one that lifts it most.
@@ -1124,29 +1191,59 @@ namespace WonderGather
         // it. In a stride the thing is stopped as it was modelled (the hips' face, pushed out by the pusher, which the
         // swing's limit may overrule). Turned further (bowed low, a knee drawn up under the body), the cloth comes up
         // against it: the face it rests on is the hips' face carried by the cloth there, its share of the flap's turn
-        // and movement as the skirt is weighted, and that share comes in as the flap turns past what a stride turns
-        // it. Its way out, a place on it, and how far out from that place the thing's weight must stay. False: no
-        // more than the hips' face.
-        private bool Cloth(Hanging thing, int k, out Vector3 way, out Vector3 at, out float stop)
+        // and movement as the skirt is weighted (or, whole, all of it), and that share comes in as the flap turns past
+        // what a stride turns it. Its way out, a place on it, and how far out from that place the thing's weight must
+        // stay. False: no more than the hips' face. For a thing on a strap the cloth goes again as the flap folds back
+        // from the hips' face (FoldsFrom): lying on its front with its hips coming up, the flap lies on the ground and
+        // its face points to the sky, and nothing of it is under the bag (measured on the skin: it pushed the bag into
+        // the coat there, October 15).
+        private bool Cloth(Hanging thing, int k, out Vector3 way, out Vector3 at, out float stop) => Cloth(thing, k, out way, out at, out stop, out _);
+
+        private bool Cloth(Hanging thing, int k, out Vector3 way, out Vector3 at, out float stop, out float comes, bool whole = false)
         {
             way = bones.pelvis.rotation * thing.stopNormal;
             at = bones.pelvis.position;
             stop = thing.stopDistance;
+            comes = 0;
             if (thing.pusher == null || thing.pushShare <= 0 || k >= hangClothRest.Length) return false;
             Quaternion turned = thing.pusher.rotation * Quaternion.Inverse(bones.pelvis.rotation * hangClothRest[k]);
-            float comes = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(ClothRoom, ClothRoom + ClothComes, Quaternion.Angle(Quaternion.identity, turned)));
+            comes = Strap(thing) ? (k < hangComes.Length ? hangComes[k] : 0)
+                : Mathf.SmoothStep(0, 1, Mathf.InverseLerp(ClothRoom, ClothRoom + ClothComes, Quaternion.Angle(Quaternion.identity, turned)));
             // A thing hung from the cloth, lain on: where the flap lies along the ground under the body, it is not over
             // the thing, and does not stop it. (Until October 20 it did: turned with the flap, the cloth's face pointed
             // into the ground, the ground pushed back, and the lantern and the mug were held between the hip and the
             // flap, inside the coat.)
             if (!HungAsOn15 && thing.riders != null && thing.riders.Length > 0) comes *= 1 - FlapLies(thing.pusher);
-            if (comes <= 0) return false;
-            float share = Mathf.Clamp01(thing.pushShare) * comes;
+            if (comes <= (Strap(thing) ? 1e-4f : 0)) return false;
+            float share = (whole ? 1 : Mathf.Clamp01(thing.pushShare)) * comes;
             Vector3 rest = bones.pelvis.TransformPoint(thing.pushRest);
             stop = thing.stopDistance - Vector3.Dot(rest - bones.pelvis.position, way);
             way = Quaternion.Slerp(Quaternion.identity, turned, share) * way;
             at = Vector3.Lerp(rest, thing.pusher.TransformPoint(thing.pushPoint), share);
             return true;
+        }
+
+        // How far the cloth has come in under a thing on a strap now: past what a stride turns its flap, not folded back
+        // from the hips' face, and with its hem off the ground (HemFrom to HemBy flap lengths over it, as the skirt's Drape
+        // reckons the ground). Lying face down the flap lies on the ground beside the bag, and coming in there it lifted
+        // the bag onto the coat's back (the judges of the satchel, round 2: hem 0.52 to 0.76 lying, 1.13 and more on hands
+        // and knees, October 20).
+        private float ClothComesNow(Hanging thing, int k)
+        {
+            if (thing.pusher == null || thing.pushShare <= 0 || k >= hangClothRest.Length) return 0;
+            Quaternion turned = thing.pusher.rotation * Quaternion.Inverse(bones.pelvis.rotation * hangClothRest[k]);
+            Vector3 hips = bones.pelvis.rotation * thing.stopNormal;
+            return Mathf.SmoothStep(0, 1, Mathf.InverseLerp(ClothRoom, ClothRoom + ClothComes, Quaternion.Angle(Quaternion.identity, turned)))
+                   * (1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(FoldsFrom, FoldsFrom + FoldsOver, Vector3.Angle(hips, turned * hips))))
+                   * Mathf.SmoothStep(0, 1, Mathf.InverseLerp(HemFrom, HemBy, HemUp(thing)));
+        }
+
+        // How high the hem of the flap a thing rests on is over the ground, in flap lengths (under 1: it lies on it).
+        private float HemUp(Hanging thing)
+        {
+            if (thing.pusher == null) return 0;
+            float ground = Mathf.Min(bones.feet[0].position.y, bones.feet[1].position.y) - ankleUp;
+            return (thing.pusher.position.y - ground) / Mathf.Max(.01f, flapLong);
         }
 
         private static Vector3 OnSegment(Vector3 p, Vector3 a, Vector3 b)
@@ -1155,9 +1252,79 @@ namespace WonderGather
             return a + ab * (ab.sqrMagnitude > 1e-10f ? Mathf.Clamp01(Vector3.Dot(p - a, ab) / ab.sqrMagnitude) : 0);
         }
 
-        // A thing kept out of the body by turning it about where it hangs from, its length kept: out of the hips as they
-        // were modelled, out of the cloth it rests on as it is now, and out of the thigh on its side, wherever that
-        // thigh has gone (bowed, it comes up under the thing; a foot brought forward on hands and knees, through it).
+        // A thing on a strap (a satchel), not sewn to the clothes: it hangs from rings that lie on the body as the strap
+        // does, and is turned on them as it rests.
+        private static bool Strap(Hanging thing) => thing.riders == null || thing.riders.Length == 0;
+
+        // Whether a place is within a thing's shin or boot (the leg on its side, by `round` from its line): the nearest place
+        // on the leg's line, and the way out to the thing's own side of it (the hips' way out, square to the leg).
+        private bool Shin(int k, Vector3 at, float round, out Vector3 near, out Vector3 side)
+        {
+            int leg = hangLeg[k];
+            Vector3 knee = bones.shins[leg].position, ankle = bones.feet[leg].position, toe = Pair(bones.toes) ? bones.toes[leg].position : ankle;
+            Vector3 onShin = OnSegment(at, knee, ankle), onBoot = OnSegment(at, ankle, toe);
+            bool boot = (at - onBoot).sqrMagnitude < (at - onShin).sqrMagnitude;
+            near = boot ? onBoot : onShin;
+            Vector3 hips = bones.pelvis.rotation * hanging[k].stopNormal;
+            side = Vector3.ProjectOnPlane(hips, boot ? toe - ankle : ankle - knee);
+            side = side.sqrMagnitude > 1e-6f ? side.normalized : hips;
+            return (at - near).sqrMagnitude < round * round;
+        }
+
+        // How far the thigh on a thing's side is drawn up past a stride, gathering the skirt (0 in a stride, 1 by GathersBy).
+        private float Gathers(int k, Vector3 hip, Vector3 knee)
+            => Mathf.SmoothStep(0, 1, Mathf.InverseLerp(GathersFrom, GathersBy, Vector3.Angle(bones.pelvis.rotation * thighRestIn[hangLeg[k]], knee - hip)));
+
+        // Where a strap's rings are, given where the strap holds them on the hips: carried out by what comes up under them
+        // past a stride, as far out as they were from the cloth as modelled. By the cloth, its share of its flap's
+        // movement there; and by a thigh drawn up past a stride, out to its side (with a foot brought forward from hands
+        // and knees it comes up to the waist, within a centimetre of where the rings are on the hips). Measured on the skin
+        // in the getting up (October 15): on hands and knees the skirt is 15 to 40 mm out over the rings, so that no
+        // turning of the bag about them can keep it outside the coat.
+        private Vector3 Ride(Hanging thing, int k, Vector3 rings, float dt)
+        {
+            Vector3 held = rings;
+            if (Cloth(thing, k, out var way, out var at, out _))
+            {
+                float clear = Vector3.Dot(rings - at, way) - hangRingsOff[k];
+                if (clear < 0) rings -= way * clear;
+            }
+            if (k < hangLeg.Length && hangLegRound[k] > 0)
+            {
+                Vector3 hip = bones.thighs[hangLeg[k]].position, knee = bones.shins[hangLeg[k]].position;
+                float gathers = Gathers(k, hip, knee);
+                if (gathers > 0)
+                {
+                    Vector3 hips = bones.pelvis.rotation * thing.stopNormal;
+                    Vector3 side = Vector3.ProjectOnPlane(hips, knee - hip);
+                    side = side.sqrMagnitude > 1e-6f ? side.normalized : hips;
+                    Vector3 off = rings - OnSegment(rings, Vector3.Lerp(hip, knee, ThighFrom), knee);
+                    float round = hangLegGathered[k] + SkirtGathered;
+                    if (off.sqrMagnitude < round * round)
+                    {
+                        float beside = Vector3.Dot(off, side);
+                        rings += side * ((Mathf.Sqrt(Mathf.Max(0, round * round - (off - side * beside).sqrMagnitude)) - beside) * gathers);
+                    }
+                }
+            }
+            // ... and off its shin, as the knee comes up by them (the thigh drawn up to the chest).
+            if (shinRound > 0 && k < hangLeg.Length && hangLegRound[k] > 0)
+            {
+                float gathers = Gathers(k, bones.thighs[hangLeg[k]].position, bones.shins[hangLeg[k]].position);
+                float round = shinRound + hangRingsOff[k];
+                if (gathers > 0 && Shin(k, rings, round, out var near, out var side))
+                {
+                    Vector3 off = rings - near;
+                    float beside = Vector3.Dot(off, side);
+                    rings += side * ((Mathf.Sqrt(Mathf.Max(0, round * round - (off - side * beside).sqrMagnitude)) - beside) * gathers);
+                }
+            }
+            Vector3 ride = Quaternion.Inverse(bones.pelvis.rotation) * (rings - held);
+            hangRide[k] += (ride - hangRide[k]) * (1 - Mathf.Exp(-dt / RidesIn));
+            HungRodeMost = Mathf.Max(HungRodeMost, hangRide[k].magnitude);
+            return held + bones.pelvis.rotation * hangRide[k];
+        }
+
         // How far the flap of the skirt on this bone lies along the ground, eased (0: not at all, or no flap; 1: enough of
         // it that it is the ground's, not over what hangs there).
         private float FlapLies(Transform bone)
@@ -1168,6 +1335,11 @@ namespace WonderGather
             return 0;
         }
 
+        // A thing kept out of the body by turning it about where it hangs from, its length kept: out of the hips as they
+        // were modelled, out of the cloth it rests on as it is now, and out of the thigh on its side, wherever that
+        // thigh has gone (bowed, it comes up under the thing; a foot brought forward on hands and knees, through it).
+        // A thing on a strap rests on its flap as the flap's whole turn carries it (its rings ride on the cloth: Ride),
+        // and a thigh drawn up keeps it off from ThighFrom of its length down (nearer the hip, the hips' face does).
         private Vector3 OutOfBody(Hanging thing, int k, Vector3 pivot, Vector3 tip, ref Vector3 against)
         {
             Vector3 hips = bones.pelvis.rotation * thing.stopNormal;
@@ -1189,12 +1361,15 @@ namespace WonderGather
                     if (level.sqrMagnitude > 1e-6f) hips = Vector3.Slerp(hips, level.normalized, lain).normalized;
                 }
             }
-            bool cloth = Cloth(thing, k, out var clothOut, out var clothAt, out float clothStop);
+            bool strap = Strap(thing);
+            bool cloth = Cloth(thing, k, out var clothOut, out var clothAt, out float clothStop, out _, strap);
             Vector3 way = tip - pivot;
             way = way.sqrMagnitude > 1e-8f ? way.normalized : Vector3.down;
             float length = Mathf.Max(1e-4f, thing.length);
             bool leg = k < hangLeg.Length && hangLegRound[k] > 0;
             Vector3 hip = leg ? bones.thighs[hangLeg[k]].position : Vector3.zero, knee = leg ? bones.shins[hangLeg[k]].position : Vector3.zero;
+            float gathers = leg ? Gathers(k, hip, knee) : 0;
+            Vector3 top = strap ? Vector3.Lerp(hip, knee, ThighFrom * gathers) : hip;
             for (int pass = 0; pass < 4; pass++)
             {
                 bool moved = Outside(ref way, hips, (thing.stopDistance - Vector3.Dot(pivot - bones.pelvis.position, hips)) / length, ref against);
@@ -1204,10 +1379,8 @@ namespace WonderGather
                     // Out of the thigh: from the nearest place on its line, as far as a stride leaves room for, and further
                     // as it is drawn up past a stride, gathering the skirt.
                     Vector3 weight = pivot + way * length;
-                    Vector3 near = OnSegment(weight, hip, knee), off = weight - near;
-                    float drawn = Vector3.Angle(bones.pelvis.rotation * thighRestIn[hangLeg[k]], knee - hip);
-                    float gathered = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(GathersFrom, GathersBy, drawn));
-                    float round = Mathf.Lerp(hangLegRound[k], hangLegGathered[k], gathered);
+                    Vector3 near = OnSegment(weight, top, knee), off = weight - near;
+                    float round = Mathf.Lerp(hangLegRound[k], hangLegGathered[k], gathers);
                     if (off.sqrMagnitude < round * round)
                     {
                         // On its own side of the thigh (the way out of the hips): a thigh brought quickly through
@@ -1231,8 +1404,8 @@ namespace WonderGather
                     // hammer's handle went through the thigh, its weight beyond it.)
                     if (!HungAsOn15 && hangFar[k] > LineFrom && thing.riders != null && thing.riders.Length > 0)
                     {
-                        Vector3 top = pivot + way * LineFrom, end = pivot + way * hangFar[k];
-                        Nearest(top, end, hip, knee, out var onThing, out var onThigh, out float alongThigh);
+                        Vector3 lineTop = pivot + way * LineFrom, lineEnd = pivot + way * hangFar[k];
+                        Nearest(lineTop, lineEnd, hip, knee, out var onThing, out var onThigh, out float alongThigh);
                         Vector3 apart = onThing - onThigh, thigh = knee - hip;
                         Vector3 hook = Vector3.ProjectOnPlane(pivot - OnSegment(pivot, hip, knee), thigh);
                         if (hook.sqrMagnitude < 1e-4f) hook = Vector3.ProjectOnPlane(hips, thigh);
@@ -1260,11 +1433,77 @@ namespace WonderGather
                             }
                         }
                     }
+                    // A thing on a strap, the leg drawn up past a stride: out of its shin and boot too, as far as it is
+                    // kept off what it rests on, out to its own side of the leg (the hips' way out, square to it): the
+                    // boot swinging forward past it pushes it out, never through it to the other side (pushed out the
+                    // nearest way, it was thrown across as the boot passed). A few times over: held at its strap's length
+                    // from its rings, one push can land back in the leg. (Bringing a foot forward from hands and knees,
+                    // the boot swung through the bag, and with that foot set down the bag lay in the shin: October 20.)
+                    if (strap && gathers > 0 && shinRound > 0)
+                        for (int again = 0; again < 4; again++)
+                        {
+                            weight = pivot + way * length;
+                            float shin = shinRound + hangRingsOff[k];
+                            if (!Shin(k, weight, shin, out near, out var side)) break;
+                            off = weight - near;
+                            float beside = Vector3.Dot(off, side);
+                            Vector3 rest = off - side * beside;
+                            Vector3 to = near + rest + side * Mathf.Sqrt(Mathf.Max(0, shin * shin - rest.sqrMagnitude)) - pivot;
+                            if (to.sqrMagnitude > 1e-10f) way = to.normalized;
+                            against = side;
+                            moved = true;
+                        }
                 }
                 if (!moved) break;
             }
             HungMovedMost = Mathf.Max(HungMovedMost, Vector3.Distance(pivot + way * length, tip));
             return pivot + way * length;
+        }
+
+        // A thing on a strap, on its hook, lies on what holds it: turned about the way it hangs until its back faces it, by
+        // as much as that holds it, over LiesIn seconds. A thigh drawn up past a stride has the skirt gathered round it,
+        // and the bag lies on that, its back to the thigh, however far out the skirt holds it; otherwise the cloth come in
+        // under it, once within LiesWithin of it. In a stride nothing holds it so, and it hangs as its strap holds it.
+        // (Until October 20 it was turned only by the least turn from how it was modelled: on hands and knees its
+        // end, not its back, came against the coat: the judges' first finding of the satchel's round 1. Measured on the
+        // skin, the thigh's way out is what the bag rests on, on hands and knees as with a foot brought forward.)
+        private void Lie(Hanging thing, int k, Vector3 pivot, Vector3 weight, float dt)
+        {
+            Vector3 way = weight - pivot;
+            if (way.sqrMagnitude < 1e-8f || k >= hangLies.Length) return;
+            way.Normalize();
+            Vector3 on = Vector3.zero;
+            float lies = 0, gathers = 0;
+            if (k < hangLeg.Length && hangLegRound[k] > 0)
+            {
+                Vector3 hip = bones.thighs[hangLeg[k]].position, knee = bones.shins[hangLeg[k]].position;
+                gathers = Gathers(k, hip, knee);
+                Vector3 off = weight - OnSegment(weight, Vector3.Lerp(hip, knee, ThighFrom), knee);
+                if (gathers > 0 && off.sqrMagnitude > 1e-8f) { on += off.normalized * gathers; lies = gathers; }
+            }
+            if (gathers < 1 && Cloth(thing, k, out var clothOut, out var clothAt, out float clothStop, out float comes, true))
+            {
+                float clear = Vector3.Dot(weight - clothAt, clothOut) - clothStop;
+                float holds = comes * (1 - Mathf.SmoothStep(0, 1, clear / LiesWithin)) * (1 - gathers);
+                on += clothOut * holds;
+                lies = Mathf.Max(lies, holds);
+            }
+            float want = 0;
+            if (lies > 0)
+            {
+                Vector3 back = Vector3.ProjectOnPlane(thing.bone.rotation * hangBack[k], way), face = Vector3.ProjectOnPlane(on, way);
+                if (back.sqrMagnitude > 1e-6f && face.sqrMagnitude > 1e-6f)
+                {
+                    // (Taken the nearer way round from how it is turned now: what holds it passing behind it does not throw it
+                    // round the other way.)
+                    float full = Vector3.SignedAngle(back, face, way);
+                    full += 360 * Mathf.Round((hangLies[k] - full) / 360);
+                    want = Mathf.Clamp(full, -LiesMost, LiesMost) * lies;
+                }
+            }
+            hangLies[k] += Mathf.Clamp((want - hangLies[k]) * (1 - Mathf.Exp(-dt / LiesIn)), -TurnsAtMost * dt, TurnsAtMost * dt);
+            if (Mathf.Abs(hangLies[k]) > 1e-3f) thing.bone.rotation = Quaternion.AngleAxis(hangLies[k], way) * thing.bone.rotation;
+            HungTurnedMost = Mathf.Max(HungTurnedMost, Mathf.Abs(hangLies[k]));
         }
 
         // A way from where a thing hangs kept at least `least` along a face's way out: turned onto it by the least turn
