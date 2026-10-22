@@ -70,3 +70,22 @@ Bench arguments used: `-riseMiner Small -riseStarts front,front@1,...,front@8 -r
   turns faster than that, with each ankle's joint speed and how far its asked turn moved;
   `spinlook.py <log>` shows them. `sumrise.sh <run>`: what a run came to (stands, turned, wild,
   boot whips over 30 and over 100 rad/s, how the tries ended).
+
+## The third path: a learned correction (October 22; Luis: "I approve we try the third path")
+
+What learns the moment from hands and feet to the squat: `Assets/_WonderGather/Learning/RiseAgent.cs` (its own
+assembly, `WonderGather.Learning`, with Unity's ML-Agents 4.0.3), on the riser's hook (`OwnRiser.Learned`, six numbers:
+the trunk's and head's bow and the twist, how high the hips are held, where the weight is meant to be; `OwnRiser.Sense`,
+29 numbers it is told). It acts only in the stages `pike` and `rollup`, and only through the body's own joints.
+
+- **The trainer** (outside the project): `D:/Dev/mlagents-env`, Python 3.10.12 made with `uv`, `mlagents` 1.1.0,
+  PyTorch 2.2.2 (CUDA 12.1), `setuptools<70` (the trainer still imports `pkg_resources`).
+- **Teaching** (two processes; the trainer first, it listens on port 5004):
+  `D:/Dev/mlagents-env/Scripts/mlagents-learn train_smallrise.yaml --run-id=<name> --results-dir=D:/Dev/mlagents-results`,
+  then Unity on the work branch's copy, as the bench: `-runTests -testPlatform PlayMode -testFilter
+  WonderGather.Tests.RiseTraining -trainWays <ways file> -trainHours 6` (also `-trainTries`, `-trainEvery 5` steps of the
+  physics between decisions, `-trainFrames 1`, `-trainFor 25`, `-trainTurn 20 -trainMove 0.3`, `-trainSeed`). A try that
+  stands is worth 1, one handed to its standing balance that then falls 0.3, any other 0; each change in what it says
+  costs a little (`RiseAgent.Jerk`). The model comes out as `<results>/<name>/SmallRise.onnx`.
+- **Without the trainer** (October 22, dry run): the agent says nothing and the body does as searched: 23 of 100 tries
+  stood, 31 came to the hand-over, the agent's stages were reached in 86; 100 tries in 36 s.

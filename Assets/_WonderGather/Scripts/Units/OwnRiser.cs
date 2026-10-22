@@ -419,8 +419,8 @@ namespace WonderGather
         private Quaternion Turn(int j)
         {
             float[] p = stage.pose;
-            if (j == Trunk) return Quaternion.Euler(p[0], p[2] * (leads == 1 ? -1 : 1), 0);
-            if (j == Head) return Quaternion.Euler(p[1], 0, 0);
+            if (j == Trunk) return Learned != null ? Quaternion.Euler(p[0] + Learned[0], (p[2] + Learned[2]) * (leads == 1 ? -1 : 1), 0) : Quaternion.Euler(p[0], p[2] * (leads == 1 ? -1 : 1), 0);
+            if (j == Head) return Quaternion.Euler(p[1] + (Learned != null ? Learned[1] : 0), 0, 0);
             int side = (j - UpperArm) % 2, n = side == leads ? 0 : 1, a = 3 + 3 * n, l = 9 + 4 * n;
             switch (j - side)
             {
@@ -1012,6 +1012,46 @@ namespace WonderGather
         // for the bench. October 22.)
         public string Released { get; private set; } = "";
         public string HandedOver { get; private set; } = "";
+        // What it senses, for what learns (Senses numbers, each roughly between -1 and 1): its trunk's up and forward, the
+        // way it lies and across (its leading side positive); its hips' and head's height; where its weight is from the
+        // middle of its soles and how it goes (the way it lies, across, up); how deep within what bears it its weight is,
+        // and where it is heading; how far ahead of its soles, how flat they lie, what its boots bear; what each hand,
+        // knee and boot bears; whether its hands have let go; at which of the stages it learns at it is, and how far
+        // into it; how much it has waited to let go.
+        public void Sense(System.Collections.Generic.List<float> into)
+        {
+            Vector3 lies = Lies(), across = Vector3.Cross(Vector3.up, lies) * (leads == 1 ? 1 : -1);
+            float L(Vector3 v) => Vector3.Dot(v, lies);
+            float A(Vector3 v) => Vector3.Dot(v, across);
+            Vector3 up = parts[Trunk].transform.up, ahead = parts[Trunk].transform.forward;
+            into.Add(L(up)); into.Add(A(up)); into.Add(up.y);
+            into.Add(L(ahead)); into.Add(A(ahead)); into.Add(ahead.y);
+            into.Add(Mathf.Clamp(Measure(Asks.Hips), 0, 1.5f)); into.Add(Mathf.Clamp(Measure(Asks.Head), 0, 1.5f));
+            Vector3 feet = .5f * (parts[Foot].transform.TransformPoint(soleAt[0]) + parts[Foot + 1].transform.TransformPoint(soleAt[1]));
+            Vector3 off = Flat(Weight() - feet) / tall, goes = WeightGoes();
+            into.Add(Mathf.Clamp(L(off), -2, 2)); into.Add(Mathf.Clamp(A(off), -2, 2));
+            into.Add(Mathf.Clamp(L(goes), -2, 2)); into.Add(Mathf.Clamp(A(goes), -2, 2)); into.Add(Mathf.Clamp(goes.y, -2, 2));
+            float depth = float.IsNaN(BalanceDepth) ? -.2f : Mathf.Clamp(BalanceDepth, -.2f, .2f);
+            into.Add(depth * 5);
+            {
+                int n = Supporting(false), m = Outline(sup, n);
+                Vector3 w = Weight();
+                float high = Mathf.Max(.05f, w.y - GroundAt(w));
+                Vector3 heads = Flat(w) + Flat(goes) * Mathf.Sqrt(high / Physics.gravity.magnitude);
+                float d = n > 0 ? Within(m, heads, out _) : -.2f;
+                into.Add(Mathf.Clamp(float.IsInfinity(d) || float.IsNaN(d) ? -.2f : d, -.2f, .2f) * 5);
+            }
+            into.Add(Mathf.Clamp(Measure(Asks.Ahead), -2, 2)); into.Add(Measure(Asks.Soles)); into.Add(Mathf.Clamp(bore, 0, 1.5f));
+            for (int i = 0; i < 2; i++) into.Add(Mathf.Clamp(leanFelt[Forearm + i], 0, 1.5f));
+            for (int i = 0; i < 2; i++) into.Add(Mathf.Clamp(leanFelt[Thigh + i] + leanFelt[Shin + i], 0, 1.5f));
+            for (int i = 0; i < 2; i++) into.Add(Mathf.Clamp(leanFelt[Foot + i], 0, 1.5f));
+            into.Add(handsLet ? 1 : 0);
+            string now = stage != null ? stage.name : "";
+            into.Add(now == "pike" ? 1 : 0); into.Add(now == "rollup" ? 1 : 0);
+            into.Add(stage != null ? Mathf.Clamp01(got / Mathf.Max(.1f, stage.atLeast)) : 0);
+            into.Add(Mathf.Clamp01(ReleaseWaited / Mathf.Max(.1f, ReleaseWaitsAtMost)));
+        }
+
         // (Where its weight is heading for: its capture point, its weight's place and its speed times the root of its
         // height over gravity, flat.)
         private string Heading(int m, string what)
@@ -1028,6 +1068,17 @@ namespace WonderGather
         // (Both hands let go only once its weight is over the rest, never all the same: every try that let go with its
         // weight outside its boots failed, October 22. False: as before.)
         public static bool ReleaseWhenOver = true;
+
+        // ---- The third path (Luis, October 22: a learned controller for the moment from hands and feet to the squat;
+        // help only while it learns, none in the game). What learns sets Learned in the stages it learns at, from what
+        // Sense tells it; its own joints do all of it: the pose's trunk bow, head bow and twist turned so much more
+        // (degrees); its hips held so much higher (a share of their standing height; held where they were kept, if the
+        // pose does not say how high); where its weight is meant to be moved so far (metres, the way it lies, and across
+        // it, its leading side positive). Null: as searched.
+        public const int Learns = 6;
+        public float[] Learned;
+        // How many numbers Sense tells.
+        public const int Senses = 29;
         // (Raised by its standing balance after its own getting up, its trunk and head come upright only after so much of
         // the rise, kept forward over its feet while its legs straighten: all together, four of nine that came onto their
         // feet fell as they rose. 0: as before. October 22.)
@@ -1146,9 +1197,11 @@ namespace WonderGather
             // Where its hips are asked to be: there; so high, if the pose says; and turned as they were, level across.
             Transform hips = parts[Hips].transform, trunk = parts[Trunk].transform;
             float up = 0;
-            if (!float.IsNaN(stage.holdHigh))
+            float holdHigh = stage.holdHigh;
+            if (Learned != null) holdHigh = (float.IsNaN(holdHigh) ? (hipsAtPlant.y - GroundAt(hipsAtPlant)) / tall : holdHigh) + Learned[3];
+            if (!float.IsNaN(holdHigh))
             {
-                highTo = Mathf.MoveTowards(highTo, GroundAt(hips.position) + stage.holdHigh * tall, stage.holdRate * tall * step);
+                highTo = Mathf.MoveTowards(highTo, GroundAt(hips.position) + holdHigh * tall, stage.holdRate * tall * step);
                 up = Mathf.Clamp(highTo - hips.position.y - BalanceDamps * parts[Hips].velocity.y, -BalanceShiftsAtMost, BalanceShiftsAtMost);
             }
             Vector3 hipsTo = hips.position + by + Vector3.up * up;
@@ -1288,6 +1341,11 @@ namespace WonderGather
                     }
                     if (front >= 0) to = Vector3.Lerp(to, Flat(parts[Foot + front].transform.TransformPoint(soleAt[front])), stage.balanceLead);
                 }
+            }
+            if (Learned != null)
+            {
+                Vector3 lies = Lies();
+                to += lies * Learned[4] + Vector3.Cross(Vector3.up, lies) * (Learned[5] * (leads == 1 ? 1 : -1));
             }
             weightTo = to;
             // What would bring it there without overshoot, with what it has learnt its pose holds back; and so where the

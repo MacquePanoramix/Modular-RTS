@@ -25,9 +25,10 @@ namespace WonderGather.Tests
     //   [-riseMany 32] [-riseKeep 6] [-riseSpread 15] [-riseSeed 1] [-riseFirst 0]
     public sealed class OwnRiseBench
     {
-        private const int Parts = OwnBody.Count, Kept = Parts + 2;
+        internal const int Parts = OwnBody.Count, Kept = Parts + 2;
         private static readonly CultureInfo Plain = CultureInfo.InvariantCulture;
-        private struct Lies { public string name; public Vector3[] at; public Quaternion[] turned; public Vector3 side, place; public Quaternion faces; }
+        // (Also for the training of the third path, RiseTraining.)
+        internal struct Lies { public string name; public Vector3[] at; public Quaternion[] turned; public Vector3 side, place; public Quaternion faces; }
         private sealed class Body
         {
             public string name;
@@ -108,7 +109,7 @@ namespace WonderGather.Tests
         }
 
         // How the let-go body lies now: its eleven parts, its boots and its toes.
-        private static Lies Now(PhysicalFall fall, string name)
+        internal static Lies Now(PhysicalFall fall, string name)
         {
             var lies = new Lies { name = name, at = new Vector3[Kept], turned = new Quaternion[Kept] };
             for (int i = 0; i < PhysicalFall.Count; i++) { lies.at[i] = fall.Part(i).transform.position; lies.turned[i] = fall.Part(i).transform.rotation; }
@@ -117,7 +118,7 @@ namespace WonderGather.Tests
             return lies;
         }
 
-        private static void Put(PhysicalFall fall, Lies lies)
+        internal static void Put(PhysicalFall fall, Lies lies)
         {
             for (int i = 0; i < PhysicalFall.Count; i++)
             {
@@ -128,7 +129,7 @@ namespace WonderGather.Tests
         }
 
         // The posed body's segments put as the body lay, for the body's own to be made from.
-        private static void Lay(MinerBody miner, Lies lies)
+        internal static void Lay(MinerBody miner, Lies lies)
         {
             var s = miner.Solved;
             void To(Transform segment, int k) => segment.SetPositionAndRotation(lies.at[k], lies.turned[k]);

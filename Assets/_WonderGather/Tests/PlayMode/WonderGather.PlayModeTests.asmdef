@@ -1,1 +1,1 @@
-{"name":"WonderGather.PlayModeTests","references":["WonderGather.Runtime"],"optionalUnityReferences":["TestAssemblies"]}
+{"name":"WonderGather.PlayModeTests","references":["WonderGather.Runtime","WonderGather.Learning","Unity.ML-Agents","Unity.InferenceEngine"],"optionalUnityReferences":["TestAssemblies"]}
