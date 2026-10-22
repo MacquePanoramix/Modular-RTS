@@ -58,6 +58,14 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 22, 2026 (evening) — a short one, before a choice of approach
+
+- Luis asked, before any approach is chosen, for research of every option that
+  keeps the body wholly responsible; it is done ([the report](Research/reports/Getting%20up%20by%20its%20own%20joints.md)).
+  Nothing is decided until he has read it. The side branches (satchel, hung things)
+  are finished and unmerged; merging them is his. The suite is still not run since
+  October 14. Nothing else has moved since the sixth, this morning.
+
 ### October 22, 2026 — the sixth (after the context was compacted)
 
 - **Where we are.** S3b step 2, the getting up by its own body. Since the fifth:
