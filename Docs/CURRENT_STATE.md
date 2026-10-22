@@ -15,6 +15,19 @@
   that hand-over to the crouch the standing body already rises from.
   [The design page](Design/TheBodysOwn.md#never-the-backup-animation-luis-october-22-work-branch-in-progress).
 
+- **The side sessions' work is merged into the game branch (October 22; Luis:
+  "can you merge the work that these other agents had done here?").** The
+  satchel stopped by the body, the satchel lying on the body, and the lantern,
+  the mug, the hammer and the ground: three branches, the two last changing the
+  same code in `MinerBody`, merged by hand by what each part means
+  ([how, and what was measured](Validation.md#the-side-sessions-work-merged--october-22)).
+  On the merge: the whole suite **207 tests, 178 passed, 0 failed** (29 run
+  only when asked); the satchel through its clothes in falls in 2, 5, 3 and 16
+  looks (front, back, left, right; each branch alone 2, 8, 3, 44); nothing on a
+  hook more than 4 mm under the ground (the satchel too, now); standing and
+  walking as before. Not in a build; not looked at by Luis. The getting up
+  (work branch) is not part of it. The three entries below are each branch's own
+  account, as written then.
 - **The satchel through the coat (the judges of the getting up, finding 4),
   partly mended on its own branch `claude/satchel-stop`, not merged, not in a
   build** ([what was found and how it was tested](Validation.md#hung-things-stopped-however-the-body-is-turned--october-15);

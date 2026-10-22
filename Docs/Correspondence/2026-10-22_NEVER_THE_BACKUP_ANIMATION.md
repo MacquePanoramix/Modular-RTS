@@ -47,3 +47,23 @@ the three side sessions in the sidebar:
 | The approach | "before we decide on a approach do a deeper research of all possible options" | **Not decided:** no approach is chosen until the options are researched and shown to him |
 | The rule | "with the previous rules of the body being responsible fully to the act of getting up" | **Kept:** every option is weighed by whether the body's own joints, against the ground, do all of it |
 | The side sessions | "did these agents finish their task" | Answered in the session: both finished, committed on their own branches, not merged |
+
+## Luis, after the research (October 22, night) (verbatim)
+
+The research report ([Getting up by its own joints](../Research/reports/Getting%20up%20by%20its%20own%20joints.md))
+ended with three questions only Luis could answer: help that exists only while
+training; changes to the body; a one-hand-first release and a hand on the knee.
+His answer, with a screenshot of the side sessions:
+
+> 1. Yes, what we care about is the game results to not receive help. We can arrive there however necessary.
+> 2. Yes they are, although they should all be checked by a team of aesthetic agents following the aesthetic guide of the game that is established.
+> 3. I guess so? I don't see why not to be honest.
+>
+> Also, do you think, if you think it's reasonable, can you merge the work that these other agents had done here? Let me know if you have any more questions.
+
+| | Luis | What follows |
+|---|---|---|
+| Help while training | "what we care about is the game results to not receive help. We can arrive there however necessary" | **Decided by Luis:** help that exists only while searching or training (extra strength later taken away, a lift reduced to nothing) is allowed; in the game the body receives none |
+| Changes to the body | "Yes they are, although they should all be checked by a team of aesthetic agents following the aesthetic guide of the game" | **Decided by Luis:** a smaller head share, more ankle range, a longer heel or broader sole are open; each is checked by a team of aesthetic judges against the game's established aesthetic guide before it stays |
+| One hand first, a hand on the knee | "I guess so? I don't see why not" | Allowed, as a way to try |
+| The side sessions' work | "if you think it's reasonable, can you merge the work" | Merged by hand where the two branches touch the same code (below, and in the validation history) |

@@ -3951,3 +3951,31 @@ judges' verdict is not his.**
 - **Judges, round 1 of the roll** (three, `Docs/Reviews/2026-10-22_Roll_Judges.md`): all "reads as
   real, with a flaw".
 - **Not run:** the test suite (since October 14); Long and Round; a build. Not looked at by Luis.
+
+## The side sessions' work, merged — October 22
+
+- **Asked by Luis** ("if you think it's reasonable, can you merge the work that these other agents had done
+  here?"; [the message](Correspondence/2026-10-22_NEVER_THE_BACKUP_ANIMATION.md)).
+- **What was merged, and how.** `claude/satchel-stop` (752fb07) with its two branches: `claude/satchel-lies`
+  (b738126) and `claude/hung-things-stop` (1bbc39d), all from the game branch at ee19ba1. The two last change
+  `MinerBody` in the same functions (`Hang`, `Cloth`, `OutOfBody`) and each added fields named `hangTwist` and
+  `hangPlace`. Merged by hand, in a copy of its own (`D:/Dev/WG-hung`, branch `claude/side-merge`), by meaning, as
+  the two sessions' notes asked: one `hangPlace` (the same in both); the satchel's turn renamed `hangLies`; the lie
+  first and the ground's tip after it, reckoned on top of it (the ground has the last word against the ground); a
+  strap's thing back to its modelled place every frame, any thing after the ground made it give; the cloth's share
+  the satchel's own for a strap's thing and, for things hung from the cloth, less where the flap lies on the ground;
+  both checks of the thigh kept. Then the game branch's own changes since ee19ba1 (docs only) merged in, and the game
+  branch moved forward to the result (710e356, cc6b46a).
+- **`HungThingTests` on the merge** (one run): 5 of 5 pass. Standing and walking, the body's last word moved what
+  hangs 0.0 mm standing and 2.7 mm walking (Small), 0.0 (Long, Round); a strap's rings never rode and its bag never
+  turned. On the ground: the deepest anything goes under it 4 mm (the satchel 3), none more than 10 mm in 1483 looks
+  (the hung-things branch alone: 12 mm, 2 of 1485). Small pushed over its own falls, the satchel through its clothes
+  in **2 of 171 looks onto its front, 5 of 123 onto its back, 3 of 159 onto its left, 16 of 121 onto its right** (the
+  satchel's branch alone: 2, 8, 3, 44; the hung-things branch alone, onto its right: 47; this count moves from run
+  to run).
+- **The whole PlayMode suite on the merge** (one run, no filter, in that copy, nothing else running, 24 minutes):
+  **207 tests, 178 passed, 0 failed, 29 run only when asked.**
+- **Not done:** pictures or judges of the merged whole (each branch had its own three rounds, or two); the satchel's
+  open points (its hem as the hips leave the ground, the boot grazing it) and the hung things' (Round's hammer in its
+  thigh in a deep squat and in its torso lain on its right) are as each branch left them; a build; Luis's look. The
+  getting up's work branch (`claude/wip-round`) is not merged with any of it.
