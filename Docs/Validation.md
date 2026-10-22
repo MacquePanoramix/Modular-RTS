@@ -3979,3 +3979,22 @@ judges' verdict is not his.**
   open points (its hem as the hips leave the ground, the boot grazing it) and the hung things' (Round's hammer in its
   thigh in a deep squat and in its torso lain on its right) are as each branch left them; a build; Luis's look. The
   getting up's work branch (`claude/wip-round`) is not merged with any of it.
+
+## S3b step 2 — where the weight is when the hands let go (October 22, night; the research's first test)
+
+- **Asked by the research** ([the report](Research/reports/Getting%20up%20by%20its%20own%20joints.md), path 1):
+  before changing anything, record where the weight is at the instant the hands let go of the ground and at the
+  hand-over to the standing balance, in tries that stood and tries that fell. Work branch; the bench only (nothing it
+  does is changed): at each, how deep the weight is within what bears it then (boots, a knee; mm, outside below 0),
+  how deep the place it is heading for is (its capture point), its speed, what the hands bore; and whether the weight
+  had gone over the rest before the hands let go, or they let go all the same (after the shift's time ran out).
+- **One run, Small, 36 chance starts from its front (`starts36.txt`, `-riseFrames 1 -riseFor 30`): 10 stood**, 5 fell
+  as they were raised, 15 gave up, 6 ran out of time. The hands let go in 33 tries:
+  - **all 10 that stood let go with the weight over the boots** (30 to 71 mm within; heading within in 9);
+  - **14 let go with the weight not over the boots (40 to 478 mm outside), the hands letting go all the same: every
+    one of them failed** (8 gave up, 6 ran out of time);
+  - of the 19 that let go with the weight over, 10 stood, 5 fell as the standing balance raised them, 4 gave up.
+- **At the hand-over** (15): those that stood and those that fell look alike (weight 36 to 153 mm within against
+  80 to 211; moving 0.10 m/s against 0.14). What makes a third of the hand-overs fall is not yet found.
+- **What follows** (not done): the hands not let go until the weight is over the boots, and what brings it there
+  while they still bear (the hips back, a hand walked nearer, one hand first); then the hand-over.
