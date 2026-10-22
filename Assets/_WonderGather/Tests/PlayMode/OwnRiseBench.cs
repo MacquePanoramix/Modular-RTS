@@ -186,6 +186,10 @@ namespace WonderGather.Tests
                     string what = part.name + " | " + (other.attachedRigidbody != null ? "body " : other.GetComponentInParent<ArticulationBody>() != null ? "articulation " : "") + other.name + " (" + (other.transform.root != null ? other.transform.root.name : "") + ")";
                     if (strangers.Add(what)) Debug.Log("RISE_STRANGER " + what + " at " + Time.time.ToString("0.00", Plain));
                 };
+            // (-riseTold 1: what the bodies say as they go, the standing balance's own telling among it: why it would not
+            // rise, why it went down.)
+            var toldWas = OwnBody.Told;
+            if (Number("-riseTold", 0) > 0) OwnBody.Told = said => Debug.Log("RISE_TOLD " + said);
             // (-riseArms 3: to try a thing: their arms so many times as strong as they are.)
             float armsWere = OwnBody.ArmsTimes;
             Directory.CreateDirectory(folder);
@@ -841,6 +845,7 @@ namespace WonderGather.Tests
                 OwnBody.FallsBack = fellBack;
                 OwnBody.ArmsTimes = armsWere;
                 OwnBody.RiseWays = waysWere;
+                OwnBody.Told = toldWas;
                 foreach (var body in bodies) { if (body.own != null && body.own.Stands) body.own.Drop(); if (body.fall != null) { body.fall.Gives = true; body.fall.GetsUp = true; } }
             }
             yield return null;

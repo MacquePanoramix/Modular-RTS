@@ -250,6 +250,8 @@ namespace WonderGather
         public OwnRiser Riser => riser;
         // (What it was like when its getting up handed it to its standing balance, as the riser told it: for the bench.)
         public string HandedOver { get; private set; } = "";
+        // (Handed to its standing balance by its own getting up, not gathered into a crouch the old way.)
+        private bool roseByItsOwn;
         public int GaveUpGettingUp { get; private set; }
         // (How often it has come onto its feet from lying, by its own body.)
         public int OnItsFeetFromLying { get; private set; }
@@ -443,6 +445,7 @@ namespace WonderGather
             OnItsFeetFromLying++;
             for (int j = 1; j < Count; j++) riseFrom[j] = riser.Aim(j);
             HandedOver = riser.HandedOver;
+            roseByItsOwn = true;
             riser = null;
             keeper.Soften();
             Quaternion hipsFace = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);
@@ -471,6 +474,7 @@ namespace WonderGather
         private void Make(bool low, bool plain, bool down = false)
         {
             var s = miner.Solved;
+            roseByItsOwn = false;
             Told?.Invoke($"{name} takes over at {Time.time:F2}: the posed body sunk {body.SinkNow * 1000:F1} mm, bowed {body.BowNow:F1} deg, going {body.VelocityNow.magnitude:F3} m/s, crouched {body.CrouchNow * 1000:F1} mm, its feet set {body.StanceWider * 1000:F0} mm wider and {body.StanceStagger * 1000:F0} mm staggered, its boots at {s.feet[0].position.y:F3} and {s.feet[1].position.y:F3}; its hips {(s.pelvis.position.y - .5f * (s.feet[0].position.y + s.feet[1].position.y)) * 1000:F0} mm over its boots, knees bent {Vector3.Angle(s.thighs[0].up, s.shins[0].up):F0} and {Vector3.Angle(s.thighs[1].up, s.shins[1].up):F0} deg");
             var shape = body.BodyProportions;
             segments[Hips] = s.pelvis; segments[Trunk] = s.torso; segments[Head] = s.head;
@@ -897,8 +901,8 @@ namespace WonderGather
             // (Rising, its joints are asked for how it stands, by as far as it has risen; and nothing else of it.)
             if (keeper.Rising)
             {
-                float up = Hump(keeper.Risen);
-                for (int j = 1; j < Count; j++) Aims(j, Quaternion.Slerp(riseFrom[j], toStood[j], up));
+                float up = Hump(keeper.Risen), trunkUp = roseByItsOwn ? Hump(Mathf.InverseLerp(OwnRiser.RiseTrunkAfter, 1, keeper.Risen)) : up;
+                for (int j = 1; j < Count; j++) Aims(j, Quaternion.Slerp(riseFrom[j], toStood[j], j == Trunk || j == Head ? trunkUp : up));
                 keeper.Shift = Vector3.zero; keeper.Roll = Quaternion.identity;
                 return;
             }

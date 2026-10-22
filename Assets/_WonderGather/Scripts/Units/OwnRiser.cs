@@ -680,9 +680,36 @@ namespace WonderGather
             if (walkT >= 1) { handAt[walkHand] = walkTo; walkHand = -1; HandsMoved++; if (!float.IsNaN(stage.balance)) Plant(-1, -1); }
         }
 
+        // A hand walked nearer its feet while it waits to let go: false if none can go nearer.
+        private bool WalkBack(float step)
+        {
+            Vector3 lies = Lies(), feet = .5f * (parts[Foot].transform.TransformPoint(soleAt[0]) + parts[Foot + 1].transform.TransformPoint(soleAt[1]));
+            float reach = (JointAt(Shin) - JointAt(Thigh)).magnitude + (JointAt(Foot) - JointAt(Shin)).magnitude;
+            if (walkHand < 0)
+            {
+                float a0 = Vector3.Dot(Flat(HandEnd(0) - feet), lies), a1 = Vector3.Dot(Flat(HandEnd(1) - feet), lies);
+                int goes = a0 >= a1 ? 0 : 1;
+                if (Mathf.Max(a0, a1) - ReleaseWalks < ReleaseNearest * reach) return false;
+                // (Its weight off that hand first, over its boots and the other hand.)
+                if (!ShiftedOff(-1, goes, step)) { for (int i = 0; i < 2; i++) Reach(i, handAt[i]); return true; }
+                walkHand = goes;
+                walkFrom = HandEnd(walkHand);
+                walkTo = walkFrom - lies * ReleaseWalks;
+                if (Physics.Raycast(walkTo + Vector3.up, Vector3.down, out var below, 3, ground)) walkTo.y = below.point.y + ArmRadius(walkHand) - .015f;
+                walkT = 0;
+            }
+            walkT += step / .5f;
+            offHand = walkHand; offW = 0;
+            float u = Mathf.Clamp01(walkT), along = u * u * (3 - 2 * u);
+            Reach(walkHand, Vector3.Lerp(walkFrom, walkTo, along) + Vector3.up * (.04f * Mathf.Sin(Mathf.PI * u)));
+            Reach(1 - walkHand, handAt[1 - walkHand]);
+            if (walkT >= 1) { handAt[walkHand] = walkTo; walkHand = -1; HandsMoved++; Plant(-1, -1); ReleaseWaited = 0; shiftT = 0; }
+            return true;
+        }
+
         private void Begin(int index)
         {
-            at = index; stage = way.stages[index]; got = 0; still = 0; hipsBegan = Measure(Asks.Hips); downFor = 0; stepBegun = false; sat = 0; shiftT = 0; liftAt = 0; planting = false; landed = false; stepAimed = false; handsLet = false;
+            at = index; stage = way.stages[index]; got = 0; still = 0; ReleaseWaited = 0; walksBack = cannotWalkBack = false; hipsBegan = Measure(Asks.Hips); downFor = 0; stepBegun = false; sat = 0; shiftT = 0; liftAt = 0; planting = false; landed = false; stepAimed = false; handsLet = false;
             walkHand = -1; for (int i = 0; i < 2; i++) { handAt[i] = HandEnd(i); kneelFrom[i] = JointAt(Foot + i); kneelBootFrom[i] = parts[Foot + i].transform.rotation; }
             for (int j = 1; j < Count; j++) aimFrom[j] = aimNow[j];
         }
@@ -768,6 +795,9 @@ namespace WonderGather
             float share = stage.over > 0 ? Mathf.SmoothStep(0, 1, got / stage.over) : 1;
             stepping = stage.steps < 0 ? -1 : stage.steps == 0 ? leads : 1 - leads;
             bool walks = !float.IsNaN(stage.handStep);
+            walksBack = ReleaseWalks > 0 && ReleaseWhenOver && stage.letsHandsGo && !handsLet && !cannotWalkBack && !float.IsNaN(stage.balance)
+                && (walkHand >= 0 || (ReleaseWaited > ReleaseWalkAfter && Measure(Asks.Ahead) > ReleaseAhead));
+            walks |= walksBack;
             for (int j = 1; j < Count; j++)
             {
                 if (stepping >= 0 && j >= Thigh && (j - Thigh) % 2 == stepping) continue;
@@ -781,7 +811,9 @@ namespace WonderGather
             Aims(Trunk, aimNow[Trunk] * Quaternion.AngleAxis(-BreathBends, Vector3.right));
             if (stage.holds && !float.IsNaN(stage.balance) && !planting) Plant(-1, -1);
             // (Its weight off both hands first; then they let go.)
-            if (stage.letsHandsGo && !handsLet && !float.IsNaN(stage.balance) && ShiftedOff(-1, 2, step)) { handsLet = true; Plant(-1, -1); }
+            if (walksBack && !WalkBack(step)) { cannotWalkBack = true; walksBack = false; }
+            if (!walksBack && stage.letsHandsGo && !handsLet && !float.IsNaN(stage.balance) && ShiftedOff(-1, 2, step)) { handsLet = true; Plant(-1, -1); }
+            if (ReleaseWhenOver && !handsLet && ReleaseWaited > ReleaseWaitsAtMost) return Does.GaveUp;
             if (stepping >= 0)
             {
                 bool balancing = !float.IsNaN(stage.balance);
@@ -805,7 +837,7 @@ namespace WonderGather
                     Steps(stepping, along, balancing);
                 }
             }
-            if (walks) WalksHands(step);
+            if (walks && !walksBack) WalksHands(step);
             if (stage.kneels > 0) Kneels(share, stepping);
             if (!float.IsNaN(stage.balance))
             {
@@ -993,6 +1025,30 @@ namespace WonderGather
                 leanFelt[Forearm] + leanFelt[Forearm + 1], bore);
         }
 
+        // (Both hands let go only once its weight is over the rest, never all the same: every try that let go with its
+        // weight outside its boots failed, October 22. False: as before.)
+        public static bool ReleaseWhenOver = true;
+        // (Raised by its standing balance after its own getting up, its trunk and head come upright only after so much of
+        // the rise, kept forward over its feet while its legs straighten: all together, four of nine that came onto their
+        // feet fell as they rose. 0: as before. October 22.)
+        // (Of those handed over, stood: 54% all together; trunk after 0.25 of the rise 57%, after 0.4 79%, after 0.6 71%;
+        // 72 chance starts each.)
+        public static float RiseTrunkAfter = .4f;
+        // (Tried and taken out, October 22: its joints held as its getting up held them and eased to how softly it stands
+        // over the rise. Held so, 1 of 72 stood, against 26 with the legs first alone: its standing balance needs its
+        // softness to balance with.)
+        // (Waited so long without its weight coming over, it gives that try up, and tries again, rather than wait out the
+        // pose's time.)
+        public static float ReleaseWaitsAtMost = 4;
+        // (Waiting so long with its weight ahead of its boots, more than ReleaseAhead of its hips' height, it walks the hand
+        // further from its feet ReleaseWalks metres nearer them, and tries again; none nearer its feet than ReleaseNearest
+        // of a leg's length. ReleaseWalks 0: not. Off: with it, 15 of 72 stood, without it 13, the hands let go in 32 and 33;
+        // its weight was 0.2 to 1 hip's height ahead of its boots, more than a hand's walk brings back. October 22.)
+        public static float ReleaseWalkAfter = .6f, ReleaseAhead = .02f, ReleaseWalks = 0, ReleaseNearest = .3f;
+        private bool walksBack, cannotWalkBack;
+        // (How long it has been moving its weight off both hands without its weight coming over the rest.)
+        public float ReleaseWaited { get; private set; }
+
         // Before it lifts a limb, its weight goes over the others: true once it is (or it has tried long enough).
         private bool ShiftedOff(int leg, int hand, float step)
         {
@@ -1010,7 +1066,8 @@ namespace WonderGather
             // (Its weight over the others is what counts: a knee on the ground bears its share however slack its leg,
             // until it is lifted.)
             bool over = depth >= Mathf.Min(Mathf.Max(BalanceMargin, .75f * BalanceShiftsDeep), .75f * shiftDeepNow) && (limb < BalanceLifts || shiftT >= BalanceUnloads) && shiftT >= .5f * BalanceUnloads;
-            if (!over && shiftT < BalanceShiftsWithin) return false;
+            if (hand == 2) ReleaseWaited = over ? 0 : ReleaseWaited + step;
+            if (!over && (shiftT < BalanceShiftsWithin || (hand == 2 && ReleaseWhenOver))) return false;
             if (over) Shifts++; else ShiftsFailed++;
             if (hand == 2) Released = Heading(m, over ? "hands let go, its weight over the rest" : "hands let go all the same") + string.Format(System.Globalization.CultureInfo.InvariantCulture, " (they bore {0:0.00} as it began)", limbAtShift);
             shiftT = 0;
