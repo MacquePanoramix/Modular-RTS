@@ -72,7 +72,9 @@ on October 15 (20 against 25); not changed, told.
   ([sheets](../Images/HungThings_2026-10-15/judges3/): its right side, a quarter to
   its front, behind; 0.04 s apart). New judges. (Partway, I moved the sheets' folder
   away for a few minutes to run a test on an older commit; two judges finished from
-  the enlargements they had already made, and say so.)
+  the enlargements they had already made, then read the sheets again when told they
+  were back: the body withdrew its front-quarter reading of the handle in the thigh,
+  and the animator found the marks on the skirt from behind may be the knees.)
 - **Verdicts:** the body and the animator, "reads as real, with a flaw"; the sceptic:
   "a person would point at" the handle flung out and back, and the thigh through it.
 
@@ -80,7 +82,7 @@ on October 15 (20 against 25); not changed, told.
 |---|---|---|---|---|
 | 1 | **The handle's upper part goes into the thigh (and the skirt) at the thigh's peak**, 2.60 to 2.72 s: the head and upper handle behind the raised thigh, the lower handle in front of the shin; from behind, marks on the skirt (the animator, on a second look: left and right of its middle, so perhaps the knees through the cloth rather than the hammer) | all three | **True:** the trace reads the handle 32 to 62 mm under the leg's skin at 2.64 to 2.72 s. The line is kept only as far from the thigh's axis as a stride leaves room for (19 mm for the hammer), which is inside the flesh: the stop knows no thigh's girth. October 15 had the handle through the thigh for longer (the first finding) | **Open** (third round). A girth for the thigh would move what hangs while walking (the lantern's line is reached by the thigh at the end of a stride): for Luis |
 | 2 | **The kick in the squat** (2.40 to 2.56 s): the handle out 35 to 45° in one look and back | sceptic and animator ("batted", "a flick"); the body: "right: lifted and dropped by the rising thigh" | True to the trace (30° to 80° from straight down in one look). The thigh rises just under the hammer's loop, and a push that near the loop turns the handle fast | **Open**, judged both ways. Not changed |
-| 3 | Dead still after the squat, no swing back; the skirt's hem over the hammer's head from 3.0 s | all three | The settle is as on October 15 (round 1, finding 3); the hem over the head is the skirt's flap, not traced | Open, older |
+| 3 | Dead still after the squat, no swing back (the body, on a second look: it eases back against the legs over 0.2 s, then rests, "which is good"); the skirt's hem over the hammer's head from 3.0 s | all three | The settle is as on October 15 (round 1, finding 3); the hem over the head is the skirt's flap, not traced | Open, older |
 | 4 | The body drops in one look at 2.72 to 2.76 s and the hammer rides it rigidly | body | The body's own movement (the squat), not what hangs | Not this task |
 
 ## What stands
