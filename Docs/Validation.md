@@ -3712,17 +3712,40 @@ behaviour. Branch `claude/hung-things-stop`, isolated copy `D:/Dev/WG-hung`.
   hung when modelled: it squeezed Small's lantern into the belly in its squat,
   and moved the satchel 141 mm; it was narrowed to the stride's room and to
   things hung from the cloth (`9_after_small_squat_work.jpg`). The satchel's
-  thigh is left to the satchel's own branch.
+  thigh is left to the satchel's own branch. After the judges' second round
+  (the handle flicking 60 to 80 degrees in a look as Round squats), a thing
+  near the thigh is kept on the side it was on last frame (450c301): a thigh
+  drawn up fast had passed the line between two frames, and the line was put
+  across to its hook's side at once. **Still open** (the judges' third round):
+  in a deep squat the hammer's upper handle sinks 32 to 62 mm into the thigh
+  for about 0.1 s (the line is kept only 19 mm from the thigh's axis, the room
+  a stride leaves it; the stop knows no thigh's girth), and two judges of three
+  find its kick out too quick.
+- **The ground holds what lies on it** (found after the judges' first round,
+  by counting sudden changes in how each thing moves against its hook): the
+  ground's turn of a thing was along the ground as much as up from it, and was
+  kept as swing, so what lay on the ground was flung round as the hips rose
+  (Round's hammer at 2 to 3 m/s). Now a thing the ground stopped keeps no swing
+  of its own that frame: it goes with its hook and starts from rest when
+  lifted. Changes of more than 200 mm in a look over the twelve falls: 38 as on
+  October 15, 52 without the hold, 42 with it.
 - **Lain on (lantern, mug):** a flap of the skirt lying along the ground under
   the body no longer stops what hangs over it, nor carries its hook under the
   hip (Long's mug rode the flap by half); where the way out of the hips points
-  down into the ground, the thing goes out along the ground. By pictures:
+  down into the ground, the thing goes out along the ground. (How much of a flap
+  lies on the ground first went from nothing to half the flap in one frame, and
+  the mug's hook jumped with it; it now grows from nothing, eased.) By pictures:
   Small's lantern (on its left) lies on the ground in front of the body; Long's
   mug (on its left, and face down) lies on the ground at the hip and the belly;
   before, both were hidden inside the coat from every side and from below
   (`7_after_lying_on_it.jpg`). The game's own "inside the body" reading for
   these frames still uses the hips' face pointing into the ground, and reads
-  them inside; it is not a judge of them.
+  them inside; it is not a judge of them. **Not mended: Round lain on (onto its
+  right)**: its hammer lies under its side, hidden from every side and from
+  below, in the torso (on October 15 it was in the ground there). Turning its
+  way out level past the body's front was tried and dropped: it flipped the
+  hammer 30 cm in one frame. The stop models the hips, not Round's belly and
+  chest.
 - **Standing and walking, unchanged:** the same course with `-hungAsOn15 1` and
   without, every frame: 0.00 mm for all four things (twice, before and after
   the lain-on change). Standing by its own joints as played: the new stops
@@ -3735,20 +3758,38 @@ behaviour. Branch `claude/hung-things-stop`, isolated copy `D:/Dev/WG-hung`.
 - **Tests** (`HungThingTests`, read from the results file): 5 of 5 pass. New:
   `WhatHangsOnAHookLiesOnTheGroundNotInIt` (each miner onto its front and onto
   the side its things hang on; each thing's skin against the drawn ground): at
-  most 2 mm under it, 0 of 1483 looks more than 10 mm; with `-hungAsOn15 1` it
-  fails (the lantern 176 mm, 503 of 1603 looks). The satchel lain on (onto its
-  right) is now through its clothes in 31 of 121 looks, where it was 50-52.
-- **The whole PlayMode suite** (no filter, one run, the satchel session's Unity
-  running beside it): 207 tests, 177 passed, 1 failed, 29 run only when asked.
-  The failure, `PhysicalBodyTests.TheBodyAdaptsToItsStrengthAndToWhereItStrikes`
-  (where a weak miner's upper hand takes the pickaxe: 0.59992 where more than
-  0.6 was asked), passed run alone twice (60%); it reads nothing of what hangs.
+  most 12 mm under it, 2 of 1485 looks more than 10 mm (2 mm before the
+  ground's hold); with `-hungAsOn15 1` it fails (the lantern 176 mm, 503 of 1603
+  looks). The satchel lain on (onto its right) is through its clothes in 47 of
+  121 looks (31 in a run before the hold; 50-52 on October 15; this count moves
+  much from run to run).
+- **The whole PlayMode suite** (no filter): on 2964061, 207 tests, 178
+  passed, 0 failed, 29 run only when asked; on the final code (450c301), 207,
+  177 passed, 1 failed, 29. The failure, in two runs of three,
+  `PhysicalBodyTests.TheBodyAdaptsToItsStrengthAndToWhereItStrikes` (where a
+  weak miner's upper hand takes the pickaxe: 0.5999 and 0.5994 where more than
+  0.6 is asked), passed run alone four times (60%, 60%, 61%, 60%) and **fails
+  run alone on the base commit 752fb07 too** (twice, 60%): a test on its own
+  edge, older than this branch; it reads nothing of what hangs.
 - **The falls are not repeatable from run to run** (the courses part at the
   push, 0.64 s): before-and-after pictures are set side by side at like
   moments, not identical ones.
-- **Found, not from this change:** Small's lantern flicks straight out from the
-  hip for single frames when bowing fast (the work: 1.96, 3.48, 9.36-9.48 s),
-  before as after.
+- **Found, not from this change:** what hangs flicks straight out from the hip
+  for single frames when its hook is deeper in the hips' stop than the thing is
+  long (an older fallback of the stop: it is then set pointing along the stop's
+  way out); Small's lantern bowing fast in the work (1.96, 3.48, 9.36-9.48 s),
+  Round's hammer standing up from its back (9.5 to 9.7 s). Single looks of a
+  thing pointing up from its hook over the twelve falls: 25 as on October 15, 20
+  now.
+- **The judges** (three rounds, nine judges,
+  [their page](Reviews/2026-10-21_HungThings_Judges.md)): rounds 1 and 2, "reads
+  as real, with a flaw" (the body, the animator), the sceptic pointing at the
+  lantern held out at rest and at Long's mug cut by the coat as it falls (both
+  as on October 15); wherever a thing could be seen it hung, rested on the
+  ground and was lifted by its hook, nothing in the ground or floating. Round 3
+  (the squat, after the kept side): "reads as real, with a flaw", the hammer's
+  upper handle into the thigh at its peak (true, above) and its kick judged
+  too quick by two of three. Their verdict is not Luis's.
 - **Where it meets the satchel's branch** (`claude/satchel-lies`, 2b6b198, not
   merged into this): the same functions (`Hang`, `Held`, `OutOfBody`, `Cloth`)
   and two fields of the same name with different meanings (`hangTwist`,

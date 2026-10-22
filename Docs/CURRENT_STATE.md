@@ -24,9 +24,16 @@
   sides: all four hung things went into the ground (the lantern to 176 mm),
   the lantern and the mug hid inside the coat when lain on, Round's hammer went
   through its thigh on hands and knees; the lantern bowed was a misreading of
-  the measure, not a fault. Mended: what hangs lies on the ground (at most
-  2 mm under it in the test), out along it when lain on, and the thigh is kept
-  off a thing's whole line; standing and walking unchanged (0.00 mm). Touches
+  the measure, not a fault. Mended: what hangs lies on the ground, held there
+  (at most 12 mm under it in the test), out along it when lain on, and the
+  thigh is kept off a thing's whole line; standing and walking unchanged
+  (0.00 mm); the whole suite passes but for one test on its own edge, which
+  fails on the base commit too. **Still open:** Round lain on its right hides
+  its hammer in its torso; in a deep squat its handle sinks into the thigh for
+  about 0.1 s; Long's mug is cut by the coat as it falls, the lantern is held
+  out at rest, and a one-frame flick of what hangs, all as on October 15.
+  Judges (three rounds): "reads as real, with a flaw"
+  ([their page](Reviews/2026-10-21_HungThings_Judges.md)). Touches
   the same code as the satchel's second branch (`claude/satchel-lies`): to be
   merged with care. For Luis to look at.
 - **A build for Luis to play, October 14 (late): `Builds/WindowsOrdinaryPlace_Oct14`**

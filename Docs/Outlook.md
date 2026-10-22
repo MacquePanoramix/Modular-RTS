@@ -58,6 +58,31 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 21, 2026 — from a side session (hung things), closing it
+
+- **Where we are.** S3b step 2, the getting up, moved on the work branch
+  (`77712a1`: with the boot turning as a foot does, 6 and 10 of 36 stand). The
+  satchel's second branch (`claude/satchel-lies`, `b738126`) is committed with
+  its suite and docs. This branch (`claude/hung-things-stop`) closes: what hangs
+  lies on the ground and is held there, goes out along it when lain on (but
+  Round's hammer), and is kept off the thigh along its whole line; suite 207,
+  178 passed, 0 failed; standing and walking unchanged.
+- **Waiting on Luis:** S3, the builds of October 13 and 14, question R1; and
+  three branches of small mends to what hangs (satchel stop, satchel lies, hung
+  things), none merged or seen.
+- **Put off, not forgotten:** the three branches touch the same functions of
+  `MinerBody` and share two field names with different meanings: merging them
+  is a piece of work, to be read as meaning. Round's hammer lain on; the
+  lantern's lean at rest; the stop's one-frame flick; the skirt's flaps guess
+  the ground from the feet (so a lantern's hook can sit under the ground).
+- **Does the task serve the stage?** It grew: the ground's hold and the jumps
+  were found only by counting after the judges. Enough: what is left is
+  either older than this branch or needs the body's trunk in the stop, which
+  is a choice for Luis, not a mend.
+- **What Luis would want to know:** pictures before and after (one folder);
+  what still clips, plainly; that merging the three branches is the next
+  step before any of it is in a build.
+
 ### October 20, 2026 — from a side session (hung things)
 
 - **Where we are.** Nothing has been committed on any branch since October
