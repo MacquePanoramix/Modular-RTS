@@ -356,6 +356,8 @@ namespace WonderGather.Tests
 
                 OwnBody.FallsBack = false;
                 OwnBody.ArmsTimes = Number("-riseArms", 1);
+                // (-riseHead 0.7: to learn what the head's weight does: its head so many times as heavy.)
+                OwnBody.HeadTimes = Number("-riseHead", 1);
                 // (-riseRule 10: the getting up's springs capped by a rule so many times looser.)
                 OwnRiser.RuleTimes = Number("-riseRule", OwnRiser.RuleTimes);
                 // (-riseBalQuick, -riseBalLeans, -riseBalMargin, -riseBalUnloads, -riseBalWithin: the balance's numbers.)
@@ -844,6 +846,7 @@ namespace WonderGather.Tests
                 Time.captureDeltaTime = timeWas;
                 OwnBody.FallsBack = fellBack;
                 OwnBody.ArmsTimes = armsWere;
+                OwnBody.HeadTimes = 1;
                 OwnBody.RiseWays = waysWere;
                 OwnBody.Told = toldWas;
                 foreach (var body in bodies) { if (body.own != null && body.own.Stands) body.own.Drop(); if (body.fall != null) { body.fall.Gives = true; body.fall.GetsUp = true; } }

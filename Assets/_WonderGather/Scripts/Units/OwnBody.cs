@@ -260,6 +260,9 @@ namespace WonderGather
         // (For a bench, to try a thing, and 1 in the game: its arms made so many times as strong as they are. How
         // strong a miner's arms are is not this file's to say: PhysicalBody, and Luis.)
         public static float ArmsTimes = 1;
+        // (For the bench, to learn what its head's weight does to its getting up: its head so many times as heavy. Not a
+        // change to it; October 22.)
+        public static float HeadTimes = 1;
 
         // Whether it is to stand by its own joints when it can (the panel's switch).
         public bool Wanted { get; set; }
@@ -514,7 +517,7 @@ namespace WonderGather
             Rod(Trunk, shape.torsoRise + .5f * breadth, breadth, surface);
             anchors[Trunk] = new Vector3(0, -shape.torsoRise, 0);
             // The head.
-            float headWeighs = Weighs("Head");
+            float headWeighs = Weighs("Head") * HeadTimes;
             float neckLever = Mathf.Max(.03f, shape.headRise - 2 * shape.torsoRise);
             var head = Made(Head, "Head", s.head.position, s.head.rotation, headWeighs, NeckHolds * headWeighs * Physics.gravity.magnitude * neckLever * physical.Strength, false);
             var skull = head.AddComponent<SphereCollider>();
