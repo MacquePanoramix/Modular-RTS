@@ -4052,3 +4052,15 @@ judges' verdict is not his.**
   physics' at every try: the first 100 tries of a copy stood 29 of 85.
 - **Teaching (run `rise3`, twelve copies, up to 3 million decisions), in progress:** at 100,000 decisions, the mean
   reward 0.335, 27% of recent tries stood (as without it). Not yet tried on the bench or in the game.
+- **Teaching, later on October 23** (twelve copies; each version's checkpoint tried on the bench at the 72 starts,
+  with its own best answer, not drawn at random about it):
+  - first version (`rise3`: acting in the pike and the roll-up): stayed where the body is without it (copies' recent
+    tries 26 to 35% stood); its checkpoint at 500,000 decisions on the bench: 25 of 72;
+  - second version (`rise4`: the hips and the weight given more room, and a reward each decision for the weight
+    coming nearer over the soles): the same (25 to 30%); on the bench, 19 of 72. In both, most tries were lost
+    before the hand-over, by where the second foot had landed from the hands;
+  - **third version (`rise5`: acting from the second foot's step, and saying where that foot goes): the copies'
+    recent tries stood 15% at first (the foot put at random), then 16, 26, 30, 43, 47%** by 500,000 decisions; **its
+    checkpoint at 400,000 on the bench: 31 of 72 stood** (the body without it 13 to 26), the hands let go with the
+    weight over the boots in 46 (32 without), 40 came to the hand-over (24 to 28), 31 gave up (44 to 48).
+    Teaching goes on. Not yet looked at in pictures, nor in the game.
