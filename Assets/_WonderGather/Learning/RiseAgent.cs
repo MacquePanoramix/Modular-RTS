@@ -81,11 +81,21 @@ namespace WonderGather
             for (int i = 0; i < Says; i++) riser.Learned[i] = said[i] * By[i];
         }
 
-        // Asked without a teacher or a model: it says nothing, and the body does as searched.
+        // Asked without a teacher or a model: it says nothing, and the body does as searched. (To learn what its
+        // corrections do, without a teacher: it says Asks, and at random so much more, Wanders, at each decision, as a
+        // fresh agent asks: -riseAsks 0,0,0,0.3,0,0 -riseWanders 1 in a build. October 23.)
+        public static float[] Asks = new float[Says];
+        public static float Wanders;
+        private static readonly System.Random wandering = new System.Random(7);
         public override void Heuristic(in ActionBuffers actionsOut)
         {
             var a = actionsOut.ContinuousActions;
-            for (int i = 0; i < a.Length; i++) a[i] = 0;
+            for (int i = 0; i < a.Length; i++)
+            {
+                double u = 1 - wandering.NextDouble(), v = wandering.NextDouble();
+                float bell = (float)(System.Math.Sqrt(-2 * System.Math.Log(u)) * System.Math.Cos(2 * System.Math.PI * v));
+                a[i] = (i < Asks.Length ? Asks[i] : 0) + Wanders * bell;
+            }
         }
     }
 }

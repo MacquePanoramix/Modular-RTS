@@ -202,6 +202,10 @@ namespace WonderGather
                 var ways = OwnRiser.Read(System.IO.File.ReadAllText(file));
 
                 Academy.Instance.AutomaticSteppingEnabled = false;
+                // (Without a teacher, to learn what its corrections do: -riseAsks and -riseWanders, RiseAgent.Heuristic.)
+                string asks = Argument("-riseAsks");
+                if (!string.IsNullOrEmpty(asks)) { var each = asks.Split(','); for (int i = 0; i < each.Length && i < RiseAgent.Says; i++) RiseAgent.Asks[i] = float.Parse(each[i], Plain); }
+                RiseAgent.Wanders = Number("-riseWanders", 0);
                 var agent = RiseAgent.On(unit.gameObject, own);
                 var clock = System.Diagnostics.Stopwatch.StartNew();
                 int stood = 0, handed = 0, acted = 0, lastStood = 0, lastActed = 0;
@@ -209,6 +213,11 @@ namespace WonderGather
                 for (int k = 0; k < tries && clock.Elapsed.TotalHours < hours; k++)
                 {
                     if (own.Stands) own.Drop();
+                    // (The game's time as the physics': the trainer sets its own time scale and frame rate when it comes, and
+                    // at twenty times, what runs by the frame (its breath, on its trunk) ran twenty times as fast as the
+                    // physics; 3 to 6% of tries stood, 25% without it. October 23.)
+                    Time.timeScale = 1;
+                    Time.captureDeltaTime = dt * Mathf.Max(1, frames);
                     // A start, turned and moved by chance (a way that serves only the very place it was taught at is not one).
                     var laid = starts[chance.Next(starts.Count)];
                     float yaw = (float)(chance.NextDouble() * 2 - 1) * turnBy;
