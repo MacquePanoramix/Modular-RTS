@@ -18,11 +18,14 @@ namespace WonderGather
         public const int Says = OwnRiser.Learns, Senses = OwnRiser.Senses + Says;
         // How far each correction goes at most: degrees for the bows and the twist, a share of the hips' standing
         // height, metres for the weight's place.
-        public static readonly float[] By = { 20, 30, 15, .12f, .08f, .05f };
+        // (Smaller than first set, October 23: asking at random as it begins, larger ones wrecked its getting up: 4% of
+        // tries stood, without it 27%.)
+        public static readonly float[] By = { 12, 18, 8, .08f, .06f, .04f };
         // How much a change in what it says costs, a decision (it learns not to jerk); and how far each decision moves
         // what it says towards what it asks for (half way: a body does not change its mind all at once; at first, asking
         // at random, it cost more than standing was worth, October 23).
-        public static float Jerk = .01f, Follows = .5f;
+        // (A fifth of the way, October 23: half way, its first asking at random still wrecked its getting up.)
+        public static float Jerk = .01f, Follows = .2f;
 
         public OwnBody Body;
         private readonly float[] said = new float[Says];

@@ -53,6 +53,7 @@ namespace WonderGather.Tests
             // (The way it began by; when it went on by another, the way that way turns into the next; and how far onto
             // its front it came at most.)
             public string firstWay = "", lastStage = "", released = "", handedOver = "";
+            public RiseAgent agent;
             public bool spinTold;
             public Vector3[] targetWas = new Vector3[2];
             public int spinAfter;
@@ -395,6 +396,21 @@ namespace WonderGather.Tests
                 look.SetOwn(true);
                 // (-riseWays keep_{0}.txt: each miner its own file, its name in small letters where {0} stands.)
                 foreach (var body in bodies) body.ways = Read(string.Format(file, body.name.ToLowerInvariant()));
+                // (-riseLearned SmallRise: what was learnt, Resources/RiseModels/<name>, says its corrections in the pike and
+                // the roll-up, every -riseLearnEvery steps of the physics, as it was taught: the third path, October 23.)
+                string learnedName = CaptureTools.Argument("-riseLearned");
+                int learnEvery = Mathf.Max(1, (int)Number("-riseLearnEvery", 5));
+                if (!string.IsNullOrEmpty(learnedName))
+                {
+                    var model = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + learnedName);
+                    Assert.That(model, Is.Not.Null, "No model Resources/RiseModels/" + learnedName);
+                    Unity.MLAgents.Academy.Instance.AutomaticSteppingEnabled = false;
+                    foreach (var body in bodies)
+                    {
+                        body.agent = RiseAgent.On(body.unit.gameObject, body.own, model);
+                        body.unit.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>().BehaviorType = Unity.MLAgents.Policies.BehaviorType.InferenceOnly;
+                    }
+                }
                 var ways = bodies[0].ways;
 
                 // One try: from one way of lying, every body made its own as it lies; stepped until each stands, has gone
@@ -432,6 +448,7 @@ namespace WonderGather.Tests
                         body.own.Wanted = true;
                         OwnBody.RiseWays = body.ways;
                         body.done = !body.own.BeginDown();
+                        if (body.agent != null) body.agent.Afresh();
                         body.up = body.onFeet = false; body.feetAt = body.upAt = -1; body.peak = body.stoodFor = body.risen = body.feetFor = 0; body.ended = body.done ? "could not be made" : "";
                         body.depth = float.NaN; body.stageAt = body.stages = body.heldFor = 0; body.upOff = false; body.stepFurthest = 0; body.shifts = body.shiftsFailed = 0; body.lastAt = float.NaN; body.recent.Clear(); body.bootSpin = 0; body.bootSpinAt = "";
                         body.firstWay = ""; body.lastStage = ""; body.released = ""; body.handedOver = ""; body.turnedAt = float.NaN; body.frontMost = -1; body.spinTold = false;
@@ -474,6 +491,11 @@ namespace WonderGather.Tests
                                 float weighs = 0;
                                 for (int i = 0; i < OwnBody.Count; i++) weighs += own.Part(i).mass;
                                 own.Part(OwnBody.Trunk).AddForce(Vector3.Lerp(body.shakeFrom, body.shakeTo, u * u * (3 - 2 * u)) * (shake * weighs * Physics.gravity.magnitude));
+                            }
+                            if (body.agent != null && own.GettingUp && own.Riser != null && (own.Riser.StageNow == "pike" || own.Riser.StageNow == "rollup") && step % learnEvery == 0)
+                            {
+                                body.agent.RequestDecision();
+                                Unity.MLAgents.Academy.Instance.EnvironmentStep();
                             }
                             own.Advance(dt);
                             if (own.Stands && float.IsNaN(own.Part(OwnBody.Hips).transform.position.x))
