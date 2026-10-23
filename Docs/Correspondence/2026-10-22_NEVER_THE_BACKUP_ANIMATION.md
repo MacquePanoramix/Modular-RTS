@@ -94,3 +94,9 @@ hand-built one.
 |---|---|---|
 | The approach | "we try the third path" | **Decided by Luis:** a learned controller for the moment from hands and feet to the squat, trained offline; in the game it only sets the body's joint targets |
 | The downloads | "you do the downloads" | **Approved by Luis:** Unity's ML-Agents package (work branch only) and its Python trainer with what it needs |
+
+## Luis, the next morning (October 23) (verbatim)
+
+After the night's save ("save your progress for now I need to turn off laptop to sleep", October 22, late):
+
+> You can proceed now please again.
