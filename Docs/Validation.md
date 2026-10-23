@@ -4032,3 +4032,23 @@ judges' verdict is not his.**
     without the game's frames between steps (about 40 times real time) and in 23 s with them (about 22 times).
 - **Bodies flying apart** (a part's speed beyond any number): 1 in about 70 to 150 tries in several of tonight's
   runs. Not yet looked into; in the game it shows as an error (October 22, a lantern's place NaN).
+
+## S3b step 2 — the third path: teaching a learned correction (October 23; Luis approved it and the downloads, October 22)
+
+- **Set up** (work branch): Unity's ML-Agents 4.0.3; the trainer outside the project (`D:/Dev/mlagents-env`: Python
+  3.10.12 by `uv`, `mlagents` 1.1.0, PyTorch 2.2.2 with CUDA); the agent (`RiseAgent`) says six corrections in the
+  pike and the roll-up through the riser's hook (`OwnRiser.Learned`), told 29 numbers (`OwnRiser.Sense`); the teaching
+  (`RiseSchool`) in the editor or in a build of the ordinary place started with `-riseTrain`, many at once by the
+  trainer. Details: `Docs/Technical/RiseWays/README.md` on the work branch.
+- **Proved:** without the trainer the body does as searched (the editor 23 of 100 stood; the build 50 of 200); with
+  it, the editor connects and learns but alone each decision waits about 36 ms on the trainer; a build with two copies
+  trains (20,000 decisions in 4 minutes, a model exported), twelve copies give about 100 to 230 decisions a second
+  (the trainer, not the copies, is the limit).
+- **A fault found and mended:** the trainer sets the game's time scale to 20 when it comes, and what runs by the frame
+  (its breath, on its trunk) then ran twenty times as fast as the physics: from the first tries only 3 to 6% stood.
+  Asked chosen or random corrections without the trainer, the build stood as before (random at a fresh agent's spread:
+  46 of 200; each correction held at 0.3 of its reach: 41 to 43 of 200), which pointed to the trainer's settings, not
+  the corrections. Now `--time-scale 1 --capture-frame-rate 50`, and the teaching keeps the game's time as the
+  physics' at every try: the first 100 tries of a copy stood 29 of 85.
+- **Teaching (run `rise3`, twelve copies, up to 3 million decisions), in progress:** at 100,000 decisions, the mean
+  reward 0.335, 27% of recent tries stood (as without it). Not yet tried on the bench or in the game.
