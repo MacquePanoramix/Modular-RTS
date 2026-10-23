@@ -19,8 +19,10 @@ namespace WonderGather
         // How far each correction goes at most: degrees for the bows and the twist, a share of the hips' standing
         // height, metres for the weight's place.
         public static readonly float[] By = { 20, 30, 15, .12f, .08f, .05f };
-        // How much a change in what it says costs, a decision (it learns not to jerk).
-        public static float Jerk = .02f;
+        // How much a change in what it says costs, a decision (it learns not to jerk); and how far each decision moves
+        // what it says towards what it asks for (half way: a body does not change its mind all at once; at first, asking
+        // at random, it cost more than standing was worth, October 23).
+        public static float Jerk = .01f, Follows = .5f;
 
         public OwnBody Body;
         private readonly float[] said = new float[Says];
@@ -65,7 +67,7 @@ namespace WonderGather
             float changed = 0;
             for (int i = 0; i < Says; i++)
             {
-                float now = Mathf.Clamp(a[i], -1, 1);
+                float now = Mathf.Lerp(said[i], Mathf.Clamp(a[i], -1, 1), Follows);
                 changed += (now - said[i]) * (now - said[i]);
                 said[i] = now;
             }
