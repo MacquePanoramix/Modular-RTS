@@ -20,7 +20,15 @@ namespace WonderGather
         // height, metres for the weight's place.
         // (Smaller than first set, October 23: asking at random as it begins, larger ones wrecked its getting up: 4% of
         // tries stood, without it 27%.)
-        public static readonly float[] By = { 12, 18, 8, .08f, .06f, .04f };
+        // (The hips and the weight's place given more room, October 23: with a twelfth of the hips' height and 6 cm, it
+        // stayed at what it did without learning; a toddler with its weight over its hands sits its hips well back and
+        // down.)
+        public static readonly float[] By = { 12, 18, 8, .25f, .15f, .06f };
+        // (Each decision, so much reward for its weight coming nearer over its soles before its hands let go, as the
+        // difference of a measure of it from the decision before: whatever is gained so is lost again if it goes back,
+        // so it does not change what is best in the end; it only tells it sooner. 0: not.)
+        public static float Nearer = .5f;
+        private float nearWas = float.NaN;
         // How much a change in what it says costs, a decision (it learns not to jerk); and how far each decision moves
         // what it says towards what it asks for (half way: a body does not change its mind all at once; at first, asking
         // at random, it cost more than standing was worth, October 23).
@@ -51,6 +59,7 @@ namespace WonderGather
         public void Afresh()
         {
             for (int i = 0; i < Says; i++) said[i] = 0;
+            nearWas = float.NaN;
             if (Body != null && Body.Riser != null) Body.Riser.Learned = null;
         }
 
@@ -77,6 +86,13 @@ namespace WonderGather
             AddReward(-Jerk * changed / Says);
             var riser = Body != null ? Body.Riser : null;
             if (riser == null) return;
+            // (How near over its soles its weight is, while its hands have not let go: best a little ahead of their middle.)
+            if (Nearer > 0 && !riser.HandsLet)
+            {
+                float near = -Mathf.Abs(Mathf.Clamp(riser.Measure(OwnRiser.Asks.Ahead), -1, 1.5f) - .08f);
+                if (!float.IsNaN(nearWas) && !float.IsNaN(near)) AddReward(Nearer * (near - nearWas));
+                nearWas = near;
+            }
             if (riser.Learned == null || riser.Learned.Length != Says) riser.Learned = new float[Says];
             for (int i = 0; i < Says; i++) riser.Learned[i] = said[i] * By[i];
         }

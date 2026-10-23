@@ -1077,6 +1077,8 @@ namespace WonderGather
         // it, its leading side positive). Null: as searched.
         public const int Learns = 6;
         public float[] Learned;
+        // (Whether its hands have let go of the ground in this pose: for what learns.)
+        public bool HandsLet => handsLet;
         // How many numbers Sense tells.
         public const int Senses = 29;
         // (Raised by its standing balance after its own getting up, its trunk and head come upright only after so much of

@@ -408,7 +408,10 @@ namespace WonderGather.Tests
                     foreach (var body in bodies)
                     {
                         body.agent = RiseAgent.On(body.unit.gameObject, body.own, model);
-                        body.unit.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>().BehaviorType = Unity.MLAgents.Policies.BehaviorType.InferenceOnly;
+                        var behaviour = body.unit.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>();
+                        behaviour.BehaviorType = Unity.MLAgents.Policies.BehaviorType.InferenceOnly;
+                        // (Its own best answer, not one drawn at random about it as it was taught.)
+                        behaviour.DeterministicInference = true;
                     }
                 }
                 var ways = bodies[0].ways;
