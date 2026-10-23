@@ -4064,3 +4064,15 @@ judges' verdict is not his.**
     checkpoint at 400,000 on the bench: 31 of 72 stood** (the body without it 13 to 26), the hands let go with the
     weight over the boots in 46 (32 without), 40 came to the hand-over (24 to 28), 31 gave up (44 to 48).
     Teaching goes on. Not yet looked at in pictures, nor in the game.
+  - **the third version at a million decisions** (copies' recent tries 49 to 50% stood from 600,000 on): **on the
+    bench, 35 of 72 stood** (the body without it 13 to 26), 42 came to the hand-over, 26 gave up; standing at about
+    12 s on average; one body flew apart in the 72. In pictures (a try at 400,000 that stood): the second foot under,
+    the hips up, the hands walked back towards the feet, the hands let go, risen legs first, the head last; no jitter
+    seen at 0.2 s apart; a long still stretch (about 1.4 s) before the hands let go.
+  - **in the game** (that model in `Resources/RiseModels/SmallRise`, given at the second foot's step, the pike and the
+    roll-up through `OwnBody.Getting`; the panel's switch on; pushed eight times, four ways round): up by its own body
+    at the first push after one try (20 s) and the second after three (58 s); then 17 tries in 300 s, 7 tries and the
+    old way, 12 tries and the old way, 14 tries in 300 s; the test stopped at the seventh (it could not be pushed over,
+    not being up). Most tries began on its back or turned: it had been taught from its front only.
+  - **fourth run (`rise6`), begun from the third's learning**, its starts pushed over as in the game (front, back,
+    sides, rolling first where it must), in progress.
