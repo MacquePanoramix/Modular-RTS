@@ -250,6 +250,11 @@ namespace WonderGather
         public OwnRiser Riser => riser;
         // (What it was like when its getting up handed it to its standing balance, as the riser told it: for the bench.)
         public string HandedOver { get; private set; } = "";
+        // (Told at each step of its getting up, with how many steps of it there have been: for what learns.)
+        public static System.Action<OwnBody, int> Getting;
+        private int gettingSteps;
+        // (The name it is chosen by, if it is one of the choice's miners: what learnt for it is found by it.)
+        public string Called { get { var choice = FindAnyObjectByType<MinerChoice>(FindObjectsInactive.Include); return choice != null && TryGetComponent<SelectableUnit>(out var unit) ? choice.NameFor(unit) : null; } }
         // (Handed to its standing balance by its own getting up, not gathered into a crouch the old way.)
         private bool roseByItsOwn;
         public int GaveUpGettingUp { get; private set; }
@@ -418,6 +423,7 @@ namespace WonderGather
         public bool BeginDown()
         {
             if (!CanRise) return false;
+            gettingSteps = 0;
             Make(true, false, true);
             return true;
         }
@@ -852,6 +858,9 @@ namespace WonderGather
             // (Getting up, it is the way's; the keeper has it only once it is on its feet.)
             if (riser != null)
             {
+                // (Whoever listens hears each step of its getting up: what learnt the moment from hands and feet to the
+                // squat says its corrections so, in the game. October 23.)
+                Getting?.Invoke(this, gettingSteps++);
                 riser.BreathBends = BreathBack * breath.Full * breath.Deep * BreathShown;
                 var does = riser.Step(dt);
                 if (does == OwnRiser.Does.Ready) OnItsFeet();

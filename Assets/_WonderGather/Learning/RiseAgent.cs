@@ -55,6 +55,50 @@ namespace WonderGather
             return agent;
         }
 
+        // ---- In the game: a miner getting up by its own body that has a learnt model (Resources/RiseModels/<its
+        // name>Rise) is given its corrections in the stages it learnt at, every DecidesEvery steps of the physics, as it
+        // was taught; only while the Academy steps itself (the bench and the teaching step it themselves). None: as
+        // searched.
+        public static int DecidesEvery = 5;
+        private static readonly Dictionary<OwnBody, RiseAgent> learnt = new Dictionary<OwnBody, RiseAgent>();
+        private static readonly HashSet<string> none = new HashSet<string>();
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void Listen()
+        {
+            OwnBody.Getting -= Heard;
+            OwnBody.Getting += Heard;
+            learnt.Clear();
+        }
+        private static void Heard(OwnBody body, int step)
+        {
+            var riser = body.Riser;
+            if (riser == null || !OwnRiser.LearnsAt(riser.StageNow) || step % DecidesEvery != 0) return;
+            if (!Academy.Instance.AutomaticSteppingEnabled) return;
+            if (!learnt.TryGetValue(body, out var agent))
+            {
+                string called = body.Called;
+                Unity.InferenceEngine.ModelAsset model = null;
+                if (!string.IsNullOrEmpty(called) && !none.Contains(called))
+                {
+                    model = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + called + "Rise");
+                    if (model == null) none.Add(called);
+                }
+                agent = model != null ? On(body.gameObject, body, model) : null;
+                if (agent != null)
+                {
+                    var behaviour = body.GetComponent<BehaviorParameters>();
+                    behaviour.BehaviorType = BehaviorType.InferenceOnly;
+                    behaviour.DeterministicInference = true;
+                }
+                learnt[body] = agent;
+            }
+            if (agent == null) return;
+            // (A fresh getting up: nothing said yet.)
+            if (agent.since != riser) { agent.Afresh(); agent.since = riser; }
+            agent.RequestDecision();
+        }
+        private OwnRiser since;
+
         // Nothing said yet: as searched.
         public void Afresh()
         {
