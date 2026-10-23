@@ -58,6 +58,33 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 23, 2026 — the eighth (250 steps of work since the last)
+
+- **Where we are.** S3b step 2, the getting up by its own body, now on the third
+  path (a learned correction; Luis approved it and the downloads, October 22).
+  The learning works end to end (twelve copies of a build teach together; a model
+  runs on the bench and in the game). Taught from neat front starts it doubled
+  standing on the bench (35 of 72; without it 13 to 26) and reads as the body's
+  own in pictures; but real falls are far harder (without it, 4% stand from
+  game-like falls), and in the game it got up at two pushes of six. Now taught
+  from falls as in the game (15 to 19% so far).
+- **Done since the seventh:** the side sessions' work merged into the game branch
+  (the whole suite passes); the hands let go only over the boots and the rise is
+  legs first; the trainer's time scale that ran the breath 20 times as fast,
+  found and mended.
+- **Waiting on Luis:** S3 (since October 8); the builds of October 13 and 14; R1
+  (the arms); whether the inference package's analytics define
+  (`SENTIS_ANALYTICS_ENABLED`) may stay in the project settings; a stray build log
+  at the shell's root (`risebuild3.log`) for him to delete.
+- **Drifting or forgotten:** bodies flying apart (1 in 70 to 150 tries, not looked
+  into; in the game an error); the whole suite not run on the work branch since
+  October 14; Long and Round have no getting up of their own; the roll's judges
+  (round 2 of 3) and the getting up's holds and pace; the work branch and the game
+  branch drift further apart (the getting up will need merging by hand).
+- **Does the task serve the stage?** Yes: real weight and strength at work need a
+  body that gets itself up from wherever it fell. But the measure that counts is
+  now the game's falls, not the bench's front starts.
+
 ### October 22, 2026 (evening) — a short one, before a choice of approach
 
 - Luis asked, before any approach is chosen, for research of every option that
