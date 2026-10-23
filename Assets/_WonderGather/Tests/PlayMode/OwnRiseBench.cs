@@ -495,7 +495,7 @@ namespace WonderGather.Tests
                                 for (int i = 0; i < OwnBody.Count; i++) weighs += own.Part(i).mass;
                                 own.Part(OwnBody.Trunk).AddForce(Vector3.Lerp(body.shakeFrom, body.shakeTo, u * u * (3 - 2 * u)) * (shake * weighs * Physics.gravity.magnitude));
                             }
-                            if (body.agent != null && own.GettingUp && own.Riser != null && (own.Riser.StageNow == "pike" || own.Riser.StageNow == "rollup") && step % learnEvery == 0)
+                            if (body.agent != null && own.GettingUp && own.Riser != null && OwnRiser.LearnsAt(own.Riser.StageNow) && step % learnEvery == 0)
                             {
                                 body.agent.RequestDecision();
                                 Unity.MLAgents.Academy.Instance.EnvironmentStep();

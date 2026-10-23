@@ -472,7 +472,8 @@ namespace WonderGather
             Vector3 lies = Lies(), aside = Vector3.Cross(Vector3.up, lies) * (leg == 1 ? 1 : -1);
             Vector3 hip = JointAt(Thigh + leg);
             float thighLong = (JointAt(Shin + leg) - hip).magnitude, shinLong = (JointAt(Foot + leg) - JointAt(Shin + leg)).magnitude, reach = thighLong + shinLong;
-            Vector3 to = Flat(hip) + lies * (stage.stepAhead * reach) + aside * (stage.stepOut * reach);
+            float stepAhead = stage.stepAhead + (Learned != null && Learned.Length > 7 ? Learned[6] : 0), stepOut = stage.stepOut + (Learned != null && Learned.Length > 7 ? Learned[7] : 0);
+            Vector3 to = Flat(hip) + lies * (stepAhead * reach) + aside * (stepOut * reach);
             Quaternion boot = Quaternion.LookRotation(lies, Vector3.up) * stoodBoot[leg];
             if (aimed && !stepAimed) { stepAimed = true; stepTo = to; stepBoot = boot; }
             if (aimed) { to = stepTo; boot = stepBoot; }
@@ -1047,7 +1048,7 @@ namespace WonderGather
             for (int i = 0; i < 2; i++) into.Add(Mathf.Clamp(leanFelt[Foot + i], 0, 1.5f));
             into.Add(handsLet ? 1 : 0);
             string now = stage != null ? stage.name : "";
-            into.Add(now == "pike" ? 1 : 0); into.Add(now == "rollup" ? 1 : 0);
+            into.Add(now == "footB" ? 1 : 0); into.Add(now == "pike" ? 1 : 0); into.Add(now == "rollup" ? 1 : 0);
             into.Add(stage != null ? Mathf.Clamp01(got / Mathf.Max(.1f, stage.atLeast)) : 0);
             into.Add(Mathf.Clamp01(ReleaseWaited / Mathf.Max(.1f, ReleaseWaitsAtMost)));
         }
@@ -1075,12 +1076,16 @@ namespace WonderGather
         // (degrees); its hips held so much higher (a share of their standing height; held where they were kept, if the
         // pose does not say how high); where its weight is meant to be moved so far (metres, the way it lies, and across
         // it, its leading side positive). Null: as searched.
-        public const int Learns = 6;
+        // (And where a foot is put: so much further ahead of its hip and out from it, shares of the leg's length; the
+        // third version, October 23.)
+        public const int Learns = 8;
         public float[] Learned;
         // (Whether its hands have let go of the ground in this pose: for what learns.)
         public bool HandsLet => handsLet;
+        // (The stages what learns acts in.)
+        public static bool LearnsAt(string stage) => stage == "footB" || stage == "pike" || stage == "rollup";
         // How many numbers Sense tells.
-        public const int Senses = 29;
+        public const int Senses = 30;
         // (Raised by its standing balance after its own getting up, its trunk and head come upright only after so much of
         // the rise, kept forward over its feet while its legs straighten: all together, four of nine that came onto their
         // feet fell as they rose. 0: as before. October 22.)

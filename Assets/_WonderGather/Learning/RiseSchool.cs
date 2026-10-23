@@ -242,7 +242,7 @@ namespace WonderGather
                     for (int step = 0; step * dt < lasts; step++)
                     {
                         var riser = own.Riser;
-                        bool acting = own.GettingUp && riser != null && (riser.StageNow == "pike" || riser.StageNow == "rollup");
+                        bool acting = own.GettingUp && riser != null && OwnRiser.LearnsAt(riser.StageNow);
                         if (acting && step % every == 0)
                         {
                             agent.RequestDecision();

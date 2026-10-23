@@ -23,7 +23,7 @@ namespace WonderGather
         // (The hips and the weight's place given more room, October 23: with a twelfth of the hips' height and 6 cm, it
         // stayed at what it did without learning; a toddler with its weight over its hands sits its hips well back and
         // down.)
-        public static readonly float[] By = { 12, 18, 8, .25f, .15f, .06f };
+        public static readonly float[] By = { 12, 18, 8, .25f, .15f, .06f, .15f, .10f };
         // (Each decision, so much reward for its weight coming nearer over its soles before its hands let go, as the
         // difference of a measure of it from the decision before: whatever is gained so is lost again if it goes back,
         // so it does not change what is best in the end; it only tells it sooner. 0: not.)
