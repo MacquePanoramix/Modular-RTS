@@ -168,14 +168,19 @@ namespace WonderGather
             var waysWere = OwnBody.RiseWays;
             try
             {
-                // Its starts: laid on its front at eighteen places along the path, and the same turned a quarter.
+                // Its starts: laid on its front at eighteen places along the path, and the same turned a quarter. (-trainFalls
+                // 1: instead, pushed over at eighteen places, four ways round and some way between by chance, and lying where
+                // it fell, on its front, its back or a side, as in the game: taught from its front only, in the game it got
+                // up at two pushes of six, October 23.)
+                bool falls = Number("-trainFalls", 0) > 0;
+                float weighs = unit.GetComponent<PhysicalBody>().Mass;
                 var starts = new List<Lies>();
                 var standing = Now(fall);
                 Quaternion ownTurn = Quaternion.LookRotation(away);
-                for (int s = 0; s < 36; s++)
+                for (int s = 0; s < (falls ? 72 : 36); s++)
                 {
                     int on = s % 18;
-                    float turned = s < 18 ? 0 : 90;
+                    float turned = falls ? 0 : s < 18 ? 0 : 90;
                     Put(fall, standing);
                     Vector3 there = Spot(on, out Vector3 thereAway);
                     thereAway = Quaternion.AngleAxis(turned, Vector3.up) * thereAway;
@@ -188,8 +193,13 @@ namespace WonderGather
                     unit.transform.SetPositionAndRotation(there, Quaternion.LookRotation(thereAway));
                     Physics.SyncTransforms();
                     fall.Fell();
-                    LayOnItsFront(fall, unit.transform, ground);
-                    for (int step = 0; step < 450; step++) { fall.Advance(dt); Physics.Simulate(dt); }
+                    float pushedTo = (s / 18) * 90 + (float)(chance.NextDouble() * 2 - 1) * 40;
+                    if (!falls) LayOnItsFront(fall, unit.transform, ground);
+                    for (int step = 0; step < 450; step++)
+                    {
+                        if (falls && step * dt < .3f) fall.Push(Quaternion.AngleAxis(pushedTo, Vector3.up) * unit.transform.forward * (6 * weighs), fall.Part(PhysicalFall.Trunk).worldCenterOfMass);
+                        fall.Advance(dt); Physics.Simulate(dt);
+                    }
                     var lies = Now(fall);
                     lies.place = unit.transform.position; lies.faces = unit.transform.rotation;
                     starts.Add(lies);
