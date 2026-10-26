@@ -4076,3 +4076,16 @@ judges' verdict is not his.**
     not being up). Most tries began on its back or turned: it had been taught from its front only.
   - **fourth run (`rise6`), begun from the third's learning**, its starts pushed over as in the game (front, back,
     sides, rolling first where it must), in progress.
+
+## S3b step 2 — the learned correction from falls as in the game (October 26)
+
+- **The fourth run** (`rise6`, begun from the third's learning, its starts pushed over as in the game) stopped at
+  650,000 decisions when the laptop went off (October 23): the copies' recent tries stood 15 to 19%, then sagged.
+- **On the bench, 72 falls pushed four ways round and between, at eighteen places** (`s<angle>@<place>`, one run each,
+  with the model's own best answer): **the falls-taught model 7 of 72 stood; the body without it 7 of 72**; the
+  front-taught model (third run, a million decisions), on 36 of them, 2 (without it 3). In all of them most tries
+  rolled onto their front, went through the stages, and **gave up rolling up from hands and feet** (21 to 29 of 36),
+  their weight not coming over their boots.
+- **So:** the learned nudges (the trunk and head, the hips' height, where the weight is meant to be, where the second
+  foot goes) helped where they were taught, from its front laid down neatly (35 of 72, from 13 to 26), and not from
+  the falls the game gives. Not run: the game again with the falls-taught model; Long and Round.
