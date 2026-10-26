@@ -89,3 +89,28 @@ the trunk's and head's bow and the twist, how high the hips are held, where the 
   costs a little (`RiseAgent.Jerk`). The model comes out as `<results>/<name>/SmallRise.onnx`.
 - **Without the trainer** (October 22, dry run): the agent says nothing and the body does as searched: 23 of 100 tries
   stood, 31 came to the hand-over, the agent's stages were reached in 86; 100 tries in 36 s.
+- **In builds, many at once** (October 23): build the work branch with `Unity.exe -batchmode -quit -projectPath D:/Dev/WG
+  -executeMethod WonderGather.Editor.OrdinaryPlaceSetup.BuildWindows -buildOut <name>` (it rewrites EditorBuildSettings
+  and ProjectSettings: put them back before committing), then from `D:/Dev`: `mlagents-env/Scripts/mlagents-learn <yaml>
+  --run-id=<name> --results-dir=D:/Dev/mlagents-results --env=D:/Dev/WG/Builds/<build>/WonderGather.exe --num-envs=12
+  --no-graphics --time-scale=1 --capture-frame-rate=50 --env-args -riseTrain -trainFalls 1 -trainWays <ways file>`. The
+  time scale must stay 1: at 20, what runs by the frame (its breath) ran twenty times as fast as the physics.
+  `-trainFalls 1`: its starts pushed over as in the game, 72 of them. `--initialize-from=<run>` begins from a run's
+  learning. A model is tried on the bench with `-riseLearned <name>` (from `Resources/RiseModels`), and in the game a
+  miner with `Resources/RiseModels/<its name>Rise` uses it.
+
+## Option 1: every joint set by what learnt (October 26; Luis: "option 1")
+
+The nudges helped from neat front starts and not from the falls the game gives (7 of 72 with or without them). Now, with
+`-trainFull 1`, at the second foot's step, the pike and the roll-up the agent also sets each joint's target itself
+(`OwnRiser.Driven`): every joint but the hips' and the head's, so many degrees more about each of its axes than the way
+asks (at most 25 for the trunk, 35 for an upper arm or forearm, 30 for a thigh or shin, 20 for a boot; `RiseAgent.Drives*`),
+eased in over 0.08 s. It is told each joint's turn and speed and what the way asks of it, and how its hips go and turn
+(`OwnRiser.SenseJoints`): 144 numbers in, 33 out. Besides standing (1) it is paid as its hips come higher once its hands
+have let go (`RiseAgent.Rises`). Its behaviour is `SmallRiseFull`; a model for it is called `<name>RiseFull` (the bench
+and the game take one so called as setting every joint).
+
+**Help only while it learns** (Luis, October 22), by the trainer's lessons (`train_smallrise_full.yaml`, the environment
+parameter `help`, from 1 to nothing; `-trainHelp` without a trainer): its joints `0.6 x help` stronger
+(`OwnRiser.StrongerWhileLearning`), and its hips lifted by `0.3 x help` of its weight in the stages it learns at until it
+is handed to its standing balance. In the game it has neither.

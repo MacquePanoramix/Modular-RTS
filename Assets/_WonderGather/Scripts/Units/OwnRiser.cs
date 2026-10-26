@@ -343,10 +343,10 @@ namespace WonderGather
         // Each joint's spring, by how hard it holds itself now.
         private void Springs(float step)
         {
-            toned = Tone;
+            toned = Tone; strongerWas = StrongerWhileLearning;
             for (int j = 1; j < Count; j++)
             {
-                float has = strength[j] * Mathf.Clamp01(Tone);
+                float has = strength[j] * Mathf.Clamp01(Tone) * StrongerWhileLearning;
                 float spring = Mathf.Min(has / (FullAt * Mathf.Deg2Rad), (j >= Foot ? RuleTimesFeet : RuleTimes) * OwnKeeper.Rule * OwnKeeper.Rule / (step * step) * lighter[j]);
                 springOf[j] = spring; hasOf[j] = has;
                 Drive(j, 1);
@@ -390,6 +390,8 @@ namespace WonderGather
             if (angle > 180) angle -= 360;
             if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.right; angle = 0; }
             Vector3 by = angle * axis;
+            wayAsks[j] = by;
+            by += drivenNow[j];
             parts[j].SetDriveTarget(ArticulationDriveAxis.X, by.x);
             if (hinge[j]) return;
             parts[j].SetDriveTarget(ArticulationDriveAxis.Y, by.y);
@@ -761,7 +763,13 @@ namespace WonderGather
             for (int i = Hips; i <= Head && !moving; i++)
                 moving = parts[i].GetPointVelocity(parts[i].worldCenterOfMass).sqrMagnitude > StillUnder * StillUnder || parts[i].angularVelocity.sqrMagnitude > StillTurning * StillTurning;
             still = moving ? 0 : still + step;
-            if (toned != Tone) Springs(step);
+            if (toned != Tone || strongerWas != StrongerWhileLearning) Springs(step);
+            // (What learnt says of each joint, eased in.)
+            {
+                float k = 1 - Mathf.Exp(-step / Mathf.Max(1e-3f, DrivenEases));
+                for (int j = 1; j < Count; j++)
+                    drivenNow[j] = Vector3.Lerp(drivenNow[j], Driven != null && Driven.Length >= 3 * Count ? new Vector3(Driven[3 * j], Driven[3 * j + 1], Driven[3 * j + 2]) : Vector3.zero, k);
+            }
             if (way == null && !Choose()) return Does.GaveUp;
             got += step; Lasted += step;
             if (float.IsNaN(stage.keeps)) leant = Mathf.MoveTowards(leant, 0, 60 * step);
@@ -1086,6 +1094,45 @@ namespace WonderGather
         public static bool LearnsAt(string stage) => stage == "footB" || stage == "pike" || stage == "rollup";
         // How many numbers Sense tells.
         public const int Senses = 30;
+
+        // ---- Option 1 (Luis, October 26: "option 1"): what learns sets every joint's target itself at the hard moment.
+        // Driven: for each joint, so many degrees more about each of its axes than its way asks (three a joint, its hinge's
+        // first only for a hinge; Count of them, the hips' and the head's unused), eased in over DrivenEases seconds. Null:
+        // as searched. Its own joints do all of it.
+        public float[] Driven;
+        public static float DrivenEases = .08f;
+        private readonly Vector3[] drivenNow = new Vector3[Count], wayAsks = new Vector3[Count];
+        // (The joints it sets: all but the hips (the root) and the head; a forearm's and a shin's are hinges.)
+        public static readonly int[] DrivenJoints = { Trunk, UpperArm, UpperArm + 1, Forearm, Forearm + 1, Thigh, Thigh + 1, Shin, Shin + 1, Foot, Foot + 1 };
+        public static int AxesOf(int j) => j == Forearm || j == Forearm + 1 || j == Shin || j == Shin + 1 ? 1 : 3;
+        public const int Drives = 25;
+        // What it senses of its joints, for what sets them (JointSenses numbers): of each it sets, how far it is turned
+        // from how it was made (radians), how fast (tenths of radians a second) and what its way asks of it (radians); and
+        // how its hips go and turn (the way it lies, across it, up).
+        public const int JointSenses = 3 * Drives + 6;
+        public void SenseJoints(System.Collections.Generic.List<float> into)
+        {
+            foreach (int j in DrivenJoints)
+            {
+                var p = parts[j].jointPosition;
+                for (int d = 0; d < AxesOf(j); d++) into.Add(d < p.dofCount ? Mathf.Clamp(p[d], -Mathf.PI, Mathf.PI) : 0);
+            }
+            foreach (int j in DrivenJoints)
+            {
+                var v = parts[j].jointVelocity;
+                for (int d = 0; d < AxesOf(j); d++) into.Add(d < v.dofCount ? Mathf.Clamp(.1f * v[d], -3, 3) : 0);
+            }
+            foreach (int j in DrivenJoints)
+                for (int d = 0; d < AxesOf(j); d++) into.Add(Mathf.Clamp(wayAsks[j][d] * Mathf.Deg2Rad, -Mathf.PI, Mathf.PI));
+            Vector3 lies = Lies(), across = Vector3.Cross(Vector3.up, lies) * (leads == 1 ? 1 : -1);
+            Vector3 goes = parts[Hips].GetPointVelocity(parts[Hips].worldCenterOfMass), turns = parts[Hips].angularVelocity;
+            into.Add(Mathf.Clamp(Vector3.Dot(goes, lies), -3, 3)); into.Add(Mathf.Clamp(Vector3.Dot(goes, across), -3, 3)); into.Add(Mathf.Clamp(goes.y, -3, 3));
+            into.Add(Mathf.Clamp(.2f * Vector3.Dot(turns, lies), -3, 3)); into.Add(Mathf.Clamp(.2f * Vector3.Dot(turns, across), -3, 3)); into.Add(Mathf.Clamp(.2f * turns.y, -3, 3));
+        }
+        // Only while it is taught, never in the game (Luis, October 22: help that exists only while it learns): its joints
+        // so many times as strong as they are. RiseSchool sets it, fading to 1 by the trainer's lessons.
+        public static float StrongerWhileLearning = 1;
+        private float strongerWas = 1;
         // (Raised by its standing balance after its own getting up, its trunk and head come upright only after so much of
         // the rise, kept forward over its feet while its legs straighten: all together, four of nine that came onto their
         // feet fell as they rose. 0: as before. October 22.)

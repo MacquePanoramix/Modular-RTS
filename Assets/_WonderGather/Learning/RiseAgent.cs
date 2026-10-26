@@ -14,8 +14,22 @@ namespace WonderGather
     // body's own joints. Help that exists only while it learns is allowed (Luis, October 22); in the game it has none.
     public sealed class RiseAgent : Agent
     {
-        public const string Behaviour = "SmallRise";
+        public const string Behaviour = "SmallRise", FullBehaviour = "SmallRiseFull";
         public const int Says = OwnRiser.Learns, Senses = OwnRiser.Senses + Says;
+        // Option 1 (Luis, October 26: "option 1"): it sets every joint's target itself (OwnRiser.Driven) besides its
+        // corrections, and senses its joints. (A model for it is called <name>RiseFull.)
+        public const int FullSays = Says + OwnRiser.Drives, FullSenses = OwnRiser.Senses + OwnRiser.JointSenses + FullSays;
+        public bool Full;
+        private int SaysNow => Full ? FullSays : Says;
+        // How far it turns each joint at most from what its way asks, degrees: its trunk, upper arm, forearm, thigh, shin,
+        // boot.
+        public static float DrivesTrunk = 25, DrivesUpperArm = 35, DrivesForearm = 35, DrivesThigh = 30, DrivesShin = 30, DrivesBoot = 20;
+        private static float DrivesBy(int j) => j == OwnBody.Trunk ? DrivesTrunk : j < OwnBody.Forearm ? DrivesUpperArm : j < OwnBody.Thigh ? DrivesForearm
+            : j < OwnBody.Shin ? DrivesThigh : j < OwnBody.Foot ? DrivesShin : DrivesBoot;
+        // (Setting its joints: each decision, so much reward for its hips coming higher once its hands have let go, as
+        // the difference from the decision before, as Nearer.)
+        public static float Rises = .5f;
+        private float highWas = float.NaN;
         // How far each correction goes at most: degrees for the bows and the twist, a share of the hips' standing
         // height, metres for the weight's place.
         // (Smaller than first set, October 23: asking at random as it begins, larger ones wrecked its getting up: 4% of
@@ -36,21 +50,22 @@ namespace WonderGather
         public static float Jerk = .01f, Follows = .2f;
 
         public OwnBody Body;
-        private readonly float[] said = new float[Says];
-        private readonly List<float> sensed = new List<float>(Senses);
+        private readonly float[] said = new float[FullSays];
+        private readonly List<float> sensed = new List<float>(FullSenses);
 
         // An agent on this body: its behaviour's numbers set before it wakes (a model to run, or none: it is taught).
-        public static RiseAgent On(GameObject on, OwnBody body, Unity.InferenceEngine.ModelAsset model = null)
+        public static RiseAgent On(GameObject on, OwnBody body, Unity.InferenceEngine.ModelAsset model = null, bool full = false)
         {
             var behaviour = on.GetComponent<BehaviorParameters>();
             if (behaviour == null) behaviour = on.AddComponent<BehaviorParameters>();
-            behaviour.BehaviorName = Behaviour;
-            behaviour.BrainParameters.VectorObservationSize = Senses;
-            behaviour.BrainParameters.ActionSpec = ActionSpec.MakeContinuous(Says);
+            behaviour.BehaviorName = full ? FullBehaviour : Behaviour;
+            behaviour.BrainParameters.VectorObservationSize = full ? FullSenses : Senses;
+            behaviour.BrainParameters.ActionSpec = ActionSpec.MakeContinuous(full ? FullSays : Says);
             if (model != null) behaviour.Model = model;
             var agent = on.GetComponent<RiseAgent>();
             if (agent == null) agent = on.AddComponent<RiseAgent>();
             agent.Body = body;
+            agent.Full = full;
             agent.MaxStep = 0;
             return agent;
         }
@@ -78,12 +93,16 @@ namespace WonderGather
             {
                 string called = body.Called;
                 Unity.InferenceEngine.ModelAsset model = null;
+                bool full = false;
                 if (!string.IsNullOrEmpty(called) && !none.Contains(called))
                 {
-                    model = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + called + "Rise");
+                    // (One that sets every joint itself first, if there is one.)
+                    model = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + called + "RiseFull");
+                    full = model != null;
+                    if (model == null) model = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + called + "Rise");
                     if (model == null) none.Add(called);
                 }
-                agent = model != null ? On(body.gameObject, body, model) : null;
+                agent = model != null ? On(body.gameObject, body, model, full) : null;
                 if (agent != null)
                 {
                     var behaviour = body.GetComponent<BehaviorParameters>();
@@ -102,9 +121,9 @@ namespace WonderGather
         // Nothing said yet: as searched.
         public void Afresh()
         {
-            for (int i = 0; i < Says; i++) said[i] = 0;
-            nearWas = float.NaN;
-            if (Body != null && Body.Riser != null) Body.Riser.Learned = null;
+            for (int i = 0; i < said.Length; i++) said[i] = 0;
+            nearWas = highWas = float.NaN;
+            if (Body != null && Body.Riser != null) { Body.Riser.Learned = null; Body.Riser.Driven = null; }
         }
 
         public override void CollectObservations(VectorSensor sensor)
@@ -113,21 +132,27 @@ namespace WonderGather
             if (Body != null && Body.Riser != null) Body.Riser.Sense(sensed);
             while (sensed.Count < OwnRiser.Senses) sensed.Add(0);
             // (A number that is none, of a body gone wild, is told as nothing: the trainer takes no such number.)
-            for (int i = 0; i < OwnRiser.Senses; i++) sensor.AddObservation(float.IsNaN(sensed[i]) || float.IsInfinity(sensed[i]) ? 0 : sensed[i]);
-            for (int i = 0; i < Says; i++) sensor.AddObservation(said[i]);
+            if (Full)
+            {
+                if (Body != null && Body.Riser != null) Body.Riser.SenseJoints(sensed);
+                while (sensed.Count < OwnRiser.Senses + OwnRiser.JointSenses) sensed.Add(0);
+            }
+            int senses = OwnRiser.Senses + (Full ? OwnRiser.JointSenses : 0);
+            for (int i = 0; i < senses; i++) sensor.AddObservation(float.IsNaN(sensed[i]) || float.IsInfinity(sensed[i]) ? 0 : sensed[i]);
+            for (int i = 0; i < SaysNow; i++) sensor.AddObservation(said[i]);
         }
 
         public override void OnActionReceived(ActionBuffers actions)
         {
             var a = actions.ContinuousActions;
             float changed = 0;
-            for (int i = 0; i < Says; i++)
+            for (int i = 0; i < SaysNow; i++)
             {
                 float now = Mathf.Lerp(said[i], Mathf.Clamp(a[i], -1, 1), Follows);
                 changed += (now - said[i]) * (now - said[i]);
                 said[i] = now;
             }
-            AddReward(-Jerk * changed / Says);
+            AddReward(-Jerk * changed / SaysNow);
             var riser = Body != null ? Body.Riser : null;
             if (riser == null) return;
             // (How near over its soles its weight is, while its hands have not let go: best a little ahead of their middle.)
@@ -139,6 +164,18 @@ namespace WonderGather
             }
             if (riser.Learned == null || riser.Learned.Length != Says) riser.Learned = new float[Says];
             for (int i = 0; i < Says; i++) riser.Learned[i] = said[i] * By[i];
+            if (!Full) return;
+            // (Its hips coming higher once its hands have let go.)
+            if (Rises > 0)
+            {
+                float high = riser.HandsLet ? Mathf.Clamp(riser.Measure(OwnRiser.Asks.Hips), 0, 1.2f) : float.NaN;
+                if (!float.IsNaN(highWas) && !float.IsNaN(high)) AddReward(Rises * (high - highWas));
+                highWas = high;
+            }
+            if (riser.Driven == null || riser.Driven.Length != 3 * OwnBody.Count) riser.Driven = new float[3 * OwnBody.Count];
+            int k = Says;
+            foreach (int j in OwnRiser.DrivenJoints)
+                for (int d = 0; d < OwnRiser.AxesOf(j); d++) riser.Driven[3 * j + d] = said[k++] * DrivesBy(j);
         }
 
         // Asked without a teacher or a model: it says nothing, and the body does as searched. (To learn what its

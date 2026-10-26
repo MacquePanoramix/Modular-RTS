@@ -407,7 +407,8 @@ namespace WonderGather.Tests
                     Unity.MLAgents.Academy.Instance.AutomaticSteppingEnabled = false;
                     foreach (var body in bodies)
                     {
-                        body.agent = RiseAgent.On(body.unit.gameObject, body.own, model);
+                        // (A model called ...Full sets every joint itself: option 1, October 26.)
+                        body.agent = RiseAgent.On(body.unit.gameObject, body.own, model, learnedName.EndsWith("Full"));
                         var behaviour = body.unit.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>();
                         behaviour.BehaviorType = Unity.MLAgents.Policies.BehaviorType.InferenceOnly;
                         // (Its own best answer, not one drawn at random about it as it was taught.)

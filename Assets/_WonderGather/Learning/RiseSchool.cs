@@ -216,7 +216,36 @@ namespace WonderGather
                 string asks = Argument("-riseAsks");
                 if (!string.IsNullOrEmpty(asks)) { var each = asks.Split(','); for (int i = 0; i < each.Length && i < RiseAgent.Says; i++) RiseAgent.Asks[i] = float.Parse(each[i], Plain); }
                 RiseAgent.Wanders = Number("-riseWanders", 0);
-                var agent = RiseAgent.On(unit.gameObject, own);
+                // (-trainFull 1: it sets every joint itself, option 1, October 26.)
+                bool full = Number("-trainFull", 0) > 0;
+                var agent = RiseAgent.On(unit.gameObject, own, null, full);
+                // The help it is given only while it is taught (Luis, October 22), by the trainer's lessons ("help", from 1
+                // down to nothing; -trainHelp without a trainer), in the stages it learns at until it is handed to its
+                // standing balance: its joints StrongerBy more as strong; its weight drawn towards a little ahead of the
+                // middle of its boots, by up to PullsBy of its weight (on its hips and trunk, as they weigh), as its weight
+                // is so far ahead or behind; and its hips lifted by LiftsBy of its weight.
+                // (Measured without learning, 100 falls each, October 26: nothing 4 stood; stronger by 0.6, 3; lifted by
+                // 0.3, none (rolling up asks its boots to bear 0.55 of it); by 0.1, 8. Most gave up rolling up, the weight
+                // not over the boots: so it is drawn there. Drawn by 0.15, 18 of 200; 0.3, 12; 0.6, 5; nothing, 9.)
+                // (-trainStrongerBy, -trainLiftsBy: other measures of it. -trainTell 1: where each try that did not stand
+                // ended.)
+                float StrongerBy = Number("-trainStrongerBy", .3f), PullsBy = Number("-trainPullsBy", .15f), LiftsBy = Number("-trainLiftsBy", 0);
+                // (-trainNearer: how much it is told as its weight comes nearer over its soles; RiseAgent.Nearer.)
+                RiseAgent.Nearer = Number("-trainNearer", RiseAgent.Nearer);
+                System.Action<string> told = said =>
+                {
+                    if (!said.Contains("gave up")) return;
+                    var r = own.Riser;
+                    tell(r == null ? "TRAIN_TOLD " + said : string.Format(Plain,
+                        "TRAIN_TOLD {0}; lasted {1:0.0} s, waited to let go {2:0.0} s, hands let {3}; weight ahead of its soles {4:0.00}, soles {5:0.00}, boots bear {6:0.00}, depth {7:0.000}, hips {8:0.00}, upright {9:0.00}",
+                        said, r.Lasted, r.ReleaseWaited, r.HandsLet, r.Measure(OwnRiser.Asks.Ahead), r.Measure(OwnRiser.Asks.Soles), r.Measure(OwnRiser.Asks.Bears), r.BalanceDepth,
+                        r.Measure(OwnRiser.Asks.Hips), r.Measure(OwnRiser.Asks.Upright)));
+                };
+                bool telling = Number("-trainTell", 0) > 0;
+                if (telling) OwnBody.Told += told;
+                // (Its weight as its physical body has it: its own body's parts are made only as it begins.)
+                float whole = weighs;
+                float helped = 0;
                 var clock = System.Diagnostics.Stopwatch.StartNew();
                 int stood = 0, handed = 0, acted = 0, lastStood = 0, lastActed = 0;
                 bool everOn = false;
@@ -244,11 +273,18 @@ namespace WonderGather
                     Lay(miner, laid);
                     own.Wanted = true;
                     OwnBody.RiseWays = ways;
+                    float help = Mathf.Clamp01(Academy.Instance.EnvironmentParameters.GetWithDefault("help", Number("-trainHelp", 0)));
+                    OwnRiser.StrongerWhileLearning = 1 + StrongerBy * help;
+                    helped += help;
                     if (!own.BeginDown()) continue;
                     Physics.SyncTransforms();
                     agent.Afresh();
                     bool hasActed = false, onFeet = false, up = false;
                     float stoodFor = 0;
+                    // (-trainTell 2: each stage it came to, with how each boot's sole faced (1: down on the ground; -1: up)
+                    // and its hips' height as it came to it.)
+                    var stages = Number("-trainTell", 0) >= 2 ? new System.Text.StringBuilder() : null;
+                    string stageWas = "";
                     for (int step = 0; step * dt < lasts; step++)
                     {
                         var riser = own.Riser;
@@ -260,14 +296,35 @@ namespace WonderGather
                             hasActed = true;
                             everOn |= Academy.Instance.IsCommunicatorOn;
                         }
+                        if (stages != null && own.GettingUp && own.Riser != null && own.Riser.StageNow != stageWas)
+                        {
+                            stages.AppendFormat(Plain, " | {0}@{1:0.0}s soles {2:0.00},{3:0.00} hips {4:0.00}", own.Riser.StageNow, step * dt,
+                                own.Part(OwnBody.Foot).transform.up.y, own.Part(OwnBody.Foot + 1).transform.up.y, own.Riser.Measure(OwnRiser.Asks.Hips));
+                            stageWas = own.Riser.StageNow;
+                        }
                         own.Advance(dt);
                         if (own.Stands && float.IsNaN(own.Part(OwnBody.Hips).transform.position.x)) break;
                         if (!own.Stands) break;
+                        if (help > 0 && own.GettingUp && own.Riser != null && OwnRiser.LearnsAt(own.Riser.StageNow))
+                        {
+                            float g = Physics.gravity.magnitude;
+                            if (LiftsBy > 0) own.Part(OwnBody.Hips).AddForce(Vector3.up * (LiftsBy * help * whole * g));
+                            Vector3 toes = Flat(own.Part(OwnBody.Foot).transform.forward + own.Part(OwnBody.Foot + 1).transform.forward);
+                            float ahead = own.Riser.Measure(OwnRiser.Asks.Ahead);
+                            if (PullsBy > 0 && toes.sqrMagnitude > 1e-6f && !float.IsNaN(ahead))
+                            {
+                                Vector3 pull = -toes.normalized * (PullsBy * help * whole * g * Mathf.Clamp((ahead - .08f) / .15f, -1, 1));
+                                float hips = own.Part(OwnBody.Hips).mass, trunk = own.Part(OwnBody.Trunk).mass;
+                                own.Part(OwnBody.Hips).AddForce(pull * (hips / (hips + trunk)));
+                                own.Part(OwnBody.Trunk).AddForce(pull * (trunk / (hips + trunk)));
+                            }
+                        }
                         if (!own.GettingUp && !onFeet) onFeet = true;
                         if (onFeet && !own.Rising) { stoodFor += dt; if (stoodFor >= 1) { up = true; break; } }
                         Physics.Simulate(dt);
                         if (frames > 0 && step % frames == 0) yield return null;
                     }
+                    if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + stages);
                     if (own.Stands) own.Drop();
                     float reward = up ? 1 : onFeet ? .3f : 0;
                     if (up) stood++;
@@ -282,19 +339,21 @@ namespace WonderGather
                     }
                     if ((k + 1) % 100 == 0)
                     {
-                        tell(string.Format(Plain, "TRAIN {0} tries in {1:0.0} min: stood {2}, handed over {3}, the agent acted in {4}; of the last {5} it acted in, {6} stood",
-                            k + 1, clock.Elapsed.TotalMinutes, stood, handed, acted, lastActed, lastStood));
-                        lastStood = lastActed = 0;
+                        tell(string.Format(Plain, "TRAIN {0} tries in {1:0.0} min: stood {2}, handed over {3}, the agent acted in {4}; of the last {5} it acted in, {6} stood; helped {7:0.00}",
+                            k + 1, clock.Elapsed.TotalMinutes, stood, handed, acted, lastActed, lastStood, helped / 100));
+                        lastStood = lastActed = 0; helped = 0;
                     }
                     if (everOn && !Academy.Instance.IsCommunicatorOn) { tell("TRAIN the trainer has gone: done"); break; }
                     yield return null;
                 }
+                if (telling) OwnBody.Told -= told;
                 tell(string.Format(Plain, "TRAIN done after {0:0.0} min: stood {1}, handed over {2}, acted {3}", clock.Elapsed.TotalMinutes, stood, handed, acted));
             }
             finally
             {
                 Physics.simulationMode = mode;
                 Time.captureDeltaTime = timeWas;
+                OwnRiser.StrongerWhileLearning = 1;
                 OwnBody.FallsBack = fellBack;
                 OwnBody.RiseWays = waysWere;
                 if (own != null && own.Stands) own.Drop();
