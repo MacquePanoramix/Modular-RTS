@@ -249,9 +249,11 @@ namespace WonderGather
                 var clock = System.Diagnostics.Stopwatch.StartNew();
                 int stood = 0, handed = 0, acted = 0, lastStood = 0, lastActed = 0;
                 bool everOn = false;
+                int beganBetween = 0;
                 for (int k = 0; k < tries && clock.Elapsed.TotalHours < hours; k++)
                 {
-                    if (own.Stands) own.Drop();
+                    // (Standing as a try begins: made its own between tries by something else. Told.)
+                    if (own.Stands) { own.Drop(); beganBetween++; tell("TRAIN_BEGAN between tries, before try " + (k + 1) + " (" + beganBetween + " times)"); }
                     // (The game's time as the physics': the trainer sets its own time scale and frame rate when it comes, and
                     // at twenty times, what runs by the frame (its breath, on its trunk) ran twenty times as fast as the
                     // physics; 3 to 6% of tries stood, 25% without it. October 23.)
@@ -326,6 +328,11 @@ namespace WonderGather
                     }
                     if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + stages);
                     if (own.Stands) own.Drop();
+                    // (Not wanted between tries: wanted, a body whose posed body seems at ease is made its own as that posed
+                    // body stands, and how it stands is noted afresh from however the try left it; five of twelve copies of
+                    // the teaching went from a quarter standing to none so, October 26.)
+                    // (-trainKeepWanted 1: wanted all along, as before.)
+                    if (Number("-trainKeepWanted", 0) <= 0) own.Wanted = false;
                     float reward = up ? 1 : onFeet ? .3f : 0;
                     if (up) stood++;
                     if (onFeet) handed++;

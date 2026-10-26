@@ -423,7 +423,7 @@ namespace WonderGather.Tests
                 {
                     foreach (var body in bodies)
                     {
-                        if (body.own.Stands) body.own.Drop();
+                        if (body.own.Stands) { body.own.Drop(); Debug.Log("RISE_BEGAN_BETWEEN " + body.name + " stood by its own as try " + j + " began"); }
                         // (Its own place where this start was made: it goes with its body from there.)
                         body.unit.transform.SetPositionAndRotation(body.starts[j].place, body.starts[j].faces);
                         // (-riseJitter 20,0.3: each try laid turned up to so many degrees either way about its hips, and moved up to
@@ -631,6 +631,9 @@ namespace WonderGather.Tests
                     {
                         if (!body.done) body.ended = body.onFeet ? "still rising when the time was over" : "not on its feet when the time was over, at " + body.ended;
                         if (body.own.Stands) body.own.Drop();
+                        // (Not wanted between tries: else, its posed body seeming at ease, it may be made its own as that posed
+                        // body stands, and how it stands noted afresh from however the try left it. October 26.)
+                        body.own.Wanted = false;
                     }
                 }
 
