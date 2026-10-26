@@ -107,3 +107,17 @@ After the session of October 23 ended (the laptop off) with the fourth teaching 
 650,000 decisions:
 
 > Please proceed.
+
+## Luis, on the learned controller's next step (October 26) (verbatim)
+
+The report: the learned nudges more than doubled standing from neat front starts but not from falls as in the game
+(7 of 72 with or without them); three options: (1) a learned controller with full control of the joints at the hard
+moment (the pike and the roll-up), taught with the help allowed only while learning (extra strength and a lift, both
+taken away), on falls as in the game; (2) the last stage redesigned by hand, the toddler's way; (3) the getting up
+put aside for now.
+
+> option 1
+
+| | Luis | What follows |
+|---|---|---|
+| The approach | "option 1" | **Decided by Luis:** a learned controller sets every joint's target itself through the pike and the roll-up, taught on falls as in the game, helped while it learns (more strength, a lift) and that help taken away to none; in the game, its own joints only |
