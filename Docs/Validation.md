@@ -4089,3 +4089,27 @@ judges' verdict is not his.**
 - **So:** the learned nudges (the trunk and head, the hips' height, where the weight is meant to be, where the second
   foot goes) helped where they were taught, from its front laid down neatly (35 of 72, from 13 to 26), and not from
   the falls the game gives. Not run: the game again with the falls-taught model; Long and Round.
+
+## S3b step 2 — option 1: every joint set by what learns, and why tries from falls fail (October 26)
+
+Luis chose option 1: a learned controller with full control at the hard moment. On the work branch (`claude/wip-round`,
+`ce91b6f`): at the second foot's step, the pike and the roll-up the agent turns each joint but the hips' and head's up to
+20-35 degrees from what the way asks, besides its eight corrections, and senses every joint; help only while it is
+taught, fading by lessons. Measured in the training build **without learning** (the agent says nothing; 72 pushed
+falls as in the game, each turned and moved by chance; counts of 100-300 tries, so a few either way is noise):
+
+- **The help first planned did not help.** Joints 60% stronger: 3 of 100 stood (nothing: 4). Hips lifted by 30% of
+  its weight: **none of 100** (rolling up asks its boots to bear 55% of its weight, which the lift takes away); by 10%: 8.
+  Instead, its weight drawn towards over its boots: by 15% of its weight 18 of 200, 30% 12, 60% 5 (nothing: 9 of 200).
+  The run uses joints 30% stronger and the 15% draw, both fading to none. Random asking as a fresh learner asks: 4 of 200.
+- **Where tries from falls end:** about two in three give up rolling up from hands and feet. **Of 147 that reached the
+  roll-up, only 27 had both soles flat on the ground, and 52 had a boot upside down** (on its top): the second foot's
+  step mostly puts its boot down tilted, and the pike rolls boots over.
+- **Boots let down flat** (the ways' `flat=120` in the pike and roll-up; `ways_roll_small_flat.txt`): 87 of 137 reached the
+  roll-up on flat soles, but standing barely moved (13 of 200, from 9). At those give-ups the weight was still ahead of
+  the boots (median a third of its height; the roll-up asks under a quarter), the trunk bowed head down, after the 4 s
+  wait at the hands' release. **So the hard moment from falls is bringing the weight back over flat boots:** what option
+  1 is for.
+- **Training** (`full1`, from these ways, 12 copies): begun.
+
+Not run: the bench and the game with the flat ways; the suite on the work branch; Long and Round.
