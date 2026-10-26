@@ -58,6 +58,21 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 26, 2026 — the ninth (after three days away)
+
+- **Where we are.** As the eighth, October 23: the third path (a learned correction
+  for Small's getting up). From neat front starts it doubled standing on the bench;
+  from falls as in the game (where Small alone stands 4% of tries) the fourth run
+  reached 15 to 19% and then sagged, stopped at 650,000 decisions when the laptop
+  went off. In the game, up at two pushes of six (October 23, the front-taught model).
+- **Luis, October 26:** "Please proceed." Nothing else has changed.
+- **Next in hand:** find where tries from falls are lost (a bench run of falls
+  crashed in the editor while the teaching ran beside it, October 23: to be run
+  alone), and give the learning what it needs there.
+- **Still drifting:** bodies flying apart (about 1 in 70 to 150 tries); the suite on
+  the work branch (not since October 14); Long and Round; the analytics define and
+  the stray log for Luis.
+
 ### October 23, 2026 — the eighth (250 steps of work since the last)
 
 - **Where we are.** S3b step 2, the getting up by its own body, now on the third

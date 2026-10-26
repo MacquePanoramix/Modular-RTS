@@ -100,3 +100,10 @@ hand-built one.
 After the night's save ("save your progress for now I need to turn off laptop to sleep", October 22, late):
 
 > You can proceed now please again.
+
+## Luis, October 26 (verbatim)
+
+After the session of October 23 ended (the laptop off) with the fourth teaching run (from falls as in the game) at
+650,000 decisions:
+
+> Please proceed.
