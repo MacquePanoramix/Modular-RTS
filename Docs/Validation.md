@@ -4113,3 +4113,21 @@ falls as in the game, each turned and moved by chance; counts of 100-300 tries, 
 - **Training** (`full1`, from these ways, 12 copies): begun.
 
 Not run: the bench and the game with the flat ways; the suite on the work branch; Long and Round.
+
+## S3b step 2 — a fault in the teaching and the bench: the body made its own between tries (October 27)
+
+- **Seen:** in the first full-control run (`full1`), five of twelve copies went, each at once, from about a quarter of
+  their tries standing to none, and stayed at none (one from its 600th try, the others between 1,600 and 3,100).
+- **Cause:** a body wanted and not standing counts how long its posed body seems at ease, and the count was never
+  cleared while it stood by its own; between tries it crept up a frame a try until `OwnBody.Begin` made it its own from
+  the posed body as the last try had laid it, noting *how it stands* from that. Every try after aimed at that pose as
+  standing.
+- **Shown** (old behaviour kept by `-trainKeepWanted 1`; eight copies, 3,000 tries each, without learning): one copy was
+  made its own between tries, before its 984th try, and stood none of each 100 after (from about 6%); the seven others
+  never were and stood about 6% throughout.
+- **Fixed** on the work branch (`2b8edc8`): the school and the bench set the body unwanted after each try, and tell
+  (`TRAIN_BEGAN`, `RISE_BEGAN_BETWEEN`) if it is ever found standing as a try begins. The game does not lay bodies down
+  this way; not checked whether a game body can meet it.
+- **Open:** earlier bench runs (`OwnRiseBench`) could have met it too: a run whose later tries all failed may have
+  been this. Not re-examined.
+- `full1` resumed from its 2,000,000-decision checkpoint on the fixed build.
