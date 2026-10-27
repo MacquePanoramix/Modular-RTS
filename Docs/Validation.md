@@ -4263,3 +4263,30 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   a second each and let them down (the fall's own, not the boots); in a failing roll-up the model once threw an arm
   straight up.
 - `full3` resumed at 1,500,000 on that build. The bench pictures failed tries going down with `-riseFallsBack 1`.
+
+## S3b step 2 — `full3` at 2,000,000; why tries begun where a failed one left the body stand less (October 27)
+
+- **The teaching, measured without a trainer** (800 tries a copy, half the tries after a failed one begun where it left
+  the body, seeds 51 and 52): `full3` at 2,000,000 decisions: fresh falls stand 31.1%, those retries 12.4% (at
+  1,000,000: 30.3% and 9.8%; the body alone, same build: 7.1% and 2.2%). About as much as two copies of the same build
+  differ: little gained. The teaching's reward has stayed level since about 1,000,000.
+- **In the game, as played** (`GettingUpByItsOwnTests`, 20 pushes four ways round, `-ownGoOn 1`, boots stopped by the
+  ground): **2,000,000: up by its own body after 13 of 20 pushes, the old way 1, not up 6; 13 in 139 tries (9.4% a
+  try; 1,000,000: 9.6%).** **The body alone (`-ownUnheard 1`): 7 of 20, the old way 7, not up 6; 7 in 167 tries
+  (4.2%).** Pushes 1 to 7 with the model went mostly unanswered (5 of 7 not up or the old way), 8 to 19 mostly up (11
+  of 12). The test reports "Failed" because it asks every push to end up.
+- **Found in the test and mended (`8868eba`):** taken back by the posed body after a push not answered, the fall kept
+  its count of tries, so the next push began near the old way's twelve (2 of the body alone's 7 "old way" came after
+  0 and 1 tries). Now taking it back begins its tries afresh. Not yet run in the game since.
+- **Why retries stand less (the teaching, 2,000,000).** They reach the roll-up as often as fresh falls but stand there
+  half as often (18% against 39 to 41%), even with both soles flat and the hips as high (33% against 60%). Measured, one
+  thing at a time:
+  - begun later, after a fresh fall's try in between (`-trainRetryLater 1`): 12.6% (at once: 12.4%; fresh 32.1%). Not
+    something a try keeps from the last;
+  - and laid where a fresh fall lies, turned as one is (`-trainRetryLater 2`): 12.4% (fresh 30.6%). Not the place;
+  - each joint's turn from how it stands as the try began: the same medians as fresh falls but for the boots (7
+    degrees) and toes (4); in both, the hips bent less stand two to four times as often;
+  - **the boots and toes laid as when it stands** (`-trainRetryBoots 1`): **18.3%** (fresh 31.1%): about a third of the
+    gap. The rest is in how it lies in some way the turns' sizes do not show; each joint's turn about its own lines is
+    now told (`224ce28`), a run of it stopped unread when the laptop went off.
+- `full3` stopped at about 2,390,000 (last saved 2,249,994); resumed with `--resume` it goes on from there.

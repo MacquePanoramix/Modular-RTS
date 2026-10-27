@@ -12,8 +12,12 @@
   were when it went down, so those tries almost never stood; now the boots go slack
   (as far as the ground lets them). Judged once (round 1 of 3): reads as real, with a
   flaw; the holds the judges point at are the ways' fixed stage times and the standing
-  balance's slow start. `full3` is still teaching. [Validation](Validation.md). **Next:**
-  more teaching, the game again, round 2 of the judges, then Luis. How it is run:
+  balance's slow start. At 2,000,000 decisions the game gives the same (13 of 20 pushes, 9.4% a try; the body
+  alone 7 of 20, 4.2%): more of the same teaching adds little. Tries begun where a failed one left
+  the body stand a third as often as fresh falls, and it is how the body lies (the boots a third
+  of it), not the place nor anything a try keeps. `full3` stopped at 2,249,994 saved. [Validation](Validation.md).
+  **Next:** read the joints' turns of retries (a run's tools are on the work branch), mend
+  what makes them fail, the game again, round 2 of the judges, then Luis. How it is run:
   `Docs/Technical/RiseWays/README.md` on the work branch.
 
 - **Where it was left for the night (October 22, late; Luis turned the laptop off).**

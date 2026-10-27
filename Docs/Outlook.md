@@ -58,6 +58,37 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 27, 2026 — the eleventh (250 steps of work since the tenth)
+
+- **Where we are.** S3b step 2, option 1. `full3` (taught on falls and on tries begun
+  where a failed one left it) at 2,000,000 decisions, in the teaching without a trainer:
+  fresh falls stand 31%, those retries 12% (at 1,000,000: 30% and 10%; the body alone
+  6 to 7% and 2 to 3%). The teaching's reward has stayed level since about 1,000,000,
+  so more of the same teaching gives little more. In the game, at 1,000,000: up by its
+  own body after 15 of 23 pushes (the body alone 7 of 20); 2,000,000 is being tried
+  there now. Judged once (round 1 of 3): reads as real, with a flaw. The flaw is mostly
+  the searched ways' fixed stage times, which more teaching does not touch.
+- **Waiting on Luis:** the question in the last report (let the learner choose when a
+  stage it controls moves on, a new network taught from the start, or keep the stage
+  times). Still open from before: S3 (since October 8); the builds of October 13 and
+  14; R1 (the arms); the inference package's analytics define; the stray
+  `risebuild3.log`.
+- **Built, not in a build:** all of the getting up (work branch, behind the switch,
+  off). Luis has not seen option 1 move. Before he does: round 2 of the judges, and a
+  build he can play with the switch named in the report's first line.
+- **Drifting or forgotten:** the suite on the work branch (not since October 14; it
+  needs the teaching stopped, nothing heavy beside it); Long and Round (no getting up);
+  the work branch drifting from the game branch; the old way still waits in the game
+  after 12 tries in one fall, and the game's test did reach that (16 tries in 300 s,
+  pushed sideways), so its comment "no measure has reached" is out of date. Luis allows
+  it only as the absolute last resort; whether it showed there is to be read. Also the
+  bench against the teaching for the body alone, the arm the model throws, the coat's
+  fin, the let-go body lifting a limb while lying.
+- **Does the task serve the stage?** Yes: the measure is the game, and it is being
+  measured there. But the teaching has levelled off; the next real step is either
+  Luis's pacing answer or work on where tries are lost (sideways falls, retries),
+  not more hours of the same run.
+
 ### October 27, 2026 — the tenth (250 steps of work since the ninth)
 
 - **Where we are.** S3b step 2, the getting up by its own body, option 1 (Luis, October
