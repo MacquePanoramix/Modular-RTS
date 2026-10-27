@@ -484,6 +484,11 @@ namespace WonderGather
         {
             var s = miner.Solved;
             roseByItsOwn = false;
+            // (How long its posed body has stood at ease counts afresh from here. Made its own by a getting up, the count
+            // was kept through it, and a frame or two at ease between tries of the teaching added to it each try until it
+            // was made its own again as its posed body stood, how it stands noted from however the last try laid it.
+            // The panel sets it wanted every frame, so not wanting it between tries did not keep it so. October 27.)
+            easeFor = 0;
             Told?.Invoke($"{name} takes over at {Time.time:F2}: the posed body sunk {body.SinkNow * 1000:F1} mm, bowed {body.BowNow:F1} deg, going {body.VelocityNow.magnitude:F3} m/s, crouched {body.CrouchNow * 1000:F1} mm, its feet set {body.StanceWider * 1000:F0} mm wider and {body.StanceStagger * 1000:F0} mm staggered, its boots at {s.feet[0].position.y:F3} and {s.feet[1].position.y:F3}; its hips {(s.pelvis.position.y - .5f * (s.feet[0].position.y + s.feet[1].position.y)) * 1000:F0} mm over its boots, knees bent {Vector3.Angle(s.thighs[0].up, s.shins[0].up):F0} and {Vector3.Angle(s.thighs[1].up, s.shins[1].up):F0} deg");
             var shape = body.BodyProportions;
             segments[Hips] = s.pelvis; segments[Trunk] = s.torso; segments[Head] = s.head;

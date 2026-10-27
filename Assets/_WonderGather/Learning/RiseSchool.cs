@@ -330,7 +330,9 @@ namespace WonderGather
                     if (own.Stands) own.Drop();
                     // (Not wanted between tries: wanted, a body whose posed body seems at ease is made its own as that posed
                     // body stands, and how it stands is noted afresh from however the try left it; five of twelve copies of
-                    // the teaching went from a quarter standing to none so, October 26.)
+                    // the teaching went from a quarter standing to none so, October 26. The panel sets it wanted again every
+                    // frame, so this alone did not keep it so; what keeps it is that its count of being at ease begins afresh
+                    // each time it is made its own, OwnBody.Make, October 27.)
                     // (-trainKeepWanted 1: wanted all along, as before.)
                     if (Number("-trainKeepWanted", 0) <= 0) own.Wanted = false;
                     float reward = up ? 1 : onFeet ? .3f : 0;
