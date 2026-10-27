@@ -4248,3 +4248,18 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   15 s; a person takes 3 to 4).
 - **So:** the holds the judges point at are the searched ways' fixed stage times and the standing balance's slow start,
   older than option 1; what the learner shapes was praised. Open for round 2.
+
+## S3b step 2 — the game with slack boots; the boots stopped by the ground (October 27)
+
+- **In the game, as played** (`GettingUpByItsOwnTests`, `-ownGoOn 1`, pushed four ways round), with the boots going slack:
+  **the body alone up by its own body 7 of 20 pushes, in 163 tries (4.3% a try; 1.0% before)**; **the `full3` model at
+  1,000,000: 15 of 23 pushes (two runs: 7 of 13, then 8 of 10, none of those the old way), in 157 tries (9.6% a try; the
+  first run's model 2.5% before)**. The two pushes of the 10 not up by 300 s were both sideways.
+- **Seen in pictures and mended:** giving up from hands and knees with its boots sole up, both legs flicked up into the
+  air as it went down: kneeling on its shins, a boot let go towards how it stands points into the ground. Now a boot
+  goes slack only as far as the ground lets it (`86b6342`). Pictured again: from the same kneel it slumps onto its face
+  and slides flat, boots on the ground. Retries in the teaching with the model: 9.8% (13.4% without the ground's stop).
+- **Seen, not looked into:** lying after a failed try, the let-go body once lifted a boot and then an arm for about half
+  a second each and let them down (the fall's own, not the boots); in a failing roll-up the model once threw an arm
+  straight up.
+- `full3` resumed at 1,500,000 on that build. The bench pictures failed tries going down with `-riseFallsBack 1`.

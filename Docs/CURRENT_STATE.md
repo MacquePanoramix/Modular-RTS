@@ -5,13 +5,16 @@
 - **Now (October 27): option 1 is being taught** (Luis, October 26: "option 1": what
   learns sets every joint's target itself at the hard moment, the second foot's step,
   the pike and the roll-up; help only while it is taught, fading to none). On the work
-  branch only, behind the switch (off), not in a build. Measured on falls as in the
-  game without a trainer, the first run's model stands about twice as often as the
-  body alone (94 and 74 of 400 against 37 and 38). Two faults in how it was taught,
-  found and mended ([Validation](Validation.md#s3b-step-2--option-1-measured-on-the-teachings-own-falls-two-more-faults-in-how-it-was-taught-october-27)).
-  The second run (`full2`) is being taught without them. **Next:** that run without
-  help; then the game (pushed as played), pictures, the aesthetic judges, and only
-  then Luis. How it is run: `Docs/Technical/RiseWays/README.md` on the work branch.
+  branch only, behind the switch (off), not in a build. **In the game, as played:
+  Small up by its own body after 15 of 23 pushes with the model (the body alone 7 of
+  20; at the start of the day 2 of 20).** Found on the way: most tries in the game
+  begin where a failed one left it, and the let-go body kept its boots bent as they
+  were when it went down, so those tries almost never stood; now the boots go slack
+  (as far as the ground lets them). Judged once (round 1 of 3): reads as real, with a
+  flaw; the holds the judges point at are the ways' fixed stage times and the standing
+  balance's slow start. `full3` is still teaching. [Validation](Validation.md). **Next:**
+  more teaching, the game again, round 2 of the judges, then Luis. How it is run:
+  `Docs/Technical/RiseWays/README.md` on the work branch.
 
 - **Where it was left for the night (October 22, late; Luis turned the laptop off).**
   The getting up (work branch `claude/wip-round`, behind the switch, off): the hands
