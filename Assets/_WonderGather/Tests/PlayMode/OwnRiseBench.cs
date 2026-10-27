@@ -53,7 +53,7 @@ namespace WonderGather.Tests
             // (The way it began by; when it went on by another, the way that way turns into the next; and how far onto
             // its front it came at most.)
             public string firstWay = "", lastStage = "", released = "", handedOver = "";
-            public RiseAgent agent;
+            public RiseAgent agent, pacer;
             public bool spinTold;
             public Vector3[] targetWas = new Vector3[2];
             public int spinAfter;
@@ -415,6 +415,24 @@ namespace WonderGather.Tests
                         behaviour.DeterministicInference = true;
                     }
                 }
+                // (-risePaceModel SmallRisePace: and what learnt the pace of every pose, an agent of its own beside the one
+                // that sets the joints, every -riseLearnEvery steps in every pose. October 27.)
+                string paceName = CaptureTools.Argument("-risePaceModel");
+                if (!string.IsNullOrEmpty(paceName))
+                {
+                    var paceModel = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + paceName);
+                    Assert.That(paceModel, Is.Not.Null, "No model Resources/RiseModels/" + paceName);
+                    Unity.MLAgents.Academy.Instance.AutomaticSteppingEnabled = false;
+                    foreach (var body in bodies)
+                    {
+                        var holder = new GameObject("Pace");
+                        holder.transform.SetParent(body.unit.transform, false);
+                        body.pacer = RiseAgent.On(holder, body.own, paceModel, paceOnly: true);
+                        var behaviour = holder.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>();
+                        behaviour.BehaviorType = Unity.MLAgents.Policies.BehaviorType.InferenceOnly;
+                        behaviour.DeterministicInference = true;
+                    }
+                }
                 var ways = bodies[0].ways;
 
                 // One try: from one way of lying, every body made its own as it lies; stepped until each stands, has gone
@@ -453,6 +471,7 @@ namespace WonderGather.Tests
                         OwnBody.RiseWays = body.ways;
                         body.done = !body.own.BeginDown();
                         if (body.agent != null) body.agent.Afresh();
+                        if (body.pacer != null) body.pacer.Afresh();
                         body.up = body.onFeet = false; body.feetAt = body.upAt = -1; body.peak = body.stoodFor = body.risen = body.feetFor = 0; body.ended = body.done ? "could not be made" : "";
                         body.depth = float.NaN; body.stageAt = body.stages = body.heldFor = 0; body.upOff = false; body.stepFurthest = 0; body.shifts = body.shiftsFailed = 0; body.lastAt = float.NaN; body.recent.Clear(); body.bootSpin = 0; body.bootSpinAt = "";
                         body.firstWay = ""; body.lastStage = ""; body.released = ""; body.handedOver = ""; body.turnedAt = float.NaN; body.frontMost = -1; body.spinTold = false;
@@ -496,9 +515,12 @@ namespace WonderGather.Tests
                                 for (int i = 0; i < OwnBody.Count; i++) weighs += own.Part(i).mass;
                                 own.Part(OwnBody.Trunk).AddForce(Vector3.Lerp(body.shakeFrom, body.shakeTo, u * u * (3 - 2 * u)) * (shake * weighs * Physics.gravity.magnitude));
                             }
-                            if (body.agent != null && own.GettingUp && own.Riser != null && (body.agent.Paced || OwnRiser.LearnsAt(own.Riser.StageNow)) && step % learnEvery == 0)
+                            bool sets = body.agent != null && own.GettingUp && own.Riser != null && (body.agent.Paced || OwnRiser.LearnsAt(own.Riser.StageNow));
+                            bool paces = body.pacer != null && own.GettingUp && own.Riser != null;
+                            if ((sets || paces) && step % learnEvery == 0)
                             {
-                                body.agent.RequestDecision();
+                                if (paces) body.pacer.RequestDecision();
+                                if (sets) body.agent.RequestDecision();
                                 Unity.MLAgents.Academy.Instance.EnvironmentStep();
                             }
                             own.Advance(dt);
