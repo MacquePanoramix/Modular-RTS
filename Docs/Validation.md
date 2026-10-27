@@ -4290,3 +4290,26 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
     gap. The rest is in how it lies in some way the turns' sizes do not show; each joint's turn about its own lines is
     now told (`224ce28`), a run of it stopped unread when the laptop went off.
 - `full3` stopped at about 2,390,000 (last saved 2,249,994); resumed with `--resume` it goes on from there.
+
+## S3b step 2 — the falls were learnt by heart; the learner paces its way (October 27, afternoon)
+
+- **Luis, October 27:** "Yes I think that approach sounds good. Please continue now then." Taken as yes to letting what
+  learns decide when each pose goes on ([Correspondence](Correspondence/2026-10-27_THE_LEARNER_PACES.md)); to be
+  confirmed in the next report.
+- **Why tries begun where a failed one left the body stood less, found.** Each joint's turn about its own lines (as well
+  as its size) showed nothing apart; tries begun on the back stood least (5% against 25% fresh). The teaching's fresh
+  falls were **72 made once at its start and drawn again and again**: fresh falls on the back lay all but the same way
+  (knees 35, hips 172, boots −0.57 in try after try). The learner, and the ways searched on falls made so, knew them by
+  heart. **Measured on falls made anew for each try** (`-trainFreshFalls 1`, `2870f0c`: facing and pushed any way, 0.7
+  to 1.4 times as hard): `full3` at 2,000,000 stands **20.2%** from fresh falls (on the 72: 31 to 33%) and 14.1% from
+  retries; the body alone 5.6% and 3.7% (6 copies, 2,400 tries). In the game the first try of a push stood 4 of 20 with
+  that model. The teaching's own measure is now honest: what it says of fresh falls is what the game will see.
+- **The learner paces its way** (`2417f24`): in every pose of its way it says how long the pose is kept at least (a
+  quarter to twice the searched time); how fast a pose is come to and what it asks before it is through stay searched;
+  it still sets every joint at the hard moment. Each second of getting up costs 0.02. Silent, it keeps the searched
+  times exactly (hands 1.6 s, pike 1.4 s, 11.7 s to the roll-up, 150 tries); answering at random, poses run from a
+  quarter to twice as long. A new network (`SmallRisePaced`), taught from the start on falls made anew (`paced2`,
+  `train_smallrise_paced.yaml`, gamma 0.995 for tries four times as many decisions long). A first run on the 72 falls
+  (`paced1`) was stopped at 50,000 when they were found.
+- **Mended in the game's test** (`8868eba`, not yet run in the game since): see the entry before.
+- **Not done:** the paced learner is not yet measured, judged or in the game; `full3` was not taught on falls made anew.
