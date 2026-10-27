@@ -263,6 +263,14 @@ namespace WonderGather
                 int stood = 0, handed = 0, acted = 0, lastStood = 0, lastActed = 0;
                 bool everOn = false;
                 int beganBetween = 0;
+                // (-trainRetries 0.5: after a try that went down, so often the next begins where that one left it, its fall
+                // having it with how its parts were going and lying still first, as in the game; at most -trainRetriesAtMost
+                // in a row. In the game most tries are such: pushed over fifteen times, Small alone tried 159 times and
+                // stood twice, the first try of each push none, October 27.)
+                float retries = Number("-trainRetries", 0);
+                int retriesAtMost = (int)Number("-trainRetriesAtMost", 4), inRow = 0, retried = 0, retriedStood = 0;
+                Lies? again = null;
+                OwnBody.FallsBack = retries > 0;
                 for (int k = 0; k < tries && clock.Elapsed.TotalHours < hours; k++)
                 {
                     // (Standing as a try begins: made its own between tries by something else. Told.)
@@ -272,10 +280,14 @@ namespace WonderGather
                     // physics; 3 to 6% of tries stood, 25% without it. October 23.)
                     Time.timeScale = 1;
                     Time.captureDeltaTime = dt * Mathf.Max(1, frames);
-                    // A start, turned and moved by chance (a way that serves only the very place it was taught at is not one).
-                    var laid = starts[chance.Next(starts.Count)];
-                    float yaw = (float)(chance.NextDouble() * 2 - 1) * turnBy;
-                    Vector3 move = new Vector3((float)(chance.NextDouble() * 2 - 1), 0, (float)(chance.NextDouble() * 2 - 1)) * moveBy;
+                    // A start, turned and moved by chance (a way that serves only the very place it was taught at is not one);
+                    // or where the last try left it.
+                    bool retry = again.HasValue;
+                    var laid = retry ? again.Value : starts[chance.Next(starts.Count)];
+                    again = null;
+                    if (retry) { retried++; inRow++; } else inRow = 0;
+                    float yaw = retry ? 0 : (float)(chance.NextDouble() * 2 - 1) * turnBy;
+                    Vector3 move = retry ? Vector3.zero : new Vector3((float)(chance.NextDouble() * 2 - 1), 0, (float)(chance.NextDouble() * 2 - 1)) * moveBy;
                     Vector3 hipsWere = laid.at[OwnBody.Hips];
                     float Under(Vector3 at) => Physics.Raycast(at + Vector3.up * 3, Vector3.down, out var hit, 8, 1 << 6) ? hit.point.y : at.y;
                     move.y = Under(hipsWere + move) - Under(hipsWere);
@@ -341,6 +353,22 @@ namespace WonderGather
                     }
                     if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + stages);
                     if (own.Stands) own.Drop();
+                    // (Gone down, its fall has it: lying still, the next try may begin there; if not, the posed body takes it
+                    // back, and the fall's parts are gone by the frame's end.)
+                    if (fall.Now == PhysicalFall.State.Falling || fall.Now == PhysicalFall.State.Lying)
+                    {
+                        if (!up && retries > 0 && inRow < retriesAtMost && chance.NextDouble() < retries)
+                        {
+                            fall.GetsUp = false;
+                            for (int s = 0; s < 450 && fall.Now != PhysicalFall.State.Lying; s++) { fall.Advance(dt); Physics.Simulate(dt); }
+                            for (int s = 0; s < 25; s++) { fall.Advance(dt); Physics.Simulate(dt); }
+                            var lies = Now(fall);
+                            lies.place = unit.transform.position; lies.faces = unit.transform.rotation;
+                            if (!float.IsNaN(lies.at[OwnBody.Hips].x)) again = lies;
+                            fall.GetsUp = true;
+                        }
+                        fall.TakeBack();
+                    }
                     // (Not wanted between tries: wanted, a body whose posed body seems at ease is made its own as that posed
                     // body stands, and how it stands is noted afresh from however the try left it; five of twelve copies of
                     // the teaching went from a quarter standing to none so, October 26. The panel sets it wanted again every
@@ -350,6 +378,7 @@ namespace WonderGather
                     if (Number("-trainKeepWanted", 0) <= 0) own.Wanted = false;
                     float reward = up ? 1 : onFeet ? .3f : 0;
                     if (up) stood++;
+                    if (up && retry) retriedStood++;
                     if (onFeet) handed++;
                     if (hasActed)
                     {
@@ -362,7 +391,8 @@ namespace WonderGather
                     if ((k + 1) % 100 == 0)
                     {
                         tell(string.Format(Plain, "TRAIN {0} tries in {1:0.0} min: stood {2}, handed over {3}, the agent acted in {4}; of the last {5} it acted in, {6} stood; helped {7:0.00}",
-                            k + 1, clock.Elapsed.TotalMinutes, stood, handed, acted, lastActed, lastStood, helped / 100));
+                            k + 1, clock.Elapsed.TotalMinutes, stood, handed, acted, lastActed, lastStood, helped / 100)
+                            + (retries > 0 ? string.Format(Plain, "; begun where the last left it {0}, of them stood {1}", retried, retriedStood) : ""));
                         lastStood = lastActed = 0; helped = 0;
                     }
                     if (everOn && !Academy.Instance.IsCommunicatorOn) { tell("TRAIN the trainer has gone: done"); break; }

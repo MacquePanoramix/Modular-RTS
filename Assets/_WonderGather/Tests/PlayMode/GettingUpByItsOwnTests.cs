@@ -27,15 +27,17 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; }
+        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; RiseAgent.Unheard = false; }
 
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
 
-        [UnityTest, Explicit, Timeout(3600000)]
+        [UnityTest, Explicit, Timeout(14400000)]
         public IEnumerator SmallPushedOverGetsUpByItsOwnBody()
         {
             Time.captureFramerate = 50;
             PhysicalFall.GetsUpByItsOwn = true;
+            // (-ownUnheard 1: no learnt model given, to set the body as searched beside it, October 27.)
+            RiseAgent.Unheard = CaptureTools.Argument("-ownUnheard") == "1";
             // (A measure, not a test that must pass: what the engine says of a body gone wild is told, and it goes on.
             // And what its own body says as it goes: where each try ended.)
             LogAssert.ignoreFailingMessages = true;

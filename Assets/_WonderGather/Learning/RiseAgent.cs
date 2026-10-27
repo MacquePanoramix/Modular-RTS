@@ -75,6 +75,8 @@ namespace WonderGather
         // was taught; only while the Academy steps itself (the bench and the teaching step it themselves). None: as
         // searched.
         public static int DecidesEvery = 5;
+        // (Unheard: no model is given in the game, to measure the body as searched against it there.)
+        public static bool Unheard;
         private static readonly Dictionary<OwnBody, RiseAgent> learnt = new Dictionary<OwnBody, RiseAgent>();
         private static readonly HashSet<string> none = new HashSet<string>();
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -87,7 +89,7 @@ namespace WonderGather
         private static void Heard(OwnBody body, int step)
         {
             var riser = body.Riser;
-            if (riser == null || !OwnRiser.LearnsAt(riser.StageNow) || step % DecidesEvery != 0) return;
+            if (Unheard || riser == null || !OwnRiser.LearnsAt(riser.StageNow) || step % DecidesEvery != 0) return;
             if (!Academy.Instance.AutomaticSteppingEnabled) return;
             if (!learnt.TryGetValue(body, out var agent))
             {
