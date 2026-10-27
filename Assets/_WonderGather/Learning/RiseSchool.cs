@@ -324,6 +324,22 @@ namespace WonderGather
                     // (-trainTell 2: each stage it came to, with how each boot's sole faced (1: down on the ground; -1: up)
                     // and its hips' height as it came to it.)
                     var stages = Number("-trainTell", 0) >= 2 ? new System.Text.StringBuilder() : null;
+                    // (And how it lay as it began: each knee's bend, each hip's (trunk to thigh), how far each boot is from
+                    // the hips along the body and across it, in metres; and how much its trunk faces the ground (1: on its
+                    // front). To learn what a try begun where the last left it lies like, October 27.)
+                    if (stages != null)
+                    {
+                        Transform P(int i) => own.Part(i).transform;
+                        Vector3 along = P(OwnBody.Trunk).up, across = P(OwnBody.Hips).right;
+                        stages.AppendFormat(Plain, " lay front {0:0.00} knees {1:0},{2:0} hips {3:0},{4:0} boots along {5:0.00},{6:0.00} across {7:0.00},{8:0.00} walked {9} slope {10:0}",
+                            -P(OwnBody.Trunk).forward.y,
+                            Vector3.Angle(P(OwnBody.Thigh).up, P(OwnBody.Shin).up), Vector3.Angle(P(OwnBody.Thigh + 1).up, P(OwnBody.Shin + 1).up),
+                            Vector3.Angle(P(OwnBody.Trunk).up, P(OwnBody.Thigh).up), Vector3.Angle(P(OwnBody.Trunk).up, P(OwnBody.Thigh + 1).up),
+                            Vector3.Dot(P(OwnBody.Foot).position - P(OwnBody.Hips).position, along), Vector3.Dot(P(OwnBody.Foot + 1).position - P(OwnBody.Hips).position, along),
+                            Vector3.Dot(P(OwnBody.Foot).position - P(OwnBody.Hips).position, across), Vector3.Dot(P(OwnBody.Foot + 1).position - P(OwnBody.Hips).position, across),
+                            UnityEngine.AI.NavMesh.SamplePosition(P(OwnBody.Hips).position, out _, .5f, UnityEngine.AI.NavMesh.AllAreas) ? 1 : 0,
+                            Physics.Raycast(P(OwnBody.Hips).position + Vector3.up, Vector3.down, out var under, 4, 1 << 6) ? Vector3.Angle(under.normal, Vector3.up) : -1);
+                    }
                     string stageWas = "";
                     for (int step = 0; step * dt < lasts; step++)
                     {
@@ -392,6 +408,20 @@ namespace WonderGather
                             for (int s = 0; s < 25; s++) { fall.Advance(dt); Physics.Simulate(dt); }
                             var lies = Now(fall);
                             lies.place = unit.transform.position; lies.faces = unit.transform.rotation;
+                            // (-trainRetryBoots 1: its boots and toes laid to its shins as when it stands, not as the let-go
+                            // body kept them from the moment it went down. To learn whether that is why such tries fail,
+                            // October 27.)
+                            if (Number("-trainRetryBoots", 0) > 0)
+                                for (int i = 0; i < 2; i++)
+                                {
+                                    Quaternion shinWas = standing.turned[OwnBody.Shin + i], shinNow = lies.turned[OwnBody.Shin + i];
+                                    Vector3 shinAt = standing.at[OwnBody.Shin + i];
+                                    foreach (int b in new[] { OwnBody.Foot + i, Parts + i })
+                                    {
+                                        lies.at[b] = lies.at[OwnBody.Shin + i] + shinNow * (Quaternion.Inverse(shinWas) * (standing.at[b] - shinAt));
+                                        lies.turned[b] = shinNow * (Quaternion.Inverse(shinWas) * standing.turned[b]);
+                                    }
+                                }
                             wild = Wild();
                             if (!wild) again = lies;
                             fall.GetsUp = true;

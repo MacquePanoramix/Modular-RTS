@@ -1067,6 +1067,14 @@ namespace WonderGather
             if (riser == null) Follows(true);
             // (How each part is going is handed on: the let-go body's eleven parts are this one's first eleven.)
             for (int i = 0; i < Foot; i++) { goesOn[i] = parts[i].GetPointVelocity(parts[i].worldCenterOfMass); turnsOn[i] = parts[i].angularVelocity; }
+            // (And how far each boot is turned from how it is to its shin when it stands, about its ankle: the let-go
+            // body has no ankles, and lets each boot go slack so as it falls. October 27.)
+            for (int i = 0; i < 2; i++)
+            {
+                var boot = parts[Foot + i].transform;
+                slackBy[i] = stoodKnown ? parts[Shin + i].transform.rotation * stoodLocal[Foot + i] * Quaternion.Inverse(boot.rotation) : Quaternion.identity;
+                ankleAt[i] = boot.TransformPoint(anchors[Foot + i]);
+            }
             PutAway();
             if (balance != null) balance.Acts = balanced;
             body.LetGo = false;
@@ -1080,8 +1088,10 @@ namespace WonderGather
                 if (part == null) continue;
                 part.linearVelocity = goesOn[i]; part.angularVelocity = turnsOn[i];
             }
+            if (stoodKnown) for (int i = 0; i < 2; i++) fall.Slacken(i, ankleAt[i], slackBy[i]);
         }
-        private readonly Vector3[] goesOn = new Vector3[Count], turnsOn = new Vector3[Count];
+        private readonly Vector3[] goesOn = new Vector3[Count], turnsOn = new Vector3[Count], ankleAt = new Vector3[2];
+        private readonly Quaternion[] slackBy = new Quaternion[2];
 
         // After the posed body would have posed, and before the model's bones are turned to it.
         private void LateUpdate()

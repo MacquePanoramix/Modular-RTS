@@ -240,6 +240,15 @@ namespace WonderGather
         private readonly Vector3[] before = new Vector3[Count], lately = new Vector3[Count];
         private readonly Vector3[] footAt = new Vector3[2], toeAt = new Vector3[2], plantAt = new Vector3[2];
         private readonly Quaternion[] footTurn = new Quaternion[2], toeTurn = new Quaternion[2];
+        // (Its boots go slack towards how they are to its shins when it stands, when its own body hands it to the fall
+        // with its ankles bent far, as in a getting up: eased over BootsSlackIn seconds about each ankle. Kept as they were
+        // when it went down, a boot upturned or bent stayed so as it lay, and nearly every try begun from there failed:
+        // in the teaching 3% of them stood; as they stand, 17%. October 27.)
+        public const float BootsSlackIn = .3f;
+        private readonly Transform[] bootsMade = new Transform[2];
+        private readonly Vector3[] footAtWas = new Vector3[2], footAtTo = new Vector3[2], toeAtWas = new Vector3[2], toeAtTo = new Vector3[2];
+        private readonly Quaternion[] footTurnWas = new Quaternion[2], footTurnTo = new Quaternion[2], toeTurnWas = new Quaternion[2], toeTurnTo = new Quaternion[2];
+        private readonly float[] slackened = { 1, 1 };
         private float beforeTime = -1, latelyTime = -1, still, ridesUp, tone = 1, neckLever, lain, gathered, risen;
         // Where the physics left each of the posed body's segments, when the posed body took over.
         private readonly Vector3[] leftAt = new Vector3[Count + 4];
@@ -515,6 +524,8 @@ namespace WonderGather
                     toeAt[i] = shin.transform.InverseTransformPoint(s.toes[i].position);
                     toeTurn[i] = Quaternion.Inverse(shin.transform.rotation) * s.toes[i].rotation;
                 }
+                bootsMade[i] = boot.transform;
+                slackened[i] = 1;
             }
             // Its own parts do not strike one another, but for those that would fold through each other in a heap and
             // stand well clear of each other in a standing body: a shin against the trunk, the head, the other shin
@@ -880,10 +891,33 @@ namespace WonderGather
         }
 
         // One step of the fall's own doing.
+        // As it is let go: each boot to go slack about its ankle (where it is) by so much (turned so in the world), to how
+        // it is to its shin when it stands. (Its own body says so as it goes down.)
+        public void Slacken(int i, Vector3 ankle, Quaternion by)
+        {
+            var shin = parts[Shin + i];
+            if (shin == null || bootsMade[i] == null) return;
+            Quaternion turns = Quaternion.Inverse(shin.transform.rotation) * by * shin.transform.rotation;
+            Vector3 about = shin.transform.InverseTransformPoint(ankle);
+            footAtWas[i] = footAt[i]; footTurnWas[i] = footTurn[i]; toeAtWas[i] = toeAt[i]; toeTurnWas[i] = toeTurn[i];
+            footAtTo[i] = about + turns * (footAt[i] - about); footTurnTo[i] = turns * footTurn[i];
+            toeAtTo[i] = about + turns * (toeAt[i] - about); toeTurnTo[i] = turns * toeTurn[i];
+            slackened[i] = 0;
+        }
+
         public void Advance(float dt)
         {
             if (Now == State.Up || Now == State.Rising) return;
             Since += dt;
+            for (int i = 0; i < 2; i++)
+            {
+                if (slackened[i] >= 1 || bootsMade[i] == null) continue;
+                slackened[i] = Mathf.Min(1, slackened[i] + dt / BootsSlackIn);
+                float u = slackened[i] * slackened[i] * (3 - 2 * slackened[i]);
+                footAt[i] = Vector3.Lerp(footAtWas[i], footAtTo[i], u); footTurn[i] = Quaternion.Slerp(footTurnWas[i], footTurnTo[i], u);
+                toeAt[i] = Vector3.Lerp(toeAtWas[i], toeAtTo[i], u); toeTurn[i] = Quaternion.Slerp(toeTurnWas[i], toeTurnTo[i], u);
+                bootsMade[i].localPosition = footAt[i]; bootsMade[i].localRotation = footTurn[i];
+            }
             bool moving = false;
             for (int i = Hips; i <= Head && !moving; i++)
                 moving = parts[i].linearVelocity.sqrMagnitude > Still * Still || parts[i].angularVelocity.sqrMagnitude > StillTurning * StillTurning;
