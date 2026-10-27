@@ -185,6 +185,10 @@ namespace WonderGather
         // weight, the push it wants no further than a centimetre outside its soles, for RiseSettles seconds. Not so
         // within SettlesWithin seconds, it cannot, and goes down.
         public static float RiseOnFeet = .85f, RiseSettles = .2f, SettlesWithin = 3;
+        // (How the rise is begun and ended: 0, its smootherstep, a tenth along less than a hundredth of the way up; 1, a
+        // smoothstep, three hundredths. Its hands lifted, all three judges saw it still in the squat 0.6 to 0.8 s before
+        // it rose; to try against it, October 27.)
+        public static int RiseCurve = 0;
         private bool settled;
         private float settledFor, unsettledFor;
         private bool rising;
@@ -617,7 +621,7 @@ namespace WonderGather
                 }
                 float pace = settled ? RisesAt * height * Mathf.Clamp01((RiseBears - risesEffort) / Mathf.Max(1e-3f, RiseBears - RiseEases)) : 0;
                 risesAlong = Mathf.Min(1, risesAlong + pace / Mathf.Max(.05f, risesFrom) * step);
-                float up = risesAlong, gone = up * up * up * (10 + up * (6 * up - 15));
+                float up = risesAlong, gone = RiseCurve == 1 ? up * up * (3 - 2 * up) : up * up * up * (10 + up * (6 * up - 15));
                 sinksBy = Mathf.Max(risesFrom * (1 - gone), height - high - RiseLeads);
                 sinkWants = sinksBy;
                 upright = Quaternion.Slerp(uprightFrom, uprightTo, gone);

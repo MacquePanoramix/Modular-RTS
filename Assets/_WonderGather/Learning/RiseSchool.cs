@@ -322,6 +322,9 @@ namespace WonderGather
                 // stood a third as often from where a failed try left it, and nothing in how it lay told why: they were
                 // falls it had not seen. October 27.)
                 bool freshFalls = Number("-trainFreshFalls", 0) > 0 && falls;
+                // (-riseCurve 1, -riseSettles: how the standing balance begins its rise, OwnKeeper.RiseCurve, RiseSettles.)
+                OwnKeeper.RiseCurve = (int)Number("-riseCurve", OwnKeeper.RiseCurve);
+                OwnKeeper.RiseSettles = Number("-riseSettles", OwnKeeper.RiseSettles);
                 int madeAnew = 0, notMade = 0;
                 // (-trainPictures <folder>: the first -trainPictured tries begun lying on its back pictured, as many fresh
                 // falls as tries begun where the last left it, every -trainPictureEvery steps: begun so, the latter stood a
@@ -502,8 +505,12 @@ namespace WonderGather
                                 own.Part(OwnBody.Trunk).AddForce(pull * (trunk / (hips + trunk)));
                             }
                         }
-                        if (!own.GettingUp && !onFeet) onFeet = true;
-                        if (onFeet && !own.Rising) { stoodFor += dt; if (stoodFor >= 1) { up = true; break; } }
+                        if (!own.GettingUp && !onFeet) { onFeet = true; stages?.AppendFormat(Plain, " | handed@{0:0.0}s", step * dt); }
+                        if (onFeet && !own.Rising)
+                        {
+                            if (stoodFor == 0) stages?.AppendFormat(Plain, " | risen@{0:0.0}s", step * dt);
+                            stoodFor += dt; if (stoodFor >= 1) { up = true; break; }
+                        }
                         Physics.Simulate(dt);
                         if (frames > 0 && step % frames == 0) yield return null;
                     }
