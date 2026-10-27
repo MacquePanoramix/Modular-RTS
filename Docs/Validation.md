@@ -4205,3 +4205,23 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   from its back the getting up reads as a body's own; in one of the three, rising out of the squat, it **throws its right
   arm back and up over its head** as a counterweight, not as a person rises (reaching forward). For the judges.
 - **Next:** more of the teaching on tries begun where the last left it (they are most tries in the game).
+
+## S3b step 2 — why tries begun where a failed one left it almost never stood: the let-go body kept its boots bent (October 27)
+
+- **Looked for:** begun on its front at the same stage, a retry stood 6% with the model, a fresh fall 36%. Not the way it
+  lay (knees, hips, boots a little apart; logged at each try with `-trainTell 2`), not the ground (528 of 565 retries
+  began on walked ground, slopes as fresh falls). At the roll-up, retries had both soles flat a third as often and the
+  hips lower.
+- **Found:** the let-go body has no ankles; each boot is fixed to its shin as the posed foot was at the moment it was let
+  go (`PhysicalFall`, "its boot goes with the shin, as it stands"). Let go from standing that is a plain ankle; let go
+  from a getting up, an ankle bent far or a boot upturned, kept so as it lay, and the next try began with it. **Shown:**
+  retries laid with their boots as they are to the shins when it stands (`-trainRetryBoots 1`, the teaching only):
+  **17% stood with the 1,000,000 model (2.7% before), the body alone 3.7% (about 0.5%)**; at the roll-up both soles flat
+  and the hips as high as from a fresh fall.
+- **Mended in the game** (work branch `f95b4fb`): gone down from its own body, each boot goes slack about its ankle to how
+  it is to its shin when it stands, over 0.3 s (`PhysicalFall.Slacken`, told by `OwnBody.GoDown`). Measured so: **retries
+  13% with the model (70 of 523), the body alone 4% (27 of 636)**; fresh falls as before (about 30% and 6%). The boot
+  going slack as it falls is a change to how the body looks: for the judges with the rest.
+- **The teaching:** `full3` resumed at 1,250,000 on that build, retries now 0.7 of the time after a failed try, up to 8 in
+  a row (`-trainRetries 0.7 -trainRetriesAtMost 8`), as the game has them.
+- **Not yet:** the game measured with it (running); pictures of a fall with slack boots; judges.
