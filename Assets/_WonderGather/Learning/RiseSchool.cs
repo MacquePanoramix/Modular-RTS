@@ -351,7 +351,7 @@ namespace WonderGather
                         Physics.Simulate(dt);
                         if (frames > 0 && step % frames == 0) yield return null;
                     }
-                    if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + stages);
+                    if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + (retry ? " again" : "") + stages);
                     if (own.Stands) own.Drop();
                     // (Gone down, its fall has it: lying still, the next try may begin there; if not, the posed body takes it
                     // back, and the fall's parts are gone by the frame's end.)
