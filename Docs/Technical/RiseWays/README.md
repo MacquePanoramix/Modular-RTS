@@ -129,3 +129,11 @@ ease afresh); copies so struck stood none from then on. (2) With an agent attach
 held at the height they were planted at in every stage that does not hold them itself (the second foot's step and the
 roll-up): 26 of 400 falls stood so, 37 and 38 without it. Now the agent only moves a height the stage holds. Runs before
 `full2` were taught with (2).
+
+**Tries begun where the last left it** (`-trainRetries 0.5`, at most `-trainRetriesAtMost 4` in a row; October 27): after
+a try that went down, so often its fall has it (as in the game, `OwnBody.FallsBack`), it lies still, and the next try
+begins there. In the game most tries are such: pushed over fifteen times (`GettingUpByItsOwnTests` with `-ownUnheard 1
+-ownPushes 20 -ownPushWays 0,180,90,270 -ownAsPlayed 1`), Small alone tried 159 times and stood twice. In the teaching
+such tries stood 1 of 158 alone and about 3% with the first run's model, against about 9% and 21% from fresh falls.
+Without the hold the help no longer added anything (the body alone 15 and 20 of 400 with all of it, 20 to 23 without),
+so from `full3` it is taught without help or lessons: `train_smallrise_full_retries.yaml`.

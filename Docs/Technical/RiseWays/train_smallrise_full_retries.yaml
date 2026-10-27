@@ -1,0 +1,31 @@
+# Option 1 (Luis, October 26, 2026: "option 1"), from October 27: SmallRiseFull taught without help, on falls as in the
+# game and on tries begun where the last left it (-trainRetries 0.5), as most tries in the game are. Measured without
+# learning on October 27, the help of the first runs (train_smallrise_full.yaml) no longer added anything once the
+# hips were no longer held down (the body alone 15 and 20 of 400 with all of it, 20 to 23 without), so there are no
+# lessons. Run from D:/Dev as train_smallrise_full.yaml, with
+#   --env-args -riseTrain -trainFull 1 -trainFalls 1 -trainRetries 0.5 -trainNearer 1 -trainWays <ways file>
+behaviors:
+  SmallRiseFull:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      beta: 2.0e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: constant
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    max_steps: 20000000
+    time_horizon: 128
+    summary_freq: 10000
+    checkpoint_interval: 250000
+    keep_checkpoints: 40
