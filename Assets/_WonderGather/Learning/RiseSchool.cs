@@ -268,7 +268,7 @@ namespace WonderGather
                 // in a row. In the game most tries are such: pushed over fifteen times, Small alone tried 159 times and
                 // stood twice, the first try of each push none, October 27.)
                 float retries = Number("-trainRetries", 0);
-                int retriesAtMost = (int)Number("-trainRetriesAtMost", 4), inRow = 0, retried = 0, retriedStood = 0;
+                int retriesAtMost = (int)Number("-trainRetriesAtMost", 4), inRow = 0, retried = 0, retriedStood = 0, wilds = 0, couldNot = 0;
                 Lies? again = null;
                 OwnBody.FallsBack = retries > 0;
                 for (int k = 0; k < tries && clock.Elapsed.TotalHours < hours; k++)
@@ -303,7 +303,20 @@ namespace WonderGather
                     float help = Mathf.Clamp01(Academy.Instance.EnvironmentParameters.GetWithDefault("help", Number("-trainHelp", 0)));
                     OwnRiser.StrongerWhileLearning = 1 + StrongerBy * help;
                     helped += help;
-                    if (!own.BeginDown()) continue;
+                    // (Not to be made its own: a frame, and after three such, its posed body set afresh at its place, so that
+                    // tries are not passed over by the thousand in an instant.)
+                    if (!own.BeginDown())
+                    {
+                        if (++couldNot % 3 == 0)
+                        {
+                            tell("TRAIN could not be made its own " + couldNot + " tries running, before try " + (k + 1));
+                            unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                            unit.GetComponent<ProceduralBiped>().ResetPose();
+                        }
+                        yield return null;
+                        continue;
+                    }
+                    couldNot = 0;
                     Physics.SyncTransforms();
                     agent.Afresh();
                     bool hasActed = false, onFeet = false, up = false;
@@ -357,17 +370,40 @@ namespace WonderGather
                     // back, and the fall's parts are gone by the frame's end.)
                     if (fall.Now == PhysicalFall.State.Falling || fall.Now == PhysicalFall.State.Lying)
                     {
-                        if (!up && retries > 0 && inRow < retriesAtMost && chance.NextDouble() < retries)
+                        // (A body that flew apart is not one to begin from: its fall is put back where it stood before the
+                        // posed body takes it, else the posed body is taken to where no try can begin, and every try after
+                        // was passed over at once until the copy quit; four copies of full3 so, October 27.)
+                        bool Wild()
+                        {
+                            for (int i = 0; i < PhysicalFall.Count; i++)
+                            {
+                                var part = fall.Part(i);
+                                if (part == null) continue;
+                                Vector3 p = part.position;
+                                if (float.IsNaN(p.x + p.y + p.z) || (p - laid.place).sqrMagnitude > 400 || part.linearVelocity.sqrMagnitude > 2500) return true;
+                            }
+                            return false;
+                        }
+                        bool wild = Wild();
+                        if (!wild && !up && retries > 0 && inRow < retriesAtMost && chance.NextDouble() < retries)
                         {
                             fall.GetsUp = false;
                             for (int s = 0; s < 450 && fall.Now != PhysicalFall.State.Lying; s++) { fall.Advance(dt); Physics.Simulate(dt); }
                             for (int s = 0; s < 25; s++) { fall.Advance(dt); Physics.Simulate(dt); }
                             var lies = Now(fall);
                             lies.place = unit.transform.position; lies.faces = unit.transform.rotation;
-                            if (!float.IsNaN(lies.at[OwnBody.Hips].x)) again = lies;
+                            wild = Wild();
+                            if (!wild) again = lies;
                             fall.GetsUp = true;
                         }
+                        if (wild) { wilds++; tell("TRAIN_WILD its fall flew apart after try " + (k + 1) + " (" + wilds + " times)"); Put(fall, standing); }
                         fall.TakeBack();
+                    }
+                    // (And wherever it is now, if that is nowhere: back at its place.)
+                    if (float.IsNaN(unit.transform.position.x + unit.transform.position.y + unit.transform.position.z))
+                    {
+                        unit.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(away));
+                        unit.GetComponent<ProceduralBiped>().ResetPose();
                     }
                     // (Not wanted between tries: wanted, a body whose posed body seems at ease is made its own as that posed
                     // body stands, and how it stands is noted afresh from however the try left it; five of twelve copies of
