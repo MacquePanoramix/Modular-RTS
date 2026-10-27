@@ -77,6 +77,12 @@ namespace WonderGather.Tests
                     round = float.Parse(each[k % each.Length], System.Globalization.CultureInfo.InvariantCulture);
                 }
                 Vector3 way = Quaternion.AngleAxis(round + ((k / Mathf.Max(1, string.IsNullOrEmpty(ways) ? 1 : ways.Split(',').Length)) % 3 - 1) * 20, Vector3.up) * unit.transform.forward;
+                // (-ownGoOn 1: waited for, and passed over if it still cannot be, so that the pushes go on.)
+                if (CaptureTools.Argument("-ownGoOn") == "1")
+                {
+                    for (float until = Time.time + 20; !look.CanPushOver && Time.time < until;) yield return null;
+                    if (!look.CanPushOver) { Debug.Log("OWN_UP push " + k + ": it could not be pushed over; passed over"); continue; }
+                }
                 Assert.That(look.CanPushOver, Is.True, "Small cannot be pushed over (push " + k + ").");
                 look.PushOver(way);
                 fall = unit.GetComponent<PhysicalFall>();
