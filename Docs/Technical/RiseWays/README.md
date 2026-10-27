@@ -137,3 +137,24 @@ begins there. In the game most tries are such: pushed over fifteen times (`Getti
 such tries stood 1 of 158 alone and about 3% with the first run's model, against about 9% and 21% from fresh falls.
 Without the hold the help no longer added anything (the body alone 15 and 20 of 400 with all of it, 20 to 23 without),
 so from `full3` it is taught without help or lessons: `train_smallrise_full_retries.yaml`.
+
+**Falls learnt by heart** (October 27): the teaching's fresh falls were 72 made once at its start, drawn again and again;
+taught on them, `full3` at 2,000,000 stood from them 31 to 33% and from where a failed try left it 12 to 14%, and nothing
+in how those lay told why (the place, `-trainRetryLater 2`; what a try keeps, `-trainRetryLater 1`; each joint's turn,
+told by `-trainTell 2` as `pose` and `turns`). On falls made anew for each try (`-trainFreshFalls 1`: one of the eighteen
+places, facing and pushed any way, 0.7 to 1.4 times as hard, 0.7 to 1.3 times as long, up to 20 cm lower or 25 higher)
+it stands 20% (retries 14%), the body alone 5.6% (3.7%). Measure and teach with `-trainFreshFalls 1`.
+`-trainPictures <folder>` (with graphics, not `-nographics`) pictures the first `-trainPictured` tries begun on the back,
+fresh and retries alike.
+
+## The learner paces its way (October 27; Luis: "Yes I think that approach sounds good")
+
+`-trainPaced 1` (model `<name>RisePaced`, behaviour `SmallRisePaced`, `train_smallrise_paced.yaml`): besides every joint
+at the hard moment, it says in every pose of its way how long the pose is kept at least (`OwnRiser.Pace`, from a quarter
+to twice the searched time); how fast each pose is come to, and what a pose asks before it is through, stay as searched.
+Each second of getting up costs `-trainTimeCost` (0.02). Said nothing, it keeps the searched times. In the game a
+`RisePaced` model is taken before a `RiseFull` one; the bench runs one with `-riseLearned <name>RisePaced`. Run:
+
+    mlagents-learn train_smallrise_paced.yaml --run-id=paced2 --env=Builds/RiseTrain14/WonderGather.exe --num-envs=12
+      --no-graphics --time-scale=1 --capture-frame-rate=50 --env-args -riseTrain -trainPaced 1 -trainFalls 1
+      -trainFreshFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays ways_roll_small_flat.txt
