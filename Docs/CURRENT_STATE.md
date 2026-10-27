@@ -2,22 +2,15 @@
 
 **Updated:** October 27, 2026.
 
-- **Now (October 27): option 1 is being taught** (Luis, October 26: "option 1": what
-  learns sets every joint's target itself at the hard moment, the second foot's step,
-  the pike and the roll-up; help only while it is taught, fading to none). On the work
-  branch only, behind the switch (off), not in a build. **In the game, as played:
-  Small up by its own body after 15 of 23 pushes with the model (the body alone 7 of
-  20; at the start of the day 2 of 20).** Found on the way: most tries in the game
-  begin where a failed one left it, and the let-go body kept its boots bent as they
-  were when it went down, so those tries almost never stood; now the boots go slack
-  (as far as the ground lets them). Judged once (round 1 of 3): reads as real, with a
-  flaw; the holds the judges point at are the ways' fixed stage times and the standing
-  balance's slow start. At 2,000,000 decisions the game gives the same (13 of 20 pushes, 9.4% a try; the body
-  alone 7 of 20, 4.2%): more of the same teaching adds little. Tries begun where a failed one left
-  the body stand a third as often as fresh falls, and it is how the body lies (the boots a third
-  of it), not the place nor anything a try keeps. `full3` stopped at 2,249,994 saved. [Validation](Validation.md).
-  **Next:** read the joints' turns of retries (a run's tools are on the work branch), mend
-  what makes them fail, the game again, round 2 of the judges, then Luis. How it is run:
+- **Now (October 27, afternoon): option 1, and the learner paces its way** (Luis, October 27: "Yes I think that
+  approach sounds good", to letting what learns decide when each pose goes on). On the work branch only, behind the
+  switch (off), not in a build. The teaching's fresh falls had been 72 made once and learnt by heart: on falls made anew
+  the 2,000,000 model stands 20% (not 31%), and that is what the game sees (the first try of a push stood 4 of 20). Now
+  taught on falls made anew, as two learners: the joints at the hard moment (from `full3`) and the pace of every pose
+  (new), `pace1`. In the game, as played, with `full3`: up by its own body after 13 of 20 pushes (the body alone 7 of 20).
+  Judged once (round 1 of 3): reads as real, with a flaw (the ways' fixed times; the standing balance's slow start).
+  [Validation](Validation.md). **Next:** teach `pace1` on, measure it on falls made anew and in the game, pictures,
+  round 2 of the judges (with the smoothstep rise beside the old), then Luis. How it is run:
   `Docs/Technical/RiseWays/README.md` on the work branch.
 
 - **Where it was left for the night (October 22, late; Luis turned the laptop off).**

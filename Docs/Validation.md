@@ -4313,3 +4313,21 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   (`paced1`) was stopped at 50,000 when they were found.
 - **Mended in the game's test** (`8868eba`, not yet run in the game since): see the entry before.
 - **Not done:** the paced learner is not yet measured, judged or in the game; `full3` was not taught on falls made anew.
+
+## S3b step 2 — the pace as a learner of its own; the game's test again (October 27, afternoon)
+
+- **One network pacing and setting the joints** (`paced2`, from nothing, falls made anew): at 250,000 decisions 5.4% of
+  fresh falls stood, at 500,000 4.4% (the body alone 5.6%); its poses' times barely moved (under 1.2 s for 1.4, prop 1.4
+  for 1.6). Its 33 joint outputs were taught in every pose, where they do nothing, and from nothing. Stopped at about
+  700,000 (kept in `D:/Dev/mlagents-results/paced2`).
+- **Now two learners** (`32f1e2c`): the pace an agent of its own (`SmallRisePace`, one output, in every pose), beside the
+  one that sets the joints (`SmallRiseFull`, begun from `full3` at 2,249,994 and taught on, now on falls made anew). Without
+  a trainer, with the pacer silent: 20.5% of fresh falls and 18% of retries stood (the joints alone 20.2% and 14.1%), the
+  searched times kept; pacing at random spread the poses' times (hands 1.4 to 1.8 s) and stood 15.8%. Teaching `pace1`
+  began 14:02, saved every 50,000 decisions; to resume: `train_smallrise_pace_resume.yaml` (without `init_path`).
+- **The standing balance's rise** begun by a smoothstep (`OwnKeeper.RiseCurve 1`, off; `115572b`): with the 2,000,000
+  model on falls made anew, 800 tries each: as it was 17.2% stood, risen 2.5 s after the hand-over; smoothstep 15.8%,
+  2.5 s; smoothstep and settled in 0.1 s 18.5%, 2.3 s. Within what runs differ by: for the judges' eyes in round 2.
+- **The game's test with `full3` at 2,000,000, 12 pushes:** up by its own body 8, the old way 2, not up 2; 59 tries
+  (13.6% a try). It showed the try-count mend did not hold when a push ended mid-try (the fall then counts as up and
+  taking back returned first): push 10 went the old way after one try. Mended (`32f1e2c`); not run in the game since.
