@@ -1,0 +1,31 @@
+# The learner paces its way (Luis, October 27: "Yes I think that approach sounds good", to letting what learns decide when
+# each pose goes on): SmallRisePaced sets every joint at the hard moment as SmallRiseFull does, and in every pose of its
+# way says how long it is kept (OwnRiser.Pace, a quarter to twice the searched time); each second of getting up costs
+# 0.02. Gamma 0.995: a try is now about 130 decisions, not 35, and standing is told only at its end. A new network,
+# taught from the start, on falls as in the game and on tries begun where the last left it. Run with
+#   --env-args -riseTrain -trainPaced 1 -trainFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays <ways file>
+behaviors:
+  SmallRisePaced:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      beta: 2.0e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: constant
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.995
+        strength: 1.0
+    max_steps: 20000000
+    time_horizon: 128
+    summary_freq: 10000
+    checkpoint_interval: 250000
+    keep_checkpoints: 40

@@ -20,7 +20,17 @@ namespace WonderGather
         // corrections, and senses its joints. (A model for it is called <name>RiseFull.)
         public const int FullSays = Says + OwnRiser.Drives, FullSenses = OwnRiser.Senses + OwnRiser.JointSenses + FullSays;
         public bool Full;
-        private int SaysNow => Full ? FullSays : Says;
+        // Paced (Luis, October 27): and it says how long each pose of its way is kept (OwnRiser.Pace), in every pose of
+        // its way, not only those it sets the joints in; it is told which pose it is in. (A model for it is called
+        // <name>RisePaced.)
+        public const string PacedBehaviour = "SmallRisePaced";
+        public static readonly string[] Before = { "plant", "push", "front", "hands", "under", "prop", "stay", "footA" };
+        public const int PacedSays = FullSays + 1;
+        public static readonly int PacedSenses = OwnRiser.Senses + Before.Length + OwnRiser.JointSenses + PacedSays;
+        public bool Paced;
+        // (How long a pose is kept at least, times its way's: said 1, a quarter; -1, twice.)
+        public static float PacesShortest = .25f, PacesLongest = 2;
+        private int SaysNow => Paced ? PacedSays : Full ? FullSays : Says;
         // How far it turns each joint at most from what its way asks, degrees: its trunk, upper arm, forearm, thigh, shin,
         // boot.
         public static float DrivesTrunk = 25, DrivesUpperArm = 35, DrivesForearm = 35, DrivesThigh = 30, DrivesShin = 30, DrivesBoot = 20;
@@ -50,22 +60,24 @@ namespace WonderGather
         public static float Jerk = .01f, Follows = .2f;
 
         public OwnBody Body;
-        private readonly float[] said = new float[FullSays];
-        private readonly List<float> sensed = new List<float>(FullSenses);
+        private readonly float[] said = new float[PacedSays];
+        private readonly List<float> sensed = new List<float>(PacedSenses);
 
         // An agent on this body: its behaviour's numbers set before it wakes (a model to run, or none: it is taught).
-        public static RiseAgent On(GameObject on, OwnBody body, Unity.InferenceEngine.ModelAsset model = null, bool full = false)
+        public static RiseAgent On(GameObject on, OwnBody body, Unity.InferenceEngine.ModelAsset model = null, bool full = false, bool paced = false)
         {
+            full |= paced;
             var behaviour = on.GetComponent<BehaviorParameters>();
             if (behaviour == null) behaviour = on.AddComponent<BehaviorParameters>();
-            behaviour.BehaviorName = full ? FullBehaviour : Behaviour;
-            behaviour.BrainParameters.VectorObservationSize = full ? FullSenses : Senses;
-            behaviour.BrainParameters.ActionSpec = ActionSpec.MakeContinuous(full ? FullSays : Says);
+            behaviour.BehaviorName = paced ? PacedBehaviour : full ? FullBehaviour : Behaviour;
+            behaviour.BrainParameters.VectorObservationSize = paced ? PacedSenses : full ? FullSenses : Senses;
+            behaviour.BrainParameters.ActionSpec = ActionSpec.MakeContinuous(paced ? PacedSays : full ? FullSays : Says);
             if (model != null) behaviour.Model = model;
             var agent = on.GetComponent<RiseAgent>();
             if (agent == null) agent = on.AddComponent<RiseAgent>();
             agent.Body = body;
             agent.Full = full;
+            agent.Paced = paced;
             agent.MaxStep = 0;
             return agent;
         }
@@ -89,22 +101,24 @@ namespace WonderGather
         private static void Heard(OwnBody body, int step)
         {
             var riser = body.Riser;
-            if (Unheard || riser == null || !OwnRiser.LearnsAt(riser.StageNow) || step % DecidesEvery != 0) return;
+            if (Unheard || riser == null || step % DecidesEvery != 0) return;
             if (!Academy.Instance.AutomaticSteppingEnabled) return;
             if (!learnt.TryGetValue(body, out var agent))
             {
                 string called = body.Called;
                 Unity.InferenceEngine.ModelAsset model = null;
-                bool full = false;
+                bool full = false, paced = false;
                 if (!string.IsNullOrEmpty(called) && !none.Contains(called))
                 {
-                    // (One that sets every joint itself first, if there is one.)
-                    model = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + called + "RiseFull");
+                    // (One that paces its way first, then one that sets every joint itself, if there is one.)
+                    model = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + called + "RisePaced");
+                    paced = model != null;
+                    if (model == null) model = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + called + "RiseFull");
                     full = model != null;
                     if (model == null) model = Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + called + "Rise");
                     if (model == null) none.Add(called);
                 }
-                agent = model != null ? On(body.gameObject, body, model, full) : null;
+                agent = model != null ? On(body.gameObject, body, model, full, paced) : null;
                 if (agent != null)
                 {
                     var behaviour = body.GetComponent<BehaviorParameters>();
@@ -113,7 +127,7 @@ namespace WonderGather
                 }
                 learnt[body] = agent;
             }
-            if (agent == null) return;
+            if (agent == null || !agent.Paced && !OwnRiser.LearnsAt(riser.StageNow)) return;
             // (A fresh getting up: nothing said yet.)
             if (agent.since != riser) { agent.Afresh(); agent.since = riser; }
             agent.RequestDecision();
@@ -125,7 +139,7 @@ namespace WonderGather
         {
             for (int i = 0; i < said.Length; i++) said[i] = 0;
             nearWas = highWas = float.NaN;
-            if (Body != null && Body.Riser != null) { Body.Riser.Learned = null; Body.Riser.Driven = null; }
+            if (Body != null && Body.Riser != null) { Body.Riser.Learned = null; Body.Riser.Driven = null; Body.Riser.Pace = 1; }
         }
 
         public override void CollectObservations(VectorSensor sensor)
@@ -133,13 +147,19 @@ namespace WonderGather
             sensed.Clear();
             if (Body != null && Body.Riser != null) Body.Riser.Sense(sensed);
             while (sensed.Count < OwnRiser.Senses) sensed.Add(0);
+            // (Paced: and which of the poses before the hard moment it is in.)
+            if (Paced)
+            {
+                string now = Body != null && Body.Riser != null ? Body.Riser.StageNow : "";
+                foreach (string stage in Before) sensed.Add(now == stage ? 1 : 0);
+            }
             // (A number that is none, of a body gone wild, is told as nothing: the trainer takes no such number.)
             if (Full)
             {
                 if (Body != null && Body.Riser != null) Body.Riser.SenseJoints(sensed);
-                while (sensed.Count < OwnRiser.Senses + OwnRiser.JointSenses) sensed.Add(0);
+                while (sensed.Count < OwnRiser.Senses + (Paced ? Before.Length : 0) + OwnRiser.JointSenses) sensed.Add(0);
             }
-            int senses = OwnRiser.Senses + (Full ? OwnRiser.JointSenses : 0);
+            int senses = OwnRiser.Senses + (Paced ? Before.Length : 0) + (Full ? OwnRiser.JointSenses : 0);
             for (int i = 0; i < senses; i++) sensor.AddObservation(float.IsNaN(sensed[i]) || float.IsInfinity(sensed[i]) ? 0 : sensed[i]);
             for (int i = 0; i < SaysNow; i++) sensor.AddObservation(said[i]);
         }
@@ -163,6 +183,13 @@ namespace WonderGather
                 float near = -Mathf.Abs(Mathf.Clamp(riser.Measure(OwnRiser.Asks.Ahead), -1, 1.5f) - .08f);
                 if (!float.IsNaN(nearWas) && !float.IsNaN(near)) AddReward(Nearer * (near - nearWas));
                 nearWas = near;
+            }
+            // (Paced: how long each pose is kept; and its corrections and joints only in the poses it learnt them at.)
+            if (Paced)
+            {
+                float pace = said[PacedSays - 1];
+                riser.Pace = pace >= 0 ? Mathf.Lerp(1, PacesShortest, pace) : Mathf.Lerp(1, PacesLongest, -pace);
+                if (!OwnRiser.LearnsAt(riser.StageNow)) { riser.Learned = null; riser.Driven = null; highWas = float.NaN; return; }
             }
             if (riser.Learned == null || riser.Learned.Length != Says) riser.Learned = new float[Says];
             for (int i = 0; i < Says; i++) riser.Learned[i] = said[i] * By[i];

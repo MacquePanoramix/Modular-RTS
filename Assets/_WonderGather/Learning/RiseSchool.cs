@@ -220,13 +220,17 @@ namespace WonderGather
                 RiseAgent.Wanders = Number("-riseWanders", 0);
                 // (-trainFull 1: it sets every joint itself, option 1, October 26.)
                 bool full = Number("-trainFull", 0) > 0;
+                // (-trainPaced 1: and it paces every pose of its way, deciding in all of them; each second of getting up
+                // costs -trainTimeCost, so that a pose is not kept longer than standing needs. Luis, October 27.)
+                bool paced = Number("-trainPaced", 0) > 0;
+                float timeCost = Number("-trainTimeCost", .02f);
                 // (-trainModel <name>: no teacher; a model built in, Resources/RiseModels/<name>, answers, its own best answer
                 // as in the game and on the bench, or one drawn about it as it was taught with -trainDrawn 1. To measure what
                 // was learnt on the teaching's own falls, October 27.)
                 string modelName = Argument("-trainModel");
                 var model = string.IsNullOrEmpty(modelName) ? null : Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + modelName);
                 if (!string.IsNullOrEmpty(modelName) && model == null) { tell("TRAIN no model RiseModels/" + modelName); yield break; }
-                var agent = RiseAgent.On(unit.gameObject, own, model, full);
+                var agent = RiseAgent.On(unit.gameObject, own, model, full, paced);
                 if (model != null)
                 {
                     var behaviour = unit.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>();
@@ -366,6 +370,19 @@ namespace WonderGather
                             Quaternion now = Quaternion.Inverse(laid.turned[from]) * laid.turned[j], stands = Quaternion.Inverse(standing.turned[from]) * standing.turned[j];
                             stages.AppendFormat(Plain, "{0}{1:0}", j == 1 ? " " : ",", Quaternion.Angle(now, stands));
                         }
+                        // (And how deep its deepest part is in the ground, centimetres (less than 0: clear of it), and which.)
+                        {
+                            float deepest = float.MinValue; int which = -1;
+                            for (int i = 0; i < OwnBody.Count; i++)
+                                foreach (var solid in own.Part(i).GetComponentsInChildren<Collider>())
+                                {
+                                    var b = solid.bounds;
+                                    if (!Physics.Raycast(new Vector3(b.center.x, b.max.y + 2, b.center.z), Vector3.down, out var floor, 6, 1 << 6)) continue;
+                                    float deep = floor.point.y - b.min.y;
+                                    if (deep > deepest) { deepest = deep; which = i; }
+                                }
+                            stages.AppendFormat(Plain, " sunk {0:0.0} part {1}", 100 * deepest, which);
+                        }
                         // (And as turns about the part's own lines as it stands: right, up, ahead, in degrees.)
                         stages.Append(" turns");
                         for (int j = 1; j < Kept; j++)
@@ -382,9 +399,10 @@ namespace WonderGather
                     for (int step = 0; step * dt < lasts; step++)
                     {
                         var riser = own.Riser;
-                        bool acting = own.GettingUp && riser != null && OwnRiser.LearnsAt(riser.StageNow);
+                        bool acting = own.GettingUp && riser != null && (paced || OwnRiser.LearnsAt(riser.StageNow));
                         if (acting && step % every == 0)
                         {
+                            if (paced && hasActed) agent.AddReward(-timeCost * every * dt);
                             agent.RequestDecision();
                             Academy.Instance.EnvironmentStep();
                             hasActed = true;

@@ -775,7 +775,7 @@ namespace WonderGather
             if (float.IsNaN(stage.keeps)) leant = Mathf.MoveTowards(leant, 0, 60 * step);
             else leant = Mathf.Clamp(leant + Balances * (stage.keeps - Measure(Asks.Ahead)) * step, -BalancesAtMost, BalancesAtMost);
             if (!float.IsNaN(stage.sits)) sat = Mathf.Clamp(sat + stage.sits * Mathf.Clamp((Measure(Asks.Ahead) - stage.sitAhead) / .1f, -1, 1) * step, 0, stage.sitMost);
-            bool through = got >= stage.atLeast || (way.gives && at == way.stages.Length - 1 && ReadyAfter > 0 && got >= ReadyAfter);
+            bool through = got >= stage.atLeast * Pace || (way.gives && at == way.stages.Length - 1 && ReadyAfter > 0 && got >= ReadyAfter);
             for (int k = 0; through && k < stage.through.Length; k++)
             {
                 float it = Measure(stage.through[k].what);
@@ -1057,7 +1057,7 @@ namespace WonderGather
             into.Add(handsLet ? 1 : 0);
             string now = stage != null ? stage.name : "";
             into.Add(now == "footB" ? 1 : 0); into.Add(now == "pike" ? 1 : 0); into.Add(now == "rollup" ? 1 : 0);
-            into.Add(stage != null ? Mathf.Clamp01(got / Mathf.Max(.1f, stage.atLeast)) : 0);
+            into.Add(stage != null ? Mathf.Clamp01(got / Mathf.Max(.1f, stage.atLeast * Pace)) : 0);
             into.Add(Mathf.Clamp01(ReleaseWaited / Mathf.Max(.1f, ReleaseWaitsAtMost)));
         }
 
@@ -1094,6 +1094,11 @@ namespace WonderGather
         public static bool LearnsAt(string stage) => stage == "footB" || stage == "pike" || stage == "rollup";
         // How many numbers Sense tells.
         public const int Senses = 30;
+        // (What learns may also pace its way, Luis, October 27: each pose is kept at least so many times as long as its
+        // way says before it goes on to the next, in every pose of the way; how fast each pose is come to is as searched.
+        // The searched times held it still in the squat and lying with a boot raised, 1.4 to 2.8 s, which read as
+        // scripted to all three judges. 1: as searched.)
+        public float Pace = 1;
 
         // ---- Option 1 (Luis, October 26: "option 1"): what learns sets every joint's target itself at the hard moment.
         // Driven: for each joint, so many degrees more about each of its axes than its way asks (three a joint, its hinge's

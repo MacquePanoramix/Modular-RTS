@@ -408,7 +408,7 @@ namespace WonderGather.Tests
                     foreach (var body in bodies)
                     {
                         // (A model called ...Full sets every joint itself: option 1, October 26.)
-                        body.agent = RiseAgent.On(body.unit.gameObject, body.own, model, learnedName.EndsWith("Full"));
+                        body.agent = RiseAgent.On(body.unit.gameObject, body.own, model, learnedName.EndsWith("Full"), learnedName.EndsWith("Paced"));
                         var behaviour = body.unit.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>();
                         behaviour.BehaviorType = Unity.MLAgents.Policies.BehaviorType.InferenceOnly;
                         // (Its own best answer, not one drawn at random about it as it was taught.)
@@ -496,7 +496,7 @@ namespace WonderGather.Tests
                                 for (int i = 0; i < OwnBody.Count; i++) weighs += own.Part(i).mass;
                                 own.Part(OwnBody.Trunk).AddForce(Vector3.Lerp(body.shakeFrom, body.shakeTo, u * u * (3 - 2 * u)) * (shake * weighs * Physics.gravity.magnitude));
                             }
-                            if (body.agent != null && own.GettingUp && own.Riser != null && OwnRiser.LearnsAt(own.Riser.StageNow) && step % learnEvery == 0)
+                            if (body.agent != null && own.GettingUp && own.Riser != null && (body.agent.Paced || OwnRiser.LearnsAt(own.Riser.StageNow)) && step % learnEvery == 0)
                             {
                                 body.agent.RequestDecision();
                                 Unity.MLAgents.Academy.Instance.EnvironmentStep();
