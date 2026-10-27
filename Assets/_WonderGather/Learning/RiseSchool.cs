@@ -48,6 +48,8 @@ namespace WonderGather
 
         // How the let-go body lies: its parts, its boots and its toes, and where its own place was.
         public const int Parts = OwnBody.Count, Kept = Parts + 2;
+        // (Which part each turns from, as in OwnBody.)
+        private static readonly int[] JointFrom = { -1, OwnBody.Hips, OwnBody.Trunk, OwnBody.Trunk, OwnBody.Trunk, OwnBody.UpperArm, OwnBody.UpperArm + 1, OwnBody.Hips, OwnBody.Hips, OwnBody.Thigh, OwnBody.Thigh + 1, OwnBody.Shin, OwnBody.Shin + 1 };
         public struct Lies { public Vector3[] at; public Quaternion[] turned; public Vector3 place; public Quaternion faces; }
 
         public static Lies Now(PhysicalFall fall)
@@ -270,6 +272,12 @@ namespace WonderGather
                 float retries = Number("-trainRetries", 0);
                 int retriesAtMost = (int)Number("-trainRetriesAtMost", 4), inRow = 0, retried = 0, retriedStood = 0, wilds = 0, couldNot = 0;
                 Lies? again = null;
+                // (-trainRetryLater 1: where a failed try left it is kept, and begun from only later, after a fresh fall's
+                // try, as often as a fresh fall; marked "later". Tries begun where the last left it stood a third as often
+                // at the roll-up as fresh falls, with the same soles and hips there; to learn whether that is how the
+                // body lies or what a try keeps from the last, October 27.)
+                bool retryLater = Number("-trainRetryLater", 0) > 0;
+                var later = new List<Lies>();
                 OwnBody.FallsBack = retries > 0;
                 for (int k = 0; k < tries && clock.Elapsed.TotalHours < hours; k++)
                 {
@@ -282,12 +290,17 @@ namespace WonderGather
                     Time.captureDeltaTime = dt * Mathf.Max(1, frames);
                     // A start, turned and moved by chance (a way that serves only the very place it was taught at is not one);
                     // or where the last try left it.
-                    bool retry = again.HasValue;
+                    bool retry = again.HasValue, fromLater = false;
                     var laid = retry ? again.Value : starts[chance.Next(starts.Count)];
                     again = null;
+                    if (!retry && later.Count > 0 && chance.NextDouble() < .5)
+                    {
+                        int j = chance.Next(later.Count);
+                        laid = later[j]; later.RemoveAt(j); fromLater = true;
+                    }
                     if (retry) { retried++; inRow++; } else inRow = 0;
-                    float yaw = retry ? 0 : (float)(chance.NextDouble() * 2 - 1) * turnBy;
-                    Vector3 move = retry ? Vector3.zero : new Vector3((float)(chance.NextDouble() * 2 - 1), 0, (float)(chance.NextDouble() * 2 - 1)) * moveBy;
+                    float yaw = retry || fromLater ? 0 : (float)(chance.NextDouble() * 2 - 1) * turnBy;
+                    Vector3 move = retry || fromLater ? Vector3.zero : new Vector3((float)(chance.NextDouble() * 2 - 1), 0, (float)(chance.NextDouble() * 2 - 1)) * moveBy;
                     Vector3 hipsWere = laid.at[OwnBody.Hips];
                     float Under(Vector3 at) => Physics.Raycast(at + Vector3.up * 3, Vector3.down, out var hit, 8, 1 << 6) ? hit.point.y : at.y;
                     move.y = Under(hipsWere + move) - Under(hipsWere);
@@ -339,6 +352,16 @@ namespace WonderGather
                             Vector3.Dot(P(OwnBody.Foot).position - P(OwnBody.Hips).position, across), Vector3.Dot(P(OwnBody.Foot + 1).position - P(OwnBody.Hips).position, across),
                             UnityEngine.AI.NavMesh.SamplePosition(P(OwnBody.Hips).position, out _, .5f, UnityEngine.AI.NavMesh.AllAreas) ? 1 : 0,
                             Physics.Raycast(P(OwnBody.Hips).position + Vector3.up, Vector3.down, out var under, 4, 1 << 6) ? Vector3.Angle(under.normal, Vector3.up) : -1);
+                        // (And each joint's turn away from how it stands, in degrees, the toes from the boots: a try begun where
+                        // the last left it stands a third as often as a fresh fall, begun at once or later; it is how it lies,
+                        // October 27.)
+                        stages.Append(" pose");
+                        for (int j = 1; j < Kept; j++)
+                        {
+                            int from = j < Parts ? JointFrom[j] : OwnBody.Foot + j - Parts;
+                            Quaternion now = Quaternion.Inverse(laid.turned[from]) * laid.turned[j], stands = Quaternion.Inverse(standing.turned[from]) * standing.turned[j];
+                            stages.AppendFormat(Plain, "{0}{1:0}", j == 1 ? " " : ",", Quaternion.Angle(now, stands));
+                        }
                     }
                     string stageWas = "";
                     for (int step = 0; step * dt < lasts; step++)
@@ -380,7 +403,7 @@ namespace WonderGather
                         Physics.Simulate(dt);
                         if (frames > 0 && step % frames == 0) yield return null;
                     }
-                    if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + (retry ? " again" : "") + stages);
+                    if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + (retry ? " again" : fromLater ? " later" : "") + stages);
                     if (own.Stands) own.Drop();
                     // (Gone down, its fall has it: lying still, the next try may begin there; if not, the posed body takes it
                     // back, and the fall's parts are gone by the frame's end.)
@@ -423,7 +446,8 @@ namespace WonderGather
                                     }
                                 }
                             wild = Wild();
-                            if (!wild) again = lies;
+                            if (!wild && retryLater) { if (later.Count < 50) later.Add(lies); }
+                            else if (!wild) again = lies;
                             fall.GetsUp = true;
                         }
                         if (wild) { wilds++; tell("TRAIN_WILD its fall flew apart after try " + (k + 1) + " (" + wilds + " times)"); Put(fall, standing); }

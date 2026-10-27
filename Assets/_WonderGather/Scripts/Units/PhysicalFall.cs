@@ -854,6 +854,9 @@ namespace WonderGather
         public void TakeBack()
         {
             if (Now == State.Up) return;
+            // (Standing again, its next fall is a new one: its tries begin afresh. Taken back after fourteen tries, the
+            // game's test began its next push at the old way's twelve, October 27.)
+            triedByItsOwn = 0;
             if (Now == State.Rising)
             {
                 // The posed body has it already: it only stands as it is posed.
