@@ -2,8 +2,8 @@
 # each pose goes on): SmallRisePaced sets every joint at the hard moment as SmallRiseFull does, and in every pose of its
 # way says how long it is kept (OwnRiser.Pace, a quarter to twice the searched time); each second of getting up costs
 # 0.02. Gamma 0.995: a try is now about 130 decisions, not 35, and standing is told only at its end. A new network,
-# taught from the start, on falls as in the game and on tries begun where the last left it. Run with
-#   --env-args -riseTrain -trainPaced 1 -trainFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays <ways file>
+# taught from the start, on falls as in the game made anew for each try and on tries begun where the last left it. Run with
+#   --env-args -riseTrain -trainPaced 1 -trainFalls 1 -trainFreshFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays <ways file>
 behaviors:
   SmallRisePaced:
     trainer_type: ppo

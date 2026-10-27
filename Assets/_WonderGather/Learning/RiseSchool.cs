@@ -60,6 +60,37 @@ namespace WonderGather
             return lies;
         }
 
+        // (A picture of the body from beside it, written as a PPM image, as the bench's are.)
+        private static void Picture(Camera eye, Vector3 at, string path, int size)
+        {
+            Vector3 looks = at + Vector3.up * .15f, from = looks + new Vector3(.9f, 2.6f, .9f);
+            eye.transform.SetPositionAndRotation(from, Quaternion.LookRotation(looks - from));
+            var target = new RenderTexture(size, size, 24);
+            var previous = RenderTexture.active;
+            eye.targetTexture = target;
+            for (int i = 0; i < 3; i++) UnityEngine.Rendering.RenderPipeline.SubmitRenderRequest(eye, new UnityEngine.Rendering.RenderPipeline.StandardRequest { destination = target });
+            RenderTexture.active = target;
+            var texture = new Texture2D(size, size, TextureFormat.RGB24, false);
+            texture.ReadPixels(new Rect(0, 0, size, size), 0, 0);
+            texture.Apply();
+            var pixels = texture.GetPixels32();
+            using (var file = new System.IO.FileStream(path + ".ppm", System.IO.FileMode.Create))
+            {
+                var header = System.Text.Encoding.ASCII.GetBytes("P6" + (char)10 + size + " " + size + (char)10 + "255" + (char)10);
+                file.Write(header, 0, header.Length);
+                var row = new byte[size * 3];
+                for (int y = size - 1; y >= 0; y--)
+                {
+                    for (int x = 0; x < size; x++) { var c = pixels[y * size + x]; row[x * 3] = c.r; row[x * 3 + 1] = c.g; row[x * 3 + 2] = c.b; }
+                    file.Write(row, 0, row.Length);
+                }
+            }
+            eye.targetTexture = null;
+            RenderTexture.active = previous;
+            Object.Destroy(texture);
+            Object.Destroy(target);
+        }
+
         public static void Put(PhysicalFall fall, Lies lies)
         {
             for (int i = 0; i < PhysicalFall.Count; i++)
@@ -179,10 +210,11 @@ namespace WonderGather
                 var starts = new List<Lies>();
                 var standing = Now(fall);
                 Quaternion ownTurn = Quaternion.LookRotation(away);
-                for (int s = 0; s < (falls ? 72 : 36); s++)
+                // (Its fall at the place on, turned so far from facing along the path: pushed towards pushedTo, so hard
+                // (times its weight) for so long, so far above its trunk's middle (metres), and lying where it fell; or,
+                // not falls, laid on its front.)
+                Lies Fallen(int on, float turned, float pushedTo, float hard, float pushFor, float high)
                 {
-                    int on = s % 18;
-                    float turned = falls ? 0 : s < 18 ? 0 : 90;
                     Put(fall, standing);
                     Vector3 there = Spot(on, out Vector3 thereAway);
                     thereAway = Quaternion.AngleAxis(turned, Vector3.up) * thereAway;
@@ -195,17 +227,18 @@ namespace WonderGather
                     unit.transform.SetPositionAndRotation(there, Quaternion.LookRotation(thereAway));
                     Physics.SyncTransforms();
                     fall.Fell();
-                    float pushedTo = (s / 18) * 90 + (float)(chance.NextDouble() * 2 - 1) * 40;
                     if (!falls) LayOnItsFront(fall, unit.transform, ground);
                     for (int step = 0; step < 450; step++)
                     {
-                        if (falls && step * dt < .3f) fall.Push(Quaternion.AngleAxis(pushedTo, Vector3.up) * unit.transform.forward * (6 * weighs), fall.Part(PhysicalFall.Trunk).worldCenterOfMass);
+                        if (falls && step * dt < pushFor) fall.Push(Quaternion.AngleAxis(pushedTo, Vector3.up) * unit.transform.forward * (hard * weighs), fall.Part(PhysicalFall.Trunk).worldCenterOfMass + Vector3.up * high);
                         fall.Advance(dt); Physics.Simulate(dt);
                     }
                     var lies = Now(fall);
                     lies.place = unit.transform.position; lies.faces = unit.transform.rotation;
-                    starts.Add(lies);
+                    return lies;
                 }
+                for (int s = 0; s < (falls ? 72 : 36); s++)
+                    starts.Add(Fallen(s % 18, falls ? 0 : s < 18 ? 0 : 90, (s / 18) * 90 + (float)(chance.NextDouble() * 2 - 1) * 40, 6, .3f, 0));
                 fall.Gives = true; fall.GetsUp = true; fall.TakeBack();
                 yield return null;
                 yield return null;
@@ -283,6 +316,20 @@ namespace WonderGather
                 // (-trainRetryLater 2: and laid where a fresh fall lies, turned as one is.)
                 float laterHow = Number("-trainRetryLater", 0);
                 bool retryLater = laterHow > 0;
+                // (-trainFreshFalls 1: each fresh fall made anew as its try begins, at one of the eighteen places, facing
+                // any way, pushed from any way, 0.7 to 1.4 times as hard, 0.7 to 1.3 times as long, up to 20 cm lower or 25
+                // higher on its trunk; not drawn from the 72 made once. Taught on those 72 again and again, what learnt
+                // stood a third as often from where a failed try left it, and nothing in how it lay told why: they were
+                // falls it had not seen. October 27.)
+                bool freshFalls = Number("-trainFreshFalls", 0) > 0 && falls;
+                int madeAnew = 0, notMade = 0;
+                // (-trainPictures <folder>: the first -trainPictured tries begun lying on its back pictured, as many fresh
+                // falls as tries begun where the last left it, every -trainPictureEvery steps: begun so, the latter stood a
+                // fifth as often, and nothing measured tells why. Not with -nographics. October 27.)
+                string pictures = Argument("-trainPictures");
+                int pictured = (int)Number("-trainPictured", 6), pictureEvery = (int)Number("-trainPictureEvery", 10), picturedFresh = 0, picturedAgain = 0;
+                var eye = Camera.main;
+                if (!string.IsNullOrEmpty(pictures)) System.IO.Directory.CreateDirectory(pictures);
                 var later = new List<Lies>();
                 OwnBody.FallsBack = retries > 0;
                 for (int k = 0; k < tries && clock.Elapsed.TotalHours < hours; k++)
@@ -299,6 +346,27 @@ namespace WonderGather
                     bool retry = again.HasValue, fromLater = false;
                     var laid = retry ? again.Value : starts[chance.Next(starts.Count)];
                     again = null;
+                    if (!retry && freshFalls)
+                    {
+                        bool gets = fall.GetsUp, gives = fall.Gives;
+                        fall.GetsUp = false; fall.Gives = false;
+                        fall.LetGo();
+                        if (fall.Now == PhysicalFall.State.Falling)
+                        {
+                            var made = Fallen(chance.Next(18), (float)(chance.NextDouble() * 360), (float)(chance.NextDouble() * 360),
+                                6 * Mathf.Lerp(.7f, 1.4f, (float)chance.NextDouble()), .3f * Mathf.Lerp(.7f, 1.3f, (float)chance.NextDouble()), Mathf.Lerp(-.2f, .25f, (float)chance.NextDouble()));
+                            bool sound = true;
+                            for (int i = 0; i < PhysicalFall.Count && sound; i++)
+                            {
+                                Vector3 p = fall.Part(i).position;
+                                sound = !float.IsNaN(p.x + p.y + p.z) && fall.Part(i).linearVelocity.sqrMagnitude < 25 && (p - made.place).sqrMagnitude < 100;
+                            }
+                            if (sound) { laid = made; madeAnew++; } else notMade++;
+                        }
+                        else notMade++;
+                        fall.GetsUp = gets; fall.Gives = gives;
+                        fall.TakeBack();
+                    }
                     if (!retry && later.Count > 0 && chance.NextDouble() < .5)
                     {
                         int j = chance.Next(later.Count);
@@ -396,8 +464,11 @@ namespace WonderGather
                         }
                     }
                     string stageWas = "";
+                    bool picturing = !string.IsNullOrEmpty(pictures) && eye != null && -own.Part(OwnBody.Trunk).transform.forward.y < -.5f && (retry ? picturedAgain : picturedFresh) < pictured;
+                    if (picturing) { if (retry) picturedAgain++; else picturedFresh++; }
                     for (int step = 0; step * dt < lasts; step++)
                     {
+                        if (picturing && step % pictureEvery == 0 && own.Stands) Picture(eye, own.Part(OwnBody.Hips).transform.position, System.IO.Path.Combine(pictures, string.Format(Plain, "try{0:000}_{1:000}", k, step / pictureEvery)), 320);
                         var riser = own.Riser;
                         bool acting = own.GettingUp && riser != null && (paced || OwnRiser.LearnsAt(riser.StageNow));
                         if (acting && step % every == 0)
@@ -437,6 +508,7 @@ namespace WonderGather
                         if (frames > 0 && step % frames == 0) yield return null;
                     }
                     if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + (retry ? " again" : fromLater ? " later" : "") + stages);
+                    if (picturing) tell(string.Format(Plain, "TRAIN_PICTURED try {0:000} {1} {2}", k, retry ? "again" : "fresh", up ? "stood" : onFeet ? "fell" : "down") + (stages != null ? stages.ToString() : ""));
                     if (own.Stands) own.Drop();
                     // (Gone down, its fall has it: lying still, the next try may begin there; if not, the posed body takes it
                     // back, and the fall's parts are gone by the frame's end.)
@@ -515,7 +587,8 @@ namespace WonderGather
                     {
                         tell(string.Format(Plain, "TRAIN {0} tries in {1:0.0} min: stood {2}, handed over {3}, the agent acted in {4}; of the last {5} it acted in, {6} stood; helped {7:0.00}",
                             k + 1, clock.Elapsed.TotalMinutes, stood, handed, acted, lastActed, lastStood, helped / 100)
-                            + (retries > 0 ? string.Format(Plain, "; begun where the last left it {0}, of them stood {1}", retried, retriedStood) : ""));
+                            + (retries > 0 ? string.Format(Plain, "; begun where the last left it {0}, of them stood {1}", retried, retriedStood) : "")
+                            + (freshFalls ? string.Format(Plain, "; falls made anew {0}, not {1}", madeAnew, notMade) : ""));
                         lastStood = lastActed = 0; helped = 0;
                     }
                     if (everOn && !Academy.Instance.IsCommunicatorOn) { tell("TRAIN the trainer has gone: done"); break; }
