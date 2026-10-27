@@ -41,7 +41,7 @@ namespace WonderGather.Tests
             // (A measure, not a test that must pass: what the engine says of a body gone wild is told, and it goes on.
             // And what its own body says as it goes: where each try ended.)
             LogAssert.ignoreFailingMessages = true;
-            OwnBody.Told = said => { if (said.Contains("gave up") || said.Contains("on its feet") || said.Contains("goes down")) Debug.Log("OWN_TOLD " + said); };
+            OwnBody.Told = said => { if (said.Contains("gave up") || said.Contains("on its feet") || said.Contains("goes down") || said.Contains("no ground")) Debug.Log("OWN_TOLD " + said); };
             int index = -1;
             for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == "Small") index = i;
             Assert.That(index, Is.GreaterThanOrEqualTo(0), "No miner called Small.");
