@@ -29,8 +29,8 @@ behaviors:
     max_steps: 20000000
     time_horizon: 128
     summary_freq: 10000
-    checkpoint_interval: 250000
-    keep_checkpoints: 40
+    checkpoint_interval: 50000
+    keep_checkpoints: 200
   SmallRisePace:
     trainer_type: ppo
     hyperparameters:
@@ -53,5 +53,5 @@ behaviors:
     max_steps: 20000000
     time_horizon: 128
     summary_freq: 10000
-    checkpoint_interval: 250000
-    keep_checkpoints: 40
+    checkpoint_interval: 50000
+    keep_checkpoints: 200

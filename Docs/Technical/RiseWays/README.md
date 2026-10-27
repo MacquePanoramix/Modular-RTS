@@ -158,3 +158,16 @@ Each second of getting up costs `-trainTimeCost` (0.02). Said nothing, it keeps 
     mlagents-learn train_smallrise_paced.yaml --run-id=paced2 --env=Builds/RiseTrain14/WonderGather.exe --num-envs=12
       --no-graphics --time-scale=1 --capture-frame-rate=50 --env-args -riseTrain -trainPaced 1 -trainFalls 1
       -trainFreshFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays ways_roll_small_flat.txt
+
+**As two learners** (October 27, afternoon): one network for both (`paced2`) stood no more often than the body alone at
+500,000 decisions; its 33 joint outputs were learnt from nothing in every pose, where they do nothing. Now the pace is an
+agent of its own (`-trainPace 1`, behaviour `SmallRisePace`, model `<name>RisePace`, on an object "Pace" under the miner)
+beside the one that sets the joints (`SmallRiseFull`, begun from `full3` at 2,249,994 by `init_path`); both are given
+whether it stood, the pacer also 0.02 a second. `train_smallrise_pace.yaml` begins a run; **to resume one use
+`train_smallrise_pace_resume.yaml`** (the trainer begins from `init_path` whenever it is given, resuming or not, which
+would set the joints back to `full3`). Saved every 50,000 decisions. Without a trainer (`-trainModel SmallRiseFull`,
+`-trainPaceModel <name>` or a silent pacer): with a silent pacer, 20.5% of falls made anew stood, as the joints alone.
+
+    mlagents-learn train_smallrise_pace.yaml --run-id=pace1 --env=Builds/RiseTrain15/WonderGather.exe --num-envs=12
+      --no-graphics --time-scale=1 --capture-frame-rate=50 --env-args -riseTrain -trainFull 1 -trainPace 1 -trainFalls 1
+      -trainFreshFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays ways_roll_small_flat.txt
