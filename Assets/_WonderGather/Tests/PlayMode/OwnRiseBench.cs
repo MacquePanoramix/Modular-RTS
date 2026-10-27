@@ -356,7 +356,7 @@ namespace WonderGather.Tests
                 yield return null;
                 yield return null;
 
-                OwnBody.FallsBack = false;
+                OwnBody.FallsBack = Number("-riseFallsBack", 0) > 0;
                 OwnBody.ArmsTimes = Number("-riseArms", 1);
                 // (-riseHead 0.7: to learn what the head's weight does: its head so many times as heavy.)
                 OwnBody.HeadTimes = Number("-riseHead", 1);
@@ -627,8 +627,34 @@ namespace WonderGather.Tests
                             shot++;
                         }
                     }
+                    // (-riseFallsBack 1: gone down, its fall has it as in the game, and the pictured body is pictured falling
+                    // and lying for -riseFallFor seconds more: how a failed try goes down, its boots going slack, October 27.)
+                    if (OwnBody.FallsBack && pictured != null && !pictured.own.Stands && pictured.fall != null && pictured.fall.Now != PhysicalFall.State.Up)
+                    {
+                        float fallFor = Number("-riseFallFor", 2.5f);
+                        bool getsUp = pictured.fall.GetsUp;
+                        pictured.fall.GetsUp = false;
+                        for (int step = 0; step * dt < fallFor; step++)
+                        {
+                            pictured.fall.Advance(dt);
+                            Physics.Simulate(dt);
+                            if (step % every != 0) continue;
+                            yield return null;
+                            Vector3 hipsAt = pictured.fall.HipsAt;
+                            float tall = 1.3f * pictured.unit.GetComponent<ProceduralBiped>().StandingHipHeight + .5f;
+                            Vector3 looksAt = new Vector3(hipsAt.x, pictured.starts[j].at[0].y + .3f * tall - .1f, hipsAt.z);
+                            Vector3 right = Quaternion.AngleAxis(-angle, Vector3.up) * pictured.starts[j].side;
+                            Vector3 fromWhere = looksAt + right * (4.2f * tall * near) + Vector3.up * (.5f * tall * near);
+                            camera.transform.SetPositionAndRotation(fromWhere, Quaternion.LookRotation(looksAt - fromWhere));
+                            CaptureTools.Render(camera, Path.Combine(folder, $"{tag}_{shot:000}"), size, size);
+                            shot++;
+                        }
+                        pictured.fall.GetsUp = getsUp;
+                        Debug.Log("RISE_FELL " + pictured.name + " pictured going down to picture " + (shot - 1));
+                    }
                     foreach (var body in bodies)
                     {
+                        if (OwnBody.FallsBack && body.fall != null && body.fall.Now != PhysicalFall.State.Up) body.fall.TakeBack();
                         if (!body.done) body.ended = body.onFeet ? "still rising when the time was over" : "not on its feet when the time was over, at " + body.ended;
                         if (body.own.Stands) body.own.Drop();
                         // (Not wanted between tries: else, its posed body seeming at ease, it may be made its own as that posed

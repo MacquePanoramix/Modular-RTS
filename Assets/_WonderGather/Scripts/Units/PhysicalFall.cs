@@ -246,6 +246,7 @@ namespace WonderGather
         // in the teaching 3% of them stood; as they stand, 17%. October 27.)
         public const float BootsSlackIn = .3f;
         private readonly Transform[] bootsMade = new Transform[2];
+        private readonly Vector3[] bootSize = new Vector3[2];
         private readonly Vector3[] footAtWas = new Vector3[2], footAtTo = new Vector3[2], toeAtWas = new Vector3[2], toeAtTo = new Vector3[2];
         private readonly Quaternion[] footTurnWas = new Quaternion[2], footTurnTo = new Quaternion[2], toeTurnWas = new Quaternion[2], toeTurnTo = new Quaternion[2];
         private readonly float[] slackened = { 1, 1 };
@@ -525,6 +526,7 @@ namespace WonderGather
                     toeTurn[i] = Quaternion.Inverse(shin.transform.rotation) * s.toes[i].rotation;
                 }
                 bootsMade[i] = boot.transform;
+                bootSize[i] = sole.size;
                 slackened[i] = 1;
             }
             // Its own parts do not strike one another, but for those that would fold through each other in a heap and
@@ -912,9 +914,16 @@ namespace WonderGather
             for (int i = 0; i < 2; i++)
             {
                 if (slackened[i] >= 1 || bootsMade[i] == null) continue;
-                slackened[i] = Mathf.Min(1, slackened[i] + dt / BootsSlackIn);
-                float u = slackened[i] * slackened[i] * (3 - 2 * slackened[i]);
-                footAt[i] = Vector3.Lerp(footAtWas[i], footAtTo[i], u); footTurn[i] = Quaternion.Slerp(footTurnWas[i], footTurnTo[i], u);
+                float next = Mathf.Min(1, slackened[i] + dt / BootsSlackIn), u = next * next * (3 - 2 * next);
+                Vector3 at = Vector3.Lerp(footAtWas[i], footAtTo[i], u);
+                Quaternion turn = Quaternion.Slerp(footTurnWas[i], footTurnTo[i], u);
+                // (Only as far as the ground lets it: kneeling on its shins, a boot let go towards how it stands points into
+                // the ground, and turned there it threw both legs up as the body went down. October 27.)
+                var shin = parts[Shin + i].transform;
+                Vector3 half = Vector3.Max(.5f * bootSize[i] - Vector3.one * .01f, Vector3.one * .005f);
+                if (Physics.CheckBox(shin.TransformPoint(at), half, shin.rotation * turn, Ground, QueryTriggerInteraction.Ignore)) continue;
+                slackened[i] = next;
+                footAt[i] = at; footTurn[i] = turn;
                 toeAt[i] = Vector3.Lerp(toeAtWas[i], toeAtTo[i], u); toeTurn[i] = Quaternion.Slerp(toeTurnWas[i], toeTurnTo[i], u);
                 bootsMade[i].localPosition = footAt[i]; bootsMade[i].localRotation = footTurn[i];
             }
