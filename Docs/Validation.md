@@ -4131,3 +4131,29 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
 - **Open:** earlier bench runs (`OwnRiseBench`) could have met it too: a run whose later tries all failed may have
   been this. Not re-examined.
 - `full1` resumed from its 2,000,000-decision checkpoint on the fixed build.
+
+## S3b step 2 — option 1 measured on the teaching's own falls; two more faults in how it was taught (October 27)
+
+- **The fix of October 26 did not hold:** the panel sets the body wanted again every frame, so setting it unwanted after
+  each try changed nothing; four of twelve copies of `full1` were again made their own between tries (`TRAIN_BEGAN`)
+  and fell to a few percent standing. Now `OwnBody.Make` begins its count of standing at ease afresh each time the body
+  is made its own (work branch `be19387`). Resumed from 2,250,000 decisions on that build: no copy struck again.
+- **What was learnt, measured without a trainer** (`-trainModel`, the model's own best answer as in the game; the
+  teaching's falls, pushed over at eighteen places and lying where they fell; no help; 400 tries a copy, about three
+  minutes): **the 2,250,000 checkpoint stood 116 and 116 of 400; the body alone 26 and 26** (same seeds); drawn as
+  when taught, 111. Without turning and moving the starts: 110 against 20 and 19.
+- **On the bench's 72 falls the same checkpoint stood 22, the body alone 21** (15 before the first fix; per start the
+  two runs differ widely, so counts of 72 move by several from run to run).
+- **Second fault, found by that:** with an agent attached, even saying nothing, the riser held the hips at the height
+  they were planted at in every stage that does not hold them itself, the second foot's step and the roll-up. The
+  bench's body alone had no agent and so no hold; every "body alone" in the teaching since October 23 (4%, 6%, 9 of
+  200), and the help's calibration, had it. Now an agent only moves a height the stage holds (`b43ae71`). Without the
+  hold: **the body alone 37 and 38 of 400** (and 48, 25 with graphics; 51 in the editor); **the 2,250,000 checkpoint 94
+  and 74**, still about twice the body alone, though it had been taught against the hold.
+- **Not explained:** the bench's body alone (15 to 21 of 72, about a quarter) stands more often than the teaching's (about
+  a tenth) on falls made the same way at the same places; not platform (the editor, and a build with graphics, give the
+  teaching's tenth) nor the ways file (the same). In the game Small was not measured alone from falls.
+- `full1` reached the no-help lesson on the fixed build (ten copies 21 to 39 of about 85 recent tries stood, the hold
+  still on) and was stopped. **`full2`** begun from its learning on the build without the hold, its lessons from full
+  help again.
+- **Not tested:** the game; pictures; judges; Long and Round; the suite on the work branch.
