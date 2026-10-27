@@ -58,6 +58,30 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 27, 2026 — the tenth (250 steps of work since the ninth)
+
+- **Where we are.** S3b step 2, the getting up by its own body, option 1 (Luis, October
+  26: what learns sets every joint at the hard moment). Measured on falls as in the game
+  without a trainer, the first run's model stands about twice as often as the body
+  alone (94 and 74 of 400 against 37 and 38). Two faults in how it was taught were
+  found and mended on the way (the body made its own between tries; a silent learner
+  holding the hips down in the roll-up, which had also made every "body alone" in the
+  teaching since October 23 look worse than it is). `full2` is taught without them.
+- **Waiting on Luis:** nothing new asked of him. Still open from before: S3 (since
+  October 8); the builds of October 13 and 14; R1 (the arms); the inference package's
+  analytics define in the project settings; the stray `risebuild3.log`.
+- **Built, not in a build:** all of the getting up (work branch, behind the switch,
+  off). The game has not been tried with an option 1 model; that, pictures and the
+  aesthetic judges come before anything goes to Luis.
+- **Drifting or forgotten:** `CURRENT_STATE.md` still says October 22 (brought up to
+  date with this outlook); why the bench's body alone stands more often than the
+  teaching's on falls made the same way (a quarter against a tenth); bodies flying
+  apart now and then; the suite on the work branch (not since October 14); Long and
+  Round; the work branch drifting from the game branch.
+- **Does the task serve the stage?** Yes, if it ends in the game: the measure is
+  Small getting up by its own body after real pushes. The teaching's numbers only
+  point the way; the next proof must be the game.
+
 ### October 26, 2026 — the ninth (after three days away)
 
 - **Where we are.** As the eighth, October 23: the third path (a learned correction

@@ -1,6 +1,17 @@
 # Wonder Gather — Current State
 
-**Updated:** October 22, 2026.
+**Updated:** October 27, 2026.
+
+- **Now (October 27): option 1 is being taught** (Luis, October 26: "option 1": what
+  learns sets every joint's target itself at the hard moment, the second foot's step,
+  the pike and the roll-up; help only while it is taught, fading to none). On the work
+  branch only, behind the switch (off), not in a build. Measured on falls as in the
+  game without a trainer, the first run's model stands about twice as often as the
+  body alone (94 and 74 of 400 against 37 and 38). Two faults in how it was taught,
+  found and mended ([Validation](Validation.md#s3b-step-2--option-1-measured-on-the-teachings-own-falls-two-more-faults-in-how-it-was-taught-october-27)).
+  The second run (`full2`) is being taught without them. **Next:** that run without
+  help; then the game (pushed as played), pictures, the aesthetic judges, and only
+  then Luis. How it is run: `Docs/Technical/RiseWays/README.md` on the work branch.
 
 - **Where it was left for the night (October 22, late; Luis turned the laptop off).**
   The getting up (work branch `claude/wip-round`, behind the switch, off): the hands
