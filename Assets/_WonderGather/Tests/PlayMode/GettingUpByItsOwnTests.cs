@@ -57,7 +57,7 @@ namespace WonderGather.Tests
             float pushes = 8;
             string given = CaptureTools.Argument("-ownPushes");
             if (!string.IsNullOrEmpty(given)) pushes = float.Parse(given, System.Globalization.CultureInfo.InvariantCulture);
-            int byItsOwn = 0, oldWay = 0, never = 0;
+            int byItsOwn = 0, oldWay = 0, never = 0, triesAll = 0;
             for (int k = 0; k < pushes; k++)
             {
                 // (Standing by its own joints before each push.)
@@ -98,14 +98,25 @@ namespace WonderGather.Tests
                     yield return null;
                 }
                 int tries = fall.RoseByItsOwn - roseBefore, feet = own.OnItsFeetFromLying - feetBefore;
-                bool itsOwn = feet > 0 && own.Stands;
+                // (Up by its own body only standing so at the end: on its feet once and down again, in a try at the end,
+                // is not up. October 27.)
+                bool itsOwn = feet > 0 && own.Stands && Up();
                 bool old = !itsOwn && fall.GotUp > oldBefore;
                 if (itsOwn) byItsOwn++; else if (old) oldWay++; else never++;
+                triesAll += tries;
                 Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                     "OWN_UP push {0} ({6:0} degrees): it lay {1}; tries by its own body {2} (its chest to the ground at each: {7}); {3} after {4:0.0} s; the fall said: {5}",
                     k, lay, tries, itsOwn ? "up by its own body" : old ? "up the old way" : "not up", Time.time - began, fall.ByItsOwnSaid, round, lying));
+                // (-ownGoOn 1: not up at the end, the posed body takes it back where it lies and stands, so that the pushes
+                // go on: to measure, not as the game does.)
+                if (!Up() && CaptureTools.Argument("-ownGoOn") == "1")
+                {
+                    if (own.Stands) own.Drop();
+                    fall.TakeBack();
+                    for (float until = Time.time + 20; !(own.Stands && !own.GettingUp && !own.Rising) && Time.time < until;) yield return null;
+                }
             }
-            Debug.Log($"OWN_UP Small, {pushes} pushes: up by its own body {byItsOwn}, the old way {oldWay}, not up {never}");
+            Debug.Log($"OWN_UP Small, {pushes} pushes: up by its own body {byItsOwn}, the old way {oldWay}, not up {never}; tries by its own body {triesAll}");
             Assert.That(never, Is.EqualTo(0), "Small did not get up after a push.");
         }
     }
