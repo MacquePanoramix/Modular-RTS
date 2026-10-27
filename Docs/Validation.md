@@ -4157,3 +4157,26 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   still on) and was stopped. **`full2`** begun from its learning on the build without the hold, its lessons from full
   help again.
 - **Not tested:** the game; pictures; judges; Long and Round; the suite on the work branch.
+
+## S3b step 2 — the game measured: most tries are retries, and they almost never stand (October 27)
+
+- **In the game, as played** (`GettingUpByItsOwnTests`, the panel's switch on, Small's ways with boots let down flat,
+  pushed 20 times four ways round, `-ownGoOn 1`: a push not up by 300 s is set standing by the posed body so the pushes
+  go on; up counted only standing at the end): **the body alone up by its own body 2 of 20 pushes, in 209 tries (1.0% a
+  try); with the first run's model (2,250,000 decisions) 5 of 20, in 202 tries (2.5%)**. The rest got up the old way
+  after twelve tries, or were not up by 300 s. First tries after a push: 1 of 20 alone, 2 of 20 with the model; the
+  others, begun where a failed try left it (often on its back): 1 of 189 alone, 3 of 182 with the model. Most tries
+  gave up rolling up from hands and feet (93 of 153 alone); 9 came onto their feet and 2 of those stood.
+- **The teaching did not have such tries:** every try began from a fresh fall. Now `-trainRetries 0.5` (work branch
+  `be3d953`): after a try that went down, half the time its fall has it, it lies still, and the next try begins there.
+  So measured in the teaching: alone 1 of 158 such tries stood, the model 5 of 147 and 5 of 155 (fresh falls about 9%
+  and 21%): **the teaching now stands for the game.**
+- **The help no longer helps:** without the hold, the body alone with all the help stood 15 and 20 of 400, without it 20
+  to 23. **`full3`** is taught without help or lessons, on fresh falls and retries
+  (`train_smallrise_full_retries.yaml`), from the first run's learning.
+- **Seen in passing (not changed):** the game test over-counted (a body in a try at 300 s that had once been on its feet
+  counted as up) and stopped at the first push not up; both mended in the test. The fall's count of tries carries over
+  to the next push when a push is cut short, so some pushes went the old way after one to three tries. The old way
+  after twelve tries is still there in the game (Luis, October 22: never the backup animation; extra tries rather than
+  help): with tries this rarely standing it is reached in most pushes. For Luis when the getting up is shown.
+- **Not tested:** Long and Round; pictures; judges; the suite on the work branch.
