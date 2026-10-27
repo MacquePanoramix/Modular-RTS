@@ -4334,3 +4334,15 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
 - **`pace1` at 100,000 pacing decisions**, with the joints of `full3` at 2,000,000 answering, falls made anew (4 copies,
   1,200 tries): 19.8% of fresh falls stood, retries 9.8%; the poses' times hardly moved (pike 1.2 s for 1.3). Too early
   to say. Stopped at 14:49 for the night, saved at 149,879 (pace) and 49,984 (joints).
+
+## S3b step 2 — `pace1` at 250,000 (October 27, evening)
+
+- Resumed at 21:07 from 149,879 (pace) and 49,984 (joints), with `train_smallrise_pace_resume.yaml` and
+  `--timeout-wait=300` (a first resume timed out while the editor compiled beside it). Stopped at 21:46, saved at
+  249,910 (pace) and 99,996 (joints).
+- **The pace at 249,910**, on falls made anew (600 tries each, 2 copies): with `full3`'s joints at 2,000,000, 23.6% of
+  fresh falls stood and 13.4% of retries (19.7% in all; a silent pacer 20.5% and 18% in 300); with the joints taught
+  beside it (49,984), 21.2% and 11.0%. **The poses begin to shorten, by about a tenth of a second each:** under 1.3 s
+  (searched 1.4), prop 1.5 (1.6), stay 0.6 (0.7), footA 1.5 (1.6), pike 1.2 (1.3 to 1.4); hands still 1.6. Standing
+  not lower for it. Not yet the holds the judges named; not yet in the game, pictured or judged.
+- The bench runs the pace learnt beside the joints (`-risePaceModel`, `5285563`), for round 2's pictures.
