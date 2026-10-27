@@ -30,7 +30,15 @@ namespace WonderGather
         public bool Paced;
         // (How long a pose is kept at least, times its way's: said 1, a quarter; -1, twice.)
         public static float PacesShortest = .25f, PacesLongest = 2;
-        private int SaysNow => Paced ? PacedSays : Full ? FullSays : Says;
+        // Pace alone (October 27): an agent of its own beside the one that sets the joints, on an object of its own
+        // under the miner: it says only how long each pose of its way is kept, in every pose, told what Sense tells and
+        // which pose it is in. What sets the joints at the hard moment is as before (<name>RiseFull). A model for it is
+        // called <name>RisePace. (Paced, one network for both, had its 33 joints' outputs in every pose, where they do
+        // nothing, and learnt them from nothing: at 500,000 decisions it stood no more often than the body alone.)
+        public const string PaceBehaviour = "SmallRisePace";
+        public static readonly int PaceSenses = OwnRiser.Senses + Before.Length + 1;
+        public bool PaceOnly;
+        private int SaysNow => PaceOnly ? 1 : Paced ? PacedSays : Full ? FullSays : Says;
         // How far it turns each joint at most from what its way asks, degrees: its trunk, upper arm, forearm, thigh, shin,
         // boot.
         public static float DrivesTrunk = 25, DrivesUpperArm = 35, DrivesForearm = 35, DrivesThigh = 30, DrivesShin = 30, DrivesBoot = 20;
@@ -64,20 +72,22 @@ namespace WonderGather
         private readonly List<float> sensed = new List<float>(PacedSenses);
 
         // An agent on this body: its behaviour's numbers set before it wakes (a model to run, or none: it is taught).
-        public static RiseAgent On(GameObject on, OwnBody body, Unity.InferenceEngine.ModelAsset model = null, bool full = false, bool paced = false)
+        public static RiseAgent On(GameObject on, OwnBody body, Unity.InferenceEngine.ModelAsset model = null, bool full = false, bool paced = false, bool paceOnly = false)
         {
-            full |= paced;
+            full = (full || paced) && !paceOnly;
+            paced &= !paceOnly;
             var behaviour = on.GetComponent<BehaviorParameters>();
             if (behaviour == null) behaviour = on.AddComponent<BehaviorParameters>();
-            behaviour.BehaviorName = paced ? PacedBehaviour : full ? FullBehaviour : Behaviour;
-            behaviour.BrainParameters.VectorObservationSize = paced ? PacedSenses : full ? FullSenses : Senses;
-            behaviour.BrainParameters.ActionSpec = ActionSpec.MakeContinuous(paced ? PacedSays : full ? FullSays : Says);
+            behaviour.BehaviorName = paceOnly ? PaceBehaviour : paced ? PacedBehaviour : full ? FullBehaviour : Behaviour;
+            behaviour.BrainParameters.VectorObservationSize = paceOnly ? PaceSenses : paced ? PacedSenses : full ? FullSenses : Senses;
+            behaviour.BrainParameters.ActionSpec = ActionSpec.MakeContinuous(paceOnly ? 1 : paced ? PacedSays : full ? FullSays : Says);
             if (model != null) behaviour.Model = model;
             var agent = on.GetComponent<RiseAgent>();
             if (agent == null) agent = on.AddComponent<RiseAgent>();
             agent.Body = body;
             agent.Full = full;
             agent.Paced = paced;
+            agent.PaceOnly = paceOnly;
             agent.MaxStep = 0;
             return agent;
         }
@@ -89,7 +99,7 @@ namespace WonderGather
         public static int DecidesEvery = 5;
         // (Unheard: no model is given in the game, to measure the body as searched against it there.)
         public static bool Unheard;
-        private static readonly Dictionary<OwnBody, RiseAgent> learnt = new Dictionary<OwnBody, RiseAgent>();
+        private static readonly Dictionary<OwnBody, RiseAgent> learnt = new Dictionary<OwnBody, RiseAgent>(), paces = new Dictionary<OwnBody, RiseAgent>();
         private static readonly HashSet<string> none = new HashSet<string>();
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Listen()
@@ -97,12 +107,34 @@ namespace WonderGather
             OwnBody.Getting -= Heard;
             OwnBody.Getting += Heard;
             learnt.Clear();
+            paces.Clear();
         }
         private static void Heard(OwnBody body, int step)
         {
             var riser = body.Riser;
             if (Unheard || riser == null || step % DecidesEvery != 0) return;
             if (!Academy.Instance.AutomaticSteppingEnabled) return;
+            // (One that paces its way, if there is one, on an object of its own: in every pose.)
+            if (!paces.TryGetValue(body, out var pacer))
+            {
+                string called = body.Called;
+                var model = string.IsNullOrEmpty(called) ? null : Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + called + "RisePace");
+                if (model != null)
+                {
+                    var holder = new GameObject("Pace");
+                    holder.transform.SetParent(body.transform, false);
+                    pacer = On(holder, body, model, paceOnly: true);
+                    var behaviour = holder.GetComponent<BehaviorParameters>();
+                    behaviour.BehaviorType = BehaviorType.InferenceOnly;
+                    behaviour.DeterministicInference = true;
+                }
+                paces[body] = pacer;
+            }
+            if (pacer != null)
+            {
+                if (pacer.since != riser) { pacer.Afresh(); pacer.since = riser; }
+                pacer.RequestDecision();
+            }
             if (!learnt.TryGetValue(body, out var agent))
             {
                 string called = body.Called;
@@ -139,11 +171,27 @@ namespace WonderGather
         {
             for (int i = 0; i < said.Length; i++) said[i] = 0;
             nearWas = highWas = float.NaN;
-            if (Body != null && Body.Riser != null) { Body.Riser.Learned = null; Body.Riser.Driven = null; Body.Riser.Pace = 1; }
+            // (Each says afresh only what it says itself.)
+            if (Body != null && Body.Riser != null)
+            {
+                if (!PaceOnly) { Body.Riser.Learned = null; Body.Riser.Driven = null; }
+                if (PaceOnly || Paced) Body.Riser.Pace = 1;
+            }
         }
 
         public override void CollectObservations(VectorSensor sensor)
         {
+            if (PaceOnly)
+            {
+                sensed.Clear();
+                if (Body != null && Body.Riser != null) Body.Riser.Sense(sensed);
+                while (sensed.Count < OwnRiser.Senses) sensed.Add(0);
+                string stageNow = Body != null && Body.Riser != null ? Body.Riser.StageNow : "";
+                foreach (string stage in Before) sensed.Add(stageNow == stage ? 1 : 0);
+                foreach (float x in sensed) sensor.AddObservation(float.IsNaN(x) || float.IsInfinity(x) ? 0 : x);
+                sensor.AddObservation(said[0]);
+                return;
+            }
             sensed.Clear();
             if (Body != null && Body.Riser != null) Body.Riser.Sense(sensed);
             while (sensed.Count < OwnRiser.Senses) sensed.Add(0);
@@ -177,6 +225,7 @@ namespace WonderGather
             AddReward(-Jerk * changed / SaysNow);
             var riser = Body != null ? Body.Riser : null;
             if (riser == null) return;
+            if (PaceOnly) { riser.Pace = said[0] >= 0 ? Mathf.Lerp(1, PacesShortest, said[0]) : Mathf.Lerp(1, PacesLongest, -said[0]); return; }
             // (How near over its soles its weight is, while its hands have not let go: best a little ahead of their middle.)
             if (Nearer > 0 && !riser.HandsLet)
             {

@@ -264,6 +264,26 @@ namespace WonderGather
                 var model = string.IsNullOrEmpty(modelName) ? null : Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + modelName);
                 if (!string.IsNullOrEmpty(modelName) && model == null) { tell("TRAIN no model RiseModels/" + modelName); yield break; }
                 var agent = RiseAgent.On(unit.gameObject, own, model, full, paced);
+                // (-trainPace 1: and an agent of its own paces every pose (RiseAgent.PaceOnly), taught beside the one that
+                // sets the joints, or answering by -trainPaceModel <name>; each second of getting up costs it
+                // -trainTimeCost. October 27.)
+                RiseAgent pacer = null;
+                if (Number("-trainPace", 0) > 0)
+                {
+                    var holder = new GameObject("Pace");
+                    holder.transform.SetParent(unit.transform, false);
+                    string paceName = Argument("-trainPaceModel");
+                    var paceModel = string.IsNullOrEmpty(paceName) ? null : Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + paceName);
+                    if (!string.IsNullOrEmpty(paceName) && paceModel == null) { tell("TRAIN no model RiseModels/" + paceName); yield break; }
+                    pacer = RiseAgent.On(holder, own, paceModel, paceOnly: true);
+                    if (paceModel != null)
+                    {
+                        var behaviour = holder.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>();
+                        behaviour.BehaviorType = Unity.MLAgents.Policies.BehaviorType.InferenceOnly;
+                        behaviour.DeterministicInference = Number("-trainDrawn", 0) <= 0;
+                        tell("TRAIN paced by RiseModels/" + paceName);
+                    }
+                }
                 if (model != null)
                 {
                     var behaviour = unit.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>();
@@ -411,7 +431,8 @@ namespace WonderGather
                     couldNot = 0;
                     Physics.SyncTransforms();
                     agent.Afresh();
-                    bool hasActed = false, onFeet = false, up = false;
+                    pacer?.Afresh();
+                    bool hasActed = false, onFeet = false, up = false, pacerActed = false;
                     float stoodFor = 0;
                     // (-trainTell 2: each stage it came to, with how each boot's sole faced (1: down on the ground; -1: up)
                     // and its hips' height as it came to it.)
@@ -474,12 +495,22 @@ namespace WonderGather
                         if (picturing && step % pictureEvery == 0 && own.Stands) Picture(eye, own.Part(OwnBody.Hips).transform.position, System.IO.Path.Combine(pictures, string.Format(Plain, "try{0:000}_{1:000}", k, step / pictureEvery)), 320);
                         var riser = own.Riser;
                         bool acting = own.GettingUp && riser != null && (paced || OwnRiser.LearnsAt(riser.StageNow));
-                        if (acting && step % every == 0)
+                        bool pacing = pacer != null && own.GettingUp && riser != null;
+                        if ((acting || pacing) && step % every == 0)
                         {
-                            if (paced && hasActed) agent.AddReward(-timeCost * every * dt);
-                            agent.RequestDecision();
+                            if (pacing)
+                            {
+                                if (pacerActed) pacer.AddReward(-timeCost * every * dt);
+                                pacer.RequestDecision();
+                                pacerActed = true;
+                            }
+                            if (acting)
+                            {
+                                if (paced && hasActed) agent.AddReward(-timeCost * every * dt);
+                                agent.RequestDecision();
+                                hasActed = true;
+                            }
                             Academy.Instance.EnvironmentStep();
-                            hasActed = true;
                             everOn |= Academy.Instance.IsCommunicatorOn;
                         }
                         if (stages != null && own.GettingUp && own.Riser != null && own.Riser.StageNow != stageWas)
@@ -588,8 +619,9 @@ namespace WonderGather
                         if (up) lastStood++;
                         agent.AddReward(reward);
                         agent.EndEpisode();
-                        Academy.Instance.EnvironmentStep();
                     }
+                    if (pacerActed) { pacer.AddReward(reward); pacer.EndEpisode(); }
+                    if (hasActed || pacerActed) Academy.Instance.EnvironmentStep();
                     if ((k + 1) % 100 == 0)
                     {
                         tell(string.Format(Plain, "TRAIN {0} tries in {1:0.0} min: stood {2}, handed over {3}, the agent acted in {4}; of the last {5} it acted in, {6} stood; helped {7:0.00}",
