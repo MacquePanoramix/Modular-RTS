@@ -4331,3 +4331,6 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
 - **The game's test with `full3` at 2,000,000, 12 pushes:** up by its own body 8, the old way 2, not up 2; 59 tries
   (13.6% a try). It showed the try-count mend did not hold when a push ended mid-try (the fall then counts as up and
   taking back returned first): push 10 went the old way after one try. Mended (`32f1e2c`); not run in the game since.
+- **`pace1` at 100,000 pacing decisions**, with the joints of `full3` at 2,000,000 answering, falls made anew (4 copies,
+  1,200 tries): 19.8% of fresh falls stood, retries 9.8%; the poses' times hardly moved (pike 1.2 s for 1.3). Too early
+  to say. Stopped at 14:49 for the night, saved at 149,879 (pace) and 49,984 (joints).
