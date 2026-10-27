@@ -4180,3 +4180,28 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   after twelve tries is still there in the game (Luis, October 22: never the backup animation; extra tries rather than
   help): with tries this rarely standing it is reached in most pushes. For Luis when the getting up is shown.
 - **Not tested:** Long and Round; pictures; judges; the suite on the work branch.
+
+## S3b step 2 — `full3` taught on falls and retries: fresh falls improve, retries hardly (October 27)
+
+- **A copy-killing fault, found and mended:** with retries, a body that flew apart was handed to its fall, and taking the
+  fall back put the posed body where no try could begin; the copy then passed over every remaining try at once and
+  quit (four copies of `full3` in its first 37 minutes; the trainer restarted them). Now such a fall is put back before
+  it is taken, never begun from, and a body that cannot be made its own waits and is set afresh (`4dc5a77`). 4 copies x
+  1,500 tries: all finished, one fall that flew apart caught. `full3` resumed on that build at 500,000; no restarts since.
+- **Measured without a trainer** (600 tries a copy, half the failed tries followed by one begun where it was left; seeds
+  41 and 42; best answers):
+
+  | | fresh falls | begun where the last left it |
+  |---|---|---|
+  | the body alone | 48 of 718 (7%) | 2 of 482 (0.4%) |
+  | `full1` at 2,250,000 (seed 21) | 69 of 371 (19%) | 9 of 229 (4%) |
+  | `full3` at 500,000 | 201 of 779 (26%) | 16 of 421 (3.8%) |
+  | `full3` at 1,000,000 | 242 of 782 (31%) | 18 of 418 (4.3%) |
+
+  Begun where a failed try left it, the roll-up is reached as often as from a fresh fall, but with both soles flat in a
+  third of tries (two thirds fresh) and the hips lower (median 0.38 of their height against 0.59). Reckoned for a push
+  in the game (one fresh try, then up to eleven such), about 57% would be up by its own body (the body alone about 12%).
+- **In pictures** (the bench, the 500,000 model, 8 falls, 3 stood; looked at by me, not yet by judges): from its front and
+  from its back the getting up reads as a body's own; in one of the three, rising out of the squat, it **throws its right
+  arm back and up over its head** as a counterweight, not as a person rises (reaching forward). For the judges.
+- **Next:** more of the teaching on tries begun where the last left it (they are most tries in the game).
