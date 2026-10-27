@@ -4225,3 +4225,26 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
 - **The teaching:** `full3` resumed at 1,250,000 on that build, retries now 0.7 of the time after a failed try, up to 8 in
   a row (`-trainRetries 0.7 -trainRetriesAtMost 8`), as the game has them.
 - **Not yet:** the game measured with it (running); pictures of a fall with slack boots; judges.
+
+## S3b step 2 — option 1, the movement's first judging (October 27; round 1 of 3)
+
+- **Judged:** the bench, the `full3` model at 1,000,000 decisions, three tries that stood from three ways of lying (A from
+  its back, B from its back pushed the other way, C from its front); a picture every 0.4 s of each whole try and every
+  0.08 s of the rise. Three fresh judges (the body, the animator, the sceptic; `Art/Review/judges/`), told what the body
+  was asked and the measured times, not what was made or changed.
+- **Verdicts:** all three judges, all three tries: **reads as real, with a flaw.** Praised by all three: the rise out of
+  the squat (legs first, the head last, a gathering dip before it, about 0.8 s, no snap); the roll driven by a leg swing;
+  the order of the stages, the weight over what touches the ground at each.
+- **Found by all three, checked against the trace:**
+  - **Still holds in the low squat**, 1.4 to 2.8 s, an arm held out: the pike stage's fixed time (1.3 s, the searched
+    way), then, after the hands lift, the standing balance beginning to raise it only 0.6 to 0.8 s after it takes over
+    (risen 0.08 at 0.8 s), the arm easing slowly from the roll-up's pose to the standing one.
+  - **Lying about 2 s with a boot held up** (A, B): the searched way's "hands" stage, its pose bending the knees up, held
+    its fixed 1.4 s, after a "front" stage that waits for stillness. Not the learned part.
+  - **Arrives standing and is still**; B stands on in a stride.
+- **Found by one or two:** C's coat tail stands out behind the raised hips for 3 s as a stiff fin, then drops at once (the
+  coat, not the getting up); the roll from the back looks acrobatic (hips over the head); A switches into the squat in
+  about 0.16 s at 10.2 s; stage times alike in every try (the ways' fixed pose times) read as scripted; too slow (12 to
+  15 s; a person takes 3 to 4).
+- **So:** the holds the judges point at are the searched ways' fixed stage times and the standing balance's slow start,
+  older than option 1; what the learner shapes was praised. Open for round 2.
