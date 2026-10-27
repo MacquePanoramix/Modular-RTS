@@ -276,7 +276,9 @@ namespace WonderGather
                 // try, as often as a fresh fall; marked "later". Tries begun where the last left it stood a third as often
                 // at the roll-up as fresh falls, with the same soles and hips there; to learn whether that is how the
                 // body lies or what a try keeps from the last, October 27.)
-                bool retryLater = Number("-trainRetryLater", 0) > 0;
+                // (-trainRetryLater 2: and laid where a fresh fall lies, turned as one is.)
+                float laterHow = Number("-trainRetryLater", 0);
+                bool retryLater = laterHow > 0;
                 var later = new List<Lies>();
                 OwnBody.FallsBack = retries > 0;
                 for (int k = 0; k < tries && clock.Elapsed.TotalHours < hours; k++)
@@ -299,9 +301,11 @@ namespace WonderGather
                         laid = later[j]; later.RemoveAt(j); fromLater = true;
                     }
                     if (retry) { retried++; inRow++; } else inRow = 0;
-                    float yaw = retry || fromLater ? 0 : (float)(chance.NextDouble() * 2 - 1) * turnBy;
-                    Vector3 move = retry || fromLater ? Vector3.zero : new Vector3((float)(chance.NextDouble() * 2 - 1), 0, (float)(chance.NextDouble() * 2 - 1)) * moveBy;
+                    bool asFresh = !retry && (!fromLater || laterHow > 1);
+                    float yaw = asFresh ? (float)(chance.NextDouble() * 2 - 1) * turnBy : 0;
+                    Vector3 move = asFresh ? new Vector3((float)(chance.NextDouble() * 2 - 1), 0, (float)(chance.NextDouble() * 2 - 1)) * moveBy : Vector3.zero;
                     Vector3 hipsWere = laid.at[OwnBody.Hips];
+                    if (fromLater && asFresh) { var there = starts[chance.Next(starts.Count)].at[OwnBody.Hips] - hipsWere; move += new Vector3(there.x, 0, there.z); }
                     float Under(Vector3 at) => Physics.Raycast(at + Vector3.up * 3, Vector3.down, out var hit, 8, 1 << 6) ? hit.point.y : at.y;
                     move.y = Under(hipsWere + move) - Under(hipsWere);
                     Quaternion yawTurn = Quaternion.AngleAxis(yaw, Vector3.up);
@@ -361,6 +365,17 @@ namespace WonderGather
                             int from = j < Parts ? JointFrom[j] : OwnBody.Foot + j - Parts;
                             Quaternion now = Quaternion.Inverse(laid.turned[from]) * laid.turned[j], stands = Quaternion.Inverse(standing.turned[from]) * standing.turned[j];
                             stages.AppendFormat(Plain, "{0}{1:0}", j == 1 ? " " : ",", Quaternion.Angle(now, stands));
+                        }
+                        // (And as turns about the part's own lines as it stands: right, up, ahead, in degrees.)
+                        stages.Append(" turns");
+                        for (int j = 1; j < Kept; j++)
+                        {
+                            int from = j < Parts ? JointFrom[j] : OwnBody.Foot + j - Parts;
+                            Quaternion now = Quaternion.Inverse(laid.turned[from]) * laid.turned[j], stands = Quaternion.Inverse(standing.turned[from]) * standing.turned[j];
+                            (Quaternion.Inverse(stands) * now).ToAngleAxis(out float by, out Vector3 about);
+                            if (by > 180) by -= 360;
+                            Vector3 v = float.IsInfinity(about.x) || float.IsNaN(about.x) ? Vector3.zero : about * by;
+                            stages.AppendFormat(Plain, "{0}{1:0}:{2:0}:{3:0}", j == 1 ? " " : ",", v.x, v.y, v.z);
                         }
                     }
                     string stageWas = "";
