@@ -218,7 +218,20 @@ namespace WonderGather
                 RiseAgent.Wanders = Number("-riseWanders", 0);
                 // (-trainFull 1: it sets every joint itself, option 1, October 26.)
                 bool full = Number("-trainFull", 0) > 0;
-                var agent = RiseAgent.On(unit.gameObject, own, null, full);
+                // (-trainModel <name>: no teacher; a model built in, Resources/RiseModels/<name>, answers, its own best answer
+                // as in the game and on the bench, or one drawn about it as it was taught with -trainDrawn 1. To measure what
+                // was learnt on the teaching's own falls, October 27.)
+                string modelName = Argument("-trainModel");
+                var model = string.IsNullOrEmpty(modelName) ? null : Resources.Load<Unity.InferenceEngine.ModelAsset>("RiseModels/" + modelName);
+                if (!string.IsNullOrEmpty(modelName) && model == null) { tell("TRAIN no model RiseModels/" + modelName); yield break; }
+                var agent = RiseAgent.On(unit.gameObject, own, model, full);
+                if (model != null)
+                {
+                    var behaviour = unit.GetComponent<Unity.MLAgents.Policies.BehaviorParameters>();
+                    behaviour.BehaviorType = Unity.MLAgents.Policies.BehaviorType.InferenceOnly;
+                    behaviour.DeterministicInference = Number("-trainDrawn", 0) <= 0;
+                    tell("TRAIN answered by RiseModels/" + modelName + (behaviour.DeterministicInference ? ", its best answer" : ", drawn"));
+                }
                 // The help it is given only while it is taught (Luis, October 22), by the trainer's lessons ("help", from 1
                 // down to nothing; -trainHelp without a trainer), in the stages it learns at until it is handed to its
                 // standing balance: its joints StrongerBy more as strong; its weight drawn towards a little ahead of the

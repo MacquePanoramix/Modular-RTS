@@ -111,6 +111,21 @@ have let go (`RiseAgent.Rises`). Its behaviour is `SmallRiseFull`; a model for i
 and the game take one so called as setting every joint).
 
 **Help only while it learns** (Luis, October 22), by the trainer's lessons (`train_smallrise_full.yaml`, the environment
-parameter `help`, from 1 to nothing; `-trainHelp` without a trainer): its joints `0.6 x help` stronger
-(`OwnRiser.StrongerWhileLearning`), and its hips lifted by `0.3 x help` of its weight in the stages it learns at until it
-is handed to its standing balance. In the game it has neither.
+parameter `help`, from 1 to nothing; `-trainHelp` without a trainer): its joints `0.3 x help` stronger
+(`OwnRiser.StrongerWhileLearning`; `-trainStrongerBy`), and its weight drawn towards over its boots by up to `0.15 x help`
+of its weight on its hips and trunk (`-trainPullsBy`), in the stages it learns at until it is handed to its standing
+balance. A lift of the hips (`-trainLiftsBy`) is left at nothing: rolling up asks the boots to bear 55% of its weight. In
+the game it has none of these. Ways: `ways_roll_small_flat.txt` (boots let down flat in the pike and the roll-up).
+
+**Measuring what was learnt on the teaching's own falls** (October 27): a build with the model in
+`Resources/RiseModels/`, started without a trainer, `-riseTrain -trainFull 1 -trainFalls 1 -trainTries 400 -trainModel
+SmallRiseFull` (its own best answer, as in the game; `-trainDrawn 1`: drawn as when taught), against the same without
+`-trainModel` (the agent says nothing: the body as searched), with the same `-trainSeed`. A few hundred tries a copy in
+about three minutes; counts of 72 on the bench move by several from run to run.
+
+**Two faults found in the teaching, October 26-27:** (1) between tries the body could be made its own as its posed body
+stood, and *how it stands* noted from however the last try laid it (`OwnBody.Make` now begins its count of standing at
+ease afresh); copies so struck stood none from then on. (2) With an agent attached, even saying nothing, the hips were
+held at the height they were planted at in every stage that does not hold them itself (the second foot's step and the
+roll-up): 26 of 400 falls stood so, 37 and 38 without it. Now the agent only moves a height the stage holds. Runs before
+`full2` were taught with (2).

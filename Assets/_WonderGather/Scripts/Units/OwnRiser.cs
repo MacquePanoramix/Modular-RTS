@@ -1252,7 +1252,11 @@ namespace WonderGather
             Transform hips = parts[Hips].transform, trunk = parts[Trunk].transform;
             float up = 0;
             float holdHigh = stage.holdHigh;
-            if (Learned != null) holdHigh = (float.IsNaN(holdHigh) ? (hipsAtPlant.y - GroundAt(hipsAtPlant)) / tall : holdHigh) + Learned[3];
+            // (What learns moves how high they are held only where the stage holds them. It used to hold them where they
+            // were planted where the stage does not, even saying nothing: so, in the second step and the roll-up, the hips
+            // were held down as they should rise: what learns, saying nothing, stood 26 of 400 falls in the teaching, and
+            // 37 and 38 of 400 without that hold. October 27.)
+            if (Learned != null && !float.IsNaN(holdHigh)) holdHigh += Learned[3];
             if (!float.IsNaN(holdHigh))
             {
                 highTo = Mathf.MoveTowards(highTo, GroundAt(hips.position) + holdHigh * tall, stage.holdRate * tall * step);
