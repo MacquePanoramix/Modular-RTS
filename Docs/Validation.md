@@ -4362,3 +4362,24 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   push after one not up begins at try 1: pushes 3 and 6). Up by its own body 6, the old way 3 (each after twelve tries
   in that push, none carried over), not up 3; 101 tries, 5.9% a try (the runs before: 9.4% and 13.6%; runs of a dozen
   pushes differ that much). The old way, Luis's "absolute last resort", now comes only where twelve tries failed.
+
+## S3b step 2 — a flaw in the pacer's cost; the joints level; the toes the standing balance never reckoned (October 28)
+
+- **`pace2` at 50,000 paces** (its own best answers, with `full3`'s joints, falls made anew, 600 tries): 11.4% of fresh
+  falls stood and 1.9% of retries (as searched: about 19% and 13%); only 42% reached the roll-up (about 75%). It had
+  shortened hands, under, stay and plant and lengthened prop (2.1 s). **The cause, in how it was taught:** each second
+  cost it in every try, so a try that failed early cost less than one that stood late, while in the game a failed try
+  costs another. Now (`f663d06`) its seconds cost it only in a try that stood: 1 less 0.02 a second; a failed try 0.
+- **The joints taught on falls made anew** (`pace2`'s at 249,951, no pacer): 18.2% of fresh falls, 11.5% of retries;
+  `full3` at 2,000,000 beside it 18.6% and 13.0%. Level at about 19%.
+- **Of tries handed to the standing balance after getting up, 59% stood** (157 of 600 tries handed over). Told what
+  it said (`-trainTell 3`): 35 went down before their weight was on their feet, 27 "could not get its weight onto its
+  feet in 3 s", their boots bearing 0.64 to 0.80 of it (0.85 asked), crouched on the balls of the feet. **The standing
+  balance never reckoned the toes**: the standing body has none (toes are on the body that gets up only, October 14),
+  and after getting up the standing balance keeps that body, toes and all, until it is made afresh. Now it reckons what
+  the ground bears through them where the body has them (`f663d06`); the standing body without toes is as it was.
+  **Same model, seeds and falls: 71% of those handed over stood, 21.3% of all tries (15.3%), fresh 22.8% (15.7%),
+  retries 18.9% (14.7%); 8 could not get their weight onto their feet (27).** It changes how the body rises after
+  getting up: for the judges in round 2.
+- `pace3` (the corrected cost) was stopped unsaved when the toes were found; **`pace4`** (the corrected cost, the toes
+  reckoned; the joints from `pace2` at 249,951, the pacer new) began 11:24.
