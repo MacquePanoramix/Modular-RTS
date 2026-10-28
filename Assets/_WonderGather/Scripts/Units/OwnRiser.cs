@@ -279,6 +279,8 @@ namespace WonderGather
         // What a joint is asked for now: its turn, in its own frame, from how it was made.
         public Quaternion Aim(int j) => aimNow[j];
         public float Lasted { get; private set; }
+        // (How long it has been in the pose it is at.)
+        public float InPose => got;
 
         // It breathes while it gets up (G1, G8): its back straightens a little as its chest fills, by BreathBends
         // degrees now (given by its body, from the miner's own breath: deeper and quicker the harder it has worked, and

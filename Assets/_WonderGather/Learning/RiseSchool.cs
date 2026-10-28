@@ -61,6 +61,13 @@ namespace WonderGather
         // (Still: no part of it going faster than this, metres a second; slow, than this: some part always moves a little
         // (its breath, an arm easing), and the judges' holds were a body that went nowhere, not one stopped dead.)
         private const float StillBelow = .06f, SlowBelow = .12f;
+        // (How fast its weight goes: its parts' speeds weighed by their masses.)
+        private static float WeightSpeed(OwnBody own)
+        {
+            Vector3 sum = Vector3.zero; float all = 0;
+            for (int i = 0; i < OwnBody.Count; i++) { var part = own.Part(i); sum += part.linearVelocity * part.mass; all += part.mass; }
+            return all > 0 ? (sum / all).magnitude : 0;
+        }
         // (Which part each turns from, as in OwnBody.)
         private static readonly int[] JointFrom = { -1, OwnBody.Hips, OwnBody.Trunk, OwnBody.Trunk, OwnBody.Trunk, OwnBody.UpperArm, OwnBody.UpperArm + 1, OwnBody.Hips, OwnBody.Hips, OwnBody.Thigh, OwnBody.Thigh + 1, OwnBody.Shin, OwnBody.Shin + 1 };
         public struct Lies { public Vector3[] at; public Quaternion[] turned; public Vector3 place; public Quaternion faces; }
@@ -280,6 +287,7 @@ namespace WonderGather
                 // 0.9 s where the searched times held 0.5, its answers hardly less drawn at random than at first: a few
                 // hundredths' worth lost among standing's 1 or nothing. October 29.)
                 bool holdsAsHeld = Number("-trainHoldsAsHeld", 0) > 0;
+                bool speeds = Number("-trainSpeeds", 0) > 0;
                 // (-trainModel <name>: no teacher; a model built in, Resources/RiseModels/<name>, answers, its own best answer
                 // as in the game and on the bench, or one drawn about it as it was taught with -trainDrawn 1. To measure what
                 // was learnt on the teaching's own falls, October 27.)
@@ -551,8 +559,14 @@ namespace WonderGather
                         if (own.GettingUp) gettingTill = step;
                         if ((pacer != null || stages != null) && own.Stands && own.GettingUp)
                         {
-                            float fastest = 0;
-                            for (int i = 0; i < OwnBody.Count; i++) fastest = Mathf.Max(fastest, own.Part(i).linearVelocity.magnitude);
+                            float fastest = 0; int fastestIs = -1;
+                            for (int i = 0; i < OwnBody.Count; i++) { float v = own.Part(i).linearVelocity.magnitude; if (v > fastest) { fastest = v; fastestIs = i; } }
+                            // (-trainSpeeds 1: every tenth of a second, which part is fastest and how fast, and the hips' and
+                            // the trunk's speeds: to learn what moves while the body seems still. October 29.)
+                            if (speeds && step % 5 == 0)
+                                tell(string.Format(Plain, "TRAIN_SPEED try {0} {1:0.00} s {2} {3:0.00} s: fastest {4} {5:0.000} m/s; hips {6:0.000} trunk {7:0.000} head {8:0.000}; weight {9:0.000}",
+                                    k, step * dt, riser != null ? riser.StageNow : "", riser != null ? riser.InPose : 0, fastestIs, fastest,
+                                    own.Part(OwnBody.Hips).linearVelocity.magnitude, own.Part(OwnBody.Trunk).linearVelocity.magnitude, own.Part(OwnBody.Head).linearVelocity.magnitude, WeightSpeed(own)));
                             if (fastest < SlowBelow)
                             {
                                 holdRun += dt;
