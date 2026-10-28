@@ -357,6 +357,8 @@ namespace WonderGather.Tests
                 yield return null;
 
                 OwnBody.FallsBack = Number("-riseFallsBack", 0) > 0;
+                // (-riseCurve 1: the standing balance begins its rise by a smoothstep, OwnKeeper.RiseCurve. October 28.)
+                OwnKeeper.RiseCurve = (int)Number("-riseCurve", 0);
                 OwnBody.ArmsTimes = Number("-riseArms", 1);
                 // (-riseHead 0.7: to learn what the head's weight does: its head so many times as heavy.)
                 OwnBody.HeadTimes = Number("-riseHead", 1);
@@ -925,6 +927,7 @@ namespace WonderGather.Tests
                 Physics.simulationMode = mode;
                 Time.captureDeltaTime = timeWas;
                 OwnBody.FallsBack = fellBack;
+                OwnKeeper.RiseCurve = 0;
                 OwnBody.ArmsTimes = armsWere;
                 OwnBody.HeadTimes = 1;
                 OwnBody.RiseWays = waysWere;
