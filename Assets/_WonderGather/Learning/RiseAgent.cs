@@ -35,7 +35,11 @@ namespace WonderGather
         // which pose it is in. What sets the joints at the hard moment is as before (<name>RiseFull). A model for it is
         // called <name>RisePace. (Paced, one network for both, had its 33 joints' outputs in every pose, where they do
         // nothing, and learnt them from nothing: at 500,000 decisions it stood no more often than the body alone.)
+        // (It says it once, as each pose begins: how long that pose is kept, as it is then. Asked every tenth of a second
+        // and eased in as the joints are, no one answer moved a pose's end, and in 250,000 decisions the poses shortened
+        // by a tenth of a second each. October 28.)
         public const string PaceBehaviour = "SmallRisePace";
+        public string PacedStage;
         public static readonly int PaceSenses = OwnRiser.Senses + Before.Length + 1;
         public bool PaceOnly;
         private int SaysNow => PaceOnly ? 1 : Paced ? PacedSays : Full ? FullSays : Says;
@@ -112,7 +116,7 @@ namespace WonderGather
         private static void Heard(OwnBody body, int step)
         {
             var riser = body.Riser;
-            if (Unheard || riser == null || step % DecidesEvery != 0) return;
+            if (Unheard || riser == null) return;
             if (!Academy.Instance.AutomaticSteppingEnabled) return;
             // (One that paces its way, if there is one, on an object of its own: in every pose.)
             if (!paces.TryGetValue(body, out var pacer))
@@ -132,9 +136,10 @@ namespace WonderGather
             }
             if (pacer != null)
             {
-                if (pacer.since != riser) { pacer.Afresh(); pacer.since = riser; }
-                pacer.RequestDecision();
+                if (pacer.since != riser) { pacer.Afresh(); pacer.since = riser; pacer.PacedStage = null; }
+                if (riser.StageNow != pacer.PacedStage) { pacer.PacedStage = riser.StageNow; pacer.RequestDecision(); }
             }
+            if (step % DecidesEvery != 0) return;
             if (!learnt.TryGetValue(body, out var agent))
             {
                 string called = body.Called;
@@ -218,11 +223,11 @@ namespace WonderGather
             float changed = 0;
             for (int i = 0; i < SaysNow; i++)
             {
-                float now = Mathf.Lerp(said[i], Mathf.Clamp(a[i], -1, 1), Follows);
+                float now = PaceOnly ? Mathf.Clamp(a[i], -1, 1) : Mathf.Lerp(said[i], Mathf.Clamp(a[i], -1, 1), Follows);
                 changed += (now - said[i]) * (now - said[i]);
                 said[i] = now;
             }
-            AddReward(-Jerk * changed / SaysNow);
+            if (!PaceOnly) AddReward(-Jerk * changed / SaysNow);
             var riser = Body != null ? Body.Riser : null;
             if (riser == null) return;
             if (PaceOnly) { riser.Pace = said[0] >= 0 ? Mathf.Lerp(1, PacesShortest, said[0]) : Mathf.Lerp(1, PacesLongest, -said[0]); return; }

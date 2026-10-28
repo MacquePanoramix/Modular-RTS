@@ -1,0 +1,56 @@
+# The pace said once as each pose begins (October 28): SmallRisePace says how long the pose it is coming to is kept (a
+# quarter to twice the searched time), as the body is then; asked every tenth of a second and eased in, no one answer
+# moved a pose's end, and in pace1's 250,000 decisions the poses shortened a tenth of a second each. The joints begun
+# from pace1 at 99,996; the pacer new (pace1's, asked once a pose, spread the poses' times and 9% stood, not 20%: what
+# it learnt eased in does not say what a pose should be). About eleven paces a try, so it learns from 2,048 at a time. Each second of getting up costs the pacer 0.02. Resume with train_smallrise_pace2_resume.yaml.
+#   --env-args -riseTrain -trainFull 1 -trainPace 1 -trainFalls 1 -trainFreshFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays <ways file>
+behaviors:
+  SmallRiseFull:
+    trainer_type: ppo
+    init_path: D:/Dev/mlagents-results/pace1/SmallRiseFull/SmallRiseFull-99996.pt
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      beta: 2.0e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: constant
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    max_steps: 20000000
+    time_horizon: 128
+    summary_freq: 10000
+    checkpoint_interval: 50000
+    keep_checkpoints: 200
+  SmallRisePace:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 512
+      buffer_size: 2048
+      learning_rate: 3.0e-4
+      beta: 2.0e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: constant
+    network_settings:
+      normalize: true
+      hidden_units: 128
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.995
+        strength: 1.0
+    max_steps: 20000000
+    time_horizon: 128
+    summary_freq: 10000
+    checkpoint_interval: 50000
+    keep_checkpoints: 200

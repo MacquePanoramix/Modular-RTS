@@ -471,7 +471,7 @@ namespace WonderGather.Tests
                         OwnBody.RiseWays = body.ways;
                         body.done = !body.own.BeginDown();
                         if (body.agent != null) body.agent.Afresh();
-                        if (body.pacer != null) body.pacer.Afresh();
+                        if (body.pacer != null) { body.pacer.Afresh(); body.pacer.PacedStage = null; }
                         body.up = body.onFeet = false; body.feetAt = body.upAt = -1; body.peak = body.stoodFor = body.risen = body.feetFor = 0; body.ended = body.done ? "could not be made" : "";
                         body.depth = float.NaN; body.stageAt = body.stages = body.heldFor = 0; body.upOff = false; body.stepFurthest = 0; body.shifts = body.shiftsFailed = 0; body.lastAt = float.NaN; body.recent.Clear(); body.bootSpin = 0; body.bootSpinAt = "";
                         body.firstWay = ""; body.lastStage = ""; body.released = ""; body.handedOver = ""; body.turnedAt = float.NaN; body.frontMost = -1; body.spinTold = false;
@@ -516,8 +516,10 @@ namespace WonderGather.Tests
                                 own.Part(OwnBody.Trunk).AddForce(Vector3.Lerp(body.shakeFrom, body.shakeTo, u * u * (3 - 2 * u)) * (shake * weighs * Physics.gravity.magnitude));
                             }
                             bool sets = body.agent != null && own.GettingUp && own.Riser != null && (body.agent.Paced || OwnRiser.LearnsAt(own.Riser.StageNow));
-                            bool paces = body.pacer != null && own.GettingUp && own.Riser != null;
-                            if ((sets || paces) && step % learnEvery == 0)
+                            bool paces = body.pacer != null && own.GettingUp && own.Riser != null && own.Riser.StageNow != body.pacer.PacedStage;
+                            if (paces) body.pacer.PacedStage = own.Riser.StageNow;
+                            sets &= step % learnEvery == 0;
+                            if (sets || paces)
                             {
                                 if (paces) body.pacer.RequestDecision();
                                 if (sets) body.agent.RequestDecision();

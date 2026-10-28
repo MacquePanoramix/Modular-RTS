@@ -171,3 +171,11 @@ would set the joints back to `full3`). Saved every 50,000 decisions. Without a t
     mlagents-learn train_smallrise_pace.yaml --run-id=pace1 --env=Builds/RiseTrain15/WonderGather.exe --num-envs=12
       --no-graphics --time-scale=1 --capture-frame-rate=50 --env-args -riseTrain -trainFull 1 -trainPace 1 -trainFalls 1
       -trainFreshFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays ways_roll_small_flat.txt
+
+**The pace said once as each pose begins** (October 28): asked every tenth of a second and eased in as the joints are,
+no one answer of the pacer moved a pose's end, and in `pace1`'s 250,000 decisions the poses shortened by a tenth of a
+second each. Now the pacer says once, as each pose begins, how long that pose is kept (`RiseAgent.PacedStage`; its
+answer taken as it is, not eased in); each second of getting up since it last said costs it 0.02, charged as it next
+says and at the end. In the game it says as each pose begins too. `train_smallrise_pace2.yaml` begins `pace2` from
+`pace1` (the joints at 99,996; the pacer new: pace1's, asked once a pose, spread the times and stood 9%), learning the pace from 2,048 at a
+time (about eleven a try); resume with `train_smallrise_pace2_resume.yaml`.

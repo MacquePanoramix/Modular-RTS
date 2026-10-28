@@ -433,6 +433,8 @@ namespace WonderGather
                     agent.Afresh();
                     pacer?.Afresh();
                     bool hasActed = false, onFeet = false, up = false, pacerActed = false;
+                    string pacedStage = null;
+                    int pacedAt = 0, gettingTill = 0;
                     float stoodFor = 0;
                     // (-trainTell 2: each stage it came to, with how each boot's sole faced (1: down on the ground; -1: up)
                     // and its hips' height as it came to it.)
@@ -495,12 +497,16 @@ namespace WonderGather
                         if (picturing && step % pictureEvery == 0 && own.Stands) Picture(eye, own.Part(OwnBody.Hips).transform.position, System.IO.Path.Combine(pictures, string.Format(Plain, "try{0:000}_{1:000}", k, step / pictureEvery)), 320);
                         var riser = own.Riser;
                         bool acting = own.GettingUp && riser != null && (paced || OwnRiser.LearnsAt(riser.StageNow));
-                        bool pacing = pacer != null && own.GettingUp && riser != null;
-                        if ((acting || pacing) && step % every == 0)
+                        // (The pacer says as each pose begins; each second of getting up since it last said costs it.)
+                        bool pacing = pacer != null && own.GettingUp && riser != null && riser.StageNow != pacedStage;
+                        if (own.GettingUp) gettingTill = step;
+                        acting &= step % every == 0;
+                        if (acting || pacing)
                         {
                             if (pacing)
                             {
-                                if (pacerActed) pacer.AddReward(-timeCost * every * dt);
+                                if (pacerActed) pacer.AddReward(-timeCost * (step - pacedAt) * dt);
+                                pacedStage = riser.StageNow; pacedAt = step;
                                 pacer.RequestDecision();
                                 pacerActed = true;
                             }
@@ -620,7 +626,7 @@ namespace WonderGather
                         agent.AddReward(reward);
                         agent.EndEpisode();
                     }
-                    if (pacerActed) { pacer.AddReward(reward); pacer.EndEpisode(); }
+                    if (pacerActed) { pacer.AddReward(reward - timeCost * Mathf.Max(0, gettingTill - pacedAt) * dt); pacer.EndEpisode(); }
                     if (hasActed || pacerActed) Academy.Instance.EnvironmentStep();
                     if ((k + 1) % 100 == 0)
                     {
