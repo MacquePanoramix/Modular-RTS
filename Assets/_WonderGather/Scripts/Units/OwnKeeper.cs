@@ -342,6 +342,11 @@ namespace WonderGather
         public System.Func<Vector3, float> GroundUnder;
         // (For whoever looks at why it does or does not step: what it does about a step, in words.)
         public System.Action<string> Tells;
+        // (Its toes, where the body it keeps has them (the body that got up, until it is made afresh as it stands): what
+        // the ground bears through them is borne by its feet, as the getting up reckons it. Not reckoned so, a body risen
+        // into a crouch on the balls of its feet read its boots as bearing 0.64 to 0.80 of it and went down as unable to
+        // get its weight onto its feet: 27 of 157 handed to it, October 28. Null: none.)
+        public GroundTouch[] ToeTouches;
         // (What body it keeps, in figures: to set one made one way beside one made another.)
         public string Describe()
         {
@@ -525,7 +530,14 @@ namespace WonderGather
             // Where the ground really bore it in the last step.
             {
                 Vector3 bore = Vector3.zero; float lifted = 0;
-                for (int i = 0; i < 2; i++) { bore += touches[i].Where; lifted += touches[i].Up; bears[i] = touches[i].Up; touches[i].Clear(); }
+                for (int i = 0; i < 2; i++)
+                {
+                    float up = touches[i].Up;
+                    Vector3 where = touches[i].Where;
+                    touches[i].Clear();
+                    if (ToeTouches != null && ToeTouches[i] != null) { up += ToeTouches[i].Up; where += ToeTouches[i].Where; ToeTouches[i].Clear(); }
+                    bore += where; lifted += up; bears[i] = up;
+                }
                 // (Neither boot bearing anything: it is off the ground.)
                 if (bears[0] + bears[1] > .5f * whole * g * step) hasBorne = true;
                 offGround = bears[0] + bears[1] < .02f * whole * g * step ? offGround + 1 : 0;

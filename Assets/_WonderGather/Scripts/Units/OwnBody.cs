@@ -667,7 +667,7 @@ namespace WonderGather
             balanced = balance != null && balance.Acts;
             if (balance != null) balance.Acts = false;
             body.LetGo = true;
-            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { StandsMid = Alive ? StandsMid : 0, Life = Lived, GroundUnder = AnyGround ? null : GroundFor, Tells = what => Told?.Invoke(name + " at " + Time.time.ToString("F2") + ": " + what) };
+            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { StandsMid = Alive ? StandsMid : 0, Life = Lived, GroundUnder = AnyGround ? null : GroundFor, Tells = what => Told?.Invoke(name + " at " + Time.time.ToString("F2") + ": " + what), ToeTouches = toeLinks[0] != null ? toeTouches : null };
             {
                 Vector3 between = Flat(.5f * (parts[Foot].transform.TransformPoint(soleAt[0]) + parts[Foot + 1].transform.TransformPoint(soleAt[1])));
                 Quaternion hipsFace = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);

@@ -307,8 +307,13 @@ namespace WonderGather
                 float StrongerBy = Number("-trainStrongerBy", .3f), PullsBy = Number("-trainPullsBy", .15f), LiftsBy = Number("-trainLiftsBy", 0);
                 // (-trainNearer: how much it is told as its weight comes nearer over its soles; RiseAgent.Nearer.)
                 RiseAgent.Nearer = Number("-trainNearer", RiseAgent.Nearer);
+                // (-trainTell 3: and what the standing balance says as it takes the body over and rises, or cannot: of
+                // tries handed to it, nearly half fell rising, October 28.)
+                bool tellRise = Number("-trainTell", 0) >= 3;
                 System.Action<string> told = said =>
                 {
+                    if (tellRise && (said.Contains("lost:") || said.Contains("down:") || said.Contains("could not") || said.Contains("is on its feet,") || said.Contains("risen,") || said.Contains("on its feet after")))
+                    { tell("TRAIN_RISE " + said); return; }
                     if (!said.Contains("gave up")) return;
                     var r = own.Riser;
                     tell(r == null ? "TRAIN_TOLD " + said : string.Format(Plain,
@@ -520,7 +525,6 @@ namespace WonderGather
                         {
                             if (pacing)
                             {
-                                if (pacerActed) pacer.AddReward(-timeCost * (step - pacedAt) * dt);
                                 pacedStage = riser.StageNow; pacedAt = step;
                                 pacer.RequestDecision();
                                 pacerActed = true;
@@ -642,7 +646,11 @@ namespace WonderGather
                         agent.AddReward(reward);
                         agent.EndEpisode();
                     }
-                    if (pacerActed) { pacer.AddReward(reward - timeCost * Mathf.Max(0, gettingTill - pacedAt) * dt); pacer.EndEpisode(); }
+                    // (The pacer's seconds cost it only in a try that stood: standing sooner is worth more, and a try that
+                    // fails is worth nothing however soon it fails. Charged on every try, failing early cost less than
+                    // standing late, and in the game a failed try costs another: at 50,000 paces 11% of fresh falls stood,
+                    // 19% as searched. October 28.)
+                    if (pacerActed) { pacer.AddReward(up ? reward - timeCost * (gettingTill + 1) * dt : reward); pacer.EndEpisode(); }
                     if (hasActed || pacerActed) Academy.Instance.EnvironmentStep();
                     if ((k + 1) % 100 == 0)
                     {
