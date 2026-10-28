@@ -58,6 +58,28 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 28, 2026 — the twelfth (a new day)
+
+- **Where we are.** S3b step 2, option 1 with the learner pacing its way (Luis, October 27:
+  "Yes I think that approach sounds good"). Found yesterday: the teaching's fresh falls were
+  72 made once and learnt by heart; on falls made anew `full3` stands 20%, which is what the
+  game sees. Now two learners, taught on falls made anew: the joints (from `full3`) and the
+  pace of every pose (`pace1`, 250,000 decisions: poses about 0.1 s shorter each, standing
+  not lower; the holds the judges named not yet touched).
+- **Waiting on Luis:** confirmation that "yes" meant the learner pacing (taken so, said in the
+  report). Still open from before: S3 (since October 8); the builds of October 13 and 14; R1
+  (the arms); the analytics define; the stray `risebuild3.log`.
+- **Built, not in a build:** all of the getting up (work branch, switch off); Luis has not seen
+  option 1 move. **Not tested as played since its last changes:** the try count's mend in the
+  game's test (`32f1e2c`).
+- **Drifting or forgotten:** the suite on the work branch, not run since October 14 while
+  OwnBody, OwnKeeper, OwnRiser and PhysicalFall changed: run it now, on a quiet machine,
+  before the teaching resumes. Long and Round (no getting up). The work branch drifting from
+  the game branch. The old way after 12 tries in the game (Luis: the absolute last resort).
+- **Does the task serve the stage?** Yes, but its pace is set by hours of teaching; keep the
+  machine teaching when nothing else needs it, and measure in the game as soon as the poses
+  have clearly shortened.
+
 ### October 27, 2026 — the eleventh (250 steps of work since the tenth)
 
 - **Where we are.** S3b step 2, option 1. `full3` (taught on falls and on tries begun
