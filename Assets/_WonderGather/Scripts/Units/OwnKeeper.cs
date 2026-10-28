@@ -192,7 +192,11 @@ namespace WonderGather
         private bool settled;
         private float settledFor, unsettledFor;
         private bool rising;
-        private float risesFrom, risesEffort, risenCalm, stoodHigh, risingFor, risesAlong, atEndFor;
+        private float risesFrom, risesEffort, risenCalm, stoodHigh, risingFor, risesAlong, atEndFor, stalledFor;
+        // (Its weight on its feet but its legs giving all they have, it goes no higher: for StallsAfter seconds so, it
+        // cannot, and goes down, to lie and try again. Its pace nothing while a leg gives RiseBears of its strength, it
+        // never came to the end of its rise to give up there: in the game a body so stayed crouched 280 s, October 28.)
+        public static float StallsAfter = 3;
         private Quaternion uprightFrom, uprightTo;
         private Vector2 stoodOver;
         public bool Rising => rising;
@@ -633,6 +637,12 @@ namespace WonderGather
                 }
                 float pace = settled ? RisesAt * height * Mathf.Clamp01((RiseBears - risesEffort) / Mathf.Max(1e-3f, RiseBears - RiseEases)) : 0;
                 risesAlong = Mathf.Min(1, risesAlong + pace / Mathf.Max(.05f, risesFrom) * step);
+                stalledFor = settled && risesAlong < 1 && pace < .02f * RisesAt * height ? stalledFor + step : 0;
+                if (stalledFor >= StallsAfter)
+                {
+                    Tells?.Invoke($"could not rise: its legs gave all they have for {stalledFor:F2} s, its weight {high:F3} m up, of {height:F3} standing, {risesAlong:F2} of the way");
+                    return false;
+                }
                 float up = risesAlong, gone = RiseCurve == 1 ? up * up * (3 - 2 * up) : up * up * up * (10 + up * (6 * up - 15));
                 sinksBy = Mathf.Max(risesFrom * (1 - gone), height - high - RiseLeads);
                 sinkWants = sinksBy;
