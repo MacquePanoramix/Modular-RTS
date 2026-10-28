@@ -2,16 +2,18 @@
 
 **Updated:** October 27, 2026.
 
-- **Now (October 27, afternoon): option 1, and the learner paces its way** (Luis, October 27: "Yes I think that
-  approach sounds good", to letting what learns decide when each pose goes on). On the work branch only, behind the
-  switch (off), not in a build. The teaching's fresh falls had been 72 made once and learnt by heart: on falls made anew
-  the 2,000,000 model stands 20% (not 31%), and that is what the game sees (the first try of a push stood 4 of 20). Now
-  taught on falls made anew, as two learners: the joints at the hard moment (from `full3`) and the pace of every pose
-  (new), `pace1`. In the game, as played, with `full3`: up by its own body after 13 of 20 pushes (the body alone 7 of 20).
-  Judged once (round 1 of 3): reads as real, with a flaw (the ways' fixed times; the standing balance's slow start).
-  [Validation](Validation.md). **Next:** teach `pace1` on, measure it on falls made anew and in the game, pictures,
-  round 2 of the judges (with the smoothstep rise beside the old), then Luis. How it is run:
-  `Docs/Technical/RiseWays/README.md` on the work branch.
+- **Now (October 28): option 1, the learner pacing its way** (Luis, October 27: "Yes I think that approach sounds
+  good"). On the work branch only, behind the switch (off), not in a build. Two learners taught on falls made anew: the
+  joints at the hard moment (from `full3`) and the pace of each pose, said once as the pose begins (`pace4`, begun
+  11:24). Found and mended today: a flaw in the pacer's cost (failing early was cheaper than standing late); **the
+  standing balance never reckoned the toes** of the body that got up (21.3% of tries stand, not 15.3%; 71% of those
+  handed over, not 59%); a rise that stalled crouched for ever (now gives up after 3 s and tries again); the game's
+  test carrying its try count between pushes. The whole PlayMode suite passes on the work branch (203, 175, 0 failed).
+  In the game as played with `full3` and the toes: up by its own body after 14 of 20 pushes. Judged once (round 1 of
+  3). [Validation](Validation.md). **Next:** teach `pace4` on (resume with `train_smallrise_pace3_resume.yaml`, run-id
+  `pace4`, `Builds/RiseTrain18`), measure it on falls made anew and in the game, pictures, round 2 of the judges (the
+  toes and the stall change how it rises), then Luis. How it is run: `Docs/Technical/RiseWays/README.md` on the work
+  branch.
 
 - **Where it was left for the night (October 22, late; Luis turned the laptop off).**
   The getting up (work branch `claude/wip-round`, behind the switch, off): the hands
