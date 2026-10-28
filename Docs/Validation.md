@@ -4414,3 +4414,8 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   fresh falls and 14.9% of retries stood, held 0.4 s a standing try (median; quartiles 0.2 and 1.1); with `pace4`'s
   pacer (seconds alone charged), 19.5% and 12.8%, held 1.5 s (0.9 and 2.0). `pace5` (the joints from `pace4`, the
   pacer new) began 16:15.
+- **`pace5` at 20,000 paces** (35 minutes; its joints at 99,959; falls made anew, 600 tries each way; stopped 16:44
+  for the day): 16.6% of fresh falls and 14.7% of retries stood (15.8%); the same joints unpaced 18.6% and 16.5%
+  (17.8%). Held 0.9 s a standing try (median; unpaced 0.7 s here, `pace4`'s pacer 1.5 s); prop 1.8 s (searched 1.6,
+  `pace4` 2.2), under 1.3 (1.4), hands 1.5 (1.6), pike 1.2 (1.4). It lengthens less than `pace4`'s did, and has not yet
+  held less than as searched: too early to say. Resume: `train_smallrise_pace5_resume.yaml`, run-id `pace5`.
