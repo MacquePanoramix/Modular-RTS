@@ -3,7 +3,7 @@
 # What learns at the hard moment (option 1) is taught with these.
 # October 29: hands half as long, come to in half the time (0.70 s, 0.79 s; were 1.40, 1.58): lying on its front its
 # arms moved 10 to 20 degrees over 1.6 s, two thirds of the getting up's holds. Measured with pace5's joints at 649,997,
-# falls made anew, 13 copies of 200 tries against 6: held 0.30 s a standing try, not about 0.8; 23.2% of fresh falls and
+# falls made anew, 13 copies of 200 tries against 9: held 0.30 s a standing try, not about 0.8; 23.2% of fresh falls and
 # 16.4% of retries stood (21.4% and 16.3%).
 way roll -1 0.4 turns
 plant | 0.50 0.56 3.0 | 6 43 -22 | 52 53 68 | -28 32 10 | 54 43 110 10 | -2 -32 43 27 |

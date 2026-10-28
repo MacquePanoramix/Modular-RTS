@@ -200,7 +200,7 @@ every 20,000; resume with `train_smallrise_pace5_resume.yaml`.
 were in `hands`: lying on its front, its arms moved 10 to 20 degrees over 1.4 s, the pose kept 1.58 s. The ways' `hands`
 is now half as long and come to in half the time (0.70 s, 0.79 s; in `ways_roll_small_flat.txt` and the game's
 `Resources/RiseWays/Small.txt`): held 0.30 s a standing try, not about 0.8, standing as before (23.2% of fresh falls,
-16.4% of retries, in 13 copies of 200 tries; 21.4% and 16.3% in 6). Switches to try such times without a new ways file:
+16.4% of retries, in 13 copies of 200 tries; 21.4% and 16.3% in 9). Switches to try such times without a new ways file:
 `-risePoses name=times,...` (each pose kept so many times as long), `-risePoseOvers` (come to in so many times as
 long), and `-riseGoesOnStill <s>` (a pose whose ends are so goes on once the body has been slow in it so long;
 `-riseGoesOnAfterMoving 1`: only once it has moved in it). Gone on after 0.25 s slow from a pose's start, 5% stood;
