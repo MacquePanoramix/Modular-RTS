@@ -4383,3 +4383,12 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   getting up: for the judges in round 2.
 - `pace3` (the corrected cost) was stopped unsaved when the toes were found; **`pace4`** (the corrected cost, the toes
   reckoned; the joints from `pace2` at 249,951, the pacer new) began 11:24.
+- **How a try is handed over decides the rise** (the joints of `pace2` at 249,951, falls made anew, 1,200 tries, 321
+  handed over; the toes reckoned): moving under 0.13 m/s at the hand-over, 86% stood; over 0.21 m/s, 45%; handed over
+  in the roll-up's first 0.4 s 78%, later 45%; the boots bearing under all its weight, 42%. **Holding the hand-over for
+  it** (the roll-up's searched ways, 800 tries each, same joints): as searched 17.6% of tries stood (65% of those handed
+  over); also still for 0.06 s, 8.8% (75%; most never come still and fall in the roll-up); the boots bearing 0.8 not
+  0.55, 20.0% (70%; within what runs differ by); both, 7.6% (88%). Kept as searched.
+- **The game as played with the toes reckoned** (`full3` at 2,000,000, 20 pushes): up by its own body 14, the old way 1,
+  not up 5; 121 tries, 11.6% a try (the runs before: 5.9 to 13.6%). A fifth of the first tries stood. Push 14 made only
+  2 tries in 300 s: something held it a long while, not looked into.
