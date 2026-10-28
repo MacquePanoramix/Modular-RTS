@@ -4392,3 +4392,8 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
 - **The game as played with the toes reckoned** (`full3` at 2,000,000, 20 pushes): up by its own body 14, the old way 1,
   not up 5; 121 tries, 11.6% a try (the runs before: 5.9 to 13.6%). A fifth of the first tries stood. Push 14 made only
   2 tries in 300 s: something held it a long while, not looked into.
+- **Push 14, looked into: a rise that stalled for ever** (`003bad3`): handed over, its weight settled on its feet, then
+  nothing for 280 s. The rise's pace is nothing while a leg gives 0.95 of its strength, and it gave up only at the end
+  of its rise, which it never came to: crouched for good. Now a rise that makes no way for 3 s gives up and goes down
+  to lie and try again (`OwnKeeper.StallsAfter`). In the teaching once in 800 tries (0.46 of the way up); standing as
+  before (20.3%; 17.6% on the same seeds, within what runs differ by). Not yet run in the game.
