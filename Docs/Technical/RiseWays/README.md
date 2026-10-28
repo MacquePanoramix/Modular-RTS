@@ -187,3 +187,10 @@ fails nothing. And the standing balance now reckons what the ground bears throug
 body that got up; the standing body has none): of tries handed to it, 71% stood, not 59% (21.3% of all tries, not
 15.3%). `-trainTell 3` tells what the standing balance says as it rises (`TRAIN_RISE`). `pace4`
 (`train_smallrise_pace4.yaml`, `Builds/RiseTrain18`): the joints from `pace2` at 249,951, the pacer new.
+
+**Holds cost the pacer** (October 28; Luis: "Penalise holds"): 0.1 a second the body getting up is slow (no part faster
+than 12 cm/s) past 0.25 s at a stretch, only in a try that stood (`-trainHoldCost`, `-trainHoldGrace`); slow movement is
+not a hold. The teaching tells the held seconds of every try (`held` in `TRAIN_STAGES`, `-trainTell 2`). With `pace4`'s
+joints, falls made anew: unpaced 0.4 s held a standing try (median), `pace4`'s pacer (seconds alone charged) 1.5 s.
+`pace5` (`train_smallrise_pace5.yaml`, `Builds/RiseTrain20`): the joints from `pace4` at 199,961, the pacer new, saved
+every 20,000; resume with `train_smallrise_pace5_resume.yaml`.
