@@ -4358,3 +4358,7 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   costs it 0.02. `pace1`'s pacer asked so (not taught so) spread the poses' times (hands 1.2 to 1.9 s) and 9% of fresh
   falls stood (with it silent 20%): what it learnt eased in does not say what a pose should be. `pace2` begins the pacer
   anew, the joints from `pace1` at 99,996 (taught on falls made anew), 09:50.
+- **The game's test again** (`full3` at 2,000,000, 12 pushes, `-ownGoOn 1`, `2f23e96`): the try count's mend holds (a
+  push after one not up begins at try 1: pushes 3 and 6). Up by its own body 6, the old way 3 (each after twelve tries
+  in that push, none carried over), not up 3; 101 tries, 5.9% a try (the runs before: 9.4% and 13.6%; runs of a dozen
+  pushes differ that much). The old way, Luis's "absolute last resort", now comes only where twelve tries failed.
