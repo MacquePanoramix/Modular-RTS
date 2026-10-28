@@ -135,6 +135,15 @@ namespace WonderGather
         private float Chance() { chance = chance * 1664525u + 1013904223u; return (chance >> 8) / 16777216f; }
         // One hump of speed, from nought to one.
         private static float Hump(float u) { u = Mathf.Clamp01(u); return u * u * u * (10 + u * (6 * u - 15)); }
+        // (Its arms, bearing nothing once its hands have let go, come from how its getting up left them to how it stands
+        // over ArmsSettleIn seconds after the keeper takes it, however slowly it rises; its legs and trunk with its rise.
+        // With its rise, an arm stayed out in the crouch as long as the rise was slow to begin, held up by nothing, and
+        // was flung through late as it rose: "an arm held out" to the judges, October 27-28. 0: with its rise.)
+        // (ArmsSettleShare: so far of the way at once; the rest with its rise. All the way at once (0.5 s), of tries handed
+        // over 60% stood, not 64%: arms held forward in a crouch weigh against falling back.)
+        public static float ArmsSettleIn = 0, ArmsSettleShare = 1;
+        private float handedFor;
+        private static bool Arm(int j) => j >= UpperArm && j < Thigh;
 
         private ProceduralBiped body;
         private PhysicalBody physical;
@@ -453,6 +462,7 @@ namespace WonderGather
             Told?.Invoke($"{name} at {Time.time:F2}: on its feet after {riser.Lasted:F2} s of getting up; the keeper takes it");
             OnItsFeetFromLying++;
             for (int j = 1; j < Count; j++) riseFrom[j] = riser.Aim(j);
+            handedFor = 0;
             HandedOver = riser.HandedOver;
             roseByItsOwn = true;
             riser = null;
@@ -919,7 +929,9 @@ namespace WonderGather
             if (keeper.Rising)
             {
                 float up = Hump(keeper.Risen), trunkUp = roseByItsOwn ? Hump(Mathf.InverseLerp(OwnRiser.RiseTrunkAfter, 1, keeper.Risen)) : up;
-                for (int j = 1; j < Count; j++) Aims(j, Quaternion.Slerp(riseFrom[j], toStood[j], j == Trunk || j == Head ? trunkUp : up));
+                handedFor += step;
+                float arms = roseByItsOwn && ArmsSettleIn > 0 ? Mathf.Max(up, ArmsSettleShare * Hump(handedFor / ArmsSettleIn)) : up;
+                for (int j = 1; j < Count; j++) Aims(j, Quaternion.Slerp(riseFrom[j], toStood[j], j == Trunk || j == Head ? trunkUp : Arm(j) ? arms : up));
                 keeper.Shift = Vector3.zero; keeper.Roll = Quaternion.identity;
                 return;
             }

@@ -358,6 +358,9 @@ namespace WonderGather
                 // (-riseCurve 1, -riseSettles: how the standing balance begins its rise, OwnKeeper.RiseCurve, RiseSettles.)
                 OwnKeeper.RiseCurve = (int)Number("-riseCurve", OwnKeeper.RiseCurve);
                 OwnKeeper.RiseSettles = Number("-riseSettles", OwnKeeper.RiseSettles);
+                // (-riseArmsIn: its arms come to how it stands so many seconds after the hand-over, OwnBody.ArmsSettleIn.)
+                OwnBody.ArmsSettleIn = Number("-riseArmsIn", OwnBody.ArmsSettleIn);
+                OwnBody.ArmsSettleShare = Number("-riseArmsShare", OwnBody.ArmsSettleShare);
                 int madeAnew = 0, notMade = 0;
                 // (-trainPictures <folder>: the first -trainPictured tries begun lying on its back pictured, as many fresh
                 // falls as tries begun where the last left it, every -trainPictureEvery steps: begun so, the latter stood a
