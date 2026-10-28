@@ -48,6 +48,8 @@ namespace WonderGather
 
         // How the let-go body lies: its parts, its boots and its toes, and where its own place was.
         public const int Parts = OwnBody.Count, Kept = Parts + 2;
+        // (Still: no part of it going faster than this, metres a second.)
+        private const float StillBelow = .06f;
         // (Which part each turns from, as in OwnBody.)
         private static readonly int[] JointFrom = { -1, OwnBody.Hips, OwnBody.Trunk, OwnBody.Trunk, OwnBody.Trunk, OwnBody.UpperArm, OwnBody.UpperArm + 1, OwnBody.Hips, OwnBody.Hips, OwnBody.Thigh, OwnBody.Thigh + 1, OwnBody.Shin, OwnBody.Shin + 1 };
         public struct Lies { public Vector3[] at; public Quaternion[] turned; public Vector3 place; public Quaternion faces; }
@@ -435,6 +437,9 @@ namespace WonderGather
                     bool hasActed = false, onFeet = false, up = false, pacerActed = false;
                     string pacedStage = null;
                     int pacedAt = 0, gettingTill = 0;
+                    // (-trainTell 2: how long the body was still, all of it, as it got up and rose, and the longest such
+                    // stretch: what the judges called holds. October 28.)
+                    float stillAll = 0, stillRun = 0, stillLongest = 0;
                     float stoodFor = 0;
                     // (-trainTell 2: each stage it came to, with how each boot's sole faced (1: down on the ground; -1: up)
                     // and its hips' height as it came to it.)
@@ -500,6 +505,13 @@ namespace WonderGather
                         // (The pacer says as each pose begins; each second of getting up since it last said costs it.)
                         bool pacing = pacer != null && own.GettingUp && riser != null && riser.StageNow != pacedStage;
                         if (own.GettingUp) gettingTill = step;
+                        if (stages != null && own.Stands && (own.GettingUp || own.Rising))
+                        {
+                            float fastest = 0;
+                            for (int i = 0; i < OwnBody.Count; i++) fastest = Mathf.Max(fastest, own.Part(i).linearVelocity.magnitude);
+                            if (fastest < StillBelow) { stillAll += dt; stillRun += dt; stillLongest = Mathf.Max(stillLongest, stillRun); }
+                            else stillRun = 0;
+                        }
                         acting &= step % every == 0;
                         if (acting || pacing)
                         {
@@ -551,6 +563,7 @@ namespace WonderGather
                         Physics.Simulate(dt);
                         if (frames > 0 && step % frames == 0) yield return null;
                     }
+                    stages?.AppendFormat(Plain, " | still {0:0.0}s longest {1:0.0}s", stillAll, stillLongest);
                     if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + (retry ? " again" : fromLater ? " later" : "") + stages);
                     if (picturing) tell(string.Format(Plain, "TRAIN_PICTURED try {0:000} {1} {2}", k, retry ? "again" : "fresh", up ? "stood" : onFeet ? "fell" : "down") + (stages != null ? stages.ToString() : ""));
                     if (own.Stands) own.Drop();
