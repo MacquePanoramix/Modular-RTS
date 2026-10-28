@@ -184,11 +184,14 @@ namespace WonderGather
         // soles, and takes it off its hands if they are on the ground) until its boots have borne RiseOnFeet of its
         // weight, the push it wants no further than a centimetre outside its soles, for RiseSettles seconds. Not so
         // within SettlesWithin seconds, it cannot, and goes down.
-        public static float RiseOnFeet = .85f, RiseSettles = .2f, SettlesWithin = 3;
+        public static float RiseOnFeet = .85f, RiseSettles = .1f, SettlesWithin = 3;
         // (How the rise is begun and ended: 0, its smootherstep, a tenth along less than a hundredth of the way up; 1, a
         // smoothstep, three hundredths. Its hands lifted, all three judges saw it still in the squat 0.6 to 0.8 s before
         // it rose; to try against it, October 27.)
-        public static int RiseCurve = 0;
+        // (Since October 28 a smoothstep, its joints too (OwnBody.RiseJoints), its weight settled on its feet for 0.1 s,
+        // not 0.2: risen out of the crouch, after getting up, its hips 3 cm higher 0.68 s after the hand-over, not 0.82,
+        // and of tries handed over 72% stood, not 65% (900 tries each, the same joints learnt).)
+        public static int RiseCurve = 1;
         private bool settled;
         private float settledFor, unsettledFor;
         private bool rising;

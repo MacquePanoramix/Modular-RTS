@@ -361,6 +361,7 @@ namespace WonderGather
                 // (-riseArmsIn: its arms come to how it stands so many seconds after the hand-over, OwnBody.ArmsSettleIn.)
                 OwnBody.ArmsSettleIn = Number("-riseArmsIn", OwnBody.ArmsSettleIn);
                 OwnBody.ArmsSettleShare = Number("-riseArmsShare", OwnBody.ArmsSettleShare);
+                OwnBody.RiseJoints = (int)Number("-riseJoints", OwnBody.RiseJoints);
                 int madeAnew = 0, notMade = 0;
                 // (-trainPictures <folder>: the first -trainPictured tries begun lying on its back pictured, as many fresh
                 // falls as tries begun where the last left it, every -trainPictureEvery steps: begun so, the latter stood a
@@ -454,6 +455,9 @@ namespace WonderGather
                     // (-trainTell 2: how long the body was still, all of it, as it got up and rose, and the longest such
                     // stretch: what the judges called holds. October 28.)
                     float stillAll = 0, stillRun = 0, stillLongest = 0, slowAll = 0, slowRun = 0, slowLongest = 0, held = 0, holdRun = 0;
+                    // (-trainTell 2: and when its hips had come 3 cm higher than when it was handed over: how long it
+                    // stayed in the crouch before it was seen to rise.)
+                    float hipsHanded = float.NaN; bool lifted = false;
                     float stoodFor = 0;
                     // (-trainTell 2: each stage it came to, with how each boot's sole faced (1: down on the ground; -1: up)
                     // and its hips' height as it came to it.)
@@ -576,7 +580,8 @@ namespace WonderGather
                                 own.Part(OwnBody.Trunk).AddForce(pull * (trunk / (hips + trunk)));
                             }
                         }
-                        if (!own.GettingUp && !onFeet) { onFeet = true; stages?.AppendFormat(Plain, " | handed@{0:0.0}s [{1}]", step * dt, own.HandedOver); }
+                        if (!own.GettingUp && !onFeet) { onFeet = true; hipsHanded = own.Part(OwnBody.Hips).transform.position.y; stages?.AppendFormat(Plain, " | handed@{0:0.0}s [{1}]", step * dt, own.HandedOver); }
+                        if (onFeet && !lifted && own.Stands && own.Part(OwnBody.Hips).transform.position.y > hipsHanded + .03f) { lifted = true; stages?.AppendFormat(Plain, " | lifted@{0:0.00}s", step * dt); }
                         if (onFeet && !own.Rising)
                         {
                             if (stoodFor == 0) stages?.AppendFormat(Plain, " | risen@{0:0.0}s", step * dt);

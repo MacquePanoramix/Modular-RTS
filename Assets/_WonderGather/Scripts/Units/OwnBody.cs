@@ -142,6 +142,11 @@ namespace WonderGather
         // (ArmsSettleShare: so far of the way at once; the rest with its rise. All the way at once (0.5 s), of tries handed
         // over 60% stood, not 64%: arms held forward in a crouch weigh against falling back.)
         public static float ArmsSettleIn = 0, ArmsSettleShare = 1;
+        // (How its joints follow its rise: 0, by a smootherstep of how far it has risen, a tenth of the way along less than
+        // a hundredth of the turn; 1, by a smoothstep, three hundredths. On top of the rise's own slow beginning, the
+        // judges saw it still in the crouch 0.6 to 0.8 s; to try against it, October 28.)
+        public static int RiseJoints = 1;
+        private static float Rose(float u) { u = Mathf.Clamp01(u); return RiseJoints == 1 ? u * u * (3 - 2 * u) : Hump(u); }
         private float handedFor;
         private static bool Arm(int j) => j >= UpperArm && j < Thigh;
 
@@ -928,7 +933,7 @@ namespace WonderGather
             // (Rising, its joints are asked for how it stands, by as far as it has risen; and nothing else of it.)
             if (keeper.Rising)
             {
-                float up = Hump(keeper.Risen), trunkUp = roseByItsOwn ? Hump(Mathf.InverseLerp(OwnRiser.RiseTrunkAfter, 1, keeper.Risen)) : up;
+                float up = Rose(keeper.Risen), trunkUp = roseByItsOwn ? Rose(Mathf.InverseLerp(OwnRiser.RiseTrunkAfter, 1, keeper.Risen)) : up;
                 handedFor += step;
                 float arms = roseByItsOwn && ArmsSettleIn > 0 ? Mathf.Max(up, ArmsSettleShare * Hump(handedFor / ArmsSettleIn)) : up;
                 for (int j = 1; j < Count; j++) Aims(j, Quaternion.Slerp(riseFrom[j], toStood[j], j == Trunk || j == Head ? trunkUp : Arm(j) ? arms : up));

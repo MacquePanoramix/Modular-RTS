@@ -277,6 +277,8 @@ namespace WonderGather.Tests
             float timeWas = Time.captureDeltaTime;
             if (Number("-riseWallClock", 0) <= 0) Time.captureDeltaTime = dt * Mathf.Max(1, frames > 0 ? frames : every);
             bool fellBack = OwnBody.FallsBack;
+            int curveWas = OwnKeeper.RiseCurve, jointsWas = OwnBody.RiseJoints;
+            float settlesWas = OwnKeeper.RiseSettles;
             var waysWere = OwnBody.RiseWays;
             try
             {
@@ -358,10 +360,12 @@ namespace WonderGather.Tests
 
                 OwnBody.FallsBack = Number("-riseFallsBack", 0) > 0;
                 // (-riseCurve 1: the standing balance begins its rise by a smoothstep, OwnKeeper.RiseCurve. October 28.)
-                OwnKeeper.RiseCurve = (int)Number("-riseCurve", 0);
+                OwnKeeper.RiseCurve = (int)Number("-riseCurve", curveWas);
+                OwnKeeper.RiseSettles = Number("-riseSettles", settlesWas);
                 // (-riseArmsIn: its arms come to how it stands so many seconds after the hand-over. October 28.)
                 OwnBody.ArmsSettleIn = Number("-riseArmsIn", 0);
                 OwnBody.ArmsSettleShare = Number("-riseArmsShare", 1);
+                OwnBody.RiseJoints = (int)Number("-riseJoints", jointsWas);
                 OwnBody.ArmsTimes = Number("-riseArms", 1);
                 // (-riseHead 0.7: to learn what the head's weight does: its head so many times as heavy.)
                 OwnBody.HeadTimes = Number("-riseHead", 1);
@@ -930,8 +934,8 @@ namespace WonderGather.Tests
                 Physics.simulationMode = mode;
                 Time.captureDeltaTime = timeWas;
                 OwnBody.FallsBack = fellBack;
-                OwnKeeper.RiseCurve = 0;
-                OwnBody.ArmsSettleIn = 0; OwnBody.ArmsSettleShare = 1;
+                OwnKeeper.RiseCurve = curveWas; OwnKeeper.RiseSettles = settlesWas;
+                OwnBody.ArmsSettleIn = 0; OwnBody.ArmsSettleShare = 1; OwnBody.RiseJoints = jointsWas;
                 OwnBody.ArmsTimes = armsWere;
                 OwnBody.HeadTimes = 1;
                 OwnBody.RiseWays = waysWere;
