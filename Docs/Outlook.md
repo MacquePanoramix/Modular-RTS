@@ -58,6 +58,27 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 29, 2026 — the thirteenth (past midnight, the night's teaching under way)
+
+- **Where we are.** S3b step 2, option 1 with the learner pacing its way, holds charged (Luis,
+  October 28: "Penalise holds"). At 140,000 decisions the pacer still held more than the
+  searched times (0.9 to 1.0 s a standing try against 0.5 to 0.8), its answers barely less
+  random than at first. Measured by pose tonight: about two thirds of the holds were in
+  `hands`, lying on its front while its arms moved 10 to 20 degrees for 1.6 s. Halving that
+  pose and its arm movement removes them (about 0.8 s to 0.3 s), standing unchanged; the
+  pacer is now charged for each held second as it happens.
+- **Waiting on Luis:** S3 (since October 8); the builds of October 13 and 14; R1 (the arms);
+  the analytics define; the stray `risebuild3.log`. He has not seen option 1 move: round 2
+  of the judges first, then a build with the switch named in the report's first line.
+- **Built, not in a build:** all of the getting up (work branch, switch off).
+- **Drifting or forgotten:** the game's test as played with tonight's models; the suite as
+  played (never run); Long and Round (no getting up); the work branch drifting from the
+  game branch; the old way after 12 tries (the absolute last resort).
+- **Does the task serve the stage?** Yes, as Luis directed it (October 13: natural, no dead
+  holds; October 28: penalise holds). But the getting up has held the stage for two weeks;
+  the prototype's purpose is real weight and strength at work. Once holds and standing are
+  where the game needs them, the next choice should be put to Luis with that in view.
+
 ### October 28, 2026 — the twelfth (a new day)
 
 - **Where we are.** S3b step 2, option 1 with the learner pacing its way (Luis, October 27:

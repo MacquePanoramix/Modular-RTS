@@ -4433,3 +4433,44 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   60% of those handed over stood (64%), more of them falling back once settled (arms held forward weigh against it);
   half the way in 0.4 s, the rest with the rise: 67%, 18.8%. Off: no picture yet shows it reads better.
 - `pace5` resumed on the build with the gentler rise at 21:19 (saved at 59,997 paces and 299,977 for the joints).
+
+## S3b step 2 — where it held: the hands pose halved; holds charged as held (October 29, night)
+
+- **`pace5` at 140,000 paces** (its joints at 649,997; falls made anew, 600 tries each way, the training left running):
+  22.6% of fresh falls and 14.6% of retries stood; the same joints unpaced 22.1% and 12.7%. Held 0.9 s a standing try
+  (median; quartiles 0.3 and 1.4), unpaced 0.5 s (0.2, 1.1). It shortened stay (0.5 s, searched 0.7), pike (1.1, 1.4),
+  footB, hands and under by a tenth each, and lengthened prop (2.0, 1.6), push (1.1, 0.8) and plant (0.7, 0.6). Its
+  answers while taught were barely less random than at first (entropy 1.42 to 1.28; a spread 0.87 of the first):
+  charged at the end of a try that stood, a held second is a few hundredths among standing's 1 or nothing.
+- **Where it holds** (the teaching now tells it: `holds by pose` in `TRAIN_STAGES`, `-trainTell 2`): as searched 0.75 s a
+  standing try, of it 0.49 s in `hands` (in 76 of 109 that stood) and 0.19 s in `prop` (93 of 109), the rest under
+  0.05; the pacer 1.00 s (hands 0.58, prop 0.32). In `hands`, lying on its front after the roll, its arms move 10 to
+  20 degrees over 1.40 s in a pose kept 1.58 s: slower than 12 cm/s nearly all of it. The hold in `prop` is at its
+  start: `under` eases out and `prop` eases in.
+- **Going on once slow** (`-riseGoesOnStill 0.25`: a pose whose ends are so goes on after 0.25 s slow): from a pose's
+  start 5.4% of fresh falls and 4.0% of retries stood (held 0.11 s): it went on before it had moved. Only once it had
+  moved in that pose (`-riseGoesOnAfterMoving 1`): 18.7% and 10.1%, held 0.52 s. Not taken.
+- **Each pose's time** (`-risePoses`, kept so many times as long; `-risePoseOvers`, come to so; 600 tries a copy of
+  three): hands kept ×0.75: 19.6% and 16.5%, held 0.56 s; ×0.5: 20.4%, 12.8%, 0.52 s; ×0.25: 16.1%, 12.6%, 0.33 s.
+  prop ×0.75: 18.3%, 10.1%, 0.79 s. **Kept and come to in half the time: 21.2% and 16.6% (28 copies, 5,600 tries),
+  held 0.3 s (median; in hands 0.06 s a try)**; in a quarter: 21.2% and 17.0% (6 copies), 0.24 s; as searched 21.4%
+  and 16.3% (9 copies), held 0.7 s. Standing as before, holds less than half. (At 13 copies it read 23.2%; the same
+  three copies run again read from 17.4% to 25.6%: runs of three differ by that much, as falls made anew should.)
+  And under ×0.75 as well: 20.1% and 14.5%, held 0.14 s (7 copies; on the same falls without it 22.6% and 16.5%): not
+  taken, it may cost standing.
+- **Now so in the ways** (`0872a64`, `cd3fe2d`, work branch): `hands` 0.70 s to come to, 0.79 s kept (were 1.40, 1.58),
+  in the teaching's ways and the game's (`Resources/RiseWays/Small.txt`). What is still held: the start of `prop`,
+  about 0.2 s; every pose eases out and the next eases in.
+- **`pace6`** (begun 00:10, `Builds/RiseTrain22`): the joints from `pace5` at 799,994, the pacer from 159,992; each held
+  second charged to the pacer as it is held, in every try (`-trainHoldsAsHeld 1`, 0.1 a second), its time cost still
+  only where it stood; the pacer learns three times as fast (1e-3) and is held less to its first randomness (beta
+  1e-3); the halved hands. `pace5` stopped at 170,000 paces and 830,000 for the joints.
+- **Stuck in a pose** (found as `pace6` began: its pacer's reward half `pace5`'s, twice as spread): of tries never handed
+  over, 3% held 3 s or more, the longest 17.8 s, mostly on hands and knees with a foot raised that never came to bear,
+  waiting out the pose's 20 s. Now a pose not through while the body has been slow in it 3 s gives the try up, as the
+  rise after getting up does (`OwnRiser.StuckAfter 3`; `-riseStuckAfter`, 0 as before): given up after 2 or 3 s the
+  longest held of such tries was 5.5 to 6.5 s (17.3), their mean 0.6 s (0.9); 24.0% of fresh falls and 18.1% of retries
+  stood (6 copies; 21.2% and 16.6% before). In the game a stuck body tries again rather than waiting up to 20 s.
+- **Not tested yet:** the game's test as played with the halved hands and the stuck pose given up; the bench and its
+  pictures; the suite after these changes. Measured only in the teaching without a trainer and one 30-try run of the
+  new training build.
