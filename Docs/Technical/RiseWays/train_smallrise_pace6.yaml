@@ -1,0 +1,58 @@
+# pace6 (October 29; Luis: "Penalise holds"): as pace5, and each held second costs the pacer as it is held, in every try
+# (-trainHoldsAsHeld 1), not all at once at the end of a try that stood: so charged, pace5's pacer at 140,000 still held
+# 0.9 s where the searched times held 0.5, its answers hardly less drawn at random than at first (entropy 1.42 -> 1.28).
+# It learns three times as fast (3e-4 -> 1e-3) and is held less to its first randomness (beta 2e-3 -> 1e-3). The hands
+# pose of the ways is half as long, come to in half the time (0.79 s, 0.70 s): it was where the searched times held.
+# The joints begun from pace5 at 799,994; the pacer from pace5 at 159,992. Resume with train_smallrise_pace6_resume.yaml.
+#   --env-args -riseTrain -trainFull 1 -trainPace 1 -trainHoldsAsHeld 1 -trainFalls 1 -trainFreshFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays <ways file>
+behaviors:
+  SmallRiseFull:
+    trainer_type: ppo
+    init_path: D:/Dev/mlagents-results/pace5/SmallRiseFull/SmallRiseFull-799994.pt
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      beta: 2.0e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: constant
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    max_steps: 20000000
+    time_horizon: 128
+    summary_freq: 10000
+    checkpoint_interval: 50000
+    keep_checkpoints: 200
+  SmallRisePace:
+    trainer_type: ppo
+    init_path: D:/Dev/mlagents-results/pace5/SmallRisePace/SmallRisePace-159992.pt
+    hyperparameters:
+      batch_size: 512
+      buffer_size: 2048
+      learning_rate: 1.0e-3
+      beta: 1.0e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: constant
+    network_settings:
+      normalize: true
+      hidden_units: 128
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.995
+        strength: 1.0
+    max_steps: 20000000
+    time_horizon: 128
+    summary_freq: 10000
+    checkpoint_interval: 20000
+    keep_checkpoints: 200

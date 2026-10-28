@@ -194,3 +194,19 @@ not a hold. The teaching tells the held seconds of every try (`held` in `TRAIN_S
 joints, falls made anew: unpaced 0.4 s held a standing try (median), `pace4`'s pacer (seconds alone charged) 1.5 s.
 `pace5` (`train_smallrise_pace5.yaml`, `Builds/RiseTrain20`): the joints from `pace4` at 199,961, the pacer new, saved
 every 20,000; resume with `train_smallrise_pace5_resume.yaml`.
+
+**Where it held, and holds charged as held** (October 29): the teaching now tells in which pose each held second was
+(`holds by pose` in `TRAIN_STAGES`). With `pace5`'s joints at 649,997 on falls made anew, about two thirds of the holds
+were in `hands`: lying on its front, its arms moved 10 to 20 degrees over 1.4 s, the pose kept 1.58 s. The ways' `hands`
+is now half as long and come to in half the time (0.70 s, 0.79 s; in `ways_roll_small_flat.txt` and the game's
+`Resources/RiseWays/Small.txt`): held 0.30 s a standing try, not about 0.8, standing as before (23.2% of fresh falls,
+16.4% of retries, in 13 copies of 200 tries; 21.4% and 16.3% in 6). Switches to try such times without a new ways file:
+`-risePoses name=times,...` (each pose kept so many times as long), `-risePoseOvers` (come to in so many times as
+long), and `-riseGoesOnStill <s>` (a pose whose ends are so goes on once the body has been slow in it so long;
+`-riseGoesOnAfterMoving 1`: only once it has moved in it). Gone on after 0.25 s slow from a pose's start, 5% stood;
+only after moving, 19% (holds 0.52 s). `under` three quarters as long as well halved the holds again (0.14 s), 20.1% and
+14.5% standing: not taken. `pace5`'s pacer, charged at the end of a try that stood, at 140,000 still held more than the
+searched times (0.9 to 1.0 s) and its answers were nearly as random as at first; `-trainHoldsAsHeld 1` charges each held
+second as it is held, in every try. `pace6` (`train_smallrise_pace6.yaml`, `Builds/RiseTrain22`, the halved `hands`):
+the joints from `pace5` at 799,994, the pacer from `pace5` at 159,992, learning three times as fast; resume with
+`train_smallrise_pace6_resume.yaml`.

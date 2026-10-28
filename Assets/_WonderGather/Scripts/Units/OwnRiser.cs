@@ -712,7 +712,7 @@ namespace WonderGather
 
         private void Begin(int index)
         {
-            at = index; stage = way.stages[index]; got = 0; still = 0; ReleaseWaited = 0; walksBack = cannotWalkBack = false; hipsBegan = Measure(Asks.Hips); downFor = 0; stepBegun = false; sat = 0; shiftT = 0; liftAt = 0; planting = false; landed = false; stepAimed = false; handsLet = false;
+            at = index; stage = way.stages[index]; got = 0; still = 0; slowFor = 0; movedIn = false; ReleaseWaited = 0; walksBack = cannotWalkBack = false; hipsBegan = Measure(Asks.Hips); downFor = 0; stepBegun = false; sat = 0; shiftT = 0; liftAt = 0; planting = false; landed = false; stepAimed = false; handsLet = false;
             walkHand = -1; for (int i = 0; i < 2; i++) { handAt[i] = HandEnd(i); kneelFrom[i] = JointAt(Foot + i); kneelBootFrom[i] = parts[Foot + i].transform.rotation; }
             for (int j = 1; j < Count; j++) aimFrom[j] = aimNow[j];
         }
@@ -728,7 +728,14 @@ namespace WonderGather
         // ReadyAfter seconds: rolling up, it was ready 0.28 s in and waited out the pose's 1.8 s, and sat back onto its
         // heels in the wait.)
         public static float ReadyAfter = .2f;
-        private float hipsBegan, downFor;
+        // (Any pose whose ends are all so goes on once the body has been slow in it GoesOnStill seconds (no part faster
+        // than GoesOnBelow), not waiting out the rest of its time: a body still in its pose until a timer is what Luis
+        // called looking dead, October 13, and he asked that holds be charged, October 28. GoesOnAfterMoving 1: only
+        // once it has moved in that pose. GoesOnStill 0: each pose its time, as searched.)
+        public static float GoesOnStill = 0, GoesOnBelow = .12f;
+        public static int GoesOnAfterMoving = 0;
+        private float hipsBegan, downFor, slowFor;
+        private bool movedIn;
 
         // One step of getting up.
         public Does Step(float step)
@@ -763,6 +770,13 @@ namespace WonderGather
             for (int i = Hips; i <= Head && !moving; i++)
                 moving = parts[i].GetPointVelocity(parts[i].worldCenterOfMass).sqrMagnitude > StillUnder * StillUnder || parts[i].angularVelocity.sqrMagnitude > StillTurning * StillTurning;
             still = moving ? 0 : still + step;
+            if (GoesOnStill > 0)
+            {
+                float fastest = 0;
+                for (int i = 0; i < Count; i++) fastest = Mathf.Max(fastest, parts[i].linearVelocity.magnitude);
+                slowFor = fastest < GoesOnBelow ? slowFor + step : 0;
+                movedIn |= fastest >= GoesOnBelow;
+            }
             if (toned != Tone || strongerWas != StrongerWhileLearning) Springs(step);
             // (What learnt says of each joint, eased in.)
             {
@@ -775,7 +789,8 @@ namespace WonderGather
             if (float.IsNaN(stage.keeps)) leant = Mathf.MoveTowards(leant, 0, 60 * step);
             else leant = Mathf.Clamp(leant + Balances * (stage.keeps - Measure(Asks.Ahead)) * step, -BalancesAtMost, BalancesAtMost);
             if (!float.IsNaN(stage.sits)) sat = Mathf.Clamp(sat + stage.sits * Mathf.Clamp((Measure(Asks.Ahead) - stage.sitAhead) / .1f, -1, 1) * step, 0, stage.sitMost);
-            bool through = got >= stage.atLeast * Pace || (way.gives && at == way.stages.Length - 1 && ReadyAfter > 0 && got >= ReadyAfter);
+            bool through = got >= stage.atLeast * PaceOf(stage) || (way.gives && at == way.stages.Length - 1 && ReadyAfter > 0 && got >= ReadyAfter)
+                || GoesOnStill > 0 && slowFor >= GoesOnStill && (GoesOnAfterMoving <= 0 || movedIn);
             for (int k = 0; through && k < stage.through.Length; k++)
             {
                 float it = Measure(stage.through[k].what);
@@ -801,7 +816,7 @@ namespace WonderGather
             if (hipsBegan >= UpFrom && Measure(Asks.Hips) < DownUnder) downFor += step; else downFor = 0;
             if (downFor > DownFor) return Does.GaveUp;
             // The pose it is at, come to from where its joints were asked to be before.
-            float share = stage.over > 0 ? Mathf.SmoothStep(0, 1, got / stage.over) : 1;
+            float share = stage.over > 0 ? Mathf.SmoothStep(0, 1, got / (stage.over * (PoseOvers.TryGetValue(stage.name, out float overs) ? overs : 1))) : 1;
             stepping = stage.steps < 0 ? -1 : stage.steps == 0 ? leads : 1 - leads;
             bool walks = !float.IsNaN(stage.handStep);
             walksBack = ReleaseWalks > 0 && ReleaseWhenOver && stage.letsHandsGo && !handsLet && !cannotWalkBack && !float.IsNaN(stage.balance)
@@ -1057,7 +1072,7 @@ namespace WonderGather
             into.Add(handsLet ? 1 : 0);
             string now = stage != null ? stage.name : "";
             into.Add(now == "footB" ? 1 : 0); into.Add(now == "pike" ? 1 : 0); into.Add(now == "rollup" ? 1 : 0);
-            into.Add(stage != null ? Mathf.Clamp01(got / Mathf.Max(.1f, stage.atLeast * Pace)) : 0);
+            into.Add(stage != null ? Mathf.Clamp01(got / Mathf.Max(.1f, stage.atLeast * PaceOf(stage))) : 0);
             into.Add(Mathf.Clamp01(ReleaseWaited / Mathf.Max(.1f, ReleaseWaitsAtMost)));
         }
 
@@ -1099,6 +1114,12 @@ namespace WonderGather
         // The searched times held it still in the squat and lying with a boot raised, 1.4 to 2.8 s, which read as
         // scripted to all three judges. 1: as searched.)
         public float Pace = 1;
+        // (And a pose by its name kept so many times as long as its way says, for every body, -risePoses hands=0.5: to
+        // learn how much standing asks of each pose's time, October 28. Empty: as searched.)
+        public static readonly System.Collections.Generic.Dictionary<string, float> PosePaces = new System.Collections.Generic.Dictionary<string, float>();
+        private float PaceOf(Stage of) => Pace * (of != null && PosePaces.TryGetValue(of.name, out float times) ? times : 1);
+        // (And come to in so many times as long, -risePoseOvers hands=0.5.)
+        public static readonly System.Collections.Generic.Dictionary<string, float> PoseOvers = new System.Collections.Generic.Dictionary<string, float>();
 
         // ---- Option 1 (Luis, October 26: "option 1"): what learns sets every joint's target itself at the hard moment.
         // Driven: for each joint, so many degrees more about each of its axes than its way asks (three a joint, its hinge's

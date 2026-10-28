@@ -29,6 +29,16 @@ namespace WonderGather
             return null;
         }
         private static bool Flag(string name) => System.Array.IndexOf(System.Environment.GetCommandLineArgs(), name) >= 0;
+        // (A list "name=number,name=number" given after the switch, into those numbers by name.)
+        public static void Named(string name, Dictionary<string, float> into)
+        {
+            into.Clear();
+            foreach (string each in (Argument(name) ?? "").Split(new[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries))
+            {
+                var named = each.Split('=');
+                if (named.Length == 2) into[named[0]] = float.Parse(named[1], CultureInfo.InvariantCulture);
+            }
+        }
         private static float Number(string argument, float otherwise) { string given = Argument(argument); return string.IsNullOrEmpty(given) ? otherwise : float.Parse(given, Plain); }
 
         // A build started with -riseTrain teaches as soon as its place is loaded, and quits when the teaching is over.
@@ -265,6 +275,11 @@ namespace WonderGather
                 // in a try that stood. Slow movement is not a hold; only the time cost is charged for it. Charged
                 // seconds alone, it learnt to keep poses longer, as that stood a little more often.)
                 float holdCost = Number("-trainHoldCost", .1f), holdGrace = Number("-trainHoldGrace", .25f);
+                // (-trainHoldsAsHeld 1: each held second costs the pacer as it is held, in every try, so that it is the pose
+                // being held that pays; charged all at once at the end of a try that stood, at 140,000 paces it still held
+                // 0.9 s where the searched times held 0.5, its answers hardly less drawn at random than at first: a few
+                // hundredths' worth lost among standing's 1 or nothing. October 29.)
+                bool holdsAsHeld = Number("-trainHoldsAsHeld", 0) > 0;
                 // (-trainModel <name>: no teacher; a model built in, Resources/RiseModels/<name>, answers, its own best answer
                 // as in the game and on the bench, or one drawn about it as it was taught with -trainDrawn 1. To measure what
                 // was learnt on the teaching's own falls, October 27.)
@@ -362,6 +377,15 @@ namespace WonderGather
                 OwnBody.ArmsSettleIn = Number("-riseArmsIn", OwnBody.ArmsSettleIn);
                 OwnBody.ArmsSettleShare = Number("-riseArmsShare", OwnBody.ArmsSettleShare);
                 OwnBody.RiseJoints = (int)Number("-riseJoints", OwnBody.RiseJoints);
+                // (-riseGoesOnStill: a pose whose ends are so goes on once the body has been slow in it so long,
+                // OwnRiser.GoesOnStill, GoesOnBelow, GoesOnAfterMoving.)
+                OwnRiser.GoesOnStill = Number("-riseGoesOnStill", OwnRiser.GoesOnStill);
+                OwnRiser.GoesOnBelow = Number("-riseGoesOnBelow", OwnRiser.GoesOnBelow);
+                OwnRiser.GoesOnAfterMoving = (int)Number("-riseGoesOnAfterMoving", OwnRiser.GoesOnAfterMoving);
+                // (-risePoses hands=0.5,prop=0.75: those poses kept so many times as long, OwnRiser.PosePaces; -risePoseOvers:
+                // come to in so many times as long, OwnRiser.PoseOvers.)
+                Named("-risePoses", OwnRiser.PosePaces);
+                Named("-risePoseOvers", OwnRiser.PoseOvers);
                 int madeAnew = 0, notMade = 0;
                 // (-trainPictures <folder>: the first -trainPictured tries begun lying on its back pictured, as many fresh
                 // falls as tries begun where the last left it, every -trainPictureEvery steps: begun so, the latter stood a
@@ -462,6 +486,8 @@ namespace WonderGather
                     // (-trainTell 2: each stage it came to, with how each boot's sole faced (1: down on the ground; -1: up)
                     // and its hips' height as it came to it.)
                     var stages = Number("-trainTell", 0) >= 2 ? new System.Text.StringBuilder() : null;
+                    // (And in which pose each held second was, to learn which poses hold. October 28.)
+                    var heldIn = stages != null ? new Dictionary<string, float>() : null;
                     // (And how it lay as it began: each knee's bend, each hip's (trunk to thigh), how far each boot is from
                     // the hips along the body and across it, in metres; and how much its trunk faces the ground (1: on its
                     // front). To learn what a try begun where the last left it lies like, October 27.)
@@ -527,7 +553,17 @@ namespace WonderGather
                         {
                             float fastest = 0;
                             for (int i = 0; i < OwnBody.Count; i++) fastest = Mathf.Max(fastest, own.Part(i).linearVelocity.magnitude);
-                            if (fastest < SlowBelow) { holdRun += dt; if (holdRun > holdGrace) held += dt; }
+                            if (fastest < SlowBelow)
+                            {
+                                holdRun += dt;
+                                if (holdRun > holdGrace)
+                                {
+                                    held += dt;
+                                    if (holdsAsHeld && pacerActed) pacer.AddReward(-holdCost * dt);
+                                    string pose = riser != null ? riser.StageNow : "";
+                                    if (heldIn != null) heldIn[pose] = (heldIn.TryGetValue(pose, out float was) ? was : 0) + dt;
+                                }
+                            }
                             else holdRun = 0;
                         }
                         if (stages != null && own.Stands && (own.GettingUp || own.Rising))
@@ -591,6 +627,7 @@ namespace WonderGather
                         if (frames > 0 && step % frames == 0) yield return null;
                     }
                     stages?.AppendFormat(Plain, " | still {0:0.0}s longest {1:0.0}s slow {2:0.0}s longest {3:0.0}s held {4:0.0}s", stillAll, stillLongest, slowAll, slowLongest, held);
+                    if (heldIn != null) { stages.Append(" | holds by pose"); foreach (var h in heldIn) stages.AppendFormat(Plain, " {0}:{1:0.00}", h.Key, h.Value); }
                     if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + (retry ? " again" : fromLater ? " later" : "") + stages);
                     if (picturing) tell(string.Format(Plain, "TRAIN_PICTURED try {0:000} {1} {2}", k, retry ? "again" : "fresh", up ? "stood" : onFeet ? "fell" : "down") + (stages != null ? stages.ToString() : ""));
                     if (own.Stands) own.Drop();
@@ -670,7 +707,7 @@ namespace WonderGather
                     // fails is worth nothing however soon it fails. Charged on every try, failing early cost less than
                     // standing late, and in the game a failed try costs another: at 50,000 paces 11% of fresh falls stood,
                     // 19% as searched. October 28.)
-                    if (pacerActed) { pacer.AddReward(up ? reward - timeCost * (gettingTill + 1) * dt - holdCost * held : reward); pacer.EndEpisode(); }
+                    if (pacerActed) { pacer.AddReward(up ? reward - timeCost * (gettingTill + 1) * dt - (holdsAsHeld ? 0 : holdCost * held) : reward); pacer.EndEpisode(); }
                     if (hasActed || pacerActed) Academy.Instance.EnvironmentStep();
                     if ((k + 1) % 100 == 0)
                     {
