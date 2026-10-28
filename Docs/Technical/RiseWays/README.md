@@ -179,3 +179,11 @@ answer taken as it is, not eased in); each second of getting up since it last sa
 says and at the end. In the game it says as each pose begins too. `train_smallrise_pace2.yaml` begins `pace2` from
 `pace1` (the joints at 99,996; the pacer new: pace1's, asked once a pose, spread the times and stood 9%), learning the pace from 2,048 at a
 time (about eleven a try); resume with `train_smallrise_pace2_resume.yaml`.
+
+**The pacer's seconds only where it stood; the toes reckoned** (October 28): charged on every try, the pacer's seconds
+made failing early cheaper than standing late (and in the game a failed try costs another): `pace2`'s pacer at 50,000
+stood 11% of fresh falls (19% as searched). Now a try that stands is worth 1 less 0.02 a second it took, a try that
+fails nothing. And the standing balance now reckons what the ground bears through the toes where the body has them (the
+body that got up; the standing body has none): of tries handed to it, 71% stood, not 59% (21.3% of all tries, not
+15.3%). `-trainTell 3` tells what the standing balance says as it rises (`TRAIN_RISE`). `pace4`
+(`train_smallrise_pace4.yaml`, `Builds/RiseTrain18`): the joints from `pace2` at 249,951, the pacer new.

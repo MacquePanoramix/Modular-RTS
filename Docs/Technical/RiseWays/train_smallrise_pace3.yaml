@@ -1,0 +1,56 @@
+# pace3 (October 28): as pace2 (the pace said once as each pose begins), but the pacer's seconds cost it only in a try
+# that stood (standing sooner is worth more; a failed try is worth nothing however soon it fails). Charged on every try,
+# failing early cost less than standing late, and in the game a failed try costs another: pace2's pacer at 50,000 stood
+# 11% of fresh falls (19% as searched). The joints begun from pace2 at 249,951; the pacer new. Resume with
+# train_smallrise_pace3_resume.yaml.
+#   --env-args -riseTrain -trainFull 1 -trainPace 1 -trainFalls 1 -trainFreshFalls 1 -trainRetries 0.7 -trainRetriesAtMost 8 -trainNearer 1 -trainWays <ways file>
+behaviors:
+  SmallRiseFull:
+    trainer_type: ppo
+    init_path: D:/Dev/mlagents-results/pace2/SmallRiseFull/SmallRiseFull-249951.pt
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      beta: 2.0e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: constant
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    max_steps: 20000000
+    time_horizon: 128
+    summary_freq: 10000
+    checkpoint_interval: 50000
+    keep_checkpoints: 200
+  SmallRisePace:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 512
+      buffer_size: 2048
+      learning_rate: 3.0e-4
+      beta: 2.0e-3
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: constant
+    network_settings:
+      normalize: true
+      hidden_units: 128
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.995
+        strength: 1.0
+    max_steps: 20000000
+    time_horizon: 128
+    summary_freq: 10000
+    checkpoint_interval: 50000
+    keep_checkpoints: 200
