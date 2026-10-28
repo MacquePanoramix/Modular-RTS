@@ -4403,3 +4403,14 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   (1.6); stay 0.5 (0.7) and pike 1.1 (1.3) shorter; the body slower than 12 cm/s 2.7 s a try (unpaced 2.2), at most 1.0 s
   at a stretch (0.7). Charged 0.02 a second only where it stood, keeping a pose longer is cheap beside standing more
   often. Whether standing more often or holding less matters more is Luis's: asked.
+
+## S3b step 2 — holds cost the pacer (October 28, afternoon)
+
+- **Luis, October 28:** "Penalise holds" (asked: charge more for time, penalise holds directly, or standing first)
+  ([Correspondence](Correspondence/2026-10-28_PENALISE_HOLDS.md)).
+- **Done** (`df79cc2`): the pacer is charged 0.1 a second the body getting up is slow (no part faster than 12 cm/s)
+  past 0.25 s at a stretch, only in a try that stood; slow movement is not a hold. The teaching tells each try's held
+  seconds. **Measured before teaching** (`pace4`'s joints at 199,961, falls made anew, 600 tries each): unpaced, 22.2% of
+  fresh falls and 14.9% of retries stood, held 0.4 s a standing try (median; quartiles 0.2 and 1.1); with `pace4`'s
+  pacer (seconds alone charged), 19.5% and 12.8%, held 1.5 s (0.9 and 2.0). `pace5` (the joints from `pace4`, the
+  pacer new) began 16:15.
