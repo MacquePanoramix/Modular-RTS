@@ -4419,3 +4419,17 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   (17.8%). Held 0.9 s a standing try (median; unpaced 0.7 s here, `pace4`'s pacer 1.5 s); prop 1.8 s (searched 1.6,
   `pace4` 2.2), under 1.3 (1.4), hands 1.5 (1.6), pike 1.2 (1.4). It lengthens less than `pace4`'s did, and has not yet
   held less than as searched: too early to say. Resume: `train_smallrise_pace5_resume.yaml`, run-id `pace5`.
+
+## S3b step 2 — the rise after getting up begins gentler; the arms (October 28, evening)
+
+- **The crouch before the rise** (the judges' "still in the crouch 0.6 to 0.8 s"): the standing balance's height and the
+  joints both followed its rise by a smootherstep (a tenth of the way along, under a hundredth of the turn), after its
+  weight had stood on its feet 0.2 s. Measured from the hand-over to the hips 3 cm higher, the joints learnt by `pace5`
+  at 99,959, falls made anew, 900 tries each: as it was 0.82 s (65% of those handed over stood, 17.6% of all tries);
+  both by a smoothstep 0.72 s (72%, 19.7%); and settled in 0.1 s, **0.68 s (72%, 20.1%)**. Now so by default
+  (`OwnKeeper.RiseCurve 1`, `RiseSettles 0.1`, `OwnBody.RiseJoints 1`; only the rise after getting up). For the judges.
+- **The arms after the hand-over** (pictured: an arm held out in the crouch, flung up and back as it rose): the arms,
+  bearing nothing, can come to how it stands sooner than the rise (`OwnBody.ArmsSettleIn`, off). All the way in 0.5 s:
+  60% of those handed over stood (64%), more of them falling back once settled (arms held forward weigh against it);
+  half the way in 0.4 s, the rest with the rise: 67%, 18.8%. Off: no picture yet shows it reads better.
+- `pace5` resumed on the build with the gentler rise at 21:19 (saved at 59,997 paces and 299,977 for the joints).
