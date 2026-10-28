@@ -561,7 +561,7 @@ namespace WonderGather
                                 own.Part(OwnBody.Trunk).AddForce(pull * (trunk / (hips + trunk)));
                             }
                         }
-                        if (!own.GettingUp && !onFeet) { onFeet = true; stages?.AppendFormat(Plain, " | handed@{0:0.0}s", step * dt); }
+                        if (!own.GettingUp && !onFeet) { onFeet = true; stages?.AppendFormat(Plain, " | handed@{0:0.0}s [{1}]", step * dt, own.HandedOver); }
                         if (onFeet && !own.Rising)
                         {
                             if (stoodFor == 0) stages?.AppendFormat(Plain, " | risen@{0:0.0}s", step * dt);
