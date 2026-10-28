@@ -736,6 +736,12 @@ namespace WonderGather
         // once it has moved in that pose. GoesOnStill 0: each pose its time, as searched.)
         public static float GoesOnStill = 0, GoesOnBelow = .12f;
         public static int GoesOnAfterMoving = 0;
+        // (A pose not through while the body has been slow in it StuckAfter seconds gives that try up, as the rise after
+        // getting up does (OwnKeeper.StallsAfter): a foot that never came to bear held it on hands and knees, a foot
+        // raised, up to 17.8 s, waiting out the pose's 20. Given up after 2 or 3 s, of tries never handed over the
+        // longest held 5.5 to 6.5 s, not 17.3, the mean 0.6 s, not 0.9; 24.0% of fresh falls stood, 21.2% before (600
+        // tries a copy, 6 copies against 28). October 29. 0: it waits out the pose's time, as searched.)
+        public static float StuckAfter = 3;
         private float hipsBegan, downFor, slowFor;
         private bool movedIn;
 
@@ -772,7 +778,7 @@ namespace WonderGather
             for (int i = Hips; i <= Head && !moving; i++)
                 moving = parts[i].GetPointVelocity(parts[i].worldCenterOfMass).sqrMagnitude > StillUnder * StillUnder || parts[i].angularVelocity.sqrMagnitude > StillTurning * StillTurning;
             still = moving ? 0 : still + step;
-            if (GoesOnStill > 0)
+            if (GoesOnStill > 0 || StuckAfter > 0)
             {
                 float fastest = 0;
                 for (int i = 0; i < Count; i++) fastest = Mathf.Max(fastest, parts[i].linearVelocity.magnitude);
@@ -815,6 +821,7 @@ namespace WonderGather
                 else if (!Choose()) return Does.GaveUp;
             }
             else if (got > stage.within) return Does.GaveUp;
+            else if (StuckAfter > 0 && slowFor >= StuckAfter) return Does.GaveUp;
             if (hipsBegan >= UpFrom && Measure(Asks.Hips) < DownUnder) downFor += step; else downFor = 0;
             if (downFor > DownFor) return Does.GaveUp;
             // The pose it is at, come to from where its joints were asked to be before.

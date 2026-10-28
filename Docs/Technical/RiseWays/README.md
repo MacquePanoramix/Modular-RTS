@@ -199,8 +199,8 @@ every 20,000; resume with `train_smallrise_pace5_resume.yaml`.
 (`holds by pose` in `TRAIN_STAGES`). With `pace5`'s joints at 649,997 on falls made anew, about two thirds of the holds
 were in `hands`: lying on its front, its arms moved 10 to 20 degrees over 1.4 s, the pose kept 1.58 s. The ways' `hands`
 is now half as long and come to in half the time (0.70 s, 0.79 s; in `ways_roll_small_flat.txt` and the game's
-`Resources/RiseWays/Small.txt`): held 0.30 s a standing try, not about 0.8, standing as before (23.2% of fresh falls,
-16.4% of retries, in 13 copies of 200 tries; 21.4% and 16.3% in 9). Switches to try such times without a new ways file:
+`Resources/RiseWays/Small.txt`): held 0.3 s a standing try (median), not 0.7, standing as before (21.2% of fresh
+falls, 16.6% of retries, in 28 copies of 200 tries; 21.4% and 16.3% in 9; runs of three copies differ by up to 8 points). Switches to try such times without a new ways file:
 `-risePoses name=times,...` (each pose kept so many times as long), `-risePoseOvers` (come to in so many times as
 long), and `-riseGoesOnStill <s>` (a pose whose ends are so goes on once the body has been slow in it so long;
 `-riseGoesOnAfterMoving 1`: only once it has moved in it). Gone on after 0.25 s slow from a pose's start, 5% stood;
@@ -210,3 +210,7 @@ searched times (0.9 to 1.0 s) and its answers were nearly as random as at first;
 second as it is held, in every try. `pace6` (`train_smallrise_pace6.yaml`, `Builds/RiseTrain22`, the halved `hands`):
 the joints from `pace5` at 799,994, the pacer from `pace5` at 159,992, learning three times as fast; resume with
 `train_smallrise_pace6_resume.yaml`.
+A pose not through while the body has been slow in it 3 s now gives the try up (`OwnRiser.StuckAfter`,
+`-riseStuckAfter`; 0 as before): a foot that never came to bear held it on hands and knees up to 17.8 s. Given up after 2
+or 3 s, the longest held of tries never handed over was 5.5 to 6.5 s, standing not lower (24.0%, 6 copies). `pace7`
+(`train_smallrise_pace7.yaml`, `Builds/RiseTrain23`): as `pace6`, with it, begun from `pace6`'s saves.
