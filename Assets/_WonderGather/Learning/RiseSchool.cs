@@ -260,6 +260,11 @@ namespace WonderGather
                 // costs -trainTimeCost, so that a pose is not kept longer than standing needs. Luis, October 27.)
                 bool paced = Number("-trainPaced", 0) > 0;
                 float timeCost = Number("-trainTimeCost", .02f);
+                // (And holds cost the pacer, Luis, October 28: "Penalise holds": each second the body getting up is slow
+                // (no part faster than SlowBelow) past -trainHoldGrace seconds at a stretch costs it -trainHoldCost, only
+                // in a try that stood. Slow movement is not a hold; only the time cost is charged for it. Charged
+                // seconds alone, it learnt to keep poses longer, as that stood a little more often.)
+                float holdCost = Number("-trainHoldCost", .1f), holdGrace = Number("-trainHoldGrace", .25f);
                 // (-trainModel <name>: no teacher; a model built in, Resources/RiseModels/<name>, answers, its own best answer
                 // as in the game and on the bench, or one drawn about it as it was taught with -trainDrawn 1. To measure what
                 // was learnt on the teaching's own falls, October 27.)
@@ -445,7 +450,7 @@ namespace WonderGather
                     int pacedAt = 0, gettingTill = 0;
                     // (-trainTell 2: how long the body was still, all of it, as it got up and rose, and the longest such
                     // stretch: what the judges called holds. October 28.)
-                    float stillAll = 0, stillRun = 0, stillLongest = 0, slowAll = 0, slowRun = 0, slowLongest = 0;
+                    float stillAll = 0, stillRun = 0, stillLongest = 0, slowAll = 0, slowRun = 0, slowLongest = 0, held = 0, holdRun = 0;
                     float stoodFor = 0;
                     // (-trainTell 2: each stage it came to, with how each boot's sole faced (1: down on the ground; -1: up)
                     // and its hips' height as it came to it.)
@@ -511,6 +516,13 @@ namespace WonderGather
                         // (The pacer says as each pose begins; each second of getting up since it last said costs it.)
                         bool pacing = pacer != null && own.GettingUp && riser != null && riser.StageNow != pacedStage;
                         if (own.GettingUp) gettingTill = step;
+                        if ((pacer != null || stages != null) && own.Stands && own.GettingUp)
+                        {
+                            float fastest = 0;
+                            for (int i = 0; i < OwnBody.Count; i++) fastest = Mathf.Max(fastest, own.Part(i).linearVelocity.magnitude);
+                            if (fastest < SlowBelow) { holdRun += dt; if (holdRun > holdGrace) held += dt; }
+                            else holdRun = 0;
+                        }
                         if (stages != null && own.Stands && (own.GettingUp || own.Rising))
                         {
                             float fastest = 0;
@@ -570,7 +582,7 @@ namespace WonderGather
                         Physics.Simulate(dt);
                         if (frames > 0 && step % frames == 0) yield return null;
                     }
-                    stages?.AppendFormat(Plain, " | still {0:0.0}s longest {1:0.0}s slow {2:0.0}s longest {3:0.0}s", stillAll, stillLongest, slowAll, slowLongest);
+                    stages?.AppendFormat(Plain, " | still {0:0.0}s longest {1:0.0}s slow {2:0.0}s longest {3:0.0}s held {4:0.0}s", stillAll, stillLongest, slowAll, slowLongest, held);
                     if (stages != null) tell("TRAIN_STAGES " + (up ? "stood" : onFeet ? "fell" : "down") + (retry ? " again" : fromLater ? " later" : "") + stages);
                     if (picturing) tell(string.Format(Plain, "TRAIN_PICTURED try {0:000} {1} {2}", k, retry ? "again" : "fresh", up ? "stood" : onFeet ? "fell" : "down") + (stages != null ? stages.ToString() : ""));
                     if (own.Stands) own.Drop();
@@ -650,7 +662,7 @@ namespace WonderGather
                     // fails is worth nothing however soon it fails. Charged on every try, failing early cost less than
                     // standing late, and in the game a failed try costs another: at 50,000 paces 11% of fresh falls stood,
                     // 19% as searched. October 28.)
-                    if (pacerActed) { pacer.AddReward(up ? reward - timeCost * (gettingTill + 1) * dt : reward); pacer.EndEpisode(); }
+                    if (pacerActed) { pacer.AddReward(up ? reward - timeCost * (gettingTill + 1) * dt - holdCost * held : reward); pacer.EndEpisode(); }
                     if (hasActed || pacerActed) Academy.Instance.EnvironmentStep();
                     if ((k + 1) % 100 == 0)
                     {
