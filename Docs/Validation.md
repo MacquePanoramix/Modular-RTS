@@ -4346,3 +4346,15 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   (searched 1.4), prop 1.5 (1.6), stay 0.6 (0.7), footA 1.5 (1.6), pike 1.2 (1.3 to 1.4); hands still 1.6. Standing
   not lower for it. Not yet the holds the judges named; not yet in the game, pictured or judged.
 - The bench runs the pace learnt beside the joints (`-risePaceModel`, `5285563`), for round 2's pictures.
+
+## S3b step 2 — the suite on the work branch; the pace said once a pose (October 28)
+
+- **The whole PlayMode suite on the work branch** (`5285563`, the worktree, one run, no filter, nothing beside it, 25
+  minutes): **203 tests, 175 passed, 0 failed**, 28 run only when asked. The first since October 14; it ran with the
+  game's switches as they ship (off), not as played (`-ownAsPlayed 1`, not run).
+- **The pace said once as each pose begins** (`2f23e96`): asked every tenth of a second and eased in as the joints are,
+  no one answer of the pacer moved a pose's end (250,000 decisions: a tenth of a second shorter each). Now it says once,
+  as each pose begins, how long that pose is kept, its answer as it is; each second of getting up since it last said
+  costs it 0.02. `pace1`'s pacer asked so (not taught so) spread the poses' times (hands 1.2 to 1.9 s) and 9% of fresh
+  falls stood (with it silent 20%): what it learnt eased in does not say what a pose should be. `pace2` begins the pacer
+  anew, the joints from `pace1` at 99,996 (taught on falls made anew), 09:50.
