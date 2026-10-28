@@ -4397,3 +4397,9 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   of its rise, which it never came to: crouched for good. Now a rise that makes no way for 3 s gives up and goes down
   to lie and try again (`OwnKeeper.StallsAfter`). In the teaching once in 800 tries (0.46 of the way up); standing as
   before (20.3%; 17.6% on the same seeds, within what runs differ by). Not yet run in the game.
+- **`pace4` at 50,000 paces** (with its joints at 199,961, falls made anew, 600 tries each way, stopped 12:29 for the
+  day): 21.9% of fresh falls and 11.3% of retries stood (17.5% in all); the same joints unpaced 18.8% and 13.4%
+  (16.7%). **It lengthens poses rather than shortening them**: prop 2.2 s (searched 1.6), under 1.7 (1.4), hands 1.7
+  (1.6); stay 0.5 (0.7) and pike 1.1 (1.3) shorter; the body slower than 12 cm/s 2.7 s a try (unpaced 2.2), at most 1.0 s
+  at a stretch (0.7). Charged 0.02 a second only where it stood, keeping a pose longer is cheap beside standing more
+  often. Whether standing more often or holding less matters more is Luis's: asked.
