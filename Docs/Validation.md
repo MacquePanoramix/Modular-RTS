@@ -4489,3 +4489,69 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
 - **Not tested yet:** the bench and its pictures with the night's models; the suite after these changes; the game's test
   with the pacer. Measured in the teaching without a trainer, one 30-try run of the training build, and two runs of the
   game's test.
+
+## S3b step 2 — the night's teaching measured; the game with the pacer (October 29, before dawn)
+
+- **Luis, October 28 (evening):** "Okay please proceed now. I can let it running overnight if needed. I only need to
+  shutdown my laptop now at around 9am tomorrow when I go to uni."
+  ([Correspondence](Correspondence/2026-10-28_OVERNIGHT.md)).
+- **`pace8` at 60,000 paces** (its joints at 249,926; falls made anew, 6 copies of 200 tries each way): paced 25.7% of
+  fresh falls and 15.8% of retries stood (22.1% of all tries); the same joints unpaced 27.7% and 14.4% (22.9%): the same,
+  within what runs differ by. Held a standing try 0.2 s (median; quartiles 0.0 and 0.4; mean 0.24 s), unpaced 0.3 s
+  (0.1, 0.5; 0.30 s). **The pacer makes the getting up about 0.6 s shorter** (its poses 7.8 s in all against 8.4: pike
+  1.1 s for 1.4, stay 0.6 for 0.7, footA 1.5 for 1.6). The joints alone are the best measured yet (22.9% of all tries;
+  `pace7`'s at 199,900 20.6%). The teaching's reward every 10,000 decisions has wandered between 0.21 and 0.42, no trend.
+- **The game's test as played with the pacer** (the first; 20 pushes a run, the same models): up by its own body after 12
+  of 20 pushes, the old way after 3, not up in 300 s after 5, 169 tries; run again, 15, 2 and 3, 117 tries. Of tries
+  handed to the standing balance, 12 of 31 stood in the first run (39%) and 15 of 22 in the second (68%, as in the
+  teaching): the game differs that much from run to run. **Pooled** (the game's test now runs faster than the clock,
+  about 4 minutes a run): paced, 4 runs, **up by its own body after 55 of 80 pushes, the old way after 10, not up in
+  300 s after 15**, 571 tries (9.6% of tries up); unpaced, 2 runs, 24 of 40, 4, 12, 289 tries (8.3%). The pacer does
+  not change it beyond what runs differ by.
+- **Why the game's hand-overs stand less often than the teaching's** (pooled, about half against 68 to 71%). The game's
+  test now tells why a rise after getting up did not stand, and where (`GettingUpByItsOwnTests`: the standing balance's
+  reasons, the hips' place, whether the walked ground is there, the ground's slope). Of 103 hand-overs in four runs, 52
+  rose, **42 went over during the rise** ("down:", 41%; in the teaching 24%), 5 could not get their weight onto their
+  feet, 3 did not come high enough, 1 stalled. Looked at and ruled out: the ground's slope (those that stood and those
+  that fell both lay on 1.4 degrees on average), the house (beside it 31% and 71% stood in two runs, elsewhere 41% and
+  62%), how it lay (the game's tries on their backs 45%, the teaching's 52%), and **how high it rises to**: the teaching
+  and the bench note how it stands once, at their start, as 0.696 m (its weight over its soles), the game 0.75 to 0.76
+  (its rises end at 0.736 m up, the teaching's at 0.691): the game aimed at 0.696 (`OwnBody.StoodHeightIs`,
+  `-ownStoodHeight`, a measure, off) stood 24 of 52 (46%, two runs); the teaching aimed at 0.755 (`-riseStoodHeight`)
+  57% (it then cannot rise that high 65 times in 398: its joints aim at the stance it noted).
+- **What it is: the depth of the tries.** In the game nearly every try begins where the last one left it, and a push
+  can take 12 or more. Its hand-overs by try within a push: tries 1 and 2, 33 of 58 stood (57%); 3 to 5, 21 of 37
+  (57%); **6 and on, 8 of 37 (22%)**. The teaching retries at most a few deep (half the failed tries, the measure; 70%,
+  at most 8, while taught). **Taught so in the teaching** (every failed try retried, up to 12 in a row; 1,200 tries):
+  tries 1 and 2 reached the hand-over 33% of the time and 60% of those stood; 3 to 5, 18% and 63%; **6 and on, 7% and
+  34%**. So the teaching does the same when it is given the game's tries: the gap is the deep retries, not the game.
+  Why a try begun after five or more failed ones does so much worse is not known yet (they begin on their backs as
+  often, on the same slopes, the knees and hips laid alike; by a rough measure their hips lie 4 cm into the ground's
+  surface rather than 2). They fail more at nearly every stage, not only where the learnt joints act: of tries from
+  the sixth on, 12% give up in the roll's push (5% of the first two), 12% coming onto its front (8%), 54% in the roll
+  up onto its feet (46%), 8% at the second foot (6%).
+- **`pace8` stopped at 04:22** (its joints at 449,981, the pacer at 99,990; the teaching's reward had wandered from 0.22
+  to 0.42 since 250,000, no trend). Measured as at 60,000: paced 27.8% of fresh falls and 14.8% of retries (23.3% of all
+  tries), unpaced 23.2% and 16.9% (21.0%); held 0.2 s a standing try (median), unpaced 0.3. Given the game's deep
+  retries, its joints reach the hand-over from the sixth try on 12% of the time (the joints at 249,926: 7%), the rest
+  alike. **In the game and the pictures, `pace8`'s joints at 249,926 and pacer at 59,998** (the most measured: six game
+  runs); now in `Resources/RiseModels` (`SmallRiseFull`, `SmallRisePace`; the folder is not committed, as before).
+- **The bench pictured** (its eight starts, those models, the ways as the game's): five stood (round 1's model: three).
+  From its back on its feet at 11.1 and 10.9 s, standing still at 13.5 and 12.9 s (round 1: 12.2 and 11.9, 14.9 and
+  14.1); from its front 8.0 and 10.6 s (9.5 and 12.5).
+- **Judges, round 2** ([the record](Reviews/2026-10-29_GettingUp_Learned_Judges.md), sheets and moving pictures in
+  `Images/GettingUp_2026-10-29/judges_learned/`): **all three, all three tries: "reads as real, with a flaw"**, as in
+  round 1. Named by all three: it waits about 2 s in the deep crouch before the rise, lies face down with its boots held
+  up 1.2 to 1.6 s, and stands dead still at the end. By two: too slow (10.6 to 13.5 s to stand still), the rise creeping
+  and then going at one speed ("hoisted rather than pushed"; round 1 praised the rise), an arm left at the ground after
+  the hands are off; by one, C's coat standing out like a fin. Praised: the weight over what touches the ground at
+  every stage, the order of the stages, the boots planted, the hips before the head, real balance with an arm. What was
+  learnt was not pointed at; the flaws are the ways' pose times, the end of the roll and the standing balance's rise.
+- **The whole PlayMode suite on the work branch** (with tonight's changes, nothing else running; 04:31 to 04:57):
+  **203 tests, 174 passed, 1 failed, 28 run only when asked.** The one: `OrdinaryPlaceTests.NightLightsTheHouseAndDayRestsIt`,
+  the windows' glow at night 0.878 against more than 0.9. That glow is scaled by the hearth's flicker at the moment it
+  is read (`TimeOfDay`, the glow 0.3 + 0.7 of the flicker), so the test fails when the flicker happens to be low: the
+  Ordinary Place's tests run alone three times passed 5 of 5 each. Not of the getting up; flagged to be mended apart.
+- **Not tested:** the EditMode tests; a build; the game's test with `pace8`'s last saves (449,981 and 99,990); Long and
+  Round (no getting up yet); the moving pictures are of the bench (level path, the stance it notes), not the game.
+  Passing tests are not Luis's acceptance.

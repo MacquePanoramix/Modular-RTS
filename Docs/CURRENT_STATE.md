@@ -1,8 +1,24 @@
 # Wonder Gather — Current State
 
-**Updated:** October 27, 2026.
+**Updated:** October 29, 2026.
 
-- **Now (October 28): option 1, the learner pacing its way** (Luis, October 27: "Yes I think that approach sounds
+- **Now (October 29, morning): the night's teaching measured; why the game's tries fail more often; judged again (round
+  2 of 3).** On the work branch only, behind the panel's switch "Gets up by its own body" (off), not in a build.
+  `pace8` (holds charged as held, the pacer only shortening) taught through the night: in the teaching 22 to 23% of all
+  tries stand, paced or not (the learnt joints' best yet); the pacer makes the getting up about 0.6 s shorter and holds
+  less (0.24 s a standing try). In the game as played, with `pace8`'s joints at 249,926 and its pacer at 59,998 (now in
+  `Resources/RiseModels`), four runs of 20 pushes: **up by its own body after 55 of 80 pushes, the old way (after 12
+  tries) after 10, not up in 300 s after 15.** The game's tries are mostly retries begun where the last one left it,
+  often six and more deep, which the teaching seldom makes; given the same, the teaching does as the game does (from the
+  sixth try in a row 7% reach the hand-over and a third of those stand); why, not known yet. Judges, round 2: "reads as
+  real, with a flaw", the same flaws as round 1 (slow, poses held still, boots held up lying face down, a dead-still end,
+  the coat's fin): mostly the ways' pose times and the end of the rise, not what was learnt. The whole PlayMode suite: 174 passed, 1 failed (a
+  night-light test that fails when the hearth's flicker is low; passes alone), 28 run only when asked.
+  [Validation](Validation.md), [the judges](Reviews/2026-10-29_GettingUp_Learned_Judges.md). **Next, Luis's to
+  choose:** teach on the game's deep retries and find why they fail; shorten what the judges see held; or set the
+  getting up aside for the work at the rock. The old way still ends one push in eight.
+
+- **Before (October 28): option 1, the learner pacing its way** (Luis, October 27: "Yes I think that approach sounds
   good"). On the work branch only, behind the switch (off), not in a build. Two learners taught on falls made anew: the
   joints at the hard moment (from `full3`) and the pace of each pose, said once as the pose begins (`pace4`, begun
   11:24). Found and mended today: a flaw in the pacer's cost (failing early was cheaper than standing late); **the

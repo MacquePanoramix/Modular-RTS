@@ -58,6 +58,30 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 29, 2026 — the fourteenth (before dawn, 250 steps after the thirteenth)
+
+- **Where we are.** S3b step 2, option 1 with the learner pacing its way. `pace8` (holds
+  charged as held, the pacer only shortening) at 60,000 paces and its joints at 250,000: in
+  the teaching 22 to 23% of all tries stand, paced or not (the joints' best so far); the
+  pacer makes the getting up about 0.6 s shorter and holds a little less (0.24 s a standing
+  try against 0.30). In the game as played, the first runs with a pacer: up by its own body
+  after 12 and 15 of 20 pushes, the old way after 3 and 2, not up in 300 s after 5 and 3;
+  of tries, 7 and 13% up. The hand-over: 39% stood in one run, 68% in the next (the
+  teaching's 68%): the game varies run to run more than was thought; pooled runs under way.
+- **Waiting on Luis:** S3 (since October 8); the builds of October 13 and 14; R1 (the arms);
+  the analytics define; the stray `risebuild3.log`. He has not seen option 1 move.
+- **Built, not in a build:** all of the getting up (work branch, switch off).
+- **Drifting or forgotten:** **the old way still ends 2 to 3 pushes in 20** in the game's
+  test (after 12 tries; the code's own note says no measure reaches that, and they now do):
+  Luis's aim is never to need it. The suite since the night's changes; Long and Round (no
+  getting up); the work branch drifting from the game branch; the game's tries succeeding
+  less often than the teaching's (most are retries of retries).
+- **Does the task serve the stage?** Yes, as directed. But the joints have stood at about a
+  fifth of tries since `pace4`, the pacer's gain is time, not standing, and the stage has
+  been on the getting up for over two weeks. The report this morning should show Luis how
+  it moves (pictures he can watch), say plainly how often the old way is still needed, and
+  put the next choice to him with the prototype's purpose in view.
+
 ### October 29, 2026 — the thirteenth (past midnight, the night's teaching under way)
 
 - **Where we are.** S3b step 2, option 1 with the learner pacing its way, holds charged (Luis,
