@@ -4576,7 +4576,19 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   (two runs of 20 pushes, `pace8`'s joints at 249,926 and pacer at 59,998): up by its own body after 29 of 40 pushes, the
   old way after 4, not up in 300 s after 7, 229 tries (12.7% of tries up; before the mend, four runs, 9.6%); of those
   handed to the standing balance 29 of 47 stood (62%; before, about half); from the sixth try of a push on, 1 of 7.
-- **So:** a real fault, mended, and some of the deep retries' loss, not most of it: from the sixth try in a row a try
-  still stands about a seventh as often as in the first two. What else a failed try leaves behind is not known yet.
+- **As the measure has it** (half the failed tries retried; the same models, 6 copies of 200): fresh falls 26.2% stood,
+  **retries 20.4%** (84 of 411; without the mend 14.8%, 62 of 419), 24.3% of all tries (23.3%); held 0.24 s a standing
+  try.
+- **So:** a real fault, mended: retries a few deep stand about a third more often, and some of the deepest retries'
+  loss is gone, not most of it: from the sixth try in a row a try still stands about a seventh as often as in the
+  first two. With the toes mended those tries still begin with the boots nearer how they stand (18 to 27 degrees from
+  it, the first two 40 to 44) and the upper arms 5 to 10 degrees higher; whether either matters is not known yet.
 - **The whole PlayMode suite with the mend** (nothing else running, 05:31 to 05:57): **203 tests, 175 passed, 0 failed,
   28 run only when asked** (the night-light test passed this time).
+- **`pace10`** (`Builds/RiseTrain25`, with the toes mended; failed tries retried 90% of the time, up to 12 in a row; from
+  `pace8`'s last saves; 06:00 to 07:34, stopped at its joints at 249,939 and its pacer at 59,993): as the measure has
+  it, fresh falls 30.3% and retries 17.8% (26.3% of all tries; `pace8`'s last on the same build 26.2%, 20.4%, 24.3%);
+  on the game's deep retries, fresh falls 29.9%, **retries 11.7%** (106 of 906; 8.9%), from the sixth try on 13% reached
+  the hand-over and 5.6% stood (10.6%, 3.1%), the first two 27% (21%). A first sign that teaching on the game's own
+  tries helps them, after an hour and a half. Not tried in the game: the game keeps `pace8`'s joints at 249,926 and
+  pacer at 59,998. Resume with `train_smallrise_pace10_resume.yaml`, run-id `pace10`, `Builds/RiseTrain25`.

@@ -22,6 +22,8 @@
   them. Mended (`OwnBody.ToesSlacken`, on): in the game two runs, up by its own body after 29 of 40 pushes, the old way
   after 4, 12.7% of tries up (9.6% before); deep retries still far worse than early ones. The whole PlayMode suite with it:
   175 passed, 0 failed, 28 run only when asked.
+  `pace10`, taught an hour and a half on the game's deep retries with the toes mended: deep retries 11.7% stood (8.9%),
+  fresh falls about 30% (25 to 26%); not yet tried in the game (resume `train_smallrise_pace10_resume.yaml`).
 
 - **Before (October 28): option 1, the learner pacing its way** (Luis, October 27: "Yes I think that approach sounds
   good"). On the work branch only, behind the switch (off), not in a build. Two learners taught on falls made anew: the
