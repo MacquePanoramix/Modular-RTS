@@ -464,7 +464,7 @@ namespace WonderGather
         // On its feet: the keeper takes it from the way that got it there, and raises it.
         private void OnItsFeet()
         {
-            Told?.Invoke($"{name} at {Time.time:F2}: on its feet after {riser.Lasted:F2} s of getting up; the keeper takes it");
+            Told?.Invoke($"{name} at {Time.time:F2}: on its feet after {riser.Lasted:F2} s of getting up; the keeper takes it [{riser.HandedOver}]");
             OnItsFeetFromLying++;
             for (int j = 1; j < Count; j++) riseFrom[j] = riser.Aim(j);
             handedFor = 0;
