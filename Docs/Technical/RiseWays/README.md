@@ -243,3 +243,8 @@ at its plain stand and the let-go body eases them to it with the boots (`OwnBody
 against 6.6%; in the game, two runs, 12.7% of tries up against 9.6%. Deep retries are still far worse than early ones.
 `pace9` (`train_smallrise_pace9.yaml`: as `pace8`, failed tries retried 90% of the time, at most 12 in a row) was begun
 on `Builds/RiseTrain24` and stopped after 15 minutes, before its first save: that build has the toes as before.
+`pace10` (`train_smallrise_pace10.yaml`, `Builds/RiseTrain25`, with the toes mended; retried 90%, at most 12 in a row;
+from `pace8`'s last saves; stopped at 249,939 and 59,993): on the game's deep retries 11.7% of retries stood (`pace8`'s
+last on the same build 8.9%), fresh falls about 30% (25 to 26%). Resume with `train_smallrise_pace10_resume.yaml`
+(`--resume --run-id=pace10`, the same env-args). Measure with the pacer and joints as `SmallRisePaceP` and
+`SmallRiseFullP` (`-trainPaceModel SmallRisePaceP -trainModel SmallRiseFullP`), so that the game's own models stay.
