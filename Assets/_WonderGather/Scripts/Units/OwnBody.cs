@@ -146,7 +146,7 @@ namespace WonderGather
         // a hundredth of the turn; 1, by a smoothstep, three hundredths. On top of the rise's own slow beginning, the
         // judges saw it still in the crouch 0.6 to 0.8 s; to try against it, October 28.)
         public static int RiseJoints = 1;
-        private static float Rose(float u) { u = Mathf.Clamp01(u); return RiseJoints == 1 ? u * u * (3 - 2 * u) : Hump(u); }
+        private static float Rose(float u) { u = Mathf.Clamp01(OwnKeeper.Early(Mathf.Clamp01(u))); return RiseJoints == 1 ? u * u * (3 - 2 * u) : Hump(u); }
         private float handedFor;
         private static bool Arm(int j) => j >= UpperArm && j < Thigh;
 

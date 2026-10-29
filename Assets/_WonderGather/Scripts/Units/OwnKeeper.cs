@@ -179,12 +179,18 @@ namespace WonderGather
         // (Until October 14 how high it meant to be went on steadily while what its joints were asked for began
         // slowly, and it stopped meaning to be higher while its weight was 3 cm under that. From a deep tuck its
         // joints, sprung towards the tuck still, held it 10 cm under: it stood folded over and waited for ever.)
-        public static float RisesAt = .3f, RiseEases = .55f, RiseBears = .95f, RiseLeads = .03f, RisenFor = .3f, RisenShort = .07f, GivesUpAfter = 4;
+        // (Held back from 0.8 of their strength, stopped at all of it, since October 29; were 0.55 and 0.95. Its weight
+        // never more than RiseLeads above where it is, its legs set its pace anyway. With RiseSettles 0 and the legs
+        // lying down in the ways' front and hands, of tries handed over after getting up 72% stood, not 66%; of all
+        // tries 26.4%, not 24.0% (12 copies of 200 each, pace8's last joints and pacer).)
+        public static float RisesAt = .3f, RiseEases = .8f, RiseBears = 1, RiseLeads = .03f, RisenFor = .3f, RisenShort = .07f, GivesUpAfter = 4;
         // Before it rises it has its weight on its feet: it only keeps itself (which brings its weight back over its
         // soles, and takes it off its hands if they are on the ground) until its boots have borne RiseOnFeet of its
         // weight, the push it wants no further than a centimetre outside its soles, for RiseSettles seconds. Not so
         // within SettlesWithin seconds, it cannot, and goes down.
-        public static float RiseOnFeet = .85f, RiseSettles = .1f, SettlesWithin = 3;
+        // (RiseSettles 0 since October 29, was 0.1: it rises as soon as its boots bear that, a step of the physics, its
+        // hips 3 cm higher 0.50 s after the hand-over, not 0.60.)
+        public static float RiseOnFeet = .85f, RiseSettles = 0, SettlesWithin = 3;
         // (How the rise is begun and ended: 0, its smootherstep, a tenth along less than a hundredth of the way up; 1, a
         // smoothstep, three hundredths. Its hands lifted, all three judges saw it still in the squat 0.6 to 0.8 s before
         // it rose; to try against it, October 27.)
@@ -192,6 +198,13 @@ namespace WonderGather
         // not 0.2: risen out of the crouch, after getting up, its hips 3 cm higher 0.68 s after the hand-over, not 0.82,
         // and of tries handed over 72% stood, not 65% (900 tries each, the same joints learnt).)
         public static int RiseCurve = 1;
+        // (And where along it it is quickest: how far along it is, taken to the power RiseEarly before that curve, for its
+        // weight and its joints alike. 1: as the curve is, quickest halfway. Under 1, sooner: at 0.75 its pace gathers
+        // over the first fifth and is quickest a third of the way up, as a body pushes hardest from the bottom; its
+        // weight is never meant to be more than RiseLeads above where it is, so its legs set how fast that can be. The
+        // judges, round 2: it crept, then went up at one speed, "hoisted rather than pushed". October 29.)
+        public static float RiseEarly = 1;
+        public static float Early(float along) => RiseEarly != 1 ? Mathf.Pow(Mathf.Clamp01(along), RiseEarly) : along;
         private bool settled;
         private float settledFor, unsettledFor;
         private bool rising;
@@ -631,7 +644,8 @@ namespace WonderGather
                 {
                     settledFor = bears[0] + bears[1] >= RiseOnFeet * whole * g * step && Outside < .01f ? settledFor + step : 0;
                     unsettledFor += step;
-                    if (settledFor >= RiseSettles) { settled = true; Tells?.Invoke($"its weight is on its feet, {unsettledFor:F2} s after the keeper took it"); }
+                    // (At least a step so: with RiseSettles 0 it was "settled" at once, whatever its boots bore.)
+                    if (settledFor > 0 && settledFor >= RiseSettles) { settled = true; Tells?.Invoke($"its weight is on its feet, {unsettledFor:F2} s after the keeper took it"); }
                     else if (unsettledFor > SettlesWithin)
                     {
                         Tells?.Invoke($"could not get its weight onto its feet in {unsettledFor:F2} s: its boots bear {(bears[0] + bears[1]) / (whole * g * step):F2} of it, the push it wants {Outside * 1000:F0} mm outside its soles");
@@ -646,7 +660,7 @@ namespace WonderGather
                     Tells?.Invoke($"could not rise: its legs gave all they have for {stalledFor:F2} s, its weight {high:F3} m up, of {height:F3} standing, {risesAlong:F2} of the way");
                     return false;
                 }
-                float up = risesAlong, gone = RiseCurve == 1 ? up * up * (3 - 2 * up) : up * up * up * (10 + up * (6 * up - 15));
+                float up = Early(risesAlong), gone = RiseCurve == 1 ? up * up * (3 - 2 * up) : up * up * up * (10 + up * (6 * up - 15));
                 sinksBy = Mathf.Max(risesFrom * (1 - gone), height - high - RiseLeads);
                 sinkWants = sinksBy;
                 upright = Quaternion.Slerp(uprightFrom, uprightTo, gone);

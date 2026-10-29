@@ -381,6 +381,14 @@ namespace WonderGather
                 // (-riseCurve 1, -riseSettles: how the standing balance begins its rise, OwnKeeper.RiseCurve, RiseSettles.)
                 OwnKeeper.RiseCurve = (int)Number("-riseCurve", OwnKeeper.RiseCurve);
                 OwnKeeper.RiseSettles = Number("-riseSettles", OwnKeeper.RiseSettles);
+                // (-risesAt, -riseEases, -riseBears, -riseLeads: the pace of that rise, and how much its legs' effort holds it
+                // back; OwnKeeper.RisesAt, RiseEases, RiseBears, RiseLeads. October 29.)
+                OwnKeeper.RisesAt = Number("-risesAt", OwnKeeper.RisesAt);
+                OwnKeeper.RiseEases = Number("-riseEases", OwnKeeper.RiseEases);
+                OwnKeeper.RiseBears = Number("-riseBears", OwnKeeper.RiseBears);
+                OwnKeeper.RiseLeads = Number("-riseLeads", OwnKeeper.RiseLeads);
+                // (-riseEarly: where along that rise it is quickest, OwnKeeper.RiseEarly; 1, halfway.)
+                OwnKeeper.RiseEarly = Number("-riseEarly", OwnKeeper.RiseEarly);
                 // (-riseArmsIn: its arms come to how it stands so many seconds after the hand-over, OwnBody.ArmsSettleIn.)
                 OwnBody.ArmsSettleIn = Number("-riseArmsIn", OwnBody.ArmsSettleIn);
                 OwnBody.ArmsSettleShare = Number("-riseArmsShare", OwnBody.ArmsSettleShare);
