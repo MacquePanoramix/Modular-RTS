@@ -187,6 +187,12 @@ namespace WonderGather
         private readonly Vector3[] stoodToeAt = new Vector3[2];
         private readonly Quaternion[] stoodToe = { Quaternion.identity, Quaternion.identity };
         private bool toesStoodKnown;
+        // (Its last try gave up in the roll with this side leading, -1 none: the next rolls the other way if it lies near
+        // enough flat (OwnRiser.AvoidsLeading). Forgotten once it is on its feet. RollsTheOtherWay false: as before.)
+        public static bool RollsTheOtherWay = false;
+        private int rollFailedLeading = -1;
+        // (A fall of its own, not a try again: whoever lays it down says so.)
+        public void ForgetsItsTries() => rollFailedLeading = -1;
         private readonly GroundTouch[] toeTouches = new GroundTouch[2];
         // (Getting up, what the ground bears its forearms, thighs and shins with: it leans on them.)
         private readonly GroundTouch[] leanTouches = new GroundTouch[Count];
@@ -477,6 +483,7 @@ namespace WonderGather
         {
             Told?.Invoke($"{name} at {Time.time:F2}: on its feet after {riser.Lasted:F2} s of getting up; the keeper takes it [{riser.HandedOver}]");
             OnItsFeetFromLying++;
+            rollFailedLeading = -1;
             for (int j = 1; j < Count; j++) riseFrom[j] = riser.Aim(j);
             handedFor = 0;
             HandedOver = riser.HandedOver;
@@ -725,7 +732,7 @@ namespace WonderGather
             if (low)
             {
                 for (int j = 1; j < Count; j++) { toStood[j] = Quaternion.Inverse(rested[j]) * stoodLocal[j]; riseFrom[j] = Quaternion.identity; }
-                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = WaysUp, ToeTouches = toeLinks[0] != null ? toeTouches : null, PartTouches = leanTouches, SoleSize = soleSize, StoodHips = stoodHips };
+                if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = WaysUp, ToeTouches = toeLinks[0] != null ? toeTouches : null, PartTouches = leanTouches, SoleSize = soleSize, StoodHips = stoodHips, AvoidsLeading = RollsTheOtherWay ? rollFailedLeading : -1 };
                 else keeper.RisesTo(StoodHeightIs > 0 ? StoodHeightIs : stoodHeight, Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized) * stoodHips, stoodOver);
                 // (The posed body under it stands, for when it is given its body back.)
                 body.Bow(0, 400); body.Sink(0); body.ResetPose();
@@ -907,6 +914,7 @@ namespace WonderGather
                 else if (does == OwnRiser.Does.GaveUp)
                 {
                     GaveUpGettingUp++;
+                    rollFailedLeading = riser.WayNow == "roll" ? riser.Leads : -1;
                     Told?.Invoke($"{name} at {Time.time:F2}: gave up getting up, at {riser.WayNow} {riser.StageNow}");
                     GoDown();
                 }

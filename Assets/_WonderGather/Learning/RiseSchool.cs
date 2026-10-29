@@ -395,6 +395,9 @@ namespace WonderGather
                 OwnBody.RiseJoints = (int)Number("-riseJoints", OwnBody.RiseJoints);
                 // (-riseStoodHeight: how high its weight rises to after getting up, metres, OwnBody.StoodHeightIs.)
                 OwnBody.StoodHeightIs = Number("-riseStoodHeight", OwnBody.StoodHeightIs);
+                // (-riseOtherWay 1: a try after one that gave up in the roll rolls the other way, lying near enough flat;
+                // OwnBody.RollsTheOtherWay. October 29.)
+                OwnBody.RollsTheOtherWay = Number("-riseOtherWay", OwnBody.RollsTheOtherWay ? 1 : 0) > 0;
                 // (-riseToesSlacken 0: gone down, its toes kept as bent as they were, as before October 29.)
                 OwnBody.ToesSlacken = Number("-riseToesSlacken", OwnBody.ToesSlacken ? 1 : 0) > 0;
                 // (-riseGoesOnStill: a pose whose ends are so goes on once the body has been slow in it so long,
@@ -480,6 +483,8 @@ namespace WonderGather
                     float help = Mathf.Clamp01(Academy.Instance.EnvironmentParameters.GetWithDefault("help", Number("-trainHelp", 0)));
                     OwnRiser.StrongerWhileLearning = 1 + StrongerBy * help;
                     helped += help;
+                    // (A fall of its own, not a try again: it has no last try.)
+                    if (!retry) own.ForgetsItsTries();
                     // (Not to be made its own: a frame, and after three such, its posed body set afresh at its place, so that
                     // tries are not passed over by the thousand in an instant.)
                     if (!own.BeginDown())

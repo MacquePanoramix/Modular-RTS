@@ -263,6 +263,13 @@ namespace WonderGather
         private Way way;
         private Stage stage;
         private int at, leads, chosen;
+        // (Which side leads its way: the uppermost as it began. AvoidsLeading: its last try gave up rolling with this
+        // side leading; lying near enough flat for either (its trunk turned less than OtherWayUnder of the way onto a
+        // side), it rolls the other way. A try after one that gave up in the roll gave up in the roll again 27% of the
+        // time, after any other 11 to 16%. October 29.)
+        public int Leads => leads;
+        public int AvoidsLeading = -1;
+        public static float OtherWayUnder = .5f;
         private float got, still, leant, bore, toned = -1, sat;
         // The hands' walk: which hand goes, how far along, from where and to where; where each hand is held.
         private int walkHand = -1;
@@ -446,6 +453,7 @@ namespace WonderGather
                 if (one != null && one.stages.Length > 0 && front >= one.frontLeast && front <= one.frontMost) { way = one; break; }
             if (way == null) return false;
             leads = Vector3.Dot(parts[Trunk].transform.right, Vector3.up) >= 0 ? 1 : 0;
+            if (AvoidsLeading >= 0 && way.name == "roll" && Mathf.Abs(Vector3.Dot(parts[Trunk].transform.right, Vector3.up)) < OtherWayUnder) leads = 1 - AvoidsLeading;
             leant = 0; leansMore = Vector3.zero; holdMore = Vector3.zero;
             Begin(0);
             return true;

@@ -157,6 +157,8 @@ namespace WonderGather.Tests
             bool knees = (CaptureTools.Argument("-riseFrom") ?? "knees") == "knees";
             float Number(string argument, float otherwise) { string given = CaptureTools.Argument(argument); return string.IsNullOrEmpty(given) ? otherwise : float.Parse(given, Plain); }
             float lasts = Number("-riseFor", 12);
+            // (-riseStandsFor: so long kept and pictured once it stands, seconds: to see it stand after its effort. October 29.)
+            float standsFor = Number("-riseStandsFor", 1);
             string shots = CaptureTools.Argument("-riseShots");
             int every = (int)Number("-riseEvery", 10), size = (int)Number("-riseSize", 360);
             string search = CaptureTools.Argument("-riseSearch");
@@ -631,7 +633,7 @@ namespace WonderGather.Tests
                             {
                                 if (!body.up) { body.up = true; body.upAt = step * dt; }
                                 body.stoodFor += dt;
-                                if (body.stoodFor >= 1) { body.done = true; body.ended = "stands"; continue; }
+                                if (body.stoodFor >= standsFor) { body.done = true; body.ended = "stands"; continue; }
                             }
                             going = true;
                         }
