@@ -248,3 +248,16 @@ from `pace8`'s last saves; stopped at 249,939 and 59,993): on the game's deep re
 last on the same build 8.9%), fresh falls about 30% (25 to 26%). Resume with `train_smallrise_pace10_resume.yaml`
 (`--resume --run-id=pace10`, the same env-args). Measure with the pacer and joints as `SmallRisePaceP` and
 `SmallRiseFullP` (`-trainPaceModel SmallRisePaceP -trainModel SmallRiseFullP`), so that the game's own models stay.
+
+**The waits the judges named** (October 29, evening; Luis: "go with your recommendation"): the ways' `front` lays the
+legs down (hips 10 degrees forward, knees as they stand) and `hands` begins drawing the knees up (hips 20, knees 45):
+before, lying face down after the roll, both shins stood straight up for 1.2 to 1.6 s. The standing balance's rise
+after getting up begins as soon as its boots bear its weight (`OwnKeeper.RiseSettles 0`; it must hold a step: with 0 the
+check had been passed at once) and is held back by its legs' effort only from 0.8 of their strength (`RiseEases 0.8`,
+`RiseBears 1`). With `pace8`'s last joints and pacer, 12 copies of 200: 26.4% of all tries stood against 24.0%; of those
+handed over 72% against 66%; the hips 3 cm up 0.50 s after the hand-over, not 0.60. Measured and not taken: the pike
+shorter (fewer stood), the rise quickest early (`-riseEarly`, fewer stood), rolling the other way after a failed roll
+(`-riseOtherWay 1`, the same), the boots slack beyond how they stand (`-riseBootsLieAt`, the same one way, far fewer the
+other). Switches for the rise: `-risesAt`, `-riseEases`, `-riseBears`, `-riseLeads`, `-riseEarly`; the bench's
+`-riseStandsFor` keeps a body that stands so long. `pace10` resumed at 549,966 joints on `Builds/RiseTrain26` (these
+changes) with the same arguments.
