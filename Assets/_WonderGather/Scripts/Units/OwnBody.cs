@@ -220,6 +220,9 @@ namespace WonderGather
         private Quaternion stoodHips = Quaternion.identity;
         private readonly Quaternion[] stoodBoot = { Quaternion.identity, Quaternion.identity };
         private float stoodHeight;
+        // (A measure: how high its weight rises to after getting up, set by hand, metres; 0: as it stood. The teaching
+        // and the bench note 0.696 m, the game 0.75 to 0.76: October 29.)
+        public static float StoodHeightIs = 0;
         private Vector2 stoodOver;
         // Whether it can be made low and stand up by its own legs (it has stood by its own joints before), and
         // whether it is doing so now.
@@ -473,7 +476,7 @@ namespace WonderGather
             riser = null;
             keeper.Soften();
             Quaternion hipsFace = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);
-            keeper.RisesTo(stoodHeight, hipsFace * stoodHips, stoodOver);
+            keeper.RisesTo(StoodHeightIs > 0 ? StoodHeightIs : stoodHeight, hipsFace * stoodHips, stoodOver);
             // (Its place is under its boots, facing as its hips do.)
             Vector3 between = .5f * (parts[Foot].transform.TransformPoint(soleAt[0]) + parts[Foot + 1].transform.TransformPoint(soleAt[1]));
             if (!StaysPut) transform.SetPositionAndRotation(new Vector3(between.x, transform.position.y, between.z), hipsFace);
@@ -706,7 +709,7 @@ namespace WonderGather
             {
                 for (int j = 1; j < Count; j++) { toStood[j] = Quaternion.Inverse(rested[j]) * stoodLocal[j]; riseFrom[j] = Quaternion.identity; }
                 if (down) riser = new OwnRiser(parts, From, masses, strength, hinge, touches, soleAt, toStood, turning, body.StandingHipHeight, Ground, rested, anchors, stoodBoot) { Ways = WaysUp, ToeTouches = toeLinks[0] != null ? toeTouches : null, PartTouches = leanTouches, SoleSize = soleSize, StoodHips = stoodHips };
-                else keeper.RisesTo(stoodHeight, Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized) * stoodHips, stoodOver);
+                else keeper.RisesTo(StoodHeightIs > 0 ? StoodHeightIs : stoodHeight, Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized) * stoodHips, stoodOver);
                 // (The posed body under it stands, for when it is given its body back.)
                 body.Bow(0, 400); body.Sink(0); body.ResetPose();
             }

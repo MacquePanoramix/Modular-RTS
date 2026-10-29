@@ -27,7 +27,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; RiseAgent.Unheard = false; }
+        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; RiseAgent.Unheard = false; OwnBody.StoodHeightIs = 0; }
 
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
 
@@ -38,10 +38,24 @@ namespace WonderGather.Tests
             PhysicalFall.GetsUpByItsOwn = true;
             // (-ownUnheard 1: no learnt model given, to set the body as searched beside it, October 27.)
             RiseAgent.Unheard = CaptureTools.Argument("-ownUnheard") == "1";
+            // (-ownStoodHeight 0.696: how high its weight rises to after getting up, as the teaching notes it, October 29.)
+            string stoodHeight = CaptureTools.Argument("-ownStoodHeight");
+            if (!string.IsNullOrEmpty(stoodHeight)) OwnBody.StoodHeightIs = float.Parse(stoodHeight, System.Globalization.CultureInfo.InvariantCulture);
             // (A measure, not a test that must pass: what the engine says of a body gone wild is told, and it goes on.
             // And what its own body says as it goes: where each try ended.)
             LogAssert.ignoreFailingMessages = true;
-            OwnBody.Told = said => { if (said.Contains("gave up") || said.Contains("on its feet") || said.Contains("goes down") || said.Contains("no ground")) Debug.Log("OWN_TOLD " + said); };
+            // (And why a rise after getting up did not stand, as the teaching tells it, and where: its hips, whether the
+            // walked ground is within a quarter of a metre, and how the ground slopes there. October 29.)
+            OwnBody own = null;
+            string Where()
+            {
+                if (own == null || !own.Stands) return "";
+                Vector3 at = own.Part(OwnBody.Hips).transform.position;
+                bool walked = UnityEngine.AI.NavMesh.SamplePosition(at, out _, .25f, UnityEngine.AI.NavMesh.AllAreas) || UnityEngine.AI.NavMesh.SamplePosition(new Vector3(at.x, at.y - .5f, at.z), out _, .25f, UnityEngine.AI.NavMesh.AllAreas);
+                float slope = Physics.Raycast(at + Vector3.up, Vector3.down, out var hit, 4, 1 << 6, QueryTriggerInteraction.Ignore) ? Vector3.Angle(hit.normal, Vector3.up) : float.NaN;
+                return string.Format(System.Globalization.CultureInfo.InvariantCulture, " (hips at {0:0.00} {1:0.00}; walked ground {2}; slope {3:0} degrees)", at.x, at.z, walked, slope);
+            }
+            OwnBody.Told = said => { if (said.Contains("gave up") || said.Contains("on its feet") || said.Contains("goes down") || said.Contains("no ground") || said.Contains("could not") || said.Contains("risen,") || said.Contains("lost:") || said.Contains("down:")) Debug.Log("OWN_TOLD " + said + Where()); };
             int index = -1;
             for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == "Small") index = i;
             Assert.That(index, Is.GreaterThanOrEqualTo(0), "No miner called Small.");
@@ -50,7 +64,6 @@ namespace WonderGather.Tests
             var unit = choice.Current;
             look.SetOwn(true);
             // (Its body becomes its own once it stands at ease.)
-            OwnBody own = null;
             for (float until = Time.time + 20; (own == null || !own.Stands) && Time.time < until;) { unit.TryGetComponent(out own); yield return null; }
             Assert.That(own != null && own.Stands, Is.True, "Small did not come to stand by its own joints.");
             Assert.That(own.KnowsAWayUp, Is.True, "Small knows no way up (Resources/RiseWays/Small.txt).");

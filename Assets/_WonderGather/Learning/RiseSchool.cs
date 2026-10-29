@@ -385,6 +385,8 @@ namespace WonderGather
                 OwnBody.ArmsSettleIn = Number("-riseArmsIn", OwnBody.ArmsSettleIn);
                 OwnBody.ArmsSettleShare = Number("-riseArmsShare", OwnBody.ArmsSettleShare);
                 OwnBody.RiseJoints = (int)Number("-riseJoints", OwnBody.RiseJoints);
+                // (-riseStoodHeight: how high its weight rises to after getting up, metres, OwnBody.StoodHeightIs.)
+                OwnBody.StoodHeightIs = Number("-riseStoodHeight", OwnBody.StoodHeightIs);
                 // (-riseGoesOnStill: a pose whose ends are so goes on once the body has been slow in it so long,
                 // OwnRiser.GoesOnStill, GoesOnBelow, GoesOnAfterMoving.)
                 OwnRiser.GoesOnStill = Number("-riseGoesOnStill", OwnRiser.GoesOnStill);

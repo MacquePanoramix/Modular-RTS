@@ -222,3 +222,14 @@ same pacer held 0.18 s and the getting up took about 0.8 s less (under, stay, fo
 tries standing (20.6% as searched; 6 copies of 200 each way). `pace8` (`train_smallrise_pace8.yaml`,
 `Builds/RiseTrain24`): as `pace7`, shortening only, begun from `pace7`'s saves (the joints at 199,900, the pacer at
 39,997).
+
+**The game's tries are deep retries** (October 29, before dawn): the game's test (`GettingUpByItsOwnTests`, about 4
+minutes a run of 20 pushes now) tells why a rise after getting up did not stand and where (the standing balance's
+reasons, the hips' place, the walked ground, the ground's slope). Its hand-overs stood about half the time against the
+teaching's 68 to 71%; by try within a push, 57% in tries 1 to 5 and 22% from the sixth on. The teaching given the same
+(`-trainRetries 1 -trainRetriesAtMost 12`) does the same: from the sixth try in a row 7% reach the hand-over (33% in the
+first two) and 34% of those stand (60%). The measure (`-trainRetries 0.5`) and the teaching (0.7, at most 8) seldom go
+that deep. Not the cause: the slope, the house, how it lay, how high it rises to. The teaching and the bench note how
+it stands once at their start, 0.696 m (its weight over its soles); the game 0.75 to 0.76: `OwnBody.StoodHeightIs`
+(`-riseStoodHeight` in the teaching, `-ownStoodHeight` in the game's test; 0: as noted) sets the height the rise after
+getting up aims for, to measure it.
