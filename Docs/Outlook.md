@@ -58,6 +58,21 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 29, 2026 — the fifteenth (dawn, 250 steps after the fourteenth)
+
+- **Where we are.** The morning's report is written, committed and pushed (the night measured, the game's tries found
+  to be deep retries, judges round 2). Since: the deep retries' cause, by how each try began: **the toes**. The let-go
+  body has no toes and kept them as bent as a failed try left them; the next try was made from them, 45 degrees and
+  more in 1,282 of 4,800 tries, which stood 3.7% (toes as they stand, 19%). The boots had the same fault, mended
+  October 27; the toes, added October 14, were never given it. Mended behind `OwnBody.ToesSlacken` (on); measuring.
+- **Waiting on Luis:** the morning report's two questions (what next; the old way after 12 tries); S3, the builds of
+  October 13 and 14, R1, the analytics define, `risebuild3.log` as before.
+- **Drifting or forgotten:** the stance the teaching and bench note (0.696 m) is not the game's (0.75); the flaky
+  night-light test (a separate task offered); the models in `Resources/RiseModels` not committed.
+- **Does the task serve the stage?** Yes: this is the game's own failure, found by measuring the game as played, and
+  it is the kind of fault (a frozen part) that no amount of teaching would have mended. If it holds, it changes the
+  morning's numbers; the addendum must say so plainly, and that it came after the report.
+
 ### October 29, 2026 — the fourteenth (before dawn, 250 steps after the thirteenth)
 
 - **Where we are.** S3b step 2, option 1 with the learner pacing its way. `pace8` (holds

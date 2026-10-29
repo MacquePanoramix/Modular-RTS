@@ -4555,3 +4555,28 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
 - **Not tested:** the EditMode tests; a build; the game's test with `pace8`'s last saves (449,981 and 99,990); Long and
   Round (no getting up yet); the moving pictures are of the bench (level path, the stance it notes), not the game.
   Passing tests are not Luis's acceptance.
+
+## S3b step 2 — the toes left bent after a failed try (October 29, dawn, after the morning's report)
+
+- **Found** (how each try began, by how deep in a row of retries it came, `-trainTell 2`): tries from the sixth on
+  began with **the toes bent about 63 degrees from how they stand** (the first two, 7); the ankles 20 degrees nearer
+  how they stand, the rest alike. Toes bent 45 degrees or more at a try's start: 1,282 tries of 4,800, all retries, of
+  which 3.7% stood (toes under 20 degrees: 24.0%; retries so 19.1%). The let-go body has no toes: it keeps each toe's
+  turn to its shin from the moment it is let go. On October 27 the boots were given to go slack to how they stand
+  (`PhysicalFall.Slacken`), and the toes were carried with the boot, never their own bend; and the next try's toes,
+  each on a hinge sprung to the pose it is made in, are made from them. A toe left bent stayed bent through every try
+  after.
+- **Mended** (`OwnBody.ToesSlacken`, on; `-riseToesSlacken 0` as before): the body notes how its toes are to its boots
+  at its plain stand, and going down it gives that to the let-go body (`PhysicalFall.SlackenToes`), which eases the
+  toes to it with the boots, over the same 0.3 s and only as far as the ground lets the boot.
+- **Measured** (the game's deep retries in the teaching, every failed try retried up to 12 in a row, `pace8`'s last
+  joints and pacer, 6 copies of 200 each way): each try's toes now begin 0.0 to 0.3 degrees from how they stand (as
+  before: 74 to 76 from the sixth try on). Retries stood 8.9% (84 of 943; as before 6.6%, 64 of 963); from the sixth
+  try on 10.6% reached the hand-over and 3.1% stood (6.1% and 0.8%); fresh falls 24.5% (22.4%). **In the game as played**
+  (two runs of 20 pushes, `pace8`'s joints at 249,926 and pacer at 59,998): up by its own body after 29 of 40 pushes, the
+  old way after 4, not up in 300 s after 7, 229 tries (12.7% of tries up; before the mend, four runs, 9.6%); of those
+  handed to the standing balance 29 of 47 stood (62%; before, about half); from the sixth try of a push on, 1 of 7.
+- **So:** a real fault, mended, and some of the deep retries' loss, not most of it: from the sixth try in a row a try
+  still stands about a seventh as often as in the first two. What else a failed try leaves behind is not known yet.
+- **The whole PlayMode suite with the mend** (nothing else running, 05:31 to 05:57): **203 tests, 175 passed, 0 failed,
+  28 run only when asked** (the night-light test passed this time).

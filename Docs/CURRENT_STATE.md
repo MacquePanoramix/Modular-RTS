@@ -17,6 +17,11 @@
   [Validation](Validation.md), [the judges](Reviews/2026-10-29_GettingUp_Learned_Judges.md). **Next, Luis's to
   choose:** teach on the game's deep retries and find why they fail; shorten what the judges see held; or set the
   getting up aside for the work at the rock. The old way still ends one push in eight.
+  **After the report (dawn):** part of why deep retries fail: **the toes were left bent** by a failed try (the let-go
+  body has no toes and kept them so; the boots had the same fault, mended October 27), and the next try was made from
+  them. Mended (`OwnBody.ToesSlacken`, on): in the game two runs, up by its own body after 29 of 40 pushes, the old way
+  after 4, 12.7% of tries up (9.6% before); deep retries still far worse than early ones. The whole PlayMode suite with it:
+  175 passed, 0 failed, 28 run only when asked.
 
 - **Before (October 28): option 1, the learner pacing its way** (Luis, October 27: "Yes I think that approach sounds
   good"). On the work branch only, behind the switch (off), not in a build. Two learners taught on falls made anew: the
