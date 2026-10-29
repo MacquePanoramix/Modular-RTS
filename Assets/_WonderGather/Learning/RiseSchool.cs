@@ -398,6 +398,9 @@ namespace WonderGather
                 // (-riseOtherWay 1: a try after one that gave up in the roll rolls the other way, lying near enough flat;
                 // OwnBody.RollsTheOtherWay. October 29.)
                 OwnBody.RollsTheOtherWay = Number("-riseOtherWay", OwnBody.RollsTheOtherWay ? 1 : 0) > 0;
+                // (-riseBootsLieAt: gone down, its boots go slack so many degrees about the ankle beyond how they stand,
+                // OwnBody.BootsLieAt. October 29.)
+                OwnBody.BootsLieAt = Number("-riseBootsLieAt", OwnBody.BootsLieAt);
                 // (-riseToesSlacken 0: gone down, its toes kept as bent as they were, as before October 29.)
                 OwnBody.ToesSlacken = Number("-riseToesSlacken", OwnBody.ToesSlacken ? 1 : 0) > 0;
                 // (-riseGoesOnStill: a pose whose ends are so goes on once the body has been slow in it so long,

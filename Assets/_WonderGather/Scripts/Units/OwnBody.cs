@@ -191,6 +191,10 @@ namespace WonderGather
         // enough flat (OwnRiser.AvoidsLeading). Forgotten once it is on its feet. RollsTheOtherWay false: as before.)
         public static bool RollsTheOtherWay = false;
         private int rollFailedLeading = -1;
+        // (Gone down, its boots go slack to how they are to their shins when it stands, turned about the ankle so many
+        // degrees more (BootsLieAt; 0, as it stands): a body that lies lets its feet point. Tries begun where a failed one
+        // left it lay with their boots 24 to 29 degrees from how they stand, fresh falls 40 to 43. October 29.)
+        public static float BootsLieAt = 0;
         // (A fall of its own, not a try again: whoever lays it down says so.)
         public void ForgetsItsTries() => rollFailedLeading = -1;
         private readonly GroundTouch[] toeTouches = new GroundTouch[2];
@@ -1117,7 +1121,7 @@ namespace WonderGather
             for (int i = 0; i < 2; i++)
             {
                 var boot = parts[Foot + i].transform;
-                slackBy[i] = stoodKnown ? parts[Shin + i].transform.rotation * stoodLocal[Foot + i] * Quaternion.Inverse(boot.rotation) : Quaternion.identity;
+                slackBy[i] = stoodKnown ? parts[Shin + i].transform.rotation * stoodLocal[Foot + i] * Quaternion.AngleAxis(BootsLieAt, Vector3.right) * Quaternion.Inverse(boot.rotation) : Quaternion.identity;
                 ankleAt[i] = boot.TransformPoint(anchors[Foot + i]);
             }
             PutAway();
