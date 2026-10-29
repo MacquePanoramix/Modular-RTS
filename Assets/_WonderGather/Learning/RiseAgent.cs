@@ -28,8 +28,12 @@ namespace WonderGather
         public const int PacedSays = FullSays + 1;
         public static readonly int PacedSenses = OwnRiser.Senses + Before.Length + OwnRiser.JointSenses + PacedSays;
         public bool Paced;
-        // (How long a pose is kept at least, times its way's: said 1, a quarter; -1, twice.)
-        public static float PacesShortest = .25f, PacesLongest = 2;
+        // (How long a pose is kept at least, times its way's: said 1, a quarter; -1, PacesLongest times. Every pacer
+        // taught free to keep poses longer kept prop and push longer (prop 2.0 to 2.2 s for 1.6), standing no more often,
+        // holding more. Kept to shortening (PacesLongest 1), pace7's pacer at 40,000: 0.18 s held a standing try, not 0.29
+        // as searched nor 0.45 free; about 0.8 s sooner up; 20.4% of all tries stood, 20.6% as searched (6 copies of 200
+        // each). October 29. 2: as before.)
+        public static float PacesShortest = .25f, PacesLongest = 1;
         // Pace alone (October 27): an agent of its own beside the one that sets the joints, on an object of its own
         // under the miner: it says only how long each pose of its way is kept, in every pose, told what Sense tells and
         // which pose it is in. What sets the joints at the hard moment is as before (<name>RiseFull). A model for it is

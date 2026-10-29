@@ -214,3 +214,11 @@ A pose not through while the body has been slow in it 3 s now gives the try up (
 `-riseStuckAfter`; 0 as before): a foot that never came to bear held it on hands and knees up to 17.8 s. Given up after 2
 or 3 s, the longest held of tries never handed over was 5.5 to 6.5 s, standing not lower (24.0%, 6 copies). `pace7`
 (`train_smallrise_pace7.yaml`, `Builds/RiseTrain23`): as `pace6`, with it, begun from `pace6`'s saves.
+
+**The pacer only shortens** (October 29): taught free to keep a pose up to twice as long, every pacer kept `prop` and
+`push` longer (`prop` 2.0 to 2.2 s for 1.6), standing no more often and holding more (`pace7` at 40,000: held 0.45 s a
+standing try, as searched 0.29). Kept to shortening (`RiseAgent.PacesLongest 1`, `-risePacesLongest`; 2 as before), the
+same pacer held 0.18 s and the getting up took about 0.8 s less (under, stay, footB and pike shorter), 20.4% of all
+tries standing (20.6% as searched; 6 copies of 200 each way). `pace8` (`train_smallrise_pace8.yaml`,
+`Builds/RiseTrain24`): as `pace7`, shortening only, begun from `pace7`'s saves (the joints at 199,900, the pacer at
+39,997).

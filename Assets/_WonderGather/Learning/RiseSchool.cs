@@ -392,6 +392,8 @@ namespace WonderGather
                 OwnRiser.GoesOnAfterMoving = (int)Number("-riseGoesOnAfterMoving", OwnRiser.GoesOnAfterMoving);
                 // (-riseStuckAfter: a pose not through while the body has been slow in it so long gives the try up.)
                 OwnRiser.StuckAfter = Number("-riseStuckAfter", OwnRiser.StuckAfter);
+                // (-risePacesLongest 1: the pacer may keep a pose no longer than its way says, only shorter.)
+                RiseAgent.PacesLongest = Number("-risePacesLongest", RiseAgent.PacesLongest);
                 // (-risePoses hands=0.5,prop=0.75: those poses kept so many times as long, OwnRiser.PosePaces; -risePoseOvers:
                 // come to in so many times as long, OwnRiser.PoseOvers.)
                 Named("-risePoses", OwnRiser.PosePaces);
