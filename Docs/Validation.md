@@ -4471,6 +4471,21 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   rise after getting up does (`OwnRiser.StuckAfter 3`; `-riseStuckAfter`, 0 as before): given up after 2 or 3 s the
   longest held of such tries was 5.5 to 6.5 s (17.3), their mean 0.6 s (0.9); 24.0% of fresh falls and 18.1% of retries
   stood (6 copies; 21.2% and 16.6% before). In the game a stuck body tries again rather than waiting up to 20 s.
-- **Not tested yet:** the game's test as played with the halved hands and the stuck pose given up; the bench and its
-  pictures; the suite after these changes. Measured only in the teaching without a trainer and one 30-try run of the
-  new training build.
+- **`pace7`** (00:46, `Builds/RiseTrain23`, with the stuck pose given up; from `pace6`'s saves, the joints at 99,986, the
+  pacer at 19,998). **At 40,000 paces** (its joints at 149,962; 6 copies of 200 each way): paced 24.1% of fresh falls
+  and 13.3% of retries stood, unpaced 25.1% and 13.2%; held 0.45 s a standing try by pose (unpaced 0.29). Its answers
+  narrowed faster (entropy 1.19 to 1.11 in 40,000; `pace5` 1.42 to 1.28 in 140,000). It kept under, stay, footB and
+  pike shorter, and prop (2.1 s for 1.6) and push (1.2 for 0.8) longer, as every pacer before it.
+- **The pacer only shortens** (`RiseAgent.PacesLongest 1`, `-risePacesLongest`; was 2): the same pacer kept to shortening
+  held **0.18 s** a standing try (prop 0.10, hands 0.06), the getting up about 0.8 s shorter (about 10.3 s against 11.1),
+  23.1% and 15.8% standing (20.4% of all tries; unpaced 20.6%). Now the default; `pace8` (`Builds/RiseTrain24`, from
+  `pace7`'s saves, the joints at 199,900, the pacer at 39,997) teaches both so, from 02:00.
+- **The game's test as played** (20 pushes, the halved hands and the stuck pose given up, no pacer): with `full3`'s joints
+  at 2,000,000 up by its own body after 10 pushes, the old way 4, not up 6, 168 tries (yesterday's run before these
+  changes: 14, 1, 5, 121 tries); with `pace5`'s joints at 799,994, 14, 2 and 4, 150 tries. On its feet (handed to the
+  standing balance) 24 times of 168 and 29 of 150 (25 of 121 yesterday); where tries give up is as before (the roll-up,
+  then the roll), none newly in the poses a stuck pose can end. Of those handed over in the game only 42 to 48% rose to
+  stand, against 72% in the teaching: open.
+- **Not tested yet:** the bench and its pictures with the night's models; the suite after these changes; the game's test
+  with the pacer. Measured in the teaching without a trainer, one 30-try run of the training build, and two runs of the
+  game's test.
