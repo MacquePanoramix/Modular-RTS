@@ -387,6 +387,8 @@ namespace WonderGather
                 OwnBody.RiseJoints = (int)Number("-riseJoints", OwnBody.RiseJoints);
                 // (-riseStoodHeight: how high its weight rises to after getting up, metres, OwnBody.StoodHeightIs.)
                 OwnBody.StoodHeightIs = Number("-riseStoodHeight", OwnBody.StoodHeightIs);
+                // (-riseToesSlacken 0: gone down, its toes kept as bent as they were, as before October 29.)
+                OwnBody.ToesSlacken = Number("-riseToesSlacken", OwnBody.ToesSlacken ? 1 : 0) > 0;
                 // (-riseGoesOnStill: a pose whose ends are so goes on once the body has been slow in it so long,
                 // OwnRiser.GoesOnStill, GoesOnBelow, GoesOnAfterMoving.)
                 OwnRiser.GoesOnStill = Number("-riseGoesOnStill", OwnRiser.GoesOnStill);

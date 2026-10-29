@@ -910,6 +910,16 @@ namespace WonderGather
             toeAtTo[i] = about + turns * (toeAt[i] - about); toeTurnTo[i] = turns * toeTurn[i];
             slackened[i] = 0;
         }
+        // (And its toes with it, to how they are to the boot when it stands, so far from the boot and so turned from it:
+        // the let-go body has no toes either, and kept them as bent as they were. Said after Slacken. October 29.)
+        public void SlackenToes(int i, Vector3 fromBoot, Quaternion turnFromBoot)
+        {
+            var shin = parts[Shin + i];
+            if (shin == null || bootsMade[i] == null) return;
+            var at = shin.transform;
+            toeAtTo[i] = at.InverseTransformPoint(at.TransformPoint(footAtTo[i]) + at.rotation * footTurnTo[i] * fromBoot);
+            toeTurnTo[i] = footTurnTo[i] * turnFromBoot;
+        }
 
         public void Advance(float dt)
         {

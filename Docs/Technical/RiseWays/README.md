@@ -233,3 +233,13 @@ that deep. Not the cause: the slope, the house, how it lay, how high it rises to
 it stands once at their start, 0.696 m (its weight over its soles); the game 0.75 to 0.76: `OwnBody.StoodHeightIs`
 (`-riseStoodHeight` in the teaching, `-ownStoodHeight` in the game's test; 0: as noted) sets the height the rise after
 getting up aims for, to measure it.
+
+**The toes left bent** (October 29, dawn): from the sixth try in a row each try began with its toes bent about 63
+degrees from how they stand; tries begun on toes bent 45 degrees or more stood 3.7% of the time (19% on toes as they
+stand). The let-go body has no toes and kept their turn to the shin from when it was let go (the boots' `Slacken`,
+October 27, carried the toes with the boot, not their own bend). Now the body notes its toes' relation to its boots
+at its plain stand and the let-go body eases them to it with the boots (`OwnBody.ToesSlacken`, on;
+`-riseToesSlacken 0` as before; `PhysicalFall.SlackenToes`). On the deep retries (6 copies each way) retries stood 8.9%
+against 6.6%; in the game, two runs, 12.7% of tries up against 9.6%. Deep retries are still far worse than early ones.
+`pace9` (`train_smallrise_pace9.yaml`: as `pace8`, failed tries retried 90% of the time, at most 12 in a row) was begun
+on `Builds/RiseTrain24` and stopped after 15 minutes, before its first save: that build has the toes as before.

@@ -179,6 +179,14 @@ namespace WonderGather
         public static bool ToesGettingUp = true;
         public static float ToeGives = .3f, ToeBendsUp = 80, ToeBendsDown = 20;
         private readonly ArticulationBody[] toeLinks = new ArticulationBody[2];
+        // (Gone down, its toes go slack with its boots to how they are to them when it stands, from its plain stand: the
+        // let-go body has no toes, and kept them as bent as they were, and the next try is made from them. A try begun
+        // where the last one left it began on toes bent 45 degrees or more 1,282 times in 4,800 and stood 3.7% of
+        // those; on toes as they stand, 19%. October 29. ToesSlacken false: as before.)
+        public static bool ToesSlacken = true;
+        private readonly Vector3[] stoodToeAt = new Vector3[2];
+        private readonly Quaternion[] stoodToe = { Quaternion.identity, Quaternion.identity };
+        private bool toesStoodKnown;
         private readonly GroundTouch[] toeTouches = new GroundTouch[2];
         // (Getting up, what the ground bears its forearms, thighs and shins with: it leans on them.)
         private readonly GroundTouch[] leanTouches = new GroundTouch[Count];
@@ -704,6 +712,15 @@ namespace WonderGather
                 Quaternion facesNow = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);
                 stoodHips = Quaternion.Inverse(facesNow) * parts[Hips].transform.rotation;
                 for (int i = 0; i < 2; i++) stoodBoot[i] = Quaternion.Inverse(facesNow) * parts[Foot + i].transform.rotation;
+                if (s.toes != null && s.toes.Length == 2 && s.toes[0] != null && s.toes[1] != null)
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        stoodToeAt[i] = Quaternion.Inverse(s.feet[i].rotation) * (s.toes[i].position - s.feet[i].position);
+                        stoodToe[i] = Quaternion.Inverse(s.feet[i].rotation) * s.toes[i].rotation;
+                    }
+                    toesStoodKnown = true;
+                }
             }
             if (low)
             {
@@ -1108,7 +1125,12 @@ namespace WonderGather
                 if (part == null) continue;
                 part.linearVelocity = goesOn[i]; part.angularVelocity = turnsOn[i];
             }
-            if (stoodKnown) for (int i = 0; i < 2; i++) fall.Slacken(i, ankleAt[i], slackBy[i]);
+            if (stoodKnown)
+                for (int i = 0; i < 2; i++)
+                {
+                    fall.Slacken(i, ankleAt[i], slackBy[i]);
+                    if (ToesSlacken && toesStoodKnown) fall.SlackenToes(i, stoodToeAt[i], stoodToe[i]);
+                }
         }
         private readonly Vector3[] goesOn = new Vector3[Count], turnsOn = new Vector3[Count], ankleAt = new Vector3[2];
         private readonly Quaternion[] slackBy = new Quaternion[2];
