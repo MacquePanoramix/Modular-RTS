@@ -261,3 +261,10 @@ shorter (fewer stood), the rise quickest early (`-riseEarly`, fewer stood), roll
 other). Switches for the rise: `-risesAt`, `-riseEases`, `-riseBears`, `-riseLeads`, `-riseEarly`; the bench's
 `-riseStandsFor` keeps a body that stands so long. `pace10` resumed at 549,966 joints on `Builds/RiseTrain26` (these
 changes) with the same arguments.
+
+`pace10` on `Builds/RiseTrain26` (October 30, night): at 899,991 joints and 199,994 paces, 28.7% of all tries stood in
+the measure (12 copies; `pace8`'s last on the same code 26.4%), and on the game's deep retries 14.0% of retries
+(9.7%); now the game's models in `Resources/RiseModels` (`SmallRiseFull`, `SmallRisePace`; not committed). In the game,
+four runs of 20 pushes: up by its own body after 53, 28 of them at the first try; the old way after 6; not up in 300 s
+after 21. Taught on to 1,049,994 and 219,999 (stopped 03:12; not measured). Resume with
+`train_smallrise_pace10_resume.yaml --run-id=pace10 --resume` on `Builds/RiseTrain26`, the same env-args.
