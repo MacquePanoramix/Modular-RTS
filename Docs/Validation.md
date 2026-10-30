@@ -4592,3 +4592,73 @@ Not run: the bench and the game with the flat ways; the suite on the work branch
   the hand-over and 5.6% stood (10.6%, 3.1%), the first two 27% (21%). A first sign that teaching on the game's own
   tries helps them, after an hour and a half. Not tried in the game: the game keeps `pace8`'s joints at 249,926 and
   pacer at 59,998. Resume with `train_smallrise_pace10_resume.yaml`, run-id `pace10`, `Builds/RiseTrain25`.
+
+## S3b step 2 — the waits the judges named, and the deep retries (October 29, evening)
+
+- **Luis, October 29 (evening):** "Yes I'd like us to go with your recommendation", then "today there is no limit of
+  when you need to finish, you can work freely" ([Correspondence](Correspondence/2026-10-29_DEEP_RETRIES_AND_HOLDS.md)):
+  the teaching on the game's deep retries and the waits the judges see, together; the old way after 12 tries kept.
+- **(a) `pace10` resumed** at 22:15 on `Builds/RiseTrain25` (the game's deep retries), and moved at 23:50 to
+  `Builds/RiseTrain26` (with the changes below), from its saves at 549,966 joints and 119,990 paces.
+- **The boots held up while it lies face down** (round 2, all three judges): pictured, both knees bent about 85 degrees
+  with the shins straight up, held, from the end of the roll to the knees coming under (2.2 to 3.7 s); the ways' `front`
+  asked the hips -8 and -13 (thighs behind the body) and `hands` kept it. Measured with `pace8`'s last joints and pacer,
+  the toes mended, falls made anew, 12 copies of 200 tries each: the legs lying down in both (hips 10, knees as they
+  stand) 22.1% of all tries stood, as before 24.0%; **lying down after the roll and the knees beginning to draw up in
+  `hands` (hips 20, knees 45): 26.4%** (with the rise below; fresh falls 29.8%, retries 19.3%). Now so in the
+  teaching's ways and the game's (`85248de`). Pictured: the legs lie down after the roll; the shins rise only in the
+  last half second of `hands`, as the knees are drawn under.
+- **The wait in the crouch** (all three judges; about 2 s): from the pike to standing 3.7 s (median, tries that stood):
+  the pike 1.0 s, rolling up onto its feet 0.3, from the hand-over until its hips are 3 cm higher 0.64, the rise 1.66.
+  - The pike's time does work: kept and come to in 0.75 and 0.5 of the time, 66% and 61% of those handed over stood
+    (70% as it is), more going over in the rise (133 and 164, against 120). Not taken (the pacer had kept it about 1 s).
+  - The rise's start: the legs' effort holding back its pace (from 0.55 of their strength) did not slow its start (the
+    hips 3 cm up 0.60 s after the hand-over either way); the wait was its weight settling on its feet (0.1 s) and the
+    smoothstep's slow beginning. Begun as soon as its boots bear its weight and held back only from 0.8: 0.50 s, of
+    those handed over 72% stood, not 66% (**now the default**, `OwnKeeper.RiseSettles 0`, `RiseEases 0.8`,
+    `RiseBears 1`). With RiseSettles 0 the check of its weight on its feet had been passed at once, whatever its boots
+    bore: now it must hold for a step (the 72% is with the check).
+  - Quickest early (`OwnKeeper.RiseEarly`, the rise's way along taken to a power before the smoothstep; 1 as before):
+    at 0.75 the hips 3 cm up at 0.36 s, but 63% stood; at 0.6, 0.30 s and 55% (more going over). Pushing hardest from
+    the bottom tips it. Not taken.
+- **The dead-still end:** frame to frame, after it stands, 300 to 900 pixels of its body change in a picture of 400
+  (rising and falling as a breath does), a pixel or two at the judges' size: the breath is there and gentle, as Luis
+  asked (October 10). Not made larger. For round 3, a closer and longer look at the stand (`-riseStandsFor`).
+- **In the game as played** with these (two runs of 20 pushes, `pace8`'s joints at 249,926 and pacer at 59,998): up by
+  its own body after 27 of 40, the old way after 2, not up in 300 s after 11, 9.6% of tries up (the toes alone, two
+  runs: 12.7%): within what runs of the game differ by.
+- **The deep retries, again:** with these, on the game's deep retries, retries stood 10.7% (8.9% with the toes alone),
+  from the sixth try on 3.1%. A try after one that gave up in the roll gave up in the roll again 27% of the time
+  (after any other, 11 to 16%): it lay as before and rolled the same way. Rolling the other way then
+  (`OwnBody.RollsTheOtherWay`, off; `88daa3c`): 11.0% against 10.6%. Not taken. Those tries still begin with their boots
+  nearer how they stand (24 to 29 degrees from it, early tries 40 to 43); nothing else measured differs.
+  Going slack 35 degrees beyond how they stand as it goes down (`OwnBody.BootsLieAt`; 0 as before): retries 9.1%
+  stood, at 0 8.8% (two draws of 6 copies, 7.5% and 10.1%: runs differ that much); the other way 3.2%. Kept at 0.
+- **`pace10`** (the game's deep retries; on `Builds/RiseTrain26` from 23:50 to 01:48, stopped at its joints at 899,991
+  and its pacer at 199,994), with everything above, against `pace8`'s last joints and pacer on the same code: as the
+  measure has it, **28.7% of all tries stood** (12 copies; fresh falls 33.6%, retries 19.2%; of those handed over 78%;
+  held 0.27 s a standing try), `pace8`'s last 26.4%; **on the game's deep retries, retries 14.0%** (6 copies; fresh
+  falls 28.7%), `pace8`'s last 9.7% (24 copies). Halfway (649,924), 29.0% and 11.1%. **Now the game's models**
+  (`Resources/RiseModels`, not committed, as before).
+- **The whole PlayMode suite** with all of the evening's changes and `pace10`'s models in place (nothing else
+  running, 01:56 to 02:20): **203 tests, 175 passed, 0 failed, 28 run only when asked.**
+- **In the game as played with `pace10`'s models and all of the above** (four runs of 20 pushes): **up by its own body
+  after 53 of 80 pushes, the old way after 6, not up in 300 s after 21**, 538 tries (9.9% of tries up). This morning's
+  four runs (`pace8`'s models, before the evening): 55, 10, 15, 571 tries (9.6%). Now **28 pushes up at the first try**
+  (21 then); of those up by its own body, a median of 1 try and 19 s from the push (2 tries and 33 s then). Of tries
+  handed to the standing balance, 54 of 97 stood (56%): tries 1 and 2 of a push 69%, 3 to 5 80%, **6 and on 2 of 26
+  (8%)**. In the game the deep retries are still lost: what the teaching gained on them (14.0% against 9.7%) has not
+  shown in four runs.
+- **The bench** (its eight starts, `pace10`'s models, the ways and the rise as now, kept 3 s once it stands): five
+  stood (A from its back on its feet at 11.1 s, standing still at 13.2 s; B 11.1 and 13.2; C from its front 8.0 and
+  10.3; round 2: 13.5, 12.9 and 10.6).
+- **Judges, round 3, the last for this movement** ([the record](Reviews/2026-10-30_GettingUp_Learned_Judges_Round3.md),
+  sheets and moving pictures in `Images/GettingUp_2026-10-30/judges_round3/`): **all three, all three tries: "reads as
+  real, with a flaw"**, as in rounds 1 and 2. Gone: the boots held up while it lies face down. Still named by all three:
+  the crouch held before the rise (then a climb that starts at once), and the stillness once it stands (only C's head
+  moves; a breath of a pixel or two would not show); the coat's stiff wedge at the hip (cloth). New: C, from its
+  front, tips up onto its side and back before it pushes up (about 1.4 s). By one or two: a limb up in the air in the
+  roll; the stage gaps of 1.3 to 1.6 s "a stage clock"; the planted hand creeping. What was learnt was not pointed at.
+- **Not tested:** the EditMode tests; a build; `pace10`'s later saves (1,049,994 and 219,999, taught on to 03:12) in the
+  game or the measure; Long and Round (no getting up yet). The judges saw the bench (level path, the stance it notes),
+  not the game. Passing tests are not Luis's acceptance.

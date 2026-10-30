@@ -14,9 +14,7 @@
   real, with a flaw", the same flaws as round 1 (slow, poses held still, boots held up lying face down, a dead-still end,
   the coat's fin): mostly the ways' pose times and the end of the rise, not what was learnt. The whole PlayMode suite: 174 passed, 1 failed (a
   night-light test that fails when the hearth's flicker is low; passes alone), 28 run only when asked.
-  [Validation](Validation.md), [the judges](Reviews/2026-10-29_GettingUp_Learned_Judges.md). **Next, Luis's to
-  choose:** teach on the game's deep retries and find why they fail; shorten what the judges see held; or set the
-  getting up aside for the work at the rock. The old way still ends one push in eight.
+  [Validation](Validation.md), [the judges](Reviews/2026-10-29_GettingUp_Learned_Judges.md).
   **After the report (dawn):** part of why deep retries fail: **the toes were left bent** by a failed try (the let-go
   body has no toes and kept them so; the boots had the same fault, mended October 27), and the next try was made from
   them. Mended (`OwnBody.ToesSlacken`, on): in the game two runs, up by its own body after 29 of 40 pushes, the old way
@@ -24,6 +22,30 @@
   175 passed, 0 failed, 28 run only when asked.
   `pace10`, taught an hour and a half on the game's deep retries with the toes mended: deep retries 11.7% stood (8.9%),
   fresh falls about 30% (25 to 26%); not yet tried in the game (resume `train_smallrise_pace10_resume.yaml`).
+  **Next, decided by Luis (October 29, evening: "Yes I'd like us to go with your recommendation"; [the
+  message](Correspondence/2026-10-29_DEEP_RETRIES_AND_HOLDS.md)): both together.** (a) Resume `pace10` (the game's deep
+  retries, the toes mended; `--resume --run-id=pace10` on `Builds/RiseTrain25`) and look further into why a try begun
+  after five failed ones does so much worse (with the toes mended those begin with the boots nearer how they stand and
+  the arms higher; `depthpose.py` in the session's scratchpad found the toes). (b) Meanwhile shorten the waits the
+  judges see: about 2 s in the crouch before the rise, the boots held up while it lies face down, the dead-still end;
+  each change through the aesthetic judges, then round 3 (the last for this movement). **The old way after 12 tries
+  stays, as the last resort, for now** (about one push in ten with the toes mended). Then `pace10` in the game, and a
+  build for Luis with the switch named. (Luis, a moment later: "today there is no limit of when you need to finish, you
+  can work freely": begun the same evening.)
+  **The evening (work branch, the switch off):** lying face down after the roll its legs now lie down, the knees
+  drawn up only as they come under (were both shins up, held 1.2 to 1.6 s); the rise after getting up begins as soon as
+  its weight is on its feet: of all tries 26.4% stood in the teaching, not 24.0%; of those handed over 72%, not 66%.
+  The pike's time and the rise's pace measured shorter and quicker: fewer stood, kept. The dead-still end: the breath is
+  there, a pixel or two at the judges' size, kept gentle. `pace10` teaching on the game's deep retries with these.
+  **Through the night:** `pace10` (the game's deep retries, with these) at 899,991: 28.7% of all tries stand in the
+  teaching (26.4% before it), of the game's deep retries 14.0% (9.7%); now the game's models. In the game, four runs:
+  up by its own body after 53 of 80 pushes (28 at the first try, 21 before; median 1 try and 19 s, not 2 and 33), the
+  old way after 6 (10), not up in 300 s after 21 (15); tries from the sixth in a push still almost never stand. The
+  whole PlayMode suite: 175 passed, 0 failed, 28 run only when asked. **Judges, round 3 (the last for this movement):
+  "reads as real, with a flaw"**, as before: the boots held up are gone; still the crouch held before the rise and the
+  stillness once it stands; new, C tipping up and back from its front. [The record](Reviews/2026-10-30_GettingUp_Learned_Judges_Round3.md).
+  **Next, Luis's:** the movement has had its three rounds; what is left (the crouch's wait, the stillness at the end, the
+  game's deep retries) is his to weigh against the stage's other steps.
 
 - **Before (October 28): option 1, the learner pacing its way** (Luis, October 27: "Yes I think that approach sounds
   good"). On the work branch only, behind the switch (off), not in a build. Two learners taught on falls made anew: the

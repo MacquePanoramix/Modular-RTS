@@ -58,6 +58,24 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 30, 2026 — the sixteenth (past midnight; 250 steps after the fifteenth)
+
+- **Where we are.** S3b step 2, Luis's choice of October 29 (evening): the game's deep retries taught (`pace10`) and the
+  judges' waits worked on, together. Done since: the legs lie down after the roll (the boots no longer held up), the
+  rise after getting up begins once its weight is on its feet; of all tries in the teaching 26.4% stand, not 24.0%.
+  `pace10`, taught on the game's deep retries with these, at 899,991: 28.7% as the measure has it, and of the game's
+  deep retries 14.0% (pace8's last, 9.7%). Now the game's models. Measured and not taken: shorter pike, early rise,
+  rolling the other way, boots slacker.
+- **Waiting on Luis:** nothing new asked; S3, the builds of October 13 and 14, R1, the analytics define,
+  `risebuild3.log` as before. The old way after 12 tries kept, as he chose.
+- **Built, not in a build:** all of the getting up (work branch, switch off); `pace10`'s models in
+  `Resources/RiseModels` (not committed, as before).
+- **Drifting or forgotten:** the crouch before the rise is still about 2 s (its time measured to be doing work); round
+  3 is the last the judges have for this movement; the stance the teaching notes (0.696 m) against the game's; the flaky
+  night-light test (a separate session); the work branch's commits not yet pushed tonight.
+- **Does the task serve the stage?** Yes, as Luis chose. After round 3 and the game's test, the report should say
+  plainly what is left of the getting up and put the stage's next step to him again.
+
 ### October 29, 2026 — the fifteenth (dawn, 250 steps after the fourteenth)
 
 - **Where we are.** The morning's report is written, committed and pushed (the night measured, the game's tries found
