@@ -93,7 +93,13 @@ namespace WonderGather.Tests
             Assert.That(lights.All(x => x.enabled && x.intensity > 0), Is.True, "Night should light every house light.");
             Assert.That(sky.intensity, Is.LessThan(.6f), "Moonlight should be dim.");
             Assert.That(Shader.GetGlobalFloat("_WG_MoonVisibility"), Is.GreaterThan(.9f), "The moon belongs to the night sky.");
+            // The hearth breathes the windows' glow with its fire (0.3 + 0.7 of the flicker), and a low moment read 0.878 in
+            // the suite (October 29): how fully the night lights them is read with the fire held still.
+            bool hearth = time.Hearth;
+            time.Hearth = false;
+            time.Hour = 23;
             Assert.That(Shader.GetGlobalFloat("_WG_GlowScale"), Is.GreaterThan(.9f), "Night should light the windows fully.");
+            time.Hearth = hearth;
             foreach (float hour in new[] { 6.5f, 9f, 12f, 16f })
             {
                 time.Hour = hour;
