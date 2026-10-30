@@ -1067,6 +1067,8 @@ namespace WonderGather
             }
             Follow();
             for (int i = 0; i < Count; i++) segments[i].SetPositionAndRotation(parts[i].transform.position, parts[i].transform.rotation);
+            // (Its limbs drawn turned as its parts are: MinerBody.TurnsAsSolved.)
+            miner.TurnsAsSolved();
             for (int i = 0; i < 2; i++)
             {
                 var shin = parts[Shin + i].transform;

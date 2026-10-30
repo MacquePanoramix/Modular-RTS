@@ -1162,6 +1162,8 @@ namespace WonderGather
                 float between = Mathf.Clamp01((Time.time - Time.fixedTime) / Time.fixedDeltaTime);
                 for (int i = 0; i < Count; i++)
                     segments[i].SetPositionAndRotation(Vector3.Lerp(wasAt[i], nowAt[i], between), Quaternion.Slerp(wasTurned[i], nowTurned[i], between));
+                // (Its limbs drawn turned as its parts are: MinerBody.TurnsAsSolved.)
+                miner.TurnsAsSolved();
                 for (int i = 0; i < 2; i++)
                     if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null)
                     {

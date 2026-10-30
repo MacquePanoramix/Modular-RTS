@@ -213,9 +213,12 @@ namespace WonderGather
             foreach (var unit in FindObjectsByType<SelectableUnit>()) bodies.Add(unit.transform);
         }
 
+        // A camera the meadow is not drawn for: pictures that look at a body lying in it (FrameRecorder, October 30).
+        public static Camera NotFor;
+
         private void Draw(ScriptableRenderContext context, Camera camera)
         {
-            if (chunks.Count == 0 || camera.cameraType == CameraType.Preview || camera.cameraType == CameraType.Reflection) return;
+            if (chunks.Count == 0 || camera.cameraType == CameraType.Preview || camera.cameraType == CameraType.Reflection || camera == NotFor) return;
             ScanBodies();
             int moverCount = 0;
             foreach (var body in bodies)

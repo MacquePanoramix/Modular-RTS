@@ -186,6 +186,16 @@ namespace WonderGather
         private Vector3[] onChestSize;
 
         public bool Ready => ready;
+
+        // Drawn from a physical body this frame (its own joints, or let go: OwnBody, PhysicalFall say so each frame, before
+        // the bones are turned). Each limb part of such a body is turned with the side its elbow or knee sticks out
+        // forward, so a limb is drawn turned as it is, at any bend. Guessed from where the elbow or knee sits off the
+        // limb's line instead, a limb straight or folded double had no such side, and was drawn turned half round from
+        // one frame to the next: over a thousand times in eighteen minutes of getting up (October 30, 2026).
+        public void TurnsAsSolved() => asSolvedFrame = Time.frameCount;
+        private int asSolvedFrame = -1;
+        private float asSolvedLast = -10;
+        private readonly Vector3[] poleWas = new Vector3[4], poleSolved = new Vector3[8];
         public Bones Rig => bones;
         // The posed body's own segments, which the bones are turned to.
         public Solution Solved => solved;
@@ -458,6 +468,37 @@ namespace WonderGather
             return Quaternion.LookRotation(aim, reference) * Quaternion.Inverse(Quaternion.LookRotation(restAim, restRef));
         }
 
+        // Which way limb k's joint bends (legs 0, 1; arms 2, 3), for each of its two bones. Drawn from a physical body: as
+        // each of its two parts is turned (each part's forward is the side its joint sticks out, square to its own length,
+        // so it says the way at any bend, straight or folded). Posed: from where the joint sits off the limb's line, as
+        // before, for both; where that says nothing (straight, and the fallback along the limb), the way it bent the frame
+        // before. Just after a physical body is given back to the posed one, from the one to the other over a quarter
+        // of a second.
+        private void Poles(int k, Transform near, Transform far, Vector3 from, Vector3 joint, Vector3 to, Vector3 fallback, out Vector3 nearPole, out Vector3 farPole)
+        {
+            Vector3 axis = (to - from).normalized;
+            if (asSolvedFrame == Time.frameCount)
+            {
+                nearPole = near.rotation * Vector3.forward;
+                farPole = far.rotation * Vector3.forward;
+                poleSolved[2 * k] = nearPole; poleSolved[2 * k + 1] = farPole;
+                Vector3 both = Vector3.ProjectOnPlane(nearPole + farPole, axis);
+                if (both.sqrMagnitude > 1e-8f) poleWas[k] = both.normalized;
+                return;
+            }
+            Vector3 pole = Bend(from, joint, to, fallback);
+            if (pole.sqrMagnitude < 1.6e-5f && poleWas[k].sqrMagnitude > 0) pole = Vector3.ProjectOnPlane(poleWas[k], axis);
+            if (pole.sqrMagnitude > 1e-8f) poleWas[k] = pole.normalized;
+            nearPole = farPole = pole;
+            float after = Time.time - asSolvedLast;
+            if (after < .25f && poleSolved[2 * k].sqrMagnitude > 0 && pole.sqrMagnitude > 1e-8f)
+            {
+                float share = Mathf.SmoothStep(0, 1, after / .25f);
+                nearPole = Vector3.Slerp(poleSolved[2 * k].normalized, pole.normalized, share);
+                farPole = Vector3.Slerp(poleSolved[2 * k + 1].normalized, pole.normalized, share);
+            }
+        }
+
         // Which way a joint bends: from the middle of the limb towards the joint, steadied by a fallback when straight.
         private static Vector3 Bend(Vector3 from, Vector3 joint, Vector3 to, Vector3 fallback)
         {
@@ -469,6 +510,7 @@ namespace WonderGather
         private void LateUpdate()
         {
             if (!ready) { CaptureRest(); if (!ready) return; }
+            if (asSolvedFrame == Time.frameCount) asSolvedLast = Time.time;
             Quaternion root = transform.rotation;
             Vector3 forward = root * Vector3.forward;
 
@@ -504,11 +546,11 @@ namespace WonderGather
                 // Legs: knees bend forward.
                 Ends(solved.thighs[i], out var hip, out var knee);
                 Ends(solved.shins[i], out _, out var ankle);
-                Vector3 kneeBend = Bend(hip, knee, ankle, solved.pelvis.forward);
+                Poles(i, solved.thighs[i], solved.shins[i], hip, knee, ankle, solved.pelvis.forward, out var thighBend, out var shinBend);
                 Vector3 restForward = root * Vector3.forward;
-                Quaternion thigh = Turn(root * thighAim[i], restForward, knee - hip, kneeBend);
+                Quaternion thigh = Turn(root * thighAim[i], restForward, knee - hip, thighBend);
                 bones.thighs[i].rotation = thigh * root * thighRest[i];
-                Quaternion shin = Turn(root * shinAim[i], restForward, ankle - knee, kneeBend);
+                Quaternion shin = Turn(root * shinAim[i], restForward, ankle - knee, shinBend);
                 bones.shins[i].rotation = shin * root * shinRest[i];
                 // Feet and toes follow their soles, heel strike and toe-off included.
                 bones.feet[i].rotation = solved.feet[i].rotation * Quaternion.Inverse(root) * root * footRest[i];
@@ -519,11 +561,11 @@ namespace WonderGather
                 Ends(solved.upperArms[i], out var shoulder, out var elbow);
                 Ends(solved.forearms[i], out _, out var wrist);
                 Vector3 back = -solved.torso.forward;
-                Vector3 elbowBend = Bend(shoulder, elbow, wrist, back);
+                Poles(2 + i, solved.upperArms[i], solved.forearms[i], shoulder, elbow, wrist, back, out var upperBend, out var foreBend);
                 Vector3 restBack = -forward;
-                Quaternion upper = Turn(root * upperAim[i], restBack, elbow - shoulder, elbowBend);
+                Quaternion upper = Turn(root * upperAim[i], restBack, elbow - shoulder, upperBend);
                 bones.upperArms[i].rotation = upper * root * upperRest[i];
-                Quaternion fore = Turn(root * foreAim[i], restBack, wrist - elbow, elbowBend);
+                Quaternion fore = Turn(root * foreAim[i], restBack, wrist - elbow, foreBend);
                 bones.forearms[i].rotation = fore * root * foreRest[i];
                 // The hand carries on from the forearm. Holding a tool, it turns to lie on the handle (as it opens to
                 // take it), and turns back when it lets go.

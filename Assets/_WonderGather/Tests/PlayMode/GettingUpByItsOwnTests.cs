@@ -34,7 +34,10 @@ namespace WonderGather.Tests
         [UnityTest, Explicit, Timeout(14400000)]
         public IEnumerator SmallPushedOverGetsUpByItsOwnBody()
         {
-            Time.captureFramerate = 50;
+            // (-ownRate 120: frames a second, as a screen faster than the physics shows them; 50 as before, a frame a step.
+            // October 30.)
+            string rate = CaptureTools.Argument("-ownRate");
+            Time.captureFramerate = string.IsNullOrEmpty(rate) ? 50 : int.Parse(rate);
             PhysicalFall.GetsUpByItsOwn = true;
             // (-ownUnheard 1: no learnt model given, to set the body as searched beside it, October 27.)
             RiseAgent.Unheard = CaptureTools.Argument("-ownUnheard") == "1";
@@ -67,6 +70,35 @@ namespace WonderGather.Tests
             for (float until = Time.time + 20; (own == null || !own.Stands) && Time.time < until;) { unit.TryGetComponent(out own); yield return null; }
             Assert.That(own != null && own.Stands, Is.True, "Small did not come to stand by its own joints.");
             Assert.That(own.KnowsAWayUp, Is.True, "Small knows no way up (Resources/RiseWays/Small.txt).");
+            // (-ownFrames <path>: every frame written, as played (FrameRecorder); -ownShots <folder> -ownShotFrames 100-140,900-960:
+            // pictures from four sides at those frames. October 30.)
+            FrameRecorder recorder = null;
+            string frames = CaptureTools.Argument("-ownFrames");
+            if (!string.IsNullOrEmpty(frames))
+            {
+                recorder = FrameRecorder.On(unit.gameObject, frames);
+                // (-ownShotFaults 1: and each fault as it happens, FrameRecorder.Fault: runs do not repeat frame for frame.)
+                string shots = CaptureTools.Argument("-ownShots"), shotFrames = CaptureTools.Argument("-ownShotFrames");
+                recorder.AsItHappens = CaptureTools.Argument("-ownShotFaults") == "1";
+                if (!string.IsNullOrEmpty(shots) && (!string.IsNullOrEmpty(shotFrames) || recorder.AsItHappens))
+                {
+                    System.IO.Directory.CreateDirectory(shots);
+                    var pictures = new GameObject("Pictures").AddComponent<Camera>();
+                    pictures.CopyFrom(Camera.main);
+                    pictures.nearClipPlane = .01f; pictures.fieldOfView = 40;
+                    pictures.enabled = false;
+                    // (-ownShotGrass 1: with the meadow drawn, as played; else without it, so that a body lying in it is seen.)
+                    if (CaptureTools.Argument("-ownShotGrass") != "1") GrassField.NotFor = pictures;
+                    recorder.Pictures = pictures; recorder.PicturesTo = shots;
+                    // (Each a-b, or a-b:s for every s-th frame.)
+                    if (!string.IsNullOrEmpty(shotFrames)) foreach (string range in shotFrames.Split(','))
+                    {
+                        var every = range.Split(':');
+                        var ends = every[0].Split('-');
+                        recorder.Pictured.Add(new Vector3Int(int.Parse(ends[0]), int.Parse(ends[ends.Length - 1]), every.Length > 1 ? int.Parse(every[1]) : 1));
+                    }
+                }
+            }
             float pushes = 8;
             string given = CaptureTools.Argument("-ownPushes");
             if (!string.IsNullOrEmpty(given)) pushes = float.Parse(given, System.Globalization.CultureInfo.InvariantCulture);
@@ -97,6 +129,7 @@ namespace WonderGather.Tests
                     if (!look.CanPushOver) { Debug.Log("OWN_UP push " + k + ": it could not be pushed over; passed over"); continue; }
                 }
                 Assert.That(look.CanPushOver, Is.True, "Small cannot be pushed over (push " + k + ").");
+                if (recorder != null) recorder.Note("push " + k + " " + round);
                 look.PushOver(way);
                 fall = unit.GetComponent<PhysicalFall>();
                 float began = Time.time;
@@ -135,6 +168,7 @@ namespace WonderGather.Tests
                     for (float until = Time.time + 20; !(own.Stands && !own.GettingUp && !own.Rising) && Time.time < until;) yield return null;
                 }
             }
+            if (recorder != null) { recorder.Close(); Object.Destroy(recorder.gameObject); GrassField.NotFor = null; }
             Debug.Log($"OWN_UP Small, {pushes} pushes: up by its own body {byItsOwn}, the old way {oldWay}, not up {never}; tries by its own body {triesAll}");
             Assert.That(never, Is.EqualTo(0), "Small did not get up after a push.");
         }
