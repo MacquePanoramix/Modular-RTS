@@ -1,6 +1,29 @@
 # Wonder Gather — Current State
 
-**Updated:** October 29, 2026.
+**Updated:** October 30, 2026.
+
+- **Now (October 30): the getting up, for the whole game (Luis).** After playing the build he found it slow, with
+  aggressive twitches, arms bent as if broken and limbs flicking out of frame: "it feels goofy". He widened the task to
+  the final game's getting up: any body the creator makes, no teaching per unit, procedural, natural ([the
+  message](Correspondence/2026-10-30_THE_GETTING_UP_FOR_THE_WHOLE_GAME.md)). **Begun:** six research threads (notes in
+  `Research/research_notes/Getting up for any body/`, report not yet written); a frame recorder in the game's test (work
+  branch, uncommitted: `Tests/PlayMode/FrameRecorder.cs`, `-ownRate 120 -ownFrames`), and a scan of every frame
+  (`framescan.py` in the session's scratchpad). **Found, 8 pushes at 120 frames a second (134,085 frames):** (1) the drawn
+  arms and legs flip about 176 degrees in one frame, over 1,000 times: `MinerBody.LateUpdate` rebuilds each limb's turn
+  from where its elbow or knee sits off the limb's line, which has no direction when the limb is straight or folded past
+  about 150 degrees; (2) the body that gets up (`OwnBody`, articulations) has **no joint limits**: elbows bent the wrong
+  way (once by 70 degrees), knees folded past 180, hips 89 degrees behind, shoulders turned half round; (3) boots whip at
+  up to 115 rad/s and forearms past 12 rad/s for a few steps at a time; (4) slow: 62 tries for 8 pushes, several taking
+  2 to 5 minutes. The whole-body flick seen was the test's own take-back after 300 s, not the game. Runs do not repeat
+  frame for frame: pictures must be taken as a fault happens (not yet written). Reference videos can be studied frame by
+  frame in the browser (sheets drawn in the page). **Afternoon:** faults pictured as they happen, from four sides
+  (`-ownShotFaults 1`; [the record and its pictures](Reviews/2026-10-30_GettingUp_EveryFrame.md)); **the drawn flips
+  mended** (work branch, uncommitted: `MinerBody.TurnsAsSolved`, each bone of a physical limb drawn turned as its part is):
+  1,036 to 40 in a run of the same length; the body at ease drawn within half a degree of before. Found too: the body that
+  gets up once blew apart (a boot spinning up to 154 rad/s, then everything). All six research threads written; the
+  report being written (`Research/reports/Getting up for any body.md`). The whole PlayMode suite with the drawing change:
+  running. **Next:** the report; a proposal for any body, for Luis; the references frame by frame (the browser draws
+  only while the app's window is open).
 
 - **Now (October 29, morning): the night's teaching measured; why the game's tries fail more often; judged again (round
   2 of 3).** On the work branch only, behind the panel's switch "Gets up by its own body" (off), not in a build.

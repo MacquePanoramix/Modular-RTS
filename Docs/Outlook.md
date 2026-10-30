@@ -58,6 +58,30 @@ work goes back to the task in hand.
 
 ## Log
 
+### October 30, 2026 — the seventeenth (a short one, before a change of scope)
+
+- **Where we are.** S3b step 2, the getting up. Luis played the build of this morning (`pace10`): good in parts, but
+  slow, with aggressive twitches, arms bent as if broken, limbs flicking out of frame for a moment; "it feels goofy".
+  He has widened the task: the getting up is to be the **final game's**, for any body the creator can make, with no
+  teaching per unit, procedural and natural; first a deep research with its references looked at frame by frame, and
+  the game read at every moment from all sides ([the message](Correspondence/2026-10-30_THE_GETTING_UP_FOR_THE_WHOLE_GAME.md)).
+- **Waiting on Luis:** nothing new; S3, the builds of October 13 and 14, R1, the analytics define, `risebuild3.log` as
+  before. A GitHub release of the build was offered.
+- **Built, not in a build:** nothing new; the learnt path for Small stays on the work branch as it is.
+- **Drifting or forgotten:** three rounds of judges said "reads as real, with a flaw" and Luis saw what none of them
+  could: the evidence was the bench, every 0.08 s, from one side. The game is to be read every frame as played, from
+  several sides, and scanned by numbers. The rest of S3b (the step's getting ready and setting off, the work at the
+  rock, walking) and S4, S2 and S5 wait longer: Luis chose this knowingly ("the longer route"). The creator (S2), whose
+  bodies this must serve, is not built: the method must read a body from its parts, not from a list of attributes that
+  is still Open. The vision's guardrail "do not add large-scale technology because it sounds future-proof" now meets
+  Luis's own choice to build the final version: any heavy tool (a new simulator, a GPU trainer) is his to approve.
+- **Does the task serve the stage?** It outgrows it, by Luis's word. What keeps it honest: the miners (Small, Long,
+  Round) and bodies made between and beyond them are the test, every frame of the game is the evidence, and the
+  vision's line on comedy ("do not let procedural physics become comedy") is the bar.
+- **Afternoon, the hook's count at 500** (it counts the six research threads' steps too): nothing in the whole has
+  moved since the morning. The frame scan found what Luis saw (limbs drawn flipping, no joint limits on the body that
+  gets up, whipping boots, many failed tries); the research is being finished. Still the same task, in the same order.
+
 ### October 30, 2026 — the sixteenth (past midnight; 250 steps after the fifteenth)
 
 - **Where we are.** S3b step 2, Luis's choice of October 29 (evening): the game's deep retries taught (`pace10`) and the
