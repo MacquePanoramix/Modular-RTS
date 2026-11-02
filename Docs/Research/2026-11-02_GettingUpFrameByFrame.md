@@ -96,6 +96,27 @@ weight. The arms forward and out as it comes up, and the step at the end, are ho
 Looked at every 8 s only: the same order from the back (onto the side, hands and knees, one knee beside a chair,
 standing), and others (sitting, kneeling; from lying face down, a push-up onto hands and knees). A teaching pace.
 
+### One adult's six get-ups, from motion capture (CMU, subject 140; November 3)
+
+Downloaded with Luis's word (November 3), never to be played: the six "getting up from ground" recordings of one adult,
+120 frames a second, read by a script that rebuilds the skeleton and says, frame by frame, which supports touch the
+ground, how high the hips are, how far the trunk leans, and how far each joint bends (`cmu_getup.py`, the session's
+scratchpad; the data in `D:/Dev/references/cmu_getup`, outside the project).
+
+| Start | First movement to standing | Its way |
+|---|---|---|
+| Face down (140_01) | **2.95 s** | Push up onto hands and knees (about 1 s, the seat off); the feet come under (hands, knees and feet together, hips at about half their standing height by 1.5 s); the knees leave the ground (2.0 s), then the hands (2.4 s); standing |
+| Face down (140_02) | **3.41 s** | The same; the knees leave at 2.4 s, the hands at 3.0 s |
+| On the side (140_03) | **4.70 s** | Sits right up first (the trunk upright by 2.0 s); hands down beside it; the seat off (2.75 s) into a squat on hands and feet; the hands leave at 4.1 s; standing |
+| From the back (140_08) | **4.60 s** | The same as from the side: sitting up (trunk from lying to upright in about 1 s), hands down, the seat off at 3.0 s, hands off at 4.0 s |
+
+**How far it bends** on the way up: knees **131 to 158 degrees** (the deep squat from the back and side reaches 155 to
+158), hips 139 to 153, elbows 90 to 130. A knee stop at 150 is too tight for a person's own squat; the anatomical tables'
+active 140 understate a squat, where thigh presses on calf. **What it holds:** nothing, for long: every support is taken
+and left within about a second of the next; the longest held is the squat on hands and feet (about 1 s). This adult,
+able and strong for its weight, rises from its back by sitting up and squatting, not through one knee: as the research
+says, a body with strength to spare takes the more symmetrical, quicker way.
+
 ## What they share, and what it asks of ours
 
 1. **Something leads, and it is small: the head**, then the trunk curls after it. Fury's head lifts a quarter of a second
@@ -125,5 +146,10 @@ kneeling at one steady slowness. At this size its details cannot be judged; what
 do not do: it neither gathers before a push nor lets one stage run into the next. Slowed evenly, it reads as slow, not
 as weak.
 
-**Still to look at:** games (a few, for comparison: Death Stranding; the anti-references); the robot get-ups. (The video named for the three toddler
+**A game beside them: Death Stranding's slips** (GameSpot's compilation, every 3 s, then 0:46 to 0:56 every 0.5 s): the
+camera is far, the cuts quick, and the getting up is over in a moment; what reads is the weight of the fall under a
+load, not how the body rises. Games' getting up was surveyed on October 14 and 22 (authored clips blended from the
+fallen pose); none was found that rises by its own joints.
+
+**Still to look at:** the robot get-ups; the anti-references beside ours, once ours moves. (The video named for the three toddler
 routes turned out to be an adult demonstrating them.)

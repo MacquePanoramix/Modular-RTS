@@ -1,8 +1,19 @@
 # Wonder Gather — Current State
 
-**Updated:** October 30, 2026.
+**Updated:** November 2, 2026.
 
-- **Now (October 30): the getting up, for the whole game (Luis).** After playing the build he found it slow, with
+- **Now (November 2): waiting on Luis's six questions** ([the proposal](Design/GettingUpForAnyBody.md), sent October
+  30); meanwhile the pieces needed whatever he chooses. **Stops tried on Small's present getting up** (elbows and knees,
+  exact for each make; the boots bounded): up by its own body after 1 and 3 of 8 pushes, not 5 to 7, the limbs chattering
+  against them; left off (`OwnBody.HingesStop`, work branch `8846684`): they belong to the body the new getting up is
+  made on. **The references looked at frame by frame** ([the page](Research/2026-11-02_GettingUpFrameByFrame.md)): a tall
+  heavy boxer, a newborn foal, a man in plate armour, a weak adult, a toddler alone, a learned simulated one: the head
+  leads, stages overlap, a hand goes down before the weight, the last push over a planted foot, the able take 3 to 4 s,
+  weakness adds stages and tries, the build chooses the way. **Designing the body with living joints and the body-read
+  stances** (a workflow of three designs and a critic, from the code), to be built next on the work branch behind a
+  switch, the present getting up untouched until the new one stands.
+
+- **Before (October 30): the getting up, for the whole game (Luis).** After playing the build he found it slow, with
   aggressive twitches, arms bent as if broken and limbs flicking out of frame: "it feels goofy". He widened the task to
   the final game's getting up: any body the creator makes, no teaching per unit, procedural, natural ([the
   message](Correspondence/2026-10-30_THE_GETTING_UP_FOR_THE_WHOLE_GAME.md)). **Begun:** six research threads (notes in
