@@ -184,6 +184,16 @@ namespace WonderGather
         // where the last one left it began on toes bent 45 degrees or more 1,282 times in 4,800 and stood 3.7% of
         // those; on toes as they stand, 19%. October 29. ToesSlacken false: as before.)
         public static bool ToesSlacken = true;
+        // Its elbows and knees stop where a living one stops (October 30, 2026: Luis saw arms bent "like it's broken"; every
+        // frame read found elbows bent the wrong way, once by 70 degrees, and knees folded past 180, for nothing stopped
+        // them): from PastStraight degrees beyond straight to folded ElbowFolds (an elbow) or KneeFolds (a knee), wherever
+        // the body was when it was made. And a boot turns no faster than BootTurnsAtMost radians a second (boots were seen
+        // at 115 to 154, and once one shook the whole body apart). Off: as before.
+        // (Off, October 30: added to Small's present getting up, made on joints that stopped nowhere, it stood after 1
+        // and 3 of 8 pushes, not 5 to 7, and its limbs chattered against the stops; the stops belong to the body the new
+        // getting up is made on, Design/GettingUpForAnyBody.md.)
+        public static bool HingesStop = false;
+        public static float ElbowFolds = 145, KneeFolds = 150, PastStraight = 3, BootTurnsAtMost = 20;
         private readonly Vector3[] stoodToeAt = new Vector3[2];
         private readonly Quaternion[] stoodToe = { Quaternion.identity, Quaternion.identity };
         private bool toesStoodKnown;
@@ -645,6 +655,20 @@ namespace WonderGather
                     if (!hinge[i]) { link.yDrive = drive; link.zDrive = drive; }
                     // (No joint turns faster than a joint can.)
                     if (OwnKeeper.Steps && OwnKeeper.TurnsAtMost > 0) link.maxJointVelocity = OwnKeeper.TurnsAtMost;
+                    if (hinge[i] && HingesStop)
+                    {
+                        // (Its bend as made, folding counted forward: the far part swings away from the side its joint
+                        // sticks out, and the joint's own turn counts the other way. A body made bent past a stop keeps
+                        // where it is within its stops.)
+                        Transform near = segmentsMade[From[i]].transform, far = segmentsMade[i].transform;
+                        float made = Mathf.Atan2(Vector3.Dot(far.up, -near.forward), Vector3.Dot(far.up, near.up)) * Mathf.Rad2Deg;
+                        float folds = i < Thigh ? ElbowFolds : KneeFolds;
+                        var stops = link.xDrive;
+                        stops.lowerLimit = Mathf.Min(made - folds, -1); stops.upperLimit = Mathf.Max(made + PastStraight, 1);
+                        link.xDrive = stops;
+                        link.twistLock = ArticulationDofLock.LimitedMotion;
+                    }
+                    if (i >= Foot && HingesStop && BootTurnsAtMost > 0) link.maxJointVelocity = BootTurnsAtMost;
                 }
                 parts[i] = link;
             }

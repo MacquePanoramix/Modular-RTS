@@ -27,7 +27,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; RiseAgent.Unheard = false; OwnBody.StoodHeightIs = 0; }
+        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; RiseAgent.Unheard = false; OwnBody.StoodHeightIs = 0; OwnBody.HingesStop = false; OwnBody.BootTurnsAtMost = 20; OwnBody.ElbowFolds = 145; OwnBody.KneeFolds = 150; }
 
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
 
@@ -39,6 +39,14 @@ namespace WonderGather.Tests
             string rate = CaptureTools.Argument("-ownRate");
             Time.captureFramerate = string.IsNullOrEmpty(rate) ? 50 : int.Parse(rate);
             PhysicalFall.GetsUpByItsOwn = true;
+            // (-ownHingesStop 1: its elbows and knees with stops, and its boots bounded, OwnBody.HingesStop; off by default.)
+            OwnBody.HingesStop = CaptureTools.Argument("-ownHingesStop") == "1";
+            // (-ownBootCap 20, -ownElbowFolds 150, -ownKneeFolds 160: the boots' bound, radians a second (0: none), and how
+            // far an elbow and a knee fold, degrees.)
+            float Given(string name, float otherwise) { string a = CaptureTools.Argument(name); return string.IsNullOrEmpty(a) ? otherwise : float.Parse(a, System.Globalization.CultureInfo.InvariantCulture); }
+            OwnBody.BootTurnsAtMost = Given("-ownBootCap", OwnBody.BootTurnsAtMost);
+            OwnBody.ElbowFolds = Given("-ownElbowFolds", OwnBody.ElbowFolds);
+            OwnBody.KneeFolds = Given("-ownKneeFolds", OwnBody.KneeFolds);
             // (-ownUnheard 1: no learnt model given, to set the body as searched beside it, October 27.)
             RiseAgent.Unheard = CaptureTools.Argument("-ownUnheard") == "1";
             // (-ownStoodHeight 0.696: how high its weight rises to after getting up, as the teaching notes it, October 29.)
