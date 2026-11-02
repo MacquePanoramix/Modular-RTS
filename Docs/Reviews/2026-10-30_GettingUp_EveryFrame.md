@@ -52,6 +52,23 @@ Each row a frame, 1/120 s apart; its four sides left to right: two at its height
 
 The pictures are small and these faults are clearest in the numbers; seen in motion they are what Luis described.
 
+## Stops tried on the present getting up (October 30, late)
+
+Elbow and knee stops, set exactly for each make (a few degrees past straight to folded 145 or 150 degrees), and a bound
+on the boots' turning (20 rad/s), added to Small's present getting up (`OwnBody.HingesStop`), in the game as played at
+120 frames a second, 8 pushes a run:
+
+| | Up by its own body | The old way | Not up |
+|---|---|---|---|
+| Stops 145/150 and the boots bounded | 1 | 1 | 6 |
+| Stops 150/160, boots free | 3 | 2 | 3 |
+| As it was (five runs) | 5 to 7 | 0 to 2 | 0 to 1 |
+
+Its poses and what was learnt were found on joints that stopped nowhere; with stops it fails, and its limbs chatter
+against them (about 1,100 frames of jumps in the hands-and-feet stage). So the stops are left off on the present getting
+up (its switch, `-ownHingesStop 1`, stays), and belong to the body the new getting up is made on, whose targets are worked
+out inside a living body's ranges from the start.
+
 ## What follows
 
 Fault 1 is mended on the work branch for every physical body (standing by its own joints, let go, getting up). Faults 2
