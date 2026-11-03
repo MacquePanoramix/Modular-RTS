@@ -58,6 +58,22 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 3, 2026 — the eighteenth (a direction decided; before building)
+
+- **Where we are.** S3b step 2, widened by Luis (October 30) to the final game's getting up for any body. On November 3
+  he decided the direction (the capacity-driven procedural rise, built in layers from a body that cannot look broken) and
+  answered all six questions. Designs for layer 0 (the body's joints) and layers 1 and 2 (reading the body, choosing its
+  way) are written from the code, with a working prototype across the miners and eleven made-up bodies, and critiqued.
+- **Waiting on Luis:** nothing asked yet beyond the strength rule, which the prototype shows decides whether a build
+  shows at all (today every body has 1.6 times its own need, so the three miners rise alike). It is Open in the vision;
+  it will be put to him with pictures. S3, the builds of October 13 and 14, R1, the analytics define as before.
+- **Built, not in a build:** the drawing fix (in the suite, not in a build Luis has played); the frame recorder.
+- **Drifting or forgotten:** the present riser stays for the game until the new one stands; the rest of S3b, S4, S2 and
+  S5 wait (Luis's choice). The creator (S2) must one day warn of bodies that cannot rise (decided November 3) and, later,
+  one unit helping another up. The research's six to twelve months' re-check of learning across bodies.
+- **Does the task serve the stage?** It serves the whole game, by Luis's word. The guard is the evidence: every frame,
+  Small, Long and Round and made bodies, judges, then Luis.
+
 ### October 30, 2026 — the seventeenth (a short one, before a change of scope)
 
 - **Where we are.** S3b step 2, the getting up. Luis played the build of this morning (`pace10`): good in parts, but
