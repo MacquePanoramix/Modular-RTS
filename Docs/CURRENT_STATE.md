@@ -1,8 +1,24 @@
 # Wonder Gather — Current State
 
-**Updated:** November 2, 2026.
+**Updated:** November 3, 2026.
 
-- **Now (November 2): waiting on Luis's six questions** ([the proposal](Design/GettingUpForAnyBody.md), sent October
+- **Now (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his
+  answers](Correspondence/2026-11-03_THE_DIRECTION_FOR_ANY_BODY.md)). **Built on the work branch:** step 0, the engine's
+  facts tested (`ArticulationFactsTests`, 7 of 7: a drive's limit is a torque; gravity's own forces hold a hung body;
+  a body made lying keeps its pose once its joints' positions are written; `maxJointVelocity` does not bound a drive's own
+  motion); step 1, each joint's own frame and range (`JointFrames`, 7 of 7); step 2 begun, the body with them behind
+  `OwnBody.Anatomical` (off), only for a body made standing. The designs: [Design/AnyBody](Design/AnyBody/).
+  **Asked of Luis (November 3):** (1) the strength rule: today every body has 1.6 times its own need (his October 14
+  choice for the arms), so a build shows only by its shape; or strength from its muscle (limb thickness times the
+  strength number), so a heavy body on thin limbs, or a giant, is truly weaker for its weight (recommended); (2) bigger
+  bodies moving proportionally slower (recommended) or every size alike; (3) the physics' weight moved to the measured
+  model (each head 8 cm too low; recommended, measured and shown first); (4) whether the standing body may change a
+  little with the new joints (the plan: keep it as he knows it, and show anything visible). Still waiting from before:
+  S3 (since October 8), the builds of October 13 and 14, R1 seen in a build; and small ones: the inference package's
+  analytics define, the stray `risebuild3.log`, the leftover `D:/Dev/WG-night`, a GitHub release of the October 30 build,
+  the merge of the work branch (best after the new getting up stands).
+
+- **Before (November 2): waiting on Luis's six questions** ([the proposal](Design/GettingUpForAnyBody.md), sent October
   30); meanwhile the pieces needed whatever he chooses. **Stops tried on Small's present getting up** (elbows and knees,
   exact for each make; the boots bounded): up by its own body after 1 and 3 of 8 pushes, not 5 to 7, the limbs chattering
   against them; left off (`OwnBody.HingesStop`, work branch `8846684`): they belong to the body the new getting up is
