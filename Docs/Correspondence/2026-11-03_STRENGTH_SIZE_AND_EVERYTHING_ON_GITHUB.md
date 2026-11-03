@@ -35,3 +35,20 @@ branch, best after the new getting up stands.
 | 9. The stray log and the leftover copy | "I don't see why not" | Deleted |
 | 10. GitHub | "Yes please. I'd like everything generally on github. Both for context and history and inference purposes." | The October 30 build uploaded as a release; **everything kept on GitHub** as a rule (what licences forbid excepted: the CMU data is used, not republished) |
 | 11. The merge | "that's fair makes sense" | The work branch is merged after the new getting up stands |
+
+## Luis, later the same day (verbatim)
+
+After hearing how the muscle rule is built (a joint's strength from the limb's thickness, cubed, times the strength number):
+
+> Oh remember, in the end, we will want to have a strengh stat, of like proportionally to the body, how much of it is muscle kind of logic. Maybe even for body regions. Anyways I wanted to check if it's being implemented with this kind of logic.
+
+Answered: yes, the rule is that (size gives how much muscle a limb could hold; the strength number is how much of it is
+muscle); the number to become one per region (arms, legs, back, neck); the fat-and-muscle split and its look belong to the
+creator. Then:
+
+> Yes later we will want to implement those also and also want visually convey in a way that matches out aesthetic in a beautiful and visually pleasing way the muscles and the difference in strengh. Anyways yeah please keep in mind those need to be implemented later.
+
+| | Luis | What follows |
+|---|---|---|
+| The strength stat | "how much of it is muscle", "proportionally to the body", "maybe even for body regions" | **Direction:** strength is set as each region's share of muscle in a body of its size; the muscle rule is written for it; one number per region next |
+| Later | "we will want to implement those"; muscles and strength shown "in a beautiful and visually pleasing way", matching the aesthetic | **Direction, later (the creator, S2):** the fat-and-muscle split, and muscles and strength drawn on the body so that what is seen tells what it can do |

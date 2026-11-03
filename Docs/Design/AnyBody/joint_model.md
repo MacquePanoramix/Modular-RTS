@@ -17,6 +17,17 @@ Which PhysX Unity 6000.6 uses is not confirmed; 4.1 matches every measured fact,
 > are the fix, not the bound. `maxAngularVelocity` on a link changed nothing measurable (39.7 rad/s under 2). The October
 > 30 boots' bound (`OwnBody.BootTurnsAtMost`, through `maxJointVelocity`) therefore most likely did nothing; the stops
 > made that run fail. Drive target speeds are in degrees a second.
+>
+> **Steps 1 and 2 (November 3, work branch).** `JointFrames` (7 of 7 tests: each joint's directions checked against
+> movements built geometrically, both sides) and the body made with them behind `OwnBody.Anatomical` (off; only for a
+> body made standing): zeros at the anatomical position, the engine's limits as a backstop, the made pose written at the
+> first step, and every target of the body and its keeper clamped through `JointAim`. **On the standing body it does as
+> the body as before does: OwnBodyTests 12 of 13 both ways**, the thirteenth (shoved again and again, an explicit test
+> "not yet met") failing both ways with boots at 17 to 73 m/s. **§4-5's damping floor does not hold on the standing
+> body:** on every joint (strength over top speed, top speeds slower with size) 8 of 13 failed (Long fell standing, Small
+> could not catch itself), on the boots alone 9 of 13 (the ankle is the balance's first joint), and the boots still went
+> at 16 to 31 m/s. Left off (`OwnBody.DampsAll`, `DampsBoots`); the boots' whip is not, mostly, a damping fault; the new
+> getting up sets its own drives.
 
 ## 0. Summary
 

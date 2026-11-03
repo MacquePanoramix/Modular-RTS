@@ -173,6 +173,16 @@ is "weaker for its build" except through `Strength`. Neither is a body's size: t
 Whether strength should keep doing this is the Open question "how strength is scaled"
 (`Docs/Design/GettingUpForAnyBody.md:11-12`).
 
+> **Decided by Luis, November 3** ([the message](../../Correspondence/2026-11-03_STRENGTH_SIZE_AND_EVERYTHING_ON_GITHUB.md)):
+> strength from muscle, not from need; joints slower with size; the weights where the models have them. **How it is to
+> be done:** the muscle rule as data beside the present one (`PhysicalBody`), each group's capacity the creator's number
+> times a reference times (limb radius / reference radius)^3, the references set so that the three miners' mean capacity
+> stays near today's (shoulder about 122 N m at a 0.047 m arm, knee about 137 N m at a 0.046 m leg, by those means; the
+> neck kept as now until its thickness is modelled); then Small, Long and Round measured standing, stepping and at the
+> rock (the pace Luis liked, R1, may change: thin-armed miners would rest more) before it becomes the default. The
+> measured centres the same way. Expected at Strength 1 (shoulder / knee, N m): Small 42 / 97, Long 54 / 137, Round 106 /
+> 275 (today 42 / 87, 76 / 202, 85 / 220): Long weaker for its height, Round stronger, Small's arms as now.
+
 ### 1.6 Contact shapes (built identically for any body; `OwnBody.cs:567-623`, `PhysicalFall.cs:471-531`)
 
 | Link | Shape and rule | Small | Long | Round |
