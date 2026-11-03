@@ -19,6 +19,10 @@ namespace WonderGather
         // Degrees. The soft range (targets are kept inside it) and the hard one (the engine's backstop beyond it).
         public float FlexMin, FlexMax, AsideMin, AsideMax, TwistMin, TwistMax;
         public float HardMargin;
+        // How fast it turns at most with nothing to push, radians a second, for a body whose hips stand 0.6 m high (Small);
+        // a bigger body's joints are slower, as their size asks (Luis, November 3: "slower with size"; OwnBody.SpeedOf).
+        // Its strength falls as it turns, to nothing at this speed (the drive's damping at least strength over speed).
+        public float Speed;
 
         public static JointRange Of(JointKind kind)
         {
@@ -26,13 +30,13 @@ namespace WonderGather
             {
                 // (October 30 to November 3: the clinical tables, the let-go body's own, and one adult's six get-ups from
                 // motion capture, whose deep squat bends the knee to 155-158 degrees.)
-                case JointKind.Back: return new JointRange { FlexMin = -20, FlexMax = 75, AsideMin = -25, AsideMax = 25, TwistMin = -30, TwistMax = 30, HardMargin = 8 };
-                case JointKind.Neck: return new JointRange { FlexMin = -40, FlexMax = 45, AsideMin = -30, AsideMax = 30, TwistMin = -60, TwistMax = 60, HardMargin = 10 };
-                case JointKind.Shoulder: return new JointRange { FlexMin = -50, FlexMax = 150, AsideMin = -10, AsideMax = 150, TwistMin = -80, TwistMax = 70, HardMargin = 10 };
-                case JointKind.Elbow: return new JointRange { FlexMin = 0, FlexMax = 140, HardMargin = 4 };
-                case JointKind.Hip: return new JointRange { FlexMin = -15, FlexMax = 125, AsideMin = -20, AsideMax = 45, TwistMin = -40, TwistMax = 35, HardMargin = 8 };
-                case JointKind.Knee: return new JointRange { FlexMin = 0, FlexMax = 155, HardMargin = 5 };
-                default: return new JointRange { FlexMin = -50, FlexMax = 30, AsideMin = -15, AsideMax = 25, TwistMin = -15, TwistMax = 15, HardMargin = 8 };
+                case JointKind.Back: return new JointRange { FlexMin = -20, FlexMax = 75, AsideMin = -25, AsideMax = 25, TwistMin = -30, TwistMax = 30, HardMargin = 8, Speed = 20 };
+                case JointKind.Neck: return new JointRange { FlexMin = -40, FlexMax = 45, AsideMin = -30, AsideMax = 30, TwistMin = -60, TwistMax = 60, HardMargin = 10, Speed = 20 };
+                case JointKind.Shoulder: return new JointRange { FlexMin = -50, FlexMax = 150, AsideMin = -10, AsideMax = 150, TwistMin = -80, TwistMax = 70, HardMargin = 10, Speed = 30 };
+                case JointKind.Elbow: return new JointRange { FlexMin = 0, FlexMax = 140, HardMargin = 4, Speed = 30 };
+                case JointKind.Hip: return new JointRange { FlexMin = -15, FlexMax = 125, AsideMin = -20, AsideMax = 45, TwistMin = -40, TwistMax = 35, HardMargin = 8, Speed = 25 };
+                case JointKind.Knee: return new JointRange { FlexMin = 0, FlexMax = 155, HardMargin = 5, Speed = 30 };
+                default: return new JointRange { FlexMin = -50, FlexMax = 30, AsideMin = -15, AsideMax = 25, TwistMin = -15, TwistMax = 15, HardMargin = 8, Speed = 20 };
             }
         }
     }
@@ -144,6 +148,29 @@ namespace WonderGather
             twistDegrees = Vector3.Dot(about, axis) >= 0 ? angle : -angle;
         }
 
+        // The engine's coordinates of a relation (its far part's frame, the joint's zero at Zero): the rotation vector of
+        // the turn from zero, as the engine reads a ball joint (and a hinge, about its X), radians.
+        public Vector3 Engine(Quaternion relation) => RotationVector(FromZero(relation));
+
+        // The engine's own limits for this joint, degrees on each axis of the far part's frame: the range and its margin
+        // along each axis (a box about the anatomical ranges, a backstop only), widened to take in a turn (radians) that a
+        // fall may have left beyond it.
+        public void Box(Vector3 takeIn, out Vector3 low, out Vector3 high)
+        {
+            var r = Range; float m = r.HardMargin;
+            (float, float) Along(Vector3 axis, Vector3 unit, float min, float max)
+            {
+                float s = Vector3.Dot(axis, unit);
+                return s >= 0 ? (min - m, max + m) : (-(max + m), -(min - m));
+            }
+            var (xl, xh) = Along(BendAxis, Vector3.right, r.FlexMin, r.FlexMax);
+            var (yl, yh) = Hinge ? (0f, 0f) : Along(TwistAxis, Vector3.up, r.TwistMin, r.TwistMax);
+            var (zl, zh) = Hinge ? (0f, 0f) : Along(AsideAxis, Vector3.forward, r.AsideMin, r.AsideMax);
+            Vector3 at = takeIn * Mathf.Rad2Deg;
+            low = new Vector3(Mathf.Min(xl, at.x - 2), Mathf.Min(yl, at.y - 2), Mathf.Min(zl, at.z - 2));
+            high = new Vector3(Mathf.Max(xh, at.x + 2), Mathf.Max(yh, at.y + 2), Mathf.Max(zh, at.z + 2));
+        }
+
         public static Vector3 RotationVector(Quaternion q)
         {
             if (q.w < 0) q = new Quaternion(-q.x, -q.y, -q.z, -q.w);
@@ -151,6 +178,42 @@ namespace WonderGather
             if (float.IsNaN(axis.x) || angle < 1e-6f) return Vector3.zero;
             if (angle > 180) angle -= 360;
             return axis.normalized * (angle * Mathf.Deg2Rad);
+        }
+    }
+
+    // A body's joints as JointFrame reads them, and how each was made: what a controller asks of a joint (a turn from how
+    // it was made, in its far part's frame, as every Aims has always said it) becomes the engine's target (degrees on each
+    // axis), kept inside the joint's soft range. One for the whole body, so that whatever asks a joint asks it alike.
+    public sealed class JointAim
+    {
+        public readonly JointFrame[] Frames;
+        public readonly Quaternion[] Made;
+        public JointAim(JointFrame[] frames, Quaternion[] made) { Frames = frames; Made = made; }
+
+        public Vector3 Target(int j, Quaternion own)
+        {
+            var f = Frames[j];
+            if (f == null) return Vector3.zero;
+            return f.Engine(f.Clamp(Made[j] * own)) * Mathf.Rad2Deg;
+        }
+
+        // The frames of a body made as OwnBody makes it (its parts in OwnBody's order: hips, trunk, head, upper arms,
+        // forearms, thighs, shins, boots; each pair left then right).
+        public static JointFrame[] OfOwnBody()
+        {
+            var f = new JointFrame[13];
+            f[1] = JointFrame.Of(JointKind.Back, 0);
+            f[2] = JointFrame.Of(JointKind.Neck, 0);
+            for (int i = 0; i < 2; i++)
+            {
+                int side = i == 0 ? -1 : 1;
+                f[3 + i] = JointFrame.Of(JointKind.Shoulder, side);
+                f[5 + i] = JointFrame.Of(JointKind.Elbow, side);
+                f[7 + i] = JointFrame.Of(JointKind.Hip, side);
+                f[9 + i] = JointFrame.Of(JointKind.Knee, side);
+                f[11 + i] = JointFrame.Of(JointKind.Ankle, side);
+            }
+            return f;
         }
     }
 }

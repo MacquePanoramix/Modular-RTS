@@ -221,10 +221,11 @@ namespace WonderGather
         {
             for (int j = 1; j < Count; j++)
             {
-                var drive = parts[j].xDrive; drive.stiffness = stoodSpring[j]; drive.damping = stoodDamper[j]; drive.forceLimit = strength[j]; parts[j].xDrive = drive;
+                float damper = Floored(j, stoodDamper[j]);
+                var drive = parts[j].xDrive; drive.stiffness = stoodSpring[j]; drive.damping = damper; drive.forceLimit = strength[j]; parts[j].xDrive = drive;
                 if (hinge[j]) continue;
-                drive = parts[j].yDrive; drive.stiffness = stoodSpring[j]; drive.damping = stoodDamper[j]; drive.forceLimit = strength[j]; parts[j].yDrive = drive;
-                drive = parts[j].zDrive; drive.stiffness = stoodSpring[j]; drive.damping = stoodDamper[j]; drive.forceLimit = strength[j]; parts[j].zDrive = drive;
+                drive = parts[j].yDrive; drive.stiffness = stoodSpring[j]; drive.damping = damper; drive.forceLimit = strength[j]; parts[j].yDrive = drive;
+                drive = parts[j].zDrive; drive.stiffness = stoodSpring[j]; drive.damping = damper; drive.forceLimit = strength[j]; parts[j].zDrive = drive;
             }
         }
         // How far it has risen (0: as low as it began; 1: as high as it stood).
@@ -487,13 +488,19 @@ namespace WonderGather
 
         private Vector3 JointAt(int j) => parts[j].transform.TransformPoint(anchors[j]);
 
-        // A joint is asked for a turn from the pose it was made in (the turn in the part's own frame).
+        // A joint is asked for a turn from the pose it was made in (the turn in the part's own frame). (On the anatomical
+        // body, OwnBody.Anatomical, through its aim: inside the joint's range, in the engine's terms.)
+        public JointAim Aim;
+        // (And each joint's drive damped at least so much, whoever springs it: OwnBody.SpeedOf.)
+        public float[] DampedAtLeast;
+        private float Floored(int j, float damper) => DampedAtLeast != null ? Mathf.Max(damper, DampedAtLeast[j]) : damper;
         private void Aims(int j, Quaternion own)
         {
             own.ToAngleAxis(out float angle, out Vector3 axis);
             if (angle > 180) angle -= 360;
             if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.right; angle = 0; }
             Vector3 by = angle * axis;
+            if (Aim != null) by = Aim.Target(j, own);
             parts[j].SetDriveTarget(ArticulationDriveAxis.X, by.x);
             if (hinge[j]) return;
             parts[j].SetDriveTarget(ArticulationDriveAxis.Y, by.y);
@@ -513,6 +520,7 @@ namespace WonderGather
                     spring = Mathf.Min(strength[j] / (SwingFullAt * Mathf.Deg2Rad), (j >= Foot ? SwingAnkle : 1) * Rule * Rule / (step * step) * lighter[j]);
                     damper = SwingDamped * 2 * Mathf.Sqrt(spring * lighter[j]);
                 }
+                damper = Floored(j, damper);
                 var drive = parts[j].xDrive; drive.stiffness = spring; drive.damping = damper; parts[j].xDrive = drive;
                 if (hinge[j]) continue;
                 drive = parts[j].yDrive; drive.stiffness = spring; drive.damping = damper; parts[j].yDrive = drive;

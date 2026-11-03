@@ -194,6 +194,23 @@ namespace WonderGather
         // getting up is made on, Design/GettingUpForAnyBody.md.)
         public static bool HingesStop = false;
         public static float ElbowFolds = 145, KneeFolds = 150, PastStraight = 3, BootTurnsAtMost = 20;
+        // The body for any body, layer 0 (Luis, November 3, 2026: the capacity-driven getting up, built from a body that
+        // cannot look broken; Docs/Design/AnyBody/joint_model.md): each joint's zero at the anatomical position and its
+        // frame as JointFrames reads it, the engine's own limits a little beyond a living joint's range as a backstop, and
+        // whatever asks a joint asked through Aim, inside that range. Only for a body made standing, for now: the present
+        // getting up was made on joints that stopped nowhere, and stays so until the new one stands (Luis, November 3).
+        // Off: as before.
+        public static bool Anatomical;
+        // (On the anatomical body: a joint's top speed is its range's Speed for hips standing SpeedHeight high, slower with
+        // size as the square root of the height, as bodies of one make move alike when their times go so; and its drive's
+        // damping is at least its strength over that speed, so that its strength falls as it turns and nothing of it whips:
+        // boots were seen at 115 to 154 rad/s, October 30.)
+        public static float SpeedHeight = .6f;
+        public static bool DampsAll, DampsBoots;
+        public float SpeedOf(JointFrame frame) => frame.Range.Speed * Mathf.Sqrt(SpeedHeight / Mathf.Max(.2f, body != null ? body.StandingHipHeight : SpeedHeight));
+        private readonly float[] dampedAtLeast = new float[Count];
+        public JointAim Aim { get; private set; }
+        private bool writesMade;
         private readonly Vector3[] stoodToeAt = new Vector3[2];
         private readonly Quaternion[] stoodToe = { Quaternion.identity, Quaternion.identity };
         private bool toesStoodKnown;
@@ -386,6 +403,44 @@ namespace WonderGather
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
 
         // A limb's two parts bend one way (as in the let-go body).
+        // A joint's stops and its first targets, on the anatomical body: the engine's limits (a backstop, a little beyond
+        // the joint's range, widened to take in how it was made), and each drive asked for the pose it was made in, as on
+        // the body as before (whose drives' zero was that pose).
+        private static void Stops(ArticulationBody link, JointFrame frame, Quaternion made, bool hinge)
+        {
+            Vector3 now = frame.Engine(made);
+            frame.Box(now, out Vector3 low, out Vector3 high);
+            Vector3 at = now * Mathf.Rad2Deg;
+            var x = link.xDrive; x.lowerLimit = low.x; x.upperLimit = high.x; x.target = at.x; link.xDrive = x;
+            link.twistLock = ArticulationDofLock.LimitedMotion;
+            if (hinge) return;
+            var y = link.yDrive; y.lowerLimit = low.y; y.upperLimit = high.y; y.target = at.y; link.yDrive = y;
+            var z = link.zDrive; z.lowerLimit = low.z; z.upperLimit = high.z; z.target = at.z; link.zDrive = z;
+            link.swingYLock = ArticulationDofLock.LimitedMotion; link.swingZLock = ArticulationDofLock.LimitedMotion;
+        }
+
+        // The pose it was made in, written as its joints' positions before its first step: the engine reads a new
+        // articulation's joints as at zero, and would snap it there (tested: ArticulationFactsTests.MadeLyingStaysAsMade).
+        private readonly System.Collections.Generic.List<int> dofStarts = new System.Collections.Generic.List<int>();
+        private readonly System.Collections.Generic.List<float> dofs = new System.Collections.Generic.List<float>();
+        private void WriteMade()
+        {
+            var root = parts[Hips];
+            if (root == null || Aim == null) return;
+            root.GetDofStartIndices(dofStarts);
+            root.GetJointPositions(dofs);
+            for (int i = 1; i < Count; i++)
+            {
+                if (parts[i] == null || Aim.Frames[i] == null) continue;
+                Vector3 at = Aim.Frames[i].Engine(rested[i]);
+                int k = dofStarts[parts[i].index];
+                if (k < 0 || k >= dofs.Count) continue;
+                dofs[k] = at.x;
+                if (!hinge[i] && k + 2 < dofs.Count) { dofs[k + 1] = at.y; dofs[k + 2] = at.z; }
+            }
+            root.SetJointPositions(dofs);
+        }
+
         private static Vector3 Bends(Vector3 from, Vector3 joint, Vector3 to, Vector3 otherwise)
         {
             Vector3 axis = (to - from).normalized;
@@ -629,6 +684,8 @@ namespace WonderGather
             {
                 if (From[i] >= 0) rested[i] = Quaternion.Inverse(segmentsMade[From[i]].transform.rotation) * segmentsMade[i].transform.rotation;
             }
+            bool anatomical = Anatomical && !down;
+            var frames = anatomical ? JointAim.OfOwnBody() : null;
             for (int i = 0; i < Count; i++)
             {
                 var link = segmentsMade[i].AddComponent<ArticulationBody>();
@@ -643,13 +700,28 @@ namespace WonderGather
                 {
                     link.jointType = hinge[i] ? ArticulationJointType.RevoluteJoint : ArticulationJointType.SphericalJoint;
                     link.anchorPosition = anchors[i]; link.anchorRotation = Quaternion.identity;
-                    link.matchAnchors = true;
+                    if (anatomical)
+                    {
+                        // (Its zero where the joint's frame has it, not as it was made: the same point on what it hangs
+                        // from, in any pose.)
+                        link.matchAnchors = false;
+                        link.parentAnchorPosition = segmentsMade[From[i]].transform.InverseTransformPoint(segmentsMade[i].transform.TransformPoint(anchors[i]));
+                        link.parentAnchorRotation = frames[i].Zero;
+                    }
+                    else link.matchAnchors = true;
                     link.twistLock = ArticulationDofLock.FreeMotion;
                     if (!hinge[i]) { link.swingYLock = ArticulationDofLock.FreeMotion; link.swingZLock = ArticulationDofLock.FreeMotion; }
                     float lighter = Lighter(i), step = Time.fixedDeltaTime;
                     turning[i] = lighter;
                     float spring = Mathf.Min(strength[i] / (OwnKeeper.FullAt * Mathf.Deg2Rad), OwnKeeper.Rule * OwnKeeper.Rule / (step * step) * lighter);
                     float damper = OwnKeeper.Damped * 2 * Mathf.Sqrt(spring * lighter);
+                    // (Off for the standing body, November 3: floored on every joint, it slowed the standing balance's
+                    // answers so much that Long fell standing and Small could not catch itself with a step (8 of 13 of
+                    // OwnBodyTests failed); on the boots alone, the same (9 of 13): the ankle is the balance's first joint.
+                    // And the boots still went at 16 to 31 m/s when shoved again and again. The new getting up is to set
+                    // its own. DampsAll: every joint; DampsBoots: the boots.)
+                    dampedAtLeast[i] = anatomical && (DampsAll || (DampsBoots && i >= Foot)) ? strength[i] / SpeedOf(frames[i]) : 0;
+                    damper = Mathf.Max(damper, dampedAtLeast[i]);
                     var drive = new ArticulationDrive { stiffness = spring, damping = damper, forceLimit = strength[i], target = 0, targetVelocity = 0, driveType = ArticulationDriveType.Force };
                     link.xDrive = drive;
                     if (!hinge[i]) { link.yDrive = drive; link.zDrive = drive; }
@@ -669,6 +741,7 @@ namespace WonderGather
                         link.twistLock = ArticulationDofLock.LimitedMotion;
                     }
                     if (i >= Foot && HingesStop && BootTurnsAtMost > 0) link.maxJointVelocity = BootTurnsAtMost;
+                    if (anatomical) Stops(link, frames[i], rested[i], hinge[i]);
                 }
                 parts[i] = link;
             }
@@ -728,7 +801,9 @@ namespace WonderGather
             balanced = balance != null && balance.Acts;
             if (balance != null) balance.Acts = false;
             body.LetGo = true;
-            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { StandsMid = Alive ? StandsMid : 0, Life = Lived, GroundUnder = AnyGround ? null : GroundFor, Tells = what => Told?.Invoke(name + " at " + Time.time.ToString("F2") + ": " + what), ToeTouches = toeLinks[0] != null ? toeTouches : null };
+            Aim = anatomical ? new JointAim(frames, (Quaternion[])rested.Clone()) : null;
+            writesMade = anatomical;
+            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { Aim = Aim, DampedAtLeast = anatomical ? (float[])dampedAtLeast.Clone() : null, StandsMid = Alive ? StandsMid : 0, Life = Lived, GroundUnder = AnyGround ? null : GroundFor, Tells = what => Told?.Invoke(name + " at " + Time.time.ToString("F2") + ": " + what), ToeTouches = toeLinks[0] != null ? toeTouches : null };
             {
                 Vector3 between = Flat(.5f * (parts[Foot].transform.TransformPoint(soleAt[0]) + parts[Foot + 1].transform.TransformPoint(soleAt[1])));
                 Quaternion hipsFace = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);
@@ -904,6 +979,7 @@ namespace WonderGather
         public void Advance(float dt)
         {
             if (!Stands) return;
+            if (writesMade) { writesMade = false; WriteMade(); }
             // (Where it was and is, for drawing it between the steps.)
             for (int i = 0; i < Count; i++)
             {
@@ -974,6 +1050,7 @@ namespace WonderGather
             if (angle > 180) angle -= 360;
             if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.right; angle = 0; }
             Vector3 by = Turns * angle * axis;
+            if (Aim != null) by = Aim.Target(j, own);
             parts[j].SetDriveTarget(ArticulationDriveAxis.X, by.x);
             if (hinge[j]) return;
             parts[j].SetDriveTarget(ArticulationDriveAxis.Y, by.y);
