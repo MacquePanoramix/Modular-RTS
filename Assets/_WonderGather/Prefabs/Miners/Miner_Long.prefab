@@ -303,6 +303,7 @@ MonoBehaviour:
   worker: {fileID: 0}
   carriedBundle: {fileID: 0}
   bundleScale: {x: 1, y: 1, z: 1}
+  StaysPut: 0
 --- !u!114 &7169045745593727816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,6 +799,10 @@ MonoBehaviour:
   upper: 0100000002000000030000000400000005000000060000000700000008000000090000000a000000i
   upperAsks: 14.739989
   strength: 1
+  armsMuscle: 1.3982192
+  legsMuscle: 1.4672036
+  backMuscle: 1
+  neckMuscle: 1
 --- !u!1 &3747268424635421190
 GameObject:
   m_ObjectHideFlags: 0

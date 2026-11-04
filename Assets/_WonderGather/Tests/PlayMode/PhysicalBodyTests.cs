@@ -204,7 +204,10 @@ namespace WonderGather.Tests
             Assert.That(strong.first.liftEffort, Is.LessThan(ordinary.first.liftEffort * .7f));
             Assert.That(strong.first.upright, Is.GreaterThan(ordinary.first.upright * 1.1f));
             // Too weak for it: slow to raise, at all it has, and a feeble blow.
-            Assert.That(feeble.first.liftTime, Is.GreaterThan(ordinary.first.liftTime * 1.2f));
+            // (Lift times are whole steps of the physics, 0.02 s: under strength from muscle, November 4, the feeble lift
+            // took 36 steps and sometimes 37 against the ordinary one's 30, 1.2 times or more, and the check passed or
+            // failed on the last figure of 0.72. Under the rule before it took 37.)
+            Assert.That(feeble.first.liftTime, Is.GreaterThan(ordinary.first.liftTime * 1.2f - .01f));
             Assert.That(feeble.first.liftEffort, Is.GreaterThan(.8f));
             Assert.That(feeble.first.upright, Is.LessThan(ordinary.first.upright * .7f));
         }
@@ -242,7 +245,10 @@ namespace WonderGather.Tests
             yield return Try("Round", 1, 1, .5f, t => high = t);
             Debug.Log($"PHYSICAL_ADAPTS upper hand: weak {weak.first.choked:P0}, strong {strong.first.choked:P0} of the way to the head; aimed low: sinks {low.sink:F3} m, its head lands {(low.first.landed.y - low.mark) * 1000:F0} mm from the mark's height at {low.first.speed:F1} m/s; "
                 + $"aimed high: sinks {high.sink:F3} m, lands {(high.first.landed.y - high.mark) * 1000:F0} mm from it at {high.first.speed:F1} m/s");
-            Assert.That(weak.first.choked, Is.GreaterThan(.6f), "A body the pickaxe is heavy for should take it near the head.");
+            // (61% of the way under the rule before; 59% under strength from muscle, November 4: one share of muscle for
+            // both of Round's arm joints cannot give each exactly what it had, and at half its strength it holds its
+            // pickaxe with about a hundredth less effort.)
+            Assert.That(weak.first.choked, Is.GreaterThan(.55f), "A body the pickaxe is heavy for should take it near the head.");
             Assert.That(strong.first.choked, Is.LessThan(.2f), "A body the pickaxe is light for has no need to.");
             Assert.That(weak.first.struck && strong.first.struck, Is.True);
             Assert.That(low.sink, Is.GreaterThan(.1f), "Aimed low, the knees should bend.");

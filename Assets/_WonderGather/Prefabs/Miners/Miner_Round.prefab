@@ -991,6 +991,7 @@ MonoBehaviour:
   worker: {fileID: 0}
   carriedBundle: {fileID: 0}
   bundleScale: {x: 1, y: 1, z: 1}
+  StaysPut: 0
 --- !u!114 &2786353215887566923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1520,6 +1521,10 @@ MonoBehaviour:
   upper: 0100000002000000030000000400000005000000060000000700000008000000090000000a000000i
   upperAsks: 19.616032
   strength: 1
+  armsMuscle: 0.8052469
+  legsMuscle: 0.7995244
+  backMuscle: 1
+  neckMuscle: 1
 --- !u!1001 &7289641312445791386
 PrefabInstance:
   m_ObjectHideFlags: 0

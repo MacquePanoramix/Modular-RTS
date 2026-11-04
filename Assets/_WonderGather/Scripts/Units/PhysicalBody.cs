@@ -126,6 +126,30 @@ namespace WonderGather
         public enum Regions { Arms, Legs, Back, Neck }
         [SerializeField] private float armsMuscle = 1, legsMuscle = 1, backMuscle = 1, neckMuscle = 1;
         public float MuscleOf(Regions region) => region == Regions.Arms ? armsMuscle : region == Regions.Legs ? legsMuscle : region == Regions.Back ? backMuscle : neckMuscle;
+        // What the region's share does to its strength under the rule in use: the share under strength from muscle; nothing
+        // under the rule before (Need), which is as it was without them (so that -strengthRule need compares with it:
+        // November 4, the miners' shares had made Round's arms a fifth weaker under it).
+        public float MuscleGives(Regions region) => Rule == Rules.Muscle ? MuscleOf(region) : 1;
+        // The shares that make strength from muscle give what the rule before gave, for a body made before the muscle rule
+        // (the three miners, whose limbs' thickness was drawn, not weighed as muscle): so that they keep their abilities,
+        // and only bodies made since show their build. (A lean, long body's thin limbs come out dense with muscle; a round
+        // body's thick ones partly not.) Called by MinerSetup when a miner is made, and on the three as they are.
+        public void SharesAsNeeded()
+        {
+            var was = Rule;
+            armsMuscle = legsMuscle = 1;
+            Rule = Rules.Need; float shoulder = ShoulderCapacity, elbow = ElbowCapacity;
+            Rule = Rules.Muscle; float shoulderMuscle = ShoulderCapacity, elbowMuscle = ElbowCapacity, kneeMuscle = KneeCapacity;
+            Rule = was;
+            // (The knee's need from the body's own saved measures: until a body wakes, its posed body still holds the
+            // first body's, a 2.2 m one's, and the shares came out more than twice as strong, November 4.)
+            if (stance == null) TryGetComponent(out stance);
+            float thigh = stance != null ? stance.SavedProportions.legSegment : .4f;
+            float knee = KneeHolds * mass * Physics.gravity.magnitude * .5f * thigh * strength;
+            if (shoulderMuscle > 0 && elbowMuscle > 0) armsMuscle = Mathf.Clamp(.5f * (shoulder / shoulderMuscle + elbow / elbowMuscle), .1f, 4);
+            if (kneeMuscle > 0) legsMuscle = Mathf.Clamp(knee / kneeMuscle, .1f, 4);
+        }
+
         public void SetMuscle(Regions region, float share)
         {
             share = Mathf.Clamp(share, .1f, 4);
@@ -164,7 +188,7 @@ namespace WonderGather
         }
 
         // The most the back gives, in newton metres: fresh, and now.
-        public float BackCapacity => BackHolds * upperAsks * Physics.gravity.magnitude * strength * backMuscle;
+        public float BackCapacity => BackHolds * upperAsks * Physics.gravity.magnitude * strength * MuscleGives(Regions.Back);
         public float BackNow => BackCapacity * Fresh(Muscles.Back);
 
         public Vector3 CentreOfMass()
@@ -190,10 +214,10 @@ namespace WonderGather
         // times its lever), times the creator's strength, whatever the body it carries, so that a heavy body on thin limbs,
         // or a giant, is weaker for its weight. The references are set so that the three miners' mean is what it was under
         // the rule before (Need: as strong as its own body needs). The back and the neck stay as before under both, until
-        // their thickness is modelled. Need, for now: Muscle is measured on the three miners first (standing, stepping, the
-        // rock's pace that Luis liked) before it becomes the default.
+        // their thickness is modelled. (The three miners, made before it, keep their abilities by their muscle shares:
+        // SharesAsNeeded. Need: the rule before, to compare.)
         public enum Rules { Need, Muscle }
-        public static Rules Rule = Rules.Need;
+        public static Rules Rule = Rules.Muscle;
         private const float ShoulderMuscle = 121.3f, ElbowMuscle = 104.5f, KneeMuscle = 137.5f, LegReference = .046f;
         private float shoulderNeeds = -1, elbowNeeds = -1;
         private void ArmNeeds()
@@ -216,8 +240,8 @@ namespace WonderGather
         public float ElbowOfThickness => ElbowReference * Build * strength;
         public float ShoulderNeeds { get { ArmNeeds(); return Mathf.Max(0, shoulderNeeds) * strength; } }
         public float ElbowNeeds { get { ArmNeeds(); return Mathf.Max(0, elbowNeeds) * strength; } }
-        public float ShoulderCapacity => armsMuscle * (Rule == Rules.Muscle ? ShoulderMuscle * Build * strength : ArmsAsBodyNeeds ? Mathf.Max(ShoulderOfThickness, ShoulderNeeds) : ShoulderOfThickness);
-        public float ElbowCapacity => armsMuscle * (Rule == Rules.Muscle ? ElbowMuscle * Build * strength : ArmsAsBodyNeeds ? Mathf.Max(ElbowOfThickness, ElbowNeeds) : ElbowOfThickness);
+        public float ShoulderCapacity => Rule == Rules.Muscle ? armsMuscle * ShoulderMuscle * Build * strength : ArmsAsBodyNeeds ? Mathf.Max(ShoulderOfThickness, ShoulderNeeds) : ShoulderOfThickness;
+        public float ElbowCapacity => Rule == Rules.Muscle ? armsMuscle * ElbowMuscle * Build * strength : ArmsAsBodyNeeds ? Mathf.Max(ElbowOfThickness, ElbowNeeds) : ElbowOfThickness;
         public float WristCapacity => WristReference * Build * strength;
         public float HoldCapacity => HoldReference * Mathf.Pow(armRadius / ArmReference, 2) * strength;
         // The most a knee gives, in newton metres: fresh, and now.
@@ -228,7 +252,7 @@ namespace WonderGather
                 if (stance == null) TryGetComponent(out stance);
                 if (Rule == Rules.Muscle) return KneeMuscle * Mathf.Pow(legRadius / LegReference, 3) * strength * legsMuscle;
                 float thigh = stance != null ? stance.BodyProportions.legSegment : .4f;
-                return KneeHolds * mass * Physics.gravity.magnitude * .5f * thigh * strength * legsMuscle;
+                return KneeHolds * mass * Physics.gravity.magnitude * .5f * thigh * strength;
             }
         }
         public float KneeNow => KneeCapacity * Fresh(Muscles.Legs);

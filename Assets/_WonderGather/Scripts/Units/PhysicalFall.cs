@@ -407,7 +407,7 @@ namespace WonderGather
         {
             float strong = tone;
             float knee = physical.KneeNow * strong, hip = knee * HipGives, back = physical.BackNow * strong;
-            float neck = NeckHolds * parts[Head].mass * Physics.gravity.magnitude * neckLever * physical.Strength * physical.MuscleOf(PhysicalBody.Regions.Neck) * strong;
+            float neck = NeckHolds * parts[Head].mass * Physics.gravity.magnitude * neckLever * physical.Strength * physical.MuscleGives(PhysicalBody.Regions.Neck) * strong;
             // Which way the trunk is going down: its front to the ground (1), its back (-1).
             float front = Vector3.Dot(parts[Trunk].rotation * Vector3.forward, Vector3.down);
             if (Now == State.Gathering && stage != null)
