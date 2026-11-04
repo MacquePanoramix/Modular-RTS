@@ -24,6 +24,8 @@ namespace WonderGather.Tests
             // (-ownAnatomical 1: every test of the body by its own joints on the anatomical body, OwnBody.Anatomical, to
             // see that it stands, steps and is pushed as the body as before does. November 3.)
             OwnBody.Anatomical = CaptureTools.Argument("-ownAnatomical") == "1";
+            // (-ownWeighed 1, with it: each part's centre where the weighed model has it, OwnBody.Weighed.)
+            OwnBody.Weighed = CaptureTools.Argument("-ownWeighed") == "1";
             // (-strengthRule muscle: strength from muscle, PhysicalBody.Rule, Luis November 3.)
             PhysicalBody.Rule = TestArguments.StrengthRule;
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
@@ -34,7 +36,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { OwnBody.Told = null; OwnBody.StaysPut = false; OwnBody.AnyGround = false; Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.BreathShoulders = 1; OwnBody.BreathSeenInAir = true; OwnBody.BreathSize = OwnBody.BreathSizeAtFirst; OwnBody.Anatomical = false; PhysicalBody.Rule = TestArguments.StrengthRule; }
+        public void Restore() { OwnBody.Told = null; OwnBody.StaysPut = false; OwnBody.AnyGround = false; Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.BreathShoulders = 1; OwnBody.BreathSeenInAir = true; OwnBody.BreathSize = OwnBody.BreathSizeAtFirst; OwnBody.Anatomical = false; OwnBody.Weighed = false; PhysicalBody.Rule = TestArguments.StrengthRule; }
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }

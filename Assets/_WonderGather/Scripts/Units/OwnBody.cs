@@ -201,6 +201,11 @@ namespace WonderGather
         // getting up was made on joints that stopped nowhere, and stays so until the new one stands (Luis, November 3).
         // Off: as before.
         public static bool Anatomical;
+        // (On the anatomical body: each part's centre of mass where the weighed model has it, not in the middle of its shapes
+        // (Luis, November 3: "the weights where the models have them"): the heads 8 cm higher, the trunks and hips 2 to 7 cm
+        // (Docs/Design/AnyBody/body_map.md §1.7). The head's own shape is moved there too, so that it meets the ground where
+        // it is drawn, and its neck is as strong for the longer lever as it was for the shorter. Off: as before.)
+        public static bool Weighed;
         // (On the anatomical body: a joint's top speed is its range's Speed for hips standing SpeedHeight high, slower with
         // size as the square root of the height, as bodies of one make move alike when their times go so; and its drive's
         // damping is at least its strength over that speed, so that its strength falls as it turns and nothing of it whips:
@@ -489,6 +494,53 @@ namespace WonderGather
 
         // The turning weight (kg m2) of the lighter side of a joint, about the joint: of all that hangs beyond it, or
         // of all the rest, whichever is less. (Each part as a point at its middle, and a rod of its own length.)
+        // Weighed: each part's centre of mass where the weighed model has it; its moments as its shapes give them, about
+        // that centre; the head's own shape moved there, so that it meets the ground where it is drawn.
+        private void WeighCentres()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (!CentreOf(out Vector3 at, BonesOf(i))) continue;
+                var link = parts[i];
+                var part = segmentsMade[i].transform;
+                if (i == Head && segmentsMade[Head].TryGetComponent(out SphereCollider skull)) skull.center = part.InverseTransformPoint(at);
+                link.ResetCenterOfMass(); link.ResetInertiaTensor();
+                Vector3 moments = link.inertiaTensor;
+                Quaternion axes = link.inertiaTensorRotation;
+                link.automaticCenterOfMass = false; link.centerOfMass = part.InverseTransformPoint(at);
+                link.automaticInertiaTensor = false; link.inertiaTensor = moments; link.inertiaTensorRotation = axes;
+            }
+        }
+
+        // Where the bones' weighed parts have their centre, as the posed body stands now.
+        private bool CentreOf(out Vector3 centre, params string[] bones)
+        {
+            float kilograms = 0;
+            Vector3 sum = Vector3.zero;
+            for (int i = 0; i < physical.PartCount; i++)
+            {
+                var part = physical.PartAt(i);
+                if (part.bone == null) continue;
+                foreach (string bone in bones) if (part.bone.name.StartsWith(bone)) { kilograms += part.mass; sum += part.mass * part.bone.TransformPoint(part.centre); break; }
+            }
+            centre = kilograms > 0 ? sum / kilograms : Vector3.zero;
+            return kilograms > 0;
+        }
+
+        // The bones each part of the body standing is weighed from, as Make weighs them.
+        private static string[] BonesOf(int i)
+        {
+            if (i == Hips) return new[] { "Pelvis" };
+            if (i == Trunk) return new[] { "Spine", "Chest", "Neck" };
+            if (i == Head) return new[] { "Head" };
+            string l = (i - UpperArm) % 2 == 0 ? "L" : "R";
+            if (i < Forearm) return new[] { "UpperArm." + l };
+            if (i < Thigh) return new[] { "Forearm." + l, "Hand." + l };
+            if (i < Shin) return new[] { "Thigh." + l };
+            if (i < Foot) return new[] { "Shin." + l };
+            return new[] { "Foot." + l, "Toe." + l };
+        }
+
         private float Lighter(int joint)
         {
             Vector3 about = segmentsMade[joint].transform.TransformPoint(anchors[joint]);
@@ -631,8 +683,11 @@ namespace WonderGather
             anchors[Trunk] = new Vector3(0, -shape.torsoRise, 0);
             // The head.
             float headWeighs = Weighs("Head") * HeadTimes;
-            float neckLever = Mathf.Max(.03f, shape.headRise - 2 * shape.torsoRise);
-            var head = Made(Head, "Head", s.head.position, s.head.rotation, headWeighs, NeckHolds * headWeighs * Physics.gravity.magnitude * neckLever * physical.Strength * physical.MuscleGives(PhysicalBody.Regions.Neck), false);
+            float neckLever = Mathf.Max(.03f, shape.headRise - 2 * shape.torsoRise), headLever = neckLever;
+            // (Weighed, the head's lever is from its neck to where the model has its centre.)
+            if (Anatomical && Weighed && !down && CentreOf(out Vector3 headAt, "Head"))
+                headLever = Mathf.Max(neckLever, Vector3.Distance(headAt, s.head.position + s.head.rotation * new Vector3(0, -neckLever, 0)));
+            var head = Made(Head, "Head", s.head.position, s.head.rotation, headWeighs, NeckHolds * headWeighs * Physics.gravity.magnitude * headLever * physical.Strength * physical.MuscleGives(PhysicalBody.Regions.Neck), false);
             var skull = head.AddComponent<SphereCollider>();
             skull.radius = Mathf.Max(.06f, shape.headHalf); skull.sharedMaterial = surface;
             lengths[Head] = 2 * skull.radius;
@@ -745,6 +800,7 @@ namespace WonderGather
                 }
                 parts[i] = link;
             }
+            if (anatomical && Weighed) WeighCentres();
             for (int i = 0; i < 2; i++) { touches[i] = segmentsMade[Foot + i].AddComponent<GroundTouch>(); touches[i].StillOnly = down; }
             for (int i = 0; i < Count; i++) leanTouches[i] = null;
             if (down)

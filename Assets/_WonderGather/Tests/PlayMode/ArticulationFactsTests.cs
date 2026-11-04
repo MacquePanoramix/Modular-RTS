@@ -206,5 +206,70 @@ namespace WonderGather.Tests
             if (held) Assert.That(Mathf.Max(driftA, driftB), Is.LessThan(2), "The engine's gravity forces, put on the joints, did not hold the body.");
             else Assert.That(Mathf.Max(driftA, driftB), Is.GreaterThan(20), "The hung body did not fall without the forces: the test proves nothing.");
         }
+
+        // Where a ball joint's reading jumps by a whole turn, and whether the two links' body frames (each one's centre of
+        // mass and inertia axes) set it, as joint_model.md §1.1 read in the engine's source (on October 30 the boots'
+        // readings jumped so, then turned at 74 to 168 rad/s). A link spun about its joint's own axis, its inertia the same
+        // about every axis (so how its body frame is turned changes nothing of how it moves), gravity off. Found (November
+        // 4): the reading runs on with the turn, about the joint's axis in the joint's frame; and with the spun link's body
+        // frame turned a third of a turn about the same axis it reads the same: the body frames do not set where it jumps.
+        [UnityTest]
+        public IEnumerator ABallJointReadsOnWithItsTurn()
+        {
+            float jumped = 0, turned = 0;
+            Vector3 end = default;
+            yield return Spun(Quaternion.identity, 175, (j, at90, e, t) => { jumped = j; end = e; turned = t; });
+            Assert.That(jumped, Is.LessThan(0), $"The reading jumped at {jumped:0} degrees, before half a turn.");
+            Assert.That(Mathf.Abs(end.x - turned * Mathf.Deg2Rad), Is.LessThan(.05f), "The reading is not the turn about the joint's axis.");
+        }
+
+        [UnityTest]
+        public IEnumerator ItsBodyFrameDoesNotMoveWhereTheReadingJumps()
+        {
+            float lined = 0, turned = 0;
+            Vector3 linedAt90 = default, turnedAt90 = default, linedEnd = default, turnedEnd = default;
+            yield return Spun(Quaternion.identity, 350, (j, at90, e, t) => { lined = j; linedAt90 = at90; linedEnd = e; });
+            yield return Spun(Quaternion.Euler(120, 0, 0), 350, (j, at90, e, t) => { turned = j; turnedAt90 = at90; turnedEnd = e; });
+            Assert.That(turned, Is.EqualTo(lined).Within(3f), $"The body frame turned a third of a turn moved where the reading jumps: {lined:0} degrees lined up, {turned:0} turned.");
+            Assert.That(Vector3.Distance(turnedAt90, linedAt90), Is.LessThan(.01f), "The body frame turned a third of a turn changed the reading at a quarter turn.");
+            Assert.That(Vector3.Distance(turnedEnd, linedEnd), Is.LessThan(.05f), "The body frame turned a third of a turn changed the reading near a whole turn.");
+        }
+
+        // A link spun about its joint's axis until it has turned so far; what its reading did.
+        private IEnumerator Spun(Quaternion bodyFrame, float until, System.Action<float, Vector3, Vector3, float> done)
+        {
+            var root = Root(new Vector3(0, 50, 900));
+            root.automaticCenterOfMass = false; root.centerOfMass = Vector3.zero;
+            root.automaticInertiaTensor = false; root.inertiaTensor = new Vector3(.01f, .01f, .01f); root.inertiaTensorRotation = Quaternion.identity;
+            var spun = Link(root.transform, "Spun", root.transform.position, root.transform.rotation, 1, Vector3.zero, new Vector3(.01f, .01f, .01f));
+            spun.inertiaTensorRotation = bodyFrame;
+            spun.useGravity = false;
+            spun.jointType = ArticulationJointType.SphericalJoint;
+            spun.twistLock = spun.swingYLock = spun.swingZLock = ArticulationDofLock.FreeMotion;
+            spun.anchorPosition = Vector3.zero; spun.anchorRotation = Quaternion.identity; spun.matchAnchors = true;
+            var none = new ArticulationDrive { stiffness = 0, damping = 0, forceLimit = 0, driveType = ArticulationDriveType.Force };
+            spun.xDrive = none; spun.yDrive = none; spun.zDrive = none;
+            yield return null;
+            spun.jointVelocity = new ArticulationReducedSpace(1f, 0f, 0f);
+            Quaternion was = spun.transform.rotation;
+            Vector3 read = Vector3.zero, readAt90 = Vector3.zero;
+            float turned = 0, jumpedAt = -1, biggest = 0;
+            while (turned < until)
+            {
+                Physics.Simulate(Dt);
+                Quaternion now = spun.transform.rotation;
+                float before = turned;
+                turned += Quaternion.Angle(was, now); was = now;
+                var jp = spun.jointPosition;
+                Vector3 reads = new Vector3(jp[0], jp[1], jp[2]);
+                float step = Vector3.Distance(reads, read);
+                if (step > biggest) biggest = step;
+                if (step > 1 && jumpedAt < 0) jumpedAt = turned;
+                if (before < 90 && turned >= 90) readAt90 = reads;
+                read = reads;
+            }
+            Debug.Log($"FACTS spun to {turned:0} degrees, its body frame turned {Quaternion.Angle(Quaternion.identity, bodyFrame):0} degrees from the joint's: the reading's largest step {biggest:0.00} rad, its first jump {(jumpedAt < 0 ? "none" : "at " + jumpedAt.ToString("0") + " degrees")}; at 90 degrees it read {readAt90.x:0.000}, {readAt90.y:0.000}, {readAt90.z:0.000}, at the end {read.x:0.000}, {read.y:0.000}, {read.z:0.000}");
+            done(jumpedAt, readAt90, read, turned);
+        }
     }
 }
