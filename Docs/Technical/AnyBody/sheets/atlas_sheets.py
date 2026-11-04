@@ -1,6 +1,8 @@
 """The stance atlas's sheets, from the tiles and figures StanceAtlasCapture writes (Docs/Technical/AnyBody/INTEGRATION.md 3.6).
 
-python atlas_sheets.py <capture folder> [<sheets folder>]
+python atlas_sheets.py <capture folder> [<sheets folder>] [--blind]
+
+--blind: for judges, the two looks named A and B, which is which drawn for each stance (blind_key.csv beside them).
 
 - converts the tiles from PPM to PNG (the PPM are then removed);
 - one sheet per stance: for each body a row as fitted and a row with its free limbs relaxed, its four sides (front,
@@ -11,6 +13,7 @@ The figures are printed here, not in Unity, so the tiles stay clean and the layo
 import csv
 import os
 import sys
+import zlib
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -77,9 +80,9 @@ def tile(folder, body, stance, look, view, size):
     return Image.open(p).resize((size, size), Image.LANCZOS) if os.path.exists(p) else None
 
 
-def stance_sheet(folder, sheets, stance, name, bodies, rows):
+def stance_sheet(folder, sheets, stance, name, bodies, rows, looks=LOOKS):
     width = PAD + len(VIEWS) * (TILE + PAD)
-    height = HEADER + len(bodies) * len(LOOKS) * (LABEL + TILE + PAD) + PAD
+    height = HEADER + len(bodies) * len(looks) * (LABEL + TILE + PAD) + PAD
     sheet = Image.new('RGB', (width, height), PAPER)
     d = ImageDraw.Draw(sheet)
     d.text((PAD, 10), name, font=font(26, True), fill=INK)
@@ -87,7 +90,7 @@ def stance_sheet(folder, sheets, stance, name, bodies, rows):
            'The dark dot on the head: its front.  The thin line: the centre of mass, plumb.', font=font(15), fill=FAINT)
     y = HEADER
     for body in bodies:
-        for look, words in LOOKS:
+        for look, words in looks:
             text, flagged = label(rows.get((body, stance, look)))
             d.text((PAD, y + 8), f'{body}, {words}', font=font(19, True), fill=INK)
             d.text((PAD, y + 30), text, font=font(15), fill=WARN if flagged else INK)
@@ -100,7 +103,7 @@ def stance_sheet(folder, sheets, stance, name, bodies, rows):
     sheet.save(os.path.join(sheets, f'stance_{stance}.png'), optimize=True)
 
 
-def body_page(folder, sheets, body, stances, names, rows, view='left', size=240, pairs=3):
+def body_page(folder, sheets, body, stances, names, rows, view='left', size=240, pairs=3, order=None):
     columns = 2 * pairs
     rows_n = (len(stances) + pairs - 1) // pairs
     gap = 24
@@ -108,13 +111,13 @@ def body_page(folder, sheets, body, stances, names, rows, view='left', size=240,
     height = HEADER + rows_n * (size + 44 + PAD)
     page = Image.new('RGB', (width, height), PAPER)
     d = ImageDraw.Draw(page)
-    d.text((PAD, 10), f'{body}: every stance from its {view} side, as fitted (left) and with its free limbs relaxed (right)',
-           font=font(22, True), fill=INK)
+    d.text((PAD, 10), f'{body}: every stance from its {view} side, ' + ('A (left) and B (right)' if order else
+           'as fitted (left) and with its free limbs relaxed (right)'), font=font(22, True), fill=INK)
     for k, stance in enumerate(stances):
         x = PAD + (k % pairs) * (2 * size + PAD + gap)
         y = HEADER + (k // pairs) * (size + 44 + PAD)
         d.text((x, y + 2), names.get(stance, stance)[:60], font=font(13, True), fill=INK)
-        for j, (look, _) in enumerate(LOOKS):
+        for j, (look, _) in enumerate(order[stance] if order else LOOKS):
             r = rows.get((body, stance, look))
             if r:
                 d.text((x + j * (size + PAD), y + 20), (f"S {float(r['S']):.2f}" if r['held'] == '1' else 'cannot hold') +
@@ -126,8 +129,9 @@ def body_page(folder, sheets, body, stances, names, rows, view='left', size=240,
 
 
 def main():
-    folder = sys.argv[1]
-    sheets = sys.argv[2] if len(sys.argv) > 2 else os.path.join(folder, 'sheets')
+    folder = [a for a in sys.argv[1:] if not a.startswith('--')][0]
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    sheets = args[1] if len(args) > 1 else os.path.join(folder, 'sheets_blind' if '--blind' in sys.argv else 'sheets')
     os.makedirs(sheets, exist_ok=True)
     convert(os.path.join(folder, 'tiles'))
     rows = figures(folder)
@@ -138,10 +142,25 @@ def main():
         if stance not in stances:
             stances.append(stance)
         names[stance] = r['name']
-    for stance in stances:
-        stance_sheet(folder, sheets, stance, names[stance], bodies, rows)
-    for body in bodies:
-        body_page(folder, sheets, body, stances, names, rows)
+    if '--blind' in sys.argv:
+        order = {}
+        with open(os.path.join(sheets, 'blind_key.csv'), 'w', encoding='utf-8') as key:
+            key.write('stance,A,B\n')
+            # (Half the stances one way, half the other: ranked by a hash of their names, so neither A nor B is mostly one look.)
+            ranked = sorted(stances, key=lambda st: zlib.crc32(st.encode()))
+            for stance in stances:
+                looks = LOOKS if ranked.index(stance) % 2 == 0 else LOOKS[::-1]
+                order[stance] = [(looks[0][0], 'A'), (looks[1][0], 'B')]
+                key.write(f'{stance},{looks[0][0]},{looks[1][0]}\n')
+        for stance in stances:
+            stance_sheet(folder, sheets, stance, names[stance], bodies, rows, order[stance])
+        for body in bodies:
+            body_page(folder, sheets, body, stances, names, rows, order=order)
+    else:
+        for stance in stances:
+            stance_sheet(folder, sheets, stance, names[stance], bodies, rows)
+        for body in bodies:
+            body_page(folder, sheets, body, stances, names, rows)
     print(f'{len(stances)} stance sheets, {len(bodies)} body pages in {sheets}')
 
 
