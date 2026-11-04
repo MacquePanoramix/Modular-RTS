@@ -4737,3 +4737,28 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); the getting up's switch off, 
   and after the review's six fixes; not yet in Unity.
 - **Not tested:** a build; the EditMode tests; strengths 0.5 and 2 on the anatomical body; any body but the three miners
   in the game (the prototype's eleven made-up bodies exist only in Python). Passing tests are not Luis's acceptance.
+
+## S3b step 2 — the stance solver in the game; the first look at its stances (November 4, night)
+
+The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the solver.
+
+- **One source** (`3a0d1f4`, INTEGRATION.md step 1): the solver's 21 files moved with `git mv` into
+  `Assets/_WonderGather/Scripts/Units/Rising/AnyBody` as one assembly with no engine references; the console runners
+  build the same files. Both runners as before the move (Body 21541 / 0; Reserve 6205 / 0); Unity compiles it with no
+  error and no warning in it; `ArticulationFactsTests` 9 of 9 in that run.
+- **The first look** (`1a89de0`; the check's C4: something to see before the bridge): `StanceAtlasCapture`, nine
+  stances fitted to Small, Long and Round as the solver has them, drawn as the solids the fit used, four sides each.
+  In the editor every fit 33 to 342 ms; all held. Read by me at their own size: as fitted, the arms that bear nothing are
+  held where no body would hold them (Long's squat on its toes: hands at its face, elbows 115 degrees, shoulders 127;
+  the deep flat squat: forearms out level; rising from the half-kneel: one forearm out level).
+- **The free limbs' pull** (`FitOptions.RelaxFreeLimbs`, off by default; a weak pull, 0.1 a radian, of what bears nothing
+  toward the relaxed pose, as a second pass from the fit's own pose). On the 450 test fits (console `relax`): the cost
+  without the pull rises by a median 0.0000 (over 0.01 in 7, the most 0.021); the reserve S moves by a median 0.0000 (over
+  0.01 in 30 of 427, the most 0.063); not held 23 to 17. Done in one pass first: 46 fits left their basin (the most 0.36),
+  so a second pass. Off, every console check as before (Body 21541 / 0). On the sheets the free arms hang beside the
+  knees in the squats and at the sides rising from the half-kneel.
+- **The sheets** (`Docs/Images/StanceAtlas/2026-11-04/`: one per stance, as fitted above relaxed for each miner; one page
+  per miner). Judged blind (A and B, half the stances each way) by three judges and a referee: see below when read.
+- **Not tested:** the drawn miners in these stances (step 5: their straight wrists and Long's shoulders, the check's C2);
+  bodies other than the three; the bridge from a made miner (steps 2 and 3); any of it in a build. Passing tests and
+  judges are not Luis's acceptance.

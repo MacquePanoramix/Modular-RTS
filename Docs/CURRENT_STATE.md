@@ -28,9 +28,15 @@
   **The port reviewed** (an independent agent, `00991e5`: six small fixes, both runners unchanged; ranked findings in
   `port/REVIEW.md`). **The design of the solver in the game** (work branch `Docs/Technical/AnyBody/INTEGRATION.md`,
   `ebec380`: one source for Unity and the console runners, the bridge from a made miner field by field, the atlas sheets;
-  checked against the code, C0 to C13). **Next:** its steps, with a first look for Luis right after the move (the
-  check's C4): then the solver in the game behind a switch, its stances pictured across the miners and made bodies for Luis (to be watched for anything
-  robotic or repetitive); the measured weight centres; layer 3, the controller. Nothing asked of Luis.
+  checked against the code, C0 to C13). **Night: the solver is in the game** (one source, `3a0d1f4`; nothing in play
+  calls it), **and the first look at its stances** (`1a89de0`): nine stances fitted to Small, Long and Round, as the
+  solids the fit used, four sides each ([the sheets](Images/StanceAtlas/2026-11-04/)). As fitted, the arms that bear
+  nothing were held where no body holds them (hands at the face in a squat, forearms out level); a weak pull of free
+  limbs toward the relaxed pose (`FitOptions.RelaxFreeLimbs`, off by default) mends it and costs the fits almost nothing
+  (the 450 test fits: a median of 0.0000). Both looks side by side, judged blind by three judges and a referee
+  (running). **Next:** the judges' findings; then the bridge from a made miner, the drawn miners in these stances (their
+  straight wrists, Long's shoulders: the check's C2), bodies between and beyond the three, all for Luis; the measured
+  weight centres; layer 3, the controller. Nothing asked of Luis yet.
 
 - **Before (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his
   answers](Correspondence/2026-11-03_THE_DIRECTION_FOR_ANY_BODY.md)). **Built on the work branch:** step 0, the engine's
