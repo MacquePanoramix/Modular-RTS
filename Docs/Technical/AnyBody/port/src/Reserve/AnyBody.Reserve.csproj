@@ -9,7 +9,12 @@
     <RootNamespace>WonderGather.AnyBody</RootNamespace>
     <AssemblyName>WonderGather.AnyBody.Reserve</AssemblyName>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- The source is in the game (Directory.Build.props: AnyBodySrc). -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(AnyBodySrc)Reserve\**\*.cs" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\AnyBody.Core.csproj" />
   </ItemGroup>

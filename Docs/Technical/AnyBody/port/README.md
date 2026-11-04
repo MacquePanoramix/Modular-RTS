@@ -6,6 +6,12 @@ This is the Python prototype (`../proto/b3.py`, `lib3.py`, `run3.py`) ported to 
 .NET Standard 2.1, so it can move into Unity unchanged (no records, init-only setters, file-scoped namespaces, global
 usings, default interface members; no UnityEngine, no System.Numerics in public APIs). Namespace `WonderGather.AnyBody`.
 
+**Since November 4 the source is in the game** (`Assets/_WonderGather/Scripts/Units/Rising/AnyBody/{Core,Body,Reserve}`,
+one assembly `WonderGather.AnyBody`, with no engine references; moved with `git mv`, so its history follows). The
+three `src/*/*.csproj` here build those same files (`Directory.Build.props`: `AnyBodySrc`); the folders under
+`src/` below are now theirs. Both runners gave the same counts after the move (Body 21541 / 0, Reserve 6205 / 0),
+and Unity compiles it with no error and no warning.
+
 Two halves, each by its own agent, meeting at `src/Core/StaticsProblem.cs` (see `INTERFACE.md`):
 
 | folder | what | owner |

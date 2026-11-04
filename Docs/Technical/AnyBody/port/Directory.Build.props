@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <!-- One source: Unity compiles these files as the assembly WonderGather.AnyBody (its asmdef there); the console
+         projects in src/ compile the same files, each its own folder. -->
+    <AnyBodySrc>$(MSBuildThisFileDirectory)..\..\..\..\Assets\_WonderGather\Scripts\Units\Rising\AnyBody\</AnyBodySrc>
+  </PropertyGroup>
+</Project>
