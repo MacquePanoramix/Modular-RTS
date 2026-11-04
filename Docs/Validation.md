@@ -4758,7 +4758,15 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   so a second pass. Off, every console check as before (Body 21541 / 0). On the sheets the free arms hang beside the
   knees in the squats and at the sides rising from the half-kneel.
 - **The sheets** (`Docs/Images/StanceAtlas/2026-11-04/`: one per stance, as fitted above relaxed for each miner; one page
-  per miner). Judged blind (A and B, half the stances each way) by three judges and a referee: see below when read.
+  per miner). Judged blind (A and B, half the stances each way) by three judges and a referee
+  ([round 1](Reviews/2026-11-04_StanceAtlas_Judges/)): the relaxed look better in the squat on the toes (all three
+  bodies) and Small's flat squat, equal elsewhere; both looks of Long's and Round's deep flat squat had the free arms out
+  like wings (shoulders lifted sideways 100 degrees, out of the ground's way). **Mended** (`77cc4ec`): the pull takes the
+  sideways lift too (toward 10 degrees) and also starts from the free arms reached forward; now forward 50 to 54 degrees,
+  out 10 to 18. On the 450 test fits: the cost without the pull a median 0.0000 (over 0.01 in 6, the most 0.021); S a
+  median 0.0000 (over 0.01 in 32 of 426, the most 0.065); not held 23 to 19. The sheets in Images are the mended ones;
+  not judged again yet. Standing findings: Long's bear crawl folds into a pike (the stance, for a tall body); Small and
+  Round sit up on locked arms (S 0.56 and 0.40); the stands and kneels mirror-perfect.
 - **Not tested:** the drawn miners in these stances (step 5: their straight wrists and Long's shoulders, the check's C2);
   bodies other than the three; the bridge from a made miner (steps 2 and 3); any of it in a build. Passing tests and
   judges are not Luis's acceptance.
