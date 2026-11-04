@@ -28,6 +28,7 @@ namespace WonderGather.AnyBody.Tests
                 if (which.Contains("anybody")) AnyBodyTests.Run(opts);
                 if (which.Contains("reserve")) ReserveAtFitsTests.Run(opts);
                 if (which.Contains("time")) FitTests.Timing(opts);
+                if (which.Contains("relax")) RelaxTests.Run(opts);
             }
             catch (Exception ex)
             {

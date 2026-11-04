@@ -31,6 +31,12 @@ namespace WonderGather.AnyBody
         public int Evaluations;
         public int JacobianEvaluations;
 
+        /// <summary>The free limbs' pull toward the relaxed pose, per radian (FitOptions.RelaxFreeLimbs); 0: none, as the
+        /// prototype. Set before the first evaluation.</summary>
+        public double Relax;
+        readonly bool[] _isFree = new bool[Pose.Count];
+        readonly bool[] _armBears = new bool[2], _toesBear = new bool[2];
+
         /// <summary>When set, Evaluate also writes a label per residual (for tests and debugging).</summary>
         public List<string> Labels;
 
@@ -92,6 +98,13 @@ namespace WonderGather.AnyBody
             MReq = double.IsNaN(st.MReq) ? 0.03 * b.HipHeight : st.MReq;
             MReady = double.IsNaN(st.MReady) ? 0.02 * b.HipHeight : st.MReady;
             foreach (var kd in st.Ready) _readyMask |= 1 << (int)kd;
+            foreach (int i in Free) _isFree[i] = true;
+            foreach (var sp in st.Supports)
+            {
+                if (sp.Side < 0 || sp.Side > 1) continue;
+                if (sp.Kind == SupportKind.Hand || sp.Kind == SupportKind.Forearm || sp.Kind == SupportKind.HandOnThigh) _armBears[sp.Side] = true;
+                if (sp.Kind == SupportKind.Toes || sp.Kind == SupportKind.Ball) _toesBear[sp.Side] = true;
+            }
             Tape = new Tape(n);
         }
 
@@ -219,7 +232,30 @@ namespace WonderGather.AnyBody
                 r.Add((a + c2) * 0.4);
             }
             Label(r, "comfort");
+            // free limbs, when asked: the neck untwisted; an arm that bears nothing hanging along the trunk, untwisted, its
+            // elbow a little bent; toes that bear nothing flat. Weak, so the weight's margin still sends an arm forward.
+            if (Relax > 0)
+            {
+                Relaxed(r, q, Pose.NRot, 0.0);
+                for (int s = 0; s < 2; s++)
+                {
+                    int o4 = 4 * s;
+                    if (!_armBears[s])
+                    {
+                        Relaxed(r, q, Pose.ShFlexL + o4, 0.0);
+                        Relaxed(r, q, Pose.ShRotL + o4, 0.0);
+                        Relaxed(r, q, Pose.ElbL + o4, 15.0 * Pose.D2R);
+                    }
+                    if (!_toesBear[s]) Relaxed(r, q, Pose.ToeL + s, 0.0);
+                }
+                Label(r, "relax");
+            }
             return r.Count;
+        }
+
+        void Relaxed(List<D> r, D[] q, int i, double at)
+        {
+            if (_isFree[i]) r.Add((q[i] - at) * Relax);
         }
 
         /// <summary>0.5 |r|^2 (scipy's cost).</summary>
