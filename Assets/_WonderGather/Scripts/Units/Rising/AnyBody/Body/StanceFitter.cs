@@ -70,7 +70,13 @@ namespace WonderGather.AnyBody
             // the stance keeps its basin and only what bears nothing moves. (In one pass, the pull sent some fits to
             // another basin: on the 450 test fits, 46 rose by more than 0.01 in the cost without the pull, Nov 4.)
             var relax = new StanceProblem(b, st) { Relax = opt.RelaxWeight };
-            var relaxed = Fit(relax, new FitOptions { MaxIterations = opt.MaxIterations, FTol = opt.FTol, XTol = opt.XTol, GTol = opt.GTol, Start = plain.Q, Restarts = 0 });
+            // (And from the same pose with its free arms reached forward, the better kept: from the fit's own pose alone,
+            // an arm that was out to the side stayed there, Long's deep flat squat, Nov 4.)
+            var relaxed = Fit(relax, new FitOptions
+            {
+                MaxIterations = opt.MaxIterations, FTol = opt.FTol, XTol = opt.XTol, GTol = opt.GTol, Start = plain.Q,
+                ExtraStarts = new[] { relax.FreeArmsForward(plain.Q) }, Restarts = 1, RestartCost = 0
+            });
             relaxed.Starts += plain.Starts;
             relaxed.Iterations += plain.Iterations;
             relaxed.Evaluations += plain.Evaluations;

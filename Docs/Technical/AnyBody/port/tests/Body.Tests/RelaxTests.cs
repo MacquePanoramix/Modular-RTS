@@ -39,7 +39,16 @@ namespace WonderGather.AnyBody.Tests
                     if (!s1.Held) notHeldAfter++;
                     dCost.Add(costWithout - plain.Cost);
                     if (s0.Held && s1.Held) dS.Add(s1.S - s0.S);
-                    if (bn == "Long" || bn == "Small")
+                    if (opts.Contains("--arms"))
+                        lines.Add(string.Format(CultureInfo.InvariantCulture,
+                            "   {0,-6} {1,-44} flex {2,4:F0} {3,4:F0} -> {4,4:F0} {5,4:F0}  abd {6,4:F0} {7,4:F0} -> {8,4:F0} {9,4:F0}  rot {10,4:F0} {11,4:F0} -> {12,4:F0} {13,4:F0}  elb {14,4:F0} {15,4:F0} -> {16,4:F0} {17,4:F0}  trunk {18,4:F0} -> {19,4:F0}",
+                            bn, st.Name.Length > 44 ? st.Name.Substring(0, 44) : st.Name,
+                            Deg(plain.Q[Pose.ShFlexL]), Deg(plain.Q[Pose.ShFlexR]), Deg(relaxed.Q[Pose.ShFlexL]), Deg(relaxed.Q[Pose.ShFlexR]),
+                            Deg(plain.Q[Pose.ShAbdL]), Deg(plain.Q[Pose.ShAbdR]), Deg(relaxed.Q[Pose.ShAbdL]), Deg(relaxed.Q[Pose.ShAbdR]),
+                            Deg(plain.Q[Pose.ShRotL]), Deg(plain.Q[Pose.ShRotR]), Deg(relaxed.Q[Pose.ShRotL]), Deg(relaxed.Q[Pose.ShRotR]),
+                            Deg(plain.Q[Pose.ElbL]), Deg(plain.Q[Pose.ElbR]), Deg(relaxed.Q[Pose.ElbL]), Deg(relaxed.Q[Pose.ElbR]),
+                            Deg(plain.Q[Pose.TFlex]), Deg(relaxed.Q[Pose.TFlex])));
+                    else if (bn == "Long" || bn == "Small")
                         lines.Add(string.Format(CultureInfo.InvariantCulture,
                             "   {0,-6} {1,-58} cost {2,6:F3} -> {3,6:F3}  S {4,5} -> {5,5}  elbows {6,4:F0} {7,4:F0} -> {8,4:F0} {9,4:F0}  shoulders {10,4:F0} {11,4:F0} -> {12,4:F0} {13,4:F0}",
                             bn, st.Name.Length > 58 ? st.Name.Substring(0, 58) : st.Name, plain.Cost, costWithout,

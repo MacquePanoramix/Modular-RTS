@@ -243,6 +243,10 @@ namespace WonderGather.AnyBody
                     if (!_armBears[s])
                     {
                         Relaxed(r, q, Pose.ShFlexL + o4, 0.0);
+                        // (Its sideways lift too, a little out from the body: without it, in a deep squat, where an arm
+                        // hanging along a trunk leant far forward would go into the ground, the free arms went out to the
+                        // sides like wings, 100 degrees, Nov 4: the judges' first finding. Now the way left is forward.)
+                        Relaxed(r, q, Pose.ShAbdL + o4, 10.0 * Pose.D2R);
                         Relaxed(r, q, Pose.ShRotL + o4, 0.0);
                         Relaxed(r, q, Pose.ElbL + o4, 15.0 * Pose.D2R);
                     }
@@ -251,6 +255,23 @@ namespace WonderGather.AnyBody
                 Label(r, "relax");
             }
             return r.Count;
+        }
+
+        /// <summary>A full pose with each arm that bears nothing reached forward and a little out, its elbow a little bent
+        /// (a second start for the free limbs' pull).</summary>
+        public double[] FreeArmsForward(double[] q)
+        {
+            var f = (double[])q.Clone();
+            for (int s = 0; s < 2; s++)
+            {
+                if (_armBears[s]) continue;
+                int o4 = 4 * s;
+                if (_isFree[Pose.ShFlexL + o4]) f[Pose.ShFlexL + o4] = 60.0 * Pose.D2R;
+                if (_isFree[Pose.ShAbdL + o4]) f[Pose.ShAbdL + o4] = 10.0 * Pose.D2R;
+                if (_isFree[Pose.ShRotL + o4]) f[Pose.ShRotL + o4] = 0.0;
+                if (_isFree[Pose.ElbL + o4]) f[Pose.ElbL + o4] = 15.0 * Pose.D2R;
+            }
+            return f;
         }
 
         void Relaxed(List<D> r, D[] q, int i, double at)

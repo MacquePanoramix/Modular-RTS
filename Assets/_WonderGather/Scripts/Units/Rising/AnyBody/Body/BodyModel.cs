@@ -325,9 +325,12 @@ namespace WonderGather.AnyBody
             Make(new BodyVariant { Name = miner, Source = miner, Strength = strength });
 
         /// <summary>b3.make_body.</summary>
-        public static BodyModel Make(BodyVariant v)
+        public static BodyModel Make(BodyVariant v) => Make(Miner(v.Source), v);
+
+        /// <summary>b3.make_body from any source's numbers: the prototype's three miners, or a body the game reads off a
+        /// unit (BodyFrame). The source's capacities are taken as its own (Strength 1 in v keeps them).</summary>
+        public static BodyModel Make(MinerSource s0, BodyVariant v)
         {
-            var s0 = Miner(v.Source);
             double k = v.Scale;
             double lmLeg = v.LegMul, lmArm = v.ArmMul, lmTrunk = v.TrunkMul;
             var b = new BodyModel { Name = v.Name ?? v.Source };
