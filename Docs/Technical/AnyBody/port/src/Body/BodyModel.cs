@@ -80,6 +80,78 @@ namespace WonderGather.AnyBody
         /// <summary>M: total mass.</summary>
         public double Mass;
 
+        // ---- each link's centre of mass and inertia, by BodyLinks index: DATA, so the game can set the measured ones
+        //      from its weighed models (Luis, November 3: "the weights where the models have them"). The factory fills
+        //      them from the collider shapes (BodyFactory.ShapeMassProperties), which gives b3.fk's centres exactly.
+        //      Each link's frame is the kinematics' rotation of that link, its origin the joint to its parent:
+        //      hips: P (between the hip joints), trunk: the waist (back joint), head: the neck joint, upper arm: the
+        //      shoulder, forearm: the elbow, thigh: the hip joint, shin: the knee, foot: the ankle, toes: the ball.
+        //      Limbs hang along their own -z (the elbow at (0,0,-lu) in the upper arm's frame); the foot points along +x.
+        /// <summary>Each link's centre of mass in its own frame, from its origin (m). A body built by hand rather than by
+        /// BodyFactory.Make must fill these (BodyFactory.ShapeMassProperties(b) does it from the shapes): left at zero,
+        /// each link's mass would sit at its joint.</summary>
+        public Vec3[] LinkCentre = new Vec3[BodyLinks.Count];
+        /// <summary>Each link's inertia about its centre of mass, in its own frame (kg m^2, symmetric). The statics do not use it.</summary>
+        public Mat3[] LinkInertia = new Mat3[BodyLinks.Count];
+
+        /// <summary>The mass of one link (kg), by BodyLinks index.</summary>
+        public double MassOf(int link)
+        {
+            switch (link)
+            {
+                case BodyLinks.Hips: return MassHips;
+                case BodyLinks.Trunk: return MassTrunk;
+                case BodyLinks.Head: return MassHead;
+                case BodyLinks.UaL: return MassUpperArm[0];
+                case BodyLinks.FaL: return MassForearm[0];
+                case BodyLinks.UaR: return MassUpperArm[1];
+                case BodyLinks.FaR: return MassForearm[1];
+                case BodyLinks.ThL: return MassThigh[0];
+                case BodyLinks.ShL: return MassShin[0];
+                case BodyLinks.FtL: return MassFoot[0];
+                case BodyLinks.ToL: return MassToes[0];
+                case BodyLinks.ThR: return MassThigh[1];
+                case BodyLinks.ShR: return MassShin[1];
+                case BodyLinks.FtR: return MassFoot[1];
+                case BodyLinks.ToR: return MassToes[1];
+                default: throw new ArgumentOutOfRangeException(nameof(link));
+            }
+        }
+
+        /// <summary>Sets one link's mass, centre (its own frame, from its origin) and inertia (about the centre, its own
+        /// frame), e.g. measured from the game's weighed models, and the total Mass. Capacities are not changed.</summary>
+        public void SetLinkMassProperties(int link, double mass, Vec3 centre, Mat3 inertia)
+        {
+            switch (link)
+            {
+                case BodyLinks.Hips: MassHips = mass; break;
+                case BodyLinks.Trunk: MassTrunk = mass; break;
+                case BodyLinks.Head: MassHead = mass; break;
+                case BodyLinks.UaL: MassUpperArm[0] = mass; break;
+                case BodyLinks.FaL: MassForearm[0] = mass; break;
+                case BodyLinks.UaR: MassUpperArm[1] = mass; break;
+                case BodyLinks.FaR: MassForearm[1] = mass; break;
+                case BodyLinks.ThL: MassThigh[0] = mass; break;
+                case BodyLinks.ShL: MassShin[0] = mass; break;
+                case BodyLinks.FtL: MassFoot[0] = mass; break;
+                case BodyLinks.ToL: MassToes[0] = mass; break;
+                case BodyLinks.ThR: MassThigh[1] = mass; break;
+                case BodyLinks.ShR: MassShin[1] = mass; break;
+                case BodyLinks.FtR: MassFoot[1] = mass; break;
+                case BodyLinks.ToR: MassToes[1] = mass; break;
+                default: throw new ArgumentOutOfRangeException(nameof(link));
+            }
+            LinkCentre[link] = centre;
+            LinkInertia[link] = inertia;
+            Mass = SumOfLinkMasses();
+        }
+
+        /// <summary>The links' masses summed in b3's order (hips, trunk, head, then the pairs ua, fa, th, sh, ft, to).</summary>
+        public double SumOfLinkMasses() =>
+            MassHips + MassTrunk + MassHead + (MassUpperArm[0] + MassUpperArm[1]) + (MassForearm[0] + MassForearm[1])
+            + (MassThigh[0] + MassThigh[1]) + (MassShin[0] + MassShin[1]) + (MassFoot[0] + MassFoot[1])
+            + (MassToes[0] + MassToes[1]);
+
         // ---- capacities (strength applied)
         public double CapBack, CapNeck;
         public double[] CapShoulder = new double[2], CapElbow = new double[2], CapHip = new double[2],
@@ -115,6 +187,8 @@ namespace WonderGather.AnyBody
             b.CapToe = (double[])CapToe.Clone();
             b.RangeLo = (double[])RangeLo.Clone();
             b.RangeHi = (double[])RangeHi.Clone();
+            b.LinkCentre = (Vec3[])LinkCentre.Clone();
+            b.LinkInertia = (Mat3[])LinkInertia.Clone();
             return b;
         }
 
@@ -374,6 +448,7 @@ namespace WonderGather.AnyBody
                 }
             }
             b.Strength = v.Strength;
+            ShapeMassProperties(b);
             return b;
         }
 
@@ -391,10 +466,64 @@ namespace WonderGather.AnyBody
             }
         }
 
-        static double TotalMass(BodyModel b) =>
-            b.MassHips + b.MassTrunk + b.MassHead + (b.MassUpperArm[0] + b.MassUpperArm[1]) + (b.MassForearm[0] + b.MassForearm[1])
-            + (b.MassThigh[0] + b.MassThigh[1]) + (b.MassShin[0] + b.MassShin[1]) + (b.MassFoot[0] + b.MassFoot[1])
-            + (b.MassToes[0] + b.MassToes[1]);
+        static double TotalMass(BodyModel b) => b.SumOfLinkMasses();
+
+        /// <summary>Each link's centre and inertia from its collider shape, uniform density, the link's mass: capsules
+        /// (hips along y; trunk, limbs along z), the head's sphere, the foot's and toes' boxes, as b3.fk places them.
+        /// The centres are b3.fk's K['coms'] (the shapes' centroids); b3 has no inertia, so these are the shapes'.</summary>
+        public static void ShapeMassProperties(BodyModel b)
+        {
+            // hips: capsule along y through P, half length wH, radius gH
+            b.LinkCentre[BodyLinks.Hips] = new Vec3(0, 0, 0);
+            b.LinkInertia[BodyLinks.Hips] = Capsule(b.MassHips, b.HipsRadius, 2 * b.HipHalfWidth, 1);
+            // trunk: capsule along z centred tR above the waist, segment half length max(0, tR - gT/2), radius gT
+            double hs = Math.Max(0.0, b.TrunkCentre - b.TrunkRadius / 2);
+            b.LinkCentre[BodyLinks.Trunk] = new Vec3(0, 0, b.TrunkCentre);
+            b.LinkInertia[BodyLinks.Trunk] = Capsule(b.MassTrunk, b.TrunkRadius, 2 * hs, 2);
+            // head: sphere of radius rH, lN above the neck joint
+            b.LinkCentre[BodyLinks.Head] = new Vec3(0, 0, b.NeckLength);
+            double ih = 0.4 * b.MassHead * b.HeadRadius * b.HeadRadius;
+            b.LinkInertia[BodyLinks.Head] = new Mat3(ih, 0, 0, 0, ih, 0, 0, 0, ih);
+            for (int s = 0; s < 2; s++)
+            {
+                int ua = s == 0 ? BodyLinks.UaL : BodyLinks.UaR, fa = ua + 1;
+                int th = s == 0 ? BodyLinks.ThL : BodyLinks.ThR, sh = th + 1, ft = th + 2, to = th + 3;
+                double eu = Math.Min(b.ArmRadius, 0.5 * b.UpperArmLength);
+                double et = Math.Min(b.ThighRadius, 0.5 * b.ThighLength);
+                double es = Math.Min(b.ShinRadius, 0.5 * b.ShinLength);
+                b.LinkCentre[ua] = new Vec3(0, 0, -0.5 * b.UpperArmLength);
+                b.LinkInertia[ua] = Capsule(b.MassUpperArm[s], b.ArmRadius, b.UpperArmLength - 2 * eu, 2);
+                b.LinkCentre[fa] = new Vec3(0, 0, -0.5 * b.ForearmLength);
+                b.LinkInertia[fa] = Capsule(b.MassForearm[s], b.ArmRadius, b.ForearmLength, 2);
+                b.LinkCentre[th] = new Vec3(0, 0, -0.5 * b.ThighLength);
+                b.LinkInertia[th] = Capsule(b.MassThigh[s], b.ThighRadius, b.ThighLength - 2 * et, 2);
+                b.LinkCentre[sh] = new Vec3(0, 0, -0.5 * b.ShinLength);
+                b.LinkInertia[sh] = Capsule(b.MassShin[s], b.ShinRadius, b.ShinLength - 2 * es, 2);
+                // foot: box x in [-hl, bl], y in [-fw, fw], z in [-a, -a + fh] about the ankle
+                b.LinkCentre[ft] = new Vec3(0.5 * (b.BallLength - b.HeelLength), 0, -b.AnkleHeight + 0.5 * b.FootHeight);
+                b.LinkInertia[ft] = Box(b.MassFoot[s], b.HeelLength + b.BallLength, 2 * b.FootHalfWidth, b.FootHeight);
+                // toes: box u in [0, tl], y in [-tw, tw], w in [0, th] about the ball
+                b.LinkCentre[to] = new Vec3(0.5 * b.ToeLength, 0, 0.5 * b.ToeHeight);
+                b.LinkInertia[to] = Box(b.MassToes[s], b.ToeLength, 2 * b.ToeHalfWidth, b.ToeHeight);
+            }
+        }
+
+        /// <summary>A solid capsule's inertia about its centre: cylinder of length h, radius r, two hemispherical ends;
+        /// its axis along x (0), y (1) or z (2).</summary>
+        public static Mat3 Capsule(double m, double r, double h, int axis)
+        {
+            h = Math.Max(0.0, h);
+            double vc = Math.PI * r * r * h, vs = 4.0 / 3.0 * Math.PI * r * r * r;
+            double mc = m * vc / (vc + vs), ms = m * vs / (vc + vs);
+            double ia = mc * r * r / 2 + ms * 2 * r * r / 5;
+            double it = mc * (r * r / 4 + h * h / 12) + ms * (2 * r * r / 5 + h * h / 4 + 3 * h * r / 8);
+            double ix = axis == 0 ? ia : it, iy = axis == 1 ? ia : it, iz = axis == 2 ? ia : it;
+            return new Mat3(ix, 0, 0, 0, iy, 0, 0, 0, iz);
+        }
+
+        /// <summary>A solid box's inertia about its centre, sides dx, dy, dz.</summary>
+        public static Mat3 Box(double m, double dx, double dy, double dz) =>
+            new Mat3(m * (dy * dy + dz * dz) / 12, 0, 0, 0, m * (dx * dx + dz * dz) / 12, 0, 0, 0, m * (dx * dx + dy * dy) / 12);
 
         /// <summary>b3.make_body_caps_present's body: the unchanged miner as built here.</summary>
         static BodyModel MinerAsBuilt(MinerSource s0)

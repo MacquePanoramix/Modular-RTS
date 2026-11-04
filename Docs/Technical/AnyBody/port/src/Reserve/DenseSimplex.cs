@@ -104,7 +104,7 @@ namespace WonderGather.AnyBody
         int stamp;
         double[] x = Array.Empty<double>(), pi = Array.Empty<double>(), dd = Array.Empty<double>();
         double[] lu = Array.Empty<double>(), rhs = Array.Empty<double>(), sol = Array.Empty<double>();
-        double[] scratch = Array.Empty<double>();
+        double[] scratch = Array.Empty<double>(), col = Array.Empty<double>();
         int[] perm = Array.Empty<int>();
         bool tableauValid;
         int maxIter, fallbackDepth;
@@ -162,6 +162,7 @@ namespace WonderGather.AnyBody
             Ensure(ref rhs, Math.Max(m, 1));
             Ensure(ref sol, Math.Max(m, 1));
             Ensure(ref scratch, Math.Max(m, 1));
+            Ensure(ref col, Math.Max(m, 1));
             Ensure(ref perm, Math.Max(m, 1));
             maxIter = MaxIterations > 0 ? MaxIterations : 50 * (m + nt) + 1000;
         }
@@ -577,10 +578,18 @@ namespace WonderGather.AnyBody
 
                 if (r < 0 && double.IsPositiveInfinity(flip))
                 {
-                    // unbounded on this tableau: check it on a fresh factorisation before saying so
+                    // unbounded on this tableau: check it on a fresh factorisation before saying so. The fresh reduced
+                    // cost and the fresh column of q certify the ray (one solve with the basis); only when they do not
+                    // is the whole tableau rebuilt and the iteration resumed.
                     Trace?.Invoke(FormattableString.Invariant($"unbounded? it {Iterations} q {q} dir {dir} d {d[q]:G4} bland {bland} fresh {fresh}"));
                     if (fresh) return LpStatus.Unbounded;
                     if (!Refresh(out _, out _)) return LpStatus.Numerical;
+                    if (ConfirmRay(q, dir))
+                    {
+                        for (int i = 0; i < m; i++) xb[i] = sol[i];
+                        return LpStatus.Unbounded;
+                    }
+
                     RebuildTableau();
                     fresh = true;
                     continue;
@@ -648,6 +657,32 @@ namespace WonderGather.AnyBody
                     xn[leaving] = hi[leaving];
                 }
             }
+        }
+
+        /// <summary>After Refresh: column q moved in direction dir lowers the phase's cost at the fresh reduced cost,
+        /// and no basic variable's finite bound blocks its fresh column B^-1 a_q, so the direction is a ray of the
+        /// feasible set along which the objective decreases without bound.</summary>
+        bool ConfirmRay(int q, int dir)
+        {
+            if (!(dir * dd[q] < -OptimalityTol)) return false;
+            if (q < n)
+                for (int i = 0; i < m; i++) rhs[i] = A[i * n + q];
+            else
+            {
+                for (int i = 0; i < m; i++) rhs[i] = 0.0;
+                rhs[q - n] = artSign[q - n];
+            }
+
+            SolveB(rhs, col);
+            for (int i = 0; i < m; i++)
+            {
+                double a = dir * col[i];
+                int bi = basis[i];
+                if (a > PivotTol && !double.IsNegativeInfinity(lo[bi])) return false;
+                if (a < -PivotTol && !double.IsPositiveInfinity(hi[bi])) return false;
+            }
+
+            return true;
         }
 
         double FlipRange(int q) =>

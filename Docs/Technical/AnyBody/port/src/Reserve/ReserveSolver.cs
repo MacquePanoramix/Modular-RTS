@@ -96,6 +96,30 @@ namespace WonderGather.AnyBody
             return v - Math.Floor(v);
         }
 
+        /// <summary>The directions a ball joint's torque is checked in (unit vectors; -d is checked with each d).
+        /// Default (null): StaticsProblem.BallDirections, b3.py's 13. A finer set (HalfSphereDirections) brings S up
+        /// towards the full-norm reserve, the least worst |tau|/cap over all force splits, from below. Takes effect at
+        /// Prepare. Hinges are checked about their axis either way.</summary>
+        public Vec3[] Directions;
+
+        Vec3[] dirs = StaticsProblem.BallDirections;
+
+        /// <summary>n unit directions spread evenly over the upper half sphere (a Fibonacci lattice); with their
+        /// opposites they cover the sphere, so |d.tau| at most s cap for all of them approaches |tau| at most s cap.</summary>
+        public static Vec3[] HalfSphereDirections(int n)
+        {
+            if (n < 1) throw new ArgumentException("n >= 1");
+            var o = new Vec3[n];
+            double golden = Math.PI * (3.0 - Math.Sqrt(5.0));
+            for (int k = 0; k < n; k++)
+            {
+                double z = (k + 0.5) / n, rr = Math.Sqrt(Math.Max(0.0, 1.0 - z * z)), ph = golden * k;
+                o[k] = new Vec3(rr * Math.Cos(ph), rr * Math.Sin(ph), z);
+            }
+
+            return o;
+        }
+
         /// <summary>The problem the solver is prepared for.</summary>
         public StaticsProblem Problem => p;
 
@@ -127,9 +151,10 @@ namespace WonderGather.AnyBody
                 for (int k = 0; k < 4; k++) gens[4 * i + k] = e4[k];
             }
 
-            // the checked directions: a hinge about its axis, a ball joint in the 13 directions
+            // the checked directions: a hinge about its axis, a ball joint in the 13 directions (or Directions)
+            dirs = Directions ?? StaticsProblem.BallDirections;
             nrow = 0;
-            for (int j = 0; j < nj; j++) nrow += p.Joints[j].IsHinge ? 1 : StaticsProblem.BallDirections.Length;
+            for (int j = 0; j < nj; j++) nrow += p.Joints[j].IsHinge ? 1 : dirs.Length;
             if (rowJoint.Length < nrow)
             {
                 rowJoint = new int[nrow];
@@ -149,7 +174,7 @@ namespace WonderGather.AnyBody
                 }
                 else
                 {
-                    foreach (var d in StaticsProblem.BallDirections)
+                    foreach (var d in dirs)
                     {
                         rowJoint[r0] = j;
                         rowDir[r0++] = d;
@@ -332,13 +357,17 @@ namespace WonderGather.AnyBody
                 res.Forces[i] = f * weight;
             }
 
-            Evaluate(p, res.Forces, shift, res);
+            Evaluate(p, res.Forces, shift, res, dirs);
         }
 
         /// <summary>Reads given contact forces as b3.py / run3.py do: the joint torques tau = tau0 - sum sign (p - o) x f,
         /// PerJoint, PerJointLp, R, Worst, HandsShare, OnThighs, and Residual = the largest of the equilibrium residual
         /// and max(PerJointLp) - res.S (with res.S as set by the caller; leave it +inf to skip that part).</summary>
-        public static void Evaluate(StaticsProblem p, Vec3[] forces, Vec3 shift, ReserveResult res)
+        public static void Evaluate(StaticsProblem p, Vec3[] forces, Vec3 shift, ReserveResult res) =>
+            Evaluate(p, forces, shift, res, StaticsProblem.BallDirections);
+
+        /// <summary>As Evaluate, with PerJointLp measured in the given ball-joint directions (the solver's Directions).</summary>
+        public static void Evaluate(StaticsProblem p, Vec3[] forces, Vec3 shift, ReserveResult res, Vec3[] ballDirections)
         {
             int nc = p.Contacts.Length, nj = p.Joints.Length;
             double weight = p.Weight;
@@ -370,7 +399,7 @@ namespace WonderGather.AnyBody
                 {
                     per = Ratio(tau.Length, cap);
                     double mx = 0.0;
-                    foreach (var d in StaticsProblem.BallDirections) mx = Math.Max(mx, Math.Abs(Vec3.Dot(d, tau)));
+                    foreach (var d in ballDirections) mx = Math.Max(mx, Math.Abs(Vec3.Dot(d, tau)));
                     perLp = Ratio(mx, cap);
                 }
 

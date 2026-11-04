@@ -111,6 +111,34 @@ namespace WonderGather.AnyBody.Tests
             t.True(st == LpStatus.Optimal, "Klee-Minty 8: optimal");
             t.Near(fun, -Math.Pow(5, km), 1e-6, "Klee-Minty 8: objective");
             Console.WriteLine(FormattableString.Invariant($"   Klee-Minty 8: {lp.Iterations} pivots"));
+
+            // the pivot limit: Klee-Minty with 10 pivots allowed stops with IterationLimit, and the next solve is whole
+            var lim = new DenseSimplex { MaxIterations = 10 };
+            st = Run(lim, ckm, null, null, akm, bkm, null, null, x, out fun);
+            t.True(st == LpStatus.IterationLimit, "Klee-Minty 8 with 10 pivots allowed: " + st);
+            t.True(!lim.ResolveNewCosts(out _), "no re-use of a tableau after IterationLimit");
+            lim.MaxIterations = 0;
+            st = Run(lim, ckm, null, null, akm, bkm, null, null, x, out fun);
+            t.True(st == LpStatus.Optimal && Math.Abs(fun + Math.Pow(5, km)) < 1e-6, "Klee-Minty 8 again without the limit: " + st);
+
+            // new costs on the same rows (ResolveNewCosts) against a solve from scratch: min c.x, x + 2y <= 4, 3x + y <= 6
+            var rs = new DenseSimplex();
+            Run(rs, new[] { -1.0, -1 }, null, null, new double[,] { { 1, 2 }, { 3, 1 } }, new[] { 4.0, 6 }, null, null, x, out fun);
+            var rnd = new Random(5);
+            int same = 0;
+            for (int k = 0; k < 20; k++)
+            {
+                double c0 = rnd.NextDouble() * 4 - 2, c1 = rnd.NextDouble() * 4 - 2;
+                rs.C[0] = c0;
+                rs.C[1] = c1;
+                rs.C[2] = rs.C[3] = 0.0;
+                bool reused = rs.ResolveNewCosts(out var st2);
+                double f2 = st2 == LpStatus.Optimal ? rs.Objective : double.NaN;
+                var st3 = Run(lp, new[] { c0, c1 }, null, null, new double[,] { { 1, 2 }, { 3, 1 } }, new[] { 4.0, 6 }, null, null, x, out double f3);
+                if (reused && st2 == st3 && (st3 != LpStatus.Optimal || Math.Abs(f2 - f3) < 1e-12)) same++;
+            }
+
+            t.True(same == 20, $"new costs re-using the tableau: {same}/20 as a solve from scratch");
         }
 
         static double[] Arr(JsonElement e)
@@ -170,9 +198,12 @@ namespace WonderGather.AnyBody.Tests
                 sw.Stop();
                 pivots += lp.Iterations;
                 count++;
-                if (!byKind.TryGetValue(kind, out var k)) byKind[kind] = k = new int[3];
+                if (!byKind.TryGetValue(kind, out var k)) byKind[kind] = k = new int[6];
                 k[0]++;
                 var wantSt = want == 0 ? LpStatus.Optimal : want == 2 ? LpStatus.Infeasible : want == 3 ? LpStatus.Unbounded : LpStatus.Numerical;
+                if (wantSt == LpStatus.Optimal) k[3]++;
+                else if (wantSt == LpStatus.Infeasible) k[4]++;
+                else if (wantSt == LpStatus.Unbounded) k[5]++;
                 bool stOk = st == wantSt;
                 if (stOk) k[1]++;
                 t.True(stOk, FormattableString.Invariant($"random {kind} #{count}: status {st}, scipy {wantSt}"));
@@ -206,7 +237,8 @@ namespace WonderGather.AnyBody.Tests
             }
 
             foreach (var kv in byKind)
-                Console.WriteLine(FormattableString.Invariant($"   {kv.Key,-15} {kv.Value[0],4} LPs: status as scipy {kv.Value[1]}, objective within 1e-7 {kv.Value[2]}"));
+                Console.WriteLine(FormattableString.Invariant(
+                    $"   {kv.Key,-15} {kv.Value[0],4} LPs ({kv.Value[3]} optimal, {kv.Value[4]} infeasible, {kv.Value[5]} unbounded by scipy): status as scipy {kv.Value[1]}, objective within 1e-7 {kv.Value[2]}/{kv.Value[3]}"));
             Console.WriteLine(FormattableString.Invariant(
                 $"   worst relative objective error {worstObj:G3}, worst infeasibility {worstFeas:G3}; {pivots} pivots; {sw.Elapsed.TotalMilliseconds / count:F3} ms per LP (primal, phase 1 + 2)"));
         }

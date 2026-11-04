@@ -112,9 +112,11 @@ namespace WonderGather.AnyBody
             k.R[BodyLinks.Hips] = RH;
             k.R[BodyLinks.Trunk] = RT;
             k.R[BodyLinks.Head] = RN;
-            k.LinkCom[BodyLinks.Hips] = P;
-            k.LinkCom[BodyLinks.Trunk] = trunkC;
-            k.LinkCom[BodyLinks.Head] = headC;
+            // each link's centre from the body's data (its own frame, from its origin): b3.fk's P, trunkC, headC for the
+            // factory's bodies; the measured centres when the game sets them
+            k.LinkCom[BodyLinks.Hips] = P + RH.Mul(b.LinkCentre[BodyLinks.Hips]);
+            k.LinkCom[BodyLinks.Trunk] = waist + RT.Mul(b.LinkCentre[BodyLinks.Trunk]);
+            k.LinkCom[BodyLinks.Head] = neck + RN.Mul(b.LinkCentre[BodyLinks.Head]);
             k.LinkMass[BodyLinks.Hips] = b.MassHips;
             k.LinkMass[BodyLinks.Trunk] = b.MassTrunk;
             k.LinkMass[BodyLinks.Head] = b.MassHead;
@@ -164,12 +166,13 @@ namespace WonderGather.AnyBody
                 k.Pts[(int)Kin.Side(Pt.KnL, s)] = kn;
                 k.Pts[(int)Kin.Side(Pt.AnL, s)] = an;
                 k.Pts[(int)Kin.Side(Pt.BallL, s)] = ball;
-                k.LinkCom[ua] = DV3.Lerp(shp, el, 0.5);
-                k.LinkCom[fa] = DV3.Lerp(el, wr, 0.5);
-                k.LinkCom[th] = DV3.Lerp(hj, kn, 0.5);
-                k.LinkCom[sh] = DV3.Lerp(kn, an, 0.5);
-                k.LinkCom[ft] = an + RFt.Mul(new Vec3(0.5 * (b.BallLength - b.HeelLength), 0, -b.AnkleHeight + 0.5 * b.FootHeight));
-                k.LinkCom[to] = ball + RTo.Mul(new Vec3(0.5 * b.ToeLength, 0, 0.5 * b.ToeHeight));
+                // centres from the body's data (b3.fk: the segments' midpoints, the foot's and toes' box centres)
+                k.LinkCom[ua] = shp + RU.Mul(b.LinkCentre[ua]);
+                k.LinkCom[fa] = el + RF.Mul(b.LinkCentre[fa]);
+                k.LinkCom[th] = hj + RTh.Mul(b.LinkCentre[th]);
+                k.LinkCom[sh] = kn + RS.Mul(b.LinkCentre[sh]);
+                k.LinkCom[ft] = an + RFt.Mul(b.LinkCentre[ft]);
+                k.LinkCom[to] = ball + RTo.Mul(b.LinkCentre[to]);
                 k.LinkMass[ua] = b.MassUpperArm[s];
                 k.LinkMass[fa] = b.MassForearm[s];
                 k.LinkMass[th] = b.MassThigh[s];

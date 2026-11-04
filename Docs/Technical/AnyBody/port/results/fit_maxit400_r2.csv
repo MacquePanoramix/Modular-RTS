@@ -1,0 +1,451 @@
+body,stance,verdict,status,cost,saved_cost,dq_max_deg,dq_var,dq_rms_deg,dz_mm,contact_err_mm,saved_contact_err_mm,pen_mm,saved_pen_mm,margin_mm,saved_margin_mm,release_margin_mm,saved_release_margin_mm,ms,starts,iterations,jacobians,python_s
+"Small","stand","match","xtol",0.153929,0.156596,45.2026,toeR,11.626,-1.85686,0.11,0.11,-0,0,80.6813,79.6938,,,137.927,3,137,140,29.1
+"Small","hands and knees","match","ftol",0.0291163,0.0288613,14.7966,hflexL,5.68147,1.77487,0,0,-0,0,189.984,194.196,,,69.2964,1,121,122,107.2
+"Small","hands and knees (toes tucked)","match","ftol",0.02916,0.02916,9.57189,nrot,1.71919,0.000418005,0,0,-0,0,209.182,209.184,,,121.738,1,196,197,81.9
+"Small","tripod (hands and one knee, left knee lifted)","match","ftol",0.0361534,0.0361534,0.356311,nrot,0.0648688,-0.00531497,0,0,-0,0,116.867,116.834,,,87.7297,1,186,187,57
+"Small","hands and knees [ready to let go of: hand]","same cost, other optimum","ftol",5.63587,6.21409,66.7898,hrotL,16.0912,-0.968812,0.44,0.53,-0,0,137.375,64.4507,-68.2016,-78.3853,134.069,3,248,251,23.9
+"Small","hands and feet D=0.80","same cost, other optimum","xtol",0.164141,0.170654,28.8117,nrot,10.0075,-5.08101,0.11,0.11,-0,0,207.831,161.54,-191.01,-200.861,121.036,3,183,186,28
+"Small","hands and feet D=0.50","match","xtol",0.15961,0.1691,24.0121,hrotL,9.21397,0.832691,0.11,0.12,-0,0,167.125,163.015,-121.405,-173.063,102.204,3,154,157,33.1
+"Small","hands and feet D=0.30","match","xtol",0.167826,0.162573,23.7132,hrotL,7.15649,-12.072,0.11,0.11,-0,0,110.063,115.921,-94.288,-87.1338,60.7317,3,124,127,35.1
+"Small","hands and feet D=0.40 toes","match","ftol",0.0168737,0.0162723,26.974,hrotL,6.87987,5.16729,0,0,-0,0,114.237,118.935,-89.3089,-88.5133,104.275,1,284,285,130.1
+"Small","hands and feet D=0.25 [ready to let go of: hand]","match","xtol",0.165143,0.166143,35.4336,hrotR,7.99512,-5.76968,0.11,0.11,-0,0,139.03,133.519,14.4498,14.2808,41.7667,3,155,158,50
+"Small","squat h=0.35 flat","same cost, other optimum","xtol",0.260193,0.288568,82.7914,shrotL,27.5001,-0.0658742,0.11,0.11,-0,0,61.5648,50.9914,,,30.3657,3,129,132,25.6
+"Small","squat h=0.50 flat","match","xtol",0.257282,0.262826,47.7537,elbL,19.9908,-0.0409879,0.11,0.11,-0,0,75.3927,70.9612,,,32.1805,3,133,136,22.7
+"Small","squat h=0.65 flat","match","xtol",0.238802,0.243409,72.1687,elbL,21.633,-0.686472,0.11,0.12,-0,0,84.8903,78.8632,,,29.1341,3,131,134,23.1
+"Small","squat h=0.80 flat","match","xtol",0.211274,0.213463,80.5174,elbR,22.0612,1.59819,0.11,0.11,-0,0,79.0134,84.0127,,,28.4755,3,125,128,29.7
+"Small","squat h=0.40 toes","match","ftol",0.156228,0.157422,26.6394,nrot,6.02123,-0.00512725,0,0,-0,0,12.4867,11.8837,,,30.342,3,120,123,28.9
+"Small","squat h=0.60 toes","match","ftol",0.108163,0.108161,39.0738,ttw,11.6912,-0.000314072,0,0,-0,0,18.6511,18.6443,,,28.2924,3,111,114,35.4
+"Small","squat h=0.35 flat hands down [ready to let go of: hand]","match","xtol",0.396527,0.39252,69.1502,nrot,15.7418,0.0408722,0.1,0.1,-0,0,83.739,86.3795,72.671,75.367,32.0339,3,122,125,50.4
+"Small","squat h=0.50 flat hands down [ready to let go of: hand]","match","xtol",0.430437,0.432858,76.9745,nrot,20.3962,4.52129,0.1,0.1,-0,0,74.5546,73.2345,53.1108,53.6035,41.9334,3,168,171,56.6
+"Small","tall kneel","match","ftol",0.006171,0.00617131,41.2219,nrot,7.42394,-0.0513837,0,0,-0,0,15.3615,15.3462,,,24.7281,1,154,155,29.5
+"Small","one knee and its toes, the other leg lifted","match","xtol",0.0287866,0.025915,62.053,toeL,17.7302,-0.42251,0.02,0.01,-0,0,-8.35477E-05,-0.000240476,,,7.3423,1,44,45,15.7
+"Small","half-kneel (left foot forward), hands: none, back toes laid","match","xtol",0.0852429,0.0862446,29.4846,elbL,11.0172,-13.641,0.11,0.11,-0,0,21.624,21.28,,,24.6025,3,129,132,22.1
+"Small","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.0846604,0.0921954,50.0285,toeL,13.9799,0.69479,0.11,0.11,-0,0,22.4186,19.2847,22.4186,19.2847,26.0121,3,126,129,22.5
+"Small","half-kneel (left foot forward), hands: both, back toes laid","better","xtol",0.0884045,0.109506,51.5804,toeL,13.9691,1.17782,0.11,0.11,-0,0,24.273,21.3456,24.273,21.3456,30.0977,3,132,135,22.8
+"Small","half-kneel (left foot forward), hands: ground, back toes laid","match","xtol",0.163359,0.157622,77.7282,nrot,18.4738,1.39149,0.1,0.11,-0,0,108.614,114.778,-136.1,-151.124,35.9709,3,173,176,30.6
+"Small","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","match","xtol",0.19727,0.197473,29.4425,hrotR,7.32853,0.319467,0.11,0.1,-0,0,113.592,107.413,12.6226,12.6598,32.8069,3,143,146,42.2
+"Small","rising from the half-kneel h=0.55, hands: none","worse","xtol",0.283144,0.257033,128.393,shflexL,31.8577,-0.00719711,0.11,0.11,-0,0,49.1112,67.4081,,,30.8239,3,137,140,32.4
+"Small","rising from the half-kneel h=0.70, hands: none","same cost, other optimum","xtol",0.171001,0.16811,76.2338,elbR,16.505,-0.0164968,0.11,0.11,-0,0,72.8777,58.7096,,,37.0018,3,154,157,31.4
+"Small","rising from the half-kneel h=0.85, hands: none","match","xtol",0.112887,0.118762,18.8245,nrot,7.60541,-0.0317237,0.11,0.12,-0,0,71.9816,62.4187,,,30.0319,3,134,137,35.9
+"Small","rising from the half-kneel h=0.55, hands: thigh","match","xtol",0.273819,0.294985,30.0333,nrot,9.53454,-0.334217,0.11,0.11,-0,0,48.6326,53.9719,48.6326,53.9719,36.085,3,145,148,42.9
+"Small","rising from the half-kneel h=0.70, hands: thigh","worse","xtol",0.18413,0.148934,43.1365,toeL,14.7902,0.114924,0.11,0.11,-0,0,64.5244,61.0101,64.5244,61.0101,30.8514,3,129,132,41.9
+"Small","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.08591,0.086991,31.5847,elbR,11.67,-9.89781,0.11,0.11,-0,0,22.3808,22.2447,,,22.6958,3,126,129,22.2
+"Small","rising from the half-kneel h=0.55, hands: none","match","xtol",0.277845,0.270501,102.251,shflexL,29.0013,0.0417476,0.11,0.11,-0,0,51.011,51.1791,,,28.6404,3,133,136,28.9
+"Small","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","same cost, other optimum","xtol",0.204177,0.202802,24.2105,invL,9.72347,2.27388,0.11,0.11,-0,0,109.673,120.024,12.318,12.5416,33.5111,3,154,157,60.8
+"Small","stoop, hands on the knees, knees 30","match","xtol",0.16577,0.17952,44.1184,toeR,15.947,-2.5667,0.11,0.11,-0,0,77.0257,71.1736,77.0257,71.1736,35.5773,3,141,144,28.1
+"Small","stoop, hands on the knees, knees 60","same cost, other optimum","xtol",0.164577,0.178153,25.802,shrotR,10.1141,3.70937,0.11,0.11,-0,0,91.5691,80.9196,91.5691,80.9196,34.7411,3,141,144,39.9
+"Small","sitting up, the trunk 15 deg from the ground, arms reaching forward","better","ftol",0.0857382,1.4483,100.842,elbL,43.5699,0.00273886,0,0.21,-0,0,61.7278,-13.6019,,,23.7815,3,171,174,21.2
+"Small","sitting up, the trunk 35 deg from the ground, arms reaching forward","better","ftol",0.0459867,0.286411,97.0615,elbL,41.486,0.00115386,0,0.07,-0,0,65.6025,4.29041,,,10.4416,1,78,79,24.1
+"Small","sitting up, the trunk 60 deg from the ground, arms reaching forward","same cost, other optimum","max iterations",0.0355743,0.0315871,35.5657,tlat,16.0723,0.000125952,0,0,-0,0,17.1427,33.2605,,,63.1692,1,460,461,23.9
+"Small","sitting up, the trunk 25 deg from the ground, hands behind","match","ftol",0.0908445,0.0908478,35.3811,tlat,11.4081,3.98216E-05,0,0,-0,0,28.5188,28.3641,,,135.329,3,809,812,37.5
+"Small","pushed up from the front (chest off the ground)","match","ftol",0.0826669,0.0750667,44.5174,habdR,9.8133,3.79167,0.02,0.03,-0,0,95.4879,86.7445,,,151.722,3,856,859,153
+"Small","on its forearms","match","max iterations",0.0359902,0.0345078,6.46107,shflexR,2.08771,-0.000575385,0.02,0.02,-0,0,210.791,219.152,,,99.9588,1,464,465,212.5
+"Small","sitting, legs out, hands behind","match","ftol",0.0203527,0.0203175,44.4586,dorsiR,15.0889,-2.20583E-06,0,0,-0,0,151.231,148.977,,,22.687,1,141,142,75.9
+"Small","rising from the half-kneel h=0.70, hands: none","match","xtol",0.15361,0.173401,52.8501,elbL,12.5896,1.19684,0.11,0.11,-0,0,68.9298,61.0176,,,33.7351,3,161,164,22.1
+"Small","rising from the half-kneel h=0.85, hands: none","better","xtol",0.106744,0.137882,43.7963,toeR,14.3102,-0.034899,0.11,0.11,-0,0,71.0823,70.862,,,29.4674,3,142,145,23.7
+"Small","one knee and its toes, the other leg lifted","match","xtol",0.0211775,0.0347387,64.8101,toeR,18.6032,5.17585,0.02,0.01,-0,0,0.000112013,-0.000456314,,,5.2805,1,42,43,55.3
+"Long","stand","match","xtol",0.350626,0.357452,48.5413,toeL,14.1673,-4.7003,0.17,0.2,-0,0,93.0933,93.4016,,,26.4813,3,131,134,24
+"Long","hands and knees","match","ftol",0.0267405,0.0267405,19.9009,nrot,3.57442,-1.80559E-06,0,0,-0,0,241.217,240.961,,,42.9659,1,261,262,99.7
+"Long","hands and knees (toes tucked)","match","ftol",0.0269871,0.0269871,3.27289,nrot,0.587886,-0.000297918,0,0,-0,0,189.576,189.548,,,60.0374,1,287,288,118.4
+"Long","tripod (hands and one knee, left knee lifted)","match","ftol",0.0348814,0.0348814,10.1898,nrot,1.83014,-7.83076E-05,0,0,-0,0,123.194,123.138,,,42.4744,1,293,294,72.1
+"Long","hands and knees [ready to let go of: hand]","better","xtol",2.53643,4.73693,67.6067,roll,23.5675,-12.1129,0.11,0.24,-0,0,0.946319,137.258,0.478302,-61.3933,39.1439,3,238,241,43.7
+"Long","hands and feet D=0.80","same cost, other optimum","xtol",0.393588,0.410255,33.6474,shrotL,9.91393,-1.75116,0.16,0.16,-0,0,229.989,203.859,-300.467,-316.247,38.0358,3,164,167,38.2
+"Long","hands and feet D=0.50","match","xtol",0.378336,0.37111,32.4142,shrotR,9.50775,0.298557,0.17,0.17,-0,0,199.129,201.703,-180.611,-234.547,32.9326,3,146,149,36.1
+"Long","hands and feet D=0.30","same cost, other optimum","xtol",0.453785,0.423805,39.3518,shrotR,13.6086,-16.1744,0.16,0.17,-0,0,162.082,90.8504,-148.623,-235.307,31.9187,3,143,146,40.2
+"Long","hands and feet D=0.40 toes","match","max iterations",0.0222102,0.0217439,17.119,ttw,5.83999,-10.5096,0,0,-0,0,162.435,153.814,-189.641,-188.835,135.341,1,604,605,135.3
+"Long","hands and feet D=0.25 [ready to let go of: hand]","same cost, other optimum","xtol",0.501838,0.506878,36.7143,hrotR,11.1569,-24.2117,0.17,0.17,-0,0,187.813,145.188,13.5379,12.3119,103.693,3,259,262,42
+"Long","squat h=0.35 flat","same cost, other optimum","xtol",0.523626,0.487797,131.323,shflexR,46.245,0.0492225,0.17,0.17,-0,0,54.0991,34.637,,,69.8252,3,132,135,27
+"Long","squat h=0.50 flat","match","xtol",0.488803,0.479055,127.83,shflexL,45.52,2.14939,0.17,0.17,-0,0,54.8517,56.3919,,,68.2323,3,126,129,25
+"Long","squat h=0.65 flat","match","xtol",0.449497,0.457071,27.8765,nrot,7.69933,2.43194,0.17,0.16,-0,0,73.6181,66.5477,,,63.7357,3,122,125,26.2
+"Long","squat h=0.80 flat","match","xtol",0.406101,0.421331,101.318,shflexL,35.2919,6.77615,0.17,0.17,-0,0,99.0123,92.1377,,,74.5698,3,137,140,28.1
+"Long","squat h=0.40 toes","worse","ftol",0.160054,0.13401,40.4604,ttw,15.568,-0.00143298,0,0.01,-0,0,16.3192,16.7506,,,104.271,3,183,186,36
+"Long","squat h=0.60 toes","match","ftol",0.109973,0.109995,1.12814,dorsiR,0.396432,-0.000512923,0,0,-0,0,20.1842,20.1069,,,73.0134,3,127,130,45.9
+"Long","squat h=0.35 flat hands down [ready to let go of: hand]","better","xtol",0.468198,0.528654,47.1408,shrotR,9.95818,-5.27168,0.16,0.16,-0,0,53.9253,63.3497,53.9253,63.3497,75.3439,3,133,136,47.1
+"Long","squat h=0.50 flat hands down [ready to let go of: hand]","same cost, other optimum","xtol",0.508952,0.554225,72.8523,nrot,16.9441,4.90809,0.16,0.16,-0,0,76.3616,89.6861,76.3616,89.6861,90.9398,3,147,150,53.5
+"Long","tall kneel","match","ftol",0.00324975,0.00325888,16.3383,nrot,2.97949,0.134685,0,0,-0,0,28.5796,28.6235,,,126.606,1,318,319,19.5
+"Long","one knee and its toes, the other leg lifted","match","xtol",0.0219782,0.0344416,77.224,elbL,20.8511,7.63849,0,0.02,-0,0,0.109113,0.129329,,,12.1207,1,41,42,12.2
+"Long","half-kneel (left foot forward), hands: none, back toes laid","match","xtol",0.180648,0.185098,42.9261,toeL,14.3234,-0.22926,0.17,0.17,-0,0,32.8978,30.5631,,,60.2961,3,116,119,19.9
+"Long","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.182181,0.186548,28.7207,nrot,7.74108,-2.08808,0.17,0.17,-0,0,33.0001,31.589,33.0001,31.589,71.165,3,126,129,23.7
+"Long","half-kneel (left foot forward), hands: both, back toes laid","better","xtol",0.191759,0.223168,30.0395,nrot,10.903,1.24065,0.17,0.17,-0,0,33.0981,30.2989,33.0981,30.2989,77.9948,3,130,133,24.1
+"Long","half-kneel (left foot forward), hands: ground, back toes laid","match","xtol",0.264831,0.240863,73.9252,nrot,19.6055,8.6739,0.16,0.16,-0,0,200.018,208.359,-154.458,-94.8687,86.248,3,141,144,34.3
+"Long","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","better","xtol",0.243617,466.924,110.574,elbR,49.2493,401.435,0.17,44.16,-0,237.5,158.412,64.7884,24.0529,-234.495,93.9341,3,160,163,55.5
+"Long","rising from the half-kneel h=0.55, hands: none","same cost, other optimum","xtol",0.347599,0.338196,87.2241,shflexL,24.1679,-0.0251109,0.17,0.17,-0,0,54.834,71.4883,,,84.7145,3,141,144,35
+"Long","rising from the half-kneel h=0.70, hands: none","same cost, other optimum","xtol",0.266527,0.277209,69.5676,elbR,14.4224,0.00630727,0.17,0.17,-0,0,49.8358,70.0745,,,84.3395,3,142,145,28.2
+"Long","rising from the half-kneel h=0.85, hands: none","better","xtol",0.216587,0.241729,64.5256,elbR,17.5415,-0.013973,0.17,0.17,-0,0,65.3527,71.6581,,,80.4264,3,135,138,26.3
+"Long","rising from the half-kneel h=0.55, hands: thigh","match","xtol",0.360098,0.364118,13.7854,shflexR,6.95751,-0.0281669,0.17,0.17,-0,0,47.9738,57.0965,47.9738,57.0965,78.3827,3,131,134,45.6
+"Long","rising from the half-kneel h=0.70, hands: thigh","match","xtol",0.267634,0.267349,30.2061,shrotL,10.3775,0.0574648,0.17,0.17,-0,0,69.6644,61.4333,69.6644,61.4333,75.0951,3,126,129,32.4
+"Long","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.180129,0.1842,31.7319,hrotL,9.98072,-2.26898,0.17,0.17,-0,0,33.0172,30.9703,,,57.9434,3,128,131,22.3
+"Long","rising from the half-kneel h=0.55, hands: none","match","xtol",0.345362,0.342772,92.1058,elbR,30.0381,-0.00795681,0.17,0.17,-0,0,50.0536,57.0294,,,74.9932,3,136,139,28.8
+"Long","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","better","xtol",0.244299,390.273,83.5779,roll,39.3712,311.588,0.17,46.77,-0,225,162.717,17.9556,23.7338,-99.2671,82.2289,3,158,161,67
+"Long","stoop, hands on the knees, knees 30","match","xtol",0.360824,0.379493,47.6472,toeR,16.0689,-4.70865,0.17,0.17,-0,0,91.6223,92.9498,91.6223,92.9498,90.0389,3,136,139,32.8
+"Long","stoop, hands on the knees, knees 60","match","xtol",0.371887,0.389731,51.7108,toeR,14.2696,10.3974,0.17,0.18,-0,0,93.7639,85.7645,93.7639,85.7645,93.8204,3,137,140,28
+"Long","sitting up, the trunk 15 deg from the ground, arms reaching forward","better","ftol",0.0823652,0.227576,100.933,elbL,45.6607,0.00111972,0,0.03,-0,0,96.1794,9.42416,,,91.6359,3,249,252,44.2
+"Long","sitting up, the trunk 35 deg from the ground, arms reaching forward","match","ftol",0.0532391,0.0532391,0.806233,hrotR,0.189907,-5.92348E-08,0,0,-0,0,28.3814,28.3799,,,407.796,3,1213,1216,32.8
+"Long","sitting up, the trunk 60 deg from the ground, arms reaching forward","match","ftol",0.0317034,0.0314332,27.5241,hrotR,10.1791,5.00308E-05,0,0,-0,0,81.6967,85.1446,,,26.0439,1,69,70,15.7
+"Long","sitting up, the trunk 25 deg from the ground, hands behind","match","ftol",0.0686253,0.0663679,96.3959,shrotR,29.3538,0.000215782,0,0,-0,0,31.4623,29.7719,,,291.383,3,678,681,62.5
+"Long","pushed up from the front (chest off the ground)","match","max iterations",0.110454,0.110338,41.3901,habdL,17.1684,0.318591,0.03,0.03,-0,0,184.35,182.831,,,704.263,3,1568,1571,122.3
+"Long","on its forearms","same cost, other optimum","ftol",0.150825,0.14686,47.0811,hrotL,14.7827,0.00088236,0.16,0.16,-0,0,292.727,459.782,,,123.281,3,198,201,69.8
+"Long","sitting, legs out, hands behind","match","ftol",0.0180898,0.018091,40.1985,hrotL,8.13464,-4.35731E-07,0,0,-0,0,195.649,188.257,,,102.004,1,237,238,58.8
+"Long","rising from the half-kneel h=0.70, hands: none","match","xtol",0.249607,0.272079,41.1823,elbL,10.9364,0.275976,0.17,0.17,-0,0,71.0787,68.4733,,,79.2413,3,149,152,23.7
+"Long","rising from the half-kneel h=0.85, hands: none","match","xtol",0.215498,0.234561,28.669,nrot,11.0622,6.52271,0.17,0.17,-0,0,68.7304,71.8648,,,71.2513,3,138,141,20.7
+"Long","one knee and its toes, the other leg lifted","match","xtol",0.0288856,0.0459439,86.5085,elbR,23.2446,8.99642,0.01,0.02,-0,0,0.231749,-0.000201889,,,10.7078,1,28,29,12.2
+"Round","stand","match","xtol",0.202252,0.202928,32.7164,toeR,8.29895,-0.873973,0.13,0.13,-0,0,91.7696,86.9864,,,70.6807,3,126,129,31.8
+"Round","hands and knees","match","ftol",0.0387343,0.0387343,21.859,nrot,3.9315,3.89676E-06,0,0,-0,0,140.707,138.9,,,31.824,1,63,64,46.6
+"Round","hands and knees (toes tucked)","match","ftol",0.038322,0.0383217,3.21895,invR,1.07391,0.00450135,0,0,-0,0,197.763,194.048,,,229.819,1,381,382,95.9
+"Round","tripod (hands and one knee, left knee lifted)","match","ftol",0.0504498,0.0528888,23.8745,nrot,8.6067,1.2101,0,0,-0,0,137.432,139.273,,,106.674,3,268,271,30.3
+"Round","hands and knees [ready to let go of: hand]","better","ftol",4.6796,7.48997,44.8597,roll,18.9377,-7.54818,0.21,0.09,-0,0,16.5429,77.8702,-39.0838,-78.2426,126.863,3,274,277,22.5
+"Round","hands and feet D=0.80","match","xtol",0.210231,0.215614,28.7313,hrotR,7.58217,3.40377,0.13,0.13,-0,0,203.386,193.781,-172.028,-190.734,98.4703,3,155,158,35.1
+"Round","hands and feet D=0.50","match","xtol",0.211379,0.224818,33.3523,shrotR,10.6426,-4.86116,0.13,0.13,-0,0,205.037,200.868,-115.748,-162.503,93.6278,3,158,161,34.9
+"Round","hands and feet D=0.30","match","xtol",0.242713,0.232033,28.3989,shrotL,11.0183,-14.6799,0.13,0.14,-0,0,148.914,146.446,-96.8249,-102.588,80.6842,3,141,144,37.1
+"Round","hands and feet D=0.40 toes","match","max iterations",0.0154917,0.0154876,1.97351,hrotL,0.735765,0.200525,0,0,-0,0,151.167,150.986,-63.446,-63.1449,377.498,1,615,616,102.3
+"Round","hands and feet D=0.25 [ready to let go of: hand]","match","xtol",0.205543,0.216668,40.5292,hrotL,10.0558,-3.36829,0.13,0.12,-0,0,163.81,160.094,18.8617,17.4056,93.1925,3,149,152,52.4
+"Round","squat h=0.35 flat","same cost, other optimum","xtol",0.340264,0.360558,136.331,shflexL,51.7517,-0.124188,0.13,0.12,-0,0,49.8676,37.9427,,,81.8995,3,151,154,26.4
+"Round","squat h=0.50 flat","match","xtol",0.330324,0.337175,109.719,shflexL,41.4558,-0.0199254,0.13,0.13,-0,0,69.3788,62.6285,,,68.1228,3,137,140,22.9
+"Round","squat h=0.65 flat","same cost, other optimum","xtol",0.299947,0.311936,26.5509,nrot,10.8151,-0.0733601,0.13,0.13,-0,0,85.7582,74.4736,,,66.3911,3,121,124,26.7
+"Round","squat h=0.80 flat","match","xtol",0.26803,0.273887,34.3455,nrot,11.3253,4.13445,0.13,0.13,-0,0,82.7783,86.4062,,,78.9648,3,141,144,27.6
+"Round","squat h=0.40 toes","worse","ftol",0.190443,0.162805,43.0052,elbL,16.2355,-0.00154103,0,0.01,-0,0,12.8523,16.5448,,,90.7194,3,158,161,30.6
+"Round","squat h=0.60 toes","match","ftol",0.123873,0.123878,12.0904,shrotL,2.48249,-0.000234313,0,0,-0,0,18.9187,18.8793,,,72.7373,3,126,129,37.1
+"Round","squat h=0.35 flat hands down [ready to let go of: hand]","match","xtol",0.641907,0.656379,72.1009,nrot,17.1954,-1.61341,0.12,0.11,-0,0,95.66,101.068,88.1987,83.8981,85.6175,3,140,143,53.9
+"Round","squat h=0.50 flat hands down [ready to let go of: hand]","match","xtol",0.594866,0.601929,7.91299,toeR,2.22973,-0.138863,0.11,0.1,-0,0,134.98,139.138,60.9971,56.6402,74.7147,3,123,126,48.1
+"Round","tall kneel","match","ftol",0.01218,0.0126096,30.0123,nrot,8.81822,-3.54763,0,0,-0,0,16.9467,16.6317,,,108.774,1,284,285,17.3
+"Round","one knee and its toes, the other leg lifted","match","ftol",0.0376576,0.0382551,67.0476,elbL,19.6638,-4.44646,0,0.01,-0,0,-2.70002E-05,-0.000685475,,,14.2738,1,43,44,13.6
+"Round","half-kneel (left foot forward), hands: none, back toes laid","match","xtol",0.118704,0.121604,66.6986,shrotR,18.3508,-22.565,0.13,0.13,-0,0,27.0053,26.5974,,,58.5545,3,129,132,23.2
+"Round","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.11545,0.120931,81.1527,elbR,18.9939,-9.02095,0.13,0.13,-0,0,30.0015,26.2262,30.0015,26.2262,63.8422,3,122,125,21
+"Round","half-kneel (left foot forward), hands: both, back toes laid","match","xtol",0.124275,0.142748,31.8675,toeL,9.7596,-6.26063,0.13,0.13,-0,0,38.9444,35.1309,38.9444,35.1309,79.5419,3,141,144,26.9
+"Round","half-kneel (left foot forward), hands: ground, back toes laid","worse","xtol",0.227156,0.194622,80.5608,nrot,18.2317,18.0886,0.12,0.12,-0,0,175.889,184.425,-143.592,-82.3688,81.7449,3,154,157,36.1
+"Round","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","better","xtol",0.198411,0.25867,72.0905,nrot,21.7275,5.05649,0.13,0.12,-0,0,119.382,132.405,14.4,13.6906,72.1133,3,133,136,43.2
+"Round","rising from the half-kneel h=0.55, hands: none","worse","xtol",0.317576,0.286699,97.4893,shflexL,32.5308,0.0624807,0.13,0.13,-0,0,54.7109,75.3201,,,74.0011,3,144,147,28.2
+"Round","rising from the half-kneel h=0.70, hands: none","same cost, other optimum","xtol",0.223139,0.211331,47.9433,toeL,12.4593,0.0469545,0.13,0.13,-0,0,59.7863,75.1093,,,73.8667,3,142,145,27.3
+"Round","rising from the half-kneel h=0.85, hands: none","match","xtol",0.152672,0.158404,68.4447,elbR,15.1923,-0.0264841,0.13,0.13,-0,0,72.8242,70.8885,,,75.1072,3,143,146,31.5
+"Round","rising from the half-kneel h=0.55, hands: thigh","match","xtol",0.295182,0.278196,94.0672,elbR,21.7504,0.0151902,0.12,0.12,-0,0,52.5385,60.3424,52.5385,60.3424,73.9185,3,127,130,37
+"Round","rising from the half-kneel h=0.70, hands: thigh","match","xtol",0.204915,0.192427,39.2116,elbR,13.192,0.112,0.13,0.13,-0,0,68.6996,66.6124,68.6996,66.6124,69.8946,3,121,124,34.9
+"Round","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.117524,0.11911,22.5275,invL,9.13787,-17.0674,0.13,0.13,-0,0,26.4293,26.7482,,,56.7851,3,123,126,23.9
+"Round","rising from the half-kneel h=0.55, hands: none","same cost, other optimum","xtol",0.308041,0.295671,90.286,shflexR,32.1961,-0.0106086,0.13,0.12,-0,0,55.2981,66.9487,,,80.2012,3,148,151,25
+"Round","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","better","xtol",0.184144,0.256544,70.8344,nrot,21.7786,5.16785,0.13,0.13,-0,0,115.948,145.853,14.2131,13.9522,65.9331,3,131,134,41.8
+"Round","stoop, hands on the knees, knees 30","match","xtol",0.222023,0.234327,45.1728,toeL,15.2974,-8.28751,0.13,0.13,-0,0,88.7606,82.2638,88.7606,82.2638,94.8846,3,139,142,32.2
+"Round","stoop, hands on the knees, knees 60","match","xtol",0.224606,0.233879,35.9806,toeR,10.579,-6.00734,0.13,0.13,-0,0,97.4163,89.8805,97.4163,89.8805,91.1536,3,135,138,31.1
+"Round","sitting up, the trunk 15 deg from the ground, arms reaching forward","better","ftol",0.0742301,1.7339,99.5373,elbR,36.127,0.00488979,0,0.18,-0,0,82.7131,-17.7195,,,113.078,3,300,303,20.6
+"Round","sitting up, the trunk 35 deg from the ground, arms reaching forward","better","ftol",0.0458539,0.36969,98.119,elbL,40.7915,0.00166193,0,0.07,-0,0,85.9733,3.37181,,,50.4325,1,135,136,22.8
+"Round","sitting up, the trunk 60 deg from the ground, arms reaching forward","match","ftol",0.033014,0.033014,16.0041,nrot,2.90849,3.8559E-07,0,0,-0,0,25.2524,25.267,,,65.4255,1,174,175,22.8
+"Round","sitting up, the trunk 25 deg from the ground, hands behind","match","ftol",0.0642547,0.0642546,33.6061,tlat,9.70396,-3.49869E-06,0,0,-0,0,96.5305,96.5254,,,310.198,3,747,750,66.1
+"Round","pushed up from the front (chest off the ground)","match","ftol",0.0530912,0.0530911,14.7979,nrot,2.65818,-0.0106276,0.01,0.01,-0,0,323.834,323.791,,,331.512,3,728,731,59.9
+"Round","on its forearms","match","ftol",0.0589883,0.0589882,72.19,nrot,14.1839,-1.14454E-07,0.02,0.02,-0,0,239.891,242.797,,,562.851,3,934,937,199.3
+"Round","sitting, legs out, hands behind","same cost, other optimum","ftol",0.0222882,0.0222948,16.0802,ttw,3.71793,1.32878E-05,0,0,-0,0,183.528,196.178,,,106.72,1,258,259,21.1
+"Round","rising from the half-kneel h=0.70, hands: none","match","xtol",0.199513,0.203002,40.8144,elbL,10.2514,-0.17847,0.13,0.13,-0,0,70.9542,68.9553,,,84.8274,3,155,158,26.5
+"Round","rising from the half-kneel h=0.85, hands: none","better","xtol",0.139785,0.179545,47.0101,toeR,15.3543,5.10984,0.13,0.14,-0,0,75.7973,68.8739,,,75.9547,3,142,145,23.2
+"Round","one knee and its toes, the other leg lifted","match","xtol",0.0395917,0.0370071,58.4457,toeR,14.8325,0.0746044,0,0.01,-0,0,2.20452E-05,0.0942192,,,21.0435,1,61,62,6.9
+"Small S0.5","stand","match","xtol",0.164263,0.166907,41.1711,toeR,8.52488,-1.17961,0.11,0.11,-0,0,85.8158,82.0577,,,70.9255,3,126,129,22.5
+"Small S0.5","hands and knees","match","ftol",0.0921757,0.0921753,18.9076,nrot,3.44882,1.4583E-05,0,0,-0,0,155.787,159.265,,,81.7307,3,186,189,55.7
+"Small S0.5","hands and knees (toes tucked)","match","ftol",0.0887932,0.0887932,1.70818,nrot,0.306906,-0.000549239,0,0,-0,0,204.839,204.854,,,190.155,3,332,335,103.1
+"Small S0.5","tripod (hands and one knee, left knee lifted)","same cost, other optimum","ftol",0.118194,0.118096,35.6047,shrotL,9.94641,-3.03358,0.01,0,-0,0,122.183,103.344,,,77.4059,3,196,199,44.5
+"Small S0.5","hands and knees [ready to let go of: hand]","better","ftol",5.70621,6.38005,77.2474,shrotL,29.5254,-0.109873,0.44,0.42,-0,0,138.108,65.3629,-68.2235,-78.3348,94.6024,3,203,206,27.4
+"Small S0.5","hands and feet D=0.80","same cost, other optimum","xtol",0.19456,0.198355,33.1374,shrotL,7.62592,-1.02596,0.11,0.11,-0,0,188.476,169.738,-190.217,-196.438,94.4316,3,142,145,27.8
+"Small S0.5","hands and feet D=0.50","better","xtol",0.177053,0.204819,39.9092,shrotR,11.539,4.37262,0.11,0.12,-0,0,180.876,172.67,-103.841,-156.674,88.9135,3,144,147,31
+"Small S0.5","hands and feet D=0.30","worse","xtol",0.206148,0.180507,36.784,shrotR,11.5189,-14.5095,0.11,0.11,-0,0,119.094,137.833,-89.4731,-74.5587,84.4013,3,140,143,39.3
+"Small S0.5","hands and feet D=0.40 toes","match","ftol",0.0361009,0.0357765,39.2326,ttw,11.0036,0.127602,0,0,-0,0,129.09,128.731,-81.7827,-81.3407,77.9493,1,119,120,102
+"Small S0.5","hands and feet D=0.25 [ready to let go of: hand]","better","xtol",0.187051,0.209342,29.6878,hrotR,11.9004,-3.25143,0.11,0.11,-0,0,137.014,124.97,12.7,11.4289,99.3695,3,162,165,49.7
+"Small S0.5","squat h=0.35 flat","match","xtol",0.519429,0.52276,10.9389,shrotR,3.23795,-1.8491,0.11,0.11,-0,0,72.2511,71.7607,,,68.8465,3,143,146,39.6
+"Small S0.5","squat h=0.50 flat","match","xtol",0.561189,0.573687,88.4919,elbR,23.1752,-0.0488582,0.11,0.11,-0,0,80.4953,77.5245,,,74.6206,3,130,133,31.2
+"Small S0.5","squat h=0.65 flat","same cost, other optimum","xtol",0.530523,0.501273,93.3591,shflexL,35.7259,-0.00426546,0.11,0.11,-0,0,73.4389,86.1171,,,68.6541,3,120,123,28.8
+"Small S0.5","squat h=0.80 flat","match","xtol",0.398838,0.405272,9.57368,habdR,4.78373,-0.0359514,0.11,0.11,-0,0,79.8373,83.761,,,64.1475,3,126,129,27.3
+"Small S0.5","squat h=0.40 toes","match","ftol",0.424258,0.424259,1.19987,nrot,0.255543,-0.000723853,0.02,0.02,-0,0,21.4859,21.4708,,,49.1443,3,89,92,34.5
+"Small S0.5","squat h=0.60 toes","match","ftol",0.405153,0.405942,91.3564,elbR,25.3505,-0.00329056,0,0,-0,0,19.9665,20.0216,,,46.0914,3,86,89,39.9
+"Small S0.5","squat h=0.35 flat hands down [ready to let go of: hand]","match","xtol",0.521171,0.51917,37.8444,tlat,10.6991,4.43814,0.1,0.09,-0,0,86.3756,88.8459,70.7132,74.1233,66.5857,3,119,122,47.8
+"Small S0.5","squat h=0.50 flat hands down [ready to let go of: hand]","match","xtol",0.613872,0.616765,77.4788,nrot,19.0279,-0.0242529,0.1,0.1,-0,0,64.7424,62.3312,46.3168,44.2916,70.4001,3,126,129,57.9
+"Small S0.5","tall kneel","match","ftol",0.0166791,0.0185797,76.2274,shrotL,20.3632,0.37628,0,0,-0,0,12.276,12.2228,,,165.634,1,397,398,13.3
+"Small S0.5","one knee and its toes, the other leg lifted","match","ftol",0.0455453,0.0532675,40.9817,shrotR,14.94,10.2995,0,0,-0,0,-1.51721,-1.4602,,,130.555,1,302,303,14.3
+"Small S0.5","half-kneel (left foot forward), hands: none, back toes laid","match","xtol",0.105895,0.112096,29.0362,ttw,11.2203,9.05637,0.11,0.11,-0,0,18.7308,18.4458,,,59.5517,3,125,128,21.8
+"Small S0.5","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.105223,0.107993,52.2006,toeL,12.689,-2.42352,0.11,0.11,-0,0,19.8686,18.0345,19.8686,18.0345,57.1597,3,114,117,24.1
+"Small S0.5","half-kneel (left foot forward), hands: both, back toes laid","match","xtol",0.107337,0.125439,56.2044,toeL,13.2049,3.32305,0.11,0.11,-0,0,20.2333,19.4203,20.2333,19.4203,65.2007,3,113,116,50.3
+"Small S0.5","half-kneel (left foot forward), hands: ground, back toes laid","same cost, other optimum","xtol",0.305707,0.305264,76.5801,nrot,18.8478,4.52397,0.1,0.1,-0,0,127.18,113.099,-133.642,-124.191,105.655,3,169,172,40.2
+"Small S0.5","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","match","xtol",0.353236,0.353801,41.5517,hrotR,8.43922,0.621041,0.11,0.1,-0,0,112.267,107.014,12.5937,12.9657,81.2195,3,132,135,43
+"Small S0.5","rising from the half-kneel h=0.55, hands: none","match","xtol",0.694179,0.689222,93.8519,elbL,20.6472,0.143884,0.11,0.11,-0,0,69.5045,67.6701,,,96.6433,3,154,157,40.6
+"Small S0.5","rising from the half-kneel h=0.70, hands: none","match","xtol",0.342903,0.346156,15.3745,nrot,4.73458,0.0241538,0.11,0.11,-0,0,64.8186,64.9517,,,99.8323,3,175,178,39.8
+"Small S0.5","rising from the half-kneel h=0.85, hands: none","match","xtol",0.174383,0.176935,13.9974,ttw,4.4197,0.000487948,0.11,0.12,-0,0,69.6267,67.1511,,,88.5178,3,146,149,67.6
+"Small S0.5","rising from the half-kneel h=0.55, hands: thigh","match","xtol",0.650595,0.628956,65.4321,shflexR,15.55,0.00831204,0.11,0.11,-0,0,63.6264,60.023,63.6264,60.023,114.744,3,170,173,46
+"Small S0.5","rising from the half-kneel h=0.70, hands: thigh","same cost, other optimum","xtol",0.279871,0.292958,103.879,shflexR,21.7597,-0.0224088,0.11,0.11,-0,0,50.7745,62.948,50.7745,62.948,102.001,3,154,157,81.8
+"Small S0.5","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.104503,0.1093,46.4435,nrot,10.8418,-0.284234,0.11,0.11,-0,0,18.5711,18.5658,,,59.0844,3,130,133,24.6
+"Small S0.5","rising from the half-kneel h=0.55, hands: none","match","xtol",0.675591,0.689968,26.5916,nrot,6.66135,-0.0137229,0.1,0.11,-0,0,67.5465,62.7807,,,77.0083,3,141,144,44.2
+"Small S0.5","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","same cost, other optimum","xtol",0.354374,0.351167,35.3626,hrotL,10.3712,-1.66567,0.11,0.11,-0,0,114.004,125.573,12.0913,12.084,94.8296,3,178,181,62.6
+"Small S0.5","stoop, hands on the knees, knees 30","better","xtol",0.183448,0.210377,43.2077,toeL,16.0314,-3.03107,0.11,0.11,-0,0,86.6096,74.939,86.6096,74.939,97.5488,3,144,147,38
+"Small S0.5","stoop, hands on the knees, knees 60","match","xtol",0.187248,0.201659,22.5192,nrot,8.30178,-2.88384,0.11,0.12,-0,0,91.4175,85.8741,91.4175,85.8741,90.8971,3,136,139,38.2
+"Small S0.5","sitting up, the trunk 15 deg from the ground, arms reaching forward","better","ftol",0.19263,1.55127,102.429,elbL,46.2607,0.00436525,0.01,0.22,-0,0,60.5278,-12.9487,,,72.7566,3,197,200,23
+"Small S0.5","sitting up, the trunk 35 deg from the ground, arms reaching forward","better","ftol",0.0895283,0.334603,99.6687,elbR,38.469,0.00126058,0,0.07,-0,0,66.0881,4.06641,,,80.1208,3,207,210,27.3
+"Small S0.5","sitting up, the trunk 60 deg from the ground, arms reaching forward","match","ftol",0.0448682,0.0448595,44.5381,hrotL,17.9285,1.33723E-06,0,0,-0,0,33.0696,33.0943,,,26.432,1,76,77,30.2
+"Small S0.5","sitting up, the trunk 25 deg from the ground, hands behind","match","ftol",0.128748,0.130125,21.1154,tlat,5.40737,-0.000208073,0,0,-0,0,41.089,43.1493,,,113.586,3,267,270,41.4
+"Small S0.5","pushed up from the front (chest off the ground)","worse","ftol",0.113688,0.0886232,47.603,habdL,12.6357,-0.214525,0.03,0.02,-0,0,87.5182,228.65,,,400.607,3,841,844,59.9
+"Small S0.5","on its forearms","match","ftol",0.0995932,0.099587,11.449,habdL,2.50133,7.47615E-06,0.02,0.02,-0,0,202.211,209.404,,,887.754,3,1570,1573,228.4
+"Small S0.5","sitting, legs out, hands behind","same cost, other optimum","ftol",0.0274666,0.0277292,46.3032,dorsiR,16.7905,-0.000308649,0,0,-0,0,174.746,156.565,,,69.1064,1,180,181,61.8
+"Small S0.5","rising from the half-kneel h=0.70, hands: none","match","xtol",0.343905,0.345869,30.2383,toeR,6.70847,0.00448936,0.11,0.11,-0,0,66.2833,67.5764,,,79.904,3,160,163,45.9
+"Small S0.5","rising from the half-kneel h=0.85, hands: none","match","xtol",0.177675,0.187305,45.0467,toeR,9.55868,-0.168568,0.11,0.1,-0,0,71.186,69.5254,,,76.0317,3,142,145,56.8
+"Small S0.5","one knee and its toes, the other leg lifted","match","ftol",0.042146,0.0541032,56.0062,toeL,19.5349,5.26905,0,0.01,-0,0,-1.28222,-1.54961,,,161.072,1,434,435,18.5
+"Toddler-like (Small, head x1.3, legs x0.85)","stand","match","xtol",0.11797,0.118712,10.106,toeL,3.64734,-0.43193,0.1,0.1,-0,0,84.4675,81.4648,,,80.1255,3,138,141,28.6
+"Toddler-like (Small, head x1.3, legs x0.85)","hands and knees","match","ftol",0.0231419,0.0231419,3.32843,nrot,0.597847,-2.08245E-06,0,0,-0,0,189.995,189.974,,,65.0782,1,138,139,82.8
+"Toddler-like (Small, head x1.3, legs x0.85)","hands and knees (toes tucked)","match","ftol",0.0235763,0.0235763,6.28077,nrot,1.12807,-7.94168E-05,0,0,-0,0,201.752,201.737,,,53.9105,1,98,99,87.3
+"Toddler-like (Small, head x1.3, legs x0.85)","tripod (hands and one knee, left knee lifted)","match","ftol",0.0298451,0.0317984,48.645,shrotL,11.0608,-0.940245,0,0,-0,0,104.27,96.6903,,,74.3002,1,195,196,46.5
+"Toddler-like (Small, head x1.3, legs x0.85)","hands and knees [ready to let go of: hand]","better","ftol",5.96203,6.71128,70.3796,shrotL,29.3254,2.93232,0.5,0.58,-0,0,118.345,84.0434,-68.3481,-76.9293,113.005,3,239,242,30.9
+"Toddler-like (Small, head x1.3, legs x0.85)","hands and feet D=0.80","match","xtol",0.139464,0.140485,23.3783,nrot,6.70124,0.52317,0.1,0.1,-0,0,183.802,181.389,-188.853,-188.775,87.8843,3,142,145,33.4
+"Toddler-like (Small, head x1.3, legs x0.85)","hands and feet D=0.50","same cost, other optimum","xtol",0.134234,0.143184,27.5096,nrot,7.26145,-1.09187,0.1,0.1,-0,0,142.147,105.921,-146.459,-161.131,90.7392,3,144,147,34.2
+"Toddler-like (Small, head x1.3, legs x0.85)","hands and feet D=0.30","better","xtol",0.128279,0.154983,24.2948,nrot,9.28845,-1.50652,0.1,0.1,-0,0,101.69,62.3066,-83.1384,-124,80.027,3,130,133,32.3
+"Toddler-like (Small, head x1.3, legs x0.85)","hands and feet D=0.40 toes","match","ftol",0.0128944,0.0128901,10.4284,nrot,2.93209,-0.124974,0,0,-0,0,104.954,104.799,-74.9914,-80.5874,217.312,1,368,369,109.2
+"Toddler-like (Small, head x1.3, legs x0.85)","hands and feet D=0.25 [ready to let go of: hand]","match","xtol",0.136699,0.148992,51.9337,shrotR,15.9085,1.19072,0.1,0.1,-0,0,108.021,101.039,13.7353,13.2529,92.9617,3,149,152,43.7
+"Toddler-like (Small, head x1.3, legs x0.85)","squat h=0.35 flat","same cost, other optimum","xtol",0.219174,0.241881,69.523,elbR,19.0045,-0.0256685,0.1,0.1,-0,0,65.765,53.4691,,,72.3428,3,127,130,24.2
+"Toddler-like (Small, head x1.3, legs x0.85)","squat h=0.50 flat","match","xtol",0.214162,0.217694,80.2142,elbL,22.665,0.391145,0.1,0.1,-0,0,82.2238,78.8756,,,61.9336,3,124,127,28
+"Toddler-like (Small, head x1.3, legs x0.85)","squat h=0.65 flat","match","xtol",0.203023,0.205053,26.6289,nrot,11.0343,0.118125,0.1,0.09,-0,0,86.1335,82.1552,,,59.7128,3,125,128,23.3
+"Toddler-like (Small, head x1.3, legs x0.85)","squat h=0.80 flat","match","xtol",0.177821,0.178639,18.9216,nrot,6.59026,0.827126,0.1,0.09,-0,0,80.0773,84.5791,,,66.2595,3,122,125,27.7
+"Toddler-like (Small, head x1.3, legs x0.85)","squat h=0.40 toes","match","ftol",0.153498,0.145575,26.0735,invL,8.73123,0.0176634,0.01,0.01,-0,0,11.7973,17.354,,,139.876,3,246,249,34.6
+"Toddler-like (Small, head x1.3, legs x0.85)","squat h=0.60 toes","match","ftol",0.105731,0.105737,11.4127,shrotR,2.12183,-0.00025382,0,0,-0,0,18.3394,18.3019,,,67.1213,3,130,133,41.6
+"Toddler-like (Small, head x1.3, legs x0.85)","squat h=0.35 flat hands down [ready to let go of: hand]","match","xtol",0.287461,0.287726,55.6387,nrot,14.9638,0.0276206,0.09,0.09,-0,0,77.6459,80.5046,68.4666,69.8247,73.4388,3,127,130,41.3
+"Toddler-like (Small, head x1.3, legs x0.85)","squat h=0.50 flat hands down [ready to let go of: hand]","match","xtol",0.278562,0.279556,73.4766,nrot,16.5386,0.031507,0.09,0.09,-0,0,54.6075,55.5509,40.0481,36.7007,96.9675,3,174,177,51.8
+"Toddler-like (Small, head x1.3, legs x0.85)","tall kneel","match","ftol",0.00906342,0.00947499,75.4681,shrotL,20.0502,-0.470792,0,0,-0,0,12.2564,12.1475,,,37.923,1,102,103,10.6
+"Toddler-like (Small, head x1.3, legs x0.85)","one knee and its toes, the other leg lifted","match","max iterations",0.0372399,0.0271189,57.8111,toeL,16.1882,-0.48586,0,0,-0,0,-1.02287,-0.0543385,,,131.5,1,406,407,38
+"Toddler-like (Small, head x1.3, legs x0.85)","half-kneel (left foot forward), hands: none, back toes laid","match","xtol",0.0719299,0.0741519,76.5732,shrotL,20.4846,-16.4871,0.1,0.09,-0,0,20.4975,21.4265,,,45.4244,3,132,135,22.1
+"Toddler-like (Small, head x1.3, legs x0.85)","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.072338,0.0734822,27.1194,shrotL,7.62192,-0.598374,0.1,0.09,-0,0,23.706,20.2541,23.706,20.2541,52.9245,3,124,127,26.7
+"Toddler-like (Small, head x1.3, legs x0.85)","half-kneel (left foot forward), hands: both, back toes laid","better","xtol",0.0737011,0.120411,29.5263,shrotL,9.35785,0.308409,0.1,0.09,-0,0,24.8991,16.8538,24.8991,16.8538,54.9782,3,124,127,23.4
+"Toddler-like (Small, head x1.3, legs x0.85)","half-kneel (left foot forward), hands: ground, back toes laid","match","xtol",0.122186,0.117126,38.9892,hrotR,10.5753,6.327,0.09,0.09,-0,0,88.0479,83.725,-184.369,-141.395,63.0681,3,158,161,31.2
+"Toddler-like (Small, head x1.3, legs x0.85)","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","same cost, other optimum","xtol",0.146076,0.140986,26.7584,habdR,7.56384,7.76908,0.1,0.09,-0,0,91.6166,80.4927,10.3426,10.6547,71.4296,3,182,185,41
+"Toddler-like (Small, head x1.3, legs x0.85)","rising from the half-kneel h=0.55, hands: none","same cost, other optimum","xtol",0.26414,0.244109,36.3213,ttw,12.065,0.0867883,0.09,0.1,-0,0,57.3886,72.158,,,60.5015,3,142,145,37.2
+"Toddler-like (Small, head x1.3, legs x0.85)","rising from the half-kneel h=0.70, hands: none","match","xtol",0.153997,0.154647,21.6786,nrot,6.35064,-0.0371253,0.1,0.1,-0,0,67.9421,61.2327,,,60.2753,3,143,146,31.9
+"Toddler-like (Small, head x1.3, legs x0.85)","rising from the half-kneel h=0.85, hands: none","same cost, other optimum","xtol",0.0965186,0.100547,27.9514,elbR,8.9946,-0.0183197,0.1,0.1,-0,0,74.1842,60.4023,,,57.9652,3,131,134,45.1
+"Toddler-like (Small, head x1.3, legs x0.85)","rising from the half-kneel h=0.55, hands: thigh","match","xtol",0.260089,0.24586,40.215,toeL,14.6005,0.0782577,0.09,0.1,-0,0,60.4807,59.5559,60.4807,59.5559,75.5219,3,152,155,47.7
+"Toddler-like (Small, head x1.3, legs x0.85)","rising from the half-kneel h=0.70, hands: thigh","match","xtol",0.151268,0.154463,41.9518,toeL,13.8516,0.0191524,0.1,0.09,-0,0,57.2423,60.0374,57.2423,60.0374,66.4576,3,132,135,63.2
+"Toddler-like (Small, head x1.3, legs x0.85)","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.070927,0.0720988,28.2429,nrot,9.89333,-9.86451,0.1,0.1,-0,0,20.437,21.8839,,,45.3562,3,124,127,20.2
+"Toddler-like (Small, head x1.3, legs x0.85)","rising from the half-kneel h=0.55, hands: none","worse","xtol",0.279064,0.253043,33.7437,shabdR,14.2165,0.136393,0.09,0.1,-0,0,52.3888,58.8031,,,49.5444,3,124,127,37.2
+"Toddler-like (Small, head x1.3, legs x0.85)","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","match","xtol",0.144815,0.147905,15.3184,toeR,6.18984,5.01103,0.09,0.09,-0,0,88.6069,88.803,10.4862,11.8034,68.6864,3,168,171,46.9
+"Toddler-like (Small, head x1.3, legs x0.85)","stoop, hands on the knees, knees 30","match","xtol",0.127111,0.14166,30.0085,shrotL,9.87921,2.6364,0.1,0.1,-0,0,77.5107,70.3194,77.5107,70.3194,74.677,3,146,149,36
+"Toddler-like (Small, head x1.3, legs x0.85)","stoop, hands on the knees, knees 60","same cost, other optimum","xtol",0.127397,0.136792,42.4205,nrot,11.39,2.54438,0.1,0.1,-0,0,91.5578,81.369,91.5578,81.369,72.1543,3,140,143,44.4
+"Toddler-like (Small, head x1.3, legs x0.85)","sitting up, the trunk 15 deg from the ground, arms reaching forward","better","ftol",0.0917832,2.12651,83.2417,tflex,32.3172,0.00441197,0,0.32,-0,0,54.6666,-16.7863,,,61.5355,3,195,198,19.9
+"Toddler-like (Small, head x1.3, legs x0.85)","sitting up, the trunk 35 deg from the ground, arms reaching forward","better","ftol",0.0472045,0.488573,96.7501,elbL,38.4653,0.00156388,0,0.13,-0,0,57.2801,1.22008,,,24.9453,1,75,76,29.8
+"Toddler-like (Small, head x1.3, legs x0.85)","sitting up, the trunk 60 deg from the ground, arms reaching forward","match","ftol",0.0336783,0.0336783,16.8335,nrot,3.02425,-2.56566E-08,0,0,-0,0,16.129,16.1286,,,42.8442,1,129,130,19.8
+"Toddler-like (Small, head x1.3, legs x0.85)","sitting up, the trunk 25 deg from the ground, hands behind","match","ftol",0.122003,0.126691,12.712,nrot,5.28586,0.000624091,0,0,-0,0,13.9936,20.1103,,,226.409,3,547,550,46.4
+"Toddler-like (Small, head x1.3, legs x0.85)","pushed up from the front (chest off the ground)","worse","ftol",0.092212,0.069324,47.9775,habdL,11.7187,0.465264,0.04,0.03,-0,0,48.6988,193.599,,,477.96,3,1002,1005,75.2
+"Toddler-like (Small, head x1.3, legs x0.85)","on its forearms","same cost, other optimum","ftol",0.0586242,0.058625,68.2329,nrot,15.0223,1.32441E-05,0.04,0.04,-0,0,309.422,225.074,,,749.312,3,1314,1317,560.1
+"Toddler-like (Small, head x1.3, legs x0.85)","sitting, legs out, hands behind","match","ftol",0.0208464,0.0207874,44.8147,dorsiL,16.1401,-3.02291E-06,0,0,-0,0,146.603,150.584,,,56.683,1,137,138,60.8
+"Toddler-like (Small, head x1.3, legs x0.85)","rising from the half-kneel h=0.70, hands: none","same cost, other optimum","xtol",0.146711,0.147713,31.1074,toeR,8.65457,-0.00383424,0.1,0.1,-0,0,71.2024,58.801,,,71.2597,3,139,142,36.3
+"Toddler-like (Small, head x1.3, legs x0.85)","rising from the half-kneel h=0.85, hands: none","same cost, other optimum","xtol",0.0965861,0.110892,36.7341,toeR,11.4889,-0.0240868,0.1,0.1,-0,0,71.6905,61.4467,,,73.9843,3,134,137,33.8
+"Toddler-like (Small, head x1.3, legs x0.85)","one knee and its toes, the other leg lifted","match","max iterations",0.0292712,0.0271217,59.4758,toeR,19.8939,-2.13129,0,0,-0,0,-0.319179,-0.0257951,,,241.238,1,534,535,73.5
+"Giant (Long x1.6, strength ~ L^3)","stand","same cost, other optimum","xtol",0.894074,0.918791,53.5756,toeL,17.8736,-8.05046,0.27,0.27,-0,0,151.436,125.13,,,79.552,3,133,136,22.1
+"Giant (Long x1.6, strength ~ L^3)","hands and knees","match","ftol",0.0604247,0.0604248,5.1052,nrot,0.919511,-8.77439E-07,0,0,-0,0,378.723,377.875,,,157.482,3,314,317,138.4
+"Giant (Long x1.6, strength ~ L^3)","hands and knees (toes tucked)","match","ftol",0.0594887,0.0596643,36.4379,dorsiR,12.0045,0.951459,0,0,-0,0,300.255,293.764,,,286.253,3,465,468,132.8
+"Giant (Long x1.6, strength ~ L^3)","tripod (hands and one knee, left knee lifted)","match","ftol",0.0799381,0.0799381,0.738128,nrot,0.132686,0.00128504,0,0,-0,0,196.029,195.971,,,162.429,3,434,437,135.6
+"Giant (Long x1.6, strength ~ L^3)","hands and knees [ready to let go of: hand]","same cost, other optimum","ftol",10.5886,10.6035,85.1254,shrotR,30.6113,-1.63909,0.13,0.15,-0,0,310.447,196.614,-85.5697,-86.9806,368.582,3,784,787,40.5
+"Giant (Long x1.6, strength ~ L^3)","hands and feet D=0.80","same cost, other optimum","xtol",0.960495,0.997193,32.906,hrotR,10.1439,8.69798,0.27,0.29,-0,0,365.435,313.783,-474.898,-531.896,91.2208,3,153,156,28.8
+"Giant (Long x1.6, strength ~ L^3)","hands and feet D=0.50","same cost, other optimum","xtol",0.975293,0.998642,43.52,shrotR,14.0004,11.87,0.27,0.25,-0,0,270.72,294.326,-286.981,-441.436,83.5915,3,128,131,30.9
+"Giant (Long x1.6, strength ~ L^3)","hands and feet D=0.30","worse","xtol",1.06958,0.947144,28.363,nrot,11.0709,-57.8177,0.27,0.29,-0,0,283.271,196.73,-215.499,-320.316,88.9563,3,127,130,40.2
+"Giant (Long x1.6, strength ~ L^3)","hands and feet D=0.40 toes","match","ftol",0.0412719,0.0412719,43.2644,hrotR,14.8464,0.00189707,0,0,-0,0,277.898,277.897,-301.875,-301.878,382.196,1,586,587,128.3
+"Giant (Long x1.6, strength ~ L^3)","hands and feet D=0.25 [ready to let go of: hand]","same cost, other optimum","xtol",1.06542,1.05174,33.0182,hrotL,10.4412,-61.3459,0.27,0.27,-0,0,293.938,308.19,26.8565,26.8068,123.462,3,190,193,42.1
+"Giant (Long x1.6, strength ~ L^3)","squat h=0.35 flat","same cost, other optimum","xtol",1.20892,1.20042,135.549,shflexL,50.2781,-11.9138,0.27,0.25,-0,0,94.8521,83.1895,,,68.8212,3,135,138,28.9
+"Giant (Long x1.6, strength ~ L^3)","squat h=0.50 flat","same cost, other optimum","xtol",1.22815,1.22622,92.8632,elbL,25.7256,8.26826,0.27,0.27,-0,0,112.94,92.7813,,,82.2284,3,142,145,32.9
+"Giant (Long x1.6, strength ~ L^3)","squat h=0.65 flat","match","xtol",1.13871,1.16085,93.9968,elbL,32.3474,0.262615,0.27,0.27,-0,0,128.011,121.527,,,74.7931,3,129,132,27.1
+"Giant (Long x1.6, strength ~ L^3)","squat h=0.80 flat","same cost, other optimum","xtol",1.05019,1.06126,97.4094,shflexR,36.6976,10.4363,0.27,0.28,-0,0,166.479,151.134,,,79.2894,3,125,128,34.4
+"Giant (Long x1.6, strength ~ L^3)","squat h=0.40 toes","match","ftol",0.293359,0.291962,93.006,elbR,26.1962,0.00163221,0.01,0.01,-0,0,28.6702,28.7172,,,86.9332,3,121,124,42.9
+"Giant (Long x1.6, strength ~ L^3)","squat h=0.60 toes","match","ftol",0.269525,0.269531,0.553301,nrot,0.149596,-0.000599633,0,0,-0,0,33.2009,33.1611,,,77.3281,3,122,125,48.4
+"Giant (Long x1.6, strength ~ L^3)","squat h=0.35 flat hands down [ready to let go of: hand]","match","xtol",1.12774,1.17336,18.5741,shrotL,6.16837,0.876691,0.27,0.26,-0,0,119.334,122.19,119.334,122.19,90.6272,3,135,138,41.5
+"Giant (Long x1.6, strength ~ L^3)","squat h=0.50 flat hands down [ready to let go of: hand]","match","xtol",1.32165,1.26634,34.3246,shrotR,10.5873,-2.03796,0.26,0.25,-0,0,163.692,162.411,128.746,162.411,96.7877,3,150,153,45.7
+"Giant (Long x1.6, strength ~ L^3)","tall kneel","match","ftol",0.00560779,0.00563075,24.4786,ttw,5.85411,0.0491522,0,0,-0,0,44.1271,44.2871,,,205.306,1,516,517,16.9
+"Giant (Long x1.6, strength ~ L^3)","one knee and its toes, the other leg lifted","better","xtol",0.0494683,0.0779,90.4016,elbL,22.781,13.3936,0.01,0.02,-0,0,0.0100151,-0.0004558,,,17.5649,1,48,49,49.5
+"Giant (Long x1.6, strength ~ L^3)","half-kneel (left foot forward), hands: none, back toes laid","match","xtol",0.462155,0.469208,40.739,nrot,15.5724,-10.9165,0.27,0.26,-0,0,52.1815,48.6335,,,65.9447,3,131,134,21.8
+"Giant (Long x1.6, strength ~ L^3)","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.473019,0.472395,28.1818,nrot,8.90045,3.81924,0.27,0.27,-0,0,52.8047,49.4064,52.8047,49.4064,71.7854,3,124,127,23.2
+"Giant (Long x1.6, strength ~ L^3)","half-kneel (left foot forward), hands: both, back toes laid","match","xtol",0.46662,0.486772,26.4213,nrot,8.25849,-0.257539,0.27,0.27,-0,0,53.2339,51.1158,53.2339,51.1158,77.9297,3,128,131,25.2
+"Giant (Long x1.6, strength ~ L^3)","half-kneel (left foot forward), hands: ground, back toes laid","same cost, other optimum","xtol",0.636068,0.609553,73.9937,nrot,20.3192,4.55761,0.26,0.26,-0,0,329.091,315.818,-263.792,-178.628,69.2478,3,124,127,30.9
+"Giant (Long x1.6, strength ~ L^3)","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","worse","xtol",0.719218,0.636078,56.5662,shrotR,16.7225,3.58148,0.27,0.26,-0,0,231.48,294.3,28.8873,38.0143,83.3212,3,144,147,38.9
+"Giant (Long x1.6, strength ~ L^3)","rising from the half-kneel h=0.55, hands: none","same cost, other optimum","xtol",0.856144,0.854792,107.46,shflexR,32.4756,0.0388757,0.27,0.27,-0,0,78.0834,111.151,,,84.0305,3,140,143,32
+"Giant (Long x1.6, strength ~ L^3)","rising from the half-kneel h=0.70, hands: none","same cost, other optimum","xtol",0.657466,0.699502,85.1539,elbR,17.183,-0.0258788,0.27,0.27,-0,0,85.8392,112.544,,,89.9617,3,149,152,27
+"Giant (Long x1.6, strength ~ L^3)","rising from the half-kneel h=0.85, hands: none","match","xtol",0.566723,0.610604,44.2544,elbR,14.5729,0.0205998,0.27,0.28,-0,0,111.289,103.601,,,79.9456,3,133,136,26.1
+"Giant (Long x1.6, strength ~ L^3)","rising from the half-kneel h=0.55, hands: thigh","match","xtol",0.830216,0.874601,26.9155,nrot,9.124,-0.0294426,0.27,0.27,-0,0,95.616,89.222,95.616,89.222,83.0887,3,135,138,37
+"Giant (Long x1.6, strength ~ L^3)","rising from the half-kneel h=0.70, hands: thigh","same cost, other optimum","xtol",0.657181,0.647606,34.3134,shrotL,11.492,0.050229,0.27,0.27,-0,0,110.314,95.4523,110.314,95.4523,76.962,3,131,134,33.5
+"Giant (Long x1.6, strength ~ L^3)","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.459679,0.467089,81.386,elbR,17.3228,1.29216,0.27,0.27,-0,0,52.2747,49.6535,,,45.611,3,122,125,20
+"Giant (Long x1.6, strength ~ L^3)","rising from the half-kneel h=0.55, hands: none","match","xtol",0.840645,0.849233,105.432,shflexR,24.6252,0.0468641,0.27,0.27,-0,0,94.2019,104.116,,,73.3178,3,141,144,32.6
+"Giant (Long x1.6, strength ~ L^3)","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","worse","xtol",0.77837,0.651768,78.5572,nrot,21.7316,2.8553,0.27,0.27,-0,0,177.34,158.869,27.0626,41.7002,83.7519,3,173,176,29.5
+"Giant (Long x1.6, strength ~ L^3)","stoop, hands on the knees, knees 30","match","xtol",0.919771,0.938205,44.5163,shrotL,15.8917,-8.76322,0.27,0.28,-0,0,147.544,143.55,147.544,143.55,81.359,3,133,136,40.9
+"Giant (Long x1.6, strength ~ L^3)","stoop, hands on the knees, knees 60","same cost, other optimum","xtol",0.961057,0.975848,51.5049,toeL,15.8163,10.0268,0.27,0.29,-0,0,143.686,133.375,143.686,133.375,87.6928,3,134,137,36
+"Giant (Long x1.6, strength ~ L^3)","sitting up, the trunk 15 deg from the ground, arms reaching forward","better","ftol",0.149808,0.319395,102.471,elbL,45.9414,0.00087597,0,0.02,-0,0,149.964,23.6498,,,159.15,3,450,453,43
+"Giant (Long x1.6, strength ~ L^3)","sitting up, the trunk 35 deg from the ground, arms reaching forward","match","ftol",0.0831835,0.0831833,57.4516,shrotL,19.1556,1.22669E-06,0,0,-0,0,44.2633,44.297,,,521.664,3,1462,1465,42.8
+"Giant (Long x1.6, strength ~ L^3)","sitting up, the trunk 60 deg from the ground, arms reaching forward","same cost, other optimum","ftol",0.0459712,0.0393929,86.1918,shabdL,26.7726,4.29457E-06,0,0,-0,0,200.898,137.039,,,19.9607,1,56,57,34.1
+"Giant (Long x1.6, strength ~ L^3)","sitting up, the trunk 25 deg from the ground, hands behind","same cost, other optimum","ftol",0.104374,0.104264,31.6587,shabdL,11.9453,8.37183E-05,0,0,-0,0,100.123,74.8802,,,513.478,3,1198,1201,64.8
+"Giant (Long x1.6, strength ~ L^3)","pushed up from the front (chest off the ground)","better","ftol",0.115416,0.149765,47.5619,habdL,19.0405,-9.80128,0.02,0.02,-0,0,592.006,323.444,,,168.018,3,366,369,343.1
+"Giant (Long x1.6, strength ~ L^3)","on its forearms","same cost, other optimum","ftol",0.366384,0.364854,47.0035,hrotL,9.2757,0.000336988,0.26,0.26,-0,0,728.005,710.601,,,122.827,3,197,200,88.5
+"Giant (Long x1.6, strength ~ L^3)","sitting, legs out, hands behind","same cost, other optimum","ftol",0.0204282,0.0204763,45.2138,hrotR,12.1438,2.70218E-08,0,0,-0,0,251.806,301.36,,,118.621,1,280,281,62.7
+"Giant (Long x1.6, strength ~ L^3)","rising from the half-kneel h=0.70, hands: none","match","xtol",0.666208,0.703556,81.236,elbL,15.9938,-0.0554926,0.27,0.27,-0,0,95.7343,100.061,,,76.5444,3,142,145,28.7
+"Giant (Long x1.6, strength ~ L^3)","rising from the half-kneel h=0.85, hands: none","match","xtol",0.543836,0.60293,28.6841,nrot,10.0684,8.16839,0.27,0.27,-0,0,111.381,108.71,,,72.3188,3,137,140,26
+"Giant (Long x1.6, strength ~ L^3)","one knee and its toes, the other leg lifted","better","xtol",0.041634,0.0743168,69.0196,toeR,22.0978,14.4383,0,0.01,-0,0,0.426235,0.131275,,,227.963,3,611,614,138.5
+"Long, arms x0.65","stand","match","xtol",0.350417,0.351832,40.4308,toeR,8.51848,-1.8626,0.17,0.17,-0,0,93.2492,96.3865,,,71.5773,3,138,141,31.8
+"Long, arms x0.65","hands and knees","match","ftol",0.0518957,0.0518952,19.0748,nrot,3.51762,-1.81571E-06,0,0,-0,0,189.841,185.613,,,307.014,3,660,663,79.4
+"Long, arms x0.65","hands and knees (toes tucked)","match","ftol",0.0523734,0.0523733,8.53903,nrot,1.53387,0.000183152,0,0,-0,0,252.405,252.183,,,713.547,3,1266,1269,257
+"Long, arms x0.65","tripod (hands and one knee, left knee lifted)","match","ftol",0.069267,0.0630871,34.433,nrot,12.1397,-1.39959,0,0,-0,0,107.7,111.011,,,109.872,3,270,273,63.5
+"Long, arms x0.65","hands and knees [ready to let go of: hand]","better","ftol",2.13338,4.0564,117.298,roll,43.913,-16.877,0.13,0.24,-0,0,27.0147,45.6414,-0.565245,-53.2321,275.987,3,603,606,57.7
+"Long, arms x0.65","hands and feet D=0.80","same cost, other optimum","xtol",0.805871,0.737601,52.9412,hrotR,14.0116,-20.3413,0.11,0.13,-0,0,200.148,181.768,-425.26,-399.755,79.1268,3,136,139,47.8
+"Long, arms x0.65","hands and feet D=0.50","same cost, other optimum","xtol",0.597544,0.631366,37.3858,hrotR,8.96029,16.0606,0.15,0.14,-0,0,132.438,155.277,-309.282,-349.525,111.396,3,179,182,40.3
+"Long, arms x0.65","hands and feet D=0.30","better","xtol",0.740036,0.877179,36.526,hrotR,10.5316,20.3467,0.14,0.15,-0,0,40.8326,27.0859,-272.58,-297.764,141.03,3,232,235,54.9
+"Long, arms x0.65","hands and feet D=0.40 toes","better","ftol",0.0740579,0.139892,106.541,kneeL,36.0474,-310.929,0,0.02,-0,0,114.001,36.9504,-242.453,-317.631,196.231,3,311,314,81
+"Long, arms x0.65","hands and feet D=0.25 [ready to let go of: hand]","match","ftol",25.0146,27.6565,65.0914,hrotL,17.7447,-4.4559,1.63,1.55,0,0,38.7038,40.7074,-202.969,-224.039,315.875,3,493,496,56.9
+"Long, arms x0.65","squat h=0.35 flat","match","xtol",0.487496,0.479351,125.113,shflexR,49.322,-0.0208431,0.17,0.16,-0,0,42.2285,34.4249,,,70.7561,3,134,137,27.2
+"Long, arms x0.65","squat h=0.50 flat","match","xtol",0.494935,0.487949,90.4641,shrotL,37.0968,0.118848,0.17,0.16,-0,0,52.1235,47.6581,,,65.1416,3,123,126,25.6
+"Long, arms x0.65","squat h=0.65 flat","same cost, other optimum","xtol",0.448806,0.462143,82.8543,shrotL,22.9583,1.18665,0.17,0.17,-0,0,71.6685,58.4307,,,71.7024,3,125,128,27.4
+"Long, arms x0.65","squat h=0.80 flat","match","xtol",0.403997,0.413337,98.6949,shflexL,32.7899,-0.0233527,0.17,0.16,-0,0,99.2964,90.0896,,,73.8707,3,130,133,30.3
+"Long, arms x0.65","squat h=0.40 toes","match","ftol",0.134473,0.134511,12.4004,shflexR,3.28811,0.00227773,0.01,0.01,-0,0,16.6669,16.6797,,,98.1237,3,163,166,35.5
+"Long, arms x0.65","squat h=0.60 toes","match","ftol",0.108151,0.108242,57.226,elbR,15.4743,-0.00150027,0,0,-0,0,20.1864,20.1866,,,78.8862,3,132,135,49.6
+"Long, arms x0.65","squat h=0.35 flat hands down [ready to let go of: hand]","match","xtol",1.96295,1.9902,99.3692,shrotR,36.5845,0.229964,0.59,0.65,0.3,0.4,98.0399,97.7442,64.4881,65.7034,194.497,3,313,316,75.7
+"Long, arms x0.65","squat h=0.50 flat hands down [ready to let go of: hand]","match","ftol",91.6274,91.6432,37.3169,shrotR,8.05945,0.58007,16.7,16.74,16.7,16.7,148.875,148.896,-113.087,-113.117,1388.36,3,1510,1513,84.9
+"Long, arms x0.65","tall kneel","match","ftol",0.00288099,0.0029201,10.6443,ttw,2.30836,0.373098,0,0,-0,0,28.9444,29.0445,,,154.333,1,219,220,17.4
+"Long, arms x0.65","one knee and its toes, the other leg lifted","match","xtol",0.0192279,0.0221455,56.262,toeL,15.5787,6.60449,0.01,0.03,-0,0,0.37174,0.317728,,,21.4203,1,34,35,11.6
+"Long, arms x0.65","half-kneel (left foot forward), hands: none, back toes laid","match","xtol",0.180127,0.184708,48.4584,toeL,15.3991,-0.461841,0.17,0.17,-0,0,32.9523,30.8769,,,103.509,3,121,124,16.8
+"Long, arms x0.65","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.176812,0.181562,44.7371,shrotL,11.0535,7.85411,0.17,0.17,-0,0,41.3074,32.6035,41.3074,32.6035,130.705,3,130,133,23.8
+"Long, arms x0.65","half-kneel (left foot forward), hands: both, back toes laid","match","xtol",0.200341,0.213176,48.9213,toeL,11.0364,-2.87572,0.17,0.17,-0,0,43.6131,37.2116,43.6131,37.2116,148.219,3,143,146,24.2
+"Long, arms x0.65","half-kneel (left foot forward), hands: ground, back toes laid","match","xtol",0.312007,0.316747,21.5481,hrotR,6.3865,2.38171,0.16,0.15,-0,0,147.402,151.918,-101.524,-105.373,134.382,3,141,144,42.8
+"Long, arms x0.65","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","better","xtol",0.619713,466.161,122.51,shflexL,51.6094,381.956,0.14,44.1,-0,237.6,113.76,71.7877,3.69416,-234.493,175.001,3,198,201,32.7
+"Long, arms x0.65","rising from the half-kneel h=0.55, hands: none","same cost, other optimum","xtol",0.345248,0.334031,101.62,shflexR,29.7893,0.0132681,0.17,0.17,-0,0,54.5079,70.7112,,,131.573,3,135,138,31.6
+"Long, arms x0.65","rising from the half-kneel h=0.70, hands: none","same cost, other optimum","xtol",0.265065,0.270438,83.3454,elbL,22.0082,0.00799287,0.17,0.17,-0,0,50.6088,69.6298,,,129.243,3,136,139,30.4
+"Long, arms x0.65","rising from the half-kneel h=0.85, hands: none","same cost, other optimum","xtol",0.226566,0.237918,25.8168,toeR,10.8705,0.321488,0.17,0.17,-0,0,50.4931,65.2464,,,133.804,3,140,143,24.9
+"Long, arms x0.65","rising from the half-kneel h=0.55, hands: thigh","match","xtol",0.317453,0.321987,30.683,dorsiL,9.36442,-0.0242921,0.17,0.17,-0,0,61.5923,60.5404,61.5923,60.5404,137.234,3,137,140,30.9
+"Long, arms x0.65","rising from the half-kneel h=0.70, hands: thigh","match","xtol",0.238409,0.245904,46.7393,shrotL,14.5198,-0.010568,0.17,0.17,-0,0,66.3009,67.5014,66.3009,67.5014,141.26,3,144,147,30.9
+"Long, arms x0.65","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.179593,0.184319,22.7431,hrotL,9.66152,0.00928197,0.17,0.17,-0,0,32.9093,30.3423,,,95.2992,3,122,125,19.5
+"Long, arms x0.65","rising from the half-kneel h=0.55, hands: none","match","xtol",0.343296,0.345115,104.862,shflexL,32.3458,-0.0100817,0.17,0.17,-0,0,51.0109,56.133,,,129.293,3,135,138,29.6
+"Long, arms x0.65","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","better","xtol",0.847214,390.53,97.4701,shflexR,36.186,295.182,0.17,46.89,-0,224.5,108.072,65.3933,-6.85065,-105.526,154.851,3,176,179,52.7
+"Long, arms x0.65","stoop, hands on the knees, knees 30","same cost, other optimum","xtol",0.391055,0.39782,28.4953,shrotR,8.40117,0.963194,0.17,0.17,-0,0,93.0078,81.4722,93.0078,81.4722,122.127,3,136,139,33
+"Long, arms x0.65","stoop, hands on the knees, knees 60","match","xtol",0.390248,0.397042,38.5295,shrotL,12.0021,3.17877,0.17,0.18,-0,0,101.481,92.8458,101.481,92.8458,102.353,3,139,142,32.5
+"Long, arms x0.65","sitting up, the trunk 15 deg from the ground, arms reaching forward","better","ftol",0.0753405,0.230283,98.0399,elbL,44.24,0.00120017,0,0.03,-0,0,97.7763,8.77316,,,107.44,3,285,288,43.2
+"Long, arms x0.65","sitting up, the trunk 35 deg from the ground, arms reaching forward","match","ftol",0.0509564,0.0509565,41.7931,nlat,13.5445,1.56507E-07,0,0,-0,0,29.3862,29.3913,,,243.628,3,665,668,63.3
+"Long, arms x0.65","sitting up, the trunk 60 deg from the ground, arms reaching forward","same cost, other optimum","ftol",0.0303391,0.0307687,81.0414,shabdL,26.6267,-3.98451E-05,0,0,-0,0,122.189,85.2599,,,32.1323,1,84,85,22.7
+"Long, arms x0.65","sitting up, the trunk 25 deg from the ground, hands behind","match","ftol",0.0692739,0.0659448,97.0149,shrotR,24.9698,-0.000703271,0,0,-0,0,182.302,172.505,,,145.408,3,343,346,95.1
+"Long, arms x0.65","pushed up from the front (chest off the ground)","match","ftol",0.0595654,0.0595663,17.9037,nrot,3.24961,0.0232147,0.04,0.04,-0,0,164.223,165.137,,,444.298,3,995,998,350
+"Long, arms x0.65","on its forearms","match","ftol",0.158371,0.158371,70.449,nrot,13.0017,1.32033E-06,0.16,0.16,-0,0,377.4,376.856,,,118.806,3,214,217,100.3
+"Long, arms x0.65","sitting, legs out, hands behind","match","ftol",0.0460307,0.0460271,39.5928,dorsiL,10.84,-1.43349E-06,0.01,0.01,-0,0,150.128,150.547,,,214.001,2,542,544,106.5
+"Long, arms x0.65","rising from the half-kneel h=0.70, hands: none","match","xtol",0.254207,0.274466,88.6664,elbR,25.3852,3.76523,0.17,0.17,-0,0,61.1597,65.7759,,,74.3907,3,139,142,28.4
+"Long, arms x0.65","rising from the half-kneel h=0.85, hands: none","match","xtol",0.210577,0.23325,45.0316,shrotR,11.971,6.77091,0.17,0.17,-0,0,70.3604,71.2672,,,76.5873,3,141,144,24.2
+"Long, arms x0.65","one knee and its toes, the other leg lifted","match","xtol",0.029753,0.0343655,85.6283,elbR,21.2668,8.50308,0.01,0.01,-0,0,-4.59508E-05,0.0355981,,,19.718,1,55,56,15.7
+"Round, stiff knees (100)","stand","match","xtol",0.198627,0.199362,16.0058,nrot,4.92992,-1.03926,0.13,0.14,-0,0,95.8525,85.9333,,,76.5193,3,137,140,28.8
+"Round, stiff knees (100)","hands and knees","same cost, other optimum","ftol",0.0413154,0.0386849,25.1006,hrotL,9.00839,12.9592,0,0,-0,0,169.478,261.652,,,78.7294,1,166,167,162.5
+"Round, stiff knees (100)","hands and knees (toes tucked)","match","ftol",0.0406014,0.0406013,10.0091,nrot,1.799,0.0067538,0,0,-0,0,295.438,295.338,,,61.0501,1,100,101,151.6
+"Round, stiff knees (100)","tripod (hands and one knee, left knee lifted)","match","ftol",0.0544359,0.0544358,17.453,nrot,3.1347,-0.00766402,0,0,-0,0,136.687,136.777,,,121.137,3,313,316,78.1
+"Round, stiff knees (100)","hands and knees [ready to let go of: hand]","better","ftol",6.41942,9.74948,73.4605,hflexR,27.8519,8.71089,0.65,0.77,-0,0,112.454,83.5795,-75.7828,-99.586,157.477,3,346,349,25.7
+"Round, stiff knees (100)","hands and feet D=0.80","match","xtol",0.207533,0.217386,26.3642,hrotR,8.44015,5.84719,0.13,0.13,-0,0,202.989,193.677,-173.981,-204.188,94.3165,3,159,162,33.5
+"Round, stiff knees (100)","hands and feet D=0.50","match","xtol",0.212051,0.219511,32.7825,shrotR,9.91592,-7.65363,0.13,0.13,-0,0,205.899,202.265,-118.812,-157.213,101.678,3,161,164,28.1
+"Round, stiff knees (100)","hands and feet D=0.30","worse","xtol",0.242849,0.216528,27.4248,shrotL,11.061,-15.5713,0.13,0.14,-0,0,148.806,165.784,-96.9127,-79.7455,90.1104,3,151,154,39.5
+"Round, stiff knees (100)","hands and feet D=0.40 toes","match","ftol",0.013354,0.013354,4.10702,nrot,0.742088,0.00116231,0,0,-0,0,141.938,141.964,-54.0819,-54.1073,352.457,1,580,581,140.2
+"Round, stiff knees (100)","hands and feet D=0.25 [ready to let go of: hand]","match","xtol",0.203082,0.210693,35.7426,hrotL,9.33981,4.38437,0.13,0.13,-0,0,164.729,157.617,19.4229,18.0617,95.9153,3,148,151,53.7
+"Round, stiff knees (100)","squat h=0.35 flat","match","ftol",4.31326,4.7158,63.9761,shrotR,15.724,-0.444977,0.15,0.14,0.2,0.1,-53.4497,-60.4561,,,276.182,3,503,506,30.4
+"Round, stiff knees (100)","squat h=0.50 flat","match","xtol",0.698842,0.703148,61.432,nrot,17.1116,-0.700297,0.11,0.11,-0,0,12.4458,11.1053,,,67.3364,3,128,131,42.9
+"Round, stiff knees (100)","squat h=0.65 flat","match","xtol",0.336868,0.332585,56.2307,toeL,11.6786,-0.013135,0.13,0.13,-0,0,56.7455,55.6154,,,61.7512,3,113,116,35
+"Round, stiff knees (100)","squat h=0.80 flat","match","xtol",0.26146,0.268473,33.5559,nrot,11.934,0.549535,0.13,0.12,-0,0,94.1582,88.0857,,,77.5982,3,131,134,28.6
+"Round, stiff knees (100)","squat h=0.40 toes","match","ftol",15.6968,15.7406,69.4248,nrot,17.4195,-0.372803,0.74,0.72,-0,0,-91.6343,-91.6776,,,787.417,3,1443,1446,39.2
+"Round, stiff knees (100)","squat h=0.60 toes","worse","ftol",1.32694,0.825034,74.4853,nrot,18.4251,5.47048,0.31,0.08,-0,0,-4.189,5.28249,,,715.88,3,1367,1370,44.6
+"Round, stiff knees (100)","squat h=0.35 flat hands down [ready to let go of: hand]","better","xtol",11.7117,15.109,81.5513,nrot,23.7281,6.43698,1.43,2.7,1.4,2.7,-30.7211,-41.972,-97.2906,-97.4279,265.562,3,441,444,56.7
+"Round, stiff knees (100)","squat h=0.50 flat hands down [ready to let go of: hand]","same cost, other optimum","xtol",2.62557,2.63365,93.6477,shrotL,23.6493,-1.52729,0.92,1.03,0.8,1,-1.69607,-12.1461,-19.7294,-12.1461,125.505,3,229,232,145
+"Round, stiff knees (100)","tall kneel","match","ftol",0.0184107,0.019371,26.9344,nrot,4.90314,-2.68125,0,0,-0,0,15.8029,15.6373,,,67.8253,1,182,183,38.5
+"Round, stiff knees (100)","one knee and its toes, the other leg lifted","match","max iterations",0.0789391,0.071572,101.626,shflexR,21.8375,-11.2178,0.01,0.01,-0,0,-0.473279,-0.391488,,,559.484,3,1478,1481,325.1
+"Round, stiff knees (100)","half-kneel (left foot forward), hands: none, back toes laid","match","xtol",0.124677,0.125049,41.7281,toeL,11.0946,7.20784,0.13,0.13,-0,0,28.9012,26.8166,,,58.1183,3,126,129,20.5
+"Round, stiff knees (100)","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.118875,0.122651,50.268,toeL,13.2132,4.42581,0.13,0.13,-0,0,31.1907,32.5178,31.1907,32.5178,63.8807,3,123,126,27.5
+"Round, stiff knees (100)","half-kneel (left foot forward), hands: both, back toes laid","match","xtol",0.128703,0.141302,48.5478,toeL,13.9729,14.6513,0.13,0.13,-0,0,45.9156,42.0361,45.9156,42.0361,87.5892,3,151,154,25.8
+"Round, stiff knees (100)","half-kneel (left foot forward), hands: ground, back toes laid","match","xtol",0.227463,0.226439,81.4617,nrot,18.4153,3.00881,0.12,0.12,-0,0,183.519,183.74,-130.402,-120.321,70.3957,3,133,136,40.4
+"Round, stiff knees (100)","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","same cost, other optimum","xtol",0.263603,0.271594,81.4477,nrot,18.6749,5.25944,0.12,0.12,-0,0,97.1146,121.685,14.2604,14.4045,67.2949,3,127,130,76.5
+"Round, stiff knees (100)","rising from the half-kneel h=0.55, hands: none","same cost, other optimum","xtol",0.304091,0.297171,89.4214,elbL,22.7826,-0.012327,0.13,0.13,-0,0,50.4738,63.4421,,,91.3872,3,167,170,28.4
+"Round, stiff knees (100)","rising from the half-kneel h=0.70, hands: none","match","xtol",0.207755,0.194141,64.5249,elbR,13.2565,0.0106995,0.13,0.13,-0,0,68.3281,64.4807,,,85.4712,3,154,157,31.7
+"Round, stiff knees (100)","rising from the half-kneel h=0.85, hands: none","match","xtol",0.152672,0.165988,70.8337,elbR,15.9108,-0.00435469,0.13,0.13,-0,0,72.8241,79.4533,,,77.5037,3,143,146,33.2
+"Round, stiff knees (100)","rising from the half-kneel h=0.55, hands: thigh","same cost, other optimum","xtol",0.31227,0.298321,47.4459,toeL,11.9221,0.0282357,0.13,0.13,-0,0,56.21,66.5137,56.21,66.5137,89.8139,3,146,149,32.6
+"Round, stiff knees (100)","rising from the half-kneel h=0.70, hands: thigh","match","xtol",0.200783,0.193522,44.034,shrotL,13.1136,0.0689312,0.13,0.13,-0,0,69.5053,65.9194,69.5053,65.9194,70.8216,3,123,126,32.4
+"Round, stiff knees (100)","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.125857,0.124216,52.9547,toeR,11.2439,8.464,0.13,0.13,-0,0,29.7566,28.6815,,,49.1543,3,111,114,24
+"Round, stiff knees (100)","rising from the half-kneel h=0.55, hands: none","match","xtol",0.302726,0.303074,88.0876,elbL,23.8479,0.0187223,0.13,0.12,-0,0,63.5123,57.9103,,,82.674,3,151,154,26.9
+"Round, stiff knees (100)","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","better","xtol",0.259301,365.452,115.029,shflexR,48.3142,257.091,0.13,31.57,-0,227.2,101.399,105.256,14.4989,-234.551,72.2874,3,138,141,95.8
+"Round, stiff knees (100)","stoop, hands on the knees, knees 30","match","xtol",0.222012,0.235567,30.3258,shrotR,10.518,-8.54939,0.13,0.13,-0,0,88.7643,82.1658,88.7643,82.1658,94.8039,3,142,145,28.8
+"Round, stiff knees (100)","stoop, hands on the knees, knees 60","same cost, other optimum","xtol",0.224606,0.239586,29.3779,shrotR,10.0911,-1.84843,0.13,0.13,-0,0,97.4163,86.4375,97.4163,86.4375,92.63,3,135,138,32.6
+"Round, stiff knees (100)","sitting up, the trunk 15 deg from the ground, arms reaching forward","better","ftol",0.0585855,1.71629,101.118,elbL,43.1846,0.00492057,0,0.18,-0,0,83.2956,-17.7318,,,70.0321,3,182,185,24.6
+"Round, stiff knees (100)","sitting up, the trunk 35 deg from the ground, arms reaching forward","better","ftol",0.029448,0.352171,80.8323,tflex,23.2342,0.0015109,0,0.07,-0,0,85.9005,3.37502,,,61.1297,1,164,165,24.1
+"Round, stiff knees (100)","sitting up, the trunk 60 deg from the ground, arms reaching forward","match","ftol",0.0156598,0.0156598,14.8132,nrot,2.67198,1.26071E-07,0,0,-0,0,25.2724,25.2763,,,57.0244,1,175,176,24.9
+"Round, stiff knees (100)","sitting up, the trunk 25 deg from the ground, hands behind","match","ftol",0.0489839,0.0481086,93.7899,shrotL,17.3984,-1.66336E-05,0,0,-0,0,89.611,89.7473,,,181.088,2,437,439,53
+"Round, stiff knees (100)","pushed up from the front (chest off the ground)","match","ftol",0.0529111,0.0529111,5.70618,nrot,1.02626,0.000448285,0.01,0.01,-0,0,323.919,323.903,,,380.367,3,825,828,110.1
+"Round, stiff knees (100)","on its forearms","match","ftol",0.0589524,0.0589523,72.19,nrot,14.2142,-6.57327E-09,0.02,0.02,-0,0,240.14,242.857,,,535.402,3,985,988,304.8
+"Round, stiff knees (100)","sitting, legs out, hands behind","same cost, other optimum","ftol",0.00934913,0.00936466,17.2182,ttw,3.8606,2.07601E-05,0,0,-0,0,181.607,195.397,,,88.1071,1,199,200,30.8
+"Round, stiff knees (100)","rising from the half-kneel h=0.70, hands: none","match","xtol",0.188902,0.200506,53.8888,elbL,15.1789,-0.00424808,0.13,0.13,-0,0,75.2686,65.6923,,,87.4572,3,155,158,26
+"Round, stiff knees (100)","rising from the half-kneel h=0.85, hands: none","better","xtol",0.139785,0.161247,41.0243,nrot,10.336,1.1157,0.13,0.13,-0,0,75.7973,79.2299,,,80.8245,3,142,145,21.7
+"Round, stiff knees (100)","one knee and its toes, the other leg lifted","match","max iterations",0.0728829,0.0669291,124.583,shflexL,32.1963,-16.2164,0.01,0.01,-0,0,-0.561123,-0.573201,,,537.74,3,1401,1404,95.2
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","stand","match","xtol",0.207681,0.208519,43.8214,toeR,12.6752,-0.460758,0.13,0.13,-0,0,92.7492,89.5333,,,77.3084,3,126,129,31.4
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","hands and knees","match","ftol",0.0684616,0.0684615,16.0998,nrot,2.89181,-1.32728E-06,0,0,-0,0,254.672,254.722,,,138.209,3,254,257,85.6
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","hands and knees (toes tucked)","match","ftol",0.0660035,0.0660037,0.845658,hrotL,0.24786,0.000114718,0,0,-0,0,193.672,192.041,,,264.516,3,430,433,147
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","tripod (hands and one knee, left knee lifted)","match","ftol",0.0939593,0.0939593,12.0302,nrot,2.16107,-0.0379535,0,0,-0,0,150.476,150.425,,,172.937,3,417,420,60.6
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","hands and knees [ready to let go of: hand]","better","ftol",5.47679,12.0155,91.4549,roll,35.9226,-11.3166,0.12,0.37,-0,0,32.4924,124.453,-55.9363,-122.418,166.68,3,397,400,23.6
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","hands and feet D=0.80","same cost, other optimum","xtol",0.225655,0.236921,28.2614,nrot,7.25411,-0.303571,0.13,0.13,-0,0,207.876,195.57,-189.836,-199.141,98.2264,3,146,149,38.5
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","hands and feet D=0.50","worse","xtol",0.325271,0.262954,33.8567,shrotR,10.7097,-16.1962,0.12,0.13,-0,0,181.691,196.254,-133.028,-158.046,102.757,3,156,159,38.4
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","hands and feet D=0.30","worse","xtol",0.330149,0.297273,27.723,roll,11.7282,-13.4334,0.13,0.13,-0,0,158.318,155.852,-90.7797,-99.7711,111.483,3,167,170,41.3
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","hands and feet D=0.40 toes","match","ftol",0.0858648,0.0865315,15.79,roll,6.14157,-9.65482,0,0,-0,0,162.224,161.933,-74.544,-80.2784,273.572,3,397,400,82.9
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","hands and feet D=0.25 [ready to let go of: hand]","match","xtol",0.365149,0.377083,26.8009,nrot,9.58763,-5.85846,0.13,0.13,-0,0,173.569,177.194,13.1152,12.8226,96.8314,3,143,146,44.3
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","squat h=0.35 flat","match","xtol",0.579348,0.577743,10.8407,ttw,2.65528,-0.0333835,0.12,0.12,-0,0,40.172,38.3537,,,74.0092,3,127,130,41.8
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","squat h=0.50 flat","match","xtol",0.509816,0.498784,140.968,shflexL,49.5813,-0.0226126,0.12,0.13,-0,0,59.8711,62.5181,,,68.3987,3,116,119,38
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","squat h=0.65 flat","match","xtol",0.424322,0.440946,58.8802,shflexL,19.6038,-0.0346534,0.12,0.13,-0,0,86.1258,78.1965,,,83.1685,3,132,135,30.3
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","squat h=0.80 flat","match","xtol",0.3536,0.359892,60.209,elbR,19.3079,0.0906599,0.13,0.13,-0,0,84.061,89.0306,,,71.44,3,121,124,24.2
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","squat h=0.40 toes","worse","ftol",0.479696,0.380567,44.2643,habdL,14.2449,0.0511238,0.01,0.02,-0,0,10.149,17.9343,,,337.831,3,565,568,28.5
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","squat h=0.60 toes","match","ftol",0.26807,0.268865,63.961,shflexL,16.8305,0.00326443,0.01,0.01,-0,0,19.5588,19.5088,,,54.6261,3,95,98,36.2
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","squat h=0.35 flat hands down [ready to let go of: hand]","match","ftol",219.561,219.67,77.5787,nrot,16.2049,-0.575194,18.13,17.89,18.1,17.9,210.411,210.189,-156.453,-156.629,447.153,3,743,746,53.5
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","squat h=0.50 flat hands down [ready to let go of: hand]","match","ftol",98.5737,98.885,77.1973,nrot,18.1077,0.144033,8.89,8.9,8.9,8.9,188.547,188.103,-143.279,-145.915,145.508,3,222,225,43
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","tall kneel","match","max iterations",0.0239655,0.0265637,29.3817,nrot,9.66453,-13.8808,0,0,-0,0,15.2006,14.703,,,171.209,1,461,462,13.5
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","one knee and its toes, the other leg lifted","match","max iterations",0.0606508,0.0621421,91.4883,elbR,20.6057,2.39262,0,0,-0,0,-0.578735,-0.356744,,,564.261,3,1537,1540,61
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","half-kneel (left foot forward), hands: none, back toes laid","match","xtol",0.143012,0.145695,35.0802,nrot,13.4216,-19.83,0.13,0.13,-0,0,24.085,23.6465,,,56.2454,3,123,126,22.7
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.137266,0.142654,86.6944,elbR,18.4882,-1.42576,0.13,0.13,-0,0,26.3999,25.2049,26.3999,25.2049,63.1704,3,118,121,27.2
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","half-kneel (left foot forward), hands: both, back toes laid","better","xtol",0.15074,0.171123,29.0843,nrot,10.2702,-11.5288,0.13,0.13,-0,0,33.0026,32.9529,33.0026,32.9529,71.943,3,125,128,25.7
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","half-kneel (left foot forward), hands: ground, back toes laid","same cost, other optimum","xtol",0.558163,0.510232,77.022,nrot,18.153,7.96892,0.1,0.08,-0,0,178.835,156.067,-168.633,-140.021,51.7072,3,103,106,46.7
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","worse","ftol",2.47595,2.14166,76.1836,nrot,20.4465,5.20026,0.17,0.18,-0,0,143.658,71.598,-34.2828,-26.9579,166.293,3,320,323,44.2
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","rising from the half-kneel h=0.55, hands: none","match","xtol",0.503229,0.472518,92.8902,elbL,29.7247,0.130832,0.12,0.13,-0,0,70.048,75.9708,,,85.5005,3,155,158,29.1
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","rising from the half-kneel h=0.70, hands: none","match","xtol",0.266575,0.265336,59.4209,elbR,13.5511,-0.0114414,0.13,0.13,-0,0,70.0228,72.7003,,,95.4937,3,169,172,44.4
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","rising from the half-kneel h=0.85, hands: none","match","xtol",0.16282,0.16552,51.4895,nrot,10.8227,-0.0106349,0.13,0.14,-0,0,72.8412,70.7647,,,78.4415,3,143,146,47.1
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","rising from the half-kneel h=0.55, hands: thigh","match","xtol",0.440174,0.486597,79.394,shflexR,19.8341,-0.275811,0.12,0.12,-0,0,54.6771,54.081,54.6771,54.081,72.5129,3,122,125,30.7
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","rising from the half-kneel h=0.70, hands: thigh","better","xtol",0.260464,0.291007,63.2966,shflexR,16.3894,-0.0738083,0.13,0.13,-0,0,64.7115,56.3923,64.7115,56.3923,91.5386,3,147,150,29.4
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.140368,0.144343,34.4099,shrotR,10.576,-11.2192,0.13,0.13,-0,0,24.2083,25.0102,,,55.3001,3,118,121,25.9
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","rising from the half-kneel h=0.55, hands: none","match","xtol",0.496678,0.48785,91.1003,elbR,24.3497,0.156614,0.12,0.13,-0,0,63.8428,66.0485,,,85.2289,3,149,152,27.4
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","worse","ftol",2.47595,2.17774,76.852,nrot,21.9229,8.83226,0.17,0.18,-0,0,143.701,53.9293,-34.2989,-26.8894,133.335,3,261,264,39.4
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","stoop, hands on the knees, knees 30","match","xtol",0.247071,0.261083,35.4188,shrotL,9.71511,-5.62244,0.13,0.13,-0,0,88.9442,86.1732,88.9442,86.1732,89.7684,3,142,145,33.3
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","stoop, hands on the knees, knees 60","better","xtol",0.235536,0.264994,23.1416,habdR,8.08959,-14.1131,0.13,0.13,-0,0,97.1064,90.7609,97.1064,90.7609,93.918,3,144,147,31.2
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","sitting up, the trunk 15 deg from the ground, arms reaching forward","match","ftol",2.30071,2.32658,94.1797,shrotL,20.096,-1.4648E-05,0.23,0.22,-0,0,-22.1924,-22.229,,,403.703,3,1087,1090,25.7
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","sitting up, the trunk 35 deg from the ground, arms reaching forward","match","ftol",0.577037,0.577489,50,tlat,15.4487,4.17175E-05,0.11,0.11,-0,0,-0.231571,-0.217517,,,298.607,3,818,821,24.7
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","sitting up, the trunk 60 deg from the ground, arms reaching forward","match","ftol",0.036385,0.0363829,40.8237,hrotL,14.7145,8.14714E-06,0,0,-0,0,20.5409,20.6498,,,186.45,2,508,510,52.5
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","sitting up, the trunk 25 deg from the ground, hands behind","match","ftol",0.0823123,0.0823124,15.6806,nrot,2.82625,1.78053E-06,0,0,-0,0,89.0258,89.039,,,324.271,3,835,838,77
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","pushed up from the front (chest off the ground)","match","ftol",0.0868832,0.0868828,23.1794,nrot,4.16338,0.0419522,0.01,0.01,-0,0,295.477,294.777,,,408.257,3,920,923,103.2
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","on its forearms","same cost, other optimum","ftol",0.0872508,0.087251,72.2463,nrot,13.4647,-4.88794E-07,0.02,0.02,-0,0,249.117,235.533,,,564.673,3,996,999,204.4
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","sitting, legs out, hands behind","match","ftol",0.0513871,0.0480619,95.8163,shrotR,19.4706,-0.000316084,0,0,-0,0,178.15,176.588,,,177.771,3,416,419,48.4
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","rising from the half-kneel h=0.70, hands: none","match","xtol",0.278543,0.263638,30.6632,nrot,9.52333,0.0054896,0.13,0.13,-0,0,73.0732,67.6978,,,79.6077,3,148,151,31.1
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","rising from the half-kneel h=0.85, hands: none","match","xtol",0.172475,0.182223,57.3926,elbL,11.5724,0.363249,0.13,0.13,-0,0,74.806,74.084,,,72.457,3,131,134,33.2
+"Heavy trunk (Round, trunk+hips x1.5, S0.7, lean 30)","one knee and its toes, the other leg lifted","match","max iterations",0.0555547,0.0539055,135.706,shflexL,37.9192,1.81036,0,0,-0,0,-0.378856,-0.537558,,,535.544,3,1603,1606,22.7
+"Long, right leg 0.4","stand","match","xtol",0.355754,0.359972,58.3966,nrot,11.9823,-4.28573,0.17,0.17,-0,0,96.0149,97.5044,,,68.6743,3,139,142,31.5
+"Long, right leg 0.4","hands and knees","match","ftol",0.0271852,0.0271852,20.5628,nrot,3.69333,-7.60993E-07,0,0,-0,0,239.404,239.241,,,135.78,1,273,274,81.4
+"Long, right leg 0.4","hands and knees (toes tucked)","same cost, other optimum","ftol",0.0273393,0.0273388,21.932,hrotR,4.4254,0.381669,0,0,-0,0,155.926,190.26,,,206.189,1,347,348,166.5
+"Long, right leg 0.4","tripod (hands and one knee, left knee lifted)","match","ftol",0.0363824,0.0363825,13.8598,nrot,2.48998,0.000886548,0,0,-0,0,114.417,114.412,,,48.4602,1,140,141,50.5
+"Long, right leg 0.4","hands and knees [ready to let go of: hand]","better","xtol",2.34871,4.75274,82.1498,nflex,24.8025,-4.39533,0.11,0.12,-0,0,15.1497,122.103,-22.7896,-60.3628,91.0771,3,216,219,60.1
+"Long, right leg 0.4","hands and feet D=0.80","same cost, other optimum","xtol",0.444864,0.409711,34.304,hrotL,9.01614,5.47011,0.15,0.16,-0,0,172.695,198.559,-301.239,-316.471,140.805,3,225,228,40.5
+"Long, right leg 0.4","hands and feet D=0.50","same cost, other optimum","xtol",0.363753,0.373053,38.4076,hrotR,10.124,3.12166,0.17,0.17,-0,0,228.442,209.711,-200.837,-235.515,92.7919,3,143,146,35.6
+"Long, right leg 0.4","hands and feet D=0.30","match","xtol",0.37545,0.381341,21.3642,hrotL,9.73688,-1.18135,0.17,0.17,-0,0,132.403,128.046,-125.605,-195.264,89.0313,3,138,141,46.2
+"Long, right leg 0.4","hands and feet D=0.40 toes","match","max iterations",0.0264098,0.025827,38.4111,ttw,11.2117,-5.7972,0,0,-0,0,150.235,151.664,-195.282,-203.728,349.948,1,600,601,85.4
+"Long, right leg 0.4","hands and feet D=0.25 [ready to let go of: hand]","same cost, other optimum","xtol",0.510831,0.491884,38.7914,hrotR,11.7883,-35.5354,0.17,0.17,-0,0,188.197,149.016,13.3943,13.8897,180.279,3,265,268,47.8
+"Long, right leg 0.4","squat h=0.35 flat","same cost, other optimum","xtol",0.567058,0.582126,44.9091,nrot,15.6998,-5.75912,0.17,0.17,-0,0,58.4334,47.8763,,,66.2393,3,125,128,29.4
+"Long, right leg 0.4","squat h=0.50 flat","match","xtol",0.575351,0.573347,49.9519,toeL,12.5462,1.65152,0.17,0.17,-0,0,60.073,66.6028,,,76.5405,3,133,136,27.3
+"Long, right leg 0.4","squat h=0.65 flat","match","xtol",0.521605,0.535796,81.0854,elbL,23.9022,1.64272,0.17,0.17,-0,0,75.0242,73.4059,,,73.0734,3,133,136,28.8
+"Long, right leg 0.4","squat h=0.80 flat","match","xtol",0.457841,0.467508,77.2658,shflexR,29.547,6.55622,0.17,0.17,-0,0,96.3972,92.119,,,67.0015,3,125,128,28.3
+"Long, right leg 0.4","squat h=0.40 toes","better","ftol",0.229862,0.268346,60.6505,nflex,15.9454,-0.000288009,0,0.01,-0,0,17.5243,15.0026,,,75.0308,3,123,126,31.6
+"Long, right leg 0.4","squat h=0.60 toes","match","ftol",0.198062,0.201264,80.8315,elbL,23.4145,0.00425874,0,0,-0,0,15.7435,15.371,,,62.1985,3,115,118,31.9
+"Long, right leg 0.4","squat h=0.35 flat hands down [ready to let go of: hand]","better","xtol",0.476527,0.582563,27.1091,shrotL,8.75918,-0.722455,0.16,0.15,-0,0,49.7082,76.3279,49.7082,76.3279,83.2695,3,135,138,45.2
+"Long, right leg 0.4","squat h=0.50 flat hands down [ready to let go of: hand]","better","xtol",0.521835,0.57992,73.0867,nrot,15.547,0.234499,0.16,0.16,-0,0,68.6067,86.9685,68.6067,86.9685,82.9201,3,135,138,46.4
+"Long, right leg 0.4","tall kneel","match","ftol",0.00427045,0.00446201,26.8721,nrot,6.50664,0.811126,0,0,-0,0,26.6387,26.881,,,29.8922,1,74,75,16.2
+"Long, right leg 0.4","one knee and its toes, the other leg lifted","match","xtol",0.0297516,0.0491875,68.3241,elbL,21.3072,11.5368,0.05,0.01,-0,0,-9.58139E-06,-0.0365862,,,14.5468,1,42,43,181
+"Long, right leg 0.4","half-kneel (left foot forward), hands: none, back toes laid","same cost, other optimum","xtol",0.181785,0.190101,52.1191,nrot,14.6606,-4.29368,0.17,0.16,-0,0,44.9939,30.6565,,,62.188,3,130,133,20.1
+"Long, right leg 0.4","half-kneel (left foot forward), hands: thigh, back toes laid","match","xtol",0.183841,0.193098,39.9484,toeL,10.9807,8.98405,0.17,0.17,-0,0,35.4801,29.3534,35.4801,29.3534,63.3234,3,129,132,20.5
+"Long, right leg 0.4","half-kneel (left foot forward), hands: both, back toes laid","match","xtol",0.192877,0.206578,26.906,nrot,8.47071,-5.75278,0.17,0.17,-0,0,33.1733,30.4124,33.1733,30.4124,73.297,3,128,131,31.5
+"Long, right leg 0.4","half-kneel (left foot forward), hands: ground, back toes laid","match","xtol",0.262013,0.251723,48.2056,shrotR,13.9344,1.72035,0.16,0.16,-0,0,211.569,219.772,-155.495,-92.168,73.3923,3,135,138,25
+"Long, right leg 0.4","half-kneel (left foot forward), hands: ground, back toes laid [ready to let go of: hand]","same cost, other optimum","xtol",0.245936,0.266726,76.2902,nrot,19.5461,-0.747495,0.17,0.16,-0,0,166.234,151.337,23.996,24.7944,75.1303,3,137,140,45.9
+"Long, right leg 0.4","rising from the half-kneel h=0.55, hands: none","match","xtol",0.432528,0.42193,12.7324,shrotL,4.8892,0.0564497,0.16,0.16,-0,0,57.1549,63.6913,,,79.5745,3,138,141,34
+"Long, right leg 0.4","rising from the half-kneel h=0.70, hands: none","match","xtol",0.333078,0.345687,50.9524,toeL,11.0328,0.0228642,0.17,0.17,-0,0,69.4621,61.0509,,,71.1558,3,131,134,26
+"Long, right leg 0.4","rising from the half-kneel h=0.85, hands: none","same cost, other optimum","xtol",0.264965,0.28014,65.714,elbR,15.2429,-0.0262883,0.17,0.17,-0,0,77.2219,65.8562,,,69.7923,3,133,136,23
+"Long, right leg 0.4","rising from the half-kneel h=0.55, hands: thigh","better","xtol",0.453137,0.586236,46.7805,shflexR,16.2053,-0.0600905,0.16,0.16,-0,0,55.9556,37.9877,55.9556,37.9877,80.0402,3,134,137,34.9
+"Long, right leg 0.4","rising from the half-kneel h=0.70, hands: thigh","better","xtol",0.348042,0.406274,28.496,nrot,10.9336,-0.0623051,0.17,0.16,-0,0,56.8518,46.3392,56.8518,46.3392,70.808,3,126,129,30.5
+"Long, right leg 0.4","half-kneel (right foot forward), hands: none, back toes laid","match","xtol",0.182568,0.188829,21.8025,hrotL,6.57257,-6.603,0.17,0.17,-0,0,32.2556,29.4779,,,64.0962,3,134,137,17.9
+"Long, right leg 0.4","rising from the half-kneel h=0.55, hands: none","match","xtol",0.6393,0.626211,28.7047,invL,9.26339,0.0755138,0.17,0.17,-0,0,52.777,58.7104,,,82.1257,3,156,159,41.6
+"Long, right leg 0.4","half-kneel (right foot forward), hands: ground, back toes laid [ready to let go of: hand]","better","xtol",0.252248,384.894,92.4484,roll,38.6728,302.582,0.17,48.61,-0,214.7,169.155,21.8493,22.5362,-87.3778,74.2382,3,145,148,90.8
+"Long, right leg 0.4","stoop, hands on the knees, knees 30","match","xtol",0.36162,0.384096,43.743,shrotL,14.0257,1.29384,0.17,0.17,-0,0,95.9724,94.7226,95.9724,94.7226,93.545,3,146,149,34.2
+"Long, right leg 0.4","stoop, hands on the knees, knees 60","match","xtol",0.392089,0.41144,46.6974,shrotL,13.2261,15.8602,0.17,0.18,-0,0,92.2941,83.5835,92.2941,83.5835,77.1186,3,133,136,31.3
+"Long, right leg 0.4","sitting up, the trunk 15 deg from the ground, arms reaching forward","better","ftol",0.0856921,0.243098,101.337,elbL,49.509,0.00132276,0,0.03,-0,0,91.6078,9.61252,,,97.6613,3,264,267,39.6
+"Long, right leg 0.4","sitting up, the trunk 35 deg from the ground, arms reaching forward","match","ftol",0.0627716,0.0627715,9.04119,nrot,1.62926,-9.95754E-07,0,0,-0,0,32.0153,31.995,,,122.393,3,329,332,48
+"Long, right leg 0.4","sitting up, the trunk 60 deg from the ground, arms reaching forward","same cost, other optimum","ftol",0.0355317,0.0325829,81.3159,shabdR,22.0383,6.89236E-06,0,0,-0,0,113.941,87.8229,,,42.1541,1,119,120,42.2
+"Long, right leg 0.4","sitting up, the trunk 25 deg from the ground, hands behind","same cost, other optimum","ftol",0.0821949,0.0793782,98.1301,shrotL,21.5194,0.00034084,0,0,-0,0,66.7762,31.8683,,,493.603,3,1107,1110,55.4
+"Long, right leg 0.4","pushed up from the front (chest off the ground)","match","ftol",0.112638,0.112631,19.0222,nrot,3.42297,0.15236,0.03,0.03,-0,0,182.794,182.221,,,283.274,3,646,649,142.7
+"Long, right leg 0.4","on its forearms","same cost, other optimum","ftol",0.147016,0.14854,47.0867,hrotR,9.47512,-0.00056842,0.16,0.16,-0,0,454.502,471.062,,,312.671,3,553,556,83
+"Long, right leg 0.4","sitting, legs out, hands behind","same cost, other optimum","ftol",0.0198948,0.0199163,36.7275,ttw,6.73197,-4.48131E-07,0,0,-0,0,178.985,144.208,,,88.7305,1,216,217,35
+"Long, right leg 0.4","rising from the half-kneel h=0.70, hands: none","match","xtol",0.393382,0.397852,103.528,shflexR,29.8374,-0.0105096,0.17,0.16,-0,0,63.501,56.7829,,,76.3677,3,148,151,23.1
+"Long, right leg 0.4","rising from the half-kneel h=0.85, hands: none","match","xtol",0.218355,0.230216,28.9684,nrot,6.63049,0.181488,0.17,0.16,-0,0,67.5921,67.2459,,,80.2914,3,149,152,34.2
+"Long, right leg 0.4","one knee and its toes, the other leg lifted","match","xtol",0.0470737,0.0493078,65.5146,toeR,15.6433,3.75857,0.02,0.03,-0,0,-9.78843E-06,0.268963,,,13.3868,1,38,39,16

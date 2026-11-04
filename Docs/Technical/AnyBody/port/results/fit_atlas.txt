@@ -1,0 +1,474 @@
+== fit: LM from each stance's start pose, 10 bodies x the prototype's 45 stances, against the saved fits
+   fitter: max 400 iterations per start, 2 extra start(s) when the cost >= 0.05, ftol 1E-07, xtol 1E-07
+   atlas: each body made from a miner starts from the miner's fit of the stance (the miners first)
+   body       stance                                                           cost    saved  dq max var        rms  dz mm  cerr   pen  mrg mm  saved     ms st verdict
+   Small      stand                                                          0.1545   0.1566    44.7 toeR      11.2     -1   0.1  -0.0    79.0   79.7    138  3 match
+   Small      hands and knees                                                0.0291   0.0289    14.8 hflexL     5.7      2   0.0  -0.0   190.0  194.2     70  1 match
+   Small      hands and knees (toes tucked)                                  0.0292   0.0292     9.6 nrot       1.7      0   0.0  -0.0   209.2  209.2    119  1 match
+   Small      tripod (hands and one knee, left knee lifted)                  0.0362   0.0362     0.4 nrot       0.1     -0   0.0  -0.0   116.9  116.8     87  1 match
+   Small      hands and knees [ready to let go of: hand]                     5.6359   6.2141    66.8 hrotL     16.1     -1   0.4  -0.0   137.4   64.5    124  3 same cost, other optimum
+   Small      hands and feet D=0.80                                          0.1637   0.1707    29.3 nrot      10.1     -9   0.1  -0.0   218.7  161.5    121  3 same cost, other optimum
+   Small      hands and feet D=0.50                                          0.1639   0.1691    52.1 toeL      12.3     -6   0.1  -0.0   163.0  163.0     98  3 match
+   Small      hands and feet D=0.30                                          0.1785   0.1626    25.5 hrotL     11.3    -29   0.1  -0.0   123.7  115.9     81  3 match
+   Small      hands and feet D=0.40 toes                                     0.0169   0.0163    27.0 hrotL      6.9      5   0.0  -0.0   114.2  118.9    129  1 match
+   Small      hands and feet D=0.25 [ready to let go of: hand]               0.1651   0.1661    35.4 hrotR      8.0     -6   0.1  -0.0   139.0  133.5     44  3 match
+   Small      squat h=0.35 flat                                              0.2604   0.2886    82.9 shrotL    26.8     -0   0.1  -0.0    60.4   51.0     30  3 match
+   Small      squat h=0.50 flat                                              0.2573   0.2628    47.8 elbL      20.0     -0   0.1  -0.0    75.4   71.0     34  3 match
+   Small      squat h=0.65 flat                                              0.2383   0.2434    72.4 elbL      19.9     -0   0.1  -0.0    83.5   78.9     34  3 match
+   Small      squat h=0.80 flat                                              0.2114   0.2135    81.4 elbR      22.9      2   0.1  -0.0    78.7   84.0     30  3 match
+   Small      squat h=0.40 toes                                              0.1562   0.1574    13.0 nrot       4.3     -0   0.0  -0.0    12.5   11.9     33  3 match
+   Small      squat h=0.60 toes                                              0.1082   0.1082    39.1 ttw       11.7     -0   0.0  -0.0    18.7   18.6     33  3 match
+   Small      squat h=0.35 flat hands down [ready to let go of: hand]        0.3943   0.3925    68.8 nrot      18.6     -4   0.1  -0.0    87.5   86.4     38  3 match
+   Small      squat h=0.50 flat hands down [ready to let go of: hand]        0.4345   0.4329    76.8 nrot      20.0     -0   0.1  -0.0    72.9   73.2     50  3 match
+   Small      tall kneel                                                     0.0062   0.0062    41.2 nrot       7.4     -0   0.0  -0.0    15.4   15.3     28  1 match
+   Small      one knee and its toes, the other leg lifted                    0.0288   0.0259    62.1 toeL      17.7     -0   0.0  -0.0    -0.0   -0.0      8  1 match
+   Small      half-kneel (left foot forward), hands: none, back toes laid    0.0852   0.0862    29.5 elbL      11.0    -14   0.1  -0.0    21.6   21.3     29  3 match
+   Small      half-kneel (left foot forward), hands: thigh, back toes laid   0.0847   0.0922    50.0 toeL      14.0      1   0.1  -0.0    22.4   19.3     29  3 match
+   Small      half-kneel (left foot forward), hands: both, back toes laid    0.0864   0.1095    29.3 shrotL     7.8     -2   0.1  -0.0    23.5   21.3     35  3 better
+   Small      half-kneel (left foot forward), hands: ground, back toes lai   0.1648   0.1576    77.2 nrot      18.9     -6   0.1  -0.0   123.6  114.8     42  3 match
+   Small      half-kneel (left foot forward), hands: ground, back toes lai   0.1963   0.1975    31.5 hrotR      8.8      2   0.1  -0.0   114.3  107.4     35  3 match
+   Small      rising from the half-kneel h=0.55, hands: none                 0.2831   0.2570   128.4 shflexL   31.9     -0   0.1  -0.0    49.1   67.4     36  3 worse
+   Small      rising from the half-kneel h=0.70, hands: none                 0.1739   0.1681    76.5 elbR      18.9     -0   0.1  -0.0    70.3   58.7     41  3 same cost, other optimum
+   Small      rising from the half-kneel h=0.85, hands: none                 0.1095   0.1188    44.2 toeL      10.3     -0   0.1  -0.0    71.5   62.4     36  3 match
+   Small      rising from the half-kneel h=0.55, hands: thigh                0.2738   0.2950    30.0 nrot       9.5     -0   0.1  -0.0    48.6   54.0     42  3 match
+   Small      rising from the half-kneel h=0.70, hands: thigh                0.1929   0.1489    38.8 shrotL    12.4     -4   0.1  -0.0    61.4   61.0     32  3 worse
+   Small      half-kneel (right foot forward), hands: none, back toes laid   0.0851   0.0870    77.7 elbR      19.0    -16   0.1  -0.0    21.8   22.2     25  3 match
+   Small      rising from the half-kneel h=0.55, hands: none                 0.2727   0.2705   100.3 shflexL   27.9     -0   0.1  -0.0    53.6   51.2     28  3 match
+   Small      half-kneel (right foot forward), hands: ground, back toes la   0.1956   0.2028    26.7 dorsiR     9.9     -2   0.1  -0.0   106.0  120.0     36  3 same cost, other optimum
+   Small      stoop, hands on the knees, knees 30                            0.1645   0.1795    44.5 toeR      16.2     -2   0.1  -0.0    79.1   71.2     40  3 match
+   Small      stoop, hands on the knees, knees 60                            0.1638   0.1782    33.4 toeL      12.8      3   0.1  -0.0    92.0   80.9     35  3 same cost, other optimum
+   Small      sitting up, the trunk 15 deg from the ground, arms reaching    0.0857   1.4483   100.8 elbL      43.6      0   0.0  -0.0    61.7  -13.6     20  3 better
+   Small      sitting up, the trunk 35 deg from the ground, arms reaching    0.0460   0.2864    97.1 elbL      41.5      0   0.0  -0.0    65.6    4.3     10  1 better
+   Small      sitting up, the trunk 60 deg from the ground, arms reaching    0.0356   0.0316    35.6 tlat      16.1      0   0.0  -0.0    17.1   33.3     60  1 same cost, other optimum
+   Small      sitting up, the trunk 25 deg from the ground, hands behind     0.0908   0.0908    35.4 tlat      11.4      0   0.0  -0.0    28.5   28.4    429  3 match
+   Small      pushed up from the front (chest off the ground)                0.0827   0.0751    44.6 habdR      9.9      4   0.0  -0.0    95.5   86.7    457  3 match
+   Small      on its forearms                                                0.0360   0.0345     6.5 shflexR    2.1     -0   0.0  -0.0   210.8  219.2    371  1 match
+   Small      sitting, legs out, hands behind                                0.0204   0.0203    44.5 dorsiR    15.1     -0   0.0  -0.0   151.2  149.0     82  1 match
+   Small      rising from the half-kneel h=0.70, hands: none                 0.1572   0.1734    53.2 elbL      12.5      1   0.1  -0.0    68.8   61.0    114  3 match
+   Small      rising from the half-kneel h=0.85, hands: none                 0.1070   0.1379    48.3 toeR      14.7     -0   0.1  -0.0    71.7   70.9    100  3 better
+   Small      one knee and its toes, the other leg lifted                    0.0212   0.0347    64.8 toeR      18.6      5   0.0  -0.0     0.0   -0.0     12  1 match
+   Long       stand                                                          0.3508   0.3575    49.2 toeR      13.7     -4   0.2  -0.0    94.6   93.4     85  3 match
+   Long       hands and knees                                                0.0267   0.0267    19.9 nrot       3.6     -0   0.0  -0.0   241.2  241.0    120  1 match
+   Long       hands and knees (toes tucked)                                  0.0270   0.0270     3.3 nrot       0.6     -0   0.0  -0.0   189.6  189.5    150  1 match
+   Long       tripod (hands and one knee, left knee lifted)                  0.0349   0.0349    10.2 nrot       1.8     -0   0.0  -0.0   123.2  123.1     72  1 match
+   Long       hands and knees [ready to let go of: hand]                     2.3662   4.7369    67.5 roll      22.5    -15   0.2  -0.0    -0.0  137.3    119  3 better
+   Long       hands and feet D=0.80                                          0.4060   0.4103    26.4 hrotR      9.1     -6   0.2  -0.0   233.7  203.9    104  3 same cost, other optimum
+   Long       hands and feet D=0.50                                          0.4152   0.3711    50.2 toeL      14.0    -10   0.2  -0.0   195.3  201.7    107  3 worse
+   Long       hands and feet D=0.30                                          0.4522   0.4238    28.1 hrotR     12.1    -30   0.2  -0.0   170.5   90.9     96  3 same cost, other optimum
+   Long       hands and feet D=0.40 toes                                     0.0222   0.0217    17.1 ttw        5.8    -11   0.0  -0.0   162.4  153.8    276  1 match
+   Long       hands and feet D=0.25 [ready to let go of: hand]               0.4987   0.5069    32.9 hrotR     10.8    -41   0.2  -0.0   189.8  145.2    116  3 same cost, other optimum
+   Long       squat h=0.35 flat                                              0.4822   0.4878   132.7 shflexR   46.4     -0   0.2  -0.0    42.1   34.6    111  3 match
+   Long       squat h=0.50 flat                                              0.4860   0.4791   127.7 shflexL   45.8     -5   0.2  -0.0    51.6   56.4    110  3 match
+   Long       squat h=0.65 flat                                              0.4495   0.4571    27.9 nrot       7.7      2   0.2  -0.0    73.6   66.5     97  3 match
+   Long       squat h=0.80 flat                                              0.4117   0.4213    96.0 shflexL   34.6      0   0.2  -0.0    93.1   92.1    114  3 match
+   Long       squat h=0.40 toes                                              0.1601   0.1340    40.5 ttw       15.6     -0   0.0  -0.0    16.3   16.8    158  3 worse
+   Long       squat h=0.60 toes                                              0.1100   0.1100     1.1 dorsiR     0.4     -0   0.0  -0.0    20.2   20.1    107  3 match
+   Long       squat h=0.35 flat hands down [ready to let go of: hand]        0.4682   0.5287    47.1 shrotR    10.0     -5   0.2  -0.0    53.9   63.3     74  3 better
+   Long       squat h=0.50 flat hands down [ready to let go of: hand]        0.5092   0.5542    72.7 nrot      16.4     -0   0.2  -0.0    80.1   89.7     83  3 match
+   Long       tall kneel                                                     0.0032   0.0033    16.3 nrot       3.0      0   0.0  -0.0    28.6   28.6    166  1 match
+   Long       one knee and its toes, the other leg lifted                    0.0220   0.0344    77.2 elbL      20.9      8   0.0  -0.0     0.1    0.1     21  1 match
+   Long       half-kneel (left foot forward), hands: none, back toes laid    0.1775   0.1851    27.3 ttw       11.5     -5   0.2  -0.0    41.0   30.6     87  3 same cost, other optimum
+   Long       half-kneel (left foot forward), hands: thigh, back toes laid   0.1807   0.1865    41.8 hrotR     11.9     -4   0.2  -0.0    33.3   31.6    104  3 match
+   Long       half-kneel (left foot forward), hands: both, back toes laid    0.1786   0.2232    33.6 toeL      11.7     -2   0.2  -0.0    40.0   30.3    108  3 better
+   Long       half-kneel (left foot forward), hands: ground, back toes lai   0.2591   0.2409    73.9 nrot      19.4      5   0.2  -0.0   216.0  208.4     85  3 match
+   Long       half-kneel (left foot forward), hands: ground, back toes lai   0.2436 466.9242   110.6 elbR      49.2    401   0.2  -0.0   158.4   64.8    103  3 better
+   Long       rising from the half-kneel h=0.55, hands: none                 0.3476   0.3382    87.2 shflexL   24.2     -0   0.2  -0.0    54.8   71.5     90  3 same cost, other optimum
+   Long       rising from the half-kneel h=0.70, hands: none                 0.2730   0.2772    70.0 elbR      16.3      0   0.2  -0.0    46.1   70.1     91  3 same cost, other optimum
+   Long       rising from the half-kneel h=0.85, hands: none                 0.2174   0.2417    64.5 elbR      13.8     -2   0.2  -0.0    67.3   71.7     67  3 better
+   Long       rising from the half-kneel h=0.55, hands: thigh                0.3630   0.3641    17.2 shflexR    6.9     -5   0.2  -0.0    40.8   57.1     87  3 same cost, other optimum
+   Long       rising from the half-kneel h=0.70, hands: thigh                0.2679   0.2673    38.4 toeL      12.4     -0   0.2  -0.0    72.8   61.4    115  3 same cost, other optimum
+   Long       half-kneel (right foot forward), hands: none, back toes laid   0.1825   0.1842    34.1 toeR      11.6     -4   0.2  -0.0    32.8   31.0     60  3 match
+   Long       rising from the half-kneel h=0.55, hands: none                 0.3494   0.3428    91.2 elbR      30.4     -0   0.2  -0.0    53.9   57.0     86  3 match
+   Long       half-kneel (right foot forward), hands: ground, back toes la   0.2432 390.2734    80.6 roll      38.7    309   0.2  -0.0   163.1   18.0    120  3 better
+   Long       stoop, hands on the knees, knees 30                            0.3592   0.3795    43.1 shrotL    13.6     -4   0.2  -0.0    93.7   92.9    153  3 match
+   Long       stoop, hands on the knees, knees 60                            0.3790   0.3897    41.4 shrotR    13.0     -5   0.2  -0.0    89.8   85.8    122  3 match
+   Long       sitting up, the trunk 15 deg from the ground, arms reaching    0.0824   0.2276   100.9 elbL      45.7      0   0.0  -0.0    96.2    9.4    119  3 better
+   Long       sitting up, the trunk 35 deg from the ground, arms reaching    0.0532   0.0532     0.8 hrotR      0.2     -0   0.0  -0.0    28.4   28.4    392  3 match
+   Long       sitting up, the trunk 60 deg from the ground, arms reaching    0.0317   0.0314    27.5 hrotR     10.2      0   0.0  -0.0    81.7   85.1     33  1 match
+   Long       sitting up, the trunk 25 deg from the ground, hands behind     0.0686   0.0664    96.4 shrotR    29.4      0   0.0  -0.0    31.5   29.8    467  3 match
+   Long       pushed up from the front (chest off the ground)                0.1103   0.1103    38.7 shrotL    17.5      0   0.0  -0.0   182.9  182.8   1059  3 match
+   Long       on its forearms                                                0.1508   0.1469    47.1 hrotL     14.8      0   0.2  -0.0   292.7  459.8    175  3 same cost, other optimum
+   Long       sitting, legs out, hands behind                                0.0181   0.0181    40.2 hrotL      8.1     -0   0.0  -0.0   195.6  188.3    164  1 match
+   Long       rising from the half-kneel h=0.70, hands: none                 0.2740   0.2721    45.6 elbL       9.9     -3   0.2  -0.0    64.9   68.5    126  3 match
+   Long       rising from the half-kneel h=0.85, hands: none                 0.2195   0.2346    25.1 elbL      10.6      3   0.2  -0.0    61.1   71.9    122  3 same cost, other optimum
+   Long       one knee and its toes, the other leg lifted                    0.0289   0.0459    86.5 elbR      23.2      9   0.0  -0.0     0.2   -0.0     15  1 match
+   Round      stand                                                          0.2028   0.2029    29.5 toeL       7.0     -2   0.1  -0.0    90.5   87.0    115  3 match
+   Round      hands and knees                                                0.0387   0.0387    21.9 nrot       3.9      0   0.0  -0.0   140.7  138.9     48  1 match
+   Round      hands and knees (toes tucked)                                  0.0383   0.0383     3.2 invR       1.1      0   0.0  -0.0   197.8  194.0    355  1 match
+   Round      tripod (hands and one knee, left knee lifted)                  0.0504   0.0529    23.9 nrot       8.6      1   0.0  -0.0   137.4  139.3    145  3 match
+   Round      hands and knees [ready to let go of: hand]                     4.6796   7.4900    44.9 roll      18.9     -8   0.2  -0.0    16.5   77.9    201  3 better
+   Round      hands and feet D=0.80                                          0.2089   0.2156    26.9 hrotR      8.4    -10   0.1  -0.0   279.0  193.8    150  3 same cost, other optimum
+   Round      hands and feet D=0.50                                          0.2267   0.2248    50.6 toeL      12.6    -15   0.1  -0.0   214.6  200.9    147  3 same cost, other optimum
+   Round      hands and feet D=0.30                                          0.2660   0.2320    33.2 shrotL    14.3    -35   0.1  -0.0   158.2  146.4    153  3 worse
+   Round      hands and feet D=0.40 toes                                     0.0155   0.0155     2.0 hrotL      0.7      0   0.0  -0.0   151.2  151.0    621  1 match
+   Round      hands and feet D=0.25 [ready to let go of: hand]               0.2055   0.2167    40.5 hrotL     10.1     -3   0.1  -0.0   163.8  160.1    168  3 match
+   Round      squat h=0.35 flat                                              0.3367   0.3606   143.2 shflexL   53.3     -0   0.1  -0.0    49.9   37.9    124  3 same cost, other optimum
+   Round      squat h=0.50 flat                                              0.3303   0.3372   109.7 shflexL   41.5     -0   0.1  -0.0    69.4   62.6    100  3 match
+   Round      squat h=0.65 flat                                              0.2992   0.3119    81.6 elbR      23.3      0   0.1  -0.0    84.6   74.5    100  3 same cost, other optimum
+   Round      squat h=0.80 flat                                              0.2698   0.2739    46.1 nrot      12.4      4   0.1  -0.0    82.3   86.4    121  3 match
+   Round      squat h=0.40 toes                                              0.1904   0.1628    43.0 elbL      16.2     -0   0.0  -0.0    12.9   16.5    156  3 worse
+   Round      squat h=0.60 toes                                              0.1239   0.1239    10.9 shrotL     2.2     -0   0.0  -0.0    18.9   18.9    116  3 match
+   Round      squat h=0.35 flat hands down [ready to let go of: hand]        0.6346   0.6564    72.0 nrot      16.9     -5   0.1  -0.0    91.1  101.1    137  3 match
+   Round      squat h=0.50 flat hands down [ready to let go of: hand]        0.5963   0.6019    35.0 toeL       7.2     -1   0.1  -0.0   137.6  139.1    124  3 match
+   Round      tall kneel                                                     0.0122   0.0126    30.0 nrot       8.8     -4   0.0  -0.0    16.9   16.6    173  1 match
+   Round      one knee and its toes, the other leg lifted                    0.0377   0.0383    67.0 elbL      19.7     -4   0.0  -0.0    -0.0   -0.0     22  1 match
+   Round      half-kneel (left foot forward), hands: none, back toes laid    0.1184   0.1216    29.4 elbL      11.7    -21   0.1  -0.0    26.7   26.6     96  3 match
+   Round      half-kneel (left foot forward), hands: thigh, back toes laid   0.1156   0.1209    47.9 shrotL    12.7    -10   0.1  -0.0    29.2   26.2    121  3 match
+   Round      half-kneel (left foot forward), hands: both, back toes laid    0.1245   0.1427    27.3 nrot       8.9     -8   0.1  -0.0    36.7   35.1    118  3 match
+   Round      half-kneel (left foot forward), hands: ground, back toes lai   0.2111   0.1946    80.8 nrot      17.7     13   0.1  -0.0   187.7  184.4    147  3 match
+   Round      half-kneel (left foot forward), hands: ground, back toes lai   0.1959   0.2587    70.1 nrot      21.2      5   0.1  -0.0   121.2  132.4    112  3 better
+   Round      rising from the half-kneel h=0.55, hands: none                 0.3077   0.2867    97.2 shflexL   32.1      0   0.1  -0.0    54.8   75.3    127  3 same cost, other optimum
+   Round      rising from the half-kneel h=0.70, hands: none                 0.2140   0.2113    46.7 toeL      10.8      0   0.1  -0.0    73.3   75.1    140  3 match
+   Round      rising from the half-kneel h=0.85, hands: none                 0.1541   0.1584    41.3 toeL      10.8     -0   0.1  -0.0    75.4   70.9    117  3 match
+   Round      rising from the half-kneel h=0.55, hands: thigh                0.2928   0.2782    94.8 elbR      20.8     -0   0.1  -0.0    51.8   60.3    114  3 match
+   Round      rising from the half-kneel h=0.70, hands: thigh                0.2116   0.1924    46.3 toeL      15.3     -3   0.1  -0.0    66.3   66.6    114  3 match
+   Round      half-kneel (right foot forward), hands: none, back toes laid   0.1193   0.1191    26.4 nrot      10.3    -19   0.1  -0.0    27.4   26.7     95  3 match
+   Round      rising from the half-kneel h=0.55, hands: none                 0.3172   0.2957    90.0 shflexR   32.1     -0   0.1  -0.0    54.2   66.9    122  3 same cost, other optimum
+   Round      half-kneel (right foot forward), hands: ground, back toes la   0.1826   0.2565    69.6 nrot      22.0      3   0.1  -0.0   113.4  145.9    109  3 better
+   Round      stoop, hands on the knees, knees 30                            0.2230   0.2343    43.3 nrot      13.2     -9   0.1  -0.0    85.2   82.3    153  3 match
+   Round      stoop, hands on the knees, knees 60                            0.2239   0.2339    41.8 toeL      13.3    -26   0.1  -0.0    98.1   89.9    156  3 match
+   Round      sitting up, the trunk 15 deg from the ground, arms reaching    0.0742   1.7339    99.5 elbR      36.1      0   0.0  -0.0    82.7  -17.7    189  3 better
+   Round      sitting up, the trunk 35 deg from the ground, arms reaching    0.0459   0.3697    98.1 elbL      40.8      0   0.0  -0.0    86.0    3.4     78  1 better
+   Round      sitting up, the trunk 60 deg from the ground, arms reaching    0.0330   0.0330    16.0 nrot       2.9      0   0.0  -0.0    25.3   25.3    102  1 match
+   Round      sitting up, the trunk 25 deg from the ground, hands behind     0.0643   0.0643    33.6 tlat       9.5      0   0.0  -0.0    96.5   96.5    469  3 match
+   Round      pushed up from the front (chest off the ground)                0.0531   0.0531    14.1 nrot       2.5      0   0.0  -0.0   323.7  323.8    506  3 match
+   Round      on its forearms                                                0.0590   0.0590    72.2 nrot      14.2     -0   0.0  -0.0   239.9  242.8    862  3 match
+   Round      sitting, legs out, hands behind                                0.0223   0.0223    16.1 ttw        3.7      0   0.0  -0.0   183.5  196.2    164  1 same cost, other optimum
+   Round      rising from the half-kneel h=0.70, hands: none                 0.2146   0.2030    51.7 nrot      13.2     -0   0.1  -0.0    68.1   69.0    125  3 match
+   Round      rising from the half-kneel h=0.85, hands: none                 0.1441   0.1795    50.8 toeR      15.6      2   0.1  -0.0    77.1   68.9    134  3 better
+   Round      one knee and its toes, the other leg lifted                    0.0396   0.0370    58.4 toeR      14.8      0   0.0  -0.0     0.0    0.1     29  1 match
+   Small S0.5 stand                                                          0.1643   0.1669    41.1 toeR       9.4     -1   0.1  -0.0    83.0   82.1     88  3 match
+   Small S0.5 hands and knees                                                0.0934   0.0922    22.7 hrotL      8.0      2   0.0  -0.0   185.6  159.3    115  3 same cost, other optimum
+   Small S0.5 hands and knees (toes tucked)                                  0.0888   0.0888     1.4 nrot       0.3      0   0.0  -0.0   204.8  204.9    225  3 match
+   Small S0.5 tripod (hands and one knee, left knee lifted)                  0.1182   0.1181    35.6 shrotL     9.9     -3   0.0  -0.0   122.2  103.3    169  3 same cost, other optimum
+   Small S0.5 hands and knees [ready to let go of: hand]                     5.7030   6.3800    50.9 hrotL     14.6     -0   0.4  -0.0   138.1   65.4    119  3 better
+   Small S0.5 hands and feet D=0.80                                          0.1905   0.1984    25.4 shrotL     9.5     -9   0.1  -0.0   225.0  169.7    112  3 same cost, other optimum
+   Small S0.5 hands and feet D=0.50                                          0.1868   0.2048    38.0 nrot      11.1    -10   0.1  -0.0   172.6  172.7    136  3 match
+   Small S0.5 hands and feet D=0.30                                          0.1853   0.1805    24.9 hrotL     10.2    -24   0.1  -0.0   145.2  137.8    179  3 match
+   Small S0.5 hands and feet D=0.40 toes                                     0.0365   0.0358    33.4 hrotL      8.8      5   0.0  -0.0   125.4  128.7     47  1 match
+   Small S0.5 hands and feet D=0.25 [ready to let go of: hand]               0.1895   0.2093    38.2 nrot      13.6    -11   0.1  -0.0   138.3  125.0    105  3 same cost, other optimum
+   Small S0.5 squat h=0.35 flat                                              0.5193   0.5228    33.4 nrot       7.8     -3   0.1  -0.0    71.9   71.8     98  3 match
+   Small S0.5 squat h=0.50 flat                                              0.5617   0.5737    88.4 elbR      25.4     -5   0.1  -0.0    80.0   77.5    103  3 match
+   Small S0.5 squat h=0.65 flat                                              0.4992   0.5013    90.3 elbL      23.4     -0   0.1  -0.0    87.5   86.1     91  3 match
+   Small S0.5 squat h=0.80 flat                                              0.4008   0.4053    88.8 elbR      24.4     -0   0.1  -0.0    79.0   83.8     77  3 match
+   Small S0.5 squat h=0.40 toes                                              0.4862   0.4243    39.2 shflexR   12.6      0   0.0  -0.0    11.5   21.5     81  3 worse
+   Small S0.5 squat h=0.60 toes                                              0.4052   0.4059    91.4 elbR      25.4     -0   0.0  -0.0    20.0   20.0     80  3 match
+   Small S0.5 squat h=0.35 flat hands down [ready to let go of: hand]        0.5187   0.5192    65.4 nrot      18.3     -0   0.1  -0.0    92.5   88.8    132  3 match
+   Small S0.5 squat h=0.50 flat hands down [ready to let go of: hand]        0.6101   0.6168    77.5 nrot      19.1     -0   0.1  -0.0    68.2   62.3    143  3 match
+   Small S0.5 tall kneel                                                     0.0168   0.0186    76.2 shrotL    20.9     -0   0.0  -0.0    12.5   12.2    314  1 match
+   Small S0.5 one knee and its toes, the other leg lifted                    0.0452   0.0533    41.4 shrotR    15.2     12   0.0  -0.0    -1.6   -1.5    175  1 match
+   Small S0.5 half-kneel (left foot forward), hands: none, back toes laid    0.1101   0.1121    39.6 toeL      12.0     -8   0.1  -0.0    18.5   18.4     73  3 match
+   Small S0.5 half-kneel (left foot forward), hands: thigh, back toes laid   0.1052   0.1080    27.9 shrotL     7.6     -6   0.1  -0.0    19.0   18.0     84  3 match
+   Small S0.5 half-kneel (left foot forward), hands: both, back toes laid    0.1082   0.1254    54.0 toeL      13.1     -2   0.1  -0.0    19.8   19.4     98  3 match
+   Small S0.5 half-kneel (left foot forward), hands: ground, back toes lai   0.3041   0.3053    76.7 nrot      19.6      2   0.1  -0.0   132.8  113.1     94  3 same cost, other optimum
+   Small S0.5 half-kneel (left foot forward), hands: ground, back toes lai   0.3534   0.3538    55.2 toeR      13.1      2   0.1  -0.0   113.5  107.0     95  3 match
+   Small S0.5 rising from the half-kneel h=0.55, hands: none                 0.6959   0.6892    94.0 elbL      20.3      0   0.1  -0.0    68.8   67.7    119  3 match
+   Small S0.5 rising from the half-kneel h=0.70, hands: none                 0.3438   0.3462     9.0 hrotL      3.2      0   0.1  -0.0    65.0   65.0     73  3 match
+   Small S0.5 rising from the half-kneel h=0.85, hands: none                 0.1747   0.1769    18.6 nrot       6.1     -0   0.1  -0.0    69.4   67.2     65  3 match
+   Small S0.5 rising from the half-kneel h=0.55, hands: thigh                0.6665   0.6290    33.3 toeL       9.9      0   0.1  -0.0    47.8   60.0    120  3 same cost, other optimum
+   Small S0.5 rising from the half-kneel h=0.70, hands: thigh                0.3427   0.2930    45.7 shrotL    13.8      0   0.1  -0.0    54.4   62.9    123  3 worse
+   Small S0.5 half-kneel (right foot forward), hands: none, back toes laid   0.1080   0.1093    78.6 shrotL    22.6    -13   0.1  -0.0    18.4   18.6     49  3 match
+   Small S0.5 rising from the half-kneel h=0.55, hands: none                 0.7187   0.6900    93.6 elbR      19.7     -0   0.1  -0.0    61.6   62.8     57  3 match
+   Small S0.5 half-kneel (right foot forward), hands: ground, back toes la   0.3525   0.3512    32.4 dorsiR     8.5     -2   0.1  -0.0   108.3  125.6     74  3 same cost, other optimum
+   Small S0.5 stoop, hands on the knees, knees 30                            0.1863   0.2104    43.2 toeL      15.6     -3   0.1  -0.0    85.8   74.9     95  3 better
+   Small S0.5 stoop, hands on the knees, knees 60                            0.1913   0.2017    40.4 toeR      13.2     -1   0.1  -0.0    91.5   85.9     70  3 match
+   Small S0.5 sitting up, the trunk 15 deg from the ground, arms reaching    0.1926   1.5513   102.4 elbL      46.3      0   0.0  -0.0    60.5  -12.9     90  3 better
+   Small S0.5 sitting up, the trunk 35 deg from the ground, arms reaching    0.0878   0.3346    99.0 elbR      45.1      0   0.0  -0.0    66.8    4.1     56  3 better
+   Small S0.5 sitting up, the trunk 60 deg from the ground, arms reaching    0.0491   0.0449    86.1 shabdR    28.7      0   0.0  -0.0    41.5   33.1    314  2 match
+   Small S0.5 sitting up, the trunk 25 deg from the ground, hands behind     0.1292   0.1301    48.0 hrotL      9.4     -0   0.0  -0.0    39.4   43.1    449  3 match
+   Small S0.5 pushed up from the front (chest off the ground)                0.1227   0.0886    47.1 habdR     15.8      4   0.0  -0.0    95.7  228.6    373  3 worse
+   Small S0.5 on its forearms                                                0.0996   0.0996    29.3 habdR      8.1     -0   0.0  -0.0   313.6  209.4    349  3 same cost, other optimum
+   Small S0.5 sitting, legs out, hands behind                                0.0278   0.0277    46.3 dorsiR    16.4     -0   0.0  -0.0   136.7  156.6    203  1 same cost, other optimum
+   Small S0.5 rising from the half-kneel h=0.70, hands: none                 0.3622   0.3459    60.9 elbL      14.5      0   0.1  -0.0    67.3   67.6     54  3 match
+   Small S0.5 rising from the half-kneel h=0.85, hands: none                 0.1814   0.1873    47.9 toeR      10.3     -0   0.1  -0.0    70.6   69.5     53  3 match
+   Small S0.5 one knee and its toes, the other leg lifted                    0.0453   0.0541    46.1 toeR      15.9     16   0.0  -0.0    -1.6   -1.5     76  1 match
+   Toddler    stand                                                          0.1181   0.1187    52.7 toeL      12.1     -1   0.1  -0.0    84.7   81.5     91  3 match
+   Toddler    hands and knees                                                0.0236   0.0231    14.9 hflexR     5.5      2   0.0  -0.0   171.1  190.0     31  1 same cost, other optimum
+   Toddler    hands and knees (toes tucked)                                  0.0236   0.0236     6.3 nrot       1.1     -0   0.0  -0.0   201.8  201.7     28  1 match
+   Toddler    tripod (hands and one knee, left knee lifted)                  0.0297   0.0318    41.5 hrotR     10.9     -6   0.0  -0.0   124.9   96.7     58  1 same cost, other optimum
+   Toddler    hands and knees [ready to let go of: hand]                     5.9590   6.7113    56.4 hrotL     15.3      3   0.5  -0.0   118.4   84.0     65  3 better
+   Toddler    hands and feet D=0.80                                          0.1373   0.1405    77.5 shrotR    19.5     -2   0.1  -0.0   188.4  181.4     83  3 match
+   Toddler    hands and feet D=0.50                                          0.1329   0.1432    14.8 hrotL      5.7     -0   0.1  -0.0   129.9  105.9     93  3 same cost, other optimum
+   Toddler    hands and feet D=0.30                                          0.1280   0.1550    32.8 nrot      10.4     -7   0.1  -0.0    88.2   62.3     83  3 better
+   Toddler    hands and feet D=0.40 toes                                     0.0129   0.0129    10.4 nrot       2.8     -0   0.0  -0.0   104.9  104.8    180  1 match
+   Toddler    hands and feet D=0.25 [ready to let go of: hand]               0.1374   0.1490    50.1 nrot      14.9      2   0.1  -0.0   116.4  101.0     96  3 same cost, other optimum
+   Toddler    squat h=0.35 flat                                              0.2192   0.2419    79.3 elbL      21.5     -0   0.1  -0.0    66.4   53.5     58  3 same cost, other optimum
+   Toddler    squat h=0.50 flat                                              0.2142   0.2177    80.2 elbL      23.1      0   0.1  -0.0    82.2   78.9     62  3 match
+   Toddler    squat h=0.65 flat                                              0.2011   0.2051    84.3 elbL      22.7      0   0.1  -0.0    87.8   82.2     70  3 match
+   Toddler    squat h=0.80 flat                                              0.1777   0.1786    22.6 toeR       6.9      1   0.1  -0.0    77.8   84.6     64  3 match
+   Toddler    squat h=0.40 toes                                              0.1535   0.1456    26.1 invL       7.7      0   0.0  -0.0    11.8   17.4     54  3 match
+   Toddler    squat h=0.60 toes                                              0.1057   0.1057    10.9 shrotR     2.0     -0   0.0  -0.0    18.3   18.3     60  3 match
+   Toddler    squat h=0.35 flat hands down [ready to let go of: hand]        0.2849   0.2877    55.7 nrot      15.6     -0   0.1  -0.0    82.7   80.5     77  3 match
+   Toddler    squat h=0.50 flat hands down [ready to let go of: hand]        0.2835   0.2796    73.3 nrot      17.8     -4   0.1  -0.0    54.7   55.6     84  3 match
+   Toddler    tall kneel                                                     0.0091   0.0095    75.4 shrotL    20.8     -1   0.0  -0.0    12.2   12.1    213  1 match
+   Toddler    one knee and its toes, the other leg lifted                    0.0280   0.0271    55.7 toeL      17.4      5   0.0  -0.0    -0.3   -0.1    200  1 match
+   Toddler    half-kneel (left foot forward), hands: none, back toes laid    0.0742   0.0742    74.3 shrotL    17.2    -10   0.1  -0.0    19.1   21.4     52  3 match
+   Toddler    half-kneel (left foot forward), hands: thigh, back toes laid   0.0721   0.0735    39.3 toeL      10.7      7   0.1  -0.0    20.7   20.3     57  3 match
+   Toddler    half-kneel (left foot forward), hands: both, back toes laid    0.0729   0.1204    29.6 shrotL    10.4      0   0.1  -0.0    24.0   16.9     75  3 better
+   Toddler    half-kneel (left foot forward), hands: ground, back toes lai   0.1137   0.1171    73.2 nrot      16.7      3   0.1  -0.0   110.4   83.7     55  3 same cost, other optimum
+   Toddler    half-kneel (left foot forward), hands: ground, back toes lai   0.1369   0.1410    43.4 hrotR      8.4     -2   0.1  -0.0    85.6   80.5     56  3 match
+   Toddler    rising from the half-kneel h=0.55, hands: none                 0.2780   0.2441   102.8 shflexL   32.9      0   0.1  -0.0    55.0   72.2     59  3 worse
+   Toddler    rising from the half-kneel h=0.70, hands: none                 0.1446   0.1546    41.5 elbR      13.2      0   0.1  -0.0    68.9   61.2     64  3 match
+   Toddler    rising from the half-kneel h=0.85, hands: none                 0.0943   0.1005    25.2 nrot       8.1     -0   0.1  -0.0    70.5   60.4     82  3 same cost, other optimum
+   Toddler    rising from the half-kneel h=0.55, hands: thigh                0.2644   0.2459    42.8 shflexR   13.2      0   0.1  -0.0    57.1   59.6     99  3 match
+   Toddler    rising from the half-kneel h=0.70, hands: thigh                0.1590   0.1545    41.6 nrot      13.4     -3   0.1  -0.0    64.4   60.0     85  3 match
+   Toddler    half-kneel (right foot forward), hands: none, back toes laid   0.0709   0.0721    75.9 elbR      16.0     -8   0.1  -0.0    20.6   21.9     59  3 match
+   Toddler    rising from the half-kneel h=0.55, hands: none                 0.2606   0.2530    87.8 elbR      19.0      0   0.1  -0.0    66.9   58.8     77  3 match
+   Toddler    half-kneel (right foot forward), hands: ground, back toes la   0.1436   0.1479    16.5 habdL      5.5      3   0.1  -0.0    85.6   88.8     58  3 match
+   Toddler    stoop, hands on the knees, knees 30                            0.1236   0.1417    28.4 shrotL    11.8      4   0.1  -0.0    86.2   70.3     89  3 same cost, other optimum
+   Toddler    stoop, hands on the knees, knees 60                            0.1262   0.1368    25.1 nrot      11.1      6   0.1  -0.0    92.8   81.4     83  3 same cost, other optimum
+   Toddler    sitting up, the trunk 15 deg from the ground, arms reaching    0.0933   2.1265   100.2 elbL      43.8      0   0.0  -0.0    54.9  -16.8     65  3 better
+   Toddler    sitting up, the trunk 35 deg from the ground, arms reaching    0.0472   0.4886    96.8 elbL      38.5      0   0.0  -0.0    57.3    1.2     20  1 better
+   Toddler    sitting up, the trunk 60 deg from the ground, arms reaching    0.0337   0.0337    16.8 nrot       3.0     -0   0.0  -0.0    16.1   16.1     30  1 match
+   Toddler    sitting up, the trunk 25 deg from the ground, hands behind     0.1220   0.1267    24.6 tlat       7.9      0   0.0  -0.0    14.0   20.1    189  3 match
+   Toddler    pushed up from the front (chest off the ground)                0.1032   0.0693    47.6 habdR     15.2      4   0.0  -0.0    55.4  193.6    121  3 worse
+   Toddler    on its forearms                                                0.0586   0.0586    10.5 invL       2.8     -0   0.0  -0.0   203.3  225.1    347  3 same cost, other optimum
+   Toddler    sitting, legs out, hands behind                                0.0208   0.0208    44.9 dorsiL    14.4     -0   0.0  -0.0   148.9  150.6     31  1 match
+   Toddler    rising from the half-kneel h=0.70, hands: none                 0.1463   0.1477    43.3 elbL      11.6      0   0.1  -0.0    71.4   58.8     57  3 same cost, other optimum
+   Toddler    rising from the half-kneel h=0.85, hands: none                 0.0946   0.1109    38.8 toeR      12.3     -0   0.1  -0.0    71.4   61.4     59  3 match
+   Toddler    one knee and its toes, the other leg lifted                    0.0246   0.0271    58.0 toeR      17.5      5   0.0  -0.0    -0.0   -0.0     34  1 match
+   Giant      stand                                                          1.2389   0.9188    62.2 kneeR     24.3   -267   0.3  -0.0    86.3  125.1     63  3 worse
+   Giant      hands and knees                                                0.0604   0.0604     4.0 nrot       0.7     -0   0.0  -0.0   378.8  377.9    111  3 match
+   Giant      hands and knees (toes tucked)                                  0.0597   0.0597    18.4 nrot       3.3     -0   0.0  -0.0   293.8  293.8    241  3 match
+   Giant      tripod (hands and one knee, left knee lifted)                  0.0799   0.0799     0.7 nrot       0.1      0   0.0  -0.0   196.0  196.0    119  3 match
+   Giant      hands and knees [ready to let go of: hand]                     3.5016  10.6035   100.3 roll      26.6    -50   0.3  -0.0    14.3  196.6     55  3 better
+   Giant      hands and feet D=0.80                                          3.6810   0.9972   175.1 shflexL   56.4   -151   0.4   0.2   252.3  313.8    123  3 worse
+   Giant      hands and feet D=0.50                                          2.6891   0.9986   117.6 shabdR    34.1    -43   0.3  -0.0   380.4  294.3     84  3 worse
+   Giant      hands and feet D=0.30                                          8.6362   0.9471   132.7 shflexL   54.5   -265   0.8   0.7   157.6  196.7    109  3 worse
+   Giant      hands and feet D=0.40 toes                                     0.0408   0.0413    39.1 ttw       10.9     -5   0.0  -0.0   258.5  277.9    158  1 same cost, other optimum
+   Giant      hands and feet D=0.25 [ready to let go of: hand]               2.3734   1.0517   140.9 shflexR   41.9   -464   0.2  -0.0   281.5  308.2     84  3 worse
+   Giant      squat h=0.35 flat                                              1.1943   1.2004   138.6 shflexR   50.1    -12   0.3  -0.0    85.4   83.2     70  3 match
+   Giant      squat h=0.50 flat                                              1.2153   1.2262    92.5 elbR      31.7     -3   0.3  -0.0    91.9   92.8     61  3 match
+   Giant      squat h=0.65 flat                                              1.1380   1.1609    94.1 elbL      31.8     -4   0.3  -0.0   126.1  121.5     69  3 match
+   Giant      squat h=0.80 flat                                              1.0544   1.0613    97.9 shflexR   35.9      4   0.3  -0.0   168.0  151.1     66  3 same cost, other optimum
+   Giant      squat h=0.40 toes                                              0.2919   0.2920    55.1 shrotR    16.1     -0   0.0  -0.0    28.7   28.7     86  3 match
+   Giant      squat h=0.60 toes                                              0.2695   0.2695     2.1 nrot       0.4     -0   0.0  -0.0    33.2   33.2     82  3 match
+   Giant      squat h=0.35 flat hands down [ready to let go of: hand]        1.0953   1.1734    38.6 shrotR    11.5    -11   0.3  -0.0    94.0  122.2     90  3 same cost, other optimum
+   Giant      squat h=0.50 flat hands down [ready to let go of: hand]        1.1689   1.2663    73.4 nrot      19.0     -2   0.3  -0.0   143.1  162.4     97  3 same cost, other optimum
+   Giant      tall kneel                                                     0.0058   0.0056    40.9 nrot       9.0     -8   0.0  -0.0    44.0   44.3    164  1 match
+   Giant      one knee and its toes, the other leg lifted                    0.0866   0.0779    88.8 elbL      23.9    -13   0.0  -0.0     0.0   -0.0    195  3 match
+   Giant      half-kneel (left foot forward), hands: none, back toes laid    0.4653   0.4692    87.9 elbL      21.8    -54   0.3  -0.0    53.5   48.6     65  3 match
+   Giant      half-kneel (left foot forward), hands: thigh, back toes laid   0.4682   0.4724   130.2 shflexR   32.7    -54   0.3  -0.0    53.9   49.4     75  3 match
+   Giant      half-kneel (left foot forward), hands: both, back toes laid    0.4638   0.4868    39.7 hrotR     14.2    -52   0.3  -0.0    54.8   51.1     93  3 match
+   Giant      half-kneel (left foot forward), hands: ground, back toes lai   0.6150   0.6096    76.0 nrot      20.4     -1   0.3  -0.0   330.8  315.8     77  3 same cost, other optimum
+   Giant      half-kneel (left foot forward), hands: ground, back toes lai   0.6172   0.6361    76.6 nrot      25.2    -16   0.3  -0.0   293.6  294.3     74  3 match
+   Giant      rising from the half-kneel h=0.55, hands: none                 0.8549   0.8548    27.9 invR      11.3      0   0.3  -0.0    79.2  111.2     72  3 same cost, other optimum
+   Giant      rising from the half-kneel h=0.70, hands: none                 0.6883   0.6995    85.6 elbR      19.5     -0   0.3  -0.0   108.4  112.5     67  3 match
+   Giant      rising from the half-kneel h=0.85, hands: none                 0.5052   0.6106    45.4 toeL      15.9    -10   0.3  -0.0   111.9  103.6     67  3 better
+   Giant      rising from the half-kneel h=0.55, hands: thigh                0.8413   0.8746    44.8 toeL      10.3     -8   0.3  -0.0    72.3   89.2     73  3 same cost, other optimum
+   Giant      rising from the half-kneel h=0.70, hands: thigh                0.6858   0.6476   103.9 shflexR   23.9     -0   0.3  -0.0   106.9   95.5     89  3 same cost, other optimum
+   Giant      half-kneel (right foot forward), hands: none, back toes laid   0.4814   0.4671   127.5 shflexL   38.2    -38   0.3  -0.0    55.0   49.7     57  3 match
+   Giant      rising from the half-kneel h=0.55, hands: none                 0.8760   0.8492    52.4 nrot      16.2     -0   0.3  -0.0    58.7  104.1     74  3 same cost, other optimum
+   Giant      half-kneel (right foot forward), hands: ground, back toes la   0.6184   0.6518    77.4 nrot      20.5    -10   0.3  -0.0   260.2  158.9     75  3 same cost, other optimum
+   Giant      stoop, hands on the knees, knees 30                            0.9265   0.9382    41.8 shrotL    13.4    -11   0.3  -0.0   146.0  143.5    110  3 match
+   Giant      stoop, hands on the knees, knees 60                            0.9546   0.9758    49.7 toeR      14.1    -10   0.3  -0.0   144.1  133.4    107  3 same cost, other optimum
+   Giant      sitting up, the trunk 15 deg from the ground, arms reaching    0.1541   0.3194   103.3 elbL      50.4      0   0.0  -0.0   145.9   23.6    118  3 better
+   Giant      sitting up, the trunk 35 deg from the ground, arms reaching    0.0832   0.0832    57.4 shrotR    19.1      0   0.0  -0.0    44.2   44.3    492  3 match
+   Giant      sitting up, the trunk 60 deg from the ground, arms reaching    0.0418   0.0394    12.7 hflexR     5.1      0   0.0  -0.0   126.9  137.0     55  1 same cost, other optimum
+   Giant      sitting up, the trunk 25 deg from the ground, hands behind     0.1043   0.1043     2.8 nrot       0.5     -0   0.0  -0.0    74.9   74.9    266  3 match
+   Giant      pushed up from the front (chest off the ground)                0.1388   0.1498    41.7 habdL     10.5    -10   0.0  -0.0   292.9  323.4    379  3 same cost, other optimum
+   Giant      on its forearms                                                0.3699   0.3649    46.9 hrotL     14.6      0   0.3  -0.0   456.4  710.6     98  3 same cost, other optimum
+   Giant      sitting, legs out, hands behind                                0.0205   0.0205    40.6 dorsiR    11.9      0   0.0  -0.0   301.9  301.4     20  1 match
+   Giant      rising from the half-kneel h=0.70, hands: none                 0.6850   0.7036    90.6 elbR      32.2     -0   0.3  -0.0   103.4  100.1     72  3 match
+   Giant      rising from the half-kneel h=0.85, hands: none                 0.5363   0.6029    89.0 elbL      21.1     -3   0.3  -0.0   108.6  108.7     66  3 better
+   Giant      one knee and its toes, the other leg lifted                    0.0984   0.0743    70.1 elbR      25.6    -22   0.0  -0.0     0.1    0.1     81  3 worse
+   LgArm.65   stand                                                          0.3506   0.3518    41.1 toeR       9.0     -2   0.2  -0.0    96.3   96.4     56  3 match
+   LgArm.65   hands and knees                                                0.0519   0.0519    25.4 nrot       4.7      0   0.0  -0.0   176.3  185.6    231  3 match
+   LgArm.65   hands and knees (toes tucked)                                  0.0524   0.0524    42.4 hrotL     12.7      6   0.0  -0.0   181.7  252.2    349  3 same cost, other optimum
+   LgArm.65   tripod (hands and one knee, left knee lifted)                  0.0696   0.0631    33.6 nrot      12.6     -1   0.0  -0.0   120.7  111.0     97  3 match
+   LgArm.65   hands and knees [ready to let go of: hand]                     2.1614   4.0564    67.4 nrot      21.2    -10   0.1  -0.0    25.6   45.6    238  3 better
+   LgArm.65   hands and feet D=0.80                                          0.7232   0.7376    49.9 hrotR     13.0    -14   0.1  -0.0   194.3  181.8     86  3 same cost, other optimum
+   LgArm.65   hands and feet D=0.50                                          0.6299   0.6314    20.4 ttw        4.8      6   0.1  -0.0   122.5  155.3     72  3 same cost, other optimum
+   LgArm.65   hands and feet D=0.30                                          0.7299   0.8772    37.1 hrotR     10.1     15   0.1  -0.0    37.3   27.1    191  3 better
+   LgArm.65   hands and feet D=0.40 toes                                     0.1242   0.1399    27.1 nrot       6.5      7   0.0  -0.0    40.5   37.0    477  3 match
+   LgArm.65   hands and feet D=0.25 [ready to let go of: hand]              10.4988  27.6565    81.1 kneeR     26.2   -132   1.6   1.3    96.9   40.7    413  3 better
+   LgArm.65   squat h=0.35 flat                                              0.4812   0.4794   129.3 shflexR   49.5     -0   0.2  -0.0    34.5   34.4     51  3 match
+   LgArm.65   squat h=0.50 flat                                              0.4850   0.4879    89.6 elbR      45.5     -7   0.2  -0.0    43.1   47.7     48  3 match
+   LgArm.65   squat h=0.65 flat                                              0.4497   0.4621    40.8 ttw       15.8     -1   0.2  -0.0    68.8   58.4     44  3 same cost, other optimum
+   LgArm.65   squat h=0.80 flat                                              0.4054   0.4133    97.0 shflexL   31.1     -0   0.2  -0.0    98.2   90.1     62  3 match
+   LgArm.65   squat h=0.40 toes                                              0.1639   0.1345    40.7 ttw       12.7      0   0.0  -0.0    16.0   16.7     68  3 worse
+   LgArm.65   squat h=0.60 toes                                              0.1082   0.1082    20.2 nrot       3.6     -0   0.0  -0.0    20.2   20.2     68  3 match
+   LgArm.65   squat h=0.35 flat hands down [ready to let go of: hand]        1.9621   1.9902    78.8 nrot      34.5     -0   0.6   0.3    97.8   97.7     84  3 match
+   LgArm.65   squat h=0.50 flat hands down [ready to let go of: hand]        4.8552  91.6432    65.0 habdL     30.9    -70   1.8   1.1    90.9  148.9    215  3 better
+   LgArm.65   tall kneel                                                     0.0029   0.0029    19.6 ttw        3.7      0   0.0  -0.0    31.1   29.0      3  1 match
+   LgArm.65   one knee and its toes, the other leg lifted                    0.0211   0.0221    58.4 toeL      16.6      6   0.0  -0.0     0.3    0.3     10  1 match
+   LgArm.65   half-kneel (left foot forward), hands: none, back toes laid    0.1769   0.1847    26.6 shflexL   12.0     -5   0.2  -0.0    41.1   30.9     44  3 same cost, other optimum
+   LgArm.65   half-kneel (left foot forward), hands: thigh, back toes laid   0.1783   0.1816    46.2 hrotR     13.9     -2   0.2  -0.0    34.5   32.6     66  3 match
+   LgArm.65   half-kneel (left foot forward), hands: both, back toes laid    0.1888   0.2132    28.4 nrot       9.1     -1   0.2  -0.0    51.0   37.2     69  3 better
+   LgArm.65   half-kneel (left foot forward), hands: ground, back toes lai   0.3138   0.3167    44.6 nrot       9.9      1   0.2  -0.0   149.2  151.9     79  3 match
+   LgArm.65   half-kneel (left foot forward), hands: ground, back toes lai   0.5378 466.1605   125.9 shflexL   52.8    401   0.1  -0.0   174.1   71.8     84  3 better
+   LgArm.65   rising from the half-kneel h=0.55, hands: none                 0.3455   0.3340    89.7 shflexL   23.2      0   0.2  -0.0    52.5   70.7     40  3 same cost, other optimum
+   LgArm.65   rising from the half-kneel h=0.70, hands: none                 0.2583   0.2704    69.2 elbR      16.2      0   0.2  -0.0    46.9   69.6     52  3 same cost, other optimum
+   LgArm.65   rising from the half-kneel h=0.85, hands: none                 0.2050   0.2379    51.2 toeL      13.9     -2   0.2  -0.0    68.7   65.2     52  3 better
+   LgArm.65   rising from the half-kneel h=0.55, hands: thigh                0.3132   0.3220    29.2 dorsiL     9.3     -0   0.2  -0.0    52.6   60.5     76  3 match
+   LgArm.65   rising from the half-kneel h=0.70, hands: thigh                0.2333   0.2459    27.1 shflexR    9.9     -0   0.2  -0.0    61.4   67.5     87  3 match
+   LgArm.65   half-kneel (right foot forward), hands: none, back toes laid   0.1818   0.1843    33.5 ttw       13.6     -3   0.2  -0.0    34.2   30.3     40  3 match
+   LgArm.65   rising from the half-kneel h=0.55, hands: none                 0.3475   0.3451    88.9 elbR      28.0     -0   0.2  -0.0    48.8   56.1     55  3 match
+   LgArm.65   half-kneel (right foot forward), hands: ground, back toes la   0.5331 390.5303    98.1 shflexR   40.6    297   0.1  -0.0   169.8   65.4     78  3 better
+   LgArm.65   stoop, hands on the knees, knees 30                            0.3929   0.3978    54.2 nrot      15.5      4   0.2  -0.0    88.1   81.5     84  3 match
+   LgArm.65   stoop, hands on the knees, knees 60                            0.3900   0.3970    46.0 toeR      17.2     -5   0.2  -0.0   104.5   92.8     89  3 same cost, other optimum
+   LgArm.65   sitting up, the trunk 15 deg from the ground, arms reaching    0.0753   0.2303    98.0 elbL      44.2      0   0.0  -0.0    97.8    8.8     49  3 better
+   LgArm.65   sitting up, the trunk 35 deg from the ground, arms reaching    0.0510   0.0510    41.8 nlat      13.6      0   0.0  -0.0    29.4   29.4    189  3 match
+   LgArm.65   sitting up, the trunk 60 deg from the ground, arms reaching    0.0307   0.0308    18.7 elbR       9.2     -0   0.0  -0.0    82.8   85.3     26  1 match
+   LgArm.65   sitting up, the trunk 25 deg from the ground, hands behind     0.0693   0.0659    97.0 shrotR    25.0     -0   0.0  -0.0   182.3  172.5    185  3 match
+   LgArm.65   pushed up from the front (chest off the ground)                0.0580   0.0596    41.5 habdR     13.9     -1   0.0  -0.0   331.3  165.1    432  3 same cost, other optimum
+   LgArm.65   on its forearms                                                0.1594   0.1584    48.1 hrotR     15.9      0   0.2  -0.0   195.6  376.9    132  3 same cost, other optimum
+   LgArm.65   sitting, legs out, hands behind                                2.4434   0.0460   122.7 pitch     47.3     -0   0.2  -0.0   265.0  150.5    330  3 worse
+   LgArm.65   rising from the half-kneel h=0.70, hands: none                 0.2676   0.2745    39.8 elbL      11.3      4   0.2  -0.0    60.9   65.8     58  3 match
+   LgArm.65   rising from the half-kneel h=0.85, hands: none                 0.2162   0.2333    45.2 shrotR    12.2      4   0.2  -0.0    63.4   71.3     63  3 match
+   LgArm.65   one knee and its toes, the other leg lifted                    0.0276   0.0344    83.5 elbR      22.5      8   0.0  -0.0    -0.0    0.0     22  1 match
+   RdKnee100  stand                                                          0.2013   0.1994    45.1 toeR       9.3     -5   0.1  -0.0    91.0   85.9     62  3 match
+   RdKnee100  hands and knees                                                0.0387   0.0387    21.7 nrot       3.9      0   0.0  -0.0   261.7  261.7     93  1 match
+   RdKnee100  hands and knees (toes tucked)                                  0.0406   0.0406    10.0 nrot       1.8      0   0.0  -0.0   295.4  295.3     70  1 match
+   RdKnee100  tripod (hands and one knee, left knee lifted)                  0.0544   0.0544    17.1 nrot       3.1     -0   0.0  -0.0   136.8  136.8    130  3 match
+   RdKnee100  hands and knees [ready to let go of: hand]                     5.4538   9.7495   113.7 roll      38.2    -16   0.8  -0.0    12.2   83.6     65  3 better
+   RdKnee100  hands and feet D=0.80                                          0.2075   0.2174    50.8 toeL      12.1    -10   0.1  -0.0   283.9  193.7     65  3 same cost, other optimum
+   RdKnee100  hands and feet D=0.50                                          0.2177   0.2195    26.0 shrotR    10.4    -16   0.1  -0.0   205.6  202.3     66  3 match
+   RdKnee100  hands and feet D=0.30                                          0.2566   0.2165    37.7 shrotL    14.8    -43   0.1  -0.0   169.2  165.8     73  3 worse
+   RdKnee100  hands and feet D=0.40 toes                                     0.0134   0.0134     4.1 nrot       0.7      0   0.0  -0.0   141.9  142.0     27  1 match
+   RdKnee100  hands and feet D=0.25 [ready to let go of: hand]               0.2041   0.2107    30.8 hrotL      8.0     -8   0.1  -0.0   164.5  157.6     54  3 match
+   RdKnee100  squat h=0.35 flat                                              4.3254   4.7158    64.6 shrotR    15.6      1   0.2   0.2   -52.8  -60.5    427  3 match
+   RdKnee100  squat h=0.50 flat                                              0.6919   0.7031    20.2 shrotR     5.2     -0   0.1  -0.0     8.8   11.1     84  3 match
+   RdKnee100  squat h=0.65 flat                                              0.3324   0.3326    30.9 nrot       5.7     -0   0.1  -0.0    56.3   55.6     54  3 match
+   RdKnee100  squat h=0.80 flat                                              0.2678   0.2685    29.2 nrot      10.0      1   0.1  -0.0    88.5   88.1     64  3 match
+   RdKnee100  squat h=0.40 toes                                             18.8356  15.7406    66.4 hrotR     23.3      2   1.0  -0.0  -123.6  -91.7    800  3 worse
+   RdKnee100  squat h=0.60 toes                                              0.8107   0.8250    69.0 nrot      16.9     -0   0.1  -0.0     7.0    5.3    919  3 match
+   RdKnee100  squat h=0.35 flat hands down [ready to let go of: hand]       11.6287  15.1090    20.8 habdL      8.2      8   1.2   1.2   -29.0  -42.0    161  3 better
+   RdKnee100  squat h=0.50 flat hands down [ready to let go of: hand]        2.5921   2.6337    35.2 habdR     15.1     -1   0.9   0.9   -13.1  -12.1    212  3 match
+   RdKnee100  tall kneel                                                     0.0184   0.0194    21.9 nrot       4.0     -3   0.0  -0.0    15.8   15.6     29  1 match
+   RdKnee100  one knee and its toes, the other leg lifted                    0.0710   0.0716    29.6 nrot       9.9     -7   0.0  -0.0    -0.2   -0.4    376  3 match
+   RdKnee100  half-kneel (left foot forward), hands: none, back toes laid    0.1264   0.1250    39.5 toeL      14.4    -26   0.1  -0.0    26.5   26.8     55  3 match
+   RdKnee100  half-kneel (left foot forward), hands: thigh, back toes laid   0.1192   0.1227    52.7 toeL      14.3    -12   0.1  -0.0    32.2   32.5     64  3 match
+   RdKnee100  half-kneel (left foot forward), hands: both, back toes laid    0.1307   0.1413    47.8 toeL      12.9    -10   0.1  -0.0    32.2   42.0     77  3 match
+   RdKnee100  half-kneel (left foot forward), hands: ground, back toes lai   0.2194   0.2264    81.5 nrot      17.8     -1   0.1  -0.0   188.8  183.7     58  3 match
+   RdKnee100  half-kneel (left foot forward), hands: ground, back toes lai   0.1946   0.2716    69.7 nrot      20.3     10   0.1  -0.0    97.9  121.7     67  3 better
+   RdKnee100  rising from the half-kneel h=0.55, hands: none                 0.3070   0.2972    89.3 elbL      24.6      0   0.1  -0.0    51.8   63.4     60  3 same cost, other optimum
+   RdKnee100  rising from the half-kneel h=0.70, hands: none                 0.2114   0.1941    65.1 elbR      14.4      0   0.1  -0.0    74.8   64.5     50  3 same cost, other optimum
+   RdKnee100  rising from the half-kneel h=0.85, hands: none                 0.1461   0.1660    73.5 elbR      16.6     -3   0.1  -0.0    75.6   79.5     54  3 match
+   RdKnee100  rising from the half-kneel h=0.55, hands: thigh                0.2916   0.2983    51.3 shrotL    12.3     -0   0.1  -0.0    57.8   66.5     67  3 match
+   RdKnee100  rising from the half-kneel h=0.70, hands: thigh                0.1978   0.1935    41.8 shrotL    13.4     -3   0.1  -0.0    69.9   65.9     67  3 match
+   RdKnee100  half-kneel (right foot forward), hands: none, back toes laid   0.1227   0.1242    48.6 toeR      11.8    -13   0.1  -0.0    28.1   28.7     51  3 match
+   RdKnee100  rising from the half-kneel h=0.55, hands: none                 0.3054   0.3031    87.9 elbL      28.0     -0   0.1  -0.0    56.6   57.9     66  3 match
+   RdKnee100  half-kneel (right foot forward), hands: ground, back toes la   0.1946 365.4522   112.1 shflexR   50.0    258   0.1  -0.0   100.5  105.3     60  3 better
+   RdKnee100  stoop, hands on the knees, knees 30                            0.2222   0.2356    30.1 shrotR    12.5     -8   0.1  -0.0    87.6   82.2     57  3 match
+   RdKnee100  stoop, hands on the knees, knees 60                            0.2219   0.2396    32.0 toeL      13.0    -19   0.1  -0.0    96.4   86.4     62  3 match
+   RdKnee100  sitting up, the trunk 15 deg from the ground, arms reaching    0.0571   1.7163    99.5 elbL      35.3      0   0.0  -0.0    82.8  -17.7     58  3 better
+   RdKnee100  sitting up, the trunk 35 deg from the ground, arms reaching    0.0286   0.3522    98.1 elbL      41.0      0   0.0  -0.0    85.9    3.4     12  1 better
+   RdKnee100  sitting up, the trunk 60 deg from the ground, arms reaching    0.0158   0.0157    14.8 nrot       2.9     -0   0.0  -0.0    25.8   25.3    167  1 match
+   RdKnee100  sitting up, the trunk 25 deg from the ground, hands behind     0.0493   0.0481    96.1 shrotR    17.9     -0   0.0  -0.0    96.4   89.7    213  1 match
+   RdKnee100  pushed up from the front (chest off the ground)                0.0529   0.0529     4.5 nrot       0.8      0   0.0  -0.0   323.8  323.9    133  3 match
+   RdKnee100  on its forearms                                                0.0590   0.0590    72.2 nrot      14.2      0   0.0  -0.0   239.9  242.9    273  3 match
+   RdKnee100  sitting, legs out, hands behind                                0.0093   0.0094    17.0 ttw        3.8      0   0.0  -0.0   181.9  195.4    111  1 same cost, other optimum
+   RdKnee100  rising from the half-kneel h=0.70, hands: none                 0.1982   0.2005    54.8 elbL      15.4      0   0.1  -0.0    74.9   65.7     47  3 match
+   RdKnee100  rising from the half-kneel h=0.85, hands: none                 0.1403   0.1612    53.7 toeR      13.6     -0   0.1  -0.0    76.2   79.2     48  3 better
+   RdKnee100  one knee and its toes, the other leg lifted                    0.0690   0.0669    64.4 toeR      18.0    -15   0.0  -0.0    -0.4   -0.6    390  3 match
+   HvTrunk    stand                                                          0.2079   0.2085    37.3 toeL       6.9     -1   0.1  -0.0    91.9   89.5     51  3 match
+   HvTrunk    hands and knees                                                0.0685   0.0685    16.1 nrot       2.9      0   0.0  -0.0   254.8  254.7    105  3 match
+   HvTrunk    hands and knees (toes tucked)                                  0.0660   0.0660     1.4 hrotL      0.4      0   0.0  -0.0   194.6  192.0    143  3 match
+   HvTrunk    tripod (hands and one knee, left knee lifted)                  0.0940   0.0940    12.0 nrot       2.2     -0   0.0  -0.0   150.4  150.4    248  3 match
+   HvTrunk    hands and knees [ready to let go of: hand]                     5.4768  12.0155    91.5 roll      35.4    -11   0.1  -0.0    32.5  124.5    289  3 better
+   HvTrunk    hands and feet D=0.80                                          0.2269   0.2369    24.3 hrotR      7.3    -14   0.1  -0.0   275.3  195.6     95  3 same cost, other optimum
+   HvTrunk    hands and feet D=0.50                                          0.2751   0.2630    28.0 shrotR    10.3    -16   0.1  -0.0   203.2  196.3     94  3 match
+   HvTrunk    hands and feet D=0.30                                          0.2873   0.2973    31.6 hrotL     12.6     -3   0.1  -0.0   169.0  155.9    116  3 same cost, other optimum
+   HvTrunk    hands and feet D=0.40 toes                                     0.0859   0.0865    13.3 habdR      4.5    -10   0.0  -0.0   162.2  161.9     91  3 match
+   HvTrunk    hands and feet D=0.25 [ready to let go of: hand]               0.3670   0.3771    35.9 hrotL     11.3     -7   0.1  -0.0   173.9  177.2     81  3 match
+   HvTrunk    squat h=0.35 flat                                              0.6091   0.5777   130.1 shflexL   51.3      0   0.1  -0.0    31.1   38.4     90  3 match
+   HvTrunk    squat h=0.50 flat                                              0.5095   0.4988   141.2 shflexL   49.3     -0   0.1  -0.0    59.0   62.5     63  3 match
+   HvTrunk    squat h=0.65 flat                                              0.4244   0.4409    57.6 shflexL   18.4     -0   0.1  -0.0    85.8   78.2     84  3 match
+   HvTrunk    squat h=0.80 flat                                              0.3424   0.3599    59.6 elbR      16.8     -0   0.1  -0.0    95.4   89.0     59  3 match
+   HvTrunk    squat h=0.40 toes                                              0.3806   0.3806    46.3 nrot       8.3     -0   0.0  -0.0    17.9   17.9    108  3 match
+   HvTrunk    squat h=0.60 toes                                              0.2681   0.2689    64.0 shflexL   16.8      0   0.0  -0.0    19.6   19.5     36  3 match
+   HvTrunk    squat h=0.35 flat hands down [ready to let go of: hand]       89.6506 219.6702    82.1 nflex     42.1   -174  14.7  14.7     7.9  210.2    305  3 better
+   HvTrunk    squat h=0.50 flat hands down [ready to let go of: hand]       98.6309  98.8850    49.9 nlat      11.8      0   8.9   8.9   188.5  188.1    163  3 match
+   HvTrunk    tall kneel                                                     0.0251   0.0266    40.5 nrot       9.5     -3   0.0  -0.0    14.9   14.7    206  1 match
+   HvTrunk    one knee and its toes, the other leg lifted                    0.0659   0.0621   131.6 shflexR   27.4     -3   0.0  -0.0    -0.4   -0.4    555  3 match
+   HvTrunk    half-kneel (left foot forward), hands: none, back toes laid    0.1437   0.1457    37.6 elbL      12.8    -21   0.1  -0.0    25.2   23.6     55  3 match
+   HvTrunk    half-kneel (left foot forward), hands: thigh, back toes laid   0.1344   0.1427    54.6 toeL      14.9     -9   0.1  -0.0    26.4   25.2     49  3 match
+   HvTrunk    half-kneel (left foot forward), hands: both, back toes laid    0.1606   0.1711    29.1 nrot      10.0    -19   0.1  -0.0    30.2   33.0     73  3 match
+   HvTrunk    half-kneel (left foot forward), hands: ground, back toes lai   0.5400   0.5102    76.9 nrot      16.1     -4   0.1  -0.0   179.0  156.1     58  3 same cost, other optimum
+   HvTrunk    half-kneel (left foot forward), hands: ground, back toes lai   2.4456   2.1417    73.8 nrot      23.9      6   0.2  -0.0   144.0   71.6    113  3 worse
+   HvTrunk    rising from the half-kneel h=0.55, hands: none                 0.5042   0.4725    92.2 shflexL   32.4     -0   0.1  -0.0    56.4   76.0     59  3 same cost, other optimum
+   HvTrunk    rising from the half-kneel h=0.70, hands: none                 0.2781   0.2653    21.8 toeL       6.4     -0   0.1  -0.0    71.8   72.7     74  3 match
+   HvTrunk    rising from the half-kneel h=0.85, hands: none                 0.1744   0.1655    55.7 elbR      15.0     -1   0.1  -0.0    74.1   70.8     67  3 match
+   HvTrunk    rising from the half-kneel h=0.55, hands: thigh                0.4307   0.4866    79.8 shflexR   19.5     -0   0.1  -0.0    53.4   54.1     76  3 better
+   HvTrunk    rising from the half-kneel h=0.70, hands: thigh                0.2962   0.2910    62.9 shflexR   17.3     -4   0.1  -0.0    68.5   56.4     72  3 same cost, other optimum
+   HvTrunk    half-kneel (right foot forward), hands: none, back toes laid   0.1423   0.1443    88.0 elbR      20.8    -18   0.1  -0.0    24.5   25.0     50  3 match
+   HvTrunk    rising from the half-kneel h=0.55, hands: none                 0.4885   0.4878    90.5 elbR      23.1      0   0.1  -0.0    68.2   66.0     67  3 match
+   HvTrunk    half-kneel (right foot forward), hands: ground, back toes la   2.4684   2.1777    74.5 nrot      26.5      9   0.3  -0.0   147.5   53.9    108  3 worse
+   HvTrunk    stoop, hands on the knees, knees 30                            0.2447   0.2611    34.1 shrotL    10.2     -8   0.1  -0.0    88.9   86.2     77  3 match
+   HvTrunk    stoop, hands on the knees, knees 60                            0.2449   0.2650    42.8 toeR      11.4    -22   0.1  -0.0    96.1   90.8     92  3 match
+   HvTrunk    sitting up, the trunk 15 deg from the ground, arms reaching    0.2912   2.3266   100.0 elbL      43.4      0   0.0  -0.0   176.9  -22.2     43  3 better
+   HvTrunk    sitting up, the trunk 35 deg from the ground, arms reaching    0.0770   0.5775    98.5 elbR      45.1      0   0.0  -0.0   141.7   -0.2     54  3 better
+   HvTrunk    sitting up, the trunk 60 deg from the ground, arms reaching    0.0403   0.0364    44.5 hrotR     17.1      0   0.0  -0.0    15.7   20.6    178  1 match
+   HvTrunk    sitting up, the trunk 25 deg from the ground, hands behind     0.0823   0.0823    10.1 nrot       1.8      0   0.0  -0.0    89.2   89.0    297  3 match
+   HvTrunk    pushed up from the front (chest off the ground)                0.0869   0.0869    22.4 nrot       4.0      0   0.0  -0.0   295.1  294.8    259  3 match
+   HvTrunk    on its forearms                                                0.0873   0.0873    72.2 nrot      13.3     -0   0.0  -0.0   234.8  235.5    538  3 match
+   HvTrunk    sitting, legs out, hands behind                                0.0481   0.0481    43.2 hrotR      8.7     -0   0.0  -0.0   176.6  176.6     16  1 match
+   HvTrunk    rising from the half-kneel h=0.70, hands: none                 0.2891   0.2636    40.9 elbL      12.2      0   0.1  -0.0    73.2   67.7     59  3 match
+   HvTrunk    rising from the half-kneel h=0.85, hands: none                 0.1770   0.1822    48.9 toeR      10.0      0   0.1  -0.0    76.3   74.1     58  3 match
+   HvTrunk    one knee and its toes, the other leg lifted                    0.0573   0.0539    74.4 shrotL    19.2     -2   0.0  -0.0    -0.4   -0.5    602  3 match
+   LgRleg.4   stand                                                          0.3568   0.3600    31.4 nrot       8.6     -5   0.2  -0.0    95.8   97.5     57  3 match
+   LgRleg.4   hands and knees                                                0.0272   0.0272    20.6 nrot       3.7      0   0.0  -0.0   239.4  239.2     10  1 match
+   LgRleg.4   hands and knees (toes tucked)                                  0.0273   0.0273     2.4 nrot       0.5      0   0.0  -0.0   191.0  190.3     19  1 match
+   LgRleg.4   tripod (hands and one knee, left knee lifted)                  0.0365   0.0364    22.2 hrotR      4.7      0   0.0  -0.0   115.5  114.4     43  1 match
+   LgRleg.4   hands and knees [ready to let go of: hand]                     1.8911   4.7527    80.5 nflex     24.6    -15   0.2  -0.0     2.2  122.1     51  3 better
+   LgRleg.4   hands and feet D=0.80                                          0.3876   0.4097    41.3 toeL      11.2     -1   0.2  -0.0   234.2  198.6     67  3 same cost, other optimum
+   LgRleg.4   hands and feet D=0.50                                          0.3756   0.3731    21.7 nrot       7.0     -1   0.2  -0.0   213.4  209.7     70  3 match
+   LgRleg.4   hands and feet D=0.30                                          0.3778   0.3813    24.8 hrotR     11.0    -24   0.2  -0.0   134.3  128.0     61  3 match
+   LgRleg.4   hands and feet D=0.40 toes                                     0.0260   0.0258    13.3 ttw        3.1     -1   0.0  -0.0   157.7  151.7    323  1 match
+   LgRleg.4   hands and feet D=0.25 [ready to let go of: hand]               0.4524   0.4919    54.3 hrotR     19.5    -80   0.2  -0.0   174.3  149.0     64  3 same cost, other optimum
+   LgRleg.4   squat h=0.35 flat                                              0.5890   0.5821   139.8 shflexL   53.4     -7   0.2  -0.0    50.3   47.9     62  3 match
+   LgRleg.4   squat h=0.50 flat                                              0.5833   0.5733   129.2 shflexL   46.8     -5   0.2  -0.0    56.1   66.6     64  3 same cost, other optimum
+   LgRleg.4   squat h=0.65 flat                                              0.5260   0.5358    21.4 toeL       6.9      2   0.2  -0.0    79.7   73.4     67  3 match
+   LgRleg.4   squat h=0.80 flat                                              0.4594   0.4675    46.1 toeR      13.6      4   0.2  -0.0    98.3   92.1     78  3 match
+   LgRleg.4   squat h=0.40 toes                                              0.2299   0.2683    60.6 nflex     15.6     -0   0.0  -0.0    17.5   15.0     67  3 better
+   LgRleg.4   squat h=0.60 toes                                              0.1989   0.2013    83.7 shrotL    27.1     -0   0.0  -0.0    15.9   15.4     74  3 match
+   LgRleg.4   squat h=0.35 flat hands down [ready to let go of: hand]        0.5390   0.5826    37.9 shrotR    12.3     -7   0.2  -0.0    65.2   76.3     61  3 same cost, other optimum
+   LgRleg.4   squat h=0.50 flat hands down [ready to let go of: hand]        0.5662   0.5799    72.9 nrot      19.0     -0   0.2  -0.0    87.8   87.0    144  3 match
+   LgRleg.4   tall kneel                                                     0.0044   0.0045    26.6 nrot       6.5      1   0.0  -0.0    28.6   26.9      3  1 match
+   LgRleg.4   one knee and its toes, the other leg lifted                    0.0328   0.0492    82.3 elbL      22.0     11   0.0  -0.0    -0.0   -0.0     13  1 match
+   LgRleg.4   half-kneel (left foot forward), hands: none, back toes laid    0.1845   0.1901    50.0 toeL      16.0     -5   0.2  -0.0    41.0   30.7     43  3 same cost, other optimum
+   LgRleg.4   half-kneel (left foot forward), hands: thigh, back toes laid   0.1926   0.1931    56.8 toeL      12.9     -7   0.2  -0.0    29.6   29.4     54  3 match
+   LgRleg.4   half-kneel (left foot forward), hands: both, back toes laid    0.1831   0.2066    43.7 toeL      11.7     -6   0.2  -0.0    41.4   30.4     62  3 better
+   LgRleg.4   half-kneel (left foot forward), hands: ground, back toes lai   0.2490   0.2517    74.1 nrot      19.3     -6   0.2  -0.0   208.8  219.8     43  3 same cost, other optimum
+   LgRleg.4   half-kneel (left foot forward), hands: ground, back toes lai   0.2460   0.2667    76.3 nrot      20.1     -2   0.2  -0.0   154.9  151.3     56  3 match
+   LgRleg.4   rising from the half-kneel h=0.55, hands: none                 0.4370   0.4219    28.9 shrotL     8.8      0   0.2  -0.0    48.9   63.7     62  3 same cost, other optimum
+   LgRleg.4   rising from the half-kneel h=0.70, hands: none                 0.3437   0.3457    88.3 elbR      19.0      0   0.2  -0.0    56.9   61.1     64  3 match
+   LgRleg.4   rising from the half-kneel h=0.85, hands: none                 0.2606   0.2801    83.4 shrotL    23.7      0   0.2  -0.0    70.5   65.9     71  3 match
+   LgRleg.4   rising from the half-kneel h=0.55, hands: thigh                0.4604   0.5862    47.4 elbR      16.3     -4   0.2  -0.0    51.1   38.0     65  3 better
+   LgRleg.4   rising from the half-kneel h=0.70, hands: thigh                0.3448   0.4063    47.8 toeL      14.5     -1   0.2  -0.0    69.7   46.3     65  3 better
+   LgRleg.4   half-kneel (right foot forward), hands: none, back toes laid   0.1847   0.1888    32.9 ttw        9.2     -4   0.2  -0.0    31.1   29.5     59  3 match
+   LgRleg.4   rising from the half-kneel h=0.55, hands: none                 0.6256   0.6262   139.4 shflexR   34.7     -0   0.2  -0.0    48.4   58.7     63  3 same cost, other optimum
+   LgRleg.4   half-kneel (right foot forward), hands: ground, back toes la   0.2444 384.8945    84.8 roll      36.8    296   0.2  -0.0   163.1   21.8     51  3 better
+   LgRleg.4   stoop, hands on the knees, knees 30                            0.3629   0.3841    44.2 shrotL    13.9     -4   0.2  -0.0    93.7   94.7     62  3 match
+   LgRleg.4   stoop, hands on the knees, knees 60                            0.3838   0.4114    40.2 shrotL    12.0      7   0.2  -0.0   101.3   83.6     72  3 same cost, other optimum
+   LgRleg.4   sitting up, the trunk 15 deg from the ground, arms reaching    0.0855   0.2431   101.3 elbL      50.0      0   0.0  -0.0    93.9    9.6     62  3 better
+   LgRleg.4   sitting up, the trunk 35 deg from the ground, arms reaching    0.0631   0.0628    66.2 shrotL    22.3     -0   0.0  -0.0    32.5   32.0    230  3 match
+   LgRleg.4   sitting up, the trunk 60 deg from the ground, arms reaching    0.0334   0.0326    47.2 hrotR     20.2      0   0.0  -0.0    76.1   87.8    170  1 same cost, other optimum
+   LgRleg.4   sitting up, the trunk 25 deg from the ground, hands behind     0.0805   0.0794    97.8 shrotL    23.4      0   0.0  -0.0    46.1   31.9    372  3 same cost, other optimum
+   LgRleg.4   pushed up from the front (chest off the ground)                0.1120   0.1126    40.2 shrotL    17.9     -0   0.0  -0.0   181.5  182.2    208  3 match
+   LgRleg.4   on its forearms                                                0.1510   0.1485    43.3 habdR     11.3      0   0.2  -0.0   292.7  471.1     76  3 same cost, other optimum
+   LgRleg.4   sitting, legs out, hands behind                                0.0200   0.0199    46.9 hrotR     10.1      0   0.0  -0.0   216.5  144.2     39  1 same cost, other optimum
+   LgRleg.4   rising from the half-kneel h=0.70, hands: none                 0.3922   0.3979    91.2 elbR      27.3     -0   0.2  -0.0    61.2   56.8     70  3 match
+   LgRleg.4   rising from the half-kneel h=0.85, hands: none                 0.2263   0.2302    10.7 invL       4.0     -7   0.2  -0.0    67.1   67.2     73  3 match
+   LgRleg.4   one knee and its toes, the other leg lifted                    0.0492   0.0493    65.6 toeR      20.8      4   0.0  -0.0    -0.0    0.3     30  2 match
+   verdicts: better 58, match 280, same cost, other optimum 89, worse 23
+   Small     : 45 fits, match 33, better 4, worse 2, other 6; mean 77.9 ms (median 38.1, max 457); mean cost 0.264 vs saved 0.315; prototype mean 45 s
+   Long      : 45 fits, match 26, better 7, worse 2, other 10; mean 143.0 ms (median 108.1, max 1059); mean cost 0.284 vs saved 0.777; prototype mean 43 s
+   Round     : 45 fits, match 30, better 6, worse 2, other 7; mean 172.8 ms (median 125.5, max 862); mean cost 0.278 vs saved 0.388; prototype mean 38 s
+   Small S0.5: 45 fits, match 29, better 4, worse 3, other 9; mean 131.0 ms (median 98.0, max 449); mean cost 0.380 vs saved 0.428; prototype mean 47 s
+   Toddler   : 45 fits, match 27, better 5, worse 2, other 11; mean 83.5 ms (median 64.7, max 347); mean cost 0.250 vs saved 0.324; prototype mean 52 s
+   Giant     : 45 fits, match 21, better 4, worse 6, other 14; mean 110.0 ms (median 82.4, max 492); mean cost 0.937 vs saved 0.791; prototype mean 54 s
+   LgArm.65  : 45 fits, match 24, better 9, worse 2, other 10; mean 118.7 ms (median 72.4, max 477); mean cost 0.707 vs saved 1.242; prototype mean 55 s
+   RdKnee100 : 45 fits, match 32, better 7, worse 2, other 4; mean 137.7 ms (median 66.4, max 919); mean cost 0.878 vs saved 1.248; prototype mean 62 s
+   HvTrunk   : 45 fits, match 33, better 5, worse 2, other 5; mean 137.3 ms (median 83.6, max 602); mean cost 0.883 vs saved 1.026; prototype mean 46 s
+   LgRleg.4  : 45 fits, match 25, better 7, worse 0, other 13; mean 80.4 ms (median 63.2, max 372); mean cost 0.302 vs saved 0.597; prototype mean 48 s
+   all: 450 fits, mean 119.2 ms per fit (median 82.3), 379 needed a second start
+   the 23 worse fits, started at the prototype's optimum instead: 23 stay at or below its cost (mean 1.2101 vs saved 1.2117): the same problem, another basin reached from the start pose
+   match or better: 338 of 450
+   wrote ../../results/fit_atlas.csv
+== 3 checks passed, 0 failed (54.6 s)
+
+real	0m56.534s
+user	0m0.030s
+sys	0m0.030s

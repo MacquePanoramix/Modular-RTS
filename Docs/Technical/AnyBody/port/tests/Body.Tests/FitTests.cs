@@ -164,6 +164,7 @@ namespace WonderGather.AnyBody.Tests
             public double? RelMargin, SavedRelMargin;
             public int Starts, Iter, Evals;
             public string DqVar;
+            public double WarmCost = double.NaN;
         }
 
         public static void FitsMatch(List<string> opts)
@@ -178,14 +179,53 @@ namespace WonderGather.AnyBody.Tests
             var cases = Ref.Cases();
             var rows = new List<Row>();
             var fo = new FitOptions();
+            foreach (var o in opts)
+            {
+                // --maxit=N --restarts=N --restartcost=X --xtol=X --ftol=X: the fitter's settings, to read their effect
+                var kv = o.TrimStart('-').Split('=');
+                if (kv.Length != 2) continue;
+                if (!double.TryParse(kv[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double val)) continue;
+                switch (kv[0])
+                {
+                    case "maxit": fo.MaxIterations = (int)val; break;
+                    case "restarts": fo.Restarts = (int)val; break;
+                    case "restartcost": fo.RestartCost = val; break;
+                    case "xtol": fo.XTol = val; break;
+                    case "ftol": fo.FTol = val; break;
+                }
+            }
+            Console.WriteLine($"   fitter: max {fo.MaxIterations} iterations per start, {fo.Restarts} extra start(s) when the cost >= {fo.RestartCost}, " +
+                              $"ftol {fo.FTol:G2}, xtol {fo.XTol:G2}");
+            // --atlas: a body made from a miner starts each stance from that miner's fit of it (the atlas idea of
+            // stances_strategy.md 2.3: warm starts from a neighbouring body), then the usual extra starts
+            // --atlas-extra: the stance's own start first, the miner's fit as the first extra start (one start more)
+            bool atlasExtra = opts.Contains("--atlas-extra");
+            bool atlas = opts.Contains("--atlas") || atlasExtra;
+            var minerFits = new Dictionary<string, double[]>();
+            if (atlas) Console.WriteLine(atlasExtra
+                ? "   atlas-extra: a body made from a miner gets the miner's fit of the stance as its first extra start (the miners first)"
+                : "   atlas: each body made from a miner starts from the miner's fit of the stance (the miners first)");
             foreach (var bn in bodies)
             {
                 var b = ExactTests.Body(bn);
+                var variant = BodyFactory.PrototypeBodies.FirstOrDefault(v => v.Name == bn);
+                string src = variant != null ? variant.Source : bn;
                 foreach (var cs in cases.Where(c => c.Body == bn))
                 {
                     if (fams != null && !fams.Contains(cs.Family)) continue;
                     var st = StanceLibrary.Make(b, cs.Family, cs.Args);
-                    var fit = StanceFitter.Fit(b, st, fo);
+                    string key = cs.Family + "|" + string.Join("|", cs.Args.Select(a => Convert.ToString(a, CultureInfo.InvariantCulture)));
+                    var foHere = fo;
+                    if (atlas && src != bn && minerFits.TryGetValue(src + "#" + key, out var qMiner))
+                        foHere = atlasExtra
+                            ? new FitOptions
+                            {
+                                MaxIterations = fo.MaxIterations, Restarts = fo.Restarts + 1, RestartCost = fo.RestartCost, FTol = fo.FTol, XTol = fo.XTol,
+                                ExtraStarts = new[] { qMiner }
+                            }
+                            : new FitOptions { MaxIterations = fo.MaxIterations, Restarts = fo.Restarts, RestartCost = fo.RestartCost, FTol = fo.FTol, XTol = fo.XTol, Start = qMiner };
+                    var fit = StanceFitter.Fit(b, st, foHere);
+                    if (src == bn) minerFits[bn + "#" + key] = fit.Q;
                     var rep = Statics.Report(b, st, fit.Q);
                     var row = new Row
                     {
@@ -196,10 +236,30 @@ namespace WonderGather.AnyBody.Tests
                         PySecs = cs.Secs ?? 0, Starts = fit.Starts, Iter = fit.Iterations, Evals = fit.JacobianEvaluations, Status = fit.Status
                     };
                     row.Verdict = Verdict(row);
+                    if (row.Verdict == "worse")
+                    {
+                        // the cause: started at the prototype's own optimum, does the C# stay there (same problem,
+                        // another basin reached from the start pose) or leave it (a different problem)?
+                        var warmOpt = new FitOptions { MaxIterations = fo.MaxIterations, Restarts = 0, Start = cs.Q };
+                        row.WarmCost = StanceFitter.Fit(b, st, warmOpt).Cost;
+                    }
                     rows.Add(row);
                 }
             }
             Summarise(rows);
+            var worse = rows.Where(r => r.Verdict == "worse").ToList();
+            if (worse.Count > 0)
+            {
+                int stays = worse.Count(r => r.WarmCost <= r.SavedCost * (1 + 1e-9) + 1e-12);
+                Console.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                    "   the {0} worse fits, started at the prototype's optimum instead: {1} stay at or below its cost (mean {2:F4} vs saved {3:F4}): " +
+                    "the same problem, another basin reached from the start pose", worse.Count, stays, worse.Average(r => r.WarmCost), worse.Average(r => r.SavedCost)));
+                Check.That(stays == worse.Count, "every worse fit is a basin, not a different problem (warm from the saved pose never ends higher)");
+            }
+            int matchOrBetter = rows.Count(r => r.Verdict == "match" || r.Verdict == "better");
+            Check.That(rows.Count == 0 || rows.Count(r => r.Verdict == "worse") <= 0.15 * rows.Count, $"at most 15% of the fits worse than the prototype's ({rows.Count(r => r.Verdict == "worse")} of {rows.Count})");
+            Check.That(rows.All(r => r.ContactErr <= Math.Max(2.0, r.SavedContactErr + 1.0) || r.Verdict != "match"), "every matching fit has its contacts within 2 mm");
+            Console.WriteLine($"   match or better: {matchOrBetter} of {rows.Count}");
             if (outOpt != null) WriteCsv(rows, outOpt.Substring(6));
         }
 
@@ -264,7 +324,7 @@ namespace WonderGather.AnyBody.Tests
             foreach (var r in rows)
                 w.WriteLine(string.Join(",", new[]
                 {
-                    Q(r.Body), Q(r.Stance), r.Verdict, r.Status, F(r.Cost), F(r.SavedCost), F(r.DqMax), r.DqVar, F(r.DqRms), F(r.Dz), F(r.ContactErr),
+                    Q(r.Body), Q(r.Stance), Q(r.Verdict), Q(r.Status), F(r.Cost), F(r.SavedCost), F(r.DqMax), r.DqVar, F(r.DqRms), F(r.Dz), F(r.ContactErr),
                     F(r.SavedContactErr), F(r.Pen), F(r.SavedPen), F(1000 * r.Margin), F(1000 * r.SavedMargin),
                     r.RelMargin.HasValue ? F(1000 * r.RelMargin.Value) : "", r.SavedRelMargin.HasValue ? F(1000 * r.SavedRelMargin.Value) : "",
                     F(r.Ms), r.Starts.ToString(), r.Iter.ToString(), r.Evals.ToString(), F(r.PySecs)

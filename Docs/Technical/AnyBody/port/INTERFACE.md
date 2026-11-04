@@ -129,3 +129,25 @@ use it as a golden file for `Statics.Build` too (same field names as the C# type
   Its poses are still valid inputs for the LP, but its saved r/fr values may come from older code; golden = miners2.
   (3) Body exports: `reference/export_body.py` -> body_ref_bodies.json (the 17 bodies as make_body builds them),
   body_ref_cases.json (765 fits: x0, bounds, residual vectors at the saved pose and at x0), body_ref_fk.json.
+- Nov 4, LP agent: the Reserve side is verified against the prototype (README.md, "Reserve side"): S to 5e-11 on all
+  252 saved miner fits, held/not held 252/252, feasible-region depth and points exact (243/243), base margin and
+  let-go exact. Additions to the API above, no changes to it: `ReserveSolver.Prepare(p)` then `Reserve(shift)` /
+  `Solve(shift)` warm-start from the last basis (what FeasibleRegion does); `FeasibleRegion.Compute(solver, p, w, ndir,
+  tmax, bisections)` re-uses a solver; `ReserveResult.Objective`, `.Residual` (the answer checked in the original
+  units), `.WarmStarted`; `ReserveSolver.CostJitter` (1e-4: each pyramid edge's tiny force cost a little different,
+  so the force split is picked deterministically; S moves by about 1e-8 at most; 0 gives b3.py's costs exactly);
+  `ReserveSolver.Evaluate(p, forces, shift, result)` reads any force split as b3/run3 do. Still vertex-dependent, as
+  said above: R, Worst, HandsShare (HiGHS's interior point differs from its dual simplex by up to 0.025 in r).
+  Later the same morning, an option (off by default, b3.py's 13 directions stay the default): `ReserveSolver.Directions`
+  (the ball joints' checked directions, null = `StaticsProblem.BallDirections`) and
+  `ReserveSolver.HalfSphereDirections(n)`; with 200, S becomes the full-norm reserve to within 0.0036 (unique, round
+  strength). `Evaluate(p, forces, shift, result, ballDirections)` measures PerJointLp in a given set.
+- Nov 4, body agent: the Body side is verified (README.md, "Body side" and "Fits against the prototype"). No change to
+  Core's types. Additions on the Body side only: (1) each link's **centre** (`BodyModel.LinkCentre[link]`, in the
+  link's own frame from its origin joint) and **inertia** (`LinkInertia[link]`) are data beside the masses, filled from
+  the collider shapes by `BodyFactory.ShapeMassProperties` (b3.fk's centres exactly) and settable from the game's
+  weighed models by `SetLinkMassProperties(link, mass, centre, inertia)`; the kinematics read the centres from there,
+  so `Statics.Build` hands the LP the measured centres once the game sets them. (2) `Statics.Build` is checked against
+  your `reserve_cases.json` at all 252 poses and 102 let-go subsets: within 1.4e-14, 0 structural mismatches.
+  (3) `FitOptions` defaults now 400 iterations per start and 2 extra starts (was 150 and 1, run3's rule): on 450 test
+  fits, worse than the prototype 40 -> 21, about 1.5-2.5x the time (still ~0.05-0.2 s per fit against ~49 s).

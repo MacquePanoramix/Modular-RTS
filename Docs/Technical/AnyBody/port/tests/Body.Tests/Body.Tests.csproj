@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- Console test runner for src/Body (no NuGet packages offline, so no xUnit).
-       Run: dotnet run -c Release, then test names (all, bodies, fk, resid, jac, fit, warm, time). Exit code = failed checks. -->
+       Run: dotnet run -c Release, then test names (all, bodies, mass, fk, handover, resid, jac, warm, fit, anybody, reserve,
+       time). Exit code = failed checks. -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
@@ -15,5 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core\AnyBody.Core.csproj" />
     <ProjectReference Include="..\..\src\Body\AnyBody.Body.csproj" />
+    <!-- only for the end-to-end "reserve" test: S by the reserve LP at the fitted poses -->
+    <ProjectReference Include="..\..\src\Reserve\AnyBody.Reserve.csproj" />
   </ItemGroup>
 </Project>

@@ -8,8 +8,9 @@ namespace WonderGather.AnyBody
 {
     public sealed class FitOptions
     {
-        /// <summary>Iteration cap per start (one Jacobian evaluation each).</summary>
-        public int MaxIterations = 150;
+        /// <summary>Iteration cap per start (one Jacobian evaluation each). 400 (Nov 4; was 150): more of the 450 test
+        /// fits match the prototype's (279 against 264); 13 still end on the cap. The prototype's TRF allows 600 evaluations.</summary>
+        public int MaxIterations = 400;
         /// <summary>Stop when an accepted step lowers the cost by less than FTol x cost (scipy's ftol).</summary>
         public double FTol = 1e-7;
         /// <summary>Stop when the step is below XTol (XTol + |x|) (scipy's xtol).</summary>
@@ -18,8 +19,10 @@ namespace WonderGather.AnyBody
         public double GTol = 1e-8;
         /// <summary>A warm start (a full pose, 34): from a neighbouring body's atlas, or a previous fit. Null: the stance's q0.</summary>
         public double[] Start;
-        /// <summary>Extra starts, each only when the best cost so far is at least RestartCost (run3: 1 extra at 0.05).</summary>
-        public int Restarts = 1;
+        /// <summary>Extra starts, each only when the best cost so far is at least RestartCost (run3: 1 extra at 0.05;
+        /// 2 here (Nov 4): on the 450 test fits, worse than the prototype's 38 -> 21, for about 1.5-2.5x the time).
+        /// The first extra start is run3's (best + RandomState(1).normal(0, 0.05)); later ones use other noise.</summary>
+        public int Restarts = 2;
         public double RestartCost = 0.05;
         /// <summary>When set, extra starts are made from these poses (full, 34) before any noisy restart.</summary>
         public double[][] ExtraStarts;
@@ -99,17 +102,33 @@ namespace WonderGather.AnyBody
             };
         }
 
-        /// <summary>A deterministic N(0, 0.05) vector for further restarts (not numpy's; only Noise1 matches run3).</summary>
-        static double[] NoiseFor(int seed)
+        /// <summary>A deterministic N(0, 0.05) vector for further restarts (not numpy's; only Noise1 matches run3).
+        /// SplitMix64 + Box-Muller, self-contained, so every runtime (.NET, Unity's Mono, IL2CPP) gives the same starts;
+        /// System.Random's seeded sequence is not promised to be the same across runtimes.</summary>
+        public static double[] NoiseFor(int seed)
         {
-            var rng = new Random(1000 + seed);
+            ulong state = 0x9E3779B97F4A7C15UL * (ulong)(1000 + seed);
             var o = new double[Pose.Count];
             for (int i = 0; i < o.Length; i++)
             {
-                double u1 = 1.0 - rng.NextDouble(), u2 = rng.NextDouble();
+                double u1 = 1.0 - NextUnit(ref state), u2 = NextUnit(ref state);
                 o[i] = 0.05 * Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2 * Math.PI * u2);
             }
             return o;
+        }
+
+        /// <summary>SplitMix64's next value as a double in [0, 1) (53 bits).</summary>
+        static double NextUnit(ref ulong state)
+        {
+            unchecked
+            {
+                state += 0x9E3779B97F4A7C15UL;
+                ulong z = state;
+                z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9UL;
+                z = (z ^ (z >> 27)) * 0x94D049BB133111EBUL;
+                z ^= z >> 31;
+                return (z >> 11) * (1.0 / 9007199254740992.0);
+            }
         }
 
         internal struct LmResult

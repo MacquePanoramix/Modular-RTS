@@ -33,7 +33,10 @@ namespace WonderGather.AnyBody.Tests
             {
                 var cases = ReserveCases(casesPath);
                 ReserveTests.Settings(t, cases);
-                ReserveTests.Run(t, cases, quick);
+                ReserveTests.Run(t, cases, quick, args.Contains("--strict-r"));
+                ReserveTests.WarmStart(t, cases, quick);
+                ReserveTests.Perturbed(t, cases, quick);
+                ReserveTests.FullNorm(t, cases, quick);
                 if (timing) ReserveTests.Timings(cases, quick ? 3 : 20);
             }
             else
