@@ -204,12 +204,36 @@ namespace WonderGather.Tests
             Assert.That(strong.first.liftEffort, Is.LessThan(ordinary.first.liftEffort * .7f));
             Assert.That(strong.first.upright, Is.GreaterThan(ordinary.first.upright * 1.1f));
             // Too weak for it: slow to raise, at all it has, and a feeble blow.
-            // (Lift times are whole steps of the physics, 0.02 s: under strength from muscle, November 4, the feeble lift
-            // took 36 steps and sometimes 37 against the ordinary one's 30, 1.2 times or more, and the check passed or
-            // failed on the last figure of 0.72. Under the rule before it took 37.)
-            Assert.That(feeble.first.liftTime, Is.GreaterThan(ordinary.first.liftTime * 1.2f - .01f));
+            Assert.That(feeble.first.liftTime, Is.GreaterThan(ordinary.first.liftTime * 1.2f));
             Assert.That(feeble.first.liftEffort, Is.GreaterThan(.8f));
             Assert.That(feeble.first.upright, Is.LessThan(ordinary.first.upright * .7f));
+        }
+
+        // Strength from muscle (Luis, November 3) gives each of the three miners, woken in the game, what each of its joints
+        // had under the rule before: they were made before it, and keep it (PhysicalBody.KeepsWhatItHad).
+        [UnityTest]
+        public IEnumerator EachMinersJointsGiveWhatTheyGaveBeforeStrengthFromMuscle()
+        {
+            foreach (string who in new[] { "Small", "Long", "Round" })
+            {
+                choice.Choose(Index(who));
+                yield return Wait(.2f);
+                var physical = choice.Current.GetComponent<PhysicalBody>();
+                var was = PhysicalBody.Rule;
+                float[] before, after;
+                try
+                {
+                    PhysicalBody.Rule = PhysicalBody.Rules.Need;
+                    before = new[] { physical.ShoulderCapacity, physical.ElbowCapacity, physical.KneeCapacity, physical.BackCapacity, physical.WristCapacity, physical.HoldCapacity };
+                    PhysicalBody.Rule = PhysicalBody.Rules.Muscle;
+                    after = new[] { physical.ShoulderCapacity, physical.ElbowCapacity, physical.KneeCapacity, physical.BackCapacity, physical.WristCapacity, physical.HoldCapacity };
+                }
+                finally { PhysicalBody.Rule = was; }
+                Debug.Log($"PHYSICAL_KEPT {who}: shoulder {after[0]:F2} (before {before[0]:F2}), elbow {after[1]:F2} ({before[1]:F2}), knee {after[2]:F2} ({before[2]:F2}), back {after[3]:F1} ({before[3]:F1}), wrist {after[4]:F2} ({before[4]:F2}), hold {after[5]:F1} ({before[5]:F1})");
+                string[] joints = { "shoulder", "elbow", "knee", "back", "wrist", "hold" };
+                for (int k = 0; k < joints.Length; k++)
+                    Assert.That(after[k], Is.EqualTo(before[k]).Within(1e-3f * before[k]), $"{who}'s {joints[k]} under strength from muscle is not what it was.");
+            }
         }
 
         // Each miner swings the pickaxe made for it, with both hands, by its own strength.
@@ -245,10 +269,7 @@ namespace WonderGather.Tests
             yield return Try("Round", 1, 1, .5f, t => high = t);
             Debug.Log($"PHYSICAL_ADAPTS upper hand: weak {weak.first.choked:P0}, strong {strong.first.choked:P0} of the way to the head; aimed low: sinks {low.sink:F3} m, its head lands {(low.first.landed.y - low.mark) * 1000:F0} mm from the mark's height at {low.first.speed:F1} m/s; "
                 + $"aimed high: sinks {high.sink:F3} m, lands {(high.first.landed.y - high.mark) * 1000:F0} mm from it at {high.first.speed:F1} m/s");
-            // (61% of the way under the rule before; 59% under strength from muscle, November 4: one share of muscle for
-            // both of Round's arm joints cannot give each exactly what it had, and at half its strength it holds its
-            // pickaxe with about a hundredth less effort.)
-            Assert.That(weak.first.choked, Is.GreaterThan(.55f), "A body the pickaxe is heavy for should take it near the head.");
+            Assert.That(weak.first.choked, Is.GreaterThan(.6f), "A body the pickaxe is heavy for should take it near the head.");
             Assert.That(strong.first.choked, Is.LessThan(.2f), "A body the pickaxe is light for has no need to.");
             Assert.That(weak.first.struck && strong.first.struck, Is.True);
             Assert.That(low.sink, Is.GreaterThan(.1f), "Aimed low, the knees should bend.");

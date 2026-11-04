@@ -1521,10 +1521,13 @@ MonoBehaviour:
   upper: 0100000002000000030000000400000005000000060000000700000008000000090000000a000000i
   upperAsks: 19.616032
   strength: 1
-  armsMuscle: 0.8052469
-  legsMuscle: 0.7995244
+  armsMuscle: 1
+  legsMuscle: 1
   backMuscle: 1
   neckMuscle: 1
+  shoulderKept: 0.7989863
+  elbowKept: 0.8115075
+  kneeKept: 0.7995244
 --- !u!1001 &7289641312445791386
 PrefabInstance:
   m_ObjectHideFlags: 0

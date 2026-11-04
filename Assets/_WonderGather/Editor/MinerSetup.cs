@@ -507,15 +507,17 @@ namespace WonderGather.Editor
             var physical = root.AddComponent<PhysicalBody>();
             physical.Configure(parts, new[] { Index("UpperArm.L"), Index("Forearm.L"), Index("Hand.L"), Index("UpperArm.R"), Index("Forearm.R"), Index("Hand.R") },
                 above, hips, w.armRadius, w.legRadius);
-            // (Its muscle shares, so that strength from muscle gives it what its body needs, as before: Luis, November 3.)
-            physical.SharesAsNeeded();
+            // (What each of its joints keeps, so that strength from muscle gives it what its body needs, as before: Luis,
+            // November 3.)
+            physical.KeepsWhatItHad();
             Debug.Log($"MINER_BACK {name}: its back gives {physical.BackCapacity:F0} N m at most");
             Debug.Log($"MINER_WEIGHT {name}: {physical.Mass:F1} kg in {parts.Length} parts; its centre {physical.CentreOfMass().y - root.transform.position.y:F3} m up; "
                 + $"the model sits {Quaternion.Angle(sits, root.transform.rotation):F2} degrees off its prefab's axes");
         }
 
-        // The three miners' muscle shares (strength from muscle, Luis, November 3: PhysicalBody.SharesAsNeeded), written
-        // into their prefabs as they are, nothing else touched. -executeMethod WonderGather.Editor.MinerSetup.SetMuscleShares
+        // What each of the three miners' joints keeps of the rule before (strength from muscle, Luis, November 3:
+        // PhysicalBody.KeepsWhatItHad), written into their prefabs as they are, nothing else touched.
+        // -executeMethod WonderGather.Editor.MinerSetup.SetMuscleShares
         public static void SetMuscleShares()
         {
             foreach (string miner in new[] { "Small", "Long", "Round" })
@@ -525,15 +527,12 @@ namespace WonderGather.Editor
                 var physical = root.GetComponent<PhysicalBody>();
                 if (physical != null)
                 {
-                    // (What the rule before gave its arms: one share for the shoulder and the elbow cannot give both
-                    // exactly what they had.)
-                    physical.SetMuscle(PhysicalBody.Regions.Arms, 1);
                     var rule = PhysicalBody.Rule;
-                    PhysicalBody.Rule = PhysicalBody.Rules.Need;
-                    float shoulderWas = physical.ShoulderCapacity, elbowWas = physical.ElbowCapacity;
-                    PhysicalBody.Rule = rule;
-                    physical.SharesAsNeeded();
-                    Debug.Log($"MINER_MUSCLE {miner}: arms {physical.MuscleOf(PhysicalBody.Regions.Arms):F3}, legs {physical.MuscleOf(PhysicalBody.Regions.Legs):F3}; shoulder {physical.ShoulderCapacity:F1} N m (before {shoulderWas:F1}), elbow {physical.ElbowCapacity:F1} (before {elbowWas:F1}), knee {physical.KneeCapacity:F1}");
+                    float shoulderWas, elbowWas;
+                    try { PhysicalBody.Rule = PhysicalBody.Rules.Need; shoulderWas = physical.ShoulderCapacity; elbowWas = physical.ElbowCapacity; }
+                    finally { PhysicalBody.Rule = rule; }
+                    physical.KeepsWhatItHad();
+                    Debug.Log($"MINER_KEPT {miner}: shoulder {physical.ShoulderKept:F3}, elbow {physical.ElbowKept:F3}, knee {physical.KneeKept:F3} of strength from muscle; shoulder {physical.ShoulderCapacity:F1} N m (before {shoulderWas:F1}), elbow {physical.ElbowCapacity:F1} (before {elbowWas:F1}), knee {physical.KneeCapacity:F1}");
                     PrefabUtility.SaveAsPrefabAsset(root, path);
                 }
                 PrefabUtility.UnloadPrefabContents(root);
