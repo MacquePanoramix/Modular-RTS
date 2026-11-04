@@ -33,10 +33,13 @@
   solids the fit used, four sides each ([the sheets](Images/StanceAtlas/2026-11-04/)). As fitted, the arms that bear
   nothing were held where no body holds them (hands at the face in a squat, forearms out level); a weak pull of free
   limbs toward the relaxed pose (`FitOptions.RelaxFreeLimbs`, off by default) mends it and costs the fits almost nothing
-  (the 450 test fits: a median of 0.0000). Both looks side by side, judged blind by three judges and a referee
-  (running). **Next:** the judges' findings; then the bridge from a made miner, the drawn miners in these stances (their
-  straight wrists, Long's shoulders: the check's C2), bodies between and beyond the three, all for Luis; the measured
-  weight centres; layer 3, the controller. Nothing asked of Luis yet.
+  (the 450 test fits: a median of 0.0000). Both looks judged blind by three judges and a referee
+  ([round 1](Reviews/2026-11-04_StanceAtlas_Judges/)): relaxed better in the squats, equal elsewhere; the free arms out
+  like wings in the deep flat squat, mended (`77cc4ec`). Still open from them: Long's bear crawl folds into a pike; Small
+  and Round sit up on locked arms; the stands and kneels mirror-perfect. **Asked of Luis (November 4):** the free limbs,
+  relaxed (recommended) or as the solver leaves them. **Next:** the bridge from a made miner (`BodyFrame`, begun), the
+  drawn miners in these stances (their straight wrists, Long's shoulders: the check's C2), bodies between and beyond the
+  three, all for Luis; the measured weight centres; layer 3, the controller.
 
 - **Before (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his
   answers](Correspondence/2026-11-03_THE_DIRECTION_FOR_ANY_BODY.md)). **Built on the work branch:** step 0, the engine's
