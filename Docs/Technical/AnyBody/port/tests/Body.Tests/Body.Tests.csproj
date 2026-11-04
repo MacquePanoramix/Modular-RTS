@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Console test runner for src/Body (no NuGet packages offline, so no xUnit).
+       Run: dotnet run -c Release, then test names (all, bodies, fk, resid, jac, fit, warm, time). Exit code = failed checks. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>WonderGather.AnyBody.Tests</RootNamespace>
+    <AssemblyName>Body.Tests</AssemblyName>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TieredPGO>true</TieredPGO>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core\AnyBody.Core.csproj" />
+    <ProjectReference Include="..\..\src\Body\AnyBody.Body.csproj" />
+  </ItemGroup>
+</Project>

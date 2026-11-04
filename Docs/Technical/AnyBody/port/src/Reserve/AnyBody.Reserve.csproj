@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The reserve LP (b3.py reserve_lp), the feasible region (feasible_region) and the base margin (poly_margin).
+       Engine-independent: netstandard2.1 APIs, C# 9, no UnityEngine, no System.Numerics. Refs Core only. -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>WonderGather.AnyBody</RootNamespace>
+    <AssemblyName>WonderGather.AnyBody.Reserve</AssemblyName>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\AnyBody.Core.csproj" />
+  </ItemGroup>
+</Project>

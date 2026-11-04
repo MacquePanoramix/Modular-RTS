@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Console test runner for src/Reserve (no NuGet packages: the machine has no offline xUnit).
+       Run: dotnet run -c Release (from this folder); exit code = number of failed checks. See Program.cs. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>WonderGather.AnyBody.Tests</RootNamespace>
+    <AssemblyName>Reserve.Tests</AssemblyName>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TieredPGO>true</TieredPGO>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core\AnyBody.Core.csproj" />
+    <ProjectReference Include="..\..\src\Reserve\AnyBody.Reserve.csproj" />
+  </ItemGroup>
+</Project>

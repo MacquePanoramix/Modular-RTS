@@ -1,0 +1,9 @@
+# Build output
+bin/
+obj/
+# The port's own project files (the repository's root ignores the ones Unity makes)
+!*.csproj
+!*.sln
+# The reference data is made again from the prototype (reference/export_*.py); only the small file is kept
+reference/*.json
+!reference/body_ref_bodies.json
