@@ -259,6 +259,7 @@ namespace WonderGather.AnyBody
             }
 
             // ---- gradients: V1 = d(rhs) - d(KKT) z, rows of N
+            // (tape.Alloc may grow the tape into a new buffer, so buf is read again after every Alloc; review, Nov 4)
             var buf = tape.Buf;
             var Gm = w.Grad; // nk x N
             Array.Clear(Gm, 0, nk * N);
@@ -267,6 +268,7 @@ namespace WonderGather.AnyBody
             for (int rr = 0; rr < nr; rr++)
             {
                 int o = tape.Alloc();
+                buf = tape.Buf;
                 Array.Clear(buf, o, N);
                 for (int i = 0; i < nc; i++)
                 {
@@ -348,6 +350,7 @@ namespace WonderGather.AnyBody
             for (int rr = 0; rr < nr; rr++)
             {
                 int o = tape.Alloc();
+                buf = tape.Buf;
                 Array.Copy(buf, uOff[rr], buf, o, N);
                 for (int i = 0; i < nc; i++)
                 {
@@ -370,6 +373,7 @@ namespace WonderGather.AnyBody
                 double gx = z[3 * i], gy = z[3 * i + 1], gz = z[3 * i + 2];
                 double fnv = (gx * W * n.X.V + gy * W * n.Y.V + gz * W * n.Z.V) / W;
                 int o = tape.Alloc();
+                buf = tape.Buf;
                 Array.Clear(buf, o, N);
                 for (int p = 0; p < 3; p++)
                 {
@@ -427,8 +431,9 @@ namespace WonderGather.AnyBody
         static void AddRow(double[] dst, int o, double[] buf, int n, double coef, in D d)
         {
             if (d.T == null || coef == 0.0) return;
+            var src = d.T.Buf; // the tape's buffer now: buf may be stale if a D operation grew the tape since it was read
             int g = d.G;
-            for (int kk = 0; kk < n; kk++) dst[o + kk] += coef * buf[g + kk];
+            for (int kk = 0; kk < n; kk++) dst[o + kk] += coef * src[g + kk];
         }
 
         /// <summary>In-place LU with partial pivoting (row-major n x n). False if a pivot is negligible.</summary>

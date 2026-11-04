@@ -15,7 +15,10 @@ namespace WonderGather.AnyBody
         /// <summary>Number of derivative directions (0: values only).</summary>
         public int N { get; private set; }
 
-        public Tape(int n, int capacityRows = 8192)
+        /// <summary>capacityRows: the rows it starts with (it grows when an evaluation needs more). 2048 (review, Nov 4;
+        /// was 8192, 2 MB per StanceProblem): one evaluation with the Jacobian uses at most 1802 rows on the 17 bodies x
+        /// 48 stances.</summary>
+        public Tape(int n, int capacityRows = 2048)
         {
             N = n;
             Buf = new double[Math.Max(1, n) * capacityRows];

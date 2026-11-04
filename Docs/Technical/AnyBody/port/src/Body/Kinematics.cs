@@ -120,13 +120,8 @@ namespace WonderGather.AnyBody
             k.LinkMass[BodyLinks.Hips] = b.MassHips;
             k.LinkMass[BodyLinks.Trunk] = b.MassTrunk;
             k.LinkMass[BodyLinks.Head] = b.MassHead;
-            k.Joints[0] = new KinJoint
-            {
-                Name = "back", Origin = waist, IsHinge = false,
-                SubtreeMask = Mask(BodyLinks.Trunk, BodyLinks.Head, BodyLinks.UaL, BodyLinks.FaL, BodyLinks.UaR, BodyLinks.FaR),
-                Capacity = b.CapBack
-            };
-            k.Joints[1] = new KinJoint { Name = "neck", Origin = neck, IsHinge = false, SubtreeMask = Mask(BodyLinks.Head), Capacity = b.CapNeck };
+            k.Joints[0] = new KinJoint { Name = "back", Origin = waist, IsHinge = false, SubtreeMask = BackMask, Capacity = b.CapBack };
+            k.Joints[1] = new KinJoint { Name = "neck", Origin = neck, IsHinge = false, SubtreeMask = NeckMask, Capacity = b.CapNeck };
 
             double hs = Math.Max(0.0, b.TrunkCentre - b.TrunkRadius / 2);
             var hipW = RH.Mul(new Vec3(0, b.HipHalfWidth, 0));
@@ -179,22 +174,22 @@ namespace WonderGather.AnyBody
                 k.LinkMass[sh] = b.MassShin[s];
                 k.LinkMass[ft] = b.MassFoot[s];
                 k.LinkMass[to] = b.MassToes[s];
-                string sx = s == 0 ? "L" : "R";
+                // names and subtree masks are constants (review, Nov 4: built per call, they were ~1 kB of garbage per evaluation)
                 int j0 = 2 + 6 * s;
-                k.Joints[j0] = new KinJoint { Name = "shoulder" + sx, Origin = shp, SubtreeMask = Mask(ua, fa), Capacity = b.CapShoulder[s] };
+                k.Joints[j0] = new KinJoint { Name = JointNames[j0], Origin = shp, SubtreeMask = SideMasks[6 * s], Capacity = b.CapShoulder[s] };
                 k.Joints[j0 + 1] = new KinJoint
                 {
-                    Name = "elbow" + sx, Origin = el, IsHinge = true, Axis = RU.Col1, SubtreeMask = Mask(fa), Capacity = b.CapElbow[s]
+                    Name = JointNames[j0 + 1], Origin = el, IsHinge = true, Axis = RU.Col1, SubtreeMask = SideMasks[6 * s + 1], Capacity = b.CapElbow[s]
                 };
-                k.Joints[j0 + 2] = new KinJoint { Name = "hip" + sx, Origin = hj, SubtreeMask = Mask(th, sh, ft, to), Capacity = b.CapHip[s] };
+                k.Joints[j0 + 2] = new KinJoint { Name = JointNames[j0 + 2], Origin = hj, SubtreeMask = SideMasks[6 * s + 2], Capacity = b.CapHip[s] };
                 k.Joints[j0 + 3] = new KinJoint
                 {
-                    Name = "knee" + sx, Origin = kn, IsHinge = true, Axis = RTh.Col1, SubtreeMask = Mask(sh, ft, to), Capacity = b.CapKnee[s]
+                    Name = JointNames[j0 + 3], Origin = kn, IsHinge = true, Axis = RTh.Col1, SubtreeMask = SideMasks[6 * s + 3], Capacity = b.CapKnee[s]
                 };
-                k.Joints[j0 + 4] = new KinJoint { Name = "ankle" + sx, Origin = an, SubtreeMask = Mask(ft, to), Capacity = b.CapAnkle[s] };
+                k.Joints[j0 + 4] = new KinJoint { Name = JointNames[j0 + 4], Origin = an, SubtreeMask = SideMasks[6 * s + 4], Capacity = b.CapAnkle[s] };
                 k.Joints[j0 + 5] = new KinJoint
                 {
-                    Name = "toe" + sx, Origin = ball, IsHinge = true, Axis = RFt.Col1, SubtreeMask = Mask(to), Capacity = b.CapToe[s]
+                    Name = JointNames[j0 + 5], Origin = ball, IsHinge = true, Axis = RFt.Col1, SubtreeMask = SideMasks[6 * s + 5], Capacity = b.CapToe[s]
                 };
                 // capsules: ua, fa, th, sh
                 int c0 = 2 + 4 * s;
@@ -256,6 +251,24 @@ namespace WonderGather.AnyBody
             foreach (var l in links) m |= 1 << l;
             return m;
         }
+
+        /// <summary>K['joints'] names, in order.</summary>
+        static readonly string[] JointNames =
+        {
+            "back", "neck", "shoulderL", "elbowL", "hipL", "kneeL", "ankleL", "toeL", "shoulderR", "elbowR", "hipR", "kneeR", "ankleR", "toeR"
+        };
+
+        static readonly int BackMask = Mask(BodyLinks.Trunk, BodyLinks.Head, BodyLinks.UaL, BodyLinks.FaL, BodyLinks.UaR, BodyLinks.FaR);
+        static readonly int NeckMask = Mask(BodyLinks.Head);
+
+        /// <summary>Per side (L then R): the subtrees of shoulder, elbow, hip, knee, ankle, toe.</summary>
+        static readonly int[] SideMasks =
+        {
+            Mask(BodyLinks.UaL, BodyLinks.FaL), Mask(BodyLinks.FaL), Mask(BodyLinks.ThL, BodyLinks.ShL, BodyLinks.FtL, BodyLinks.ToL),
+            Mask(BodyLinks.ShL, BodyLinks.FtL, BodyLinks.ToL), Mask(BodyLinks.FtL, BodyLinks.ToL), Mask(BodyLinks.ToL),
+            Mask(BodyLinks.UaR, BodyLinks.FaR), Mask(BodyLinks.FaR), Mask(BodyLinks.ThR, BodyLinks.ShR, BodyLinks.FtR, BodyLinks.ToR),
+            Mask(BodyLinks.ShR, BodyLinks.FtR, BodyLinks.ToR), Mask(BodyLinks.FtR, BodyLinks.ToR), Mask(BodyLinks.ToR)
+        };
 
         static void SetCap(Kin k, int i, int link, DV3 a, DV3 c, double r)
         {

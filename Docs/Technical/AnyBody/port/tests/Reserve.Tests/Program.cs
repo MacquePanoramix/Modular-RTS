@@ -37,6 +37,7 @@ namespace WonderGather.AnyBody.Tests
                 ReserveTests.WarmStart(t, cases, quick);
                 ReserveTests.Perturbed(t, cases, quick);
                 ReserveTests.FullNorm(t, cases, quick);
+                ReviewTests.Run(t, cases, quick);
                 if (timing) ReserveTests.Timings(cases, quick ? 3 : 20);
             }
             else

@@ -138,6 +138,7 @@ namespace WonderGather.AnyBody
                     kmin = k;
                 }
             }
+            if (kmin < 0) return new D(double.NaN); // a NaN point or centre: no distance is < +inf (review, Nov 4: was an IndexOutOfRange)
             var va = Vert(w, h[kmin]);
             var vb = Vert(w, h[(kmin + 1) % nh]);
             var dd = SegDist(cx, cy, va, vb, false);

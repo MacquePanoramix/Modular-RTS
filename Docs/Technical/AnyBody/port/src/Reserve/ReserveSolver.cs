@@ -78,7 +78,8 @@ namespace WonderGather.AnyBody
         Vec3[] gens = Array.Empty<Vec3>(); // 4 per contact
         int[] rowJoint = Array.Empty<int>(); // per primal inequality pair
         Vec3[] rowDir = Array.Empty<Vec3>();
-        double[] jointScale = Array.Empty<double>(); // 1 / max(cap, tiny)
+        double[] jointScale = Array.Empty<double>(); // 1 / max(cap, 1e-9 W); zero capacity: 1 / (ZeroCapacityScale W)
+        readonly Vec3[] edges4 = new Vec3[4];
         bool warm;
 
         /// <summary>The LP's settings (tolerances, pivot limit), for tests.</summary>
@@ -133,18 +134,29 @@ namespace WonderGather.AnyBody
 
         public long Solves { get; private set; }
 
+        /// <summary>The rows of a joint of zero capacity (its torque must be zero: |d.tau| &lt;= 0 s) are scaled by
+        /// 1 / (ZeroCapacityScale x W x 1 m), the size of the other joints' entries; every other joint's by
+        /// 1 / max(cap, 1e-9 W) as before (the same LP either way: any positive row scale is). Review, Nov 4: zero capacity
+        /// fell to the 1e-9 W floor, entries near 1e9 against an s coefficient of 0, and the simplex failed (Numerical,
+        /// once Infeasible) where HiGHS holds the pose. With 0.03: 3528 of 3528 such LPs (every joint of the 252 saved
+        /// fits at zero in turn) as HiGHS; a floor of 1e-3 W left 6 unsolved, 0.1 one, 1 four.</summary>
+        public const double ZeroCapacityScale = 0.03;
+
         /// <summary>Builds the LP for this pose and these supports. Call again whenever p changes; until then
-        /// Reserve(shift) and Solve(shift) warm-start from the last basis.</summary>
+        /// Reserve(shift) and Solve(shift) warm-start from the last basis. Throws ArgumentException for a problem with
+        /// non-finite data, a negative capacity or friction, or a ContactSign of the wrong length.</summary>
         public void Prepare(StaticsProblem problem)
         {
-            p = problem ?? throw new ArgumentNullException(nameof(problem));
+            if (problem == null) throw new ArgumentNullException(nameof(problem));
+            Validate(problem);
+            p = problem;
             nc = p.Contacts?.Length ?? 0;
             nj = p.Joints?.Length ?? 0;
             nv = 4 * nc + 1;
             weight = p.Weight;
             if (!(weight > 0)) throw new ArgumentException("the body needs a positive mass");
             if (gens.Length < 4 * nc) gens = new Vec3[4 * nc];
-            var e4 = new Vec3[4];
+            var e4 = edges4;
             for (int i = 0; i < nc; i++)
             {
                 StaticsProblem.PyramidEdges(p.Contacts[i].Normal, p.Contacts[i].Mu, e4);
@@ -166,7 +178,7 @@ namespace WonderGather.AnyBody
             for (int j = 0; j < nj; j++)
             {
                 var jt = p.Joints[j];
-                jointScale[j] = 1.0 / Math.Max(jt.Capacity, 1e-9 * weight);
+                jointScale[j] = jt.Capacity > 0 ? 1.0 / Math.Max(jt.Capacity, 1e-9 * weight) : 1.0 / (ZeroCapacityScale * weight);
                 if (jt.IsHinge)
                 {
                     rowJoint[r0] = j;
@@ -275,9 +287,38 @@ namespace WonderGather.AnyBody
             for (int k = 6 + 2 * nrow; k < 6 + 2 * nrow + nv; k++) c[k] = 0.0;
         }
 
+        static bool Finite(double v) => !double.IsNaN(v) && !double.IsInfinity(v);
+
+        static bool Finite(Vec3 v) => Finite(v.X) && Finite(v.Y) && Finite(v.Z);
+
+        /// <summary>Review, Nov 4: a NaN centre of mass, contact point or capacity used to come back Optimal and held,
+        /// with a finite S or S = NaN; now such a problem is refused.</summary>
+        static void Validate(StaticsProblem q)
+        {
+            if (!Finite(q.Mass) || !Finite(q.Com)) throw new ArgumentException("the mass and the centre of mass must be finite");
+            int n = q.Contacts?.Length ?? 0;
+            for (int i = 0; i < n; i++)
+            {
+                var c = q.Contacts[i];
+                if (!Finite(c.Point) || !Finite(c.Normal) || !(c.Normal.LengthSquared > 1e-18) || !Finite(c.Mu) || c.Mu < 0)
+                    throw new ArgumentException("contact " + i + ": the point, a non-zero normal and mu >= 0 must be finite");
+            }
+
+            if (q.Joints == null) return;
+            for (int j = 0; j < q.Joints.Length; j++)
+            {
+                var jt = q.Joints[j];
+                if (jt == null || !Finite(jt.Origin) || !Finite(jt.Axis) || !Finite(jt.Capacity) || jt.Capacity < 0 || !Finite(jt.SubMass) ||
+                    !Finite(jt.SubMoment))
+                    throw new ArgumentException("joint " + j + ": the origin, axis, capacity >= 0, subtree mass and moment must be finite");
+                if ((jt.ContactSign?.Length ?? 0) != n) throw new ArgumentException("joint " + j + ": ContactSign needs one entry per contact");
+            }
+        }
+
         LpStatus Run(Vec3 shift, out bool usedWarm)
         {
             if (p == null) throw new InvalidOperationException("Prepare first");
+            if (!Finite(shift)) throw new ArgumentException("the shift must be finite");
             SetCosts(shift);
             usedWarm = false;
             LpStatus st;
@@ -371,6 +412,7 @@ namespace WonderGather.AnyBody
         {
             int nc = p.Contacts.Length, nj = p.Joints.Length;
             double weight = p.Weight;
+            double zeroTorque = 1e-9 * weight; // N m: below this a joint of zero capacity counts as unloaded (rounding)
             res.Forces = forces;
             res.PerJoint = new double[nj];
             res.PerJointLp = new double[nj];
@@ -392,15 +434,15 @@ namespace WonderGather.AnyBody
                 double per, perLp;
                 if (jt.IsHinge)
                 {
-                    per = Ratio(Math.Abs(Vec3.Dot(jt.Axis, tau)), cap);
+                    per = Ratio(Math.Abs(Vec3.Dot(jt.Axis, tau)), cap, zeroTorque);
                     perLp = per;
                 }
                 else
                 {
-                    per = Ratio(tau.Length, cap);
+                    per = Ratio(tau.Length, cap, zeroTorque);
                     double mx = 0.0;
                     foreach (var d in ballDirections) mx = Math.Max(mx, Math.Abs(Vec3.Dot(d, tau)));
-                    perLp = Ratio(mx, cap);
+                    perLp = Ratio(mx, cap, zeroTorque);
                 }
 
                 res.PerJoint[j] = per;
@@ -442,10 +484,12 @@ namespace WonderGather.AnyBody
             if (!double.IsPositiveInfinity(res.S)) res.Residual = Math.Max(res.Residual, lpMax - res.S);
         }
 
-        static double Ratio(double v, double cap)
+        /// <summary>v / cap; for a joint of zero capacity, 0 when v is within rounding of zero (the LP holds its torque
+        /// at zero), +inf otherwise (review, Nov 4: any rounding gave +inf, so R was +inf at a held pose).</summary>
+        static double Ratio(double v, double cap, double zeroTol)
         {
             if (cap > 0) return v / cap;
-            return v > 0 ? double.PositiveInfinity : 0.0;
+            return v > zeroTol ? double.PositiveInfinity : 0.0;
         }
     }
 

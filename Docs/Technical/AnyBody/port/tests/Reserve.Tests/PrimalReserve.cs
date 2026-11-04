@@ -56,7 +56,10 @@ namespace WonderGather.AnyBody.Tests
                 var jt = p.Joints[jj];
                 var t0 = p.TorqueMap(jj, Vec3.Zero, bm);
                 var dirs = jt.IsHinge ? new[] { jt.Axis } : StaticsProblem.BallDirections;
-                double sc = 1.0 / jt.Capacity;
+                // a joint of zero capacity (its torque must be zero) is scaled as ReserveSolver does (review, Nov 4); every
+                // other joint exactly as before
+                bool weak = !(jt.Capacity > 0);
+                double sc = weak ? 1.0 / (ReserveSolver.ZeroCapacityScale * Weight) : 1.0 / jt.Capacity;
                 foreach (var d in dirs)
                 {
                     double c0 = Vec3.Dot(d, t0) * sc;
@@ -72,7 +75,7 @@ namespace WonderGather.AnyBody.Tests
                                 Aub[q * N + 4 * i + k] = sgn * v * Weight * sc;
                             }
 
-                        Aub[q * N + N - 1] = -1.0;
+                        Aub[q * N + N - 1] = weak ? -jt.Capacity * sc : -1.0;
                         Bub[q] = sgn * c0;
                         q++;
                     }
