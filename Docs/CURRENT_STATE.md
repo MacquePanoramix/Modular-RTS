@@ -6,12 +6,13 @@
   answers](Correspondence/2026-11-03_STRENGTH_SIZE_AND_EVERYTHING_ON_GITHUB.md)): strength from muscle, each region's
   share of muscle in a body of its size; bigger bodies slower; the weights where the models have them; the standing body
   may change; every action to adapt to any body in the end; everything on GitHub. **Built on the work branch:** strength
-  from muscle as a rule with a muscle share for each region (`cc89cfd`, off by default); **now made the default**, the
-  three miners given the shares that keep their present strengths (Small arms 0.99, legs 0.89; Long 1.40 and 1.47; Round
-  0.81 and 0.80), so that only bodies made from now on show their build; `-strengthRule need` runs the tests on the
-  rule before (the shares count only under strength from muscle). **The whole PlayMode suite with it: 187 passed, 2
-  failed, 28 run only when asked**: two of Round's swing tests at their thresholds (one share for both arm joints cannot
-  give each exactly what it had; [Validation](Validation.md)); their thresholds eased to keep their meaning. **Done for the small answers:** the October 30 build is a
+  from muscle as a rule with a muscle share for each region (`cc89cfd`, off by default); **now made the default**, each
+  joint of the three miners keeping exactly what it had (`shoulderKept`, `elbowKept`, `kneeKept`; Long 1.40 to 1.47,
+  Round about 0.80, Small 0.89 to 1.00), so that only bodies made from now on show their build; the creator's share of
+  muscle per region apart from it (1 for the three); `-strengthRule need` runs the tests on the rule before. Reviewed by
+  three agents ([their reviews](Reviews/2026-11-04_StrengthFromMuscle/)), who had the first form (one share per region)
+  mended at its cause. **The whole PlayMode suite with it: 220 tests, 192 passed, 0 failed, 28 run only when asked**;
+  each miner's joints read the same under both rules in the game ([Validation](Validation.md); work branch `f7312d1`). **Done for the small answers:** the October 30 build is a
   GitHub release (`getting-up-2026-10-30`); `D:/Dev/WG-night` and the stray log deleted; the analytics define kept.
   (Committed and pushed: `23754f6`.) **Layer 1's solver in C#** (`Docs/Technical/AnyBody/port` on the work branch, engine
   free, for the game unchanged): the reserve side finished, 5072 checks against the prototype passed (the LP's optimum
@@ -19,7 +20,16 @@
   fitter side's bodies, kinematics, residuals and derivatives match the prototype exactly, and of 450 fits on ten
   bodies 291 match its saved fits, 56 are better, 83 reach other poses of the same cost and 20 are worse (another basin),
   at 50 to 120 ms a fit against 38 to 62 s; its last checks and the port's review were cut off by a usage limit.
-  **Next:** that review; then the solver in the game behind a switch, its stances pictured across the miners and made bodies for Luis (to be watched for anything
+  **Layer 0, found the same day** (work branch `f303d3f`): the design's lined-up body frames do nothing in this engine (a
+  ball joint's reading does not depend on them, and runs on to 6.12 rad with no jump: two more engine facts, 9 of 9);
+  built, measured and taken out. **The weighed centres** (`OwnBody.Weighed`, off): OwnBodyTests 10 of 13 with them,
+  against 12; Long settles 4.7 cm from its posed stand (its head where the model draws it, 15 cm ahead) and Small goes
+  down to a gentle pull: the standing balance must learn them before they become the default.
+  **The port reviewed** (an independent agent, `00991e5`: six small fixes, both runners unchanged; ranked findings in
+  `port/REVIEW.md`). **The design of the solver in the game** (work branch `Docs/Technical/AnyBody/INTEGRATION.md`,
+  `ebec380`: one source for Unity and the console runners, the bridge from a made miner field by field, the atlas sheets;
+  checked against the code, C0 to C13). **Next:** its steps, with a first look for Luis right after the move (the
+  check's C4): then the solver in the game behind a switch, its stances pictured across the miners and made bodies for Luis (to be watched for anything
   robotic or repetitive); the measured weight centres; layer 3, the controller. Nothing asked of Luis.
 
 - **Before (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his

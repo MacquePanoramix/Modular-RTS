@@ -4717,5 +4717,23 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); the getting up's switch off, 
   41.5 and 35.8 (before 41.8 and 35.5), Long 76.2 and 65.7 (76.4 and 65.5), Round 85.7 and 73.9 (85.1 and 74.4); the
   knees as before (86.9, 201.7, 220.4). The whole suite was not run again after the eased thresholds and
   `MuscleGives` (under the default the capacities are the same numbers as in the run above).
+- **Reviewed** (three independent agents, physicist, sceptic and builder, on a copied folder:
+  [their reviews](Reviews/2026-11-04_StrengthFromMuscle/)). Their finding: mend the cause, not the tests (one share for
+  both arm joints; the share both the creator's stat and a calibration). **Mended** (`f7312d1`): each joint of a body made
+  before the rule keeps what it had (`shoulderKept`, `elbowKept`, `kneeKept`), the creator's share of muscle is its own
+  (1 for the three), the wrist and hold take the arm's share, the two thresholds as they were. **A new test reads each
+  miner woken in the game under both rules** (`EachMinersJointsGiveWhatTheyGaveBeforeStrengthFromMuscle`): shoulder,
+  elbow, knee, back, wrist and hold the same to a hundredth of a newton metre (Small 41.85, 35.51, 86.94, 257.2, 4.15,
+  197.2; Long 76.41, 65.49, 201.74, 347.0, 5.39, 234.7; Round 85.06, 74.43, 220.37, 461.8, 10.53, 366.7).
+  `PhysicalBodyTests` **8 of 8** (the weak Round's upper hand 61% of the way, the feeble lift 0.74 s, as before). **The
+  whole PlayMode suite (19:43 to 20:08 UTC, nothing else running): 220 tests, 192 passed, 0 failed, 28 run only when
+  asked.** Only the three miner prefabs carry a `PhysicalBody` (the script's GUID searched in every prefab, scene and
+  asset).
+- **Layer 0, the same day** (`f303d3f`): `ArticulationFactsTests` 9 of 9 (a ball joint's reading does not depend on the
+  body frames; it runs on to 6.12 rad at 350 degrees with no jump); OwnBodyTests with the weighed centres
+  (`-ownAnatomical 1 -ownWeighed 1`) 10 of 13 (Long settles 4.7 cm from its posed stand; Small goes down to a pull of
+  0.08 of its weight); without them, with the lined-up frames since taken out, 12 of 13.
+- **The stance solver's port** (`df1af87`, reviewed `00991e5`): Reserve.Tests 5072 / 0, Body.Tests 21541 / 0, before
+  and after the review's six fixes; not yet in Unity.
 - **Not tested:** a build; the EditMode tests; strengths 0.5 and 2 on the anatomical body; any body but the three miners
   in the game (the prototype's eleven made-up bodies exist only in Python). Passing tests are not Luis's acceptance.

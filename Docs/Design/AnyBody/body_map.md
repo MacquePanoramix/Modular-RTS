@@ -187,17 +187,17 @@ Whether strength should keep doing this is the Open question "how strength is sc
 > shoulder and elbow `ShoulderMuscle` 121.3 and `ElbowMuscle` 104.5 N m times the arms' build, the knee `KneeMuscle`
 > 137.5 N m times (leg radius / 0.046)^3, each times `Strength` and **the region's share of muscle** (arms, legs, back,
 > neck: Luis, later on November 3, "how much of it is muscle ... maybe even for body regions"; 1 is an ordinary body of
-> its size). **The three miners keep their strengths:** they were drawn before the rule, their limbs' thickness not meant
-> as muscle, so each carries the shares that make the muscle rule give what the need rule gave
-> (`PhysicalBody.SharesAsNeeded`, written into their prefabs by `MinerSetup.SetMuscleShares`): Small arms 0.989, legs
-> 0.893; Long 1.398 and 1.467 (a lean body dense with muscle); Round 0.805 and 0.800 (thick limbs partly not muscle).
-> Shoulder / elbow / knee, N m: Small 41.5 / 35.8 / 86.9, Long 76.2 / 65.7 / 201.7, Round 85.7 / 73.9 / 220.4. The knees
-> are exactly as before; one share for both arm joints cannot give each exactly what it had (before: Small 41.8 / 35.5,
-> Long 76.4 / 65.5, Round 85.1 / 74.4), so each arm joint is within 0.3 to 0.8% of it. Two of Round's swing tests sat
-> on their thresholds and were eased (Validation, November 4). The shares count only under strength from muscle
-> (`MuscleGives`), so `-strengthRule need` is the rule before. Nothing Luis has played changes by more than that, and a
-> body made from now on shows its build. To see the three miners' builds speak
-> instead (Long weaker for its height, Round stronger), their shares go back to 1: Luis's to choose.
+> its size). **The three miners keep their strengths exactly:** they were drawn before the rule, their limbs' thickness
+> not meant as muscle, so each joint keeps what the rule before gave it (`shoulderKept`, `elbowKept`, `kneeKept`;
+> `PhysicalBody.KeepsWhatItHad`, written into their prefabs by `MinerSetup.SetMuscleShares`): Small 0.997, 0.982, 0.893;
+> Long 1.402, 1.395, 1.467; Round 0.799, 0.812, 0.800. Shoulder / elbow / knee, N m, as before: Small 41.8 / 35.5 /
+> 86.9, Long 76.4 / 65.5 / 201.7, Round 85.1 / 74.4 / 220.4 (read on each miner woken in the game under both rules, to a
+> hundredth). The creator's share of muscle per region is apart from it, 1 for the three, and counts only under
+> strength from muscle (`MuscleGives`; so `-strengthRule need` is the rule before); the wrist and the hand's hold take
+> the arm's. (First, on November 4, one share per region did both jobs and left each arm joint 0.3 to 0.8% off; three
+> reviewers asked for the cause to be mended, not two tests' thresholds: [their reviews](../../Reviews/2026-11-04_StrengthFromMuscle/).)
+> Nothing Luis has played changes, and a body made from now on shows its build. To see the three miners' builds speak
+> instead (Long weaker for its height, Round stronger), what they keep goes back to 1: Luis's to choose.
 
 ### 1.6 Contact shapes (built identically for any body; `OwnBody.cs:567-623`, `PhysicalFall.cs:471-531`)
 
