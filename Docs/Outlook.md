@@ -58,6 +58,28 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 4, 2026 — the twentieth (evening; the hook's count at 803, agents' steps included)
+
+- **Where we are.** Still S3b step 2, the getting up for any body. Since the morning: strength from muscle is the
+  default with the three miners keeping each joint's strength exactly (three reviewers had the first form mended at its
+  cause; the whole suite 192 of 192 run, 28 only when asked); layer 0's facts corrected the design (the body frames do
+  nothing; built, measured, taken out); the weighed centres exist behind a switch and change the standing body; the
+  stance solver is in C#, matching the prototype at a few hundredths of its time, and independently reviewed; the design
+  for bringing it into the game, and for the atlas sheets, is written and checked against the code.
+- **Waiting on Luis:** nothing asked. His, when shown: whether the three miners keep their strengths or let their builds
+  speak; Long's head where the model draws it (15 cm ahead) or over its chest, once the weighed centres stand.
+- **Built, not in a build:** all of layer 0 and 1 so far (the switches off; strength from muscle changes nothing he has
+  played). Nothing new to play.
+- **Put off, not to be forgotten:** the weighed centres' standing balance; the boots' whip (not the body frames: its
+  cause is open); the port review's items for layers 2 and 3 (no garbage per frame, ground that is not level, legs of
+  two lengths, strength per direction, the gate on S rather than r); the six stances with a forearm on a thigh the game's
+  body cannot touch; everything listed in the nineteenth.
+- **Does the task serve the stage?** Yes, and the next thing is the first thing of the new getting up that Luis can see:
+  the miners' fitted stances, as their solids and then drawn. The design's check said it came too late (its step 8): it
+  comes right after the move now. Three times today a usage limit stopped the work, the long agent runs costing most:
+  agents for reviews and judges, where a fresh eye is the point; the building done with what I already know, written
+  as it goes.
+
 ### November 4, 2026 — the nineteenth (after Luis's eleven answers; the hook's count at 304)
 
 - **Where we are.** S3b step 2, the final game's getting up for any body (Luis, October 30 and November 3). Layer 0 is
