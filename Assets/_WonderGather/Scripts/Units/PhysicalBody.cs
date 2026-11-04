@@ -119,6 +119,18 @@ namespace WonderGather
 
         // 1: ordinary for this body's build.
         public float Strength { get => strength; set => strength = Mathf.Clamp(value, .1f, 4); }
+        // How much of each region is muscle, against an ordinary body of its size (1): its arms, legs, back and neck
+        // (Luis, November 3: "a strengh stat ... how much of it is muscle", "maybe even for body regions"). Each region's
+        // joints give so much more or less; Strength is the whole body's. A first form, for the creator to set later
+        // (with the fat and muscle a region shows: Luis, the same day); 1 everywhere until then.
+        public enum Regions { Arms, Legs, Back, Neck }
+        [SerializeField] private float armsMuscle = 1, legsMuscle = 1, backMuscle = 1, neckMuscle = 1;
+        public float MuscleOf(Regions region) => region == Regions.Arms ? armsMuscle : region == Regions.Legs ? legsMuscle : region == Regions.Back ? backMuscle : neckMuscle;
+        public void SetMuscle(Regions region, float share)
+        {
+            share = Mathf.Clamp(share, .1f, 4);
+            if (region == Regions.Arms) armsMuscle = share; else if (region == Regions.Legs) legsMuscle = share; else if (region == Regions.Back) backMuscle = share; else neckMuscle = share;
+        }
 
         // upperParts: the parts above the hips; hips: where the hips are now (the body standing as modelled).
         public void Configure(Part[] weighed, int[] armParts, int[] upperParts, Vector3 hips, float arm, float leg)
@@ -152,7 +164,7 @@ namespace WonderGather
         }
 
         // The most the back gives, in newton metres: fresh, and now.
-        public float BackCapacity => BackHolds * upperAsks * Physics.gravity.magnitude * strength;
+        public float BackCapacity => BackHolds * upperAsks * Physics.gravity.magnitude * strength * backMuscle;
         public float BackNow => BackCapacity * Fresh(Muscles.Back);
 
         public Vector3 CentreOfMass()
@@ -173,6 +185,16 @@ namespace WonderGather
         // the ground. ArmsAsBodyNeeds false: so again, to compare.)
         private const float ArmHolds = 1.6f;
         public static bool ArmsAsBodyNeeds = true;
+        // Strength from muscle (Luis, November 3, 2026: "my intention was always the alternative"; Docs/Design/AnyBody/
+        // body_map.md, 1.5): a limb's joints give what its thickness gives (the cube of its radius: a muscle's cross-section
+        // times its lever), times the creator's strength, whatever the body it carries, so that a heavy body on thin limbs,
+        // or a giant, is weaker for its weight. The references are set so that the three miners' mean is what it was under
+        // the rule before (Need: as strong as its own body needs). The back and the neck stay as before under both, until
+        // their thickness is modelled. Need, for now: Muscle is measured on the three miners first (standing, stepping, the
+        // rock's pace that Luis liked) before it becomes the default.
+        public enum Rules { Need, Muscle }
+        public static Rules Rule = Rules.Need;
+        private const float ShoulderMuscle = 121.3f, ElbowMuscle = 104.5f, KneeMuscle = 137.5f, LegReference = .046f;
         private float shoulderNeeds = -1, elbowNeeds = -1;
         private void ArmNeeds()
         {
@@ -194,8 +216,8 @@ namespace WonderGather
         public float ElbowOfThickness => ElbowReference * Build * strength;
         public float ShoulderNeeds { get { ArmNeeds(); return Mathf.Max(0, shoulderNeeds) * strength; } }
         public float ElbowNeeds { get { ArmNeeds(); return Mathf.Max(0, elbowNeeds) * strength; } }
-        public float ShoulderCapacity => ArmsAsBodyNeeds ? Mathf.Max(ShoulderOfThickness, ShoulderNeeds) : ShoulderOfThickness;
-        public float ElbowCapacity => ArmsAsBodyNeeds ? Mathf.Max(ElbowOfThickness, ElbowNeeds) : ElbowOfThickness;
+        public float ShoulderCapacity => armsMuscle * (Rule == Rules.Muscle ? ShoulderMuscle * Build * strength : ArmsAsBodyNeeds ? Mathf.Max(ShoulderOfThickness, ShoulderNeeds) : ShoulderOfThickness);
+        public float ElbowCapacity => armsMuscle * (Rule == Rules.Muscle ? ElbowMuscle * Build * strength : ArmsAsBodyNeeds ? Mathf.Max(ElbowOfThickness, ElbowNeeds) : ElbowOfThickness);
         public float WristCapacity => WristReference * Build * strength;
         public float HoldCapacity => HoldReference * Mathf.Pow(armRadius / ArmReference, 2) * strength;
         // The most a knee gives, in newton metres: fresh, and now.
@@ -204,8 +226,9 @@ namespace WonderGather
             get
             {
                 if (stance == null) TryGetComponent(out stance);
+                if (Rule == Rules.Muscle) return KneeMuscle * Mathf.Pow(legRadius / LegReference, 3) * strength * legsMuscle;
                 float thigh = stance != null ? stance.BodyProportions.legSegment : .4f;
-                return KneeHolds * mass * Physics.gravity.magnitude * .5f * thigh * strength;
+                return KneeHolds * mass * Physics.gravity.magnitude * .5f * thigh * strength * legsMuscle;
             }
         }
         public float KneeNow => KneeCapacity * Fresh(Muscles.Legs);

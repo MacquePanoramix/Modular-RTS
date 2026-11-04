@@ -632,7 +632,7 @@ namespace WonderGather
             // The head.
             float headWeighs = Weighs("Head") * HeadTimes;
             float neckLever = Mathf.Max(.03f, shape.headRise - 2 * shape.torsoRise);
-            var head = Made(Head, "Head", s.head.position, s.head.rotation, headWeighs, NeckHolds * headWeighs * Physics.gravity.magnitude * neckLever * physical.Strength, false);
+            var head = Made(Head, "Head", s.head.position, s.head.rotation, headWeighs, NeckHolds * headWeighs * Physics.gravity.magnitude * neckLever * physical.Strength * physical.MuscleOf(PhysicalBody.Regions.Neck), false);
             var skull = head.AddComponent<SphereCollider>();
             skull.radius = Mathf.Max(.06f, shape.headHalf); skull.sharedMaterial = surface;
             lengths[Head] = 2 * skull.radius;
