@@ -245,6 +245,15 @@ Heights above the hip joints, standing (*derived*):
   5-6 cm higher.
 - The effect on behaviour is not measured. For a head-heavy body, the physics head turns about a lever about 30% shorter
   than the model's, which is about half the turning inertia about the neck.
+- **Measured (November 4, work branch): the weighed centres on the anatomical standing body** (`OwnBody.Weighed`, off;
+  each link's centre where the weighing has it, its moments as its shapes give them, the head's sphere moved to its
+  centre, the neck as strong for the longer lever; `-ownAnatomical 1 -ownWeighed 1`). OwnBodyTests **10 of 13**, against
+  12 without: **Long settles 4.7 cm from where its posed body stands** (asked within 3 cm: its weighed head is 15 cm
+  ahead, where the model draws it, while the posed body balances it upright over the chest), and **Small goes down
+  pulled with 0.08 of its weight**; the third, shoved again and again, fails both ways. So the weights where the models
+  have them change the standing body; the balance was tuned on the lower, centred heads. Not the default until the
+  standing balance holds with them (and Long's forward head is the model's: whether the physics follows it, or the
+  model's head comes back over the chest, is a look for Luis to see).
 
 ### 1.8 Differences that do not reach the physical bodies
 

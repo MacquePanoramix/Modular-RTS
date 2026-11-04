@@ -28,6 +28,15 @@ Which PhysX Unity 6000.6 uses is not confirmed; 4.1 matches every measured fact,
 > could not catch itself), on the boots alone 9 of 13 (the ankle is the balance's first joint), and the boots still went
 > at 16 to 31 m/s. Left off (`OwnBody.DampsAll`, `DampsBoots`); the boots' whip is not, mostly, a damping fault; the new
 > getting up sets its own drives.
+>
+> **The body frames (November 4, `ArticulationFactsTests`): §0 item 2 and §1.2's "Body frames" do not hold in this
+> engine.** A link spun about its ball joint's axis, its inertia the same about every axis, reads the turn about the
+> joint's axis in the joint's frame (1.580 rad at a quarter turn, 3.060 at 175 degrees), and with its body frame turned
+> a third of a turn about the same axis it reads exactly the same: the body frames do not set where the reading jumps,
+> so lining them up (built, measured, taken out) changes nothing. Spun on to 350 degrees, it reads on to 6.12 rad with no
+> jump, both ways: the reading is not kept within a half turn either. The boots' jumps of October 30 have another
+> cause, not yet found; the bodies were made lying with their joints' zeros as made, so their readings were often far
+> from zero (|jp| above 90 degrees in 41 to 49% of frames), which the anatomical zeros change.
 
 ## 0. Summary
 
