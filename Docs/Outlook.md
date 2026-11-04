@@ -58,6 +58,31 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 4, 2026 — the nineteenth (after Luis's eleven answers; the hook's count at 304)
+
+- **Where we are.** S3b step 2, the final game's getting up for any body (Luis, October 30 and November 3). Layer 0 is
+  begun on the work branch: the engine's facts tested, each joint's own frame and range, the standing body on them
+  behind a switch. Luis's answers of November 3 settle the body's rules: strength from muscle (built as a rule with a share
+  of muscle for each region, `cc89cfd`; now being made the default, the three miners given the shares that keep their
+  strengths, the whole suite running since 09:01), slower with size, the weights where the models have them, the
+  standing body allowed to change. Layer 1 (the stances fitted to a body, and its reserve) is being moved from the
+  Python prototype to C# that the game can use; that work was cut off twice (usage limits, then the laptop turned off)
+  and waits for the suite to finish.
+- **Waiting on Luis:** nothing asked. Luis is waiting on the new getting up, and nothing of it has reached a build
+  since October 30. The first thing of it he can judge is the stances fitted to each body, shown as pictures. He asked
+  me to watch them for anything robotic or repetitive.
+- **Built, not in a build:** the drawn limbs' flips mended; the joints' frames; the muscle rule; the frame recorder.
+- **Put off, not to be forgotten:** the measured weight centres (heads 8 cm low); the boots whipping under repeated
+  shoves (its own test, not yet met); checks on every step of the body (BodyWatch); a maker of bodies between and beyond
+  the three; layer 3, the controller; the merge after the new getting up stands. Later, from Luis: the strength stat for
+  each region in the creator, the split of fat and muscle, the muscles shown on the body; the creator's warning for
+  bodies that cannot rise; one unit helping another up; every action for any body; the mining skill, with its own deep
+  research. The rest of S3b, then S4, S2 and S5, wait, by Luis's choice.
+- **Does the task serve the stage?** Yes, by Luis's word, and the strength rule is the body's ground rule for every
+  action, not only for getting up. The drift to watch is that designs and ports pile up while Luis sees nothing. The C#
+  solver's first use should be pictures of its stances across the miners and made bodies, for him, before layer 3 is
+  built on it.
+
 ### November 3, 2026 — the eighteenth (a direction decided; before building)
 
 - **Where we are.** S3b step 2, widened by Luis (October 30) to the final game's getting up for any body. On November 3

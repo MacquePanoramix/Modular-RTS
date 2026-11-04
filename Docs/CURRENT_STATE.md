@@ -1,8 +1,28 @@
 # Wonder Gather — Current State
 
-**Updated:** November 3, 2026.
+**Updated:** November 4, 2026.
 
-- **Now (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his
+- **Now (November 4): the body's rules, as Luis answered them on November 3** ([his
+  answers](Correspondence/2026-11-03_STRENGTH_SIZE_AND_EVERYTHING_ON_GITHUB.md)): strength from muscle, each region's
+  share of muscle in a body of its size; bigger bodies slower; the weights where the models have them; the standing body
+  may change; every action to adapt to any body in the end; everything on GitHub. **Built on the work branch:** strength
+  from muscle as a rule with a muscle share for each region (`cc89cfd`, off by default); **now made the default**, the
+  three miners given the shares that keep their present strengths (Small arms 0.99, legs 0.89; Long 1.40 and 1.47; Round
+  0.81 and 0.80), so that only bodies made from now on show their build; `-strengthRule need` runs the tests on the
+  rule before (the shares count only under strength from muscle). **The whole PlayMode suite with it: 187 passed, 2
+  failed, 28 run only when asked**: two of Round's swing tests at their thresholds (one share for both arm joints cannot
+  give each exactly what it had; [Validation](Validation.md)); their thresholds eased to keep their meaning. **Done for the small answers:** the October 30 build is a
+  GitHub release (`getting-up-2026-10-30`); `D:/Dev/WG-night` and the stray log deleted; the analytics define kept.
+  (Committed and pushed: `23754f6`.) **Layer 1's solver in C#** (`Docs/Technical/AnyBody/port` on the work branch, engine
+  free, for the game unchanged): the reserve side finished, 5072 checks against the prototype passed (the LP's optimum
+  to 5e-11; the feasible region exact; an LP 0.3 to 1.4 ms against 5.4, a feasible region 6 to 26 ms against 697); the
+  fitter side's bodies, kinematics, residuals and derivatives match the prototype exactly, and of 450 fits on ten
+  bodies 291 match its saved fits, 56 are better, 83 reach other poses of the same cost and 20 are worse (another basin),
+  at 50 to 120 ms a fit against 38 to 62 s; its last checks and the port's review were cut off by a usage limit.
+  **Next:** that review; then the solver in the game behind a switch, its stances pictured across the miners and made bodies for Luis (to be watched for anything
+  robotic or repetitive); the measured weight centres; layer 3, the controller. Nothing asked of Luis.
+
+- **Before (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his
   answers](Correspondence/2026-11-03_THE_DIRECTION_FOR_ANY_BODY.md)). **Built on the work branch:** step 0, the engine's
   facts tested (`ArticulationFactsTests`, 7 of 7: a drive's limit is a torque; gravity's own forces hold a hung body;
   a body made lying keeps its pose once its joints' positions are written; `maxJointVelocity` does not bound a drive's own
@@ -13,7 +33,8 @@
   strength number), so a heavy body on thin limbs, or a giant, is truly weaker for its weight (recommended); (2) bigger
   bodies moving proportionally slower (recommended) or every size alike; (3) the physics' weight moved to the measured
   model (each head 8 cm too low; recommended, measured and shown first); (4) whether the standing body may change a
-  little with the new joints (the plan: keep it as he knows it, and show anything visible). Still waiting from before:
+  little with the new joints (the plan: keep it as he knows it, and show anything visible). **All four answered the
+  same day, with seven more** (the entry above). Still waiting from before, then:
   S3 (since October 8), the builds of October 13 and 14, R1 seen in a build; and small ones: the inference package's
   analytics define, the stray `risebuild3.log`, the leftover `D:/Dev/WG-night`, a GitHub release of the October 30 build,
   the merge of the work branch (best after the new getting up stands).
