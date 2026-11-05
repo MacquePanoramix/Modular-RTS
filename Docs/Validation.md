@@ -4787,5 +4787,7 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   133); a drawing-only wrist (`AtlasHands`) lays them on the ground: hands and knees -15, +1, -23 mm (Small, Long, Round),
   the bear crawl -4, +22, -3, the sit-up -12, -90, -5. Long's sit-up stays 9 cm in: its drawn wrist is already below the
   ground (its model's shoulders sit off the solver's: the design's check, C2).
+  **Then** (`a weight-bearing arm drawn from the model's own shoulder to the fit's wrist`, work branch): hands and knees -13,
+  -1, -19 mm, the bear crawl -7, +11, -5, the sit-up -13, -20, -9; the sheets in Images are these.
 - **Not tested:** the drawn stances judged (round 2 of the judges); bodies other than the three; any of it in a build or
   in motion. The wrist is the drawing's only: the body the physics moves has no hand of its own yet.

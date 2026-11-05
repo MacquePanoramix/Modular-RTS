@@ -39,8 +39,8 @@
   and Round sit up on locked arms; the stands and kneels mirror-perfect. **Decided by Luis (November 5):** the free limbs rest
   ([his answer](Correspondence/2026-11-05_FREE_LIMBS_RESTING.md)); now the solver's default. **November 5, night: the bridge from a made miner** (`BodyFrame`, as the
   prototype has the three) **and the stances on the drawn miners** in their own place ([the sheets](Images/StanceAtlas/2026-11-05_drawn/)):
-  the hands that bear weight laid on the ground by a drawn wrist (Long's sit-up still 9 cm in: its shoulders off the
-  solver's). **Next:** the drawn stances judged (round 2); bodies between and beyond the three; the measured weight
+  the hands that bear weight laid on the ground by a drawn wrist, and their arms drawn from the model's own shoulders
+  to the fit's wrists: every such hand within about 2 cm of the ground. **Next:** the drawn stances judged (round 2); bodies between and beyond the three; the measured weight
   centres; layer 3, the controller.
 
 - **Before (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his
