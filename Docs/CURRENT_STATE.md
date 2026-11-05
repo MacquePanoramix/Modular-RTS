@@ -37,9 +37,11 @@
   ([round 1](Reviews/2026-11-04_StanceAtlas_Judges/)): relaxed better in the squats, equal elsewhere; the free arms out
   like wings in the deep flat squat, mended (`77cc4ec`). Still open from them: Long's bear crawl folds into a pike; Small
   and Round sit up on locked arms; the stands and kneels mirror-perfect. **Decided by Luis (November 5):** the free limbs rest
-  ([his answer](Correspondence/2026-11-05_FREE_LIMBS_RESTING.md)); now the solver's default. **Next:** the bridge from a made miner (`BodyFrame`, begun), the
-  drawn miners in these stances (their straight wrists, Long's shoulders: the check's C2), bodies between and beyond the
-  three, all for Luis; the measured weight centres; layer 3, the controller.
+  ([his answer](Correspondence/2026-11-05_FREE_LIMBS_RESTING.md)); now the solver's default. **November 5, night: the bridge from a made miner** (`BodyFrame`, as the
+  prototype has the three) **and the stances on the drawn miners** in their own place ([the sheets](Images/StanceAtlas/2026-11-05_drawn/)):
+  the hands that bear weight laid on the ground by a drawn wrist (Long's sit-up still 9 cm in: its shoulders off the
+  solver's). **Next:** the drawn stances judged (round 2); bodies between and beyond the three; the measured weight
+  centres; layer 3, the controller.
 
 - **Before (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his
   answers](Correspondence/2026-11-03_THE_DIRECTION_FOR_ANY_BODY.md)). **Built on the work branch:** step 0, the engine's

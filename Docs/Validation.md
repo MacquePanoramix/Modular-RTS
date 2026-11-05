@@ -4770,3 +4770,22 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
 - **Not tested:** the drawn miners in these stances (step 5: their straight wrists and Long's shoulders, the check's C2);
   bodies other than the three; the bridge from a made miner (steps 2 and 3); any of it in a build. Passing tests and
   judges are not Luis's acceptance.
+
+## S3b step 2 — the stances on the drawn miners (November 5, night)
+
+- **The bridge** (`3d8ff19`, `BodyFrame` in the tests): BodyFrameTests 2 of 2. For Small, Long and Round every number read
+  off the game (saved proportions, weighed parts, limbs' thickness, strengths as a body made standing has them) against
+  the prototype's (lengths within 2e-5 m, masses within 6 g, strengths within the rounding: Small's knee 86.9 N m
+  against 87); the numbers it copies from OwnBody and PhysicalBody still theirs.
+- **The free limbs rest by default** (`ad1385c`; Luis, November 5): every console check as before (Body 21541 / 0; the
+  450 fits' verdicts identical: 293 match, 53 better, 83 other optima, 21 worse).
+- **The drawn miners** (`9b0ee74`, `StanceAtlasDrawnCapture`): the nine stances fitted to each miner through the bridge
+  and drawn in The Ordinary Place, on a level stage on the path, four sides each ([the sheets](Images/StanceAtlas/2026-11-05_drawn/)).
+  Read by me at their size: the stand, the kneels, the squats with the arms resting and the rise read as the miners' own;
+  Round's "forearm up near the chin" the judges saw on the solids is not there drawn (the solids' doing). The drawn
+  wrists are straight, so the hands that bear weight went into the ground (hands and knees 41 to 127 mm, the sit-up 37 to
+  133); a drawing-only wrist (`AtlasHands`) lays them on the ground: hands and knees -15, +1, -23 mm (Small, Long, Round),
+  the bear crawl -4, +22, -3, the sit-up -12, -90, -5. Long's sit-up stays 9 cm in: its drawn wrist is already below the
+  ground (its model's shoulders sit off the solver's: the design's check, C2).
+- **Not tested:** the drawn stances judged (round 2 of the judges); bodies other than the three; any of it in a build or
+  in motion. The wrist is the drawing's only: the body the physics moves has no hand of its own yet.
