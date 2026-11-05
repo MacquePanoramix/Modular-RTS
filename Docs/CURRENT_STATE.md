@@ -1,6 +1,6 @@
 # Wonder Gather — Current State
 
-**Updated:** November 4, 2026.
+**Updated:** November 5, 2026.
 
 - **Now (November 4): the body's rules, as Luis answered them on November 3** ([his
   answers](Correspondence/2026-11-03_STRENGTH_SIZE_AND_EVERYTHING_ON_GITHUB.md)): strength from muscle, each region's
@@ -36,8 +36,8 @@
   (the 450 test fits: a median of 0.0000). Both looks judged blind by three judges and a referee
   ([round 1](Reviews/2026-11-04_StanceAtlas_Judges/)): relaxed better in the squats, equal elsewhere; the free arms out
   like wings in the deep flat squat, mended (`77cc4ec`). Still open from them: Long's bear crawl folds into a pike; Small
-  and Round sit up on locked arms; the stands and kneels mirror-perfect. **Asked of Luis (November 4):** the free limbs,
-  relaxed (recommended) or as the solver leaves them. **Next:** the bridge from a made miner (`BodyFrame`, begun), the
+  and Round sit up on locked arms; the stands and kneels mirror-perfect. **Decided by Luis (November 5):** the free limbs rest
+  ([his answer](Correspondence/2026-11-05_FREE_LIMBS_RESTING.md)); now the solver's default. **Next:** the bridge from a made miner (`BodyFrame`, begun), the
   drawn miners in these stances (their straight wrists, Long's shoulders: the check's C2), bodies between and beyond the
   three, all for Luis; the measured weight centres; layer 3, the controller.
 

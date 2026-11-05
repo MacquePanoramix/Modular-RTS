@@ -35,7 +35,9 @@ Each stance is a record written once, for no body in particular:
 - **A weight rule:** the centre of mass stays inside the base by a margin. A **ready** variant also keeps it inside the
   base that is left once a named support lets go, so the weight moves before a hand or foot lifts.
 - **Free limbs** (new; see §2.2): a weak pull toward the relaxed pose. The arms reach forward only when the weight must
-  go forward.
+  go forward. **Decided by Luis, November 5, 2026** ("Yes I agree with your recommendation for resting";
+  [the message](../../Correspondence/2026-11-05_FREE_LIMBS_RESTING.md)): built as the solver's default
+  (`FitOptions.RelaxFreeLimbs`), a second pass from the fit's own pose and from its free arms reached forward.
 
 The rules every stance shares (clearance, effort, no pulling, comfort) are the fit's residuals (§2.1).
 
