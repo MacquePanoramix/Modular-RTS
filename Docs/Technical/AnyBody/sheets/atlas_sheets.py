@@ -19,6 +19,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 VIEWS = ['front', 'right', 'back', 'left']
 LOOKS = [('fitted', 'as fitted'), ('relaxed', 'free limbs relaxed')]
+WORDS = {'fitted': 'as fitted', 'relaxed': 'free limbs relaxed', 'drawn': 'drawn'}
 TILE = 384
 LABEL = 50
 HEADER = 70
@@ -103,7 +104,7 @@ def stance_sheet(folder, sheets, stance, name, bodies, rows, looks=LOOKS):
     sheet.save(os.path.join(sheets, f'stance_{stance}.png'), optimize=True)
 
 
-def body_page(folder, sheets, body, stances, names, rows, view='left', size=240, pairs=3, order=None):
+def body_page(folder, sheets, body, stances, names, rows, view='left', size=240, pairs=3, order=None, looks=LOOKS):
     columns = 2 * pairs
     rows_n = (len(stances) + pairs - 1) // pairs
     gap = 24
@@ -111,18 +112,20 @@ def body_page(folder, sheets, body, stances, names, rows, view='left', size=240,
     height = HEADER + rows_n * (size + 44 + PAD)
     page = Image.new('RGB', (width, height), PAPER)
     d = ImageDraw.Draw(page)
-    d.text((PAD, 10), f'{body}: every stance from its {view} side, ' + ('A (left) and B (right)' if order else
-           'as fitted (left) and with its free limbs relaxed (right)'), font=font(22, True), fill=INK)
+    one = not order and len(looks) == 1
+    d.text((PAD, 10), f'{body}: every stance, ' + (f'{looks[0][1]}, from its left side and its front' if one else f'from its {view} side, ' +
+           ('A (left) and B (right)' if order else f'{looks[0][1]} (left) and {looks[1][1]} (right)')), font=font(22, True), fill=INK)
     for k, stance in enumerate(stances):
         x = PAD + (k % pairs) * (2 * size + PAD + gap)
         y = HEADER + (k // pairs) * (size + 44 + PAD)
         d.text((x, y + 2), names.get(stance, stance)[:60], font=font(13, True), fill=INK)
-        for j, (look, _) in enumerate(order[stance] if order else LOOKS):
+        pair = [(looks[0][0], view), (looks[0][0], 'front')] if one else [(l, view) for l, _ in (order[stance] if order else looks)]
+        for j, (look, seen) in enumerate(pair):
             r = rows.get((body, stance, look))
             if r:
                 d.text((x + j * (size + PAD), y + 20), (f"S {float(r['S']):.2f}" if r['held'] == '1' else 'cannot hold') +
                        f" · fit {float(r['cost']):.2f}", font=font(12), fill=FAINT)
-            t = tile(folder, body, stance, look, view, size)
+            t = tile(folder, body, stance, look, seen, size)
             if t:
                 page.paste(t, (x + j * (size + PAD), y + 40))
     page.save(os.path.join(sheets, f'body_{body}.png'), optimize=True)
@@ -157,10 +160,15 @@ def main():
         for body in bodies:
             body_page(folder, sheets, body, stances, names, rows, order=order)
     else:
+        present = []
+        for (body, stance, look) in rows:
+            if look not in present:
+                present.append(look)
+        looks = [(l, WORDS.get(l, l)) for l in present]
         for stance in stances:
-            stance_sheet(folder, sheets, stance, names[stance], bodies, rows)
+            stance_sheet(folder, sheets, stance, names[stance], bodies, rows, looks)
         for body in bodies:
-            body_page(folder, sheets, body, stances, names, rows)
+            body_page(folder, sheets, body, stances, names, rows, looks=looks)
     print(f'{len(stances)} stance sheets, {len(bodies)} body pages in {sheets}')
 
 
