@@ -25,7 +25,7 @@ namespace WonderGather.AnyBody.Tests
             using var doc = JsonDocument.Parse(File.ReadAllText(path));
             var cases = Ref.Cases().Where(c => c.File == "res_miners2.json").ToList();
             var solver = new ReserveSolver();
-            var fo = new FitOptions();
+            var fo = new FitOptions { RelaxFreeLimbs = false };
             int n = 0, heldSame = 0, heldBoth = 0, savedPathBad = 0;
             var dS = new List<double>();
             var rows = new List<(string tag, double s0, double s1, double c0, double c1)>();

@@ -110,7 +110,7 @@ namespace WonderGather.AnyBody.Tests
             q[Pose.Pitch] = double.NaN;
             FitResult fit = null;
             threw = false;
-            try { fit = StanceFitter.Fit(b, st, new FitOptions { Start = q }); }
+            try { fit = StanceFitter.Fit(b, st, new FitOptions { Start = q, RelaxFreeLimbs = false }); }
             catch (Exception) { threw = true; }
             Check.That(!threw && fit.Status == "nan" && double.IsPositiveInfinity(fit.Cost), "a fit from a NaN start ends as 'nan', cost +inf");
             Console.WriteLine($"   a NaN pose: {(threw ? "THREW" : "residuals NaN")}; a fit from a NaN start: {(fit == null ? "threw" : fit.Status + ", cost " + fit.Cost)}");

@@ -684,7 +684,8 @@ the thigh:
 **Open, for the lead or the Director.**
 
 - **The reserve's measure:** S, or the full-norm reserve (README, "Reserve side, next").
-- **Free limbs:** pulled toward the relaxed pose (step 9), or left as fitted.
+- **Free limbs:** ~~pulled toward the relaxed pose (step 9), or left as fitted~~ **decided by Luis, November 5: they rest**
+  (`FitOptions.RelaxFreeLimbs`, now the default; built after the first look and the judges' round 1, `77cc4ec`).
 - **Which ranges the fits use:** b3's knee stops at 150°, layer 0's at 155°.
 - **The miners' muscle shares:** at 1, their build would show in their strength.
 - **Friction:** the port's 0.6 against the game's 0.7/0.8.

@@ -27,9 +27,10 @@ namespace WonderGather.AnyBody
         /// <summary>When set, extra starts are made from these poses (full, 34) before any noisy restart.</summary>
         public double[][] ExtraStarts;
         /// <summary>Free limbs (stances_strategy.md 1.1; INTEGRATION.md step 9): a weak pull of the limbs that bear nothing
-        /// toward the relaxed pose, so that an arm reaches forward only when the weight must go forward. Off: as the
-        /// prototype fits (Nov 4: on the first look's sheets free arms were held out level or up at the face).</summary>
-        public bool RelaxFreeLimbs;
+        /// toward the relaxed pose, so that an arm reaches forward only when the weight must go forward. On: the game's way
+        /// (Luis, November 5, 2026: "Yes I agree with your recommendation for resting"; on the first look's sheets, free
+        /// arms had been held out level or up at the face). Off: as the prototype fits, for the comparisons with it.</summary>
+        public bool RelaxFreeLimbs = true;
         /// <summary>The pull's weight per radian, when RelaxFreeLimbs is set.</summary>
         public double RelaxWeight = 0.1;
     }
@@ -64,8 +65,9 @@ namespace WonderGather.AnyBody
 
         public static FitResult Fit(BodyModel b, Stance st, FitOptions opt = null)
         {
+            opt = opt ?? new FitOptions();
             var plain = Fit(new StanceProblem(b, st), opt);
-            if (opt == null || !opt.RelaxFreeLimbs) return plain;
+            if (!opt.RelaxFreeLimbs) return plain;
             // Then its free limbs relaxed: a second fit with the pull, from the first one's pose and with no restart, so
             // the stance keeps its basin and only what bears nothing moves. (In one pass, the pull sent some fits to
             // another basin: on the 450 test fits, 46 rose by more than 0.01 in the cost without the pull, Nov 4.)

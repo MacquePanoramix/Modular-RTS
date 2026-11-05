@@ -29,7 +29,7 @@ namespace WonderGather.AnyBody.Tests
                 foreach (var (family, args) in StanceLibrary.PrototypeBatch)
                 {
                     var st = StanceLibrary.Make(b, family, args);
-                    var plain = StanceFitter.Fit(b, st);
+                    var plain = StanceFitter.Fit(b, st, new FitOptions { RelaxFreeLimbs = false });
                     var relaxed = StanceFitter.Fit(b, st, new FitOptions { RelaxFreeLimbs = true, RelaxWeight = weight });
                     double costWithout = CostAt(b, st, relaxed.Q);
                     var s0 = solver.Solve(Statics.Build(b, plain.Q, st.Supports));

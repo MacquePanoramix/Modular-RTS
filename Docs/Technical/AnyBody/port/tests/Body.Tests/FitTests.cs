@@ -99,7 +99,7 @@ namespace WonderGather.AnyBody.Tests
             var cases = Ref.Cases().Where(c => c.File == "res_miners2.json").ToList();
             int better = 0, same = 0, worse = 0;
             double totalMs = 0, worstDq = 0;
-            var fo = new FitOptions { Restarts = 0 };
+            var fo = new FitOptions { Restarts = 0, RelaxFreeLimbs = false };
             foreach (var cs in cases)
             {
                 var b = ExactTests.Body(cs.Body);
@@ -178,7 +178,7 @@ namespace WonderGather.AnyBody.Tests
             Console.WriteLine($"== fit: LM from each stance's start pose, {bodies.Count} bodies x the prototype's 45 stances, against the saved fits");
             var cases = Ref.Cases();
             var rows = new List<Row>();
-            var fo = new FitOptions();
+            var fo = new FitOptions { RelaxFreeLimbs = false };
             foreach (var o in opts)
             {
                 // --maxit=N --restarts=N --restartcost=X --xtol=X --ftol=X: the fitter's settings, to read their effect
@@ -220,10 +220,11 @@ namespace WonderGather.AnyBody.Tests
                         foHere = atlasExtra
                             ? new FitOptions
                             {
+                                RelaxFreeLimbs = false,
                                 MaxIterations = fo.MaxIterations, Restarts = fo.Restarts + 1, RestartCost = fo.RestartCost, FTol = fo.FTol, XTol = fo.XTol,
                                 ExtraStarts = new[] { qMiner }
                             }
-                            : new FitOptions { MaxIterations = fo.MaxIterations, Restarts = fo.Restarts, RestartCost = fo.RestartCost, FTol = fo.FTol, XTol = fo.XTol, Start = qMiner };
+                            : new FitOptions { MaxIterations = fo.MaxIterations, Restarts = fo.Restarts, RestartCost = fo.RestartCost, FTol = fo.FTol, XTol = fo.XTol, Start = qMiner, RelaxFreeLimbs = false };
                     var fit = StanceFitter.Fit(b, st, foHere);
                     if (src == bn) minerFits[bn + "#" + key] = fit.Q;
                     var rep = Statics.Report(b, st, fit.Q);
@@ -240,7 +241,7 @@ namespace WonderGather.AnyBody.Tests
                     {
                         // the cause: started at the prototype's own optimum, does the C# stay there (same problem,
                         // another basin reached from the start pose) or leave it (a different problem)?
-                        var warmOpt = new FitOptions { MaxIterations = fo.MaxIterations, Restarts = 0, Start = cs.Q };
+                        var warmOpt = new FitOptions { MaxIterations = fo.MaxIterations, Restarts = 0, Start = cs.Q, RelaxFreeLimbs = false };
                         row.WarmCost = StanceFitter.Fit(b, st, warmOpt).Cost;
                     }
                     rows.Add(row);

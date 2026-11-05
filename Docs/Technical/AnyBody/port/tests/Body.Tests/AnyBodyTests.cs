@@ -28,7 +28,7 @@ namespace WonderGather.AnyBody.Tests
         public static void Run(List<string> opts)
         {
             Console.WriteLine("== anybody: 4 bodies the prototype never saw x its 45 stances (no saved fits: read for soundness)");
-            var fo = new FitOptions();
+            var fo = new FitOptions { RelaxFreeLimbs = false };
             int bad = 0;
             foreach (var v in NewBodies)
             {
