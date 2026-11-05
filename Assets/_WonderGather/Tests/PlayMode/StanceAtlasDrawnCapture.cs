@@ -165,6 +165,7 @@ namespace WonderGather.Tests
                         hands.Bears[side] = false;
                         foreach (var sp in st.Supports)
                             if (sp.Side == side && (sp.Kind == AnyBody.SupportKind.Hand || sp.Kind == AnyBody.SupportKind.Forearm)) hands.Bears[side] = true;
+                        poser.Reach[side] = hands.Bears[side];
                     }
                     // Held 40 frames, so the hung things settle, then seen from its four sides, the sun turned with the
                     // camera so that every side is lit alike.
@@ -288,6 +289,8 @@ namespace WonderGather.Tests
         public MinerBody Miner;
         public Vector3 Origin;
         public Quaternion Facing = Quaternion.identity;
+        // The arms that bear weight: drawn from the model's own shoulder to the fit's wrist (ReachFrom).
+        public readonly bool[] Reach = new bool[2];
         private AnyBody.BodyModel body;
         private AnyBody.Kin kin;
 
@@ -331,6 +334,26 @@ namespace WonderGather.Tests
             return Quaternion.LookRotation(z, y);
         }
 
+        // The two arm segments placed so that an arm of the model's lengths from this shoulder ends at this wrist (or as
+        // near as it reaches), its elbow out the way the fit's sticks out (the upper arm segment's forward, as just put).
+        private static void ReachFrom(Vector3 shoulder, Vector3 wrist, Transform upper, Transform fore)
+        {
+            float lu = 2 * upper.localScale.y, lf = 2 * fore.localScale.y;
+            Vector3 toWrist = wrist - shoulder;
+            if (toWrist.sqrMagnitude < 1e-8f) return;
+            Vector3 u = toWrist.normalized;
+            float d = Mathf.Clamp(toWrist.magnitude, Mathf.Abs(lu - lf) + 1e-4f, lu + lf - 1e-4f);
+            Vector3 pole = Vector3.ProjectOnPlane(upper.rotation * Vector3.forward, u);
+            if (pole.sqrMagnitude < 1e-8f) return;
+            pole.Normalize();
+            float cos = Mathf.Clamp((lu * lu + d * d - lf * lf) / (2 * lu * d), -1, 1);
+            Vector3 elbow = shoulder + lu * (cos * u + Mathf.Sqrt(1 - cos * cos) * pole);
+            Vector3 reached = shoulder + u * d;
+            Vector3 d1 = (elbow - shoulder).normalized, d2 = (reached - elbow).normalized;
+            upper.SetPositionAndRotation(.5f * (shoulder + elbow), Quaternion.LookRotation(Vector3.ProjectOnPlane(pole, d1).normalized, d1));
+            fore.SetPositionAndRotation(.5f * (elbow + reached), Quaternion.LookRotation(Vector3.ProjectOnPlane(pole, d2).normalized, d2));
+        }
+
         private static void Put(Transform segment, Vector3 at, Quaternion turned)
         {
             if (segment == null) return;
@@ -359,6 +382,11 @@ namespace WonderGather.Tests
                 var ball = k[i == 0 ? AnyBody.Pt.BallL : AnyBody.Pt.BallR];
                 if (s.upperArms != null && s.upperArms.Length == 2) Put(s.upperArms[i], .5f * (W(shp) + W(el)), Turn(ua, 1));
                 if (s.forearms != null && s.forearms.Length == 2) Put(s.forearms[i], .5f * (W(el) + W(wr)), Turn(fa, 1));
+                // (A drawn arm starts from the model's own shoulder, which sits off the fit's: Long's by 9 cm. One that bears
+                // weight is drawn from there to the fit's wrist, its elbow bent the fit's way, so that its hand lands where
+                // the fit has it: the design's check, C2.)
+                if (Reach[i] && Miner.Rig.upperArms != null && Miner.Rig.upperArms.Length == 2 && s.upperArms != null && s.forearms != null && s.upperArms.Length == 2 && s.forearms.Length == 2)
+                    ReachFrom(Miner.Rig.upperArms[i].position, W(wr), s.upperArms[i], s.forearms[i]);
                 if (s.thighs != null && s.thighs.Length == 2) Put(s.thighs[i], .5f * (W(hj) + W(kn)), Turn(th, 2));
                 if (s.shins != null && s.shins.Length == 2) Put(s.shins[i], .5f * (W(kn) + W(an)), Turn(sh, 2));
                 // (The boot's box from its ankle, the toes' from the ball of the foot: their sizes are the posed body's, not written.)
