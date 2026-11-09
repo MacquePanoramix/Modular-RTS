@@ -4806,3 +4806,8 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   0.3 needs 0.88 to rise from the half-kneel and 0.64 on hands and knees; Long x1.25 needs 0.42 to rise from the
   half-kneel (Long 0.22): bigger is weaker for its weight. The halfway bodies fall between their parents.
 - **Not tested:** the made bodies drawn (no model of them exists: the creator, S2); motion of any kind; a build.
+- **Resting hands and natural variation** (`13e4a53`; Luis, November 9): a free hand whose bent thigh is near rests on it,
+  each side drawn from a seed. On the 450 test fits the stance's own cost rises by a median 0.0000 (over 0.01 in 30, the most
+  0.047), S a median 0.0000, not held 23 to 19; the prototype comparisons unchanged (Body 21541 / 0, the verdicts
+  identical). Drawn ([the sheets](Images/StanceAtlas/2026-11-09_resting/)): the squats' forearms rest on the knees; in the
+  half-kneel the front hand on its knee while the other hangs; rising, a hand on the front thigh. Read by me; not judged.
