@@ -34,6 +34,16 @@ namespace WonderGather.AnyBody
         /// <summary>The free limbs' pull toward the relaxed pose, per radian (FitOptions.RelaxFreeLimbs); 0: none, as the
         /// prototype. Set before the first evaluation.</summary>
         public double Relax;
+        /// <summary>The free limbs' rest, per side (natural variation: Luis, November 9; StanceFitter.Vary): the elbow's bend,
+        /// the arm's lift to the side, and the neck's turn, radians.</summary>
+        public readonly double[] RelaxElbow = { 15 * Pose.D2R, 15 * Pose.D2R }, RelaxAbd = { 10 * Pose.D2R, 10 * Pose.D2R };
+        public double RelaxNeck;
+        /// <summary>Resting hands (Luis, November 9): per side, whether a free hand rests on its own thigh, and where along it
+        /// (0 the hip, 1 the knee); the pull toward that place per metre (0: none). Set before the first evaluation.</summary>
+        public double Rest;
+        public readonly bool[] RestOn = new bool[2];
+        public readonly double[] RestAt = { .8, .8 };
+        public bool ArmBears(int side) => _armBears[side];
         readonly bool[] _isFree = new bool[Pose.Count];
         readonly bool[] _armBears = new bool[2], _toesBear = new bool[2];
 
@@ -236,19 +246,29 @@ namespace WonderGather.AnyBody
             // elbow a little bent; toes that bear nothing flat. Weak, so the weight's margin still sends an arm forward.
             if (Relax > 0)
             {
-                Relaxed(r, q, Pose.NRot, 0.0);
+                Relaxed(r, q, Pose.NRot, RelaxNeck);
                 for (int s = 0; s < 2; s++)
                 {
                     int o4 = 4 * s;
-                    if (!_armBears[s])
+                    if (!_armBears[s] && Rest > 0 && RestOn[s])
+                    {
+                        // (A hand resting on its thigh: the wrist at its place there; the arm untwisted. Luis, November 9.)
+                        var at = RestPlace(_k, s);
+                        var wr = _k[s == 0 ? Pt.WrL : Pt.WrR];
+                        r.Add((wr.X - at.X) * Rest);
+                        r.Add((wr.Y - at.Y) * Rest);
+                        r.Add((wr.Z - at.Z) * Rest);
+                        Relaxed(r, q, Pose.ShRotL + o4, 0.0);
+                    }
+                    else if (!_armBears[s])
                     {
                         Relaxed(r, q, Pose.ShFlexL + o4, 0.0);
                         // (Its sideways lift too, a little out from the body: without it, in a deep squat, where an arm
                         // hanging along a trunk leant far forward would go into the ground, the free arms went out to the
                         // sides like wings, 100 degrees, Nov 4: the judges' first finding. Now the way left is forward.)
-                        Relaxed(r, q, Pose.ShAbdL + o4, 10.0 * Pose.D2R);
+                        Relaxed(r, q, Pose.ShAbdL + o4, RelaxAbd[s]);
                         Relaxed(r, q, Pose.ShRotL + o4, 0.0);
-                        Relaxed(r, q, Pose.ElbL + o4, 15.0 * Pose.D2R);
+                        Relaxed(r, q, Pose.ElbL + o4, RelaxElbow[s]);
                     }
                     if (!_toesBear[s]) Relaxed(r, q, Pose.ToeL + s, 0.0);
                 }
@@ -272,6 +292,37 @@ namespace WonderGather.AnyBody
                 if (_isFree[Pose.ElbL + o4]) f[Pose.ElbL + o4] = 15.0 * Pose.D2R;
             }
             return f;
+        }
+
+        /// <summary>Where a free hand rests on its own thigh: toward the knee (RestAt along it), on its upper side (or its
+        /// front, where the thigh stands upright), the wrist a forearm's thickness off its skin.</summary>
+        DV3 RestPlace(Kin k, int s)
+        {
+            var hip = k[s == 0 ? Pt.HjL : Pt.HjR];
+            var kn = k[s == 0 ? Pt.KnL : Pt.KnR];
+            var axis = (kn - hip).Unit();
+            var up = new DV3(new Vec3(0, 0, 1));
+            var upAcross = up - axis * DV3.Dot(axis, up);
+            var ahead = k.R[BodyLinks.Hips].Col0;
+            var aheadAcross = ahead - axis * DV3.Dot(axis, ahead);
+            var n = (upAcross + aheadAcross * 0.3).Unit();
+            return DV3.Lerp(hip, kn, RestAt[s]) + n * (Body.ThighRadius + Body.ArmRadius);
+        }
+
+        /// <summary>Whether a free hand would rest on its thigh at this pose: its knee bent, and the place within its easy
+        /// reach and below its shoulder (values only).</summary>
+        public bool RestNear(double[] q, int s)
+        {
+            if (_armBears[s]) return false;
+            if (q[Pose.KneeL + 4 * s] < 45 * Pose.D2R) return false;
+            var dq = new D[Pose.Count];
+            for (int i = 0; i < Pose.Count; i++) dq[i] = q[i];
+            var k = new Kin();
+            Kinematics.Forward(Body, dq, k);
+            var at = RestPlace(k, s).V;
+            var sh = k[s == 0 ? Pt.ShL : Pt.ShR].V;
+            double dx = at.X - sh.X, dy = at.Y - sh.Y, dz = at.Z - sh.Z;
+            return Math.Sqrt(dx * dx + dy * dy + dz * dz) < .95 * (Body.UpperArmLength + Body.ForearmLength) && at.Z < sh.Z - .05;
         }
 
         void Relaxed(List<D> r, D[] q, int i, double at)

@@ -152,7 +152,9 @@ namespace WonderGather.Tests
                 {
                     if (only != null && Array.IndexOf(only.Split(','), s.Key) < 0) continue;
                     var st = AnyBody.StanceLibrary.Make(b, s.Family, s.Args);
-                    var fit = AnyBody.StanceFitter.Fit(b, st);
+                    // (Its free limbs resting, a free hand near its thigh resting on it, each side its own: Luis, November 5
+                    // and 9; the seed is the miner's, so its sides differ and its pictures stay the same from run to run.)
+                    var fit = AnyBody.StanceFitter.Fit(b, st, new AnyBody.FitOptions { Seed = Seed(who) });
                     var report = AnyBody.Statics.Report(b, st, fit.Q);
                     var problem = AnyBody.Statics.Build(b, fit.Q, st.Supports);
                     var reserve = solver.Solve(problem);
@@ -165,7 +167,9 @@ namespace WonderGather.Tests
                         hands.Bears[side] = false;
                         foreach (var sp in st.Supports)
                             if (sp.Side == side && (sp.Kind == AnyBody.SupportKind.Hand || sp.Kind == AnyBody.SupportKind.Forearm)) hands.Bears[side] = true;
-                        poser.Reach[side] = hands.Bears[side];
+                        // (Every arm drawn from the model's own shoulder to the fit's wrist, so that a hand bearing weight or
+                        // resting on a thigh is where the fit has it.)
+                        poser.Reach[side] = true;
                     }
                     // Held 40 frames, so the hung things settle, then seen from its four sides, the sun turned with the
                     // camera so that every side is lit alike.
@@ -203,6 +207,14 @@ namespace WonderGather.Tests
             File.WriteAllText(Path.Combine(folder, "log.txt"), log.ToString());
             Debug.Log(log.ToString());
             Assert.That(shots, Is.GreaterThan(0), "Nothing was drawn.");
+        }
+
+        // A seed from a name, the same on every runtime (string.GetHashCode is not).
+        private static int Seed(string name)
+        {
+            int h = 17;
+            foreach (char c in name) h = unchecked(h * 31 + c);
+            return h == 0 ? 1 : h;
         }
 
         private static float Lowest(Transform bone)

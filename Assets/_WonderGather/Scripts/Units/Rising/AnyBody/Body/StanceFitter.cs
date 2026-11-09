@@ -33,6 +33,14 @@ namespace WonderGather.AnyBody
         public bool RelaxFreeLimbs = true;
         /// <summary>The pull's weight per radian, when RelaxFreeLimbs is set.</summary>
         public double RelaxWeight = 0.1;
+        /// <summary>Resting hands (Luis, November 9: "Yes I agree with your suggestion"): with the free limbs relaxed, a free
+        /// hand whose thigh is near (its knee bent, the thigh within easy reach) rests on it, toward the knee; the pull per
+        /// metre (0: the hands hang).</summary>
+        public double RestWeight = 2.0;
+        /// <summary>Natural variation (Luis, November 9: "some level of natural variability that is permitted to sell the
+        /// reality"): a seed (a unit's and a fall's, or a body's) for each side's rest: where a hand rests, its elbow, its
+        /// lift, now and then a hand that hangs, the neck's turn. 0: none (both sides alike).</summary>
+        public int Seed;
     }
 
     public sealed class FitResult
@@ -72,6 +80,7 @@ namespace WonderGather.AnyBody
             // the stance keeps its basin and only what bears nothing moves. (In one pass, the pull sent some fits to
             // another basin: on the 450 test fits, 46 rose by more than 0.01 in the cost without the pull, Nov 4.)
             var relax = new StanceProblem(b, st) { Relax = opt.RelaxWeight };
+            var wants = Vary(relax, opt.Seed);
             // (And from the same pose with its free arms reached forward, the better kept: from the fit's own pose alone,
             // an arm that was out to the side stayed there, Long's deep flat squat, Nov 4.)
             var relaxed = Fit(relax, new FitOptions
@@ -79,12 +88,66 @@ namespace WonderGather.AnyBody
                 MaxIterations = opt.MaxIterations, FTol = opt.FTol, XTol = opt.XTol, GTol = opt.GTol, Start = plain.Q,
                 ExtraStarts = new[] { relax.FreeArmsForward(plain.Q) }, Restarts = 1, RestartCost = 0
             });
+            // Then a free hand whose thigh is near rests on it (a third fit, from the relaxed pose, no restart), kept when
+            // the stance itself costs little more for it.
+            if (opt.RestWeight > 0)
+            {
+                var rest = new StanceProblem(b, st) { Relax = opt.RelaxWeight, Rest = opt.RestWeight };
+                Vary(rest, opt.Seed);
+                bool any = false;
+                for (int s = 0; s < 2; s++)
+                {
+                    rest.RestOn[s] = wants[s] && rest.RestNear(relaxed.Q, s);
+                    any |= rest.RestOn[s];
+                }
+                if (any)
+                {
+                    var rested = Fit(rest, new FitOptions { MaxIterations = opt.MaxIterations, FTol = opt.FTol, XTol = opt.XTol, GTol = opt.GTol, Start = relaxed.Q, Restarts = 0 });
+                    if (StanceCost(b, st, rested.Q) <= StanceCost(b, st, relaxed.Q) + 0.05)
+                    {
+                        rested.Starts += relaxed.Starts;
+                        rested.Iterations += relaxed.Iterations;
+                        rested.Evaluations += relaxed.Evaluations;
+                        rested.JacobianEvaluations += relaxed.JacobianEvaluations;
+                        rested.Millis += relaxed.Millis;
+                        relaxed = rested;
+                    }
+                }
+            }
             relaxed.Starts += plain.Starts;
             relaxed.Iterations += plain.Iterations;
             relaxed.Evaluations += plain.Evaluations;
             relaxed.JacobianEvaluations += plain.JacobianEvaluations;
             relaxed.Millis += plain.Millis;
             return relaxed;
+        }
+
+        /// <summary>The cost of a pose against the stance alone (no pull of the free limbs).</summary>
+        public static double StanceCost(BodyModel b, Stance st, double[] q)
+        {
+            var p = new StanceProblem(b, st);
+            var r = new List<D>();
+            p.Evaluate(p.FreeOf(q), false, r);
+            return StanceProblem.Cost(r);
+        }
+
+        /// <summary>Each side's rest from the seed (natural variation, Luis, November 9): the elbow 10 to 25 degrees, the lift
+        /// 6 to 16, where a hand rests 0.6 to 0.9 of the way to the knee, the neck turned up to 6 degrees; a free hand rests
+        /// where it can 85 times in 100. Seed 0: both sides alike, resting where they can. Returns whether each hand would rest.</summary>
+        public static bool[] Vary(StanceProblem p, int seed)
+        {
+            var wants = new[] { true, true };
+            if (seed == 0) return wants;
+            ulong state = 0x9E3779B97F4A7C15UL * (ulong)(uint)seed + 0x632BE59BD9B4E019UL;
+            for (int s = 0; s < 2; s++)
+            {
+                p.RelaxElbow[s] = (10 + 15 * NextUnit(ref state)) * Pose.D2R;
+                p.RelaxAbd[s] = (6 + 10 * NextUnit(ref state)) * Pose.D2R;
+                p.RestAt[s] = .6 + .3 * NextUnit(ref state);
+                wants[s] = NextUnit(ref state) < .85;
+            }
+            p.RelaxNeck = (NextUnit(ref state) * 12 - 6) * Pose.D2R;
+            return wants;
         }
 
         public static FitResult Fit(StanceProblem p, FitOptions opt = null)
