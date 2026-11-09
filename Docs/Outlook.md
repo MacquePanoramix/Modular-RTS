@@ -58,6 +58,23 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 9, 2026 — the twenty-first (a new week; the last outlook five days old)
+
+- **Where we are.** S3b step 2, the getting up for any body. Since the twentieth: the stance solver is in the game (one
+  source); its first look (the solids) judged blind; Luis decided the free limbs rest (November 5); the bridge from a made
+  miner matches the prototype; the stances drawn on the three miners in their own place, their hands on the ground.
+- **Waiting on Luis:** nothing asked. His, unasked yet: whether the three miners keep their strengths or show their
+  builds; Long's head where its model draws it, once the weighed centres stand.
+- **Built, not in a build:** everything since October 30; nothing of it changes play yet (the newest build is still
+  October 30's).
+- **Put off, not to be forgotten:** the drawn stances' judges (round 2); bodies between and beyond the three; the
+  weighed centres' standing balance; the boots' whip; the port review's items for layers 2 and 3; the forearm-on-thigh
+  stances the game's body cannot touch; Long's bear crawl folding into a pike; mirror-perfect stands (layer 2's variation);
+  the physics body's own hand.
+- **Does the task serve the stage?** Yes, but the pictures are not yet the getting up. After this week's judges and the
+  made bodies, the next large step must be the one that moves a body through the stances (layers 2 and 3), so that Luis
+  has something to play; it should be designed and agreed before it is built.
+
 ### November 4, 2026 — the twentieth (evening; the hook's count at 803, agents' steps included)
 
 - **Where we are.** Still S3b step 2, the getting up for any body. Since the morning: strength from muscle is the
