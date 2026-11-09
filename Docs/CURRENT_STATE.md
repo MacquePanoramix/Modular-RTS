@@ -43,8 +43,8 @@
   to the fit's wrists: every such hand within about 2 cm of the ground. **November 9:** the drawn stances judged (round 2: [their findings](Reviews/2026-11-09_DrawnStances_Judges/); the
   bear crawl not real, the rise and the sit-up stiff, the resting arms alike); bodies between and beyond the three on the
   sheets with a line-up ([the sheets](Images/StanceAtlas/2026-11-09_made/)): the weak and the big need more of their
-  strength, some stances out of reach. **Asked of Luis (November 9):** the resting hands, on the knees or thighs where
-  near, or hanging. **Next:** the design of the step that moves a body through the stances (layers 2 and 3), with the
+  strength, some stances out of reach. **Decided by Luis (November 9):** a free hand near a knee or thigh rests on it, the
+  sides not mirrored, with natural variation ([his answer](Correspondence/2026-11-09_RESTING_HANDS_AND_THE_NEXT_STEP.md)). **Next:** the design of the step that moves a body through the stances (layers 2 and 3), with the
   judges' findings in it, agreed with Luis before it is built; the measured weight centres.
 
 - **Before (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his
