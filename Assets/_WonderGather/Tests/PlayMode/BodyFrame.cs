@@ -12,6 +12,81 @@ namespace WonderGather.Tests
         internal const float HipGives = 1.5f, AnkleGives = .7f, NeckHolds = 3;
         // PhysicalBody's knee under the rule before (Need), from the saved proportions (its own reads the live ones).
         internal const float KneeHolds = 1.6f;
+        // PhysicalBody's strength from muscle: what a shoulder, an elbow and a knee give at the reference thicknesses.
+        internal const float ShoulderMuscle = 121.3f, ElbowMuscle = 104.5f, KneeMuscle = 137.5f, ArmReference = .047f, LegReference = .046f;
+
+        // Bodies between and beyond the three miners, for the stance sheets (INTEGRATION.md 2.6): data bodies (no maker of
+        // bodies exists yet), each from a miner's numbers, or two mixed half and half, by the solver's rules for lengths,
+        // masses and shapes; their strengths then by the game's rule now: the arms and legs by muscle from their own
+        // thickness (a body scaled by k gets k cubed: a giant is weaker for its weight, Luis, November 3), the back by its
+        // need as the game reckons it, the neck by OwnBody's formula. Made since the muscle rule, they keep nothing of the
+        // rule before (unlike the three miners), so they show their build. miner: a miner's numbers by name.
+        public static System.Collections.Generic.List<(string Name, AnyBody.BodyModel Body)> MadeBodies(System.Func<string, AnyBody.MinerSource> miner)
+        {
+            var made = new System.Collections.Generic.List<(string, AnyBody.BodyModel)>();
+            void Add(string name, AnyBody.MinerSource source, AnyBody.BodyVariant v, double strength = 1)
+            {
+                v.Name = name;
+                v.Source = source.Name;
+                made.Add((name, WithGameStrength(AnyBody.BodyFactory.Make(source, v), source, strength)));
+            }
+            var small = miner("Small");
+            var lean = miner("Long");
+            var round = miner("Round");
+            Add("Small-Long", Mixed(small, lean), new AnyBody.BodyVariant());
+            Add("Long-Round", Mixed(lean, round), new AnyBody.BodyVariant());
+            Add("Round-Small", Mixed(round, small), new AnyBody.BodyVariant());
+            Add("Small x0.7", small, new AnyBody.BodyVariant { Scale = .7 });
+            Add("Toddler-like", small, new AnyBody.BodyVariant { LegMul = .85, MassMul = new System.Collections.Generic.Dictionary<string, double> { ["head"] = 1.3 } });
+            Add("Long x1.25", lean, new AnyBody.BodyVariant { Scale = 1.25 });
+            Add("Long, legs x1.2", lean, new AnyBody.BodyVariant { LegMul = 1.2 });
+            Add("Round, trunk x1.5", round, new AnyBody.BodyVariant { MassMul = new System.Collections.Generic.Dictionary<string, double> { ["trunk"] = 1.5 } });
+            Add("Small at S0.5", small, new AnyBody.BodyVariant(), .5);
+            Add("Round at S0.3", round, new AnyBody.BodyVariant(), .3);
+            return made;
+        }
+
+        // Every number of two miners, half and half.
+        private static AnyBody.MinerSource Mixed(AnyBody.MinerSource a, AnyBody.MinerSource b)
+        {
+            double M(double x, double y) => .5 * (x + y);
+            double[] Ms(double[] x, double[] y) => new[] { M(x[0], y[0]), M(x[1], y[1]) };
+            return new AnyBody.MinerSource
+            {
+                Name = a.Name + "-" + b.Name,
+                H = M(a.H, b.H), WH = M(a.WH, b.WH), Leg = M(a.Leg, b.Leg), A = M(a.A, b.A), Hl = M(a.Hl, b.Hl), Bl = M(a.Bl, b.Bl), Tl = M(a.Tl, b.Tl),
+                HW = M(a.HW, b.HW), TR = M(a.TR, b.TR), HeadRise = M(a.HeadRise, b.HeadRise), Sx = M(a.Sx, b.Sx), Sy = M(a.Sy, b.Sy), Sz = M(a.Sz, b.Sz),
+                Lu = M(a.Lu, b.Lu), Lf = M(a.Lf, b.Lf), BodyFront = M(a.BodyFront, b.BodyFront), HeadHalf = M(a.HeadHalf, b.HeadHalf),
+                Ra = M(a.Ra, b.Ra), Rl = M(a.Rl, b.Rl), Height = M(a.Height, b.Height),
+                MHips = M(a.MHips, b.MHips), MTrunk = M(a.MTrunk, b.MTrunk), MHead = M(a.MHead, b.MHead),
+                MUa = Ms(a.MUa, b.MUa), MFa = Ms(a.MFa, b.MFa), MTh = Ms(a.MTh, b.MTh), MSh = Ms(a.MSh, b.MSh), MFt = Ms(a.MFt, b.MFt), MTo = Ms(a.MTo, b.MTo),
+                CBack = M(a.CBack, b.CBack), CNeck = M(a.CNeck, b.CNeck), CShoulder = M(a.CShoulder, b.CShoulder), CElbow = M(a.CElbow, b.CElbow),
+                CHip = M(a.CHip, b.CHip), CKnee = M(a.CKnee, b.CKnee), CAnkle = M(a.CAnkle, b.CAnkle), CToe = M(a.CToe, b.CToe),
+            };
+        }
+
+        // A body's strengths by the game's rule now, from its own numbers (see MadeBodies). The back: the source's own back
+        // over what the solver reckons it asks, times what this body asks.
+        private static AnyBody.BodyModel WithGameStrength(AnyBody.BodyModel b, AnyBody.MinerSource source, double strength)
+        {
+            double arms = System.Math.Pow(b.ArmRadius / ArmReference, 3), legs = System.Math.Pow(b.ShinRadius / LegReference, 3);
+            double knee = KneeMuscle * legs * strength;
+            var asks = AnyBody.BodyFactory.PresentCaps(b);
+            var asksOfSource = AnyBody.BodyFactory.PresentCaps(AnyBody.BodyFactory.Make(source, new AnyBody.BodyVariant { Name = source.Name, Source = source.Name }));
+            b.CapBack = source.CBack / asksOfSource["back"] * asks["back"] * strength;
+            b.CapNeck = asks["neck"] * strength;
+            for (int s = 0; s < 2; s++)
+            {
+                b.CapShoulder[s] = ShoulderMuscle * arms * strength;
+                b.CapElbow[s] = ElbowMuscle * arms * strength;
+                b.CapKnee[s] = knee;
+                b.CapHip[s] = HipGives * knee;
+                b.CapAnkle[s] = AnkleGives * knee;
+                b.CapToe[s] = AnkleGives * OwnBody.ToeGives * knee;
+            }
+            b.Strength = strength;
+            return b;
+        }
 
         public static AnyBody.MinerSource SourceOf(GameObject unit)
         {

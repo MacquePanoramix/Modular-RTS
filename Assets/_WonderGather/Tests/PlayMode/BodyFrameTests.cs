@@ -78,6 +78,11 @@ namespace WonderGather.Tests
             Assert.That(Constant(typeof(OwnBody), "AnkleGives"), Is.EqualTo(BodyFrame.AnkleGives), "OwnBody.AnkleGives");
             Assert.That(Constant(typeof(OwnBody), "NeckHolds"), Is.EqualTo(BodyFrame.NeckHolds), "OwnBody.NeckHolds");
             Assert.That(Constant(typeof(PhysicalBody), "KneeHolds"), Is.EqualTo(BodyFrame.KneeHolds), "PhysicalBody.KneeHolds");
+            Assert.That(Constant(typeof(PhysicalBody), "ShoulderMuscle"), Is.EqualTo(BodyFrame.ShoulderMuscle), "PhysicalBody.ShoulderMuscle");
+            Assert.That(Constant(typeof(PhysicalBody), "ElbowMuscle"), Is.EqualTo(BodyFrame.ElbowMuscle), "PhysicalBody.ElbowMuscle");
+            Assert.That(Constant(typeof(PhysicalBody), "KneeMuscle"), Is.EqualTo(BodyFrame.KneeMuscle), "PhysicalBody.KneeMuscle");
+            Assert.That(Constant(typeof(PhysicalBody), "ArmReference"), Is.EqualTo(BodyFrame.ArmReference), "PhysicalBody.ArmReference");
+            Assert.That(Constant(typeof(PhysicalBody), "LegReference"), Is.EqualTo(BodyFrame.LegReference), "PhysicalBody.LegReference");
         }
 
         private static float Constant(System.Type type, string name)

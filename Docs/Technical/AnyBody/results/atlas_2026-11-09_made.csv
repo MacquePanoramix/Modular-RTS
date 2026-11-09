@@ -1,0 +1,118 @@
+body,stance,look,name,cost,status,S,held,worst,base_mm,contact_err_mm,penetration_mm,fit_ms,starts
+Small,stand,relaxed,"stand",0.1548,xtol,0.0625,1,"hipL kneeL ankleL hipR kneeR ankleR",78.4411,0.11,0,108.9502,5
+Small,quad,relaxed,"hands and knees",0.0291,ftol,0.1922,1,"neck shoulderL shoulderR elbowR",189.994,0,0,57.8792,3
+Small,bear_0.5,relaxed,"hands and feet D=0.50",0.1637,xtol,0.0673,1,"neck shoulderL elbowL kneeL ankleL shoulderR elbowR hipR ankleR",167.4746,0.11,0,131.3772,5
+Small,squat_0.35,relaxed,"squat h=0.35 flat",0.2743,xtol,0.1645,1,"hipL kneeL ankleL hipR kneeR ankleR",53.395,0.11,0,97.8771,5
+Small,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.1768,ftol,0.2414,1,"hipL kneeL ankleL hipR kneeR",12.3382,0.01,0,104.6189,5
+Small,tallkneel,relaxed,"tall kneel",0.0067,ftol,0.0604,1,"hipL kneeL hipR kneeR",15.369,0,0,350.7554,3
+Small,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.0859,xtol,0.0746,1,"hipL kneeL kneeR",21.7653,0.11,0,87.1017,5
+Small,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.1641,xtol,0.2727,1,"hipL ankleL toeR",70.0889,0.11,0,129.6756,5
+Small,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0908,ftol,0.5637,1,"shoulderL shoulderR",28.5192,0,0,347.6013,5
+Long,stand,relaxed,"stand",0.3514,xtol,0.0567,1,"hipL kneeL ankleL hipR kneeR ankleR",94.9375,0.17,0,116.4493,5
+Long,quad,relaxed,"hands and knees",0.0267,ftol,0.1949,1,"neck shoulderL shoulderR elbowR",241.2088,0,0,121.32,3
+Long,bear_0.5,relaxed,"hands and feet D=0.50",0.4179,ftol,0.0513,1,"shoulderL elbowL ankleL shoulderR elbowR hipR ankleR",195.2926,0.17,0,148.9111,5
+Long,squat_0.35,relaxed,"squat h=0.35 flat",0.4899,xtol,0.1783,1,"hipL kneeL hipR kneeR",36.5212,0.17,0,109.6654,5
+Long,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.179,ftol,0.269,1,"kneeL kneeR",15.8002,0,0,146.1145,5
+Long,tallkneel,relaxed,"tall kneel",0.0039,ftol,0.0322,1,"hipL kneeL hipR kneeR",28.5513,0,0,295.9587,3
+Long,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.1785,xtol,0.0391,1,"shoulderL kneeL kneeR",41.6147,0.17,0,96.1288,5
+Long,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.2717,xtol,0.2184,1,"kneeL kneeR toeR",47.3854,0.17,0,118.0469,5
+Long,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0686,ftol,0.146,1,"neck hipL shoulderR hipR",31.4806,0,0,304.0316,5
+Round,stand,relaxed,"stand",0.2032,xtol,0.0612,1,"hipL kneeL ankleL hipR kneeR ankleR",92.0292,0.13,0,108.3885,5
+Round,quad,relaxed,"hands and knees",0.0387,ftol,0.2403,1,"neck shoulderL shoulderR",140.7872,0,0,46.2271,3
+Round,bear_0.5,relaxed,"hands and feet D=0.50",0.2261,xtol,0.0673,1,"neck shoulderL hipL kneeL shoulderR elbowR hipR kneeR ankleR",214.0391,0.13,0,128.6079,5
+Round,squat_0.35,relaxed,"squat h=0.35 flat",0.3459,xtol,0.1752,1,"hipL kneeL ankleL hipR kneeR ankleR",47.5094,0.12,0,128.071,5
+Round,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.2124,ftol,0.2821,1,"kneeL ankleL kneeR",12.5233,0,0,134.6961,5
+Round,tallkneel,relaxed,"tall kneel",0.0127,ftol,0.0892,1,"hipL kneeL hipR kneeR",16.9571,0,0,242.8304,3
+Round,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.1192,xtol,0.1078,1,"hipL kneeL kneeR",27.0038,0.13,0,98.0233,5
+Round,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.2065,xtol,0.2532,1,"hipL kneeL toeR",75.5163,0.13,0,131.2756,5
+Round,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0643,ftol,0.3977,1,"shoulderL shoulderR",96.5028,0,0,329.3628,5
+Small-Long,stand,relaxed,"stand",0.2448,xtol,0.0678,1,"hipL kneeL ankleL hipR kneeR ankleR",87.6171,0.14,0,112.7272,5
+Small-Long,quad,relaxed,"hands and knees",0.0296,ftol,0.1921,1,"neck shoulderL shoulderR elbowR",216.8611,0,0,88.5872,3
+Small-Long,bear_0.5,relaxed,"hands and feet D=0.50",0.2882,xtol,0.0672,1,"neck shoulderL elbowL kneeL ankleL shoulderR elbowR hipR ankleR",184.6031,0.14,0,118.2321,5
+Small-Long,squat_0.35,relaxed,"squat h=0.35 flat",0.4032,xtol,0.1994,1,"hipL kneeL hipR kneeR",54.6715,0.14,0,102.426,5
+Small-Long,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.2186,ftol,0.2947,1,"kneeL ankleL hipR kneeR",14.0563,0,0,118.9638,5
+Small-Long,tallkneel,relaxed,"tall kneel",0.0057,ftol,0.049,1,"hipL kneeL hipR kneeR",20.747,0,0,175.7729,3
+Small-Long,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.1306,xtol,0.0648,1,"hipL kneeL ankleL kneeR",26.5062,0.14,0,117.9197,5
+Small-Long,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.2251,xtol,0.298,1,"hipL ankleL toeR",67.7506,0.14,0,125.2889,5
+Small-Long,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0791,ftol,0.5126,1,"shoulderL shoulderR",40.5545,0,0,407.6904,5
+Long-Round,stand,relaxed,"stand",0.2732,xtol,0.0647,1,"hipL kneeL ankleL kneeR ankleR",94.3215,0.15,0,135.0532,5
+Long-Round,quad,relaxed,"hands and knees",0.0322,ftol,0.2145,1,"neck shoulderL shoulderR elbowR",246.6898,0,0,52.6136,3
+Long-Round,bear_0.5,relaxed,"hands and feet D=0.50",0.3315,xtol,0.0715,1,"neck shoulderL elbowL hipL kneeL shoulderR elbowR hipR kneeR ankleR",203.0664,0.15,0,130.0057,5
+Long-Round,squat_0.35,relaxed,"squat h=0.35 flat",0.4302,xtol,0.1922,1,"hipL kneeL hipR kneeR",45.8082,0.15,0,106.7051,5
+Long-Round,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.1823,ftol,0.2027,1,"hipL kneeL hipR kneeR",16.4354,0.01,0,201.6713,5
+Long-Round,tallkneel,relaxed,"tall kneel",0.0078,ftol,0.068,1,"hipL kneeL hipR kneeR",21.4751,0,0,482.9071,3
+Long-Round,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.1485,xtol,0.0798,1,"hipL kneeL kneeR",28.9436,0.15,0,98.3034,5
+Long-Round,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.2564,xtol,0.2582,1,"hipL kneeL toeR",66.8249,0.15,0,123.681,5
+Long-Round,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0681,ftol,0.3692,1,"shoulderL shoulderR",59.6283,0,0,325.6112,5
+Round-Small,stand,relaxed,"stand",0.1769,xtol,0.0572,1,"hipL kneeL ankleL hipR kneeR ankleR",82.6658,0.12,0,130.0031,5
+Round-Small,quad,relaxed,"hands and knees",0.0322,ftol,0.217,1,"neck shoulderR elbowR",220.2776,0,0,37.3208,3
+Round-Small,bear_0.5,relaxed,"hands and feet D=0.50",0.1907,xtol,0.0671,1,"neck shoulderL kneeL ankleL shoulderR elbowR hipR ankleR",195.62,0.12,0,138.0818,5
+Round-Small,squat_0.35,relaxed,"squat h=0.35 flat",0.291,xtol,0.1509,1,"hipL kneeL ankleL hipR kneeR ankleR",42.3632,0.12,0,98.3912,5
+Round-Small,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.173,ftol,0.2436,1,"kneeL ankleL kneeR",12.4431,0.01,0,190.2245,5
+Round-Small,tallkneel,relaxed,"tall kneel",0.0082,ftol,0.0734,1,"hipL kneeL hipR kneeR",16.6654,0,0,125.0023,3
+Round-Small,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.0991,ftol,0.083,1,"hipL kneeL ankleL kneeR",24.6375,0.12,0,91.4002,5
+Round-Small,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.1678,xtol,0.2163,1,"hipL kneeL toeR",75.2423,0.12,0,129.0523,5
+Round-Small,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0744,ftol,0.3561,1,"shoulderL shoulderR",59.2845,0,0,157.9665,5
+Small_x0.7,stand,relaxed,"stand",0.0756,xtol,0.0358,1,"hipL kneeL ankleL hipR kneeR ankleR",59.9805,0.08,0,124.4438,5
+Small_x0.7,quad,relaxed,"hands and knees",0.0254,ftol,0.1922,1,"neck shoulderR elbowR",131.4457,0,0,85.7159,3
+Small_x0.7,bear_0.5,relaxed,"hands and feet D=0.50",0.0793,xtol,0.0421,1,"neck shoulderL elbowL ankleL shoulderR elbowR hipR ankleR",128.6823,0.08,0,124.7703,5
+Small_x0.7,squat_0.35,relaxed,"squat h=0.35 flat",0.1454,xtol,0.1205,1,"back hipL kneeL ankleL hipR",23.8331,0.08,0,108.3512,5
+Small_x0.7,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.3443,ftol,0.3653,1,"kneeL kneeR",16.0455,0.02,0,85.4721,5
+Small_x0.7,tallkneel,relaxed,"tall kneel",0.0039,ftol,0.0397,1,"hipL kneeL hipR kneeR",11.7015,0,0,162.8995,3
+Small_x0.7,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.0425,xtol,0.0479,1,"hipL kneeL ankleL kneeR",15.6695,0.08,0,54.5853,3
+Small_x0.7,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.0731,xtol,0.167,1,"hipL ankleL toeR",48.4323,0.08,0,120.3242,5
+Small_x0.7,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0949,ftol,0.3634,1,"shoulderL shoulderR",21.6821,0,0,412.0883,5
+Toddler-like,stand,relaxed,"stand",0.1168,xtol,0.0458,1,"hipL kneeL ankleL hipR kneeR ankleR",84.1217,0.1,0,122.1648,5
+Toddler-like,quad,relaxed,"hands and knees",0.0247,ftol,0.1598,1,"neck shoulderL elbowR",185.6385,0,0,56.1473,3
+Toddler-like,bear_0.5,relaxed,"hands and feet D=0.50",0.1386,xtol,0.1551,1,"neck elbowL shoulderR hipR",141.0058,0.1,0,127.3484,5
+Toddler-like,squat_0.35,relaxed,"squat h=0.35 flat",0.204,xtol,0.1316,1,"back hipL kneeL ankleL hipR kneeR ankleR",51.956,0.1,0,104.4708,5
+Toddler-like,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.5676,ftol,0.4861,1,"kneeL kneeR",22.226,0.04,0,85.319,5
+Toddler-like,tallkneel,relaxed,"tall kneel",0.0072,ftol,0.065,1,"hipL kneeL hipR kneeR",13.1921,0,0,231.7917,3
+Toddler-like,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.0679,xtol,0.0766,1,"hipL kneeL ankleL kneeR",21.213,0.1,0,97.0617,5
+Toddler-like,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.1225,xtol,0.2199,1,"hipL ankleL toeR",72.1905,0.1,0,118.9315,5
+Toddler-like,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.1324,ftol,0.6875,1,"shoulderL shoulderR",15.1622,0,0,266.2732,5
+Long_x1.25,stand,relaxed,"stand",0.5547,xtol,0.0878,1,"hipL kneeL ankleL hipR kneeR ankleR",118.1848,0.21,0,115.7719,5
+Long_x1.25,quad,relaxed,"hands and knees",0.0343,ftol,0.1917,1,"neck shoulderL hipL kneeL shoulderR elbowR",307.3339,0,0,68.3107,3
+Long_x1.25,bear_0.5,relaxed,"hands and feet D=0.50",0.5798,ftol,0.0831,1,"shoulderL elbowL hipL ankleL shoulderR elbowR ankleR",256.6711,0.21,0,120.6439,5
+Long_x1.25,squat_0.35,relaxed,"squat h=0.35 flat",0.8764,xtol,0.3099,1,"hipL kneeL hipR kneeR",80.2926,0.21,0,123.2986,5
+Long_x1.25,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.3328,ftol,0.3196,1,"hipL kneeL hipR kneeR",23.0088,0.01,0,110.9702,5
+Long_x1.25,tallkneel,relaxed,"tall kneel",0.0074,ftol,0.0517,1,"hipL kneeL hipR kneeR",32.1608,0,0,265.3625,3
+Long_x1.25,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.2912,xtol,0.0851,1,"hipL kneeL ankleL kneeR",38.707,0.21,0,94.324,5
+Long_x1.25,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.545,xtol,0.4196,1,"hipL kneeL toeR",64.9295,0.21,0,117.1559,5
+Long_x1.25,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0865,ftol,0.2599,1,"hipL shoulderR hipR",68.213,0,0,417.9562,5
+Long_legs_x1.2,stand,relaxed,"stand",0.4972,xtol,0.0844,1,"hipL kneeL ankleL hipR kneeR ankleR",96.251,0.2,0,119.3378,5
+Long_legs_x1.2,quad,relaxed,"hands and knees",0.041,ftol,0.2389,1,"neck shoulderL kneeL shoulderR elbowR",249.3986,0,0,90.1113,3
+Long_legs_x1.2,bear_0.5,relaxed,"hands and feet D=0.50",0.6387,xtol,0.0926,1,"shoulderL elbowL hipL ankleL shoulderR elbowR ankleR",190.1406,0.18,0,147.0931,5
+Long_legs_x1.2,squat_0.35,relaxed,"squat h=0.35 flat",0.8729,xtol,0.329,1,"hipL kneeL hipR kneeR",43.9737,0.19,0,124.8778,5
+Long_legs_x1.2,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.3445,ftol,0.3255,1,"hipL kneeL hipR kneeR",17.806,0.02,0,101.3885,5
+Long_legs_x1.2,tallkneel,relaxed,"tall kneel",0.0049,max iterations,0.0326,1,"shoulderL hipL kneeL hipR kneeR",31.9971,0,0,351.8297,3
+Long_legs_x1.2,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.2635,xtol,0.0761,1,"hipL kneeL ankleL kneeR",34.4245,0.2,0,90.9067,5
+Long_legs_x1.2,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.4564,xtol,0.4005,1,"hipL ankleL toeR",60.7072,0.2,0,119.9315,5
+Long_legs_x1.2,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0761,ftol,0.191,1,"hipL shoulderR hipR",65.5014,0,0,366.6893,5
+Round_trunk_x1.5,stand,relaxed,"stand",0.2024,xtol,0.0598,1,"hipL kneeL ankleL hipR kneeR ankleR",87.2802,0.13,0,119.7876,5
+Round_trunk_x1.5,quad,relaxed,"hands and knees",0.0401,ftol,0.2442,1,"neck shoulderL shoulderR",139.2206,0,0,53.4021,3
+Round_trunk_x1.5,bear_0.5,relaxed,"hands and feet D=0.50",0.2568,xtol,0.0947,1,"neck shoulderL hipL kneeL shoulderR elbowR hipR ankleR",196.8046,0.13,0,120.9914,5
+Round_trunk_x1.5,squat_0.35,relaxed,"squat h=0.35 flat",0.3353,xtol,0.1665,1,"hipL kneeL ankleL hipR kneeR ankleR",40.3265,0.13,0,93.1319,5
+Round_trunk_x1.5,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.1969,ftol,0.2674,1,"kneeL ankleL kneeR",12.5887,0,0,159.8045,5
+Round_trunk_x1.5,tallkneel,relaxed,"tall kneel",0.0122,ftol,0.0947,1,"hipL kneeL hipR kneeR",17.2733,0,0,332.8804,3
+Round_trunk_x1.5,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.1181,xtol,0.1045,1,"hipL kneeL kneeR",27.4351,0.13,0,94.9622,5
+Round_trunk_x1.5,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.1982,xtol,0.2446,1,"hipL kneeL toeR",69.0074,0.13,0,111.9667,5
+Round_trunk_x1.5,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.0765,ftol,0.4265,1,"shoulderL shoulderR",80.3635,0,0,395.1253,5
+Small_at_S0.5,stand,relaxed,"stand",0.1627,xtol,0.0724,1,"hipL kneeL ankleL hipR kneeR ankleR",84.3199,0.11,0,116.9481,5
+Small_at_S0.5,quad,relaxed,"hands and knees",0.0925,ftol,0.341,1,"neck shoulderL elbowL shoulderR",185.6177,0,0,104.3202,5
+Small_at_S0.5,bear_0.5,relaxed,"hands and feet D=0.50",0.1758,xtol,0.0802,1,"shoulderL elbowL ankleL shoulderR elbowR hipR ankleR",180.7061,0.11,0,142.8215,5
+Small_at_S0.5,squat_0.35,relaxed,"squat h=0.35 flat",0.48,xtol,0.2875,1,"hipL kneeL ankleL hipR kneeR ankleR",67.6251,0.11,0,119.9523,5
+Small_at_S0.5,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.3808,ftol,0.309,1,"hipL kneeL hipR kneeR",20.7292,0.02,0,79.0881,5
+Small_at_S0.5,tallkneel,relaxed,"tall kneel",0.0142,ftol,0.0849,1,"hipL kneeL hipR kneeR",12.9992,0,0,489.8214,3
+Small_at_S0.5,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.1049,xtol,0.133,1,"hipL kneeL ankleL kneeR",19.0611,0.11,0,80.1533,5
+Small_at_S0.5,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.2957,xtol,0.5644,1,"hipL ankleL toeR",65.1658,0.11,0,144.1433,5
+Small_at_S0.5,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.1278,ftol,1.1635,1,"shoulderL shoulderR",38.6131,0,0,176.8393,5
+Round_at_S0.3,stand,relaxed,"stand",0.2236,xtol,0.0911,1,"hipL kneeL ankleL hipR kneeR ankleR",95.0573,0.13,0,117.8648,5
+Round_at_S0.3,quad,relaxed,"hands and knees",0.2832,ftol,0.6359,1,"neck shoulderL shoulderR",243.3391,0.01,0,139.9029,5
+Round_at_S0.3,bear_0.5,relaxed,"hands and feet D=0.50",0.2592,xtol,0.1141,1,"neck shoulderL hipL kneeL ankleL shoulderR kneeR ankleR",207.0839,0.13,0,164.7159,5
+Round_at_S0.3,squat_0.35,relaxed,"squat h=0.35 flat",0.9906,xtol,0.4465,1,"back hipL kneeL hipR kneeR",69.1283,0.12,0,92.0772,5
+Round_at_S0.3,squat_0.4_toes,relaxed,"squat h=0.40 toes",0.852,ftol,0.4736,1,"hipL kneeL hipR kneeR",26.4655,0.03,0,81.213,5
+Round_at_S0.3,tallkneel,relaxed,"tall kneel",0.0513,ftol,0.2069,1,"hipL kneeL hipR kneeR",12.1321,0,0,341.8419,5
+Round_at_S0.3,halfkneel_L,relaxed,"half-kneel (left foot forward), hands: none, back toes laid",0.2044,xtol,0.2962,1,"kneeL ankleL kneeR",19.746,0.13,0,85.8603,5
+Round_at_S0.3,halfkneel_up_0.7_L,relaxed,"rising from the half-kneel h=0.70, hands: none",0.5888,xtol,0.8803,1,"hipL ankleL toeR",66.9849,0.12,0,112.1512,5
+Round_at_S0.3,situp_25_hands,relaxed,"sitting up, the trunk 25 deg from the ground, hands behind",0.173,ftol,1.0336,1,"shoulderL shoulderR",108.7575,0,0,502.6673,5

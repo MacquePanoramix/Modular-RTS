@@ -169,7 +169,34 @@ def main():
             stance_sheet(folder, sheets, stance, names[stance], bodies, rows, looks)
         for body in bodies:
             body_page(folder, sheets, body, stances, names, rows, looks=looks)
+        lineup_pages(folder, sheets)
     print(f'{len(stances)} stance sheets, {len(bodies)} body pages in {sheets}')
+
+
+def lineup_pages(folder, sheets):
+    """Every body standing side by side at one scale (StanceAtlasCapture -atlasLineup 1), each named under it."""
+    for view, words in (('front', 'from the front'), ('three_quarter', 'from three quarters')):
+        p = os.path.join(folder, f'lineup_{view}')
+        if not os.path.exists(p + '.ppm') and not os.path.exists(p + '.png'):
+            continue
+        if os.path.exists(p + '.ppm'):
+            Image.open(p + '.ppm').save(p + '.png')
+            os.remove(p + '.ppm')
+        im = Image.open(p + '.png').convert('RGB')
+        page = Image.new('RGB', (im.width + 2 * PAD, im.height + HEADER + 60), PAPER)
+        d = ImageDraw.Draw(page)
+        d.text((PAD, 10), f'Every body standing, at one scale, {words}', font=font(24, True), fill=INK)
+        d.text((PAD, 42), 'the three miners, then the made bodies (between and beyond them)', font=font(15), fill=FAINT)
+        page.paste(im, (PAD, HEADER))
+        places = p + '.csv'
+        if os.path.exists(places):
+            with open(places, newline='', encoding='utf-8') as f:
+                for k, r in enumerate(csv.DictReader(f)):
+                    x = PAD + float(r['u']) * im.width
+                    name = r['body'].replace('_', ' ')
+                    w = d.textlength(name, font=font(13))
+                    d.text((x - w / 2, HEADER + im.height + 6 + 18 * (k % 2)), name, font=font(13, True), fill=INK)
+        page.save(os.path.join(sheets, f'lineup_{view}.png'), optimize=True)
 
 
 if __name__ == '__main__':

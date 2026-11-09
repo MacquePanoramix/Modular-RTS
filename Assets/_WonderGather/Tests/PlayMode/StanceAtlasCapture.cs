@@ -62,7 +62,20 @@ namespace WonderGather.Tests
             string folder = CaptureTools.Argument("-atlasOut") ?? Path.Combine("Captures", "Atlas", DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             string tiles = Path.Combine(folder, "tiles");
             Directory.CreateDirectory(tiles);
-            var bodies = (CaptureTools.Argument("-atlasBodies") ?? "Small,Long,Round").Split(',');
+            // The bodies: the three miners by name, "made" for the ten made bodies (BodyFrame.MadeBodies), or those by name.
+            var madeBodies = BodyFrame.MadeBodies(AnyBody.BodyFactory.Miner);
+            var bodies = new List<(string Key, AnyBody.BodyModel Body)>();
+            foreach (string name in (CaptureTools.Argument("-atlasBodies") ?? "Small,Long,Round").Split(','))
+            {
+                string n = name.Trim();
+                if (n == "made") foreach (var m in madeBodies) bodies.Add((Key(m.Name), m.Body));
+                else
+                {
+                    var found = madeBodies.Find(m => Key(m.Name) == Key(n));
+                    bodies.Add((Key(n), found.Body ?? AnyBody.BodyFactory.Make(n)));
+                }
+            }
+            var lookNames = (CaptureTools.Argument("-atlasLooks") ?? string.Join(",", Looks)).Split(',');
             var only = CaptureTools.Argument("-atlasStances");
             var stances = new List<(string Key, string Family, object[] Args)>();
             foreach (var s in FirstLook) if (only == null || Array.IndexOf(only.Split(','), s.Key) >= 0) stances.Add(s);
@@ -71,15 +84,14 @@ namespace WonderGather.Tests
             var csv = new StringBuilder("body,stance,look,name,cost,status,S,held,worst,base_mm,contact_err_mm,penetration_mm,fit_ms,starts\n");
             var log = new StringBuilder();
             var solver = new AnyBody.ReserveSolver();
-            foreach (string body in bodies)
+            foreach (var (body, b) in bodies)
             {
-                var b = AnyBody.BodyFactory.Make(body.Trim());
                 // One scale for all of a body's stances: its standing height, times 1.25, fills the frame.
                 var standing = AnyBody.StanceFitter.Fit(b, AnyBody.StanceLibrary.Make(b, "stand"));
                 float height = (float)Highest(b, standing.Q);
                 float distance = .5f * 1.25f * height / Mathf.Tan(.5f * FieldOfView * Mathf.Deg2Rad);
                 foreach (var s in stances)
-                foreach (var look in Looks)
+                foreach (var look in lookNames)
                 {
                     var st = AnyBody.StanceLibrary.Make(b, s.Family, s.Args);
                     // As fitted; and the free limbs relaxed (FitOptions.RelaxFreeLimbs), side by side for the judges and Luis.
@@ -112,11 +124,63 @@ namespace WonderGather.Tests
                     yield return null;
                 }
             }
+            // The line-up (-atlasLineup 1): every body standing, side by side at one scale, from its front and its left.
+            int lineup = 0;
+            if (CaptureTools.Argument("-atlasLineup") == "1")
+            {
+                var stood = new List<GameObject>();
+                float x = 0, tallest = 0;
+                foreach (var (body, b) in bodies)
+                {
+                    var st = AnyBody.StanceLibrary.Make(b, "stand");
+                    var fit = AnyBody.StanceFitter.Fit(b, st);
+                    var solids = Solids(b, fit.Q, AnyBody.Statics.Build(b, fit.Q, st.Supports));
+                    float width = Mathf.Max(.5f, 2.2f * (float)(b.HipsRadius + b.HipHalfWidth));
+                    solids.transform.position = new Vector3(x + .5f * width, 0, 0);
+                    x += width + .15f;
+                    tallest = Mathf.Max(tallest, (float)Highest(b, fit.Q));
+                    stood.Add(solids);
+                }
+                var centre = new Vector3(.5f * (x - .15f), .5f * tallest, 0);
+                // (The ground under the whole row.)
+                var ground = GameObject.Find("Atlas ground");
+                if (ground != null)
+                {
+                    ground.transform.position = new Vector3(centre.x, -.001f, 0);
+                    ground.transform.localScale = new Vector3(x + 4, .001f, x + 4);
+                }
+                // (Framed so that the row and its tallest body fit a picture three times as wide as it is high.)
+                float half = Mathf.Tan(.5f * FieldOfView * Mathf.Deg2Rad);
+                float distance = Mathf.Max(.5f * 1.25f * tallest / half, .5f * 1.05f * x / (3 * half));
+                foreach (var (name, turn) in new[] { ("front", 0f), ("three_quarter", -35f) })
+                {
+                    Vector3 side = Quaternion.AngleAxis(turn, Vector3.up) * Vector3.forward;
+                    Vector3 from = Quaternion.AngleAxis(-8, Vector3.Cross(Vector3.up, side)) * side;
+                    camera.transform.position = centre + from * distance;
+                    camera.transform.rotation = Quaternion.LookRotation(-from, Vector3.up);
+                    Vector3 looking = -from;
+                    light.transform.rotation = Quaternion.LookRotation(Quaternion.AngleAxis(40, Vector3.up) * Quaternion.AngleAxis(50, Vector3.Cross(Vector3.up, looking)) * looking, Vector3.up);
+                    yield return null;
+                    CaptureTools.Render(camera, Path.Combine(folder, "lineup_" + name), 3 * Tile, Tile);
+                    // (Where each body stands in the picture, for its name under it: the share of the width from the left.)
+                    camera.aspect = 3;
+                    var places = new StringBuilder("body,u\n");
+                    for (int i = 0; i < stood.Count; i++)
+                        places.Append(bodies[i].Key).Append(',').Append(F(camera.WorldToViewportPoint(stood[i].transform.position).x)).Append('\n');
+                    camera.ResetAspect();
+                    File.WriteAllText(Path.Combine(folder, "lineup_" + name + ".csv"), places.ToString());
+                    lineup++;
+                }
+                foreach (var g in stood) UnityEngine.Object.Destroy(g);
+            }
             File.WriteAllText(Path.Combine(folder, "figures.csv"), csv.ToString());
             File.WriteAllText(Path.Combine(folder, "log.txt"), log.ToString());
             Debug.Log(log.ToString());
-            Assert.That(Directory.GetFiles(tiles, "*.ppm").Length, Is.EqualTo(bodies.Length * stances.Count * Looks.Length * Views.Length), "A tile was not written.");
+            Assert.That(Directory.GetFiles(tiles, "*.ppm").Length, Is.EqualTo(bodies.Count * stances.Count * lookNames.Length * Views.Length), "A tile was not written.");
         }
+
+        // A body's name as a file's (no spaces or commas).
+        private static string Key(string name) => name.Replace(", ", "_").Replace(" ", "_").Replace(",", "_");
 
         // The stage: a level ground with a faint 10 cm grid, a sun, a soft sky and a camera of little perspective.
         private Camera Studio(out Light light)
