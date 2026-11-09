@@ -4791,3 +4791,18 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   -1, -19 mm, the bear crawl -7, +11, -5, the sit-up -13, -20, -9; the sheets in Images are these.
 - **Not tested:** the drawn stances judged (round 2 of the judges); bodies other than the three; any of it in a build or
   in motion. The wrist is the drawing's only: the body the physics moves has no hand of its own yet.
+
+## S3b step 2 — the drawn stances judged; bodies between and beyond the three (November 9)
+
+- **Judges, round 2** (three fresh judges and a referee, on the drawn sheets: [the round](Reviews/2026-11-09_DrawnStances_Judges/)):
+  the stand, the tall kneel and hands and knees read as each miner's own; the bear crawl reads as a pike with the head
+  buried on all three (not real); Long's coat lies on the ground or bundles in the deep poses; sitting up, the head hangs
+  limp; the rise is the same inert-armed stride on all three; the resting arms hang straight and alike everywhere; the squat
+  on the toes cannot be told from the flat one.
+- **The made bodies** (`53f388d`, `BodyFrame.MadeBodies`): ten data bodies between and beyond the miners, their strength by
+  the game's rule from their own build, fitted to the nine stances, resting, as solids
+  ([the sheets and the line-up](Images/StanceAtlas/2026-11-09_made/)). All fits held except where the strength is not
+  there: Small at half strength and Round at 0.3 need more than all of it to sit up on their hands (S 1.16, 1.03); Round at
+  0.3 needs 0.88 to rise from the half-kneel and 0.64 on hands and knees; Long x1.25 needs 0.42 to rise from the
+  half-kneel (Long 0.22): bigger is weaker for its weight. The halfway bodies fall between their parents.
+- **Not tested:** the made bodies drawn (no model of them exists: the creator, S2); motion of any kind; a build.

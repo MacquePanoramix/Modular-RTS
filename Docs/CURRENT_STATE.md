@@ -1,6 +1,6 @@
 # Wonder Gather — Current State
 
-**Updated:** November 5, 2026.
+**Updated:** November 9, 2026.
 
 - **Now (November 4): the body's rules, as Luis answered them on November 3** ([his
   answers](Correspondence/2026-11-03_STRENGTH_SIZE_AND_EVERYTHING_ON_GITHUB.md)): strength from muscle, each region's
@@ -40,8 +40,12 @@
   ([his answer](Correspondence/2026-11-05_FREE_LIMBS_RESTING.md)); now the solver's default. **November 5, night: the bridge from a made miner** (`BodyFrame`, as the
   prototype has the three) **and the stances on the drawn miners** in their own place ([the sheets](Images/StanceAtlas/2026-11-05_drawn/)):
   the hands that bear weight laid on the ground by a drawn wrist, and their arms drawn from the model's own shoulders
-  to the fit's wrists: every such hand within about 2 cm of the ground. **Next:** the drawn stances judged (round 2); bodies between and beyond the three; the measured weight
-  centres; layer 3, the controller.
+  to the fit's wrists: every such hand within about 2 cm of the ground. **November 9:** the drawn stances judged (round 2: [their findings](Reviews/2026-11-09_DrawnStances_Judges/); the
+  bear crawl not real, the rise and the sit-up stiff, the resting arms alike); bodies between and beyond the three on the
+  sheets with a line-up ([the sheets](Images/StanceAtlas/2026-11-09_made/)): the weak and the big need more of their
+  strength, some stances out of reach. **Asked of Luis (November 9):** the resting hands, on the knees or thighs where
+  near, or hanging. **Next:** the design of the step that moves a body through the stances (layers 2 and 3), with the
+  judges' findings in it, agreed with Luis before it is built; the measured weight centres.
 
 - **Before (November 3): Luis decided the direction** (the capacity-driven getting up, layers 0 to 4; [his
   answers](Correspondence/2026-11-03_THE_DIRECTION_FOR_ANY_BODY.md)). **Built on the work branch:** step 0, the engine's
