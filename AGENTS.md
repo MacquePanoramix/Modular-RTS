@@ -35,3 +35,10 @@ Ordinary reversible experiments should stay lightweight.
 For silent + consequential changes—especially save migrations, stable-ID/GUID semantics, civilization-graph meaning, destructive data transforms, or future multiplayer authority—consider a fresh independent reviewer who did not author the candidate.
 
 Do not introduce multiplayer, DOTS, active ragdolls, or another major civilization framework without a corresponding milestone request.
+
+## Session cost
+
+The Game Director watches the usage of his plan (November 10, 2026: "please automatically compact the session whenever it starts to cost more usage in a more noticeable way and make sure all future agents and versions of yourself or other models remember that").
+The project's Claude Code settings compact a conversation by themselves once it reaches 250,000 tokens (`autoCompactWindow` in `.claude/settings.json`); keep that setting, and say so if a session is seen past it.
+Keep the state of the work in files (`Docs/Handoff.md`, `Docs/CURRENT_STATE.md`, `Docs/Outlook.md`) so that a compaction or a fresh session loses nothing, and keep the conversation small: search before fetching a whole page, read logs through a filter, and give heavy reading to cheaper subagents.
+Quality still comes before speed and before cost.

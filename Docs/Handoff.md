@@ -15,6 +15,10 @@ this page. Luis's preferences and the lessons already paid for are in the assist
   of the plan's limits, until November 16, and it draws usage much faster than Opus 5.5. After that, or whenever Luis
   says, the work goes on with Opus 5.5 at max thinking. Subagents take the session's model unless told otherwise: pass
   `model: 'opus'` for builders and reviewers and `model: 'sonnet'` for judges.
+- **The conversation is kept small** (Luis, November 10: [his message](Correspondence/2026-11-10_COMPACT_WHEN_IT_COSTS.md)).
+  Claude Code compacts it by itself at 250,000 tokens (`autoCompactWindow` in `.claude/settings.json` and
+  `.claude/settings.local.json`). So everything that matters is written here and in the repository before a long
+  stretch, and nothing is kept only in the conversation or the scratchpad.
 - **What the stronger model is spent on:** the checked design of the motion (done: `Design/AnyBody/motion_design.md`,
   sections 6 and 7); root causes inside the engine (the flying boot: done, the design's K1); and the ground of the new
   controller (steps 0 and 2 of the design's section 6.3), where a wrong foundation would cost most. Everything else is
@@ -51,6 +55,36 @@ played animation ([the vision's rows of October 30 to November 9](GAME_VISION.md
 
 The six questions of `motion_design.md` section 7 (put to him on November 10). Steps 0 to 2 below do not depend on his
 answers; the route work (steps 4 and 5) does.
+
+## In hand (November 10, evening): finish these first
+
+1. **Correct the design's K1 by its review.** Two agents reviewed the flying boot's diagnosis
+   ([their findings](Reviews/2026-11-10_FlyingBoot_K1/review.md)): the core holds (the count is coded rightly, it
+   balances before a boot gives way, and the body then gains several times what its joints are counted to give, also in
+   steps where nothing touches the ground), but K1 as committed in `66a602a` says more than the logs show. To change in
+   `motion_design.md`: (a) the game's dampers alone do not hold a leg at 60 rad/s, its springs and dampers together do;
+   (b) the pushed leg ran away at 30 rad/s but not at 60 or 120, so "a drive can take no more than its strength" is not
+   shown; (c) 0.7·(speed × step)² is what the first step adds, not a steady rate (over a second: 0.4% a step at 10 rad/s,
+   3% at 20, 16% at 30); (d) the worked-out torques do start it or feed it (up to 150 J a step; in one course 87 of the
+   first 94 J); (e) the leg swings against its hip's drive, not against the hip's worked-out torque; (f) the third way in
+   is "given 117 of 154 N m one step after it bore nothing", and the claim is limited to the courses checked (Round's
+   course under the other solver is not explained); (g) R1: the target is the goal plus torque over spring and does not
+   follow the joint, and R1 holds only together with K5's damper and R2; (h) R2: a share is planned by the design's §2.4
+   and bounded by what the touch can bear, the pyramids at the real contact points, and `GroundTouch` must keep each
+   contact's point, impulse and normal; (i) a rule R5 for the hand-over to the standing balance (§2.10): from there R1 to
+   R3 do not hold, both soles flat is asked at the gate, and `BodyWatch` marks a fault there as the keeper's; (j) K5's
+   speed bound as a test with stated quantities, and which speed the tempo rule uses; (k) section 7's paragraph for Luis:
+   two guards on the standing balance and the other solver were tried, one run each; the engine adds energy to a fast
+   leg that nothing damps. Then the validation log and the keeper's note at `OwnKeeper.Braced` to match.
+2. **Make the count better** (work branch): a torque's work as the torque times the mean of the joint's turning at the
+   start and the end of the step (the end alone is off by tens of joules where a light part is pushed hard); the fastest
+   of the other parts in the record; a fact that a drive's reported force is what it took when the drive is at its
+   limit. Then record Small's course again.
+3. **The stiff-ankle fact** (K1's R4; `AStifflySprungAnkleHoldsALightBoot` in the worktree's
+   `ArticulationFactsTests.cs`: drafted, **not committed, never run, no bar yet**). Run it as it is to see; then give it
+   the cases and the bar the review proposes (its item "design 9": on an edge, off the ground, dropped; the three
+   miners' boots; both solvers).
+4. **Report to Luis** with the six questions of the design's section 7 (not yet put to him).
 
 ## Next steps, in order
 
