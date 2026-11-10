@@ -636,41 +636,45 @@ courses a boot goes at 10 to 74 m/s as the body goes down (the courses are not t
 count of what the whole body holds (its motion and its height, in joules) against what its joints give it (each
 worked-out torque and each drive's force, times how far the joint turned in the step). What was found:
 
-1. **Until a boot gives way the count balances**, to within 5 to 11 J a step (Small's courses; Round's quarter-turn
-   course). **Then the body gains several times what all its joints are counted to give.** The worked-out torques start
-   it or feed it, with up to 150 J a step (in one course 87 of the first 94 J). From the next step the gains are 300 to
-   3600 J a step, while the drives are taking energy out and, in several of those steps, while neither boot touches
-   the ground. The count takes a torque's work at the end of the step, which is uncertain where a part turns a radian
-   in a step; bounded at its worst (each joint's torque times its speed times the step, drives too) the gains still
-   stand in three of the four steps checked (Small's course as it is: 504, 1081 and 3344 J gained, against at most
-   294, 457 and 748 J).
+1. **Until a boot gives way the count balances**, to within 4 J a step (Small's quarter-turn course, reckoned from
+   the parts' true speeds, with each torque's work taken at the mean of the step: see 3). **Then the body gains several
+   times what all its joints are counted to give**: 107 J in the step the boot rolls over, then 480, 680, 1100 and
+   2000 J a step, while its torques and drives together are taking 20 to 300 J a step out of it. In two of those
+   steps neither boot touches the ground, and the rest of the body moves at under 5 m/s. The boot's centre really moved
+   74 cm in one step (37 m/s; the engine tells 80). The worked-out torques start it or feed it: in Round's course, by
+   the first count, 87 of the first 94 J.
 2. **It begins at a boot that is being pushed through while it is not flat on the ground.** Seen: a boot rolled onto
-   an edge under more than the body's weight (22 degrees from flat at one step, 97 at the next, turning at 66 rad/s);
+   an edge under more than the body's weight (22 degrees from flat at one step, 95 at the next, turning at 65 rad/s);
    and a boot given 117 of its ankle's 154 N m one step after it had borne nothing (Round; two steps later, 34 cm in
    the air, it was still given 150). A boot turns as 0.003 kg m²; its ankle's spring is 3 N m a radian (the keeper's
    rule for a light part at the game's step) and it has no stop; its worked-out torque is 30 to 61 N m for Small, all
    its ankle has, and up to 150 for Round. Flat on the ground, its four corners hold it whatever that torque is.
    Otherwise nothing does: one step later it turns at 60 to 80 rad/s, and the leg above it swings at 11 rad/s about its
    hip while the hip's drive is braking it.
-3. **The engine's own step adds energy to a leg that turns fast and that nothing damps.** A bare leg with nothing
-   acting on it (no weight, no ground, no drives; `ArticulationFactsTests.AFastLegGainsByTheStepItself`,
-   `WhatAFastLegsGainComesOf`), set turning and left alone, does not keep what it holds. Its first step adds about
-   0.7·(speed × step)² of it: 3% at 10 rad/s, a quarter at 30, about as much again at 60. Over the following second the
-   gain is uneven: 1.2 times at 10 rad/s, 1.5 at 15, 4 at 20, 1900 at 30 (on average 0.4% a step at 10 rad/s, 3% at 20,
-   16% at 30). It is not the parts spinning about their long lines (turning in one plane it is the same, and with every
-   part's turning weight the same about every line); the engine's other solver has it too (15 times at 15 rad/s); a
-   finer step has far less of it (a quarter of the step: 1.25 at 30 rad/s). Sprung and damped as the game's joints
-   are, or as this design has them, a leg left alone holds no more than it began with up to 60 rad/s; with the game's
-   dampers and no springs it runs away at 60, and why the springs matter is not known. Pushed besides with 100 N m put
-   straight on the thigh, it ran away once with this design's dampers (9 times what it held, set turning at 30 rad/s;
-   not at 15, 60 or 120), and under the other solver, with the game's, from 5 rad/s: a torque put straight on a part
-   makes it unpredictable.
+3. **The engine's own step adds energy to a leg that turns fast.** Two engine facts lie under this
+   (`ArticulationFactsTests`, 13 of 13). The first is about measuring. What the engine tells of how fast a turning
+   part's centre goes is too great, by the square root of one and (its turning times the step) squared: one part on
+   one hinge at 50 rad/s is told to go at 9.2 m/s and goes at 6.5. So what a body holds is reckoned here from its
+   root's going and each part's turning, never from the parts' own told speeds (`ADrivesForceIsWhatItTakes`; the first
+   count of November 10 took the told speeds, and its gains were up to twice too large). The second: with that mended,
+   a bare leg with nothing acting on it (no weight, no ground, no drives; `AFastLegGainsByTheStepItself`,
+   `WhatAFastLegsGainComesOf`), set turning and left alone, still does not keep what it holds. Over a second it holds
+   1.07 times as much at 5 rad/s, 1.55 at 15, and a thousand times at 30, its joints by then at the engine's own bound
+   of 100 rad/s. One part on one hinge keeps what it holds exactly, so it is the chain on its floating root that
+   gains. It is not the parts spinning about their long lines (turning in one plane, 470 times at 30 rad/s; with every
+   part's turning weight the same about every line, 680); the engine's other solver has it too; a finer step has far
+   less (half the step 3 times, a quarter 1.3). Sprung and damped as the game's joints are, or as this design has
+   them, a leg left alone holds no more than it began with at 30 rad/s (at 60: the game's 1.2 times, the design's no
+   more); with the game's dampers and no springs it gains a third at 30 and 33 times at 60, and why the springs matter
+   is not known. Pushed besides with 100 N m put straight on the thigh, it ran away once with this design's dampers
+   (13 times what it held, set turning at 30 rad/s; not at 15 or 60): a torque put straight on a part makes it
+   unpredictable. And a part turning faster than the greatest turning speed set for it (20 rad/s on the game's body) is
+   dragged back towards that, a quarter of what is over at each step, which no count of the joints shows.
 
-What is shown and what is not. In the steps checked (Small's course under the game's solver, with and without
-`BySpeed`) the gains are of the size the bare leg's first step shows at those speeds, and they come while nothing
-touches the ground. Round's other course under the other solver gained 36 to 445 J a step with its legs turning at
-only 6 to 33 rad/s, and its count did not balance before: that one is not explained (the record shows only the legs,
-and only the boots' touches).
+What is shown and what is not. In Small's course under the game's solver the gains come while nothing touches the
+ground and are far more than the joints give, as on the bare leg at those speeds. Round's other course under the other
+solver gained 36 to 445 J a step (by the first count) with its legs turning at only 6 to 33 rad/s, and its count did
+not balance before: that one is not explained, and it has not been recorded again with the true speeds.
 
 What did not mend the standing balance (one run of the nine courses each; the courses differ from run to run by as
 much as the guards do, so the runs show that none meets the bar, not which helps most): a leg not pushed with while

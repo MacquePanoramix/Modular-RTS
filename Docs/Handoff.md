@@ -76,12 +76,18 @@ answers; the route work (steps 4 and 5) does.
    speed bound as a test with stated quantities, and which speed the tempo rule uses; (k) section 7's paragraph for Luis:
    two guards on the standing balance and the other solver were tried, one run each; the engine adds energy to a fast
    leg that nothing damps. Then the validation log and the keeper's note at `OwnKeeper.Braced` to match.
-2. **Make the count better** (work branch): a torque's work as the torque times the mean of the joint's turning at the
+2. **(Done, November 10, evening: the count takes true speeds and the mean of each step; `ADrivesForceIsWhatItTakes`
+   added; Small's course recorded again; K1 holds the numbers.)** Make the count better (work branch): a torque's work as the torque times the mean of the joint's turning at the
    start and the end of the step (the end alone is off by tens of joules where a light part is pushed hard); the fastest
    of the other parts in the record; a fact that a drive's reported force is what it took when the drive is at its
    limit. Then record Small's course again.
-3. **The stiff-ankle fact** (K1's R4; `AStifflySprungAnkleHoldsALightBoot` in the worktree's
-   `ArticulationFactsTests.cs`: drafted, **not committed, never run, no bar yet**). Run it as it is to see; then give it
+3. **The stiff-ankle fact** (K1's R4; `AStifflySprungAnkleHoldsALightBoot` in the work branch's
+   `ArticulationFactsTests.cs`: **run once under the game's solver, no bar yet**. First look: standing flat under
+   Small's weight the boot stays within 0.1 degree and does not turn, with a stiff ankle (100 and 300 N m a radian) as
+   with the soft one, asked for nothing, for 12 and 30 N m through its drive, and for the same put straight on it. But
+   the drive gives only 4 to 26 N m of the 12 to 30 asked through it, and where the ground bears the boot was not read
+   in those cases (the body was most likely asleep, which stops the touches being told: keep it awake): the load
+   through the target is not yet shown to arrive.) Next: give it
    the cases and the bar the review proposes (its item "design 9": on an edge, off the ground, dropped; the three
    miners' boots; both solvers).
 4. **Report to Luis** with the six questions of the design's section 7 (not yet put to him).

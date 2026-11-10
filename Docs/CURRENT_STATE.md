@@ -18,8 +18,9 @@
   0.003 kg m², sprung with 3 N m a radian and with no stop: one step later it turns at 60 to 80 rad/s). From the next
   step the body gains several times what all its joints are counted to give, also while nothing touches the ground:
   the engine's own step adds energy to a leg that turns fast and that nothing damps (a bare leg with nothing acting on
-  it, set turning at 30 rad/s, holds 1900 times as much a second later; two new engine facts, `ArticulationFactsTests`
-  11 of 11). Two guards on the standing balance and the engine's other solver, alone and with both, did not meet the
+  it, set turning at 30 rad/s, holds a thousand times as much a second later), and the engine's own telling of a fast
+  part's speed is too great, so what a body holds is reckoned from its true speeds (four new engine facts,
+  `ArticulationFactsTests` 13 of 13; Small's boot really moved at 37 m/s where the engine tells 80). Two guards on the standing balance and the engine's other solver, alone and with both, did not meet the
   test's bar (one run each; a boot still at 13 to 74 m/s), so it stays as it is until it is folded into the new
   controller. The design's K1 has the finding and the five rules drawn from it, **reviewed by two agents who did not
   make it** ([their findings](Reviews/2026-11-10_FlyingBoot_K1/review.md): the core holds; what K1 said beyond the

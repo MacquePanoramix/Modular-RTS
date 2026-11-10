@@ -4857,6 +4857,21 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   because of them: what holds a fast leg is its springs and dampers together, not its dampers alone; 0.7·(speed × step)²
   is the first step's gain, not a steady rate; the worked-out torques do start it or feed it; the pushed leg's runaway
   is not explained by a drive's limit; one course is not explained; and five of the rules' wordings.
+- **Measured again after the review** (evening; work branch): a fact the reviewers asked for
+  (`ADrivesForceIsWhatItTakes`: one part on one hinge) showed that what the engine tells of a fast part's own speed is
+  too great, by the square root of one and (its turning times the step) squared (at 50 rad/s: 9.19 m/s told, 6.5 gone;
+  left alone at 40 rad/s the part keeps its 42.7 J exactly; damped at its limit, what its drive is counted to take is
+  what it loses, 5.9 J). **So the counts above overstate**: they took the told speeds. Reckoned from the parts' true
+  speeds (the root's going and each part's turning) and with each torque's work at the mean of the step:
+  the bare leg left alone holds 1.07 times what it began with at 5 rad/s, 1.55 at 15, 1028 at 30 (in one plane 468;
+  turning weights alike 679; half the step 2.96; a quarter 1.28), its joints reaching the engine's bound of 100 rad/s;
+  the game's dampers alone 1.37 at 30 and 33 at 60; the game's springs and dampers 1.00 at 30, 1.21 at 60; the design's
+  1.00 at both; pushed with 100 N m, the design's dampers: 12.7 at 30, 1.00 at 60. `ArticulationFactsTests` **13 of 13**.
+  Small's quarter-turn course recorded again: the count balances within 4 J a step until the boot rolls over (22 to 95
+  degrees in one step); then the body gains 84, 461, 600, 849 and 1655 J in five steps, of which 107, 477, 681, 1114
+  and 1955 J are beyond what its torques and drives are counted to give (together they take 22 to 300 J a step out);
+  the boot's centre moved at most 37.1 m/s by how far it went in a step (79.8 as the engine tells it). The test's bar
+  is still on the speed the engine tells.
 - **The standing body after the day's changes** (all the new switches off): `OwnBodyTests` **12 of 13**, the
   thirteenth the shove test above (72.6 m/s), as before.
 - **Not tested:** the whole suite (the changes are two switches that are off, and readings for the record); any of
