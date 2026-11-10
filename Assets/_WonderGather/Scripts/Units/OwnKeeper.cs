@@ -277,12 +277,15 @@ namespace WonderGather
         // (rolled onto an edge under the body's weight; just off the ground; taken for landed while still in the air).
         // A boot turns as 0.003 kg m2, its ankle is sprung with 3 N m a radian and stops nowhere, and its worked-out
         // torque is 30 to 150 N m: not held flat by the ground, it is turning at 60 to 80 rad/s one step later. And
-        // from there the body gains what no joint gives it, 90 and then 300 to 3600 joules a step: the engine's step
-        // itself adds to parts that turn fast (ArticulationFactsTests.AFastLegGainsByTheStepItself: a leg left alone
-        // gains a quarter of what it holds each step at 30 rad/s). So no guard here mends it: not this one, nor BySpeed
-        // below (42 m/s), nor the engine's other solver (13 m/s; with both guards as well, 21, through the step's own
-        // "landed"). It is mended where the new getting up is built: no torque put straight on a part, joints that
-        // stop and are damped, and a push planned only where a sole really lies (Docs/Design/AnyBody/motion_design.md, K1).)
+        // from the next step the body gains several times what all its joints are counted to give, 500 to 2000 joules
+        // a step, also while nothing touches the ground: the engine's step itself adds to a leg that turns fast and
+        // that nothing damps (ArticulationFactsTests.AFastLegGainsByTheStepItself: left alone, a leg set turning at
+        // 30 rad/s holds a thousand times as much after a second). (Reckoned from the parts' true speeds: the
+        // engine's own telling of a fast part's speed is too great, and a boot it tells at 80 m/s moved at 37.) So no guard
+        // here met the test's bar, one run each: not this one, nor BySpeed below (42 m/s), nor the engine's other
+        // solver (13 m/s; with both guards as well, 21). It is mended where the new getting up is built: no torque put
+        // straight on a part, joints that stop and are sprung and damped, and a push planned only where a sole really
+        // lies (Docs/Design/AnyBody/motion_design.md, K1; reviewed: Docs/Reviews/2026-11-10_FlyingBoot_K1).)
         public static float Braced = 0;
         public static int BracedOver = 3;
         // (How many steps of the physics a leg has been held back so, since the game began: for whoever counts.)

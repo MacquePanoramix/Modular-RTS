@@ -274,17 +274,41 @@ namespace WonderGather.Tests
         }
 
         // What a body holds in its motion (joules): each part's going and its turning.
-        private static float Held(ArticulationBody[] parts)
+        // (How fast each part's centre truly goes is worked out along the chain, from the root's going and each part's
+        // turning: what the engine tells of a part's own going is too great when the part turns fast, by the square root
+        // of one and (its turning times the step) squared: ADrivesForceIsWhatItTakes, November 10. Told = true: by the
+        // engine's own telling, to set beside it.)
+        private static Vector3 TrulyGoes(ArticulationBody part, Dictionary<ArticulationBody, Vector3> known)
+        {
+            if (known.TryGetValue(part, out Vector3 goes)) return goes;
+            if (part.isRoot) goes = part.immovable ? Vector3.zero : part.linearVelocity;
+            else
+            {
+                var parent = part.transform.parent.GetComponentInParent<ArticulationBody>();
+                Vector3 anchor = part.transform.TransformPoint(part.anchorPosition);
+                Vector3 parentTurns = parent.immovable ? Vector3.zero : parent.angularVelocity;
+                goes = TrulyGoes(parent, known) + Vector3.Cross(parentTurns, anchor - parent.worldCenterOfMass) + Vector3.Cross(part.angularVelocity, part.worldCenterOfMass - anchor);
+            }
+            known[part] = goes;
+            return goes;
+        }
+
+        private static float Held(ArticulationBody[] parts, bool told = false)
         {
             float held = 0;
+            var known = new Dictionary<ArticulationBody, Vector3>();
             foreach (var part in parts)
             {
-                Vector3 goes = part.GetPointVelocity(part.worldCenterOfMass);
+                Vector3 goes = told ? part.GetPointVelocity(part.worldCenterOfMass) : TrulyGoes(part, known);
                 Vector3 turns = Quaternion.Inverse(part.transform.rotation * part.inertiaTensorRotation) * part.angularVelocity, inertia = part.inertiaTensor;
                 held += .5f * part.mass * goes.sqrMagnitude + .5f * (inertia.x * turns.x * turns.x + inertia.y * turns.y * turns.y + inertia.z * turns.z * turns.z);
             }
             return held;
         }
+
+        // (Of the last leg set turning: what it held after its first step and the most it held, both by the engine's own
+        // telling of how its parts go; and the fastest any of its joints turned, rad/s.)
+        private (float toldBegan, float toldMost, float fastest) Whirl;
 
         // The leg set turning at so many radians a second at each joint, for a second. Which way: 0 left alone; 1 damped
         // only; 2 sprung and damped as the game's joints; 3 so, and pushed with 100 N m at the hip. What it held after
@@ -314,28 +338,49 @@ namespace WonderGather.Tests
             float dt = made0 == 3 ? .5f * Dt : made0 == 4 ? .25f * Dt : Dt;
             int steps = Mathf.RoundToInt(1 / dt);
             float held = 0, began = 0, most = 0, least = 0, beyond = 0, given = 0;
+            Whirl = (0, 0, 0);
+            // (What a torque or a drive gave over a step: itself times the mean of how the joint turned at the step's
+            // start and at its end.)
+            Vector3 againstBefore = default;
+            var jointBefore = new float[4][];
             for (int k = 0; k <= steps; k++)
             {
                 Vector3 push = (way == 3 || way == 4 ? 100 : 0) * Vector3.right;
                 if (push.x != 0) { parts[1].AddTorque(push); parts[0].AddTorque(-push); }
                 Physics.Simulate(dt);
-                float now = Held(parts), by = Vector3.Dot(push, parts[1].angularVelocity - parts[0].angularVelocity) * dt;
+                Vector3 against = parts[1].angularVelocity - parts[0].angularVelocity;
+                float now = Held(parts), by = Vector3.Dot(push, k == 0 ? against : .5f * (against + againstBefore)) * dt;
+                againstBefore = against;
                 for (int i = 1; i < 4; i++)
-                    for (int d = 0; d < parts[i].dofCount; d++) by += parts[i].driveForce[d] * parts[i].jointVelocity[d] * dt;
+                {
+                    if (jointBefore[i] == null) jointBefore[i] = new float[parts[i].dofCount];
+                    for (int d = 0; d < parts[i].dofCount; d++)
+                    {
+                        float turns = parts[i].jointVelocity[d];
+                        by += parts[i].driveForce[d] * (k == 0 ? turns : .5f * (turns + jointBefore[i][d])) * dt;
+                        jointBefore[i][d] = turns;
+                    }
+                }
                 if (k == 0) { began = most = least = now; }
                 else { most = Mathf.Max(most, now); least = Mathf.Min(least, now); beyond += now - held - by; given += by; }
                 held = now;
+                // (And by the engine's own telling of how its parts go; and the fastest any joint turns.)
+                float toldNow = Held(parts, true), fastest = 0;
+                for (int i = 1; i < 4; i++)
+                    for (int d = 0; d < parts[i].dofCount; d++) fastest = Mathf.Max(fastest, Mathf.Abs(parts[i].jointVelocity[d]));
+                Whirl = (k == 0 ? toldNow : Whirl.toldBegan, Mathf.Max(Whirl.toldMost, toldNow), Mathf.Max(Whirl.fastest, fastest));
             }
             made.Remove(parts[0].gameObject);
             Object.DestroyImmediate(parts[0].gameObject);
             done(began, most / Mathf.Max(1e-6f, began), least / Mathf.Max(1e-6f, began), given, beyond);
         }
 
-        // What the gain comes of: the same leg left alone, made or set going each other way. Found (November 10): it is
-        // not the parts' spinning about their own long lines (turning in one plane only, or with every part's turning
-        // weight made the same about every line, it gains as much: 2240 and 2201 times at 30 rad/s); it is the size of the
-        // step against the speed (the step quartered, 1.25 at 30 rad/s and 2.2 at 60). And one step alone shows it: set
-        // turning at 60 rad/s, after its first step of a fiftieth of a second the leg holds 911 J; of a two-hundredth, 500.
+        // What the gain comes of: the same leg left alone, made or set going each other way. Found (November 10, by true
+        // speeds): it is not the parts' spinning about their own long lines (turning in one plane only, or with every
+        // part's turning weight made the same about every line, it still gains 470 and 680 times at 30 rad/s, against
+        // 1030); it is the size of the step against the speed (the step halved 3 times, quartered 1.3, at 30 rad/s). And
+        // one step alone shows it: set turning at 60 rad/s, after its first step of a fiftieth of a second the leg holds
+        // 745 J; of a two-hundredth, 460.
         [UnityTest]
         public IEnumerator WhatAFastLegsGainComesOf()
         {
@@ -348,7 +393,7 @@ namespace WonderGather.Tests
                 {
                     float began = 0, most = 0, least = 0;
                     yield return Whirled(speed, 0, (b, m, l, g, e) => { began = b; most = m; least = l; }, how);
-                    Debug.Log(string.Format(inv, "FACTS a leg left alone, set turning at {0:0} rad/s at each joint, {1}: it held {2:0.0} J after the first step; over the next second at most {3:0.00} and at least {4:0.00} of that", speed, hows[how], began, most, least));
+                    Debug.Log(string.Format(inv, "FACTS a leg left alone, set turning at {0:0} rad/s at each joint, {1}: it held {2:0.0} J after the first step; over the next second at most {3:0.00} and at least {4:0.00} of that; by the engine's own telling {5:0.0} J and at most {6:0.00}; its fastest joint turned at {7:0} rad/s", speed, hows[how], began, most, least, Whirl.toldBegan, Whirl.toldMost / Mathf.Max(1e-6f, Whirl.toldBegan), Whirl.fastest));
                     mostBy[(speed, how)] = most; beganBy[(speed, how)] = began;
                 }
             Assert.That(mostBy[(30f, 1)], Is.GreaterThan(10f), "Turning in one plane only, at 30 rad/s, the leg kept what it held: the gain is of the parts' spinning after all.");
@@ -357,17 +402,21 @@ namespace WonderGather.Tests
             Assert.That(beganBy[(60f, 0)] / beganBy[(60f, 4)], Is.GreaterThan(1.4f), "Set turning at 60 rad/s, the leg held no more after one step of a fiftieth of a second than after one of a two-hundredth: one step alone does not add what was found.");
         }
 
-        // Found (November 10, the game's step of a fiftieth of a second, the game's solver): left alone, the leg does NOT
-        // keep what it holds. Turning at 5 rad/s at each joint it holds at most 1.07 of what it began with over a second;
-        // at 15 rad/s 1.46; at 30 rad/s 1886 times as much; and so under the engine's other solver (1.05, 14.9, 1359).
-        // The step itself adds it, about 0.7 of (speed times step) squared each step: 3% a step at 10 rad/s, a quarter at
-        // 30, four fifths at 60. Sprung and damped as the game's joints are it holds no more than it began with up to
-        // 60 rad/s: a joint's damper must take more each step than the step adds. Damped as the design of the motion has
-        // it (each joint's strength over its top speed) it holds up to 60 rad/s too; but pushed besides with a torque put
-        // straight on the thigh (100 N m, as the standing balance puts its worked-out torques on the parts) it ran away
-        // from 30 rad/s all the same (9 times what it held): a drive can take no more than its strength, and above about
-        // 30 rad/s the step adds more than that. So no part of a body may be let turn faster than its dampers can answer
-        // for, and nothing may be able to set it turning so in one step.
+        // Found (November 10, the game's step of a fiftieth of a second, the game's solver; what it holds reckoned from
+        // its parts' true speeds, TrulyGoes): left alone, the leg does NOT keep what it holds. Turning at 5 rad/s at each
+        // joint it holds at most 1.07 of what it began with over a second; at 15 rad/s 1.55; at 30 rad/s a thousand times
+        // as much, its joints by then at the engine's own bound of 100 rad/s. (By the engine's own telling of its
+        // parts' speeds, which is too great when they turn fast: 1.46 and 1886; under the other solver, so told, 14.9
+        // and 1359.) One part on one hinge keeps what it holds exactly (ADrivesForceIsWhatItTakes): it is the chain on
+        // its floating root that gains. Sprung and damped as the game's joints are, or as the design of the motion has
+        // them (each joint's strength over its top speed), it holds no more than it began with at 30 rad/s (at 60 the
+        // game's 1.2 times, the design's no more); with the game's dampers and no springs it gains a third at 30 and 33
+        // times at 60, and why the springs matter is not known. Pushed besides with a torque put straight on the thigh
+        // (100 N m, as the standing balance puts its worked-out torques on the parts) it ran away once with the
+        // design's dampers (13 times what it held, set turning at 30 rad/s; not at 15 or 60): a torque put straight on a
+        // part makes it unpredictable. So no part of a body may be let turn
+        // faster than its springs and dampers can answer for, and nothing may be able to set it turning so in one step.
+        // (Reviewed: Docs/Reviews/2026-11-10_FlyingBoot_K1 in the main project.)
         [UnityTest]
         public IEnumerator AFastLegGainsByTheStepItself()
         {
@@ -379,14 +428,183 @@ namespace WonderGather.Tests
                 {
                     float began = 0, most = 0, least = 0, given = 0, beyond = 0;
                     yield return Whirled(speed, way, (b, m, l, g, e) => { began = b; most = m; least = l; given = g; beyond = e; });
-                    Debug.Log(string.Format(inv, "FACTS a leg set turning at {0:0} rad/s at each joint, {1}: it held {2:0.0} J after the first step; over the next second at most {3:0.00} and at least {4:0.00} of that; its drives and the torque were counted to give it {5:+0.0;-0.0} J, and it gained {6:+0.0;-0.0} J beyond that",
-                        speed, ways[way], began, most, least, given, beyond));
+                    Debug.Log(string.Format(inv, "FACTS a leg set turning at {0:0} rad/s at each joint, {1}: it held {2:0.0} J after the first step; over the next second at most {3:0.00} and at least {4:0.00} of that; its drives and the torque were counted to give it {5:+0.0;-0.0} J, and it gained {6:+0.0;-0.0} J beyond that; by the engine's own telling it held {7:0.0} J after the first step and at most {8:0.00} of that; its fastest joint turned at {9:0} rad/s",
+                        speed, ways[way], began, most, least, given, beyond, Whirl.toldBegan, Whirl.toldMost / Mathf.Max(1e-6f, Whirl.toldBegan), Whirl.fastest));
                     mostBy[(speed, way)] = most;
                 }
             Assert.That(mostBy[(5f, 0)], Is.LessThan(1.15f), "Left alone and turning slowly (5 rad/s), the leg gained more than a seventh: the step adds more than was found.");
             Assert.That(mostBy[(30f, 0)], Is.GreaterThan(10f), "Left alone at 30 rad/s the leg kept what it held: the engine's step no longer adds to a fast leg, and what was built on that (how fast a part may turn, how much its dampers must take) can be looked at again.");
             Assert.That(mostBy[(30f, 2)], Is.LessThan(1.05f), "Sprung and damped as the game's joints, at 30 rad/s, the leg gained.");
             Assert.That(mostBy[(30f, 5)], Is.LessThan(1.05f), "Sprung, and damped as the design has it, at 30 rad/s, the leg gained.");
+        }
+
+        // What a drive is counted to take is what it takes, also at its limit (the review of November 10 asked: every
+        // count of what a body's joints gave rests on it). One part as Small's thigh on a hinge on a fixed root, no weight,
+        // set turning at 40 rad/s: left alone it must keep what it holds (one part on one hinge has nothing to gain
+        // from); damped with 4.5 N m s a radian and a limit of 130 N m (so at its limit above 29 rad/s) it must lose
+        // just what its drive's force, times the mean of its turning over each step, comes to. Found with it (November
+        // 10): what the engine tells of how fast a turning part's centre goes is too great, by the square root of one
+        // and (its turning times the step) squared (at 50 rad/s, 9.19 m/s told for 6.5 m/s gone: the part's going is
+        // carried a step along its old line and never turned with it), so what a body holds must be reckoned from its
+        // root's going and its parts' turning (TrulyGoes), not from the parts' own told speeds. And set turning at
+        // 60 rad/s and left alone, a part is brought down to the project's greatest turning speed (50 rad/s,
+        // Physics.defaultMaxAngularSpeed; the game's own body sets 20 on every part), a quarter of what is over at each
+        // step: a drag the count of what its joints gave does not show.
+        [UnityTest]
+        public IEnumerator ADrivesForceIsWhatItTakes()
+        {
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            float freeMost = 0, freeLeast = 0, lost = 0, counted = 0, endsAt = 0;
+            for (int way = 0; way < 3; way++)
+            {
+                var root = Root(new Vector3(-900, 50, -500));
+                var part = Link(root.transform, "Thigh", root.transform.position, Quaternion.identity, 2.38f, new Vector3(0, -.13f, 0), new Vector3(.0131f, .0029f, .0131f));
+                part.useGravity = false;
+                part.jointType = ArticulationJointType.RevoluteJoint;
+                part.anchorPosition = Vector3.zero; part.anchorRotation = Quaternion.identity; part.matchAnchors = true;
+                part.twistLock = ArticulationDofLock.FreeMotion;
+                part.xDrive = new ArticulationDrive { stiffness = 0, damping = way == 1 ? 4.5f : 0, forceLimit = way == 1 ? 130 : 0, driveType = ArticulationDriveType.Force };
+                yield return null;
+                part.jointVelocity = new ArticulationReducedSpace(way == 2 ? 60f : 40f);
+                var one = new[] { part };
+                float began = 0, held = 0, most = 0, least = 0, turnedBefore = 0, by = 0;
+                // (What the engine says of the part at each of its first steps, and what it truly does: how far it has
+                // turned by its own drawn pose, against its joint's reading and the speeds the engine tells.)
+                Quaternion turnedWas = part.transform.rotation;
+                Vector3 centreWas = part.worldCenterOfMass;
+                for (int k = 0; k <= 50; k++)
+                {
+                    Physics.Simulate(Dt);
+                    float now = Held(one), turns = part.jointVelocity[0];
+                    if (k < 6 || k % 10 == 0)
+                    {
+                        float trulyTurns = Quaternion.Angle(turnedWas, part.transform.rotation) * Mathf.Deg2Rad / Dt, trulyGoes = (part.worldCenterOfMass - centreWas).magnitude / Dt;
+                        Debug.Log(string.Format(inv, "FACTS hinge {0} step {1}: its joint reads {2:0.00} rad at {3:0.00} rad/s; the engine says it turns at {4:0.00} rad/s and its centre goes at {5:0.00} m/s (its point speed there {6:0.00}); by its own pose it turned at {7:0.00} rad/s over the step and its centre went {8:0.00} m/s along the chord; it holds {9:0.0} J, and by the engine's own telling {10:0.0} J",
+                            way == 0 ? "left alone" : way == 1 ? "damped" : "left alone at 60 rad/s", k, part.jointPosition[0], turns, part.angularVelocity.magnitude, part.linearVelocity.magnitude, part.GetPointVelocity(part.worldCenterOfMass).magnitude, trulyTurns, trulyGoes, now, Held(one, true)));
+                    }
+                    turnedWas = part.transform.rotation; centreWas = part.worldCenterOfMass;
+                    if (k == 0) { began = most = least = now; }
+                    else { most = Mathf.Max(most, now); least = Mathf.Min(least, now); by += part.driveForce[0] * .5f * (turns + turnedBefore) * Dt; }
+                    held = now; turnedBefore = turns;
+                }
+                if (way == 0) { freeMost = most / began; freeLeast = least / began; }
+                else if (way == 1) { lost = began - held; counted = -by; }
+                else endsAt = Mathf.Abs(turnedBefore);
+                Debug.Log(string.Format(inv, "FACTS one part on a hinge set turning, {0}: it held {1:0.0} J after the first step, at most {2:0.000} and at least {3:0.000} of that over the next second, {4:0.0} J at the end; its drive was counted to take {5:0.0} J", way == 0 ? "at 40 rad/s, left alone" : way == 1 ? "at 40 rad/s, damped, at its limit above 29 rad/s" : "at 60 rad/s, left alone", began, most / began, least / began, held, -by));
+                made.Remove(root.gameObject);
+                Object.DestroyImmediate(root.gameObject);
+            }
+            Assert.That(freeMost, Is.LessThan(1.01f), "One part on one hinge, left alone, gained what nothing gave it.");
+            Assert.That(freeLeast, Is.GreaterThan(.99f), "One part on one hinge, left alone, lost what nothing took.");
+            Assert.That(counted, Is.EqualTo(lost).Within(.03f * lost), "What the drive was counted to take is not what the part lost.");
+            Assert.That(endsAt, Is.EqualTo(Physics.defaultMaxAngularSpeed).Within(.5f), "Set turning faster than the project's greatest turning speed and left alone, the part did not come down to it.");
+        }
+
+        // The first fact of step 0 of the motion (Docs/Design/AnyBody/motion_design.md, K1's R4; November 10): whether an
+        // ankle sprung stiffly enough to carry its torque through its drive holds a light boot under a body's weight at
+        // the game's step. The standing balance's ankle is sprung with 3 N m a radian and given its torque straight on
+        // the boot, because, as that was built, "a stiff spring between a heavy body and a light boot does not hold at
+        // the game's step" (OwnKeeper). Here: a weight as Small's on a slide that only goes up and down (so nothing has to
+        // balance), and under it a boot as Small's (1.29 kg, turning as 0.003 kg m2, a box 9 cm wide, 5 high and 22 long)
+        // on a ball joint above its heel, standing flat on the ground.
+        private (ArticulationBody weight, ArticulationBody boot, GroundTouch touch) Stood(Vector3 at, float spring, float damper, float limit)
+        {
+            var ground = new GameObject("Facts ground");
+            ground.transform.position = at + .5f * Vector3.down;
+            made.Add(ground);
+            var surface = new PhysicsMaterial("Facts") { dynamicFriction = .7f, staticFriction = .8f, bounciness = 0, bounceCombine = PhysicsMaterialCombine.Minimum };
+            var slab = ground.AddComponent<BoxCollider>();
+            slab.size = new Vector3(6, 1, 6); slab.sharedMaterial = surface;
+            var root = Root(at + 1.5f * Vector3.up);
+            Vector3 bootAt = at + new Vector3(0, .025f, 0), ankle = bootAt + new Vector3(0, .025f, -.04f);
+            var weight = Link(root.transform, "Weight", ankle + .5f * Vector3.up, Quaternion.identity, 39.4f, Vector3.zero, new Vector3(1, 1, 1));
+            weight.jointType = ArticulationJointType.PrismaticJoint;
+            weight.anchorPosition = Vector3.zero; weight.anchorRotation = Quaternion.Euler(0, 0, 90); weight.matchAnchors = true;
+            weight.linearLockX = ArticulationDofLock.FreeMotion; weight.linearLockY = ArticulationDofLock.LockedMotion; weight.linearLockZ = ArticulationDofLock.LockedMotion;
+            weight.xDrive = new ArticulationDrive { stiffness = 0, damping = 0, forceLimit = 0, driveType = ArticulationDriveType.Force };
+            var boot = Link(weight.transform, "Boot", bootAt, Quaternion.identity, 1.29f, Vector3.zero, new Vector3(.0030f, .0037f, .0015f));
+            var box = boot.gameObject.AddComponent<BoxCollider>();
+            box.size = new Vector3(.09f, .05f, .22f); box.sharedMaterial = surface;
+            boot.jointType = ArticulationJointType.SphericalJoint;
+            boot.anchorPosition = new Vector3(0, .025f, -.04f); boot.anchorRotation = Quaternion.identity; boot.matchAnchors = true;
+            boot.twistLock = boot.swingYLock = boot.swingZLock = ArticulationDofLock.FreeMotion;
+            var drive = new ArticulationDrive { stiffness = spring, damping = damper, forceLimit = limit, target = 0, driveType = ArticulationDriveType.Force };
+            boot.xDrive = drive; boot.yDrive = drive; boot.zDrive = drive;
+            boot.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            root.solverIterations = 14; root.solverVelocityIterations = 4;
+            var touch = boot.gameObject.AddComponent<GroundTouch>();
+            return (weight, boot, touch);
+        }
+
+        // The boot stood so for three seconds, its ankle sprung and damped as told, and asked for a torque about its
+        // long line (across the sole, towards one side) and about the line across it (along the sole, towards the toe),
+        // either through its drive's target (the torque over the spring, as the design has it) or put straight on the
+        // boot with its opposite on the weight (as the standing balance does). After the first half second: how far
+        // from flat it tipped at most (degrees), how fast it turned at most (rad/s), where the ground bore it on
+        // average, from the point under its ankle (mm across, mm along), how far the weight sank or rose (mm), and
+        // what its drive gave on average (N m).
+        private IEnumerator AnkleHeld(float spring, float damper, float across, float along, bool straight, System.Action<float, float, Vector2, float, float> done)
+        {
+            Vector3 at = new Vector3(500, 20, -900);
+            var (weight, boot, touch) = Stood(at, spring, damper, 61);
+            yield return null;
+            if (!straight)
+            {
+                // (Its x is the line across the sole, its z the line along it: a torque about z tips it sideways.)
+                var d = boot.xDrive; d.target = along / spring * Mathf.Rad2Deg; boot.xDrive = d;
+                d = boot.zDrive; d.target = across / spring * Mathf.Rad2Deg; boot.zDrive = d;
+            }
+            float tipped = 0, turned = 0, sank = 0, gave = 0, heightAt = 0, bore = 0;
+            Vector2 where = Vector2.zero;
+            int counted = 0;
+            for (int k = 0; k < 150; k++)
+            {
+                if (straight)
+                {
+                    Vector3 torque = boot.transform.right * along + boot.transform.forward * across;
+                    boot.AddTorque(torque); weight.AddTorque(-torque);
+                }
+                touch.Clear();
+                Physics.Simulate(Dt);
+                yield return null;
+                if (k == 24) heightAt = weight.transform.position.y;
+                if (k < 25) continue;
+                tipped = Mathf.Max(tipped, Vector3.Angle(boot.transform.up, Vector3.up));
+                turned = Mathf.Max(turned, boot.angularVelocity.magnitude);
+                sank = Mathf.Max(sank, Mathf.Abs(weight.transform.position.y - heightAt));
+                float force = 0;
+                for (int d = 0; d < boot.dofCount; d++) force += boot.driveForce[d] * boot.driveForce[d];
+                gave += Mathf.Sqrt(force);
+                if (touch.Up > 1e-6f)
+                {
+                    Vector3 local = boot.transform.InverseTransformPoint(touch.Where / touch.Up) - new Vector3(0, -.025f, -.04f);
+                    where += new Vector2(local.x, local.z) * touch.Up; bore += touch.Up;
+                }
+                counted++;
+            }
+            made.Remove(boot.transform.root.gameObject);
+            Object.DestroyImmediate(boot.transform.root.gameObject);
+            done(tipped, turned, bore > 0 ? where / bore * 1000 : new Vector2(float.NaN, float.NaN), sank * 1000, gave / Mathf.Max(1, counted));
+        }
+
+        [UnityTest]
+        public IEnumerator AStifflySprungAnkleHoldsALightBoot()
+        {
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            // (The ankle's spring and damper: the standing balance's; all its strength at 35 degrees, damped by the
+            // standing balance's rule; the same, damped as the design has it; three times as stiff.)
+            var ankles = new (float spring, float damper, string called)[] { (3, .07f, "sprung as the standing balance's (3 N m a radian)"), (100, .42f, "sprung with all its strength at 35 degrees, damped lightly"), (100, 2.65f, "sprung with all its strength at 35 degrees, damped as the design has it"), (300, 2.65f, "sprung three times as stiffly, damped as the design has it") };
+            var asks = new (float across, float along, bool straight, string called)[] { (0, 0, false, "asked for nothing"), (12, 0, false, "12 N m sideways through its drive"), (0, 30, false, "30 N m towards the toe through its drive"), (30, 0, false, "30 N m sideways through its drive (more than the sole is wide for)"), (12, 0, true, "12 N m sideways put straight on it"), (0, 30, true, "30 N m towards the toe put straight on it"), (30, 0, true, "30 N m sideways put straight on it (more than the sole is wide for)") };
+            foreach (var ankle in ankles)
+                foreach (var ask in asks)
+                {
+                    if (ankle.spring < 10 && !ask.straight && (ask.across != 0 || ask.along != 0)) continue;
+                    float tipped = 0, turned = 0, sank = 0, gave = 0; Vector2 where = default;
+                    yield return AnkleHeld(ankle.spring, ankle.damper, ask.across, ask.along, ask.straight, (t, w, at, s, g) => { tipped = t; turned = w; where = at; sank = s; gave = g; });
+                    Debug.Log(string.Format(inv, "FACTS a boot under Small's weight, its ankle {0}, {1}: after the first half second it tipped at most {2:0.0} degrees and turned at most {3:0.0} rad/s; the ground bore it {4:0} mm across and {5:0} mm along from under its ankle; the weight moved {6:0.0} mm; its drive gave {7:0.0} N m",
+                        ankle.called, ask.called, tipped, turned, where.x, where.y, sank, gave));
+                }
+            Assert.Pass();
         }
 
         // A link spun about its joint's axis until it has turned so far; what its reading did.

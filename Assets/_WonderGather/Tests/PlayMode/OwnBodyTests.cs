@@ -805,10 +805,16 @@ namespace WonderGather.Tests
                     yield return Wait(2);
                     float tall = own.HeadAt.y - spotAt.y + .15f;
                     float fastest = 0, turnsMost = 0, highest = 0; string fastestWhen = "", highestWhen = "";
+                    // (And the fastest any part truly went, by how far its centre moved in a step: the engine's own
+                    // telling of a part's speed is too great when the part turns fast.)
+                    float fastestMoved = 0; string fastestMovedWhen = "";
+                    var atBefore = new Vector3[64]; int countBefore = -1, atBeforeK = -2; bool ownsBefore = false;
                     int stoodUntil = -1, steps = 0;
                     var traced = CaptureTools.Argument("-ownShoveTrace") == "1" ? new System.Collections.Generic.List<string>() : null;
                     string tracedAtFastest = null;
                     float heldBefore = float.NaN;
+                    var turnedBefore = new Vector3[OwnBody.Count];
+                    var jointBefore = new float[OwnBody.Count][];
                     bool partsTold = false;
                     var fall = unit.GetComponent<PhysicalFall>();
                     for (int k = 0; k < 300; k++)
@@ -832,24 +838,48 @@ namespace WonderGather.Tests
                             // (And what the whole body holds, moving and lifted, in joules; and what was put into it over
                             // this step by its joints' worked-out torques, by its joints' drives and by the shove: what
                             // it gained beyond those, the ground and the engine gave or took.)
-                            float holdsNow = 0, byTorques = 0, byDrives = 0, byShove = 0, weighs = 0;
+                            float holdsNow = 0, byTorques = 0, byDrives = 0, byShove = 0, weighs = 0, othersGo = 0, othersTurn = 0, toldHolds = 0;
+                            var trulyGoes = new Vector3[OwnBody.Count];
                             for (int i = 0; i < OwnBody.Count; i++)
                             {
                                 var part = own.Part(i);
                                 if (part == null) continue;
                                 weighs += part.mass;
-                                Vector3 goes = part.GetPointVelocity(part.worldCenterOfMass);
+                                // (How fast its centre truly goes, worked out along the body from its hips' going and each
+                                // part's turning: what the engine tells of a part's own going is too great when the part
+                                // turns fast (ArticulationFactsTests.ADrivesForceIsWhatItTakes, November 10).)
+                                Vector3 goes = part.linearVelocity;
+                                if (i > 0)
+                                {
+                                    var hangsFrom = own.Part(OwnBody.FromOf(i));
+                                    Vector3 anchor = part.transform.TransformPoint(part.anchorPosition);
+                                    goes = trulyGoes[OwnBody.FromOf(i)] + Vector3.Cross(hangsFrom.angularVelocity, anchor - hangsFrom.worldCenterOfMass) + Vector3.Cross(part.angularVelocity, part.worldCenterOfMass - anchor);
+                                }
+                                trulyGoes[i] = goes;
+                                toldHolds += .5f * part.mass * part.linearVelocity.sqrMagnitude - .5f * part.mass * goes.sqrMagnitude;
                                 Vector3 turns = Quaternion.Inverse(part.transform.rotation * part.inertiaTensorRotation) * part.angularVelocity, inertia = part.inertiaTensor;
                                 holdsNow += .5f * part.mass * goes.sqrMagnitude + .5f * (inertia.x * turns.x * turns.x + inertia.y * turns.y * turns.y + inertia.z * turns.z * turns.z) + part.mass * gravity * (part.worldCenterOfMass.y - spotAt.y);
                                 byShove += part.mass * Vector3.Dot(own.NudgedBy, goes) * .02f;
                                 float byDrive = 0, byTorque = 0;
                                 if (i >= 1)
                                 {
-                                    for (int d = 0; d < part.dofCount; d++) byDrive += part.driveForce[d] * part.jointVelocity[d] * .02f;
-                                    byTorque = Vector3.Dot(own.GaveAs(i), part.angularVelocity - own.Part(OwnBody.FromOf(i)).angularVelocity) * .02f;
+                                    // (What a torque or a drive gave over the step: itself times the mean of how the joint
+                                    // turned at the step's start and at its end. At the end alone it is off by tens of
+                                    // joules where a light part is pushed hard: the review of November 10.)
+                                    bool had = !float.IsNaN(heldBefore) && jointBefore[i] != null && jointBefore[i].Length == part.dofCount;
+                                    Vector3 against = part.angularVelocity - own.Part(OwnBody.FromOf(i)).angularVelocity;
+                                    if (jointBefore[i] == null || jointBefore[i].Length != part.dofCount) jointBefore[i] = new float[part.dofCount];
+                                    for (int d = 0; d < part.dofCount; d++)
+                                    {
+                                        float now = part.jointVelocity[d];
+                                        byDrive += part.driveForce[d] * (had ? .5f * (now + jointBefore[i][d]) : now) * .02f;
+                                        jointBefore[i][d] = now;
+                                    }
+                                    byTorque = Vector3.Dot(own.GaveAs(i), had ? .5f * (against + turnedBefore[i]) : against) * .02f;
+                                    turnedBefore[i] = against;
                                 }
                                 byDrives += byDrive; byTorques += byTorque;
-                                if (i < OwnBody.Thigh) continue;
+                                if (i < OwnBody.Thigh) { othersGo = Mathf.Max(othersGo, goes.magnitude); othersTurn = Mathf.Max(othersTurn, part.angularVelocity.magnitude); continue; }
                                 float joint = 0, drive = 0, turned = 0;
                                 for (int d = 0; d < part.dofCount; d++) { joint += part.jointVelocity[d] * part.jointVelocity[d]; drive += part.driveForce[d] * part.driveForce[d]; turned += part.jointPosition[d] * part.jointPosition[d]; }
                                 line.Append(string.Format(inv, " [{0}] v {1:0.0} w {2:0} jw {3:0} at {4:0} deg gave {5:0} ({6:+0.0;-0.0} J) drive {7:0} ({8:+0.0;-0.0} J)", i, goes.magnitude, part.angularVelocity.magnitude, Mathf.Sqrt(joint), Mathf.Sqrt(turned) * Mathf.Rad2Deg, own.Gave(i), byTorque, Mathf.Sqrt(drive), byDrive));
@@ -874,6 +904,7 @@ namespace WonderGather.Tests
                                 lowest[0], lowest[1],
                                 Vector3.Angle(own.Part(OwnBody.Foot).transform.up, Vector3.up), Vector3.Angle(own.Part(OwnBody.Foot + 1).transform.up, Vector3.up),
                                 own.Part(OwnBody.Hips).linearVelocity.magnitude, own.Part(OwnBody.Hips).angularVelocity.magnitude));
+                            line.Append(string.Format(inv, " | the fastest of its other parts v {0:0.0} w {1:0} | by the engine's own telling of how its parts go it would hold {2:0.0} J more", othersGo, othersTurn, toldHolds));
                             float gained = float.IsNaN(heldBefore) ? 0 : holdsNow - heldBefore;
                             line.Append(string.Format(inv, " | holds {0:0.0} J: gained {1:+0.0;-0.0}, by its torques {2:+0.0;-0.0}, by its drives {3:+0.0;-0.0}, by the shove {4:+0.0;-0.0}, else {5:+0.0;-0.0}",
                                 holdsNow, gained, byTorques, byDrives, byShove, gained - byTorques - byDrives - byShove));
@@ -899,6 +930,13 @@ namespace WonderGather.Tests
                             if (owns) { var part = own.Part(i); if (part == null) continue; goes = part.linearVelocity; turns = part.angularVelocity; at = part.worldCenterOfMass; }
                             else { var part = fall.Part(i); if (part == null) continue; goes = part.linearVelocity; turns = part.angularVelocity; at = part.worldCenterOfMass; }
                             Assert.That(float.IsNaN(goes.x) || float.IsNaN(at.y), Is.False, $"{name}, shoved {how.called}: a part of it is nowhere.");
+                            if (atBeforeK == k - 1 && countBefore == count && ownsBefore == owns && i < atBefore.Length)
+                            {
+                                float moved = (at - atBefore[i]).magnitude / .02f;
+                                if (moved > fastestMoved) { fastestMoved = moved; fastestMovedWhen = $"part {i}, {k * .02f:F2} s"; }
+                            }
+                            if (i < atBefore.Length) atBefore[i] = at;
+                            if (i == count - 1) { atBeforeK = k; countBefore = count; ownsBefore = owns; }
                             if (goes.magnitude > fastest)
                             {
                                 fastest = goes.magnitude; fastestWhen = $"part {i}, {k * .02f:F2} s, {(owns ? "standing by its own joints" : "in the fall")}";
@@ -909,8 +947,8 @@ namespace WonderGather.Tests
                         }
                     }
                     Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                        "OWN_SHOVES {0}, shoved {1}: {2}; {3} steps; its fastest part {4:0.0} m/s ({5}); the most any part turned {6:0} rad/s; its highest part {7:0.00} m over the ground ({8}), of {9:0.00} standing",
-                        name, how.called, stoodUntil >= 299 ? "it stands" : $"it went down {stoodUntil * .02f:F2} s after the first", steps, fastest, fastestWhen, turnsMost, highest, highestWhen, tall));
+                        "OWN_SHOVES {0}, shoved {1}: {2}; {3} steps; its fastest part {4:0.0} m/s ({5}); the most any part turned {6:0} rad/s; by how far its parts moved in a step the fastest went {10:0.0} m/s ({11}); its highest part {7:0.00} m over the ground ({8}), of {9:0.00} standing",
+                        name, how.called, stoodUntil >= 299 ? "it stands" : $"it went down {stoodUntil * .02f:F2} s after the first", steps, fastest, fastestWhen, turnsMost, highest, highestWhen, tall, fastestMoved, fastestMovedWhen));
                     if (tracedAtFastest != null) Debug.Log($"OWN_SHOVE_TRACE {name}, shoved {how.called}, the steps before its fastest part ({fastestWhen}): // {tracedAtFastest}");
                     if (fastest >= 9) wrong += $" {name}, shoved {how.called}: a part of it went at {fastest:F1} m/s ({fastestWhen}).";
                     if (highest >= tall + .35f) wrong += $" {name}, shoved {how.called}: a part of it was {highest:F2} m over the ground ({highestWhen}); it stands {tall:F2} m.";
