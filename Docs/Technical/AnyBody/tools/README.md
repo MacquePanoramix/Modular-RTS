@@ -4,6 +4,7 @@
 |---|---|
 | `unity_tests.sh <name> [filter] [extra args]` | Runs this worktree's PlayMode tests in batch mode; results and log in `TestRuns/` (ignored by git); prints each test's result and every failure's message |
 | `testresults.py <results.xml>` | Prints a results file: totals, each test, each failure's message |
+| `shoves.sh <name> [extra args]` | Runs only the shove test that is not yet met (`ShovedAgainAndAgainNothingOfItFlies`) and prints each course's line. With `-ownShoveTrace 1` it also writes `TestRuns/<name>.trace.txt`: the 16 steps before a part flies, one a line (each leg part's speeds and what its joint gave; the boots; and what the whole body holds against what its joints were counted to give, in joules). `-ownOnly Small` runs one miner; `-ownStepSet Name=value,...` sets the keeper's static settings for the run |
 | `../sheets/atlas_sheets.py <capture folder> [--blind]` | Makes the stance sheets from a capture's tiles and `figures.csv` |
 
 ## The runs used most

@@ -261,6 +261,49 @@ namespace WonderGather
         // (Off since the same night: it changed how it steps when nothing is wrong. Pulled gently, Small then took
         // five to seven steps for two, its head going 46 to 58 cm for 33.)
         public static bool LoadsBoth = false;
+        // A leg is not pushed with while its boot bears nothing (November 10). What makes a leg push is the ground
+        // pushing back on its sole: asked for its share with its boot off the ground (its body tipping over the other
+        // boot, or shoved off both), the leg only kicks out, its boot going at 9 to 18 m/s as the body goes down
+        // (ShovedAgainAndAgainNothingOfItFlies, not met since October 13). So a leg's share of the push is scaled by
+        // how its boot is braced: nothing while the ground has borne it with nothing for BracedOver steps, all of it
+        // once the ground bears it with Braced of its weight or more, smoothly between; what it does not take the
+        // other leg does, as far as that one is braced. Unlike LoadsBoth it leaves a boot that bears anything much
+        // alone (a leg in ordinary standing and stepping bears far more than Braced of its weight), and it leaves a
+        // boot its own step is swinging or has just put down to the step's own rules (Loads). Braced 0: as before.
+        // (Tried, and off. It came on in only 13 to 28 steps of the test's nine courses, and the boots flew as before,
+        // Small's at 74 m/s: a boot that bears nothing is one way into it among several. What was then measured, step
+        // by step (the test's -ownShoveTrace 1): what the whole body holds against what its joints are counted to
+        // give balances to a few joules a step until a boot that is being pushed through is not flat on the ground
+        // (rolled onto an edge under the body's weight; just off the ground; taken for landed while still in the air).
+        // A boot turns as 0.003 kg m2, its ankle is sprung with 3 N m a radian and stops nowhere, and its worked-out
+        // torque is 30 to 150 N m: not held flat by the ground, it is turning at 60 to 80 rad/s one step later. And
+        // from there the body gains what no joint gives it, 90 and then 300 to 3600 joules a step: the engine's step
+        // itself adds to parts that turn fast (ArticulationFactsTests.AFastLegGainsByTheStepItself: a leg left alone
+        // gains a quarter of what it holds each step at 30 rad/s). So no guard here mends it: not this one, nor BySpeed
+        // below (42 m/s), nor the engine's other solver (13 m/s; with both guards as well, 21, through the step's own
+        // "landed"). It is mended where the new getting up is built: no torque put straight on a part, joints that
+        // stop and are damped, and a push planned only where a sole really lies (Docs/Design/AnyBody/motion_design.md, K1).)
+        public static float Braced = 0;
+        public static int BracedOver = 3;
+        // (How many steps of the physics a leg has been held back so, since the game began: for whoever counts.)
+        public static int UnbracedSteps;
+        // What a joint has to give falls as it turns the way it pushes, to nothing at its top speed (TopSpeed, from
+        // OwnBody.SpeedOf: slower with size), as a muscle's does: BySpeed times that top speed. Turning against its
+        // push, or still, it has all its strength. 0: all of it at any speed, as before.
+        // (Tried on November 10, and off: see Braced. At the speeds a boot is thrown to in one step, which way a joint
+        // turns against its push has changed by the end of the step, and what it holds back comes a step too late.)
+        public static float BySpeed = 0;
+        public float[] TopSpeed;
+        // (How many steps of the physics a joint was given less than it was asked for so: for whoever counts.)
+        public static int SlowedSteps;
+        private readonly float[,] boreLately = new float[2, 8];
+        private float Bracing(int i, float step, float g)
+        {
+            if (swings == i || (landed == i && sinceLanded < LoadsFor)) return 1;
+            float most = 0;
+            for (int k = 0; k < Mathf.Clamp(BracedOver, 1, boreLately.GetLength(1)); k++) most = Mathf.Max(most, boreLately[i, k]);
+            return Mathf.Clamp01(most / Mathf.Max(1e-6f, Braced * whole * g * step));
+        }
         // (Tried on October 13, and off: a boot just put down not lifted again for the next catch; for NotAgain
         // seconds (0.3) after it lands, the other leg takes it. In nine runs of the game's shove test ten catches
         // were begun by the boot that had landed within three tenths of a second, the one it then stood on, and
@@ -419,6 +462,8 @@ namespace WonderGather
         // push it wanted lay (metres); how far it leans against what it feels, and what it feels (m/s2); how its
         // hips were turned when it began.
         public float[] Gave => gave;
+        // (And as the turning push it was, in the world: on the part, and its opposite on what the part hangs from.)
+        public Vector3[] GaveAs => torque;
         public float Outside { get; private set; }
         public Vector3 Leaning => holds - rest;
         public Vector3 Felt => felt;
@@ -1044,6 +1089,20 @@ namespace WonderGather
                 float lacks = Mathf.Max(0, (landed == 0 ? takes0 : takes1) - most);
                 if (landed == 0) { takes0 -= lacks; takes1 += lacks; } else { takes1 -= lacks; takes0 += lacks; }
             }
+            // (A leg is not pushed with while its boot bears nothing: Braced.)
+            for (int i = 0; i < 2; i++)
+            {
+                for (int k = boreLately.GetLength(1) - 1; k > 0; k--) boreLately[i, k] = boreLately[i, k - 1];
+                boreLately[i, 0] = bears[i];
+            }
+            if (Braced > 0)
+            {
+                float brace0 = Bracing(0, step, g), brace1 = Bracing(1, step, g);
+                if (brace0 < 1 || brace1 < 1) UnbracedSteps++;
+                float lost0 = takes0 * (1 - brace0), lost1 = takes1 * (1 - brace1);
+                takes0 -= lost0; takes1 -= lost1;
+                takes0 += lost1 * brace0; takes1 += lost0 * brace1;
+            }
             for (int i = 0; i < 2; i++)
             {
                 Vector3 pushes = (i == 0 ? takes0 : takes1) * push;
@@ -1077,7 +1136,15 @@ namespace WonderGather
                 // (A hinge gives only about its own line; what is across it is borne by the joint itself.)
                 if (hinge[j]) { Vector3 line = parts[j].transform.right; torque[j] = line * Vector3.Dot(line, torque[j]); }
                 asked[j] = torque[j].magnitude;
-                torque[j] = Vector3.ClampMagnitude(torque[j], strength[j]);
+                float has = strength[j];
+                if (BySpeed > 0 && TopSpeed != null && asked[j] > 1e-6f)
+                {
+                    // (How fast the joint turns the way this pushes it: the part against what it hangs from.)
+                    float along = Vector3.Dot(torque[j], parts[j].angularVelocity - parts[from[j]].angularVelocity) / asked[j];
+                    if (along > 0) has *= Mathf.Clamp01(1 - along / Mathf.Max(1e-3f, BySpeed * TopSpeed[j]));
+                    if (has < Mathf.Min(asked[j], strength[j])) SlowedSteps++;
+                }
+                torque[j] = Vector3.ClampMagnitude(torque[j], has);
                 if (float.IsNaN(torque[j].x) || float.IsNaN(torque[j].y) || float.IsNaN(torque[j].z)) torque[j] = Vector3.zero;
                 gave[j] = torque[j].magnitude;
                 // Equal and opposite, on the two parts the joint joins: nothing pushes the body from nowhere.

@@ -348,6 +348,13 @@ namespace WonderGather
         // What a joint's worked-out torque was in the last step (newton metres), and how far outside its soles the
         // push it wanted lay (metres): for whoever watches it.
         public float Gave(int index) => keeper != null ? keeper.Gave[index] : 0;
+        // (And as the turning push it was, in the world; which part each part hangs from; and how it was pushed as a
+        // whole at the last step, as a nudge, in m/s2: for whoever reckons what was put into it.)
+        public Vector3 GaveAs(int index) => keeper != null ? keeper.GaveAs[index] : Vector3.zero;
+        public static int FromOf(int index) => From[index];
+        public Vector3 NudgedBy { get; private set; }
+        // (What the ground bore a boot with in the last step, an upward impulse in newton seconds: for whoever watches it.)
+        public float Bore(int leg) => keeper != null ? keeper.Bore(leg) : 0;
         public float Outside => keeper != null ? keeper.Outside : 0;
         // How far it leans against what it feels (metres from where it rests), and what it feels (m/s2).
         public Vector3 Leaning => keeper != null ? keeper.Leaning : Vector3.zero;
@@ -859,7 +866,13 @@ namespace WonderGather
             body.LetGo = true;
             Aim = anatomical ? new JointAim(frames, (Quaternion[])rested.Clone()) : null;
             writesMade = anatomical;
-            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { Aim = Aim, DampedAtLeast = anatomical ? (float[])dampedAtLeast.Clone() : null, StandsMid = Alive ? StandsMid : 0, Life = Lived, GroundUnder = AnyGround ? null : GroundFor, Tells = what => Told?.Invoke(name + " at " + Time.time.ToString("F2") + ": " + what), ToeTouches = toeLinks[0] != null ? toeTouches : null };
+            // (Each joint's top speed, for what it has to give at a speed: OwnKeeper.BySpeed.)
+            var topSpeed = new float[Count];
+            {
+                var kinds = JointAim.OfOwnBody();
+                for (int i = 1; i < Count; i++) topSpeed[i] = SpeedOf(kinds[i]);
+            }
+            keeper = new OwnKeeper(parts, From, masses, strength, hinge, anchors, touches, soleAt, soleSize, turning) { Aim = Aim, TopSpeed = topSpeed, DampedAtLeast = anatomical ? (float[])dampedAtLeast.Clone() : null, StandsMid = Alive ? StandsMid : 0, Life = Lived, GroundUnder = AnyGround ? null : GroundFor, Tells = what => Told?.Invoke(name + " at " + Time.time.ToString("F2") + ": " + what), ToeTouches = toeLinks[0] != null ? toeTouches : null };
             {
                 Vector3 between = Flat(.5f * (parts[Foot].transform.TransformPoint(soleAt[0]) + parts[Foot + 1].transform.TransformPoint(soleAt[1])));
                 Quaternion hipsFace = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);
@@ -1042,6 +1055,7 @@ namespace WonderGather
                 wasAt[i] = nowAt[i]; wasTurned[i] = nowTurned[i];
                 nowAt[i] = parts[i].transform.position; nowTurned[i] = parts[i].transform.rotation;
             }
+            NudgedBy = nudgeFor > 0 ? nudge : Vector3.zero;
             if (nudgeFor > 0)
             {
                 nudgeFor--;
