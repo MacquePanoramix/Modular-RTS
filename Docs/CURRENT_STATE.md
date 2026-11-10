@@ -13,13 +13,17 @@
   and not only timed; lying is never dead. **Waiting on Luis:** his agreement to the design, and the six questions of
   its section 7. **Nothing of layers 2 and 3 is built.**
   **The boot that flies** (the shove test, not met since October 13): its courses recorded step by step with a count of
-  what the body holds against what its joints give (work branch, `tools/shoves.sh`). The joints do not throw the leg.
-  It begins at a boot that is pushed through while not flat on the ground (the standing balance puts its ankle's torque
-  straight on a boot that turns as 0.003 kg m², sprung with 3 N m a radian and with no stop), and from there the engine's
-  own step adds the rest: a bare leg with nothing acting on it, set turning at 30 rad/s, holds 1900 times as much a
-  second later (two new engine facts; `ArticulationFactsTests` 11 of 11). Four guards on the standing balance, alone and
-  together, did not mend it (a boot still at 13 to 74 m/s), so it stays as it is until it is folded into the new
-  controller; the design's K1 has the finding and the four rules drawn from it. **Next:** step 0 of the design's
+  what the body holds against what its joints give (work branch, `tools/shoves.sh`). It begins at a boot that is pushed
+  through while not flat on the ground (the standing balance puts its ankle's torque straight on a boot that turns as
+  0.003 kg m², sprung with 3 N m a radian and with no stop: one step later it turns at 60 to 80 rad/s). From the next
+  step the body gains several times what all its joints are counted to give, also while nothing touches the ground:
+  the engine's own step adds energy to a leg that turns fast and that nothing damps (a bare leg with nothing acting on
+  it, set turning at 30 rad/s, holds 1900 times as much a second later; two new engine facts, `ArticulationFactsTests`
+  11 of 11). Two guards on the standing balance and the engine's other solver, alone and with both, did not meet the
+  test's bar (one run each; a boot still at 13 to 74 m/s), so it stays as it is until it is folded into the new
+  controller. The design's K1 has the finding and the five rules drawn from it, **reviewed by two agents who did not
+  make it** ([their findings](Reviews/2026-11-10_FlyingBoot_K1/review.md): the core holds; what K1 said beyond the
+  logs was corrected). **Next:** step 0 of the design's
   section 6.3, beginning with whether a stiffly sprung ankle holds a light boot under the body's weight.
   ([Validation](Validation.md), November 10.)
 

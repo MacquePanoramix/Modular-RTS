@@ -622,63 +622,96 @@ findings are in those files; this section says what changes because of them.
 | 12 | **Free joints are not blended between fits.** A joint the tasks leave free follows its own role at each step, from the body's state (resting, reaching, counterweighing: §2.7). The fit only says which side an elbow or knee points to | a blend between two fitted poses is a played pose in all but name (decisions 8) |
 
 Not changed: layer 2's graph, cost and draw (§1.2, §1.3); the gates (§2.4); one budget through the drive (§2.3); the
-tempo rule (§2.6).
+tempo rule (§2.6), except that K5 may bound its pace by a joint's speed bound.
 
 ### 6.2 The control law, checked
 
-**K1. Why a boot or a leg flies, and the rules that follow** (measured November 10; the engine's part tested on a
-bare leg). The standing balance and the present riser put their worked-out torques on the parts directly, beside the
-drives (`OwnKeeper.cs`, its two `AddTorque` calls; `OwnRiser.cs:1490-1495`), from the push each sole is meant to give.
-The keeper's shove test (`ShovedAgainAndAgainNothingOfItFlies`) is still not met: in one to three of its nine courses a
-boot goes at 10 to 74 m/s as the body goes down (the courses are not the same from run to run). On November 10 the
-courses were recorded step by step (`tools/shoves.sh` with `-ownShoveTrace 1`): each leg part, the boots, and a count of
-what the whole body holds (its motion and its height, in joules) against what its joints give it (each worked-out
-torque and each drive's force, times how far the joint turned in the step). Three things were found.
+**K1. Why a boot or a leg flies, and the rules that follow** (measured November 10; reviewed the same day by two
+agents who did not make it: [their findings](../../Reviews/2026-11-10_FlyingBoot_K1/review.md), taken in below). The
+standing balance and the present riser put their worked-out torques on the parts directly, beside the drives
+(`OwnKeeper`, the two `AddTorque` calls at the end of its step; `OwnRiser`, the same), from the push each sole is meant
+to give. The keeper's shove test (`ShovedAgainAndAgainNothingOfItFlies`) is still not met: in one to three of its nine
+courses a boot goes at 10 to 74 m/s as the body goes down (the courses are not the same from run to run). On November
+10 the courses were recorded step by step (`tools/shoves.sh` with `-ownShoveTrace 1`): each leg part, the boots, and a
+count of what the whole body holds (its motion and its height, in joules) against what its joints give it (each
+worked-out torque and each drive's force, times how far the joint turned in the step). What was found:
 
-1. **Until a boot gives way the count balances**, to a few joules a step. And the joints are not what throws the leg:
-   in the steps a boot flies the drives are taking energy out, the worked-out torques give 150 J a step at most, and the
-   body gains 300 to 3600 J a step that nothing is counted to give.
-2. **It begins at a boot that is being pushed through while it is not flat on the ground.** Three ways were seen: rolled
-   onto an edge under the body's weight (22 degrees from flat at one step, 97 at the next); just off the ground; and
-   taken for landed by the step's own rule while 34 cm in the air. A boot turns as 0.003 kg m²; its ankle's spring is
-   3 N m a radian (the keeper's rule for a light part at the game's step) and it has no stop; its worked-out torque is 30
-   to 150 N m. Flat on the ground, its four corners hold it whatever that torque is. Otherwise nothing does: one step
-   later it turns at 60 to 80 rad/s, and the ground's push, which was holding the body up through that leg, swings the
-   leg instead (the whole leg at 11 rad/s about its hip, against the hip's own torque).
-3. **From there the engine's own step adds the rest.** A bare leg with nothing acting on it (no weight, no ground, no
-   drives; `ArticulationFactsTests.AFastLegGainsByTheStepItself`, `WhatAFastLegsGainComesOf`), set turning and left
-   alone, does not keep what it holds. Each step adds about 0.7·(speed × step)² of it: 3% a step at 10 rad/s, a quarter
-   at 30, four fifths at 60. Over a second that is 1.2 times at 10 rad/s, 1.5 at 15, and 1900 times at 30. It is not
-   the parts spinning about their long lines (turning in one plane it is the same, and with rounder turning weights);
-   the engine's other solver has it too (15 times at 15 rad/s); only a finer step is free of it (a quarter of the step:
-   1.25 at 30 rad/s). Dampers hold it while they take more each step than the step adds: the game's own, to 60 rad/s on
-   a leg left alone. But a drive can take no more than its strength: pushed besides by a torque put straight on the
-   thigh, the leg ran away from 30 rad/s even with this design's dampers.
+1. **Until a boot gives way the count balances**, to within 5 to 11 J a step (Small's courses; Round's quarter-turn
+   course). **Then the body gains several times what all its joints are counted to give.** The worked-out torques start
+   it or feed it, with up to 150 J a step (in one course 87 of the first 94 J). From the next step the gains are 300 to
+   3600 J a step, while the drives are taking energy out and, in several of those steps, while neither boot touches
+   the ground. The count takes a torque's work at the end of the step, which is uncertain where a part turns a radian
+   in a step; bounded at its worst (each joint's torque times its speed times the step, drives too) the gains still
+   stand in three of the four steps checked (Small's course as it is: 504, 1081 and 3344 J gained, against at most
+   294, 457 and 748 J).
+2. **It begins at a boot that is being pushed through while it is not flat on the ground.** Seen: a boot rolled onto
+   an edge under more than the body's weight (22 degrees from flat at one step, 97 at the next, turning at 66 rad/s);
+   and a boot given 117 of its ankle's 154 N m one step after it had borne nothing (Round; two steps later, 34 cm in
+   the air, it was still given 150). A boot turns as 0.003 kg m²; its ankle's spring is 3 N m a radian (the keeper's
+   rule for a light part at the game's step) and it has no stop; its worked-out torque is 30 to 61 N m for Small, all
+   its ankle has, and up to 150 for Round. Flat on the ground, its four corners hold it whatever that torque is.
+   Otherwise nothing does: one step later it turns at 60 to 80 rad/s, and the leg above it swings at 11 rad/s about its
+   hip while the hip's drive is braking it.
+3. **The engine's own step adds energy to a leg that turns fast and that nothing damps.** A bare leg with nothing
+   acting on it (no weight, no ground, no drives; `ArticulationFactsTests.AFastLegGainsByTheStepItself`,
+   `WhatAFastLegsGainComesOf`), set turning and left alone, does not keep what it holds. Its first step adds about
+   0.7·(speed × step)² of it: 3% at 10 rad/s, a quarter at 30, about as much again at 60. Over the following second the
+   gain is uneven: 1.2 times at 10 rad/s, 1.5 at 15, 4 at 20, 1900 at 30 (on average 0.4% a step at 10 rad/s, 3% at 20,
+   16% at 30). It is not the parts spinning about their long lines (turning in one plane it is the same, and with every
+   part's turning weight the same about every line); the engine's other solver has it too (15 times at 15 rad/s); a
+   finer step has far less of it (a quarter of the step: 1.25 at 30 rad/s). Sprung and damped as the game's joints
+   are, or as this design has them, a leg left alone holds no more than it began with up to 60 rad/s; with the game's
+   dampers and no springs it runs away at 60, and why the springs matter is not known. Pushed besides with 100 N m put
+   straight on the thigh, it ran away once with this design's dampers (9 times what it held, set turning at 30 rad/s;
+   not at 15, 60 or 120), and under the other solver, with the game's, from 5 rad/s: a torque put straight on a part
+   makes it unpredictable.
 
-What does not mend the standing balance, each tried on the nine courses: a leg not pushed with while its boot bears
-nothing (`OwnKeeper.Braced`: a boot at 74 m/s); a joint's worked-out torque falling with its speed (`BySpeed`: 42 m/s);
-the engine's other solver (13 m/s); that solver with both guards (21 m/s, by the third way in). Stops alone did not
-either (November 3, the anatomical body: 17 to 73 m/s). Each guard closes one way in, and there are several. So the
-standing balance stays as it is, its test not met, until it is folded into the new controller (§2.10); the two switches
-stay in the code, off.
+What is shown and what is not. In the steps checked (Small's course under the game's solver, with and without
+`BySpeed`) the gains are of the size the bare leg's first step shows at those speeds, and they come while nothing
+touches the ground. Round's other course under the other solver gained 36 to 445 J a step with its legs turning at
+only 6 to 33 rad/s, and its count did not balance before: that one is not explained (the record shows only the legs,
+and only the boots' touches).
+
+What did not mend the standing balance (one run of the nine courses each; the courses differ from run to run by as
+much as the guards do, so the runs show that none meets the bar, not which helps most): a leg not pushed with while
+its boot bears nothing (`OwnKeeper.Braced`: a boot at 74 m/s); a joint's worked-out torque falling with its speed
+(`BySpeed`: 42 m/s); the engine's other solver (13 m/s); that solver with both guards (21 m/s). Earlier guards did not
+either (October 13: `LoadsBoth`, `OffGroundAtMost`, `TurnsAtMost`; November 3: stops, with boots at 17 to 73 m/s, and
+the damping floor). So the standing balance stays as it is, its test not met, until it is folded into the new
+controller (§2.10); the two switches stay in the code, off.
 
 The rules for the new controller:
 
-- **R1. No torque is put straight on a part.** Every joint torque is the drive's (K4). A torque put on a part keeps
-  pushing however far and fast the joint turns. A spring giving the same torque lets go as the joint moves: it can give
-  no more than its stroke holds (half of strength times eFull: 19 J for Small's ankle, 40 J for its hip), and it does
-  so inside the engine's own solve.
-- **R2. A push is planned only where the body really touches** (K2, K7). A support's share, and where on it the push
-  acts, come from what its touch bears and where. A sole that is not flat carries no torque across the edge it stands
-  on. A support that bears nothing gets a slow reach for the ground, and nothing else.
-- **R3. No part comes near the speed at which the step adds more than its damper takes.** Every joint has its stops
-  (layer 0) and the damper of K5. `BodyWatch` keeps the same count as the record above at every step, and marks any
-  step in which the body gains more than its joints gave, or a part turns faster than its top speed.
+- **R1. No torque is put straight on a part.** Every joint torque is the drive's (K4): the target is the goal plus the
+  torque over the spring, and it does not follow the joint (K3 only chooses in which of its equal readings a pose is
+  written). So a joint that is let go comes to rest that far past its goal, and the spring has given no more than its
+  stroke holds (half of strength times eFull: 19 J for Small's ankle, 40 J for its hip), inside the engine's own solve.
+  A torque put on a part keeps pushing however far and fast the joint turns. R1 holds only together with R2 (the
+  torque is never worked out for a push that has no touch) and with K5's damper.
+- **R2. A push is planned only where the body really touches** (K2, K7). A support's share is planned as §2.4 has it
+  and bounded by what its touch can bear; no share is planned on a support with no touch, which gets a slow reach for
+  the ground and nothing else. In K2 the pyramids sit at the support's real contact points, so a sole on an edge can
+  take no turning across that edge. For this `GroundTouch` keeps, for each part, every contact's point, its whole
+  impulse and its normal, and how many there are (more than change 7 lists). And since touches are read a step late,
+  whether a sole lies flat is read in the same step from the pose (the sole's tilt and its corners' heights).
+- **R3. No part comes near a speed its springs and dampers cannot answer for.** Every joint has its stops (layer 0) and
+  the damper of K5. Nothing in the engine caps a part's speed (`maxJointVelocity` does not bound a drive's motion;
+  `maxAngularVelocity` 20 is set on every link, and a boot turned at 151 rad/s). So R3 holds only through R1, R2 and
+  the damper. `BodyWatch` keeps the same count as the record above at every step, and marks any step in which the
+  body gains more than its joints gave, or a part turns faster than its bound (K5). A breach is a fault of the step,
+  to be found; it is not a speed to be clamped.
 - **R4. The first fact of step 0: whether an ankle sprung stiffly enough for R1 holds a light boot under the body's
-  weight at the game's step**, under both solvers. The keeper's soft ankle and its direct torques exist because, as it
-  was built, a stiff one did not hold (`OwnKeeper.cs:37-40`). If it holds under neither solver, what must change is
-  the boot's turning weight, the step, or the solver; each of those changes how everything in the game moves, so it is
-  put to Luis first.
+  weight at the game's step**, under both solvers (one test, `AStifflySprungAnkleHoldsALightBoot`; its cases and its
+  bar are set at step 0: standing with nothing asked, with a torque the sole can bear and with one it cannot; set on
+  an edge; off the ground; dropped; the three miners' boots). The keeper's soft ankle and its direct torques exist
+  because, as it was built, a stiff one did not hold (`OwnKeeper`, the note at `FullAt`). If it holds under neither
+  solver, what must change is the boot's turning weight, the step, or the solver; each of those changes how everything
+  in the game moves, so it is put to Luis first.
+- **R5. At the hand-over to the standing balance (§2.10), R1 to R3 stop holding**: the keeper puts its torques straight
+  on the parts. So the hand-over's gate also asks that both soles lie flat and bear; the drives are sprung as the
+  keeper has them before its first direct torque comes (or its torques come in with that change); and `BodyWatch`
+  keeps its count through the keeper's rise and marks a fault there as the keeper's. The last moment of every rise is
+  the standing balance's until the two are folded together, which is not in the first build (§6.4).
 
 **K2. The ground's push is shared by a smooth least squares, not by `Shares` and not by the LP** (likely; shown at
 step 2). `Shares` (`OwnRiser.cs:1336-1373`) splits an upward push so that its middle falls where it is wanted. Every
@@ -698,7 +731,9 @@ a half turn (`ArticulationFactsTests`: 6.12 rad at 350 degrees). Its drive pulls
 numbers. Far from zero, or far from the target, that is not the shortest turn; and a reading "the long way round" sends
 a limb round. So the writer never writes a goal as a turn from zero. At each step it writes: the reading now, plus the
 shortest turn from the joint's pose to its goal (in the joint's axes, never more than eFull), plus τ/k. The spring then
-pulls along the shortest turn whatever the reading says. Facts to add at step 0: the reading for a turn about two axes
+pulls along the shortest turn whatever the reading says. (That sum is the goal plus τ/k, written in the reading's own
+count of turns: the target does not follow the joint as it moves, and a joint that is let go stops τ/k past its goal:
+K1, R1. The limit of eFull only keeps the spring's pull within the joint's strength.) Facts to add at step 0: the reading for a turn about two axes
 at once; a drive across a half turn.
 
 **K4. The load through the target rests on two facts not yet run** (step 0). (a) target = goal + τ/k carries a known
@@ -710,11 +745,17 @@ within 2 degrees. The spring is soft (full strength at 35 degrees) and solved im
 **K5. The tempo rule is the drive's own law** (sure). With a damping of τcap/ωmax, a joint giving the share S of its
 strength can turn at ωmax(1 − S) at most. So pace = ρ·min(ωmax(1 − S_j)/turn) asks nothing the drive cannot give, and
 the weak are slow for the very reason they are weak. Kept. S_j is read as `OwnBody.cs:1053-1064` reads `driveForce`
-(the keeper's own sums are not the drive's force: code A7). One thing changes (November 10): the top speeds in
-`JointFrames` (20 to 30 rad/s at a hip height of 0.6 m) lie where the engine's step adds 11 to 25% a step to what a
-turning part holds (K1, 3). Getting up needs no joint at a third of that. So step 0 sets how fast each joint may turn
-in this controller from the count on the bare leg (its damper taking at least twice what the step adds at that speed),
-and the same bound will stand when a tool is swung.
+(the keeper's own sums are not the drive's force: code A7). One thing is added (November 10). The engine's
+step adds energy to parts that turn fast (K1, 3), and the top speeds in `JointFrames` are 20 to 30 rad/s at a hip
+height of 0.6 m (23 to 35 for Small). With this design's springs and dampers a leg left alone held up to 60 rad/s, so
+the top speeds may stand; whether they do is a test at step 0, not an estimate. For each of the three miners, the bare
+leg with this design's drives (the spring, damper and limit of §2.3), set turning at one speed at every joint and left
+for a second, must hold no more than it began with, and in every step gain less beyond the count than half of what
+its dampers took. The speed is swept up from 10 rad/s. A joint's bound in this controller is the lowest speed that
+fails, over 1.5; or its top speed, if none fails below that. Where a bound comes out below a top speed, the damper
+keeps the top speed (the weak stay slower by the same law), and the pace of §2.6 and the target's slew of §2.3 use the
+lower of the two. The quickest stage of a rise (the last push, 0.4 to 0.55 s) turns a knee about a quarter turn, some
+5 rad/s at its quickest: a rise does not need the top speeds. A swung tool will come nearer them.
 
 **K6. A speed limit does not stop flailing** (sure). A leg within its top speeds still brings its boot to 8 to 14 m/s,
 as a person's kick does. What keeps a limb from flailing is K1's rules, and that every free limb has a role and a
@@ -732,7 +773,7 @@ name (step 5 begins with one).
 
 | # | Step | Evidence | Luis |
 |---|---|---|---|
-| 0 | The ground: first, whether a stiffly sprung ankle holds a light boot under the body's weight (K1, R4); then layer 0 on the lying body; the one drive writer (K3, K4); the smooth sharing of the push (K2); the touches (change 7); `BodyWatch`, keeping the count of what the body holds against what its joints gave (K1, R3) | the facts pass; made lying from real falls with no snap; lying limp 20 s with no fault and the count balanced, three miners | |
+| 0 | The ground: first, whether a stiffly sprung ankle holds a light boot under the body's weight (K1, R4); the joints' speed bounds from the bare leg (K5); then layer 0 on the lying body; the one drive writer (K3, K4); the smooth sharing of the push (K2); the touches (change 7, and what R2 adds); `BodyWatch`, keeping the count of what the body holds against what its joints gave (K1, R3) | the stiff-ankle fact passes its bar under both solvers; the other facts pass; made lying from real falls with no snap; lying limp 20 s with no fault and the count balanced, three miners | only if R4 fails: the boot's turning weight, the step, or the solver |
 | 1 | The bridge in the game; the pose read off the body (change 8) | round trips, the hard poses among them; a fit written as joint turns puts every part within 1 mm | |
 | 2 | Holding one stance by its own joints: propped on the forearms, hands and knees, the half-kneel, the squat with hands | 20 s each, three miners at strengths 0.5, 1 and 2, no fault; each joint's share beside the atlas's S; nudged, it yields and comes back | **clips** |
 | 3 | One change of support at a time: each edge of the two routes | the gates open; nothing lifts while it bears; no fault | **clips** |
@@ -768,12 +809,15 @@ rises through one knee or through a squat. On the way you get short clips twice 
 nudged; then one hand or knee moving), before any build.
 
 **Found on the way: the boot that flies.** When you pressed the shove button many times (October 13) and limbs flew, the
-cause was not the body's strength. This engine cannot carry a light part that spins fast: it adds speed to it by
-itself, step after step (measured on a bare leg with nothing touching it). And your standing balance pushes its ankles
-directly, so a boot that rolls off the flat of its sole is set spinning within one step. No small guard on the standing
-balance cures it (four were tried, alone and together). The new way of moving is built so that it cannot begin: joints
-that stop where a real joint stops, every push through a spring that lets go, and a push only where a sole really lies.
-Standing and stepping get the same when they are folded into the new way; until then that fault stays as it is.
+body's strength was not the cause. Two things were, and both were measured. Your standing balance pushes its ankles
+directly, so a boot that is not flat on the ground while it is pushed through is set spinning within one step. And this
+engine adds energy by itself to a leg that turns fast and that nothing damps (measured on a bare leg with nothing
+touching it), so from there it runs away. Two small guards on the standing balance were tried, and the engine's other
+solver, alone and with both guards; none was enough (one run each; the earlier guards of October and November were
+not either). The new way of moving is built against it: joints that stop where a real joint stops, every push through
+a spring that lets go, and a push only where a sole really lies. Whether that holds is the first thing tested, before
+anything is built on it. The very end of a rise is still your standing balance's, so the fault can still show there,
+and in standing and stepping, until those are folded into the new way.
 
 **Six questions** (each with what I recommend):
 
@@ -793,5 +837,6 @@ Standing and stepping get the same when they are folded into the new way; until 
    changing their work. *Recommended: add the switch; the default stays as today.*
 6. **The last moment of a rise.** Your standing balance may use up to twice a joint's strength, as it does today when a
    miner stands and steps. Keeping it makes the end of a rise a little stronger than the body's own numbers; capping it
-   changes the step you like. *Recommended: keep it for the first build, measure it, and show you the capped one beside
+   changes the step you like. It is also where a boot can still fly at the end of a rise (above): the standing balance
+   pushes its joints directly. *Recommended: keep it for the first build, measure it, and show you the capped one beside
    it later.*

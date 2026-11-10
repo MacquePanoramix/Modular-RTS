@@ -58,7 +58,7 @@ answers; the route work (steps 4 and 5) does.
 
 ## In hand (November 10, evening): finish these first
 
-1. **Correct the design's K1 by its review.** Two agents reviewed the flying boot's diagnosis
+1. **(Done, November 10, evening: the design's K1, K3, K5, its step 0 and its section 7 corrected.)** Two agents reviewed the flying boot's diagnosis
    ([their findings](Reviews/2026-11-10_FlyingBoot_K1/review.md)): the core holds (the count is coded rightly, it
    balances before a boot gives way, and the body then gains several times what its joints are counted to give, also in
    steps where nothing touches the ground), but K1 as committed in `66a602a` says more than the logs show. To change in
@@ -91,11 +91,12 @@ answers; the route work (steps 4 and 5) does.
 Each step has its evidence in `motion_design.md` §6.3. Report a result only after reading its run.
 
 1. **The flying boot: its cause found (November 10), the standing balance not mended.** Read `motion_design.md` K1
-   first: it is the ground the new controller stands on. In short: the joints do not throw the leg. A boot pushed through
-   while it is not flat on the ground is set spinning within one step (the keeper puts its ankle's torque straight on a
-   boot that turns as 0.003 kg m²), and from there the engine's own step adds energy to whatever turns fast (a bare
-   leg left alone gains a quarter of what it holds each step at 30 rad/s: `ArticulationFactsTests`). Four guards on the
-   keeper did not meet the test's bar (`Braced`, `BySpeed`, the other solver, all together); they stay in the code, off.
+   first: it is the ground the new controller stands on. In short: a boot pushed through while it is not flat on the
+   ground is set spinning within one step (the keeper puts its ankle's torque straight on a boot that turns as
+   0.003 kg m²), and from there the engine's own step adds energy to a leg that turns fast and that nothing damps (a
+   bare leg left alone holds 1900 times as much after a second at 30 rad/s: `ArticulationFactsTests`). Two guards on
+   the keeper and the engine's other solver, alone and with both, did not meet the test's bar (`Braced`, `BySpeed`;
+   one run each); the switches stay in the code, off.
    **Do not spend more on guarding the keeper.** It is mended by folding it into the new controller (design §2.10).
    The record of any course: `bash Docs/Technical/AnyBody/tools/shoves.sh <name> -ownShoveTrace 1`, then
    `TestRuns/<name>.trace.txt`.

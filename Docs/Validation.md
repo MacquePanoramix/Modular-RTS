@@ -4839,16 +4839,24 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   50 J; its torques are counted to give 16, its drives to take 55; 89 J come from neither); in the next four steps it
   gains 504, 1081, 903 and 3344 J while torques and drives together take 40 to 290 J out of it. With `BySpeed` the same
   course, the same way. Under the other solver the gains are smaller (130 to 650 J in a step) and the boots slower.
-  With both guards under that solver, Round's boot was given its ankle's whole strength (117, then 150 N m) one step
-  after it left the ground and again when the step took it for landed, 34 cm in the air.
+  With both guards under that solver, Round's boot was given 117 of its ankle's 154 N m one step after it had borne
+  nothing, and 150 two steps later, 34 cm in the air; in Round's other course there the body gained 36 to 445 J a step
+  beyond the count with its legs turning at only 6 to 33 rad/s, which is not explained.
 - **Two engine facts** (`ArticulationFactsTests`, **11 of 11**): a leg as Small's on floating hips, no weight, nothing
   to touch, no stops. Left alone and set turning at each joint, over a second it holds at most 1.07 times what it began
   with at 5 rad/s, 1.21 at 10, 1.46 at 15, 4.1 at 20, 1886 at 30 (the game's solver); 1.05, 14.9 and 1359 at 5, 15 and 30
   under the other. Turning in one plane only: 2240 at 30 rad/s; with every part's turning weight the same about every
   line: 2201. With the step halved 2.8, quartered 1.25. After one step alone, set turning at 60 rad/s, it holds 911 J
   with the game's step and 500 with a quarter of it. Sprung and damped as the game's joints: no more than it began with
-  up to 60 rad/s; damped as the design has it (strength over top speed): the same; pushed besides with 100 N m straight
-  on the thigh: 9.3 times at 30 rad/s.
+  up to 60 rad/s; damped as the design has it (strength over top speed): the same; with the game's dampers and no
+  springs: 41 times at 60 rad/s; pushed besides with 100 N m straight on the thigh, with the design's dampers: 9.3 times
+  at 30 rad/s, and no more than it began with at 15, 60 and 120.
+- **Reviewed** by two agents who did not make it ([their findings](Reviews/2026-11-10_FlyingBoot_K1/review.md)): the
+  count is coded rightly (its sign for the drives shown by the damped-only leg), it balances before a boot gives way,
+  and bounded at its worst the gains still stand in three of the four steps checked. Corrected in the design's K1
+  because of them: what holds a fast leg is its springs and dampers together, not its dampers alone; 0.7·(speed × step)²
+  is the first step's gain, not a steady rate; the worked-out torques do start it or feed it; the pushed leg's runaway
+  is not explained by a drive's limit; one course is not explained; and five of the rules' wordings.
 - **The standing body after the day's changes** (all the new switches off): `OwnBodyTests` **12 of 13**, the
   thirteenth the shove test above (72.6 m/s), as before.
 - **Not tested:** the whole suite (the changes are two switches that are off, and readings for the record); any of
