@@ -1,8 +1,29 @@
 # Wonder Gather — Current State
 
-**Updated:** November 9, 2026.
+**Updated:** November 10, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 4): the body's rules, as Luis answered them on November 3** ([his
+- **Now (November 10): the design of the motion checked; the boot that flies explained.** Luis moved the session to
+  Claude Fable 5.2 on November 9 (night): quality above everything, and the work kept so that Opus 5.5 can take it up
+  ([his message](Correspondence/2026-11-09_QUALITY_ABOVE_EVERYTHING_AND_FABLE.md)).
+  **The design of the motion through the stances** (layers 2 and 3: [motion_design.md](Design/AnyBody/motion_design.md))
+  was checked three ways (every citation against the code and the game's recorded falls; Luis's decisions and the
+  research; the control law itself) and revised: **its sections 6 and 7 stand.** Twelve changes, among them: the first
+  build takes every fall of every miner (a miner on its back rolls onto its front first: only one fall in ten ends on the
+  front, and Long and Round have no way up of their own today); Luis gets clips after steps 2 and 3; capacity is seen
+  and not only timed; lying is never dead. **Waiting on Luis:** his agreement to the design, and the six questions of
+  its section 7. **Nothing of layers 2 and 3 is built.**
+  **The boot that flies** (the shove test, not met since October 13): its courses recorded step by step with a count of
+  what the body holds against what its joints give (work branch, `tools/shoves.sh`). The joints do not throw the leg.
+  It begins at a boot that is pushed through while not flat on the ground (the standing balance puts its ankle's torque
+  straight on a boot that turns as 0.003 kg m², sprung with 3 N m a radian and with no stop), and from there the engine's
+  own step adds the rest: a bare leg with nothing acting on it, set turning at 30 rad/s, holds 1900 times as much a
+  second later (two new engine facts; `ArticulationFactsTests` 11 of 11). Four guards on the standing balance, alone and
+  together, did not mend it (a boot still at 13 to 74 m/s), so it stays as it is until it is folded into the new
+  controller; the design's K1 has the finding and the four rules drawn from it. **Next:** step 0 of the design's
+  section 6.3, beginning with whether a stiffly sprung ankle holds a light boot under the body's weight.
+  ([Validation](Validation.md), November 10.)
+
+- **Before (November 4): the body's rules, as Luis answered them on November 3** ([his
   answers](Correspondence/2026-11-03_STRENGTH_SIZE_AND_EVERYTHING_ON_GITHUB.md)): strength from muscle, each region's
   share of muscle in a body of its size; bigger bodies slower; the weights where the models have them; the standing body
   may change; every action to adapt to any body in the end; everything on GitHub. **Built on the work branch:** strength

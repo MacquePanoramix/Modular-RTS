@@ -4811,3 +4811,48 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   0.047), S a median 0.0000, not held 23 to 19; the prototype comparisons unchanged (Body 21541 / 0, the verdicts
   identical). Drawn ([the sheets](Images/StanceAtlas/2026-11-09_resting/)): the squats' forearms rest on the knees; in the
   half-kneel the front hand on its knee while the other hangs; rising, a hand on the front thigh. Read by me; not judged.
+
+## S3b step 2 — the design of the motion checked; the boot that flies measured (November 10)
+
+- **The design of the motion** ([motion_design.md](Design/AnyBody/motion_design.md)) checked three ways, no code run:
+  every citation opened and the game's recorded falls counted ([the code check](Design/AnyBody/motion_check_code.md): of
+  615 recorded pushes the body lay on its front in 11%, between in 33%, on its back in 56%); Luis's decisions and the
+  research ([the decisions check](Design/AnyBody/motion_check_decisions.md)); the control law (the design's §6.2). Its
+  sections 6 and 7 are the outcome. **Not tested:** anything of it; nothing of layers 2 and 3 is built.
+- **The shove test that is not met** (`OwnBodyTests.ShovedAgainAndAgainNothingOfItFlies`; work branch, by
+  `Docs/Technical/AnyBody/tools/shoves.sh`), its nine courses (three miners, three ways of shoving), one run each unless
+  said; the courses are not the same from run to run. The fastest part in a course, as it stood by its own joints:
+
+  | Run | Small | Long | Round |
+  |---|---|---|---|
+  | as it is (four runs of Small's courses; one of Long's and Round's) | 73.1, 26.6, 73.7, 72.6 m/s (the quarter-turn course); its others under 4 | under 5 | 16.2 (the quarter-turn course) |
+  | a leg not pushed with while its boot bears nothing (`Braced=0.03`, over 3 steps; then over 1) | 74.2; 73.6 | 9.6; 7.8 | 11.2; 13.0 |
+  | a joint's worked-out torque falling with its speed (`BySpeed=1`) | 18.3 and 42.1 | 10.9 | under 5 |
+  | the engine's other solver (TGS; the project's setting changed for the run and put back) | 9.6 | 12.3 | 12.9 |
+  | that solver with both guards | 6.2 | 5.2 | 13.6 and 21.4 |
+
+  The bar is 9 m/s: no row meets it.
+- **The steps before a part flies, recorded** (`-ownShoveTrace 1`: each leg part; the boots; and what the whole body
+  holds, moving and lifted, against what its joints' worked-out torques, its drives and the shove are counted to give
+  it). Small, the quarter-turn course, as it is: the count balances to within about 5 J a step for the eleven steps before; then the
+  boot it stands on, 22 degrees from flat, is 97 degrees from flat one step later, turning at 66 rad/s (the body gains
+  50 J; its torques are counted to give 16, its drives to take 55; 89 J come from neither); in the next four steps it
+  gains 504, 1081, 903 and 3344 J while torques and drives together take 40 to 290 J out of it. With `BySpeed` the same
+  course, the same way. Under the other solver the gains are smaller (130 to 650 J in a step) and the boots slower.
+  With both guards under that solver, Round's boot was given its ankle's whole strength (117, then 150 N m) one step
+  after it left the ground and again when the step took it for landed, 34 cm in the air.
+- **Two engine facts** (`ArticulationFactsTests`, **11 of 11**): a leg as Small's on floating hips, no weight, nothing
+  to touch, no stops. Left alone and set turning at each joint, over a second it holds at most 1.07 times what it began
+  with at 5 rad/s, 1.21 at 10, 1.46 at 15, 4.1 at 20, 1886 at 30 (the game's solver); 1.05, 14.9 and 1359 at 5, 15 and 30
+  under the other. Turning in one plane only: 2240 at 30 rad/s; with every part's turning weight the same about every
+  line: 2201. With the step halved 2.8, quartered 1.25. After one step alone, set turning at 60 rad/s, it holds 911 J
+  with the game's step and 500 with a quarter of it. Sprung and damped as the game's joints: no more than it began with
+  up to 60 rad/s; damped as the design has it (strength over top speed): the same; pushed besides with 100 N m straight
+  on the thigh: 9.3 times at 30 rad/s.
+- **The standing body after the day's changes** (all the new switches off): `OwnBodyTests` **12 of 13**, the
+  thirteenth the shove test above (72.6 m/s), as before.
+- **Not tested:** the whole suite (the changes are two switches that are off, and readings for the record); any of
+  it as played or in a build; a repeat of each guard's run (one run each: the table shows that no guard meets the bar,
+  not by how much each helps); why the count's remainder is what it is in the step a boot rolls over (the worked-out
+  torques' work is counted at the end of the step, which is uncertain by up to their size times the turn in a step
+  where a part turns a radian); the other solver on anything but this test.

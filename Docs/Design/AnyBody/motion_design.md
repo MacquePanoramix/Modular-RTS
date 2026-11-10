@@ -3,6 +3,10 @@
 Status: a design for Luis to agree before anything is built (November 9, 2026). Nothing here is Locked. Nothing was built
 or run for it: the numbers are from the cited files, and every cost is an estimate until it is measured.
 
+**Checked on November 10 (three checks): sections 6 and 7 at the end revise this page. Where they differ from
+sections 0 to 5, sections 6 and 7 stand.** The first build is no longer "from the front only", and the questions for
+Luis are those of section 7.
+
 Code is cited on the work branch (`D:/Dev/WG`, `claude/wip-round` at `53f388d`). Paths are under
 `Assets/_WonderGather/Scripts/Units/` unless they begin with `Tests/` (`Assets/_WonderGather/Tests/PlayMode/`) or `Docs/`;
 the solver's files (`Stances.cs`, `StanceFitter.cs`, `Statics.cs`, `Targets.cs`) are in `Rising/AnyBody/Body/`.
@@ -592,3 +596,202 @@ every frame checked, then judges, then you.
 
 **Five questions** close the design: front first; a body that truly cannot rise; how much variation; opening switched
 on; the miners' strengths.
+
+## 6. The checks of November 10, and what they change
+
+Three checks were made of sections 0 to 5. The code: every citation opened, and the game's recorded falls counted
+([motion_check_code.md](motion_check_code.md)). Luis's decisions, the research and what he could judge
+([motion_check_decisions.md](motion_check_decisions.md)). The control law itself (§6.2, by the lead, on Fable 5.2). The
+findings are in those files; this section says what changes because of them.
+
+### 6.1 What changes
+
+| # | Change | Why |
+|---|---|---|
+| 1 | **The first build takes every fall, by every miner.** A body on its back or a side first rolls onto its front (the third named passage of §1.2), then pushes up and takes one of the two routes. The old animation stays only as today's last guard, after 12 tries. Sitting up from the back, which an able body does more often than rolling, is the second build | Of 615 recorded pushes in the game's own test the body lay on its front in 11%, between in 33%, on its back in 56%; Luis saw the same on October 22. "Front first" would have shown him the old animation at most falls, and Long and Round have no present way at all (code D, A10; decisions 1) |
+| 2 | **Luis sees it early.** After step 2 (a stance held by its own joints, and nudged) and after step 3 (one change of support) he gets short clips of the three miners. Nothing to decide, no build yet | Nothing reached him before step 7 (decisions 5; the fault INTEGRATION C4 had found once already) |
+| 3 | **Capacity is seen, not only timed.** (a) The hand that pushes on the front thigh is in the first build, as a smooth law: it carries what the leg lacks, nothing for the able and more with strain. (b) The stagger between the two sides grows with strain again (strategy §3.4), beside the seeded lag. (c) Effort shows: the breath deepens, and a joint trembles a little as its share of its strength passes about 0.7. (d) A test sets a weak rise beside an able one with their times made equal: the weak one must differ in its stages, supports and paths, not only in its time. (e) The bear (the way predicted for Small) comes as soon as its stance is mended | "Slowed evenly, it reads as slow, not as weak" (the frame study, on Tao 2022); judges round 2: the miners differ in costume, not in how they carry weight (decisions 2, 3) |
+| 4 | **Lying is never dead.** As its tone returns the body stirs: breath on the ground, the head first, a hand drawn in, small shifts. Recovery is read from its state (breath, daze, fresh shares), and the first stage begins when its tone suffices. Between tries it rests until that state has recovered, not for `RestsAfterATry` seconds (`PhysicalFall.cs:779`). Behind the new switch | Luis, October 13: "shouldn't look dead and then start moving ... after a timer" (decisions 4) |
+| 5 | **The standing balance's double strength is put to Luis** (Q6), and measured either side of the hand-over: each joint's share of its strength, and how fast the hips rise | Critique F1 left it to him; the design had dropped the question (decisions 7) |
+| 6 | **Every gate, bar and time in the body's own units.** The hand-over gate (1 cm) becomes a share of the sole; the draw's temperature and the cost of a failure are times √(H/g); the wander region's bound is times H; the bars are shares of H. The riser's `Balance*` numbers (searched on Small, in metres and seconds) are not carried over: the new law's few settings are found again, in body units, on the three miners and the made bodies together | decisions 9; code C |
+| 7 | **What the design called reuse is new work**, now counted in the steps. The reach pieces are written again as plain geometry that gives joint turns in layer 0's coordinates, their elbow and knee sides taken from the fit (the riser's write for the as-made body, and its elbow side is set for lying on the front). The reserve without each single support comes from `Statics.Build` with `keep`. Touches go on the trunk, hips, head and upper arms, and keep the whole impulse, not only its upward part. Each leg and the neck get their own tiredness, the work at the rock unchanged. The slope under a support comes from the ray's normal | code A2 to A8, A13 |
+| 8 | **The pose read off a lying body is tested where it is hard**: flat on the front and on the back (where the solver's three root angles lose one turn) and with shoulders and hips 90 degrees aside. The game keeps the root's turn whole; the solver's root angles are only where a fit starts | decisions 10 (INTEGRATION C12) |
+| 9 | **The look on the routes is mended before Luis sees motion**: Long's coat (on the ground in the squat, bundled in the kneels), Round's apron, and arms drawn from the model's own shoulders with the palm laid (`AtlasPoser.ReachFrom`, `AtlasHands`), in the game's drawing for the new way only | judges round 2, items 2 and 8; decisions 6 |
+| 10 | **A button pressed many times** is a test: a miner pushed again while it rises, and pushed ten times quickly | Luis, October 13 |
+| 11 | **The panel says what happened.** One line names how the last getting up was done (the new way; the old one after 12 tries), from `PhysicalFall.ByItsOwnSaid`. The two switches become one choice of three, so they cannot disagree | Luis once judged a build with the new switch off (decisions 1, 5) |
+| 12 | **Free joints are not blended between fits.** A joint the tasks leave free follows its own role at each step, from the body's state (resting, reaching, counterweighing: §2.7). The fit only says which side an elbow or knee points to | a blend between two fitted poses is a played pose in all but name (decisions 8) |
+
+Not changed: layer 2's graph, cost and draw (§1.2, §1.3); the gates (§2.4); one budget through the drive (§2.3); the
+tempo rule (§2.6).
+
+### 6.2 The control law, checked
+
+**K1. Why a boot or a leg flies, and the rules that follow** (measured November 10; the engine's part tested on a
+bare leg). The standing balance and the present riser put their worked-out torques on the parts directly, beside the
+drives (`OwnKeeper.cs`, its two `AddTorque` calls; `OwnRiser.cs:1490-1495`), from the push each sole is meant to give.
+The keeper's shove test (`ShovedAgainAndAgainNothingOfItFlies`) is still not met: in one to three of its nine courses a
+boot goes at 10 to 74 m/s as the body goes down (the courses are not the same from run to run). On November 10 the
+courses were recorded step by step (`tools/shoves.sh` with `-ownShoveTrace 1`): each leg part, the boots, and a count of
+what the whole body holds (its motion and its height, in joules) against what its joints give it (each worked-out
+torque and each drive's force, times how far the joint turned in the step). Three things were found.
+
+1. **Until a boot gives way the count balances**, to a few joules a step. And the joints are not what throws the leg:
+   in the steps a boot flies the drives are taking energy out, the worked-out torques give 150 J a step at most, and the
+   body gains 300 to 3600 J a step that nothing is counted to give.
+2. **It begins at a boot that is being pushed through while it is not flat on the ground.** Three ways were seen: rolled
+   onto an edge under the body's weight (22 degrees from flat at one step, 97 at the next); just off the ground; and
+   taken for landed by the step's own rule while 34 cm in the air. A boot turns as 0.003 kg m²; its ankle's spring is
+   3 N m a radian (the keeper's rule for a light part at the game's step) and it has no stop; its worked-out torque is 30
+   to 150 N m. Flat on the ground, its four corners hold it whatever that torque is. Otherwise nothing does: one step
+   later it turns at 60 to 80 rad/s, and the ground's push, which was holding the body up through that leg, swings the
+   leg instead (the whole leg at 11 rad/s about its hip, against the hip's own torque).
+3. **From there the engine's own step adds the rest.** A bare leg with nothing acting on it (no weight, no ground, no
+   drives; `ArticulationFactsTests.AFastLegGainsByTheStepItself`, `WhatAFastLegsGainComesOf`), set turning and left
+   alone, does not keep what it holds. Each step adds about 0.7·(speed × step)² of it: 3% a step at 10 rad/s, a quarter
+   at 30, four fifths at 60. Over a second that is 1.2 times at 10 rad/s, 1.5 at 15, and 1900 times at 30. It is not
+   the parts spinning about their long lines (turning in one plane it is the same, and with rounder turning weights);
+   the engine's other solver has it too (15 times at 15 rad/s); only a finer step is free of it (a quarter of the step:
+   1.25 at 30 rad/s). Dampers hold it while they take more each step than the step adds: the game's own, to 60 rad/s on
+   a leg left alone. But a drive can take no more than its strength: pushed besides by a torque put straight on the
+   thigh, the leg ran away from 30 rad/s even with this design's dampers.
+
+What does not mend the standing balance, each tried on the nine courses: a leg not pushed with while its boot bears
+nothing (`OwnKeeper.Braced`: a boot at 74 m/s); a joint's worked-out torque falling with its speed (`BySpeed`: 42 m/s);
+the engine's other solver (13 m/s); that solver with both guards (21 m/s, by the third way in). Stops alone did not
+either (November 3, the anatomical body: 17 to 73 m/s). Each guard closes one way in, and there are several. So the
+standing balance stays as it is, its test not met, until it is folded into the new controller (§2.10); the two switches
+stay in the code, off.
+
+The rules for the new controller:
+
+- **R1. No torque is put straight on a part.** Every joint torque is the drive's (K4). A torque put on a part keeps
+  pushing however far and fast the joint turns. A spring giving the same torque lets go as the joint moves: it can give
+  no more than its stroke holds (half of strength times eFull: 19 J for Small's ankle, 40 J for its hip), and it does
+  so inside the engine's own solve.
+- **R2. A push is planned only where the body really touches** (K2, K7). A support's share, and where on it the push
+  acts, come from what its touch bears and where. A sole that is not flat carries no torque across the edge it stands
+  on. A support that bears nothing gets a slow reach for the ground, and nothing else.
+- **R3. No part comes near the speed at which the step adds more than its damper takes.** Every joint has its stops
+  (layer 0) and the damper of K5. `BodyWatch` keeps the same count as the record above at every step, and marks any
+  step in which the body gains more than its joints gave, or a part turns faster than its top speed.
+- **R4. The first fact of step 0: whether an ankle sprung stiffly enough for R1 holds a light boot under the body's
+  weight at the game's step**, under both solvers. The keeper's soft ankle and its direct torques exist because, as it
+  was built, a stiff one did not hold (`OwnKeeper.cs:37-40`). If it holds under neither solver, what must change is
+  the boot's turning weight, the step, or the solver; each of those changes how everything in the game moves, so it is
+  put to Luis first.
+
+**K2. The ground's push is shared by a smooth least squares, not by `Shares` and not by the LP** (likely; shown at
+step 2). `Shares` (`OwnRiser.cs:1336-1373`) splits an upward push so that its middle falls where it is wanted. Every
+push is upward and every support is taken to be at one height. The atlas's S assumes more: its LP lets the ground push
+sideways within friction, which is how a body on hands and feet props itself, its limbs leaning on one another through
+the ground. A controller that shares only upward pushes asks more of the joints than the plan promised, so a stance
+planned at S 0.8 may not hold. The LP cannot be solved each step instead: its answer is a corner of the allowed set, and
+the corner jumps while the pose moves smoothly (REVIEW F2). So at each step the controller takes the pushes, inside the
+friction pyramids and with the sum and the turning it wants, that make Σ(τ_j/cap_j)² + ε|f|² least. That answer is
+single and moves smoothly with the pose, and at a held stance its largest share is at or just over the LP's S. It is a
+few dozen unknowns (a non-negative least squares over the pyramids' edges); its cost is measured at step 0. The LP stays
+what it is for: whether a stance can be held at all, and with how much to spare.
+
+**K3. A ball joint's target is written from where the joint is** (the reading: sure; the rule: tested at step 0). The
+engine reads a ball joint as the rotation vector of its turn from zero (joint_model §1.1), and the reading runs on past
+a half turn (`ArticulationFactsTests`: 6.12 rad at 350 degrees). Its drive pulls on each axis by the difference of those
+numbers. Far from zero, or far from the target, that is not the shortest turn; and a reading "the long way round" sends
+a limb round. So the writer never writes a goal as a turn from zero. At each step it writes: the reading now, plus the
+shortest turn from the joint's pose to its goal (in the joint's axes, never more than eFull), plus τ/k. The spring then
+pulls along the shortest turn whatever the reading says. Facts to add at step 0: the reading for a turn about two axes
+at once; a drive across a half turn.
+
+**K4. The load through the target rests on two facts not yet run** (step 0). (a) target = goal + τ/k carries a known
+load on a body whose root floats and whose foot stands on the ground: a two-part leg under a weight keeps its pose
+within 2 degrees. The spring is soft (full strength at 35 degrees) and solved implicitly, so it should. (b) What
+`GetJointGravityForces` gives on a floating root. The design reads the engine's source as "nothing"; then the sum of
+§2.2 step 4 is the only way, and K2 gives its pushes.
+
+**K5. The tempo rule is the drive's own law** (sure). With a damping of τcap/ωmax, a joint giving the share S of its
+strength can turn at ωmax(1 − S) at most. So pace = ρ·min(ωmax(1 − S_j)/turn) asks nothing the drive cannot give, and
+the weak are slow for the very reason they are weak. Kept. S_j is read as `OwnBody.cs:1053-1064` reads `driveForce`
+(the keeper's own sums are not the drive's force: code A7). One thing changes (November 10): the top speeds in
+`JointFrames` (20 to 30 rad/s at a hip height of 0.6 m) lie where the engine's step adds 11 to 25% a step to what a
+turning part holds (K1, 3). Getting up needs no joint at a third of that. So step 0 sets how fast each joint may turn
+in this controller from the count on the bare leg (its damper taking at least twice what the step adds at that speed),
+and the same bound will stand when a tool is swung.
+
+**K6. A speed limit does not stop flailing** (sure). A leg within its top speeds still brings its boot to 8 to 14 m/s,
+as a person's kick does. What keeps a limb from flailing is K1's rules, and that every free limb has a role and a
+damped rest (§2.7).
+
+**K7. What the body senses bounds what the controller can promise** (sure). `GroundTouch` keeps the upward impulse only,
+and ignores moving bodies while getting up. Until change 7 a gate on "bears" is a gate on upward push alone, a slope
+is not read, and a hand on a thigh is not felt.
+
+**Not checked here:** the numbers of §1.3's cost; whether the engine keeps a body with many loaded contacts quiet at 50
+steps a second on soft springs (step 2 shows it); the roll, which is the hardest passage and has no design beyond its
+name (step 5 begins with one).
+
+### 6.3 The steps, revised
+
+| # | Step | Evidence | Luis |
+|---|---|---|---|
+| 0 | The ground: first, whether a stiffly sprung ankle holds a light boot under the body's weight (K1, R4); then layer 0 on the lying body; the one drive writer (K3, K4); the smooth sharing of the push (K2); the touches (change 7); `BodyWatch`, keeping the count of what the body holds against what its joints gave (K1, R3) | the facts pass; made lying from real falls with no snap; lying limp 20 s with no fault and the count balanced, three miners | |
+| 1 | The bridge in the game; the pose read off the body (change 8) | round trips, the hard poses among them; a fit written as joint turns puts every part within 1 mm | |
+| 2 | Holding one stance by its own joints: propped on the forearms, hands and knees, the half-kneel, the squat with hands | 20 s each, three miners at strengths 0.5, 1 and 2, no fault; each joint's share beside the atlas's S; nudged, it yields and comes back | **clips** |
+| 3 | One change of support at a time: each edge of the two routes | the gates open; nothing lifts while it bears; no fault | **clips** |
+| 4 | The plan: the graph with each single let-go, the draw, the laws (change 3), the variation | the odds for the 13 bodies; sweeps of strength and size that move smoothly | the odds, as a table |
+| 5 | Leaving the ground: stirring while it lies (change 4); the roll onto the front; pushing up | from real falls on the bench, by kind of body | |
+| 6 | The look on the routes (change 9) | the sheets again, and the same stances in motion | |
+| 7 | The whole getting up in the game as played: every fall, every rendered frame; pushed again while rising; six falls side by side; weak beside able with times made equal | the bars of §3.3, in body units | |
+| 8 | Judges on motion (clips, not stills), then Luis | three rounds at most | **a build** |
+
+### 6.4 Not in the first build (revised)
+
+Sitting up from the back (the second build). The bear, until its stance is mended. Slopes beyond what the feedback
+takes. A hand of its own. One controller for standing and rising. The creator's warning in the creator. One unit helping
+another. Bodies with one short leg, or a joint stronger one way than the other: the solver's body has one length for
+each pair of limbs and one strength for each joint (REVIEW F5), so "any body" here means any proportions and strengths of
+this body with two arms and two legs.
+
+## 7. For Luis, in plain words (revised November 10)
+
+**The way up.** A fallen body reads how it lies and what it can do in each stance: how much of its strength each needs,
+whether it can let a hand or a knee go there, how tired it is. From that it picks a way up and picks again at every
+stage. Weaker or bigger bodies keep more of themselves on the ground, push on their own knee, gather before a hard push,
+rest, tremble a little, and take longer. A seed per miner and per fall gives natural differences: which leg leads, where
+the hands go, which hand rests where. The two sides never mirror.
+
+**The moving.** Each joint pushes with no more than its muscle has, and with less the faster it turns. A hand goes down
+before weight goes onto it; weight leaves a hand or knee before it lifts; a leg never pushes against nothing; the head
+leads; every arm has a job; the last push leans forward over a planted foot. While it lies it is never dead: it breathes
+and stirs as it recovers. At the end your standing balance takes over.
+
+**The first build.** Every fall, all three miners. A miner on its back or side rolls onto its front, pushes up, and
+rises through one knee or through a squat. On the way you get short clips twice (a stance held by its own joints and
+nudged; then one hand or knee moving), before any build.
+
+**Found on the way: the boot that flies.** When you pressed the shove button many times (October 13) and limbs flew, the
+cause was not the body's strength. This engine cannot carry a light part that spins fast: it adds speed to it by
+itself, step after step (measured on a bare leg with nothing touching it). And your standing balance pushes its ankles
+directly, so a boot that rolls off the flat of its sole is set spinning within one step. No small guard on the standing
+balance cures it (four were tried, alone and together). The new way of moving is built so that it cannot begin: joints
+that stop where a real joint stops, every push through a spring that lets go, and a push only where a sole really lies.
+Standing and stepping get the same when they are folded into the new way; until then that fault stays as it is.
+
+**Six questions** (each with what I recommend):
+
+1. **The roll for everybody, at first.** In the first build a miner on its back always rolls onto its front before it
+   gets up. A strong body would more often sit up instead; that comes in the second build. *Recommended: yes, roll
+   first.* Without it most falls would still end in the old animation, because miners land on their front only about
+   one fall in ten.
+2. **A body too weak to get up.** It gets as far as it can, rests there, and tries again when it has recovered; never
+   the old animation. (You decided on November 3 that the creator warns and that another unit may help later.)
+   *Recommended: yes.*
+3. **Natural variation.** On by default, with a slider on the panel so that you can set its size by eye.
+   *Recommended: yes.*
+4. **The build opens with the new way switched on**, the old one click away, and the panel names which way the last
+   getting up used. *Recommended: yes.*
+5. **The three miners' strengths.** Today each keeps the strength it had, so they get up nearly alike. A panel switch
+   "strength by its build" would show the other choice beside it (Long weaker for its height, Round stronger) without
+   changing their work. *Recommended: add the switch; the default stays as today.*
+6. **The last moment of a rise.** Your standing balance may use up to twice a joint's strength, as it does today when a
+   miner stands and steps. Keeping it makes the end of a rise a little stronger than the body's own numbers; capping it
+   changes the step you like. *Recommended: keep it for the first build, measure it, and show you the capped one beside
+   it later.*

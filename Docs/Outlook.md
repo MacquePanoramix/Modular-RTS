@@ -58,6 +58,35 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 10, 2026 — the twenty-second (500 steps of work since the last; the session now on Fable 5.2)
+
+- **Where we are.** S3b step 2, the getting up for any body. Since the twenty-first: the drawn stances judged (round 2);
+  bodies between and beyond the three on the sheets; resting hands with variation (Luis's two decisions of November 9);
+  the run scripts in the repository; the design of the motion through the stances (layers 2 and 3) written, then checked
+  three ways and revised (its sections 6 and 7). Luis moved the session to Fable 5.2 (November 9, night): quality above
+  everything, and the work left so that Opus 5.5 can take it up: [Handoff.md](Handoff.md).
+- **Waiting on Luis:** his agreement to the design before it is built, and the six questions of its section 7 (put to
+  him in this stretch's report). Nothing else.
+- **Built, not in a build:** everything since October 30; none of it changes play. In what he plays, Long and Round
+  still have no way up of their own (the old animation after 12 tries), against his word of October 22: the first build
+  of the new way is what ends that.
+- **Put off, not to be forgotten:** the bear crawl's stance; Long's coat and Round's apron in the deep stances; the
+  weighed centres' standing balance; the creator's warning; the physics body's own hand; strength per region in the
+  creator, and muscles shown on the body; one unit helping another; the mining skill's research; the merge to main once
+  the new getting up stands.
+- **Does the task serve the stage?** The getting up has been designs and pictures for eleven days: nothing moves yet,
+  and Luis has seen no motion since October 30. The checks moved the first thing he sees forward (clips after steps 2
+  and 3). The flying boot, taken up on the way, is not a detour: the new controller rests on the same question (what
+  happens to a joint's push when the ground stops answering), and it is being settled by measuring, with a bound: when
+  its cause is written into the design's K1, the work goes on to step 0 whether or not the standing balance is mended.
+- **Drift watched.** (1) Eleven days without motion: the next thing that reaches Luis must move. (2) The allowance:
+  Fable until November 16 and for half the limits; it is spent on the design's check (done), the engine's root causes
+  (in hand) and the controller's ground (steps 0 to 2); subagents on Opus and Sonnet. (3) A side-finding must not grow:
+  the standing balance is what Luis plays and likes; it is changed only behind a switch, with the whole suite and the
+  flows as played, and never as part of another step.
+- **What Luis would want to know:** the design in plain words, with the six questions; that nothing new is playable yet
+  and why; what the stronger model was spent on.
+
 ### November 9, 2026 — the twenty-first (a new week; the last outlook five days old)
 
 - **Where we are.** S3b step 2, the getting up for any body. Since the twentieth: the stance solver is in the game (one
