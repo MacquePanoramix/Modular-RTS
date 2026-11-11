@@ -121,23 +121,67 @@ runs, since it is the rare fall). Luis waits on motion: the first clips come aft
    (c) **My count of energy used the told joint speed**, which for a part at rest on the ground is not real motion
    (0.1 to 1.5 rad/s told while the boot does not move): the drive's work has to be counted from the joint's real
    change of position.
-   **To do, in order:** (1) rebuild the rig: the weight free to slide in all three directions and never turning (a
-   chain of three slides); the drive's work from the joint's change of position; a probe of the told force against a
-   known torque in the air; the flat cases also with other turns of the solver, told and not barred ((28, 4),
-   (14, 18), (60, 4): if the law holds the first two give the same); "flat, all its strength sideways" in place of
-   five thirds; the weight's sliding sideways told. (2) Run it under PGS (`facts_r4_pgs2`) and under TGS
-   (`m_SolverType: 1` in the worktree's `ProjectSettings/DynamicsManager.asset`, run as `facts_r4_tgs`, then
-   `git checkout -- ProjectSettings/DynamicsManager.asset`). (3) Agents who did not write it review the rig, the bar
-   and the reading (a small workflow, reviewers on Opus). (4) Write the result into `motion_design.md` (R4, step 0,
-   and what the law means for R1 and K5), `Validation.md`, `CURRENT_STATE.md` and here; commit and push both
-   branches by path (worktree files uncommitted: `ArticulationFactsTests.cs`, `OwnBodyTests.cs`).
-   **What the law may mean for the design (mine, not decided; weigh after the TGS run):** the torque asked through
-   the target arrives short at light end parts held by the ground (boots, later hands). Ways out, each with a cost:
-   more turns of the solver (Round's boot needs about 90 for 95%); TGS (its small steps may give it whole: the run
-   will say); a servo on the told force (true, so it can be closed on; winds up to the stroke's bound when the touch
-   breaks); a greater turning weight for end parts (about 7 times for Round's boot; touches "true weights");
-   a smaller step. The game's solver, its step and true weights are Luis's to decide: put it to him with the
-   measured numbers if no way without them is good enough.
+   **Done since (November 11, late night): the rig rebuilt and run under both solvers; both runs read.** Worktree
+   files still uncommitted: `ArticulationFactsTests.cs`, `OwnBodyTests.cs`, `Docs/Technical/AnyBody/tools/r4_table.py`.
+   Logs: `D:/Dev/WG/TestRuns/facts_r4_pgs2.log` and `facts_r4_tgs.log` (lines `FACTS R4`; a table of either:
+   `python -I Docs/Technical/AnyBody/tools/r4_table.py <log> flat|rest [filter]`). The rig now: the weight on three
+   free slides, never turning; the drive's work counted from the joint's change of place; a probe of the told force
+   (13.3 N m put straight on a boot held in the air); the flat cases also at (28, 4), (14, 18) and (60, 4) turns of
+   the solver, told and not barred; "flat, all its strength sideways" in place of five thirds. The bar was not moved:
+   the test fails it under both solvers (PGS 33 misses, TGS 50).
+   **Read, PGS (the game's solver):**
+   - The told force is true: in the air the boot gives way 7.63 degrees under 13.3 N m (the torque over the spring is
+     7.63) and its drive tells 13.30.
+   - **The law is confirmed by the turns:** (28, 4) and (14, 18) give the same (n is the sum of both kinds of turns)
+     and (60, 4) follows it. Given towards the toe when asked two thirds of what the sole bears, design ankle: Small
+     16.1 of 22.5 N m at 14+4, 20.1 at 28+4, 22.4 at 60+4; Long 21.7 / 29.3 / 36.6 of 38.5; Round 26.1 / 36.3 / 48.1
+     of 53.3. (The told number is the size over three lines, so it carries what the ankle gives with nothing asked;
+     where the ground bears the boot times the load, less its place with nothing asked, gives the law's number
+     within about 2%.)
+   - **New: with nothing asked a flat boot does not sit flat at 14+4 turns.** It tips 1.6 (Small), 1.7 (Long), 3.8
+     (Round) degrees, its drive gives 2.1 / 3.5 / 6.1 N m, and a boot made bent 22 degrees comes back only to 3 to 6
+     degrees from its zero. It shrinks with the turns of place only (28+4: 0.7 / 0.7 / 1.5 degrees; 60+4: 0.24 / 0.27
+     / 0.58; 14+18: 1.5 / 1.6 / 3.3). My reading, not shown: the heavy weight on the light boot is not solved to the
+     end in 14 turns of place (this kind of solver's known trouble with a heavy thing on a light one).
+   - **Stable everywhere, at design, 3x and 10x:** never faster than the ankle's top speed (most at design 11.3
+     rad/s, on a drop; at 10x 16.0 to 16.4 springing back from 22 degrees, Long's top being 16.1), never more than
+     0.2 J gained in sum, the drive's work in a step at most 1.4 J (Small), 2.2 (Long), 3.0 (Round), far under the
+     stroke. What the bar still counts as misses there: the tips with nothing asked (above); a told turning of 0.5
+     to 0.9 rad/s at the end in five cases on an edge (told speed: whether the boot moves there was not read from
+     its change of place); 1 to 3 J more in one step on Long and Round at a landing or when set on an edge (my
+     reading, not shown: the ground pushing the body out of the millimetres it sank in; the bar's 1 J did not grow
+     with the body's weight).
+   **Read, TGS:**
+   - It gives hardly more at the game's turns and gains less from more turns: towards the toe Small 17.3 of 22.5 N m
+     (28+4: 19.3; 60+4: 20.8), Long 23.1 of 38.5 (28.0; 32.6), Round 28.8 of 53.3 (36.4; 43.1). Three and ten times
+     as stiff changes little there (Small 16.8, 15.3): its law is another one, not worked out. (14, 18) gives the
+     very same numbers as (28, 4) to the last digit (my recollection of the engine's notes: TGS turns the turns of
+     speed beyond 4 into turns of place).
+   - A flat boot sits flat (0.2 to 0.3 degrees with nothing asked, the drive gives 0.4 to 0.6 N m) and a bent one
+     comes back to within 0.3 degrees.
+   - **But the boot flies at landings:** told turning above the ankle's top speed in five of the design's cases
+     (Round dropped 5 cm: 76.5 rad/s, 25.9 J more in one step, 14.7 J gained in all; Round dropped leant 50.7; Long
+     dropped leant 32.7; on an edge pushed onto it 22.2 and 24.1), more at 3x and 10x (to 68.6). Told turning at
+     rest is 0.7 to 4.3 rad/s and grows with the turns. In the air under 13.3 N m put straight on it the boot gives
+     way 5.92 degrees, not 7.63, while telling 13.30 (my reading, not shown: the small steps move the light boot
+     within the step before the drive stops it).
+   **So, for R4 (mine, to be reviewed before it is written into the design):** under the game's solver a stiffly
+   sprung ankle holds a light boot (stable in every case), but gives short by the law and sits a few degrees off;
+   under TGS it gives as short and is not stable at landings. TGS is no way out. What I mean to propose after the
+   review: stay on PGS; more turns of the solver for a body (at 60 and 4: 99.6 / 95 / 90% given, tips 0.24 to 0.58
+   degrees), their cost with many bodies to be measured; and the law used by the controller for the rest (where a
+   part is held by the ground, ask the torque over the law's share, faded by how far it is held; the drive's force
+   limit still bounds what arrives; the told force, being true, checks it each step). A greater turning weight for
+   end parts, a smaller step or another solver are Luis's to decide and are not needed on these numbers.
+   **To do, in order:** (1) A small review workflow, reviewers on Opus who did not write it: the rig and its numbers
+   recomputed from the two logs; a skeptic against the law and each reading above, the engine's own source looked up
+   (no project or personal detail in any outside request); the consequences for the design against
+   `motion_design.md` §6.2 and Luis's standing decisions. (2) Act on what they find; reshape the test into what
+   holds (the law as a fact under PGS at three counts of turns; the stability bar with a landing's allowance that
+   grows with the body's weight and rest read from the change of place; the fidelity bar told openly as failed at
+   14+4). (3) Write the result into `motion_design.md` (R4, step 0, R1, K5), `Validation.md`, `CURRENT_STATE.md`
+   and here; commit and push both branches by path. (4) Measure what more turns cost with many bodies; then the
+   rest of step 0.
    **Usage on November 11 (night):** the week's Fable share read 55%, the 5-hour limit 42%: the work may pass to
    Opus 5.5 at any moment, which is why this page is kept exact.
 4. **(Done: reported on November 10; answered on November 11, above.)**
