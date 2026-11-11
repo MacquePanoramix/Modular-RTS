@@ -58,6 +58,30 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 11, 2026 — the twenty-third (250 steps since the last; Luis has agreed to the design)
+
+- **Where we are.** S3b step 2, the getting up for any body. Since the twenty-second: the flying boot's cause found,
+  reviewed by two agents and corrected (the design's K1, with true speeds); the session made to compact itself at
+  250,000 tokens (Luis, November 10; it took effect once the session was compacted); and **Luis's yes of November 11 to
+  all six recommendations, "and please proceed"**: the design of the motion is agreed and may be built. The build has
+  begun at its ground: step 0, first the stiff-ankle fact (K1's R4).
+- **Waiting on Luis:** nothing. Luis waits on motion: the first clips come after step 2 (a stance held by its own
+  joints and nudged).
+- **Built, not in a build:** everything since October 30; none of it changes play. In what he plays, Long and Round
+  still have no way up of their own; the first build of the new way ends that.
+- **Put off, not to be forgotten:** as the twenty-second has it, and: Round's one course under the other solver that is
+  not explained; the shove test's bar still on the engine's told speed; sitting up from the back (the second build);
+  the fall onto the front, which Luis named on November 11 (in the design's steps 5 and 7 as evidence, forced in the
+  runs because it is the rare fall).
+- **Does the task serve the stage?** Yes, and it is now building, not designing. Twelve days without motion all the
+  same, and step 0 is facts and plumbing that show nothing. Its bound: each fact is one test with a bar, run under both
+  solvers, then on; nothing in step 0 is studied further than step 2 needs.
+- **Drift watched.** (1) The next thing that reaches Luis must move: clips after step 2. (2) The allowance: Fable until
+  November 16 (27% of its week used, 34% of all models'); it goes to step 0's facts, the drive writer and the sharing of
+  the push, where a wrong ground costs most; agents on Opus and Sonnet. (3) The standing balance stays as it is.
+- **What Luis would want to know:** that his answers are recorded and the building has begun; that the first thing he
+  will see is a short clip of a stance held and nudged, before any build.
+
 ### November 10, 2026 — the twenty-second (500 steps of work since the last; the session now on Fable 5.2)
 
 - **Where we are.** S3b step 2, the getting up for any body. Since the twenty-first: the drawn stances judged (round 2);

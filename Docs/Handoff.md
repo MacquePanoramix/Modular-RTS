@@ -1,6 +1,6 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 10, 2026, by Claude Fable 5.2. Kept current at every milestone.
+**Last updated:** November 11, 2026, by Claude Fable 5.2. Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, the top entry of [CURRENT_STATE.md](CURRENT_STATE.md), then
 this page. Luis's preferences and the lessons already paid for are in the assistant's memory directory (its index is
@@ -53,8 +53,11 @@ played animation ([the vision's rows of October 30 to November 9](GAME_VISION.md
 
 ## Waiting on Luis
 
-The six questions of `motion_design.md` section 7 (put to him on November 10). Steps 0 to 2 below do not depend on his
-answers; the route work (steps 4 and 5) does.
+Nothing. On November 11 he answered the six questions of `motion_design.md` section 7: **yes to all six, as
+recommended, "and please proceed"** ([his message](Correspondence/2026-11-11_YES_TO_THE_SIX_AND_PROCEED.md); the row of
+November 11 in `GAME_VISION.md`). The design is agreed and may be built. He adds that "a miner falling forward should
+still also be able to get up": the fall onto the front is built and tested as fully as the common one (forced in the
+runs, since it is the rare fall). Luis waits on motion: the first clips come after step 2.
 
 ## In hand (November 10, evening): finish these first
 
@@ -90,7 +93,27 @@ answers; the route work (steps 4 and 5) does.
    through the target is not yet shown to arrive.) Next: give it
    the cases and the bar the review proposes (its item "design 9": on an edge, off the ground, dropped; the three
    miners' boots; both solvers).
-4. **Report to Luis** with the six questions of the design's section 7 (not yet put to him).
+   **State on November 11 (evening): rebuilt, its first run under the game's solver launched, nothing read yet.** The
+   test now stands on the three miners' real boots (read from the game on November 11 by the shove test's
+   `OWN_SHOVE_PARTS` line, which now tells each part's joint, centre, top speed and sole: Small's boot 1.29 kg, sole
+   10 x 6 x 15.7 cm, ankle 5.5 cm above the boot's centre and 6 mm behind its middle, 61 N m, top 19.9 rad/s; Long's
+   1.83 kg, sole 18.7 cm long, 141 N m, 16.1 rad/s; Round's 1.55 kg, sole 17.2 cm, 154 N m, 18.5 rad/s), kept awake, with
+   thirteen cases a miner (flat and asked for nothing, for two thirds of what the sole bears sideways and towards the
+   toe; dropped from 2 cm; made bent 22 degrees at its ankle; five thirds of what the sole bears; on its edge under a
+   weight leant 22 degrees with nothing, with all its strength further onto the edge and towards the toe; dropped from
+   5 cm flat and leant; held in the air about one line and two), the ankle as the design has it (barred), three and
+   ten times as stiff, and on Small the standing balance's own ankle with the torque put straight on it (told beside
+   it). **The bar is written in the test's own comment, set before the run.** Both files are uncommitted in the
+   worktree (`ArticulationFactsTests.cs`, `OwnBodyTests.cs`). To do, in order: read the run `facts_r4_pgs`
+   (`D:/Dev/WG/TestRuns/facts_r4_pgs.log`, lines `FACTS R4`); run it under the other solver (`m_SolverType: 1` in
+   the worktree's `ProjectSettings/DynamicsManager.asset`, run as `facts_r4_tgs`, then
+   `git checkout -- ProjectSettings/DynamicsManager.asset`); have agents who did not write it review the rig, the bar
+   and the reading (a small workflow, reviewers on Opus); write the result into `motion_design.md` (R4, step 0),
+   `Validation.md`, `CURRENT_STATE.md` and here; commit and push both branches by path. If it holds under neither
+   solver, stop and put the choice to Luis (the boot's turning weight, the step, or the solver).
+   **Usage on November 11 (evening):** the week's Fable share stood at 47% (the included share ends at 50%): the
+   work may pass to Opus 5.5 at any moment, which is why this page is kept exact.
+4. **(Done: reported on November 10; answered on November 11, above.)**
 
 ## Next steps, in order
 

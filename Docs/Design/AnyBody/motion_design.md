@@ -782,9 +782,9 @@ name (step 5 begins with one).
 | 2 | Holding one stance by its own joints: propped on the forearms, hands and knees, the half-kneel, the squat with hands | 20 s each, three miners at strengths 0.5, 1 and 2, no fault; each joint's share beside the atlas's S; nudged, it yields and comes back | **clips** |
 | 3 | One change of support at a time: each edge of the two routes | the gates open; nothing lifts while it bears; no fault | **clips** |
 | 4 | The plan: the graph with each single let-go, the draw, the laws (change 3), the variation | the odds for the 13 bodies; sweeps of strength and size that move smoothly | the odds, as a table |
-| 5 | Leaving the ground: stirring while it lies (change 4); the roll onto the front; pushing up | from real falls on the bench, by kind of body | |
+| 5 | Leaving the ground: stirring while it lies (change 4); the roll onto the front; pushing up | from real falls on the bench, by kind of body; the falls onto the front forced, so that the rare fall is counted and looked at as fully as the common one (Luis, November 11) | |
 | 6 | The look on the routes (change 9) | the sheets again, and the same stances in motion | |
-| 7 | The whole getting up in the game as played: every fall, every rendered frame; pushed again while rising; six falls side by side; weak beside able with times made equal | the bars of §3.3, in body units | |
+| 7 | The whole getting up in the game as played: every fall (the falls onto the front among them, forced), every rendered frame; pushed again while rising; six falls side by side; weak beside able with times made equal | the bars of §3.3, in body units | |
 | 8 | Judges on motion (clips, not stills), then Luis | three rounds at most | **a build** |
 
 ### 6.4 Not in the first build (revised)
@@ -823,7 +823,10 @@ a spring that lets go, and a push only where a sole really lies. Whether that ho
 anything is built on it. The very end of a rise is still your standing balance's, so the fault can still show there,
 and in standing and stepping, until those are folded into the new way.
 
-**Six questions** (each with what I recommend):
+**Six questions** (each with what I recommend). **Answered by Luis on November 11: yes to all six, as recommended**
+("yes to all the recommendations and please proceed"; [his message](../../Correspondence/2026-11-11_YES_TO_THE_SIX_AND_PROCEED.md)).
+He adds that "a miner falling forward should still also be able to get up": a body that lands on its front gets up
+from there without the roll, in the first build too, and that fall is tested as fully as the common one.
 
 1. **The roll for everybody, at first.** In the first build a miner on its back always rolls onto its front before it
    gets up. A strong body would more often sit up instead; that comes in the second build. *Recommended: yes, roll
