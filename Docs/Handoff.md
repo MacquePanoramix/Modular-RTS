@@ -93,26 +93,53 @@ runs, since it is the rare fall). Luis waits on motion: the first clips come aft
    through the target is not yet shown to arrive.) Next: give it
    the cases and the bar the review proposes (its item "design 9": on an edge, off the ground, dropped; the three
    miners' boots; both solvers).
-   **State on November 11 (evening): rebuilt, its first run under the game's solver launched, nothing read yet.** The
-   test now stands on the three miners' real boots (read from the game on November 11 by the shove test's
-   `OWN_SHOVE_PARTS` line, which now tells each part's joint, centre, top speed and sole: Small's boot 1.29 kg, sole
-   10 x 6 x 15.7 cm, ankle 5.5 cm above the boot's centre and 6 mm behind its middle, 61 N m, top 19.9 rad/s; Long's
-   1.83 kg, sole 18.7 cm long, 141 N m, 16.1 rad/s; Round's 1.55 kg, sole 17.2 cm, 154 N m, 18.5 rad/s), kept awake, with
-   thirteen cases a miner (flat and asked for nothing, for two thirds of what the sole bears sideways and towards the
-   toe; dropped from 2 cm; made bent 22 degrees at its ankle; five thirds of what the sole bears; on its edge under a
-   weight leant 22 degrees with nothing, with all its strength further onto the edge and towards the toe; dropped from
-   5 cm flat and leant; held in the air about one line and two), the ankle as the design has it (barred), three and
-   ten times as stiff, and on Small the standing balance's own ankle with the torque put straight on it (told beside
-   it). **The bar is written in the test's own comment, set before the run.** Both files are uncommitted in the
-   worktree (`ArticulationFactsTests.cs`, `OwnBodyTests.cs`). To do, in order: read the run `facts_r4_pgs`
-   (`D:/Dev/WG/TestRuns/facts_r4_pgs.log`, lines `FACTS R4`); run it under the other solver (`m_SolverType: 1` in
-   the worktree's `ProjectSettings/DynamicsManager.asset`, run as `facts_r4_tgs`, then
-   `git checkout -- ProjectSettings/DynamicsManager.asset`); have agents who did not write it review the rig, the bar
-   and the reading (a small workflow, reviewers on Opus); write the result into `motion_design.md` (R4, step 0),
-   `Validation.md`, `CURRENT_STATE.md` and here; commit and push both branches by path. If it holds under neither
-   solver, stop and put the choice to Luis (the boot's turning weight, the step, or the solver).
-   **Usage on November 11 (evening):** the week's Fable share stood at 47% (the included share ends at 50%): the
-   work may pass to Opus 5.5 at any moment, which is why this page is kept exact.
+   **State on November 11 (night): the first run under the game's solver is read; the rig is being rebuilt once more
+   before the second solver is run.** The test stands on the three miners' real boots (read from the game on
+   November 11 by the shove test's `OWN_SHOVE_PARTS` line: Small's boot 1.29 kg, sole 10 x 6 x 15.7 cm, ankle 5.5 cm
+   above the boot's centre and 6 mm behind its middle, 61 N m, top 19.9 rad/s; Long's 1.83 kg, sole 18.7 cm long,
+   141 N m, 16.1 rad/s; Round's 1.55 kg, sole 17.2 cm, 154 N m, 18.5 rad/s), thirteen cases a miner, the ankle as
+   the design has it (barred), three and ten times as stiff, and on Small the standing balance's own ankle with the
+   torque put straight on it (told beside it). The bar is written in the test's own comment, set before the run.
+   **What the run `facts_r4_pgs` showed** (`D:/Dev/WG/TestRuns/facts_r4_pgs.log`, lines `FACTS R4`; PGS, 14 and 4
+   turns of the solver): it compiled; the rig's probes came out as expected (a target counted up turns the toe down
+   and the right edge up, 10.00 degrees reached, a boot made bent 22 degrees stays as made, touches told within the
+   step). **The boot is quiet at every stiffness** (design, 3x, 10x: no flying, never near its top speed on the
+   ground): the stability half of R4 holds under PGS. **34 misses of the bar, of three causes:**
+   (a) **A law (mine; it fits the nine cases asked towards the toe within about 1%):** against a part the ground
+   holds still, a drive gives in a step only `1 - (1 - x)^n` of what its spring says, with
+   `x = 1 / (1 + dt (dt k + c) / I)`, `I` the part's turning weight about its joint (about its centre plus mass times
+   the distance squared: Small's boot 0.0069 kg m2 towards the toe, 0.0054 sideways; Long's 0.0115; Round's 0.0091)
+   and `n = 14 + 4 = 18` (to be confirmed by changing the turns). Asked two thirds of what the sole bears towards the
+   toe, the design's ankle gave 69% of it on Small (15.6 of 22.5 N m), 53% on Long (20.4 of 38.5), 45% on Round
+   (23.8 of 53.3); three times as stiff 48 / 36 / 29%; ten times 23 / 18 / 14%. The stiffer and the more damped
+   against a light part, the less arrives; the K5 damper (strength over top speed) is the larger share of it. The
+   drive's told force and where the ground bears the boot agree, so the told force is true and the shortfall real.
+   (b) **The rig pinned the ankle sideways** (the weight on an upright slide only): the ground's grip and the slide's
+   lock then hold forces between them, so where the ground bears the boot is not settled by the torque alone (about
+   10 mm across and 7 to 10 mm along with nothing asked), a boot made bent stays bent, and five thirds of what the
+   sole bears does not roll it. Not an engine finding: the rig's fault.
+   (c) **My count of energy used the told joint speed**, which for a part at rest on the ground is not real motion
+   (0.1 to 1.5 rad/s told while the boot does not move): the drive's work has to be counted from the joint's real
+   change of position.
+   **To do, in order:** (1) rebuild the rig: the weight free to slide in all three directions and never turning (a
+   chain of three slides); the drive's work from the joint's change of position; a probe of the told force against a
+   known torque in the air; the flat cases also with other turns of the solver, told and not barred ((28, 4),
+   (14, 18), (60, 4): if the law holds the first two give the same); "flat, all its strength sideways" in place of
+   five thirds; the weight's sliding sideways told. (2) Run it under PGS (`facts_r4_pgs2`) and under TGS
+   (`m_SolverType: 1` in the worktree's `ProjectSettings/DynamicsManager.asset`, run as `facts_r4_tgs`, then
+   `git checkout -- ProjectSettings/DynamicsManager.asset`). (3) Agents who did not write it review the rig, the bar
+   and the reading (a small workflow, reviewers on Opus). (4) Write the result into `motion_design.md` (R4, step 0,
+   and what the law means for R1 and K5), `Validation.md`, `CURRENT_STATE.md` and here; commit and push both
+   branches by path (worktree files uncommitted: `ArticulationFactsTests.cs`, `OwnBodyTests.cs`).
+   **What the law may mean for the design (mine, not decided; weigh after the TGS run):** the torque asked through
+   the target arrives short at light end parts held by the ground (boots, later hands). Ways out, each with a cost:
+   more turns of the solver (Round's boot needs about 90 for 95%); TGS (its small steps may give it whole: the run
+   will say); a servo on the told force (true, so it can be closed on; winds up to the stroke's bound when the touch
+   breaks); a greater turning weight for end parts (about 7 times for Round's boot; touches "true weights");
+   a smaller step. The game's solver, its step and true weights are Luis's to decide: put it to him with the
+   measured numbers if no way without them is good enough.
+   **Usage on November 11 (night):** the week's Fable share read 55%, the 5-hour limit 42%: the work may pass to
+   Opus 5.5 at any moment, which is why this page is kept exact.
 4. **(Done: reported on November 10; answered on November 11, above.)**
 
 ## Next steps, in order
