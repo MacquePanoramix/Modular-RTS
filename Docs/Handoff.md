@@ -161,7 +161,9 @@ nothing is asked of him.
      `S eFull b (1 + b) / 4`: 0.54, 0.40 and 0.49 of the stroke, past it only above `eFull / dt`, about 30.5 rad/s;
      the first form leaves out the `dt k` part of the damping, so it is the looser bound. Either way R1's stroke bounds
      it at the three ankles.
-   - **Owed: the review.** It was cut off twice by the plan's limit (three reviewers at once) and gave nothing. Its
+   - **The review is in** (November 12, evening; one Opus reviewer at medium effort: `review.md` beside its brief).
+     The law holds at the design's stiffness; nine changes to the design text follow from it, being made next (then
+     this item is rewritten). Before that it was cut off twice by the plan's limit (three reviewers at once). Its
      brief, sized to finish, is [Reviews/2026-11-12_StiffAnkle_K8/brief.md](Reviews/2026-11-12_StiffAnkle_K8/brief.md);
      the findings go to `review.md` beside it. If that file is there already, read it first (the review was
      started on November 12, in the evening, and may have finished). Then act on it in the design and the validation
