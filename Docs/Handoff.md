@@ -165,25 +165,82 @@ runs, since it is the rare fall). Luis waits on motion: the first clips come aft
      rest is 0.7 to 4.3 rad/s and grows with the turns. In the air under 13.3 N m put straight on it the boot gives
      way 5.92 degrees, not 7.63, while telling 13.30 (my reading, not shown: the small steps move the light boot
      within the step before the drive stops it).
-   **So, for R4 (mine, to be reviewed before it is written into the design):** under the game's solver a stiffly
-   sprung ankle holds a light boot (stable in every case), but gives short by the law and sits a few degrees off;
-   under TGS it gives as short and is not stable at landings. TGS is no way out. What I mean to propose after the
-   review: stay on PGS; more turns of the solver for a body (at 60 and 4: 99.6 / 95 / 90% given, tips 0.24 to 0.58
-   degrees), their cost with many bodies to be measured; and the law used by the controller for the rest (where a
-   part is held by the ground, ask the torque over the law's share, faded by how far it is held; the drive's force
-   limit still bounds what arrives; the told force, being true, checks it each step). A greater turning weight for
-   end parts, a smaller step or another solver are Luis's to decide and are not needed on these numbers.
-   **To do, in order:** (1) A small review workflow, reviewers on Opus who did not write it: the rig and its numbers
-   recomputed from the two logs; a skeptic against the law and each reading above, the engine's own source looked up
-   (no project or personal detail in any outside request); the consequences for the design against
-   `motion_design.md` §6.2 and Luis's standing decisions. (2) Act on what they find; reshape the test into what
-   holds (the law as a fact under PGS at three counts of turns; the stability bar with a landing's allowance that
-   grows with the body's weight and rest read from the change of place; the fidelity bar told openly as failed at
-   14+4). (3) Write the result into `motion_design.md` (R4, step 0, R1, K5), `Validation.md`, `CURRENT_STATE.md`
-   and here; commit and push both branches by path. (4) Measure what more turns cost with many bodies; then the
-   rest of step 0.
-   **Usage on November 11 (night):** the week's Fable share read 55%, the 5-hour limit 42%: the work may pass to
-   Opus 5.5 at any moment, which is why this page is kept exact.
+   **The engine's own source read (November 12, morning; by me, from the files the review's skeptic had fetched
+   before it was cut off): PhysX 4.1, `DyFeatherstoneArticulation.cpp`** (public: `NVIDIAGameWorks/PhysX`, branch
+   `4.1`, `physx/source/lowleveldynamics/src/`; the copy in the session's scratchpad is not kept. Unity's own build
+   of the engine may differ, so the runs are the proof and the source the explanation). For each driven axis
+   `setupInternalConstraintsRecursive` (about line 2590) reckons once a step `a = dt (dt k + c)` and
+   `x = 1 / (1 + a R)`, `R` being the joint's response with nothing else holding it (for a light end part, 1 over
+   its turning weight about the joint), and sets the drive's summed impulse to zero (nothing is carried over from
+   the step before). `solveInternalConstraintRecursive` (about line 4170) then does, at every turn of the solver,
+   turns of place and turns of speed alike:
+   - **PGS:** `sum = (1 - x) sum + x (dt k error + dt c wantedSpeed - a jointSpeed)`, clamped to the force limit.
+     For a free joint the first turn gives the whole impulse of an implicit spring and later turns change nothing
+     (so K5's damper bounds a free part's speed as designed). For a part held still the sum creeps up: after `n`
+     turns `1 - (1 - x)^n` of what the spring says. **This is the law, as it was fitted.**
+   - **TGS:** `a` and `x` are made with the substep `h = dt / turns of place`, the error is read anew each substep,
+     and `sum = sum + x (...)`, nothing taken off. So each substep gives its own impulse and each turn of speed one
+     more: **a free spring acts `(place + speed) / place` times as strong as set** (at 14 and 4: 1.29 times; the
+     rig's probe gave way 5.92 degrees, and 7.63 / 1.2857 = 5.93), and a held part gets
+     `(place + speed) / place / (1 + h (h k + c) / I)`. Against the twelve flat readings of the TGS run this is
+     within 1%: towards the toe at 14, 28, 60 turns, law / read: Small 17.4 / 17.3, 19.4 / 19.3, 20.9 / 20.8; Long
+     23.3 / 23.1, 28.3 / 28.0, 32.7 / 32.6; Round 29.0 / 28.8, 36.5 / 36.4, 43.5 / 43.1; sideways at 14: 9.2 / 9.2,
+     9.1 / 9.0, 12.6 / 12.8.
+   Also in that source: **a drive's target is clamped to the joint's limits** (about line 2575), so near a limit
+   what can be asked towards it falls to nothing however far the target is set. The share a held boot gets under
+   PGS at 14 and 4, by the law: Small 0.70 towards the toe and 0.61 sideways, Long 0.53 and 0.40, Round 0.45 and
+   0.35; read: 0.72 and 0.79, 0.56 and 0.58, 0.49 and 0.57 (more than the law, most of all sideways: the boot is
+   not quite held, it rolls a little). The damper is the greater part of it: with none the law gives 0.94 / 0.88 /
+   0.79 towards the toe. At 28 and 4 the law gives 0.88 / 0.74 / 0.66, at 60 and 4 0.99 / 0.93 / 0.88. For the
+   body's other joints the law gives 1 (a shin with its boot, or a forearm, turns as 0.05 kg m² and more about its
+   joint: reckoned, not run).
+
+   **What more turns cost (November 11, night):** `OwnBodyTests.WhatMoreTurnsOfTheSolverCost` (explicit, a fact
+   with no bar; `TestRuns/turns_cost.log`, lines `FACTS TURNS`): twenty copies of a miner's own body (13 parts)
+   lying awake on the ground, the engine stepped by hand, in the editor. A body costs, in microseconds a step at
+   14 and 4, 28 and 4, 60 and 4 turns: Small 111 / 172 / 304, Long 125 / 192 / 351, Round 106 / 163 / 293. So 60
+   turns cost 2.7 to 2.8 times what 14 cost; twenty bodies at 60 turns take 6 to 7 ms of a step. (Its "with no
+   body: 0.000 ms" only says that an empty scene costs nothing worth the name.) Not measured: standing bodies, a
+   player build, what more turns do to the standing balance and its tests.
+
+   **The review was cut off twice by the plan's limit and gave nothing** (November 11, 23:31, and November 12,
+   04:01, when the workflow took itself up again after the reset): three reviewers on Opus at high effort at once
+   use up a whole 5-hour window of this plan (Pro) in about five minutes, and a reviewer that does not finish
+   leaves no word (only its searches, in its transcript: that is how the source above was found already fetched).
+   **So a review is sized to finish:** one reviewer at a time, a brief that names the files and the lines and
+   holds the numbers to be recomputed, medium effort, a few claims each.
+
+   **So, for R4 (mine; the source and the runs agree; one reviewer still to read it before it goes into the
+   design):** under the game's solver an ankle sprung stiffly enough for R1 holds a light boot under the body's
+   weight: stable in every case tried, at the design's spring and at 3 and 10 times it. Two things are not as the
+   design took them: a held boot gets only the law's share of what its spring says, and a loaded flat boot sits
+   1.6 to 3.8 degrees off flat with nothing asked (not explained; less with more turns of place). Under TGS a boot
+   flies at landings and every free spring is 1.29 times as strong as set: TGS is no way out. **What I propose:
+   nothing of the engine changes** (PGS, 14 and 4 turns, the step, the true weights: so there is nothing to put to
+   Luis on these numbers, only to tell him). The controller asks a joint's torque through the target as R1 says
+   and, where a part is held, makes up for the share the drive really gave: the drive tells its force truly, so
+   what was asked and what was given are compared each step and the target moved by the difference (smoothly; no
+   threshold; kept between the law's share for that joint and the whole); the drive's force limit and the target's
+   clamp at the joint's limit still bound what arrives. Whether that is done as a share that is read or as a trim
+   on the told force is settled by measurement when the controller's first stance is built (step 2). When a body is
+   built the law is reckoned for each joint from its spring, its damper and the lighter side's turning weight; a
+   joint under 0.9 is marked (the three miners' ankles; a made body's light end parts; the creator's warning can
+   use it). More turns for a body stay a lever with a known cost, not used now.
+   **To do, in order:** (1) One reviewer, sized as above, on this reading: the two laws against the source's lines
+   and the numbers; the proposal against `motion_design.md` §6.2 and Luis's standing decisions. (2) Reshape the
+   test into what holds. Under PGS: the law as a fact at three counts of turns (towards the toe the read share
+   never under the law and at most a tenth over it); the told force true (the probe in the air); stable at the
+   design's spring, at 3 and at 10 times (no told turning over the ankle's top; no gain of energy over a run; a
+   landing's one step allowed for by the body's weight; rest read from the change of place, not from told speed);
+   the tip with nothing asked told as a fact with its numbers, not a bar. Under TGS the test is not part of the
+   suite (the game does not use it); its findings stay in the log and the documents. Run it, read it. (3) Write
+   R4's answer into `motion_design.md` (R4; step 0; R1's "through the target" with the share; K5's damper as the
+   greater cause; the clamp at the limits), `Validation.md`, `CURRENT_STATE.md` and here; commit and push both
+   branches by path (worktree: `ArticulationFactsTests.cs`, `OwnBodyTests.cs`, `tools/r4_table.py`). (4) The rest
+   of step 0.
+   **Usage on November 12 (morning):** the week's Fable share read 72% (all models 60%; both reset November 16,
+   16:00 UTC); a 5-hour window of this plan holds little. Fable for the hardest thinking only, each turn made to
+   count; the work may pass to Opus 5.5 at any moment, which is why this page is kept exact.
 4. **(Done: reported on November 10; answered on November 11, above.)**
 
 ## Next steps, in order
