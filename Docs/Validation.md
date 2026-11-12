@@ -4982,10 +4982,15 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
 - **The whole facts fixture after the reshaping** (`ArticulationFactsTests`, November 12, the work branch at
   `582c022`): **13 of 13**, no compile error; the stiff-ankle test among them, passed a third time with the same
   lines.
-- **Review: owed.** An independent review of the laws against the source and of the design's new text was cut off
-  twice by the plan's five-hour limit (November 11 and 12: three reviewers at once; nothing returned). Its brief,
-  sized to finish, is `Reviews/2026-11-12_StiffAnkle_K8/brief.md`; its findings go beside it. Until it is read, K8,
-  R1's addition and R4's answer are their author's own word.
+- **Review: done** (November 12; one Opus 5.5 reviewer at medium effort, who wrote none of it;
+  `Reviews/2026-11-12_StiffAnkle_K8/review.md`; advice, not Luis's verdict). The held part's law holds at the design's
+  stiffness, both kinds of turns counting in the source too; the free part, the part let go, the clamp and TGS's law
+  hold; nothing is to be put to Luis. Wrong or loose: R1's "no faster after" (the bound is the fixed point), the
+  work of one step as first reckoned (the tighter S·eFull·b(1 + b)/4 holds), the offset bound per axis (it is on the
+  norm), and "flat" 5 degrees in the design against 6 in the test. Not shown: that the making-up's loop is stable
+  (its linear part is; three non-linear paths can feed back: the force clamp, a joint on its stop, a hold that comes
+  and goes; the design now weighs the first two smoothly to nothing, and step 2 reads the third). Its nine changes
+  were made in the design (K8, R1, R4, §2.3), with three things for step 2 to read added to R1.
 - **Not tested:** the test under TGS after its reshaping (it is meant to fail there; the TGS numbers above are the
   first run's); the whole PlayMode suite, and `OwnBodyTests` as a whole since its two additions (the shove test's
   parts line, read on November 11, and the cost test, run alone); the making-up of R1, which is not built: its form
@@ -4993,4 +4998,9 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   design's spring; the other joints' shares (a rough reckoning); a body of many parts with several held at once; a
   standing body's or a player build's cost with more turns, and what more turns do to the standing balance; Unity's
   own build of the engine (the public 4.1 source was read); why a flat boot tips and what a landing's one-step gain
-  comes of (readings, not shown); nothing of this as played or in a build.
+  comes of (readings, not shown; the tip readable by the sole's four corners' depths, not read); and, from the
+  review: why the toe readings at three and ten times the spring run 1.1 to 2.8 times the law; a held case on a
+  diagonal (towards the toe and sideways at once); a part half held; the speed bound under gravity and with the
+  parent turning; the share read with the drive at its limit or an axis on its stop; an edge case with the making-up
+  on, its estimate read step by step (a hold that comes and goes could rock); what the making-up does with the tip
+  read as error (1/share times the torque into the ground); nothing of this as played or in a build.

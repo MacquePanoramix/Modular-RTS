@@ -321,6 +321,11 @@ budget**, all of it through the drive:
   itself presses it there, or where its spring out-pulls the load's lever: its strength over 0.61 of the weight
   times the lever. Step 2 tests it so. And one more place: where the ground holds a light part and its drive gives
   it only a share, the target may stand up to eFull + dt·ωmax from the joint, R1.)
+  (November 12, from the review: the 0.61 is eFull in radians, and it holds for a straight limb whose load's lever
+  grows as L·sin θ off straight, L the distance along the limb to the load, at small angles. The spring pulls back
+  S·θ/eFull, the load pushes W·L·θ, so the spring wins where S > eFull·W·L; at larger angles the spring gains, up to
+  eFull, where it gives all of S (past eFull it gives no more, and holds only while S > W·L·sin θ: mine, November
+  12). A toned drive needs tone·S over that. R1's made-up target is clamped to the limits too.)
 - k = tone·τcap/eFull, eFull 35 degrees (the riser's `FullAt`, `OwnRiser.cs:115`), so a full-strength target is never
   more than eFull ahead;
 - damping c = max(ζ·2√(k·I), tone·τcap/ωmax): the torque falls as the joint turns faster, to nothing at its top speed.
@@ -700,25 +705,60 @@ The rules for the new controller:
   One thing is added (November 12, from R4's answer and K8; mine, to be measured at step 2). A part the ground holds
   gets only a share of what its drive's spring says: 0.45 to 0.70 at the three miners' ankles towards the toe, 0.35
   to 0.61 sideways, about 1 at their other joints (a rough reckoning from the parts' weights; exactly at step 0, and
-  not run). So the writer makes up for it, where there is something to make up. Each step it reads, for each axis, what the drive gave (`driveForce`, which tells true) over what its spring
+  not run). The 13-part body has no hands: its arms end at the forearms, so the elbows' drives on the forearms are
+  the other light end parts, their shares to be reckoned exactly, axis by axis, when a body is made (step 0; November
+  12, from the review). So the writer makes up for it, where there is something to make up. Each step it reads, for
+  each axis, what the drive gave (`driveForce`, which tells true) over what its spring
   and damper said for that step: the spring's pull at the step's start less what spring and damper take for the
   speed at its end, k·e − (dt·k + c)·ω, with ω read from how far the joint really turned in the step (the speed the
   engine tells of a held part is not its motion). For a joint nothing holds that share is 1; for one held still it
   is K8's law. The writer keeps it between the law's share for that axis (reckoned once, when the body is made) and
-  1, believes at once that a joint is free and only slowly that it is held, learns nothing while the spring says
+  1, believes quickly that a joint is free and only slowly that it is held, learns little while the spring says
   next to nothing, and writes the target that much further from the joint: where the joint is, plus (goal + τ/k −
-  where the joint is) over the share. It compares with what spring and damper said, never with the torque wanted
-  alone, or it would undo K5's damper. Nothing in it switches at a threshold. Two bounds keep R1's promise in this
+  where the joint is) over the share. Because it reads the share, a share above the law (a part half held, or the
+  stiff springs of K8's "Not known") is met by the reading: there the law is a floor, not a claim. It compares with
+  what spring and damper said, never with the torque wanted alone, or it would undo K5's damper. Nothing in it
+  switches at a threshold (November 12, from the review: every weight and rate in it is a smooth function). Each
+  step the share s moves towards the reading r by s ← s + w·(a_hold + (a_free − a_hold)·σ((r − s)/d))·(r − s): σ a
+  smooth step from 0 to 1 of width d, a_free near 1 (quick to believe a joint free), a_hold small (slow to believe
+  it held). The weight w falls smoothly to nothing in three ways, never by a cut: as said²/(said² + T0²), T0 a small
+  share of S, while the spring says next to nothing; as the told force nears the drive's limit, with "said" taken as
+  what the limit lets through (the smaller of |said| and S), or a clamped step would teach a lower share, the target
+  rise, the clamp bite harder: a ratchet to the floor; and as a limited axis nears its stop, where the limit's row
+  takes the drive's push and reads as held, and the engine clamps the target (K8, 5), so what is written is not what
+  arrives. Two bounds keep R1's promise in this
   form. The drive's limit is still the joint's strength, so no more than that ever arrives. And the target is never
   written further from the joint than eFull plus what the joint turns in one step at its top speed (eFull + dt·ωmax:
   1.5 to 1.65 times eFull at the three ankles; §2.3's "never more than eFull from the joint" stands wherever the
-  share is 1). A part let go all at once, with its target e away, turns in its first step at dt·k·e/(I + dt(dt·k +
-  c)) and no faster after (K8); at that offset this is its top speed at most, whatever the writer still believes of
-  it, and what so light a part can carry away is ½·I·ωmax², 1.4 to 1.6 J for the three boots. Within that bound a
+  share is 1). That bound is on the length of the three axes' offset together, not on each axis: on each, a diagonal
+  target would get up to √3 times the offset and three times the work (November 12, from the review). A part let go
+  all at once, with its target e away, turns in its first step at dt·k·e/(I + dt(dt·k + c)), and after that ever
+  nearer k·e/(dt·k + c), from below, as a weighted mean of the two (K8, 4). That fixed point, not the first step, is
+  the bound, also when the target is kept at its offset every step (November 12, from the review: the first step
+  was a bound only while e shrank, as it did in the runs). At the bound's offset the fixed point is ωmax exactly:
+  dt·k + c = (S/ωmax)(1 + b) and k·(eFull + dt·ωmax) = S(1 + b), b = dt·ωmax/eFull. A larger damper lowers it; a
+  torque T from elsewhere on the part adds T/(dt·k + c) (gravity on a boot: about 0.6 N m over 5 N m s, 0.1 rad/s).
+  It bounds the joint's own speed: a turning parent adds its turning to the part's in the world, so R3's "a part
+  turns faster than its bound" is read on the joint. The work of one step (November 12, from the review; reckoned,
+  not run): a drive works at most S·eFull·b(1 + b)/4 on a part in one step, counted as the told torque times the
+  joint's turn dt·ω at the step's end, where the solver's turns settle (a free part, or a held one whose turns
+  converged) and the offset is within eFull(1 + b). That is 0.54, 0.40 and 0.49 of the stroke S·eFull/2 at the
+  three ankles, and over it only where ωmax > eFull/dt, about 30.5 rad/s. The earlier S·eFull·b(1 + b)²/4 is true
+  but looser: it leaves out the dt·k part of the damping. Neither covers a hold that lets go during the step's
+  turns; there only S·eFull·b holds. And with the target rewritten every step no stroke bounds the sum over the
+  steps: for a part let go what bounds it is its energy at its top speed, ½·I·ωmax², 1.4 to 1.6 J for the three
+  boots, whatever the writer still believes of it. Within that bound a
   held ankle can be given all its strength on Small, 0.81 of it towards the toe and 0.61 sideways on Long, 0.72 and
   0.56 on Round; a flat sole bears less than that on all three (0.20 to 0.55 of the ankle's strength), so the bound
   costs a standing boot nothing. Whether the share is best read this way or the target trimmed on the told force,
-  and whether a rise needs the making-up at all, is measured at step 2, with it and without.
+  and whether a rise needs the making-up at all, is measured at step 2, with it and without. Three things for step 2
+  to read (November 12, from the review). On a ball joint the turn read from the change of the joint's position is
+  not quite its speed about each axis (the two differ by terms of the angle times the speed): small in one step, an
+  approximation. A hold that comes and goes may rock at an edge (more torque tips the sole off its hold, the reading
+  says free, the share goes towards 1, the torque drops, the hold comes back): bounded by the speed bound, not ruled
+  out; so step 2 runs a sole on an edge with the making-up on and reads the share step by step. And the tip of a
+  flat sole (R4) reads as error, so the making-up puts 1/share times the tip's torque into the ground (with nothing
+  asked the sole's push already sits 3 to 13 mm aside).
 - **R2. A push is planned only where the body really touches** (K2, K7). A support's share is planned as §2.4 has it
   and bounded by what its touch can bear; no share is planned on a support with no touch, which gets a slow reach for
   the ground and nothing else. In K2 the pyramids sit at the support's real contact points, so a sole on an edge can
@@ -750,12 +790,18 @@ The rules for the new controller:
   only a share of the torque its drive is asked for (K8). And a flat boot under the body's weight sits 1.2 to 4.0
   degrees off flat (up to 4.7 after it was made bent at its ankle), always the same way, its spring giving 2 to 8
   N m against that; less with more turns of place (0.3 to 1.8 degrees at 28, 0.1 to 0.8 at 60) and hardly less with
-  more turns of speed (0.8 to 3.8 at 14 and 18). Under TGS a flat boot sits flat (0.3 degrees), but a boot flies at
+  more turns of speed (0.8 to 3.8 at 14 and 18). (November 12, from the review: the tip is the ground's, what the
+  solver's contact rows leave unsettled under PGS for a light sole under a heavy body, not a sag against the spring;
+  it hardly changes with an ankle ten times as stiff, 1.62 to 1.85 degrees and 3.83 to 3.93. The 2 to 8 N m are the
+  sideways law of K8 on the tip, so what the drive gives sideways is one law on one error, what is asked plus the
+  tip.) Under TGS a flat boot sits flat (0.3 degrees), but a boot flies at
   a landing (22 to 76 rad/s told; one case gained 14.7 J) and every free spring acts 1.29 times as strong as set
   (K8): TGS is no way out, and it is not the game's solver. **So nothing of the
   engine changes**: not the solver, not its turns, not the step, not the boot's turning weight. There is nothing
   here to put to Luis, only to tell him. What changes is the writer (R1: the share is made up for), what "flat"
-  means wherever this design asks it of a sole (R2, R5: within what the solver leaves, 5 degrees), and the test:
+  means wherever this design asks it of a sole (R2, R5: within what the solver leaves, 6 degrees; November 12, from
+  the review: one number in the design and the test, whose bar is 6 and passed, the worst tip read being 4.67
+  degrees, Round, after it was made bent at its ankle), and the test:
   its first bar, set before the run, asked for the whole torque and a flat boot, and judged rest by the speed the
   engine tells; it is reshaped to what holds and passes under PGS. Under TGS it fails, as it should.
 - **R5. At the hand-over to the standing balance (§2.10), R1 to R3 stop holding**: the keeper puts its torques straight
@@ -842,17 +888,23 @@ dt·k·e − a·ω: e the error at the step's start, ω the joint's speed as tha
    (Small), 0.53 (Long) and 0.45 (Round) of it towards the toe and 0.61, 0.40 and 0.35 sideways. Read towards the toe,
    with two thirds of what the sole bears asked: 16.1 of 22.5 N m, 21.7 of 38.5, 26.1 of 53.3 (the law: 15.7, 20.5,
    24.0). At 28 and 4 turns 20.1, 29.3, 36.3 (the law: 19.8, 28.5, 35.0); at 14 and 18 the same as at 28 and 4 (20.3,
-   29.4, 36.9): both kinds of turns count alike; at 60 and 4, 22.4, 36.6, 48.1 (the law: 22.2, 35.9, 47.0). The
-   readings are never under the law, and at most 8.8% over it at the game's turns, 5.4% at the others. Sideways the
-   reading is the law's share plus what the drive already gives against the boot's own tip (R4) with nothing asked,
-   the tip being about that same axis: 10.5, 11.1, 16.4 read against 8.1 + 2.1, 7.6 + 3.5, 10.0 + 6.1; within 5% at
-   all four counts of turns.
+   29.4, 36.9): both kinds of turns count alike, and the source says so too (November 12, from the review:
+   `DySolverControl.cpp` calls `solveInternalConstraints` once in every turn of place and once in every turn of
+   speed, and the drive's update does not ask which kind it is; only the limits' rows do); at 60 and 4, 22.4, 36.6,
+   48.1 (the law: 22.2, 35.9, 47.0). At the design's stiffness the readings are never under the law, and at most 8.8%
+   over it at the game's turns, 5.4% at the others; at three and ten times the spring they run further over it ("Not
+   known"). Sideways the reading is the law's share plus what the drive already gives against the boot's own tip (R4)
+   with nothing asked, the tip being about that same axis: 10.5, 11.1, 16.4 read against 8.1 + 2.1, 7.6 + 3.5, 10.0 +
+   6.1; within 5% at all four counts of turns. That is one law on one error, the asked offset plus the tip, not two
+   contributions (November 12, from the review: the share times k times the tip gives 1.7, 2.8, 5.9 N m against the
+   2.1, 3.5, 6.1 read with nothing asked; the tip is the ground's, R4).
 3. **The drive tells truly what it gave** (`driveForce`: 13.30 N m told for 13.3 asked of a boot in the air), and the
    ground bears a flat boot where the torque given puts it, not where the torque asked would: within 5.4 mm in every
    flat case.
 4. **A part let go** (the ground gone from under it, its target still e away) turns after one step at
    (I·ω + dt·k·e)/(I + a): from rest at dt·k·e/(I + a), and ever after at a weighted mean of its own speed and
-   k·e/(dt·k + c). Read: a boot in the air asked for all its ankle's strength reached 11.3 to 11.4 rad/s (Small), 10.1
+   k·e/(dt·k + c). So that fixed point is the bound on its speed, not the first step: a part whose target is kept
+   e away climbs towards it from below (November 12, from the review). Read: a boot in the air asked for all its ankle's strength reached 11.3 to 11.4 rad/s (Small), 10.1
    to 10.2 (Long), 11.2 (Round) against the law's 11.28, 10.11, 11.14; that is 0.57 to 0.63 of its ankle's top speed.
    A boot made bent 22 degrees at its ankle and standing on its edge was slower than the law while the edge still
    bore weight (4.1, 4.1, 3.6 against 7.2, 6.5, 7.1) and came up to it as the spring was made stiffer (three times:
@@ -870,14 +922,20 @@ dt·k·e − a·ω: e the error at the step's start, ω the joint's speed as tha
 What follows. The share is under 1 only where a part is light against its drive: 0.98 or more where I is at least a
 quarter of a, 0.9 or more where it is over a/7.3. When a body is made, the law's share is reckoned for each axis of
 each joint, and a joint under 0.9 is marked. On the three miners that is the ankles (their other joints by a rough
-reckoning only, to be done exactly at step 0); on a made body it is any light end part on a strong joint, and the
+reckoning only, to be done exactly at step 0, the forearms first: the 13-part body's arms end at them, it has no
+hands); on a made body it is any light end part on a strong joint, and the
 creator's warning can use the mark. The writer makes up for the share (R1). More turns of the solver raise the share and lower the tip,
 and what they cost is measured (`OwnBodyTests.WhatMoreTurnsOfTheSolverCost`: a step of a lying body costs 1.5 times
 as much at 28 turns of place and 2.7 to 2.8 times at 60; for Small 111, 172 and 304 microseconds, in the editor): a
 lever of known price, kept and not used.
 
-Not known. Where the engine calls these rows from was not read: that a drive is solved in the turns of speed too is
-shown by the numbers only. The scale of a drive's force limit inside the solver was not read. The law is for one light
+Not known. The scale of a drive's force limit inside the solver was not read. Why a stiffer spring gives a held boot
+more than the law towards the toe: at three and ten times the design's spring the readings run 1.1 to 2.8 times the
+law (Small 12.5 against 11.1 N m at three times, 9.3 against 5.3 at ten; Long 17.4 against 14.0, 13.8 against 6.6;
+Round 21.1 against 15.5, 19.2 against 6.9), the excess following the tip (November 12, from the review). So the law
+is stated as holding at the design's stiffness; on stiffer springs (and it may be on lighter parts, which the law treats alike: not run) the share is not the law alone, and the
+making-up (R1), which reads the share and keeps it between the law's share and 1, meets it by the reading: there the
+law is a floor. The law is for one light
 part held still; a body of many parts with several of them held at once (both knees and a hand planted) is step 2's to
 show, and a part half held lies somewhere between the law and 1. Why a flat boot tips (R4) is a reading only: what the
 solver's turns leave of the ground's four corner pushes on a light sole under a heavy load. So is the gain of one step
