@@ -16,8 +16,8 @@ Opus 5.5's, at max thinking with ultracode on. Everything it needs is in the rep
 
 1. Read `AGENTS.md`, this page, then `Design/AnyBody/motion_design.md` sections 6 and 7 (they stand over sections 0
    to 5), above all §6.2 (K1 to K8, R1 to R5) and the step table of §6.3. The memory index loads by itself.
-2. **The review that is owed** (item 3 of "In hand"): run it from its brief, or read it if it is there already, and
-   act on it. Until then K8 and R1's addition are their author's own word.
+2. **The review** (item 3 of "In hand"): done on November 12 and acted on (`d0f8c22`). K8 and R1's addition stand
+   reviewed; what it left open is in item 3.
 3. **The rest of step 0** ("Next steps", item 2), each fact with its bar set before its run and read before it is
    claimed; then step 1; then **step 2, whose clips are the first thing Luis sees** (he has seen no motion from this
    work since October 30).
@@ -84,7 +84,7 @@ runs, since it is the rare fall). Luis waits on motion: the first clips come aft
 of the plan being used up, he moved the session to Opus 5.5 ([his messages](Correspondence/2026-11-12_PASS_THE_TORCH_TO_OPUS.md));
 nothing is asked of him.
 
-## In hand: all done but the review (items 1, 2 and 4 are history; item 3 is where the work stands)
+## In hand: all done, the review too (items 1, 2 and 4 are history; item 3 is the stiff ankle, answered and reviewed)
 
 1. **(Done, November 10, evening: the design's K1, K3, K5, its step 0 and its section 7 corrected.)** Two agents reviewed the flying boot's diagnosis
    ([their findings](Reviews/2026-11-10_FlyingBoot_K1/review.md)): the core holds (the count is coded rightly, it
@@ -129,8 +129,9 @@ nothing is asked of him.
      (ii) A part nothing holds gets the implicit spring and damper exactly; a part let go turns at
      `(I w + dt k e) / (I + dt (dt k + c))` at most. The drive tells truly what it gave (`driveForce`).
      (iii) A flat boot under the body's weight sits 1.2 to 4.0 degrees off flat (4.7 after it was made bent), always
-     the same way; less with more turns of place. Its cause is a reading only. Wherever the design asks a sole to be
-     flat (R2, R5, the gates), about 5 degrees must be allowed; look at the soles in step 2's clips.
+     the same way; less with more turns of place, not with a stiffer ankle: the tip is the ground's (the review). Its
+     cause is a reading only. Wherever the design asks a sole to be flat (R2, R5, the gates), "flat" is within 6
+     degrees, one number in the design and the test; look at the soles in step 2's clips.
      (iv) The engine clamps a drive's target to the joint's limits: nothing asked through the target presses a joint
      into its stop (§2.3's note).
      (v) TGS is no cure: boots fly at landings there and every free spring acts 1.29 times as strong as set.
@@ -139,45 +140,48 @@ nothing is asked of him.
    - **Corrected against what this page said before:** sideways the drive's reading is not "the boot rolls a little";
      it is the law's share plus what the drive gives against the boot's own tip with nothing asked (within 5% on all
      twelve readings). The test bars the reading towards the toe at an eighth over the law, and the tip at 6 degrees.
-   - **The making-up** (R1's addition; mine; **not built and not run**). Each step, for each axis: what the spring
-     and damper said is `k e - (dt k + c) w` (plus `c` times the wanted speed), `e` the error at the step's start and
-     `w` the joint's real turning over the step (its change of position over `dt`; never the joint speed the engine
-     tells, which is not motion for a held part). The share read is `driveForce` over that. It is weighed by how
-     much was said against the joint's strength (nothing is learnt while little is said), kept between the law's
-     share for that axis and 1, believed at once when it says the joint is free and slowly when it says it is held.
-     The target is written at `q + (goal + torque / k - q) / share`, never further from the joint than
-     `eFull + dt wmax` (1.65, 1.53, 1.61 times eFull at the three ankles), the drive's limit staying the joint's
-     strength. It is never reckoned against the wanted torque alone: that would undo K5's damper. Reading the share
-     does not feed back on itself: for a held part, told over said is the true share whatever was written. Within
-     the bound a held ankle can be given all its strength on Small, 0.81 (toe) and 0.61 (sideways) of it on Long,
-     0.72 and 0.56 on Round; a flat sole bears only 0.20 to 0.55 of the ankle's strength. Whether a rise needs the
-     making-up at all, and whether it is better done as a trim on the told force, is measured at step 2, with it and
-     without.
-   - **One thing reckoned after the design text was written, to be settled by the review and then written into R1:**
-     with the target at the bound, what a drive can work on a part in one step. Fable 5.2 reckoned it at most
-     `S eFull b (1 + b)^2 / 4`, `b = dt wmax / eFull`: 0.89, 0.61 and 0.78 of the spring's stroke (`S eFull / 2`) at
-     the three ankles, past the stroke only on a light end part whose top speed is over about 21 rad/s. Opus 5.5,
-     checking it against the implicit law (`k e0 - (dt k + c) w_end`, the joint's turn `dt w_end`), gets
-     `S eFull b (1 + b) / 4`: 0.54, 0.40 and 0.49 of the stroke, past it only above `eFull / dt`, about 30.5 rad/s;
-     the first form leaves out the `dt k` part of the damping, so it is the looser bound. Either way R1's stroke bounds
-     it at the three ankles.
-   - **The review is in** (November 12, evening; one Opus reviewer at medium effort: `review.md` beside its brief).
-     The law holds at the design's stiffness; nine changes to the design text follow from it, being made next (then
-     this item is rewritten). Before that it was cut off twice by the plan's limit (three reviewers at once). Its
-     brief, sized to finish, is [Reviews/2026-11-12_StiffAnkle_K8/brief.md](Reviews/2026-11-12_StiffAnkle_K8/brief.md);
-     the findings go to `review.md` beside it. If that file is there already, read it first (the review was
-     started on November 12, in the evening, and may have finished). Then act on it in the design and the validation
-     record. Its verdict is advice, not Luis's.
+   - **The making-up** (R1's addition; mine, reviewed; **not built and not run**). Each step, for each axis: what
+     the spring and damper said is `k e - (dt k + c) w` (plus `c` times the wanted speed), `e` the error at the step's
+     start and `w` the joint's real turning over the step (its change of position over `dt`, an approximation on a
+     ball joint; never the joint speed the engine tells, which is not motion for a held part). The share read is
+     `driveForce` over that, "said" taken as what the drive's limit lets through. The share moves towards the reading
+     by smooth weights and rates only (R1 has the form): quickly when it says the joint is free, slowly when held,
+     less and less as little is said, as the told force nears the limit, or as a limited axis nears its stop; it is
+     kept between the law's share for that axis and 1. The target is written at `q + (goal + torque / k - q) / share`,
+     its offset from the joint never longer than `eFull + dt wmax` (1.65, 1.53, 1.61 times eFull at the three
+     ankles), measured on the three axes together; the drive's limit stays the joint's strength. At that offset a part
+     let go tends to its top speed and no faster (the fixed point `k e / (dt k + c)`). It is never reckoned against
+     the wanted torque alone: that would undo K5's damper. Its linear part does not feed back on itself; three
+     non-linear paths can (the force clamp, a joint on its stop, a hold that comes and goes at an edge): the first two
+     are weighed smoothly to nothing, the third is read at step 2 on a sole on an edge, the share read step by step.
+     Within the bound a held ankle can be given all its strength on Small, 0.81 (toe) and 0.61 (sideways) of it on
+     Long, 0.72 and 0.56 on Round; a flat sole bears only 0.20 to 0.55 of the ankle's strength. Whether a rise needs
+     the making-up at all, and whether it is better done as a trim on the told force, is measured at step 2, with it
+     and without.
+   - **The work of one step, settled by the review and written into R1:** with the target at the bound a drive works
+     at most `S eFull b (1 + b) / 4` on a part in one step, `b = dt wmax / eFull`: 0.54, 0.40 and 0.49 of the
+     spring's stroke (`S eFull / 2`) at the three ankles, past it only above `eFull / dt`, about 30.5 rad/s (Fable
+     5.2's first `S eFull b (1 + b)^2 / 4` is true but looser). Over many steps no stroke bounds it while the target
+     is rewritten: a part let go is bounded by its energy at top speed, `I wmax^2 / 2`, 1.4 to 1.6 J for the boots.
+   - **The review is done and acted on** (November 12, evening; one Opus reviewer at medium effort:
+     [review.md](Reviews/2026-11-12_StiffAnkle_K8/review.md) beside its brief; its verdict is advice, not Luis's). The
+     law holds at the design's stiffness; its nine changes to the design text are made, with three things for step 2
+     to read (`d0f8c22`; the validation record says which). Before it ran it was cut off twice by the plan's limit
+     (three reviewers at once).
    - **Open, and not needed now:** why the boot tips; what a landing's one-step gain comes of (3.0 J at most; my
-     reading: the ground pushing a sunk sole back out); several parts held at once (step 2 shows it); Round's
+     reading: the ground pushing a sunk sole back out); why a stiffer spring gives a held boot more than the law (1.1
+     to 2.8 times it at three and ten times the spring; the making-up's reading meets it); several parts held at once,
+     a part half held, a held case on a diagonal (step 2 shows them); Round's
      unexplained course; the shove test (`ShovedAgainAndAgainNothingOfItFlies`) still fails as known and its bar is
      still on the speed the engine tells: the standing balance is not mended, by decision ("Next steps", 1); the
      whole PlayMode suite was not run again (the facts fixture was: 13 of 13).
    - **Usage, November 12:** Fable's week at 96% at midday and spent by the evening, so the work is Opus 5.5's from
-     here. All models at 77% of the week in the evening; it resets on Monday, November 16 (17:00 local). The plan is
-     Pro and a five-hour window is small: three reviewers on Opus at high effort at once used a whole window in about
-     five minutes and returned nothing. One agent at a time, a brief that names the files and the lines and holds the
-     numbers, medium effort, and the agent writes its file early.
+     here. All models at 79% of the week in the evening, after the review and its changes (the five-hour window at
+     52%; a whole window is about a fifth of the week, so about one window is left until the reset); it resets on
+     Monday, November 16 (17:00 local). The plan is Pro and a five-hour window is small: three reviewers on Opus at
+     high effort at once used a whole window in about five minutes and returned nothing. One agent at a time, a brief
+     that names the files and the lines and holds the numbers, medium effort, and the agent writes its file early.
+     Unity's runs cost nothing of the plan; reading them does, so read them through filters.
 4. **(Done: reported on November 10; answered on November 11, above.)**
 
 ## Next steps, in order

@@ -12,10 +12,12 @@
   drive's spring says (0.45 to 0.70 at the three ankles; the design's new K8); a flat boot under the body's weight sits
   1.2 to 4.0 degrees off flat; a drive's target is clamped to the joint's limits. The drive writer is to make up for the
   share within a bound that keeps a boot let go under its ankle's top speed (R1's addition: not built; measured at step
-  2). The other solver (TGS) is no cure: boots fly at landings there. `ArticulationFactsTests` 13 of 13. **An
-  independent review of it is owed** ([its brief](Reviews/2026-11-12_StiffAnkle_K8/brief.md)). Fable 5.2's share of the
+  2). The other solver (TGS) is no cure: boots fly at landings there. `ArticulationFactsTests` 13 of 13. **Reviewed
+  independently** ([the review](Reviews/2026-11-12_StiffAnkle_K8/review.md)): the law holds at the design's stiffness;
+  its nine changes to the design text are made (the speed bound is a fixed point, the offset bound is on the three
+  axes together, every weight of the making-up is smooth, "flat" is one number, 6 degrees). Fable 5.2's share of the
   plan was used up that day, and Luis moved the session to Opus 5.5 ([his
-  messages](Correspondence/2026-11-12_PASS_THE_TORCH_TO_OPUS.md)). **Next:** the review, then the rest of step 0.
+  messages](Correspondence/2026-11-12_PASS_THE_TORCH_TO_OPUS.md)). **Next:** the rest of step 0.
   ([Validation](Validation.md), November 11 and 12.)
 
 - **Before (November 10): the design of the motion checked; the boot that flies explained.** Luis moved the session to
