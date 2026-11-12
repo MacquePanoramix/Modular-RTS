@@ -4879,3 +4879,118 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   not by how much each helps); why the count's remainder is what it is in the step a boot rolls over (the worked-out
   torques' work is counted at the end of the step, which is uncertain by up to their size times the turn in a step
   where a part turns a radian); the other solver on anything but this test.
+
+## S3b step 2 — the stiff ankle: it holds under the game's solver, and a planted boot gets a share (November 11 and 12)
+
+- **The question** (the design's R4, the first fact of step 0): whether an ankle sprung as the design springs it (all
+  its strength at 35 degrees, damped by its strength over its top speed) and asked through its target holds a light
+  boot under the body's weight, under both solvers. Its bar was set before the first run.
+- **The rig** (`ArticulationFactsTests.AStifflySprungAnkleHoldsALightBoot`, work branch): each miner's boot, with the
+  game's weight, turning weight and sole, on a ball joint driven about its three lines, under the rest of the body's
+  weight. The weight rides on two light carriers and an upright slide, so it goes freely every way and never turns,
+  and it is centred over the ankle. 150 steps (3 s) a case. Thirteen cases a miner: flat with nothing asked; flat with
+  two thirds of what the sole bears asked, sideways and towards the toe; dropped flat from 2 cm; made bent 22 degrees
+  at its ankle; all its strength sideways; on its edge under a weight leant 22 degrees (nothing asked, all its
+  strength further onto the edge, all of it towards the toe); dropped from 5 cm with all its strength (flat, and
+  leant); held 34 cm in the air with all its strength (towards the toe, and towards the toe and sideways at once).
+  Told for the design's ankle; for the same ankle 3 and 10 times as stiff (not in the air); for the standing
+  balance's own ankle (spring 3, damper 0.07, the torque put straight on the boot; Small, six cases); and for the
+  design's at 28 and 4, 14 and 18, 60 and 4 turns of the solver (the three flat cases): 138 cases. Before them a probe
+  of the rig itself: a boot in the air with 13.3 N m put on it gives way 7.63 degrees (its spring says 7.63) and its
+  drive tells 13.30 N m.
+- **First run, both solvers, against the first bar** (November 11). The bar: where the sole can bear what is asked,
+  the boot within 2 degrees of flat, turning under 1 rad/s after its first half second, the weight within 2 mm, the
+  drive giving within a tenth of what was asked (within a twentieth of its strength with nothing asked), the ground
+  bearing the boot within 10 mm of where the asked torque puts it; in the other cases the boot at rest by the speed
+  the engine tells (0.5 rad/s) and no more than 90 degrees from flat; in all of them no boot faster than its ankle's
+  top speed, no drive giving more in a step than its spring's stroke holds, no more than 1 J gained in a step from
+  anything else and 0.5 J in sum. The game's solver (PGS) missed it 33 times, the other (TGS) 50. Read with
+  `Docs/Technical/AnyBody/tools/r4_table.py`: under PGS no boot flew and none gained energy; the misses were the
+  boot's tip, the drive giving short, and the bar itself. Under TGS a flat boot sits flat (0.2 to 0.4 degrees) and
+  boots fly at landings (22 to 76 rad/s told; one case gained 14.7 J in a step).
+- **What of the first bar was wrong**: it judged rest by the speed the engine tells, which is not motion for a part
+  at rest on the ground; it allowed 1 J in a step whatever the body weighs, where a landing lifts the body's weight;
+  it asked the drive for the whole torque, where the engine gives a held part a share; it asked 2 degrees of flat,
+  where the solver leaves up to 4.7; it set 90 degrees for a boot that lies on its side at 89.5; and the probe's own
+  check did not know that under TGS a free spring acts stronger than set.
+- **The engine's own source read** (PhysX 4.1, public; `DyFeatherstoneArticulation.cpp`, the two functions that set
+  up and solve a joint's inner rows; Unity's build may differ, so the runs are the proof): the laws written in
+  `motion_design.md` K8. Under PGS a part held still gets 1 − (1 − x)^n of what its spring says, x = I/(I + dt(dt·k +
+  c)), n the turns of place and of speed together; a free part gets the spring and damper of the step's end exactly.
+  Under TGS a free spring acts (place + speed)/place times as strong as set, a held part gets that over 1 + h(h·k +
+  c)/I, h the substep. Also read: a drive's target is clamped to the joint's limits. Not read: where these rows are
+  called from, and the scale of a drive's force limit.
+- **The laws against the readings.** Towards the toe, two thirds of what the sole bears asked (22.5, 38.5, 53.3 N m
+  for Small, Long, Round), the drive gave, and the law says:
+
+  | turns | Small | Long | Round |
+  |---|---|---|---|
+  | PGS 14 and 4 (the game's) | 16.1 (15.7) | 21.7 (20.5) | 26.1 (24.0) |
+  | PGS 28 and 4 | 20.1 (19.8) | 29.3 (28.5) | 36.3 (35.0) |
+  | PGS 14 and 18 | 20.3 (19.8) | 29.4 (28.5) | 36.9 (35.0) |
+  | PGS 60 and 4 | 22.4 (22.2) | 36.6 (35.9) | 48.1 (47.0) |
+  | TGS 14 and 4 | 17.3 (17.4) | 23.1 (23.3) | 28.8 (29.0) |
+
+  Under PGS the readings are never under the law, at most 8.8% over it at the game's turns and 5.4% at the others;
+  under TGS twelve readings lay within 1% of its law (the probe's boot gave way 5.92 degrees where its spring says
+  7.63: 1.29 times as strong). Sideways (13.3, 19.1, 28.6 N m asked) the drive gave 10.5, 11.1, 16.4 at the game's
+  turns, where the law says 8.1, 7.6, 10.0: the reading is the law's share plus what the drive gives against the
+  boot's own tip with nothing asked (2.1, 3.5, 6.1), within 5% at all four counts of turns (28 and 4: 12.4, 14.1,
+  20.4 against 10.8 + 1.4, 11.4 + 2.8, 15.3 + 4.8; 14 and 18: 13.4, 15.5, 24.1 against 10.8 + 2.0, 11.4 + 3.9, 15.3 +
+  7.8; 60 and 4: 13.6, 17.7, 26.0 against 12.8 + 0.6, 16.0 + 1.8, 22.5 + 3.2).
+- **The tip.** A flat boot under the body's weight, nothing asked, sits 1.62 (Small), 1.73 (Long), 3.83 (Round)
+  degrees off flat at the game's turns, always the same way, the ground bearing it 2 to 4 mm to one side of the
+  ankle; with a torque asked 1.25 to 3.99; after it was made bent at its ankle, up to 4.67 (Round). At 28 and 4 turns
+  0.67, 0.73, 1.49; at 60 and 4, 0.24, 0.27, 0.58; at 14 and 18, 1.49, 1.59, 3.26: it falls with turns of place and
+  hardly with turns of speed. The rig's weight cannot turn and is centred, so no leaning load makes it. Under TGS
+  0.27 to 0.31.
+- **A boot let go** turns no faster than (I·ω + dt·k·e)/(I + dt(dt·k + c)) says (mine, from the law for a free
+  part): in the air with all its strength asked 11.3 to 11.4 rad/s (Small), 10.1 to 10.2 (Long), 11.2 (Round) against
+  11.28, 10.11, 11.14; made bent 22 degrees and standing on its edge 4.1, 4.1, 3.6 against 7.2, 6.5, 7.1 (the edge
+  still bears weight); at three times the spring 11.9, 10.9, 11.5 against 12.3, 11.6, 12.2; at ten times 16.4, 16.0,
+  16.4 against 16.45, 16.03, 16.39.
+- **Each ankle's greatest, PGS at the game's turns.** The design's (39 cases): fastest turning 11.4 rad/s (0.63 of
+  its ankle's top speed at most, Long); the drive's most work in a step 3.00 J; the most gained in a step from
+  anything else 3.04 J (Round, dropped 5 cm flat: a landing); every case a loss in sum; no boot turned more than 0.32
+  degrees in its last half second; asked for more than its sole bears, it rolled onto its side and lay there (89.5
+  degrees from flat at most). Three times as stiff (33 cases): 11.9 rad/s (0.68 of top), 3.01 J, one case +0.18 J in
+  sum (Long, on its edge), last half second 0.38 degrees. Ten times as stiff (33): 16.4 rad/s (Long's 16.0 is 0.99 of
+  its ankle's top), 3.47 J, sums within +0.01 J, last half second 0.52 degrees. The standing balance's own, the
+  torque put straight on the boot (Small, 6): 199 rad/s, 1195 J gained in one step, ends 179 degrees from flat. At
+  the other counts of turns (9 cases each): sums at most +0.21 J (28 and 4) and +0.45 J (60 and 4, Round towards the
+  toe).
+- **What more turns cost** (`OwnBodyTests.WhatMoreTurnsOfTheSolverCost`, explicit, no bar: twenty copies of a miner's
+  own body lying awake, the engine stepped by hand, in the editor). Microseconds a body a step at 14 and 4, 28 and 4,
+  60 and 4 turns: Small 111.2, 172.2, 303.6; Long 125.0, 191.7, 350.6; Round 105.5, 163.0, 293.4.
+- **The test reshaped to what holds** (November 12; work branch `582c022`). For the design's ankle at every count of
+  turns, where the sole can bear what is asked: the drive gives no less than 0.97 of the held part's law and no more
+  than 1.1 of what was asked, and towards the toe no more than an eighth over the law. For the design's ankle at the
+  game's turns besides: the boot within 6 degrees of flat, turning under 1 rad/s after its first half second, the
+  weight within 2 mm, the drive within a tenth of its strength with nothing asked, the ground bearing the boot within
+  10 mm of where the torque given puts it; in the other cases the boot turning no more than 2 degrees in its last
+  half second (read from where it is), no more than 100 degrees from flat, in the air within 2 degrees of 35; in all
+  of them no boot faster than its ankle's top speed, no drive giving more in a step than its stroke holds, one step's
+  gain from anything else no more than the body's weight lifted 5 mm (1 J at least), 0.5 J in sum. **Run twice under
+  PGS as committed: passed both times**, the same numbers both times. Nearest to each bar: the ground's bearing 5.4 of
+  10 mm; lying on its side 89.5 of 100 degrees; the drive with nothing asked 0.054 of 0.1 of its strength; the drive
+  over what was asked 1.023 of 1.1; a landing 3.04 of 4.30 J; the last half second 0.32 of 2 degrees; the law over
+  the drive 0.991 of 1.031; the weight 0.64 of 2 mm; the tip 4.67 of 6 degrees; towards the toe over the law 1.088 of
+  1.125; turning 10.2 of 16.1 rad/s; turning late 0.67 of 1 rad/s; the drive's work 1.41 of 18.6 J.
+- **Read from this** (`motion_design.md` R4, R1, K8, §2.3): the stiff ankle holds under the game's solver, so nothing
+  of the engine changes; the writer makes up for the held part's share, within a bound that keeps a part let go under
+  its top speed; a flat sole is flat within what the solver leaves; a target cannot press a joint into its stop.
+- **The whole facts fixture after the reshaping** (`ArticulationFactsTests`, November 12, the work branch at
+  `582c022`): **13 of 13**, no compile error; the stiff-ankle test among them, passed a third time with the same
+  lines.
+- **Review: owed.** An independent review of the laws against the source and of the design's new text was cut off
+  twice by the plan's five-hour limit (November 11 and 12: three reviewers at once; nothing returned). Its brief,
+  sized to finish, is `Reviews/2026-11-12_StiffAnkle_K8/brief.md`; its findings go beside it. Until it is read, K8,
+  R1's addition and R4's answer are their author's own word.
+- **Not tested:** the test under TGS after its reshaping (it is meant to fail there; the TGS numbers above are the
+  first run's); the whole PlayMode suite, and `OwnBodyTests` as a whole since its two additions (the shove test's
+  parts line, read on November 11, and the cost test, run alone); the making-up of R1, which is not built: its form
+  and its bound are reckoned from the law, not run; a part let go with its target further away than eFull at the
+  design's spring; the other joints' shares (a rough reckoning); a body of many parts with several held at once; a
+  standing body's or a player build's cost with more turns, and what more turns do to the standing balance; Unity's
+  own build of the engine (the public 4.1 source was read); why a flat boot tips and what a landing's one-step gain
+  comes of (readings, not shown); nothing of this as played or in a build.

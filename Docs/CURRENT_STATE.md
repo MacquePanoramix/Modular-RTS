@@ -1,8 +1,24 @@
 # Wonder Gather — Current State
 
-**Updated:** November 10, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 12, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 10): the design of the motion checked; the boot that flies explained.** Luis moved the session to
+- **Now (November 12): the stiff ankle holds under the game's solver; the work passes to Opus 5.5.** Luis agreed to
+  the design of the motion on November 11: all six recommendations of its section 7, "and please proceed", with the
+  fall onto the front to be made to work as fully as the common one ([his
+  message](Correspondence/2026-11-11_YES_TO_THE_SIX_AND_PROCEED.md)). Step 0 of its section 6.3 began with the fact its
+  R4 asks for: whether an ankle sprung as the design springs it holds a light boot under the body's weight. **It does
+  under the game's solver (PGS), so nothing of the engine changes and nothing waits on Luis.** Found on the way, read
+  in the engine's own source and matched by the runs: a light part that the ground holds gets only a share of what its
+  drive's spring says (0.45 to 0.70 at the three ankles; the design's new K8); a flat boot under the body's weight sits
+  1.2 to 4.0 degrees off flat; a drive's target is clamped to the joint's limits. The drive writer is to make up for the
+  share within a bound that keeps a boot let go under its ankle's top speed (R1's addition: not built; measured at step
+  2). The other solver (TGS) is no cure: boots fly at landings there. `ArticulationFactsTests` 13 of 13. **An
+  independent review of it is owed** ([its brief](Reviews/2026-11-12_StiffAnkle_K8/brief.md)). Fable 5.2's share of the
+  plan was used up that day, and Luis moved the session to Opus 5.5 ([his
+  messages](Correspondence/2026-11-12_PASS_THE_TORCH_TO_OPUS.md)). **Next:** the review, then the rest of step 0.
+  ([Validation](Validation.md), November 11 and 12.)
+
+- **Before (November 10): the design of the motion checked; the boot that flies explained.** Luis moved the session to
   Claude Fable 5.2 on November 9 (night): quality above everything, and the work kept so that Opus 5.5 can take it up
   ([his message](Correspondence/2026-11-09_QUALITY_ABOVE_EVERYTHING_AND_FABLE.md)).
   **The design of the motion through the stances** (layers 2 and 3: [motion_design.md](Design/AnyBody/motion_design.md))

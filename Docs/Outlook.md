@@ -58,6 +58,32 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 12, 2026 — the twenty-fourth (250 steps since the last; Fable's share used up, the work passes to Opus 5.5)
+
+- **Where we are.** S3b step 2, the getting up for any body: layers 0 and 1 in the code; layers 2 and 3 designed,
+  checked, agreed by Luis on November 11, not built. Step 0 of the design's §6.3 is under way. Its first fact, the stiff
+  ankle, is answered: it holds under the game's solver, so nothing of the engine changes. On the way the engine's own
+  source was read and two things found and matched by the runs: a light part that the ground holds gets only a share
+  of what its drive says (K8), and a flat boot under the body's weight sits a few degrees off flat.
+- **Waiting on Luis:** nothing. On November 12 he moved the session to Opus 5.5 at max thinking with ultracode, Fable's
+  week being spent. He waits on motion: the first clips come after step 2.
+- **Built, not in a build:** everything since October 30, as before; none of it changes play.
+- **Put off, not to be forgotten:** the review of today's answer (owed; its brief is written); the fall onto the front,
+  made to work and tested as fully as the common one, forced in the runs; the bear crawl's stance; Long's coat and
+  Round's apron; the weighed centres; the creator's warning (K8's mark can feed it); strength by region; one unit helping
+  another up; the mining skill and its research; Round's one unexplained course under the other solver; the shove test,
+  still failing as known (the standing balance is mended only by folding it into the new controller); the merge to main,
+  only on Luis's word.
+- **Does the task serve the stage?** Yes, and the drift is real: thirteen days without motion reaching Luis, and step
+  0's first fact took two days and the engine's source. What it found (the share) changes how the drive writer is
+  built, so it was not idle; but the rest of step 0 must be kept as small as step 2 needs: one test and one bar each,
+  read, then on, and what only step 2's own stance can show is left to step 2.
+- **Drift watched.** (1) The next thing that reaches Luis must move. (2) The allowance: Fable spent; all models at 77%
+  of the week with four days to its reset (Monday, November 16): one agent at a time, a tight brief, medium effort.
+  (3) The standing balance stays as it is.
+- **What Luis would want to know:** that the work goes on without a break; that the ankle question is answered with
+  nothing for him to decide; that the next thing he sees is a clip of a stance held by its own joints and nudged.
+
 ### November 11, 2026 — the twenty-third (250 steps since the last; Luis has agreed to the design)
 
 - **Where we are.** S3b step 2, the getting up for any body. Since the twenty-second: the flying boot's cause found,

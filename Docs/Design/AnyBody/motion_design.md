@@ -316,6 +316,11 @@ budget**, all of it through the drive:
   (That slew is what joint_model §4 asks; `JointAim.Target`, `JointFrames.cs:193-198`, does not do it yet.) The one
   place a target may go past the soft range: a straight elbow or knee that bears (the weak on straight arms, critique
   F8) rests on its stop with a little push into it; whether the engine holds that without chatter is tested at step 2.
+  (November 12: not by its target. The engine clamps a drive's target to the joint's limits, K8, so nothing asked
+  through the target presses a joint into its stop. A straight joint that bears stays on its stop where the load
+  itself presses it there, or where its spring out-pulls the load's lever: its strength over 0.61 of the weight
+  times the lever. Step 2 tests it so. And one more place: where the ground holds a light part and its drive gives
+  it only a share, the target may stand up to eFull + dt·ωmax from the joint, R1.)
 - k = tone·τcap/eFull, eFull 35 degrees (the riser's `FullAt`, `OwnRiser.cs:115`), so a full-strength target is never
   more than eFull ahead;
 - damping c = max(ζ·2√(k·I), tone·τcap/ωmax): the torque falls as the joint turns faster, to nothing at its top speed.
@@ -692,6 +697,28 @@ The rules for the new controller:
   stroke holds (half of strength times eFull: 19 J for Small's ankle, 40 J for its hip), inside the engine's own solve.
   A torque put on a part keeps pushing however far and fast the joint turns. R1 holds only together with R2 (the
   torque is never worked out for a push that has no touch) and with K5's damper.
+  One thing is added (November 12, from R4's answer and K8; mine, to be measured at step 2). A part the ground holds
+  gets only a share of what its drive's spring says: 0.45 to 0.70 at the three miners' ankles towards the toe, 0.35
+  to 0.61 sideways, about 1 at their other joints (a rough reckoning from the parts' weights; exactly at step 0, and
+  not run). So the writer makes up for it, where there is something to make up. Each step it reads, for each axis, what the drive gave (`driveForce`, which tells true) over what its spring
+  and damper said for that step: the spring's pull at the step's start less what spring and damper take for the
+  speed at its end, k·e − (dt·k + c)·ω, with ω read from how far the joint really turned in the step (the speed the
+  engine tells of a held part is not its motion). For a joint nothing holds that share is 1; for one held still it
+  is K8's law. The writer keeps it between the law's share for that axis (reckoned once, when the body is made) and
+  1, believes at once that a joint is free and only slowly that it is held, learns nothing while the spring says
+  next to nothing, and writes the target that much further from the joint: where the joint is, plus (goal + τ/k −
+  where the joint is) over the share. It compares with what spring and damper said, never with the torque wanted
+  alone, or it would undo K5's damper. Nothing in it switches at a threshold. Two bounds keep R1's promise in this
+  form. The drive's limit is still the joint's strength, so no more than that ever arrives. And the target is never
+  written further from the joint than eFull plus what the joint turns in one step at its top speed (eFull + dt·ωmax:
+  1.5 to 1.65 times eFull at the three ankles; §2.3's "never more than eFull from the joint" stands wherever the
+  share is 1). A part let go all at once, with its target e away, turns in its first step at dt·k·e/(I + dt(dt·k +
+  c)) and no faster after (K8); at that offset this is its top speed at most, whatever the writer still believes of
+  it, and what so light a part can carry away is ½·I·ωmax², 1.4 to 1.6 J for the three boots. Within that bound a
+  held ankle can be given all its strength on Small, 0.81 of it towards the toe and 0.61 sideways on Long, 0.72 and
+  0.56 on Round; a flat sole bears less than that on all three (0.20 to 0.55 of the ankle's strength), so the bound
+  costs a standing boot nothing. Whether the share is best read this way or the target trimmed on the told force,
+  and whether a rise needs the making-up at all, is measured at step 2, with it and without.
 - **R2. A push is planned only where the body really touches** (K2, K7). A support's share is planned as §2.4 has it
   and bounded by what its touch can bear; no share is planned on a support with no touch, which gets a slow reach for
   the ground and nothing else. In K2 the pyramids sit at the support's real contact points, so a sole on an edge can
@@ -711,6 +738,26 @@ The rules for the new controller:
   because, as it was built, a stiff one did not hold (`OwnKeeper`, the note at `FullAt`). If it holds under neither
   solver, what must change is the boot's turning weight, the step, or the solver; each of those changes how everything
   in the game moves, so it is put to Luis first.
+  **Answered (November 12): under the game's solver it holds.** The test ran under both solvers (November 11 and
+  12; `Docs/Validation.md` has the numbers). Under PGS at the game's 14 and 4 turns the ankle as this design springs
+  it held the boot in every case on all three miners, and so did the same ankle three and ten times as stiff: no
+  boot turned faster than its ankle's top speed (the design's reached 0.63 of it, the tenfold one 0.99), no run
+  gained energy worth the name (the design's lost in every case; the stiffer ones gained 0.18 J at most), every
+  boot came to rest (none turned more than 0.5 degrees in its last half second), and a boot asked for more than its
+  sole can bear rolled onto its side and lay there. The standing balance's own ankle, soft and with its torque put
+  straight on the boot, flew in the same cases (199 rad/s, 1195 J in one step): the fault of K1, not the stiff
+  spring's. Two things are not as this design took them, and both are the solver's. A boot the ground holds gets
+  only a share of the torque its drive is asked for (K8). And a flat boot under the body's weight sits 1.2 to 4.0
+  degrees off flat (up to 4.7 after it was made bent at its ankle), always the same way, its spring giving 2 to 8
+  N m against that; less with more turns of place (0.3 to 1.8 degrees at 28, 0.1 to 0.8 at 60) and hardly less with
+  more turns of speed (0.8 to 3.8 at 14 and 18). Under TGS a flat boot sits flat (0.3 degrees), but a boot flies at
+  a landing (22 to 76 rad/s told; one case gained 14.7 J) and every free spring acts 1.29 times as strong as set
+  (K8): TGS is no way out, and it is not the game's solver. **So nothing of the
+  engine changes**: not the solver, not its turns, not the step, not the boot's turning weight. There is nothing
+  here to put to Luis, only to tell him. What changes is the writer (R1: the share is made up for), what "flat"
+  means wherever this design asks it of a sole (R2, R5: within what the solver leaves, 5 degrees), and the test:
+  its first bar, set before the run, asked for the whole torque and a flat boot, and judged rest by the speed the
+  engine tells; it is reshaped to what holds and passes under PGS. Under TGS it fails, as it should.
 - **R5. At the hand-over to the standing balance (§2.10), R1 to R3 stop holding**: the keeper puts its torques straight
   on the parts. So the hand-over's gate also asks that both soles lie flat and bear; the drives are sprung as the
   keeper has them before its first direct torque comes (or its torques come in with that change); and `BodyWatch`
@@ -742,7 +789,9 @@ at once; a drive across a half turn.
 
 **K4. The load through the target rests on two facts not yet run** (step 0). (a) target = goal + τ/k carries a known
 load on a body whose root floats and whose foot stands on the ground: a two-part leg under a weight keeps its pose
-within 2 degrees. The spring is soft (full strength at 35 degrees) and solved implicitly, so it should. (b) What
+within 2 degrees. The spring is soft (full strength at 35 degrees) and solved implicitly, so it should. (November 12:
+at the ankle only K8's share of the load arrives unless the writer makes up for it, R1; the fact is run both ways.)
+(b) What
 `GetJointGravityForces` gives on a floating root. The design reads the engine's source as "nothing"; then the sum of
 §2.2 step 4 is the only way, and K2 gives its pushes.
 
@@ -759,7 +808,9 @@ its dampers took. The speed is swept up from 10 rad/s. A joint's bound in this c
 fails, over 1.5; or its top speed, if none fails below that. Where a bound comes out below a top speed, the damper
 keeps the top speed (the weak stay slower by the same law), and the pace of §2.6 and the target's slew of §2.3 use the
 lower of the two. The quickest stage of a rise (the last push, 0.4 to 0.55 s) turns a knee about a quarter turn, some
-5 rad/s at its quickest: a rise does not need the top speeds. A swung tool will come nearer them.
+5 rad/s at its quickest: a rise does not need the top speeds. A swung tool will come nearer them. (November 12, K8:
+under the game's solver the drive of a part nothing else holds is solved as the implicit spring and damper exactly,
+so the law stands as written; a part the ground holds is another matter.)
 
 **K6. A speed limit does not stop flailing** (sure). A leg within its top speeds still brings its boot to 8 to 14 m/s,
 as a person's kick does. What keeps a limb from flailing is K1's rules, and that every free limb has a role and a
@@ -769,6 +820,70 @@ damped rest (§2.7).
 and ignores moving bodies while getting up. Until change 7 a gate on "bears" is a gate on upward push alone, a slope
 is not read, and a hand on a thigh is not felt.
 
+**K8. What a drive gives a part that the ground holds** (measured November 11 and 12; the law read in the engine's own
+source and matched by the runs; the reading and what follows are mine). The stiff-ankle test (R4) asked a planted
+boot's ankle for a torque and read what the drive gave. It gave less, by a law. The public source of the engine's
+articulation solver explains it (PhysX 4.1, `DyFeatherstoneArticulation.cpp`: `setupInternalConstraintsRecursive` and
+`solveInternalConstraintRecursive`); Unity's build may differ from that source, so the runs are the proof and the
+source the explanation.
+
+Once a step, for each driven axis, the engine reckons a = dt·(dt·k + c) from the drive's spring k and damper c, and
+x = 1/(1 + a·R), where R is how far a unit of turning impulse turns the joint when nothing else holds it; for a light
+end part R is 1 over its turning weight I about the joint, so x = I/(I + a). The drive's impulse for the step begins
+at nothing. Under PGS, the game's solver, each turn of the solver then sets it to (1 − x) of what it was plus x of
+dt·k·e − a·ω: e the error at the step's start, ω the joint's speed as that turn finds it.
+
+1. **A part nothing else holds** has, after the first turn, exactly the spring and damper of the step's end:
+   k·e − (dt·k + c)·ω at the end. That is the implicit spring, stable at any stiffness (§2.3's fact), and K5's law
+   stands on it.
+2. **A part the ground holds still** stays at ω = 0 at every turn, the ground's rows taking back what the drive gave,
+   so each turn closes only x of what is missing: after n turns the drive has given 1 − (1 − x)^n of what its spring
+   says, n the turns of place and of speed together (18 in the game). By the law the three miners' ankles give 0.70
+   (Small), 0.53 (Long) and 0.45 (Round) of it towards the toe and 0.61, 0.40 and 0.35 sideways. Read towards the toe,
+   with two thirds of what the sole bears asked: 16.1 of 22.5 N m, 21.7 of 38.5, 26.1 of 53.3 (the law: 15.7, 20.5,
+   24.0). At 28 and 4 turns 20.1, 29.3, 36.3 (the law: 19.8, 28.5, 35.0); at 14 and 18 the same as at 28 and 4 (20.3,
+   29.4, 36.9): both kinds of turns count alike; at 60 and 4, 22.4, 36.6, 48.1 (the law: 22.2, 35.9, 47.0). The
+   readings are never under the law, and at most 8.8% over it at the game's turns, 5.4% at the others. Sideways the
+   reading is the law's share plus what the drive already gives against the boot's own tip (R4) with nothing asked,
+   the tip being about that same axis: 10.5, 11.1, 16.4 read against 8.1 + 2.1, 7.6 + 3.5, 10.0 + 6.1; within 5% at
+   all four counts of turns.
+3. **The drive tells truly what it gave** (`driveForce`: 13.30 N m told for 13.3 asked of a boot in the air), and the
+   ground bears a flat boot where the torque given puts it, not where the torque asked would: within 5.4 mm in every
+   flat case.
+4. **A part let go** (the ground gone from under it, its target still e away) turns after one step at
+   (I·ω + dt·k·e)/(I + a): from rest at dt·k·e/(I + a), and ever after at a weighted mean of its own speed and
+   k·e/(dt·k + c). Read: a boot in the air asked for all its ankle's strength reached 11.3 to 11.4 rad/s (Small), 10.1
+   to 10.2 (Long), 11.2 (Round) against the law's 11.28, 10.11, 11.14; that is 0.57 to 0.63 of its ankle's top speed.
+   A boot made bent 22 degrees at its ankle and standing on its edge was slower than the law while the edge still
+   bore weight (4.1, 4.1, 3.6 against 7.2, 6.5, 7.1) and came up to it as the spring was made stiffer (three times:
+   11.9, 10.9, 11.5 against 12.3, 11.6, 12.2; ten times: 16.4, 16.0, 16.4 against 16.45, 16.03, 16.39). None was over
+   it. R1's bound on the target rests on this law.
+5. **The target is clamped to the joint's limits** before the spring is reckoned, where the joint's motion is limited.
+   Near a stop the torque that can be asked towards it falls with the room left, to nothing at the stop (§2.3).
+6. **Under TGS the law is another.** The step is cut into as many substeps as there are turns of place, and each
+   substep, and each of up to four turns of speed, adds an impulse of its own. A free spring acts (place + speed)/place
+   times as strong as set (1.29 at 14 and 4: the probe's boot gave way 5.92 degrees where its spring says 7.63), and
+   a held part gets that over 1 + h(h·k + c)/I, h the substep: 0.77, 0.60, 0.54 towards the toe (17.4, 23.3, 29.0
+   N m; read 17.3, 23.1, 28.8). Twelve readings lay within 1% of it. It is not the game's solver; it is kept here so
+   that nobody takes TGS for a cure.
+
+What follows. The share is under 1 only where a part is light against its drive: 0.98 or more where I is at least a
+quarter of a, 0.9 or more where it is over a/7.3. When a body is made, the law's share is reckoned for each axis of
+each joint, and a joint under 0.9 is marked. On the three miners that is the ankles (their other joints by a rough
+reckoning only, to be done exactly at step 0); on a made body it is any light end part on a strong joint, and the
+creator's warning can use the mark. The writer makes up for the share (R1). More turns of the solver raise the share and lower the tip,
+and what they cost is measured (`OwnBodyTests.WhatMoreTurnsOfTheSolverCost`: a step of a lying body costs 1.5 times
+as much at 28 turns of place and 2.7 to 2.8 times at 60; for Small 111, 172 and 304 microseconds, in the editor): a
+lever of known price, kept and not used.
+
+Not known. Where the engine calls these rows from was not read: that a drive is solved in the turns of speed too is
+shown by the numbers only. The scale of a drive's force limit inside the solver was not read. The law is for one light
+part held still; a body of many parts with several of them held at once (both knees and a hand planted) is step 2's to
+show, and a part half held lies somewhere between the law and 1. Why a flat boot tips (R4) is a reading only: what the
+solver's turns leave of the ground's four corner pushes on a light sole under a heavy load. So is the gain of one step
+at a landing (3.0 J at most, Round dropped 5 cm; the test allows the body's weight lifted 5 mm): the ground pushing a
+sunk sole back out.
+
 **Not checked here:** the numbers of §1.3's cost; whether the engine keeps a body with many loaded contacts quiet at 50
 steps a second on soft springs (step 2 shows it); the roll, which is the hardest passage and has no design beyond its
 name (step 5 begins with one).
@@ -777,7 +892,7 @@ name (step 5 begins with one).
 
 | # | Step | Evidence | Luis |
 |---|---|---|---|
-| 0 | The ground: first, whether a stiffly sprung ankle holds a light boot under the body's weight (K1, R4); the joints' speed bounds from the bare leg (K5); then layer 0 on the lying body; the one drive writer (K3, K4); the smooth sharing of the push (K2); the touches (change 7, and what R2 adds); `BodyWatch`, keeping the count of what the body holds against what its joints gave (K1, R3) | the stiff-ankle fact passes its bar under both solvers; the other facts pass; made lying from real falls with no snap; lying limp 20 s with no fault and the count balanced, three miners | only if R4 fails: the boot's turning weight, the step, or the solver |
+| 0 | The ground: first, whether a stiffly sprung ankle holds a light boot under the body's weight (K1, R4; **answered November 12: it does, under the game's solver**); the joints' speed bounds from the bare leg (K5); then layer 0 on the lying body; the one drive writer (K3, K4, and the held part's share made up for within its bound: R1, K8); the smooth sharing of the push (K2); the touches (change 7, and what R2 adds); `BodyWatch`, keeping the count of what the body holds against what its joints gave (K1, R3) | the stiff-ankle fact holds under the game's solver, its test reshaped to what holds and passing (under TGS it fails, and TGS is not the game's); the other facts pass; made lying from real falls with no snap; lying limp 20 s with no fault and the count balanced, three miners | R4 held: nothing of the engine changes, so nothing is asked of him here; he is told |
 | 1 | The bridge in the game; the pose read off the body (change 8) | round trips, the hard poses among them; a fit written as joint turns puts every part within 1 mm | |
 | 2 | Holding one stance by its own joints: propped on the forearms, hands and knees, the half-kneel, the squat with hands | 20 s each, three miners at strengths 0.5, 1 and 2, no fault; each joint's share beside the atlas's S; nudged, it yields and comes back | **clips** |
 | 3 | One change of support at a time: each edge of the two routes | the gates open; nothing lifts while it bears; no fault | **clips** |
