@@ -17,7 +17,8 @@
   its nine changes to the design text are made (the speed bound is a fixed point, the offset bound is on the three
   axes together, every weight of the making-up is smooth, "flat" is one number, 6 degrees). Fable 5.2's share of the
   plan was used up that day, and Luis moved the session to Opus 5.5 ([his
-  messages](Correspondence/2026-11-12_PASS_THE_TORCH_TO_OPUS.md)). **Next:** the rest of step 0.
+  messages](Correspondence/2026-11-12_PASS_THE_TORCH_TO_OPUS.md)). **Next:** the rest of step 0, designed on the night of
+  November 12 with its bars and not yet written ([the hand-over](Handoff.md), "Next steps", item 2, "Where it stopped").
   ([Validation](Validation.md), November 11 and 12.)
 
 - **Before (November 10): the design of the motion checked; the boot that flies explained.** Luis moved the session to

@@ -20,7 +20,9 @@ Opus 5.5's, at max thinking with ultracode on. Everything it needs is in the rep
    reviewed; what it left open is in item 3.
 3. **The rest of step 0** ("Next steps", item 2), each fact with its bar set before its run and read before it is
    claimed; then step 1; then **step 2, whose clips are the first thing Luis sees** (he has seen no motion from this
-   work since October 30).
+   work since October 30). **Where it stopped** (November 12, night, when Luis had to pack his computer): the other
+   facts of step 0 are designed with their bars, and nothing of them is written yet ("Next steps", item 2, "Where it
+   stopped"). Begin there.
 
 What binds every step: quality above speed; never a played animation; nothing that switches at a threshold; one body
 for everything; every step reviewed by agents who did not make it; a result said only after its run was read; Luis's
@@ -211,6 +213,78 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
    writer; the smooth sharing of the ground's push (a non-negative least squares over the friction pyramids); touches
    on the trunk, hips, head and upper arms; `BodyWatch` with the count of what the body holds against what its joints
    gave.
+
+   **Where it stopped (November 12, night: Luis had to pack his computer).** The other facts are designed, each bar
+   set before any run; nothing is written yet (`D:/Dev/WG` is at `582c022`, its test file unchanged). They go at the
+   end of `ArticulationFactsTests.cs`, reusing its helpers (`Root`, `Link`, `FloatingLeg`'s pattern, `Held` and
+   `TrulyGoes`, `Whirled`'s count, `RotationVector`, `Put`, `AsMade`'s way, `Stood`'s ground and links, `Shod`):
+   - **K3, the reading about two axes.** A link on a free ball joint, fixed root, gravity off, the same turning weight
+     about every line (as `Spun`), moved only by setting its joint's speeds each step, so its pose follows the asked
+     path exactly: (a) spun about an oblique line (x and y together) to 175 degrees; (b) 60 degrees about x, then 60
+     about its own y; (c) a swing of 60 degrees whose direction goes once round and back to its start. Bar: in all
+     three the reading is the rotation vector of the joint's turn (the parent's anchor to the child's, in the anchor's
+     axes, signed as `MadeLyingStaysAsMade` fixes it) within 0.02 rad (0.05 along the spin of (a)): a function of the
+     pose, not the sum of the turns ((b) would read 1.05, 1.05, 0 if summed; (c) would gather a twist of half a turn
+     about x if integrated). If it fails, joint_model §1.1 is wrong for two axes and the design changes (a joint's
+     limits act on its reading). From the engine's source (a PhysX 4.1 copy: `DyFeatherstoneForwardDynamic.cpp`,
+     `computeSphericalJointPositions` and the ball joint's case where the links' poses are worked out after a step):
+     a ball joint with three free axes reads the rotation vector of its pose kept to the short side, so it would jump
+     at a half turn, and one with fewer free axes adds up its speeds; the project's engine was measured (November 4)
+     to run on past a half turn with all three free, so it differs from that copy here, and the run decides.
+   - **K3, a drive across a half turn.** The same rig with Small's thigh (2.38 kg, its centre 0.13 m below the joint,
+     turning weight 0.0131, 0.0029, 0.0131) and the design's drive (k = 130/0.611 = 212.8 N m a radian, c = 130/24.9
+     = 5.22, limit 130), spun to 170 degrees about x and stopped; the goal 20 degrees on about x; a second case, the
+     goal 30 degrees about its own y from there. Written by K3's rule at each step (the reading, plus the shortest turn
+     from the pose to the goal in the child's anchor axes, at most eFull; no load). Bar: within 1 degree of the goal
+     after a second, never more than 25 degrees from the start (the second case 45). Control: the goal written as its
+     own rotation vector from zero must go the long way (more than 90 degrees from the start), or the fact proves
+     nothing.
+   - **K4(b).** `Hung`'s two links, once on a fixed root and once on a floating one, the same pose. From the source
+     (`DyFeatherstoneInverseDynamic.cpp`, `getGeneralizedGravityForce`: a floating root goes through
+     `inverseDynamicFloatingBase` with no joint accelerations, the body falling freely, which asks no joint torque):
+     expected about nothing. Bar: every floating value under 1% of the largest fixed one.
+   - **K5, the speed sweep.** For each miner a floating leg as `FloatingLeg`, built from that miner's parts (below):
+     the hips the body less one leg (35.7, 49.1, 77.3 kg), their turning weight Small's (1.2, 0.4, 1.2) scaled by the
+     weight and by the square of the leg's length (a stand-in, said so); each part's centre at its joint's distance
+     below that joint, the next joint at twice it; the boot's centre at minus its joint's place. The drives of §2.3 on
+     every axis (k = S/eFull, c = S over the top speed, limit S), target zero; gravity off; each link's
+     maxAngularVelocity raised out of the way (the game's 20 is a drag of its own and would hide a gain). Set turning
+     as `Whirled` sets it, at 10, 15, 20, 25, 30, 35, 40, 45 and 50 rad/s, a second each. It fails at a speed if it
+     ever holds more than after its first step (beyond 1.0001 of it), or if in any step it gains beyond the count
+     (what it holds, less what the drives were counted to give: drive force times the mean joint speed over the
+     step) more than half of what its dampers took (per axis min(c |v|, S) |v| dt, v the mean speed over the step;
+     under a floor of a thousandth of what it began with nothing counts). Each joint's bound: its top speed, or the
+     lowest failing speed over 1.5 if that is lower. Bar: every miner holds at 10 (so every bound is at least 6.7
+     rad/s, above the 5 a rise asks at its quickest). Control: left alone at 30 it must fail.
+   - **K4(a), the load through the target, all three miners.** A planar rig with the root on top, as in the game: the
+     weight (the body less the leg) floating; the thigh on a hinge (the hip), the shin (the knee), the boot (the
+     ankle) with its sole on `Stood`'s ground, every hinge about the line across; the knee bent so the whole body's
+     centre is 5 to 6 cm ahead of the ankle, inside the sole; the pose written before the first step (`AsMade`'s
+     way). Each step, at each joint: τ = the moment of gravity of all on the root's side of that joint, about it,
+     along its axis; target = goal + τ/k (in degrees for the drive). Both ways: without the making-up, and with it at
+     the ankle by K8's law (Small 0.70, Long 0.53, Round 0.45). The knee's and the hip's shares are not known: the
+     run reads each joint's (1 − its offset × k / τ). Bar (K4(a)): with the making-up, the pose within 2 degrees at
+     every joint after 2 s. Expected without: the ankle off by τ/k (1/share − 1), about 5 degrees for Small. Reckon
+     each miner's margin before the run: with τ worked out from the pose each step, only share × k × (goal − pose)
+     holds a joint, against (1 − share) m g h of what stands on it when nothing makes up (Small's ankle about 70
+     against 86 with the weight at the hip). So the run without may not stand at all, which would be the finding, not
+     a fault of the rig; or the weight is set lower. Decide that before the run, and say why.
+
+   Each miner's leg (`D:/Dev/WG/TestRuns/parts_r4.log`, OWN_SHOVE_PARTS, November 11; part kg, turning weight kg m²,
+   strength N m, its joint's place in the part's frame, top speed rad/s):
+   Small (40.7 kg): thigh 2.38, (0.0131, 0.0029, 0.0131), 130, (0, −0.136, 0), 24.9; shin 1.35, (0.0074, 0.0011,
+   0.0074), 87, (0, −0.136, 0), 29.9; boot 1.29, (0.0030, 0.0037, 0.0015), 61, (0, 0.055, −0.006), 19.9.
+   Long (58.5 kg): thigh 4.87, (0.0701, 0.0077, 0.0701), 303, (0, −0.220, 0), 20.1; shin 2.74, (0.0400, 0.0028,
+   0.0400), 202, (0, −0.220, 0), 24.2; boot 1.83, (0.0059, 0.0069, 0.0021), 141, (0, 0.055, −0.007), 16.1.
+   Round (87.6 kg): thigh 5.60, (0.0430, 0.0137, 0.0430), 331, (0, −0.160, 0), 23.2; shin 3.14, (0.0239, 0.0050,
+   0.0239), 220, (0, −0.160, 0), 27.8; boot 1.55, (0.0043, 0.0051, 0.0018), 154, (0, 0.055, −0.007), 18.5.
+   Soles 0.100 across and 0.060 high; 0.157, 0.187 and 0.172 long.
+
+   Then: run only these (`bash Docs/Technical/AnyBody/tools/unity_tests.sh <name> <filter>` in `D:/Dev/WG`), read the
+   FACTS lines through a filter, write them into `Validation.md`, one independent review, and commit and push both
+   branches. Still to tell Luis in the next report: the stiff-ankle test's bar was reshaped after its first run; more
+   turns of the solver are a lever with a known cost (1.5 times at 28, 2.7 to 2.8 at 60); the review's verdicts; the
+   pace of the plan's usage (about one five-hour window left before it resets on November 16).
 3. **Step 1**: `BodyFrame` moved into the game with the pose read off the body, tested lying flat and at the hard poses.
 4. **Step 2**: one stance held by its own joints, nudged; then **clips for Luis**.
 5. Steps 3 to 8 as the design has them.
