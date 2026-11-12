@@ -917,6 +917,12 @@ namespace WonderGather.Tests
                                 {
                                     var part = own.Part(i);
                                     told.Append(string.Format(inv, " [{0}] {1:0.00} kg, turning {2:0.0000} {3:0.0000} {4:0.0000} kg m2, has {5:0} N m;", i, part.mass, part.inertiaTensor.x, part.inertiaTensor.y, part.inertiaTensor.z, own.Has(i)));
+                                    // (What the facts on bare bodies need of the three: where each part's joint and its
+                                    // centre are in the part, how fast its joint may turn, and a boot's sole.)
+                                    Vector3 joint = part.anchorPosition, centre = part.centerOfMass;
+                                    told.Append(string.Format(inv, " joint at {0:0.000} {1:0.000} {2:0.000}, centre at {3:0.000} {4:0.000} {5:0.000}, top speed {6:0.0} rad/s;", joint.x, joint.y, joint.z, centre.x, centre.y, centre.z, own.SpeedOf(JointAim.OfOwnBody()[i])));
+                                    if (part.TryGetComponent(out BoxCollider sole))
+                                        told.Append(string.Format(inv, " sole {0:0.000} {1:0.000} {2:0.000} at {3:0.000} {4:0.000} {5:0.000};", sole.size.x, sole.size.y, sole.size.z, sole.center.x, sole.center.y, sole.center.z));
                                 }
                                 Debug.Log(told.ToString());
                             }
@@ -958,6 +964,85 @@ namespace WonderGather.Tests
                 }
             }
             Assert.That(wrong, Is.EqualTo(""), "Shoved again and again:" + wrong);
+        }
+
+        // (A fact, not a bar: what the engine's step costs with many bodies of this kind at more turns of its solver.
+        // Twenty copies of each miner's own body, nothing keeping them, left to lie on the ground with their joints
+        // sprung as they were and kept awake; the engine stepped by hand and timed at 14 and 4 turns, 28 and 4, 60 and
+        // 4, each in turn over several rounds; and the same with no body at all. November 11, for the stiff ankle's
+        // fact (ArticulationFactsTests, R4): more turns give a light boot held by the ground what its drive asks.)
+        [UnityTest, Explicit, Timeout(900000)]
+        public IEnumerator WhatMoreTurnsOfTheSolverCost()
+        {
+            Time.captureFramerate = 50;
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            var turns = new (int place, int speed)[] { (14, 4), (28, 4), (60, 4) };
+            const int Copies = 20, Rounds = 6, Steps = 100;
+            for (int index = 0; index < choice.Count; index++)
+            {
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                string name = choice.NameOf(index);
+                Vector3 away = default, spotAt = default;
+                yield return StandPlainly(unit, (s, a) => { away = a; spotAt = s; });
+                OwnBody own = null;
+                yield return Own(unit, name, o => own = o);
+                yield return Wait(1);
+                var whole = own.Part(OwnBody.Hips).transform.parent.gameObject;
+                Vector3 across = Vector3.Cross(Vector3.up, away);
+                var copies = new GameObject[Copies];
+                var roots = new ArticulationBody[Copies];
+                int parts = 0, shapes = 0;
+                for (int c = 0; c < Copies; c++)
+                {
+                    Vector3 to = across * ((c % 5 - 2) * 2f) + away * ((c / 5 + 1) * 2f) + Vector3.up * .25f;
+                    copies[c] = Object.Instantiate(whole, whole.transform.position + to, whole.transform.rotation);
+                    roots[c] = copies[c].GetComponentInChildren<ArticulationBody>();
+                    roots[c].sleepThreshold = 0;
+                    if (c == 0) { parts = copies[c].GetComponentsInChildren<ArticulationBody>().Length; shapes = copies[c].GetComponentsInChildren<Collider>().Length; }
+                }
+                // (Its own body given back: only the copies are left to the engine.)
+                look.SetOwn(false);
+                yield return Wait(4);
+                var modeWas = Physics.simulationMode;
+                Physics.simulationMode = SimulationMode.Script;
+                var took = new double[turns.Length + 1];
+                var clock = new System.Diagnostics.Stopwatch();
+                float lowest = float.MaxValue, highest = float.MinValue, fastest = 0;
+                for (int pass = 0; pass < 2; pass++)
+                {
+                    // (The second pass: with no body at all.)
+                    if (pass == 1) { foreach (var copy in copies) Object.Destroy(copy); yield return null; yield return null; }
+                    int rounds = pass == 0 ? Rounds : 2;
+                    for (int round = 0; round < rounds; round++)
+                        for (int t = 0; t < (pass == 0 ? turns.Length : 1); t++)
+                        {
+                            if (pass == 0) foreach (var root in roots) { root.solverIterations = turns[t].place; root.solverVelocityIterations = turns[t].speed; }
+                            for (int k = 0; k < 10; k++) Physics.Simulate(Time.fixedDeltaTime);
+                            clock.Restart();
+                            for (int k = 0; k < Steps; k++) Physics.Simulate(Time.fixedDeltaTime);
+                            clock.Stop();
+                            took[pass == 0 ? t : turns.Length] += clock.Elapsed.TotalMilliseconds / Steps / rounds;
+                        }
+                    if (pass == 0)
+                        foreach (var root in roots)
+                        {
+                            float over = root.transform.position.y - ground.Height(root.transform.position.x, root.transform.position.z);
+                            lowest = Mathf.Min(lowest, over); highest = Mathf.Max(highest, over);
+                            fastest = Mathf.Max(fastest, root.linearVelocity.magnitude);
+                        }
+                }
+                Physics.simulationMode = modeWas;
+                var line = new System.Text.StringBuilder($"FACTS TURNS {name}: {Copies} of its own body ({parts} parts, {shapes} shapes each) lying awake, their hips {lowest.ToString("0.00", inv)} to {highest.ToString("0.00", inv)} m over the ground, the fastest going {fastest.ToString("0.00", inv)} m/s; a step of the engine takes");
+                for (int t = 0; t < turns.Length; t++) line.Append($" {took[t].ToString("0.000", inv)} ms at {turns[t].place} and {turns[t].speed} turns,");
+                line.Append($" and {took[turns.Length].ToString("0.000", inv)} ms with no body; so a body costs");
+                for (int t = 0; t < turns.Length; t++) line.Append($" {((took[t] - took[turns.Length]) / Copies * 1000).ToString("0.0", inv)}{(t < turns.Length - 1 ? "," : "")}");
+                line.Append(" microseconds a step");
+                Debug.Log(line.ToString());
+                Assert.That(parts > 0 && took[0] > 0, Is.True, name + ": nothing was timed");
+                yield return Wait(.5f);
+            }
         }
     }
 }

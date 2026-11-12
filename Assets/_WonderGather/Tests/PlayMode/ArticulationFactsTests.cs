@@ -500,14 +500,50 @@ namespace WonderGather.Tests
             Assert.That(endsAt, Is.EqualTo(Physics.defaultMaxAngularSpeed).Within(.5f), "Set turning faster than the project's greatest turning speed and left alone, the part did not come down to it.");
         }
 
-        // The first fact of step 0 of the motion (Docs/Design/AnyBody/motion_design.md, K1's R4; November 10): whether an
-        // ankle sprung stiffly enough to carry its torque through its drive holds a light boot under a body's weight at
-        // the game's step. The standing balance's ankle is sprung with 3 N m a radian and given its torque straight on
-        // the boot, because, as that was built, "a stiff spring between a heavy body and a light boot does not hold at
-        // the game's step" (OwnKeeper). Here: a weight as Small's on a slide that only goes up and down (so nothing has to
-        // balance), and under it a boot as Small's (1.29 kg, turning as 0.003 kg m2, a box 9 cm wide, 5 high and 22 long)
-        // on a ball joint above its heel, standing flat on the ground.
-        private (ArticulationBody weight, ArticulationBody boot, GroundTouch touch) Stood(Vector3 at, float spring, float damper, float limit)
+        // The first fact of step 0 of the motion (Docs/Design/AnyBody/motion_design.md, K1's R4; November 10 and 11): whether
+        // an ankle sprung stiffly enough to carry its torque through its drive (all its strength at 35 degrees from its
+        // goal, damped by its strength over its top speed: the design's K5) holds a light boot under a body's weight at
+        // the game's step. The standing balance's ankle is sprung with about 3 N m a radian and given its torque straight
+        // on the boot (as it was built: "a stiff spring between a heavy body and a light boot does not hold at the game's
+        // step", OwnKeeper), and a boot pushed so while it does not lie flat is what flies (K1).
+        // The rig: a miner's whole weight but its boot, on a slide that only goes up and down (so nothing has to balance),
+        // and under it that miner's boot on a ball joint where its ankle is. The boot's weight, turning weight, sole and
+        // ankle (where it is, its strength, its top speed) are the game's, read from the three miners on November 11 (the
+        // shove test's OWN_SHOVE_PARTS line); the links are set as the game sets its own.
+        private struct Shod
+        {
+            public string Name;
+            // (The whole body and the boot, kg; the ankle's strength, N m, and its top speed, rad/s.)
+            public float Body, Boot, Has, Top;
+            // (The boot's turning weight about its own lines, kg m2; where its ankle is in it; its sole's box: across,
+            // high, long. Its own centre is the box's.)
+            public Vector3 Turning, Joint, Sole;
+            public float Spring => Has / (35 * Mathf.Deg2Rad);
+            public float Damper => Has / Top;
+        }
+
+        private static readonly Shod[] Shods =
+        {
+            new Shod { Name = "Small", Body = 40.7f, Boot = 1.29f, Has = 61, Top = 19.9f, Turning = new Vector3(.0030f, .0037f, .0015f), Joint = new Vector3(0, .055f, -.006f), Sole = new Vector3(.100f, .060f, .157f) },
+            new Shod { Name = "Long", Body = 58.5f, Boot = 1.83f, Has = 141, Top = 16.1f, Turning = new Vector3(.0059f, .0069f, .0021f), Joint = new Vector3(0, .055f, -.007f), Sole = new Vector3(.100f, .060f, .187f) },
+            new Shod { Name = "Round", Body = 87.6f, Boot = 1.55f, Has = 154, Top = 18.5f, Turning = new Vector3(.0043f, .0051f, .0018f), Joint = new Vector3(0, .055f, -.007f), Sole = new Vector3(.100f, .060f, .172f) },
+        };
+
+        private void TakeAway() { foreach (var g in made) if (g != null) Object.DestroyImmediate(g); made.Clear(); }
+
+        // Which solver the project is set to (ProjectSettings/DynamicsManager.asset): the fact is run under both.
+        private static string SolverInForce()
+        {
+            foreach (string line in System.IO.File.ReadAllLines("ProjectSettings/DynamicsManager.asset"))
+                if (line.Contains("m_SolverType")) return line.Trim().EndsWith("1") ? "TGS" : "PGS";
+            return "solver not known";
+        }
+
+        // The boot made under its weight. The weight leant so many degrees to the side (about the line along the sole,
+        // its right side up), the boot at its ankle's zero under it, so equally on its edge; or the boot made bent so
+        // many degrees at its ankle the same way; its lowest corner so far above the ground; its weight on its slide or
+        // held where it is. The ankle's zero is the boot square under the weight, however it is made.
+        private (ArticulationBody weight, ArticulationBody boot, GroundTouch touch) Stood(Shod of, Vector3 at, float spring, float damper, float leant, float bent, float lifted, bool held)
         {
             var ground = new GameObject("Facts ground");
             ground.transform.position = at + .5f * Vector3.down;
@@ -516,95 +552,365 @@ namespace WonderGather.Tests
             var slab = ground.AddComponent<BoxCollider>();
             slab.size = new Vector3(6, 1, 6); slab.sharedMaterial = surface;
             var root = Root(at + 1.5f * Vector3.up);
-            Vector3 bootAt = at + new Vector3(0, .025f, 0), ankle = bootAt + new Vector3(0, .025f, -.04f);
-            var weight = Link(root.transform, "Weight", ankle + .5f * Vector3.up, Quaternion.identity, 39.4f, Vector3.zero, new Vector3(1, 1, 1));
-            weight.jointType = ArticulationJointType.PrismaticJoint;
-            weight.anchorPosition = Vector3.zero; weight.anchorRotation = Quaternion.Euler(0, 0, 90); weight.matchAnchors = true;
-            weight.linearLockX = ArticulationDofLock.FreeMotion; weight.linearLockY = ArticulationDofLock.LockedMotion; weight.linearLockZ = ArticulationDofLock.LockedMotion;
-            weight.xDrive = new ArticulationDrive { stiffness = 0, damping = 0, forceLimit = 0, driveType = ArticulationDriveType.Force };
-            var boot = Link(weight.transform, "Boot", bootAt, Quaternion.identity, 1.29f, Vector3.zero, new Vector3(.0030f, .0037f, .0015f));
+            Quaternion leans = Quaternion.AngleAxis(leant, Vector3.forward), turned = leans * Quaternion.AngleAxis(bent, Vector3.forward);
+            float lowest = float.MaxValue;
+            for (int c = 0; c < 8; c++)
+                lowest = Mathf.Min(lowest, (turned * Vector3.Scale(.5f * of.Sole, new Vector3((c & 1) == 0 ? -1 : 1, (c & 2) == 0 ? -1 : 1, (c & 4) == 0 ? -1 : 1))).y);
+            Vector3 bootAt = at + new Vector3(0, lifted - lowest, 0), ankle = bootAt + turned * of.Joint;
+            // (Not held: two light carriers, one sliding across and one along, and the weight sliding up and down on
+            // them, however it leans: so it goes freely every way and never turns. Pinned sideways, as the first run had
+            // it, the ground's grip and the slide's lock held forces between them, and where the ground bore the boot
+            // was not settled by the torque alone. The carriers' own weight is borne by their slides, not by the boot.)
+            Transform under = root.transform;
+            if (!held)
+                for (int way = 0; way < 2; way++)
+                {
+                    var carrier = Link(under, way == 0 ? "Across" : "Along", ankle + .5f * Vector3.up, Quaternion.identity, .2f, Vector3.zero, Vector3.one);
+                    Slides(carrier, way == 0 ? Quaternion.identity : Quaternion.Euler(0, -90, 0));
+                    under = carrier.transform;
+                }
+            var weight = Link(under, "Weight", ankle + .5f * Vector3.up, leans, of.Body - of.Boot, Vector3.zero, Vector3.one);
+            if (held) weight.jointType = ArticulationJointType.FixedJoint;
+            else Slides(weight, Quaternion.Inverse(leans) * Quaternion.Euler(0, 0, 90));
+            var boot = Link(weight.transform, "Boot", bootAt, turned, of.Boot, Vector3.zero, of.Turning);
             var box = boot.gameObject.AddComponent<BoxCollider>();
-            box.size = new Vector3(.09f, .05f, .22f); box.sharedMaterial = surface;
+            box.size = of.Sole; box.sharedMaterial = surface;
             boot.jointType = ArticulationJointType.SphericalJoint;
-            boot.anchorPosition = new Vector3(0, .025f, -.04f); boot.anchorRotation = Quaternion.identity; boot.matchAnchors = true;
+            boot.anchorPosition = of.Joint; boot.anchorRotation = Quaternion.identity;
+            boot.matchAnchors = false;
+            boot.parentAnchorPosition = weight.transform.InverseTransformPoint(ankle); boot.parentAnchorRotation = Quaternion.identity;
             boot.twistLock = boot.swingYLock = boot.swingZLock = ArticulationDofLock.FreeMotion;
-            var drive = new ArticulationDrive { stiffness = spring, damping = damper, forceLimit = limit, target = 0, driveType = ArticulationDriveType.Force };
+            var drive = new ArticulationDrive { stiffness = spring, damping = damper, forceLimit = of.Has, target = 0, driveType = ArticulationDriveType.Force };
             boot.xDrive = drive; boot.yDrive = drive; boot.zDrive = drive;
-            boot.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            // (As the game sets its own links and its own body: OwnBody.)
+            foreach (var link in new[] { weight, boot }) { link.maxAngularVelocity = 20; link.maxDepenetrationVelocity = 1.5f; link.collisionDetectionMode = CollisionDetectionMode.Continuous; }
             root.solverIterations = 14; root.solverVelocityIterations = 4;
+            // (Never asleep: a body asleep tells no touches.)
+            root.sleepThreshold = 0;
             var touch = boot.gameObject.AddComponent<GroundTouch>();
             return (weight, boot, touch);
         }
 
-        // The boot stood so for three seconds, its ankle sprung and damped as told, and asked for a torque about its
-        // long line (across the sole, towards one side) and about the line across it (along the sole, towards the toe),
-        // either through its drive's target (the torque over the spring, as the design has it) or put straight on the
-        // boot with its opposite on the weight (as the standing balance does). After the first half second: how far
-        // from flat it tipped at most (degrees), how fast it turned at most (rad/s), where the ground bore it on
-        // average, from the point under its ankle (mm across, mm along), how far the weight sank or rose (mm), and
-        // what its drive gave on average (N m).
-        private IEnumerator AnkleHeld(float spring, float damper, float across, float along, bool straight, System.Action<float, float, Vector2, float, float> done)
+        // (A link that slides freely along one line, the line its own x turned so, and nothing else.)
+        private static void Slides(ArticulationBody link, Quaternion along)
+        {
+            link.jointType = ArticulationJointType.PrismaticJoint;
+            link.anchorPosition = Vector3.zero; link.anchorRotation = along; link.matchAnchors = true;
+            link.linearLockX = ArticulationDofLock.FreeMotion; link.linearLockY = ArticulationDofLock.LockedMotion; link.linearLockZ = ArticulationDofLock.LockedMotion;
+            link.xDrive = new ArticulationDrive { stiffness = 0, damping = 0, forceLimit = 0, driveType = ArticulationDriveType.Force };
+        }
+
+        // (A boot made bent at its ankle: its joint's position written as made, before its first step, or the engine
+        // reads it as at zero and snaps it there: MadeLyingStaysAsMade.)
+        private static void AsMade(ArticulationBody boot, float bent)
+        {
+            var root = boot.transform.root.GetComponent<ArticulationBody>();
+            var starts = new List<int>(); root.GetDofStartIndices(starts);
+            var q = new List<float>(); root.GetJointPositions(q);
+            Put(q, starts[boot.index], RotationVector(Quaternion.AngleAxis(bent, Vector3.forward)));
+            root.SetJointPositions(q);
+            root.SetJointVelocities(new List<float>(new float[q.Count]));
+        }
+
+        // What the weight and its boot hold (joules): their going, the boot's turning, and their height above the ground.
+        // (How the boot's centre goes is worked out from the weight's going and the boot's turning about its ankle: what
+        // the engine tells of a fast-turning part's own going is too great, ADrivesForceIsWhatItTakes.)
+        private static float Holds(ArticulationBody weight, ArticulationBody boot, float ground)
+        {
+            float g = -Physics.gravity.y;
+            Vector3 goes = weight.jointType == ArticulationJointType.FixedJoint ? Vector3.zero : weight.linearVelocity;
+            Vector3 turns = boot.angularVelocity, bootGoes = goes + Vector3.Cross(turns, boot.worldCenterOfMass - boot.transform.TransformPoint(boot.anchorPosition));
+            Vector3 inBoot = Quaternion.Inverse(boot.transform.rotation) * turns, inertia = boot.inertiaTensor;
+            return .5f * weight.mass * goes.sqrMagnitude + weight.mass * g * (weight.worldCenterOfMass.y - ground)
+                + .5f * boot.mass * bootGoes.sqrMagnitude + boot.mass * g * (boot.worldCenterOfMass.y - ground)
+                + .5f * (inertia.x * inBoot.x * inBoot.x + inertia.y * inBoot.y * inBoot.y + inertia.z * inBoot.z * inBoot.z);
+        }
+
+        // How the rig reads, before anything is measured on it. Which way a ball joint's drive turns the boot when its
+        // target is counted up, about the line across the sole (x) and about the line along it (z): +1 as Unity's own
+        // turn about that line (about x the toe goes down, about z the right edge goes up), and how far it came to of the
+        // 10 degrees asked, on a boot held in the air. Whether a boot made bent 22 degrees at its ankle stays as made,
+        // and what its joint reads then (degrees about the line along the sole). And whether the ground's touches are
+        // told within the step itself (then nothing has to wait a frame for them).
+        // And what the drive tells of its force against a torque that is known: 13.3 N m put straight on a boot held in
+        // the air about the line along its sole, its target left at zero: how far it gives way (the torque over the
+        // spring, in degrees, if the spring is as set) and what force the drive tells then (13.3 if it tells true).
+        private IEnumerator AnkleRead(System.Action<Vector2, Vector2, float, float, bool, float, float> done)
         {
             Vector3 at = new Vector3(500, 20, -900);
-            var (weight, boot, touch) = Stood(at, spring, damper, 61);
+            Vector2 turns = Vector2.zero, cameTo = Vector2.zero;
+            for (int axis = 0; axis < 2; axis++)
+            {
+                var (weight, boot, _) = Stood(Shods[0], at, Shods[0].Spring, Shods[0].Damper, 0, 0, .4f, true);
+                weight.useGravity = false; boot.useGravity = false;
+                yield return null;
+                var d = axis == 0 ? boot.xDrive : boot.zDrive;
+                d.target = 10;
+                if (axis == 0) boot.xDrive = d; else boot.zDrive = d;
+                Steps(100);
+                if (axis == 0) turns.x = boot.transform.forward.y < 0 ? 1 : -1; else turns.y = boot.transform.right.y > 0 ? 1 : -1;
+                cameTo[axis] = Quaternion.Angle(boot.transform.rotation, weight.transform.rotation);
+                TakeAway();
+            }
+            var (upright, bentBoot, _) = Stood(Shods[0], at, 0, 0, 0, 22, .4f, true);
+            upright.useGravity = false; bentBoot.useGravity = false;
             yield return null;
+            AsMade(bentBoot, 22);
+            Steps(5);
+            float stays = Quaternion.Angle(bentBoot.transform.rotation, upright.transform.rotation) * (bentBoot.transform.right.y > 0 ? 1 : -1);
+            float reads = bentBoot.jointPosition[2] * Mathf.Rad2Deg;
+            TakeAway();
+            var (_, _, touch) = Stood(Shods[0], at, Shods[0].Spring, Shods[0].Damper, 0, 0, 0, false);
+            yield return null;
+            Steps(3);
+            touch.Clear();
+            Physics.Simulate(Dt);
+            bool within = touch.Up > 0;
+            TakeAway();
+            var (fixedWeight, pushed, _) = Stood(Shods[0], at, Shods[0].Spring, Shods[0].Damper, 0, 0, .4f, true);
+            fixedWeight.useGravity = false; pushed.useGravity = false;
+            yield return null;
+            for (int k = 0; k < 100; k++) { pushed.AddTorque(pushed.transform.forward * 13.3f); Physics.Simulate(Dt); }
+            float gaveWay = Quaternion.Angle(pushed.transform.rotation, fixedWeight.transform.rotation), tells = 0;
+            for (int d = 0; d < pushed.dofCount; d++) tells += pushed.driveForce[d] * pushed.driveForce[d];
+            tells = Mathf.Sqrt(tells);
+            TakeAway();
+            done(turns, cameTo, stays, reads, within, gaveWay, tells);
+        }
+
+        // What a boot did, stood, hung or dropped for three seconds. After the first half second: how far from flat on
+        // the ground it tipped at most (degrees), how fast it turned at most (rad/s), how far the weight moved (mm), what
+        // its drive gave on average (N m), where the ground bore it on average from the point under its ankle (mm across,
+        // mm along) and with how much (N). Over all of it: how fast it turned at most; the most its drive gave it in one
+        // step (J); the most the two held more after a step than their joint and any torque put on them gave (J), and the
+        // sum of that. At the end: how fast it turned at most in the last half second, how far it was from flat on the
+        // ground, and how far from its ankle's zero.
+        private struct Standing
+        {
+            public float Tipped, TurnedLate, Moved, Slid, Gave, Bore, TurnedEver, WorkMost, ElseMost, ElseSum, EndsTurning, EndsTipped, EndsBent, EndsMoved;
+            public Vector2 Where;
+        }
+
+        // The boot's ankle sprung and damped as told, asked for a torque towards the toe (about the line across the sole)
+        // and one sideways (about the line along it, its right edge up), either through its drive's target (the torque
+        // over the spring: the design's way) or put straight on the boot with its opposite on the weight (the standing
+        // balance's way).
+        // (The solver's turns: of place and of speed; the game's own are 14 and 4. The drive's work is counted from the
+        // joint's real change of position: the joint speed the engine tells of a part at rest on the ground is not
+        // motion, the first run.)
+        private IEnumerator Shoed(Shod of, float spring, float damper, float toToe, float sideways, bool straight, float leant, float bent, float lifted, bool held, Vector2 turns, bool within, int turnsOfPlace, int turnsOfSpeed, System.Action<Standing> done)
+        {
+            Vector3 at = new Vector3(500, 20, -900);
+            var (weight, boot, touch) = Stood(of, at, spring, damper, leant, bent, lifted, held);
+            var whole = boot.transform.root.GetComponent<ArticulationBody>();
+            whole.solverIterations = turnsOfPlace; whole.solverVelocityIterations = turnsOfSpeed;
+            Vector3 placeAt = Vector3.zero;
+            yield return null;
+            if (bent != 0) AsMade(boot, bent);
             if (!straight)
             {
-                // (Its x is the line across the sole, its z the line along it: a torque about z tips it sideways.)
-                var d = boot.xDrive; d.target = along / spring * Mathf.Rad2Deg; boot.xDrive = d;
-                d = boot.zDrive; d.target = across / spring * Mathf.Rad2Deg; boot.zDrive = d;
+                var d = boot.xDrive; d.target = turns.x * toToe / spring * Mathf.Rad2Deg; boot.xDrive = d;
+                d = boot.zDrive; d.target = turns.y * sideways / spring * Mathf.Rad2Deg; boot.zDrive = d;
             }
-            float tipped = 0, turned = 0, sank = 0, gave = 0, heightAt = 0, bore = 0;
+            var s = new Standing();
+            float heightAt = 0, bore = 0, heldBefore = Holds(weight, boot, at.y);
             Vector2 where = Vector2.zero;
-            int counted = 0;
+            Quaternion lateAs = Quaternion.identity;
+            int counted = 0, dofs = boot.dofCount;
+            var jointBefore = new float[3];
             for (int k = 0; k < 150; k++)
             {
+                Vector3 torque = Vector3.zero, turnedBefore = boot.angularVelocity;
+                for (int d = 0; d < dofs; d++) jointBefore[d] = boot.jointPosition[d];
                 if (straight)
                 {
-                    Vector3 torque = boot.transform.right * along + boot.transform.forward * across;
+                    torque = boot.transform.right * toToe + boot.transform.forward * sideways;
                     boot.AddTorque(torque); weight.AddTorque(-torque);
                 }
                 touch.Clear();
                 Physics.Simulate(Dt);
-                yield return null;
-                if (k == 24) heightAt = weight.transform.position.y;
-                if (k < 25) continue;
-                tipped = Mathf.Max(tipped, Vector3.Angle(boot.transform.up, Vector3.up));
-                turned = Mathf.Max(turned, boot.angularVelocity.magnitude);
-                sank = Mathf.Max(sank, Mathf.Abs(weight.transform.position.y - heightAt));
-                float force = 0;
-                for (int d = 0; d < boot.dofCount; d++) force += boot.driveForce[d] * boot.driveForce[d];
-                gave += Mathf.Sqrt(force);
-                if (touch.Up > 1e-6f)
+                if (!within) yield return null;
+                float holds = Holds(weight, boot, at.y), byDrive = 0, force = 0;
+                for (int d = 0; d < dofs; d++)
                 {
-                    Vector3 local = boot.transform.InverseTransformPoint(touch.Where / touch.Up) - new Vector3(0, -.025f, -.04f);
-                    where += new Vector2(local.x, local.z) * touch.Up; bore += touch.Up;
+                    byDrive += boot.driveForce[d] * (boot.jointPosition[d] - jointBefore[d]);
+                    force += boot.driveForce[d] * boot.driveForce[d];
                 }
-                counted++;
+                float byTorque = Vector3.Dot(torque, .5f * (turnedBefore + boot.angularVelocity)) * Dt;
+                float other = holds - heldBefore - byDrive - byTorque, turning = boot.angularVelocity.magnitude;
+                heldBefore = holds;
+                s.TurnedEver = Mathf.Max(s.TurnedEver, turning);
+                s.WorkMost = Mathf.Max(s.WorkMost, byDrive);
+                s.ElseMost = Mathf.Max(s.ElseMost, other); s.ElseSum += other;
+                if (k == 24) { heightAt = weight.transform.position.y; placeAt = weight.transform.position; }
+                if (k >= 25)
+                {
+                    s.Slid = Mathf.Max(s.Slid, Vector3.ProjectOnPlane(weight.transform.position - placeAt, Vector3.up).magnitude * 1000);
+                    s.Tipped = Mathf.Max(s.Tipped, Vector3.Angle(boot.transform.up, Vector3.up));
+                    s.TurnedLate = Mathf.Max(s.TurnedLate, turning);
+                    s.Moved = Mathf.Max(s.Moved, Mathf.Abs(weight.transform.position.y - heightAt) * 1000);
+                    s.Gave += Mathf.Sqrt(force);
+                    if (touch.Up > 1e-6f)
+                    {
+                        Vector3 local = boot.transform.InverseTransformPoint(touch.Where / touch.Up) - of.Joint;
+                        where += new Vector2(local.x, local.z) * touch.Up; bore += touch.Up;
+                    }
+                    counted++;
+                }
+                // (Rest is read from where the boot is: how far it turns, in its last half second, from where it was.)
+                if (k == 124) lateAs = boot.transform.rotation;
+                if (k >= 125) { s.EndsTurning = Mathf.Max(s.EndsTurning, turning); s.EndsMoved = Mathf.Max(s.EndsMoved, Quaternion.Angle(lateAs, boot.transform.rotation)); }
             }
-            made.Remove(boot.transform.root.gameObject);
-            Object.DestroyImmediate(boot.transform.root.gameObject);
-            done(tipped, turned, bore > 0 ? where / bore * 1000 : new Vector2(float.NaN, float.NaN), sank * 1000, gave / Mathf.Max(1, counted));
+            s.Gave /= counted; s.Bore = bore / counted / Dt;
+            s.Where = bore > 0 ? where / bore * 1000 : new Vector2(float.NaN, float.NaN);
+            s.EndsTipped = Vector3.Angle(boot.transform.up, Vector3.up);
+            s.EndsBent = Quaternion.Angle(boot.transform.rotation, weight.transform.rotation);
+            TakeAway();
+            done(s);
         }
 
+        // The bar (November 12: reshaped after both runs and the engine's own source were read; the first bar, set on
+        // November 11 before the run, and what of it was wrong, are in Docs/Validation.md). It says what holds under the
+        // game's solver, PGS. Under TGS this test fails and is meant to: there a boot flies at landings.
+        // The law (the design's ankle at 14 and 4, 28 and 4, 14 and 18, 60 and 4 turns; flat, asked a torque the sole
+        // can bear): what the drive gives lies between what the engine's source says a part held still gets and the
+        // whole of what was asked (a tenth over is allowed: the spring's answer to the boot's own tip is in the
+        // reading; 2% over was found); and towards the toe, where the long sole holds the boot still, it is the held
+        // part's within an eighth (9% over was found). (PGS: the share 1 - (1 - x)^n, x = 1 / (1 + dt (dt k + c) / I), I the boot's turning weight
+        // about its ankle, n the turns of place and of speed together. TGS: (place + speed) / place over
+        // 1 + h (h k + c) / I, h = dt / place.)
+        // Where the sole can bear what is asked (kind 0), after the first half second: the boot tips no more than
+        // 6 degrees (under PGS it sits 1.2 to 4.7 degrees off flat, and the same way every time; less with more turns
+        // of place, 0.1 to 0.8 at 60, and no less with more turns of speed: what the solver's turns leave of the
+        // ground's four pushes on a light sole under a heavy load, as it reads; not shown) and turns no faster than
+        // 1 rad/s; the weight moves no more than 2 mm; asked for nothing, the drive
+        // gives no more than a tenth of its strength; and the ground bears the boot within 10 mm of where the torque its
+        // drive really gave puts it (that torque over the weight, from under the ankle).
+        // Where it cannot (kind 1: more than the sole bears, on an edge under a leaning weight, dropped with all its
+        // strength asked): it comes to rest (in its last half second it turns no more than 2 degrees from where it was:
+        // the speed the engine tells of a part at rest on the ground is not motion) and is not turned over (asked with
+        // all its strength onto its edge it ends on its side, 84 to 90 degrees from flat: over 100 is turned over).
+        // (Where it rests is not barred: on an edge the ground's grip can hold it anywhere its spring and the weight
+        // allow.)
+        // Held in the air (kind 2): it comes to rest, and, asked about one line, within 2 degrees of its target.
+        // In every case: the boot never turns faster than its ankle's top speed; its drive never gives more in a step
+        // than the spring's whole stroke holds (half its strength times 35 degrees); over the three seconds the two gain
+        // not half a joule in all that nothing gave them; and in one step they hold no more beyond the count than the
+        // body's weight lifted 5 mm, a joule at least (at a landing the ground pushes a sunk sole back out: 2.0 to 3.5
+        // mm's worth was found, and every sum over a run came out a loss).
+        // Barred: each miner's ankle as the design has it (and the law at the other counts of turns). Told beside it,
+        // not barred: the same ankle three and ten times as stiff (how near the edge the design's is), and on Small the
+        // standing balance's own ankle with the torque put straight on it (what the fault was found in).
         [UnityTest]
+        [Timeout(1800000)]
         public IEnumerator AStifflySprungAnkleHoldsALightBoot()
         {
             var inv = System.Globalization.CultureInfo.InvariantCulture;
-            // (The ankle's spring and damper: the standing balance's; all its strength at 35 degrees, damped by the
-            // standing balance's rule; the same, damped as the design has it; three times as stiff.)
-            var ankles = new (float spring, float damper, string called)[] { (3, .07f, "sprung as the standing balance's (3 N m a radian)"), (100, .42f, "sprung with all its strength at 35 degrees, damped lightly"), (100, 2.65f, "sprung with all its strength at 35 degrees, damped as the design has it"), (300, 2.65f, "sprung three times as stiffly, damped as the design has it") };
-            var asks = new (float across, float along, bool straight, string called)[] { (0, 0, false, "asked for nothing"), (12, 0, false, "12 N m sideways through its drive"), (0, 30, false, "30 N m towards the toe through its drive"), (30, 0, false, "30 N m sideways through its drive (more than the sole is wide for)"), (12, 0, true, "12 N m sideways put straight on it"), (0, 30, true, "30 N m towards the toe put straight on it"), (30, 0, true, "30 N m sideways put straight on it (more than the sole is wide for)") };
-            foreach (var ankle in ankles)
-                foreach (var ask in asks)
+            string solver = SolverInForce();
+            bool tgs = solver == "TGS";
+            float g = -Physics.gravity.y;
+            var failed = new List<string>();
+            Vector2 turns = default, cameTo = default;
+            float stays = 0, reads = 0, gaveWay = 0, tells = 0;
+            bool within = false;
+            yield return AnkleRead((way, came, stayed, read, told, gave, force) => { turns = way; cameTo = came; stays = stayed; reads = read; within = told; gaveWay = gave; tells = force; });
+            Debug.Log(string.Format(inv, "FACTS R4 ({0}) the rig, its drive against a known torque: 13.3 N m put straight on a boot held in the air, its target at zero: it gives way {1:0.00} degrees (the torque over the spring is {2:0.00}) and its drive tells {3:0.00} N m",
+                solver, gaveWay, 13.3f / Shods[0].Spring * Mathf.Rad2Deg, tells));
+            if (Mathf.Abs(tells - 13.3f) > .05f * 13.3f) failed.Add(string.Format(inv, "the rig: against 13.3 N m its drive told {0:0.00}", tells));
+            // (Under TGS a free spring acts (place + speed) / place times as strong as set, here 18 / 14: the engine's
+            // source, and the second run's 5.92 degrees.)
+            if (Mathf.Abs(gaveWay - 13.3f / Shods[0].Spring * Mathf.Rad2Deg * (tgs ? 14f / 18 : 1)) > .4f) failed.Add(string.Format(inv, "the rig: under 13.3 N m the boot gave way {0:0.00} degrees", gaveWay));
+            Debug.Log(string.Format(inv, "FACTS R4 ({0}) the rig: a ball joint's drive, its target counted up by 10 degrees: about the line across the sole the toe goes {1} and it comes to {2:0.00} degrees; about the line along it the right edge goes {3} and it comes to {4:0.00} degrees. A boot made bent 22 degrees at its ankle (its right edge up), its joint written as made, nothing driving it: after five steps it lies {5:0.00} degrees from its zero and its joint reads {6:0.00} degrees. The ground's touches are {7} within the step itself",
+                solver, turns.x > 0 ? "down" : "up", cameTo.x, turns.y > 0 ? "up" : "down", cameTo.y, stays, reads, within ? "told" : "not told"));
+            if (Mathf.Abs(cameTo.x - 10) > .5f || Mathf.Abs(cameTo.y - 10) > .5f) failed.Add(string.Format(inv, "the rig: a target of 10 degrees brought the boot to {0:0.00} and {1:0.00} degrees", cameTo.x, cameTo.y));
+            if (Mathf.Abs(stays - 22) > .5f) failed.Add(string.Format(inv, "the rig: a boot made bent 22 degrees lay {0:0.00} degrees from its zero after five steps", stays));
+            foreach (var of in Shods)
+            {
+                float bears = of.Body * g, across = bears * .5f * of.Sole.x, toToe = bears * (.5f * of.Sole.z - of.Joint.z), stroke = .5f * of.Has * 35 * Mathf.Deg2Rad;
+                Debug.Log(string.Format(inv, "FACTS R4 ({0}) {1}'s boot: {2:0.00} kg under {3:0.0} kg; its sole bears {4:0.0} N m sideways and {5:0.0} towards the toe, its ankle has {6:0}; as the design has it, sprung {7:0} N m a radian and damped {8:0.00} N m s; top speed {9:0.0} rad/s; the spring's stroke holds {10:0.0} J",
+                    solver, of.Name, of.Boot, of.Body - of.Boot, across, toToe, of.Has, of.Spring, of.Damper, of.Top, stroke));
+                // (What it is called; asked towards the toe and sideways, N m; the weight leant and the boot bent,
+                // degrees; lifted, m; held in the air; its kind; whether the standing balance's ankle is told beside it.)
+                var cases = new (string called, float toToe, float sideways, float leant, float bent, float lifted, bool held, int kind, bool also)[]
                 {
-                    if (ankle.spring < 10 && !ask.straight && (ask.across != 0 || ask.along != 0)) continue;
-                    float tipped = 0, turned = 0, sank = 0, gave = 0; Vector2 where = default;
-                    yield return AnkleHeld(ankle.spring, ankle.damper, ask.across, ask.along, ask.straight, (t, w, at, s, g) => { tipped = t; turned = w; where = at; sank = s; gave = g; });
-                    Debug.Log(string.Format(inv, "FACTS a boot under Small's weight, its ankle {0}, {1}: after the first half second it tipped at most {2:0.0} degrees and turned at most {3:0.0} rad/s; the ground bore it {4:0} mm across and {5:0} mm along from under its ankle; the weight moved {6:0.0} mm; its drive gave {7:0.0} N m",
-                        ankle.called, ask.called, tipped, turned, where.x, where.y, sank, gave));
+                    ("flat, nothing asked", 0, 0, 0, 0, 0, false, 0, false),
+                    ("flat, 2/3 of what the sole bears sideways", 0, across * 2 / 3, 0, 0, 0, false, 0, false),
+                    ("flat, 2/3 of what the sole bears towards the toe", toToe * 2 / 3, 0, 0, 0, 0, false, 0, false),
+                    ("dropped flat from 2 cm, nothing asked", 0, 0, 0, 0, .02f, false, 0, false),
+                    ("made bent 22 degrees at its ankle under an upright weight, nothing asked", 0, 0, 0, 22, 0, false, 0, false),
+                    ("flat, all its strength sideways", 0, of.Has, 0, 0, 0, false, 1, true),
+                    ("on its edge under a weight leant 22 degrees, nothing asked", 0, 0, 22, 0, 0, false, 1, false),
+                    ("on its edge under a weight leant 22 degrees, all its strength further onto the edge", 0, of.Has, 22, 0, 0, false, 1, true),
+                    ("on its edge under a weight leant 22 degrees, all its strength towards the toe", of.Has, 0, 22, 0, 0, false, 1, true),
+                    ("dropped flat from 5 cm, all its strength towards the toe", of.Has, 0, 0, 0, .05f, false, 1, true),
+                    ("dropped from 5 cm under a weight leant 22 degrees, all its strength towards the toe", of.Has, 0, 22, 0, .05f, false, 1, true),
+                    ("held 34 cm off the ground, all its strength towards the toe", of.Has, 0, 0, 0, .34f, true, 2, true),
+                    ("held 34 cm off the ground, all its strength towards the toe and sideways at once", of.Has * .7071f, of.Has * .7071f, 0, 0, .34f, true, 2, false),
+                };
+                // (Ankles 4 to 6: the design's own with other turns of the solver, on the three flat cases only: whether
+                // what arrives follows the first run's law, 1 - (1 - x)^n with n the turns of place and of speed together.)
+                for (int ankle = 0; ankle < 7; ankle++)
+                {
+                    if (ankle == 3 && of.Name != "Small") continue;
+                    float spring = ankle == 3 ? 3 : (ankle == 1 ? 3 : ankle == 2 ? 10 : 1) * of.Spring, damper = ankle == 3 ? .07f : of.Damper;
+                    int ofPlace = ankle == 4 ? 28 : ankle == 6 ? 60 : 14, ofSpeed = ankle == 5 ? 18 : 4;
+                    string ankleCalled = ankle == 0 ? "design" : ankle == 1 ? "3x stiff" : ankle == 2 ? "10x stiff" : ankle == 3 ? "balance's, straight" : "design, " + ofPlace + " and " + ofSpeed + " turns";
+                    for (int n = 0; n < cases.Length; n++)
+                    {
+                        var c = cases[n];
+                        if ((ankle == 1 || ankle == 2) && c.kind == 2) continue;
+                        if (ankle == 3 && !c.also) continue;
+                        if (ankle >= 4 && n >= 3) continue;
+                        Standing s = default;
+                        yield return Shoed(of, spring, damper, c.toToe, c.sideways, ankle == 3, c.leant, c.bent, c.lifted, c.held, turns, within, ofPlace, ofSpeed, r => s = r);
+                        float asked = Mathf.Sqrt(c.toToe * c.toToe + c.sideways * c.sideways);
+                        Vector2 put = new Vector2(-c.sideways / bears, c.toToe / bears) * 1000;
+                        // (The first run's law, for a part the ground holds still: the boot's turning weight about its
+                        // ankle, about the line asked.)
+                        float about = c.toToe != 0 ? of.Turning.x + of.Boot * (of.Joint.y * of.Joint.y + of.Joint.z * of.Joint.z) : of.Turning.z + of.Boot * (of.Joint.x * of.Joint.x + of.Joint.y * of.Joint.y);
+                        // (What the engine's source says a part held still gets. PGS: at each turn, of place or of speed,
+                        // the drive's sum goes the share x of the way to what the spring says, from nothing each step.
+                        // TGS: each substep gives its own impulse and each turn of speed one more; and it takes the
+                        // turns of speed over four as turns of place: its rows at 14 and 18 are those at 28 and 4.)
+                        int place = tgs ? ofPlace + Mathf.Max(0, ofSpeed - 4) : ofPlace, speed = tgs ? Mathf.Min(ofSpeed, 4) : ofSpeed;
+                        float inStep = Dt / place;
+                        float law = asked * (tgs
+                            ? (place + speed) / (float)place / (1 + inStep * (inStep * spring + damper) / about)
+                            : 1 - Mathf.Pow(1 - 1 / (1 + Dt * (Dt * spring + damper) / about), place + speed));
+                        Debug.Log(string.Format(inv, "FACTS R4 ({0}) {1} | {2} | {3} | asked {4:0.0} N m | after 0.5 s: tipped {5:0.00} deg, turned {6:0.00} rad/s, weight moved {7:0.00} mm, drive gave {8:0.0} N m, ground bore {9:0} N at {10:0.0} across {11:0.0} along mm (the torque puts it at {12:0.0}, {13:0.0}) | over all: turned at most {14:0.0} rad/s, drive gave at most {15:0.00} J a step, held at most {16:0.00} J more than given in a step and {17:0.00} J in sum | at the end: turning {18:0.00} rad/s, {19:0.0} deg from flat on the ground, {20:0.0} deg from its ankle's zero | weight slid {21:0.0} mm sideways | held still, the law gives {22:0.0} N m | in its last half second it turned {23:0.00} deg",
+                            solver, of.Name, ankleCalled, c.called, asked, s.Tipped, s.TurnedLate, s.Moved, s.Gave, s.Bore, s.Where.x, s.Where.y, put.x, put.y, s.TurnedEver, s.WorkMost, s.ElseMost, s.ElseSum, s.EndsTurning, s.EndsTipped, s.EndsBent, s.Slid, law, s.EndsMoved));
+                        string what = of.Name + ", " + ankleCalled + ", " + c.called + ": ";
+                        if ((ankle == 0 || ankle >= 4) && c.kind == 0 && asked > 0)
+                        {
+                            if (s.Gave < .97f * law || s.Gave > 1.1f * asked) failed.Add(what + string.Format(inv, "its drive gave {0:0.0} N m: not between the held part's {1:0.0} and the {2:0.0} asked", s.Gave, law, asked));
+                            else if (c.toToe != 0 && s.Gave > 1.125f * law) failed.Add(what + string.Format(inv, "its drive gave {0:0.0} N m, more than an eighth over the held part's {1:0.0}", s.Gave, law));
+                        }
+                        if (ankle != 0) continue;
+                        if (c.kind == 0)
+                        {
+                            if (s.Tipped > 6) failed.Add(what + string.Format(inv, "it tipped {0:0.00} degrees", s.Tipped));
+                            if (s.TurnedLate > 1) failed.Add(what + string.Format(inv, "it turned at {0:0.00} rad/s after the first half second", s.TurnedLate));
+                            if (s.Moved > 2) failed.Add(what + string.Format(inv, "the weight moved {0:0.00} mm", s.Moved));
+                            if (asked == 0 && s.Gave > .1f * of.Has) failed.Add(what + string.Format(inv, "asked for nothing, its drive gave {0:0.0} N m", s.Gave));
+                            Vector2 given = asked > 0 ? put * (s.Gave / asked) : Vector2.zero;
+                            if (!((s.Where - given).magnitude <= 10)) failed.Add(what + string.Format(inv, "the ground bore it at {0:0.0}, {1:0.0} mm, not near {2:0.0}, {3:0.0}, where what its drive gave puts it", s.Where.x, s.Where.y, given.x, given.y));
+                        }
+                        else
+                        {
+                            if (s.EndsMoved > 2) failed.Add(what + string.Format(inv, "it turned {0:0.00} degrees in its last half second", s.EndsMoved));
+                            if (c.kind == 1 && s.EndsTipped > 100) failed.Add(what + string.Format(inv, "it ended turned over, {0:0.0} degrees from flat", s.EndsTipped));
+                            if (c.kind == 2 && c.sideways == 0 && Mathf.Abs(s.EndsBent - 35) > 2) failed.Add(what + string.Format(inv, "it ended {0:0.0} degrees from its zero, not at its target of 35", s.EndsBent));
+                        }
+                        if (s.TurnedEver > of.Top) failed.Add(what + string.Format(inv, "the boot turned at {0:0.0} rad/s, faster than its ankle's {1:0.0}", s.TurnedEver, of.Top));
+                        if (s.WorkMost > stroke) failed.Add(what + string.Format(inv, "its drive gave {0:0.0} J in a step, more than the stroke's {1:0.0}", s.WorkMost, stroke));
+                        float landing = Mathf.Max(1, bears * .005f);
+                        if (s.ElseMost > landing) failed.Add(what + string.Format(inv, "the two held {0:0.00} J more after a step than was given them (a landing is allowed {1:0.00})", s.ElseMost, landing));
+                        if (s.ElseSum > .5f) failed.Add(what + string.Format(inv, "the two gained {0:0.00} J in all that nothing gave them", s.ElseSum));
+                    }
                 }
-            Assert.Pass();
+            }
+            Debug.Log("FACTS R4 (" + solver + ") the stiff ankle: " + (failed.Count == 0 ? "every case within its bar" : failed.Count + " not within the bar: " + string.Join(" | ", failed)));
+            Assert.That(failed, Is.Empty, "A stiffly sprung ankle did not hold a light boot under a body's weight (" + solver + "): " + string.Join(" | ", failed));
         }
 
         // A link spun about its joint's axis until it has turned so far; what its reading did.
