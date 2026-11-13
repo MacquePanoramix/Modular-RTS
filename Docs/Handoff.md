@@ -451,6 +451,23 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      with it off. (3) One review workflow (two opus reviewers, medium): the finding and the fix; K4(a)'s reading, R1's
      floor and K5's summed bar. (4) `OwnBodyTests` as a whole, on and off, read side by side; the flows as played. (5)
      A build for Luis with the switch, its default and its place named in the report's first line.
+     **Where it stands (November 13, night):** (1) and (2) done, uncommitted in `D:/Dev/WG` (OwnBody, MinerPanel,
+     BodysOwnBench, TestArguments `-turnsAsMeant 1`, the turns test, the facts test's fifth way); the switch is **off
+     from the start**; its run passed (`turnsswitch.log`; Validation, "the solver's turns fixed in the game, behind a
+     switch"). (3) **done**: both reviewers "sound with changes" (`Docs/Reviews/2026-11-13_SolverTurns/review.md`,
+     each finding and what was done). A's three: the sleep test (`EachMinersOwnBodyStandingStillIsNotPutToSleep`,
+     passed: never asleep, either way), the bench reads its turns back (`-ownIterations` now kept), and `RISE_BITS` in
+     `OwnRiseBench` to show the switch off is the game as played to the last bit: `TestRuns/turnsoff_new` (with the
+     switch's code) read; `turnsoff_old` (at `2ed1c7c`, the six files set aside with `git stash` in `D:/Dev/WG`,
+     since put back and checked the same as the copies kept beside) read: **the bits and the courses differ**, but
+     `turnsoff_old2` (the old code again) **differs from itself too**: the bench does not repeat itself run to run
+     (its waits before it steps by hand are in frames), so A's 7 is **still open**, shown on the facts' leg only.
+     Next for it: both makings in one run from one kept start, the new one run twice first. B's are for the next
+     step (B4 blocks the unfloored share of R1; K8's R; K5's count); B7 said in `motion_design.md` K8. (4) `ownoff`
+     and `ownon` read: 14 of 15 each way, only the shove test failing (Small 25.0 and 22.7 m/s; Round 17.1 off, 4.2
+     on). The decision is in `GAME_VISION.md` (2026-11-13 row). Records written (Validation, review.md). **Next:**
+     commit and push both branches, the build `WindowsOrdinaryPlace_Nov13`, the report (its first line: the switch,
+     off by default); then A's 7 as above, and the next step under B's bars.
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for

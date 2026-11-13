@@ -5102,3 +5102,68 @@ from its log before it was written here.
   other articulations (`BodysOwnBench.cs` near lines 587 and 660); a making-up by the share read from what the drive
   gave, or with a floor below the law's; K5's summed bar as a bar; TGS at the true turns; nothing of this as played or
   in a build. No independent review yet.
+
+## S3b step 2 — the solver's turns fixed in the game, behind a switch (November 13, evening)
+
+Luis's word ("1. Yes please.", `Correspondence/2026-11-13_FIX_THE_TURNS_AND_THE_WEEK.md`): the turns fixed behind a
+switch, so that the step and the getting up can be played both ways before he chooses. The work branch
+`claude/wip-round`.
+
+- **What changed.** `OwnBody.TurnsAsMeant`, off from the start: on, 14 and 4; off, the project's defaults, 6 and 1, as
+  everything was tuned and played. `OwnBody.Make` no longer sets turns on the root in the loop that joins the parts;
+  `KeepTurns` sets them once all the parts are joined, the toes included, and each `Advance` reads the root back and
+  sets them again only where it reads otherwise (a part joined later; the switch turned while it stands). The panel of
+  the Ordinary Place: "Solver turns as meant (14 and 4)", with what the chosen miner's own body runs at beside it.
+  `BodysOwnBench` follows the switch: its articulated body's turns, and its one-arm rig's (near line 587), are set
+  after their links when it is on; off, as they ran (the rig near line 660 already set them after its second link).
+  `-turnsAsMeant 1` sets the switch for the whole suite (`TestArguments`).
+- **The switch's first run** (`turnsswitch.log`; both passed):
+  - `TheSolversTurnsSetBeforeTheLinksAreKept`, with a fifth way, the leg made with no turns set at all: it reads back 6
+    and 1 and runs the same course as the leg as made to the last bit, all three miners. So the switch off is the game
+    as it was played. Told besides: the sleep threshold set before the links reads back 0.005, the default; set after
+    them, 0. It is lost the same way (OwnBody sets none; the rigs set theirs after the links since this morning).
+  - `EachMinersOwnBodyRunsAtItsOwnTurns`, its bar for the switch set before the run: with the switch on, each miner's
+    own body reads 14 and 4 once it stands; turned off while it stands, 6 and 1 two steps later; on again, 14 and 4 two
+    steps later; and Small, pushed over and getting up by its own body, has 15 parts joined (its toes among them) at 14
+    and 4. All so. Told besides, the root's own settings read back as set: its mass (Small 7.880 kg, Long 9.677, Round
+    23.629), damping 0 and 0, turning at most 20, coming out at most 1.5, continuous collision. A link's own settings
+    are kept; the articulation's (the turns, the sleep threshold) are not, when set before the links.
+- **`OwnBodyTests` as a whole, both ways** (`ownoff`; `ownon`, with `-turnsAsMeant 1`; `WhatMoreTurnsOfTheSolverCost`
+  ran in both, its class named): **14 of 15 passed each way.** The one that fails both ways is the one that failed
+  before, `ShovedAgainAndAgainNothingOfItFlies` (the step adds energy; Handoff, "the engine's step"), shoved eight
+  times in 2 s with a quarter turn each time: switch off, Small's fastest part 25.0 m/s (part 12, at 0.64 s) and
+  Round's 17.1 m/s (part 11, 0.46 s); switch on, Small's 22.7 m/s (part 11, 0.70 s) and Round's 4.2 m/s (part 12,
+  0.46 s), within its bar. Long within it both ways. One run each way; that bench is not the same run to run (below).
+- **The independent review** (`Reviews/2026-11-13_SolverTurns/review.md`, A and B, opus, medium): both **sound with
+  changes**. A: the finding holds on two readings; the fix is complete for every path that makes or remakes the own
+  body; the rules hold; to do, whether it ever sleeps, that the switch off is the game as played on the game's own body
+  (not only on the facts' leg), and that the bench says its turns. B: step 0's reading right as far as it goes; R1's
+  share without its floor must not run as proposed (it ratchets where the give has a ceiling, as Round's ankle held at
+  21.6 N m four steps running), K8's law to be fed the joint's response in the whole articulation, K5's count to be
+  taken from the joint's own change of place; all for the next step. Its finding 7 is said in `motion_design.md` K8 (18
+  turns only with the switch on; 7 as played).
+- **Asleep standing still?** (A's 3; `OwnBodyTests.EachMinersOwnBodyStandingStillIsNotPutToSleep`, explicit, its bar
+  set before its run: none asleep in any step of ten seconds standing still, either way; `turnsoff_new`): passed. All
+  three, both ways, asleep in 0 of 500 or 501 steps; the threshold read back 0.005 (OwnBody sets none). At the strength
+  each has as played; at a lower strength, not run.
+- **The bench says its turns** (A's 9): `BodysOwnBench` reads the turns back from each body's root into its report;
+  `-ownIterations`, when given, is now kept by its articulated body whatever the switch (until now set before its links
+  and lost, so it ran at 6 and 1 whatever was asked, while its body of joints ran at what was asked); the one-ankle rig
+  stays at 14 and 4 (set after its link, so kept all along; a study of one ankle's law, not the game's body).
+  Compiled; not yet run.
+- **The switch off is the game as played, on the game's own body?** (A's 7.) `OwnRiseBench` now folds the bits of
+  where every part of each own body is and how it is turned, each step, into one number a course (`RISE_BITS`). Run
+  with the switch's code, off (`turnsoff_new`), and at `2ed1c7c` (`turnsoff_old`: the six files set aside in the
+  worktree with `git stash` and put back after, checked the same as copies kept beside): **every course differed**,
+  and not by a last bit (Round from the front stood with the switch's code, not at `2ed1c7c`), though the lying starts
+  agreed to their printed digits. **The old code run again (`turnsoff_old2`) differed from itself in every course
+  too**: this bench is not the same run to run (it waits in frames, under the engine's own stepping, before it steps by
+  hand), so these three runs show nothing either way. Not shown yet on the game's own body, then; the facts' fifth way
+  shows it on the leg. Next: both makings in one run, from one kept start, with the new making run twice to show the
+  run repeats itself.
+- **Not tested:** that the switch off is the game as played on the game's own body (above; on the facts' leg only);
+  the flows as played (`-ownAsPlayed 1`; the default did not change, so the game as played is the code of `2ed1c7c`
+  but for the removed lost write); the panel's new row as drawn on screen; `BodysOwnBench` with its changes (compiled
+  only); a miner standing still at a lower strength than its own; TGS; K4(a), R1's making-up and K5 at the true turns
+  (the next step, under B's bars); anything by Luis's eye. The fallen body (`PhysicalFall`) runs at 14 and 4 whatever
+  the switch (A's 8): the switch is the own body's alone.

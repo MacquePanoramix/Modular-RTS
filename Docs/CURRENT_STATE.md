@@ -2,16 +2,18 @@
 
 **Updated:** November 13, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 13): the game's own bodies run the solver at 6 and 1 turns, not the 14 and 4 their code sets.**
-  Found while reading step 0's two misses: Unity loses turns set on an articulation's root before its links are added.
-  It is proven to the last bit in the facts tests, and the game's own bodies read 6 and 1 for all three miners
-  (`OwnBody.cs:760`; `OwnBodyTests.EachMinersOwnBodyRunsAtItsOwnTurns` fails). So everything own-body since October
-  (the standing balance, the step, the getting up, the benches) was tuned at 6 and 1. **The game is not changed:** the
-  one-line fix changes how every own body moves and costs 1.72 to 1.77 times the physics time (about 2.2 to 2.7 ms more
-  a body for each second played), so it is Luis's to decide. Step 0 at the true turns: K3 twice and K4(b) pass; K4(a)'s
-  stance still falls, two to six times later, because the ankle gives less than K8's law says (the drive writer's
-  making-up must read its share, not floor it at the law); K5's bar trips on its own count's lag and is to be
-  re-specified. No independent review yet. ([Validation](Validation.md), November 13; [the hand-over](Handoff.md).)
+- **Now (November 13, night): the solver's turns are fixed in the game behind a switch, off by default.** Unity loses
+  turns set on an articulation's root before its links are added, so the game's own bodies have run at the project's
+  6 and 1, not the 14 and 4 their code sets, since October (everything own-body was tuned at 6 and 1). Luis chose a
+  switch to play both ways ([his word](Correspondence/2026-11-13_FIX_THE_TURNS_AND_THE_WEEK.md)): **"Solver turns as meant (14 and 4)"** on the miner panel,
+  with "runs at X and Y" beside it; off, the game as played. On, it costs 1.72 to 1.77 times the physics time.
+  `OwnBodyTests` 14 of 15 each way (only the known shove test failing; Round's fastest part 17.1 m/s off, 4.2 on);
+  never put to sleep standing still, either way. **Reviewed independently**
+  ([the review](Reviews/2026-11-13_SolverTurns/review.md)): both "sound with changes"; that the switch off is the game
+  as played is shown on the facts' leg only (the rise bench does not repeat itself run to run): open. B's findings
+  bound the next step: R1's unfloored share must not run until what caps Round's ankle is found; K8's law to be fed
+  the joint's response in the whole articulation; K5's count from the joint's own change of place.
+  ([Validation](Validation.md), November 13; [the hand-over](Handoff.md).)
 
 - **Now (November 12): the stiff ankle holds under the game's solver; the work passes to Opus 5.5.** Luis agreed to
   the design of the motion on November 11: all six recommendations of its section 7, "and please proceed", with the

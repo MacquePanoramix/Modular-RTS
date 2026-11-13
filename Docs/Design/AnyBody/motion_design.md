@@ -884,7 +884,11 @@ dt·k·e − a·ω: e the error at the step's start, ω the joint's speed as tha
    stands on it.
 2. **A part the ground holds still** stays at ω = 0 at every turn, the ground's rows taking back what the drive gave,
    so each turn closes only x of what is missing: after n turns the drive has given 1 − (1 − x)^n of what its spring
-   says, n the turns of place and of speed together (18 in the game). By the law the three miners' ankles give 0.70
+   says, n the turns of place and of speed together (18 in the game) [November 13: 18 only with the solver's turns as
+   meant, `OwnBody.TurnsAsMeant`; as the game was played until then, and with the switch off, its own bodies run at 6
+   and 1, so 7, and by the law as it stands their ankles give 0.37, 0.25 and 0.21 towards the toe and 0.31, 0.18 and
+   0.15 sideways; which way the game plays is Luis's to choose, and whatever reckons a share takes n from the turns its
+   root reads back; the review of the switch, B's finding 7, `Docs/Reviews/2026-11-13_SolverTurns/`]. By the law the three miners' ankles give 0.70
    (Small), 0.53 (Long) and 0.45 (Round) of it towards the toe and 0.61, 0.40 and 0.35 sideways. Read towards the toe,
    with two thirds of what the sole bears asked: 16.1 of 22.5 N m, 21.7 of 38.5, 26.1 of 53.3 (the law: 15.7, 20.5,
    24.0). At 28 and 4 turns 20.1, 29.3, 36.3 (the law: 19.8, 28.5, 35.0); at 14 and 18 the same as at 28 and 4 (20.3,
