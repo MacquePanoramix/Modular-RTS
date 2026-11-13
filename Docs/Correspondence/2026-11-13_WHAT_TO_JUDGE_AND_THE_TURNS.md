@@ -14,3 +14,8 @@ With two pictures: [a miner lying, a leg looking detached](2026-11-13_images/leg
 panel with the switch, as drawn](2026-11-13_images/panel_with_the_switch.webp).
 
 Recorded in `Handoff.md` (where it stands); answered in the session the same night.
+
+Later the same night, on the detached leg, verbatim:
+
+> Oh also yeah it was set to gets up by its own on the dettached leg, sorry for interrupting you and not including in
+> the previous message.

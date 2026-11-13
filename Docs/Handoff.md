@@ -480,7 +480,7 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      rarer twitches to **zero**: found by reading every frame of many turns as played, with numbers (one lead, not
      checked: the walk turns the body at up to 420 degrees a second and holds it where a planted leg is twisted 62
      degrees in its hip, `MostTwist`, then lets it go on: a stop and start at a limit); (c) a leg seen detached while a
-     miner lay trying to get up (his picture; which miner and which boxes were ticked, to ask): the fall's body is
+     miner lay trying to get up (his picture; with Gets up by its own body ticked, so the October way up by its own body, most likely Small: Luis, the same night): the fall's body is
      jointed rigid bodies whose joints can pull apart (projection at 2 cm and 5 degrees, `PhysicalFall.cs:388`), the
      standing body's cannot; or the drawn leg; not checked.
      **His word on the switch (the same night, [verbatim](Correspondence/2026-11-13_PREFERS_THE_NEW_AND_LOVES_THE_IDLE.md)):**
