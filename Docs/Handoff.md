@@ -489,6 +489,12 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      (`OwnBody.TurnsAsMeant = true` in `D:/Dev/WG`; the switch stays on the panel), `OwnBodyTests` and the flows as
      played (`-ownAsPlayed 1`) run and read before its commit; then (a) to (c) above. The idle standing at 14 and 4 is
      loved: every change to the own body keeps it, set side by side with this build, switch on.
+     **And (the same night, [verbatim](Correspondence/2026-11-13_SETTLING_AFTER_A_SHOVE.md)):** (d) after a shove it
+     catches itself well but does not settle back into its own comfortable stance, as people do once they have
+     recovered; and people shift their stance now and then so as not to feel stiff (some of that is there). He asked
+     whether it is worth exploring or already a later step's. Answered: worth it; its research joins (a)'s (moving
+     between stances: turning, recovering, settling, shifting weight); built on the design's stances and steps,
+     growing smoothly with how far from comfortable the body stands (no threshold), beside the loved idle, never over it.
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for
