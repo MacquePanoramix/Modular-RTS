@@ -20,9 +20,11 @@ Opus 5.5's, at max thinking with ultracode on. Everything it needs is in the rep
    reviewed; what it left open is in item 3.
 3. **The rest of step 0** ("Next steps", item 2), each fact with its bar set before its run and read before it is
    claimed; then step 1; then **step 2, whose clips are the first thing Luis sees** (he has seen no motion from this
-   work since October 30). **Where it stopped** (November 13, morning): the five other facts of step 0 are written
-   and have had one run. Three meet their bars and two do not, and both of those are being read ("Next steps", item 2,
-   "Where it stopped (November 13)"). Begin there.
+   work since October 30). **Where it stopped** (November 13, midday): the five other facts of step 0 have had one
+   run (three meet their bars) and the two that did not have been read with three diagnostics. K5's miss is a lag in
+   its count (a summed bar is proposed); K4(a)'s is real: under a body that tips, the ankle's drive gets a third to a
+   quarter of K8's share and the light boot's heel sinks ("Next steps", item 2, "Where it stopped (November 13,
+   midday)"). Begin there: the review of both readings, then the solver run, then the report to Luis.
 
 What binds every step: quality above speed; never a played animation; nothing that switches at a threshold; one body
 for everything; every step reviewed by agents who did not make it; a result said only after its run was read; Luis's
@@ -354,6 +356,42 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
        | Round's knee | 9.2 | 7.9 |
 
        That growth is slow (seconds), so it is not this fall.
+
+   **Where it stopped (November 13, midday; Opus 5.5).** The diagnostics are written (`ArticulationFactsTests.cs`:
+   K4(b)'s check of all 12 values; `TheSweepsCountReadStepByStep`; `TheStandingLegsFallTraced`) and have had one run,
+   all three passing as tests (`TestRuns/step0diag.log`, 72 FACTS lines). Weekly usage then: 90%.
+   - **K4(b): passes its full bar.** Start indices: fixed root 0,0,3; floating root 0,6,9 (the root's own 6 first).
+     All 12 floating values 0.0000 against 16.508 fixed.
+   - **K5's count, read step by step.** The leg's energy never ends near zero: it falls to about 0.83 of its first
+     step's in two or three steps and stays there (0.80 to 0.92 after the second), because the floating leg keeps its
+     whole spin (no drive can take that) and only its inner motion is damped. Per step, the gain beyond the count runs
+     negative in the first step and positive in the next two or three (a lag of the count, not a gain): summed over the
+     second it is about nothing at 5 rad/s (−0.04%, −0.01%, 0.00% of the first step's, Small, Long, Round), small at 10
+     (+0.44%, +0.76%, +0.41%), and grows (20: +3.7%, +5.1%, +3.4%; 30: +6.2%, +8.2%, +6.1%). Against what the dampers
+     took over the second: at 10: 0.035, 0.063, 0.029; at 20: 0.30, 0.43, 0.24; at 30: 0.49, 0.69, 0.42. Never above
+     the first step's (1.0000) at any of these speeds. **So the first run's second clause tripped on the count's lag.**
+     Proposed new bar (to be reviewed before its run): the clause taken over the whole second (the summed gain beyond
+     the count at most half the summed dampers' take), the first clause as it was; by these numbers every miner holds
+     at 10 and Long fails at 30.
+   - **K4(a)'s fall traced: the rig is sound, the fall is the solver's.** The control, Round with gravity off, stood
+     exactly (0.001 degrees, 0.0 mm); after the first step every part was where it was made (0.0 mm, 0.00 degrees), so
+     the hinge's reading runs as assumed and the pose is written right. With gravity, the **ankle's drive gives only a
+     small part of what it asks**: Round without the making-up, 8.9 of 47.2 N m in the first step, then 12 to 14 while
+     asking 78 to 119 (about 0.10 to 0.19; K8's law says 0.45); Small with the making-up, 7.5 of 31.4, then about 9.4
+     of 46 to 54 (about 0.17 to 0.24; the law says 0.70). The hip gives about what it asks (0.7 to 1.1); the knee
+     about 0.8 of it, and buckles as the body tips (off +12 degrees in 8 steps). **The boot rocks toe-up and its heel
+     sinks:** Round's boot tilted −2.0 degrees in the first step and −8 by the fifth, its centre 7.5 mm down, its heel
+     about 19 mm into the ground by reckoning; the weight dropped 2.6 mm in the first step (two-thirds of a free fall's
+     step) and about 22 mm in eight. Round fell at step 6, Small at step 24. So under 14 and 4 turns the ground does not
+     hold a light boot that bears a whole body, and the ankle's share is a third to a quarter of the law's. **K8's law
+     was matched where the weight above never turned (the stiff-ankle rig's slide); it does not hold under a body that
+     tips.**
+   - **Next (decided before the compaction, not yet done):** (1) commit the diagnostics and this block (doing now);
+     (2) one independent review (opus, medium) of K5's new bar and of this reading of K4(a); (3) a small lever run on
+     the traced rig, Round with and without the making-up: the solver at 14/4, 28/4 and 60/4 (the law's share for
+     each), and TGS at 14/4, to learn whether more turns or the other solver give the ankle its share and hold the
+     heel; (4) then the report to Luis, since the drive writer's making-up by K8's law does not hold the stance and the
+     lever has a cost he should weigh (1.5 times at 28, 2.7 to 2.8 at 60).
    - Then: write it all into `Validation.md`, one independent review, commit and push both branches, the 25th outlook,
      and the report to Luis (with the items above).
 3. **Step 1**: `BodyFrame` moved into the game with the pose read off the body, tested lying flat and at the hard poses.
