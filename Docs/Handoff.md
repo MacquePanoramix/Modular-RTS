@@ -441,6 +441,16 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
    - **Cost** (`turnscost.log`): a body a step at 6/1 against 14/4: Small 62.3 against 110.5 microseconds, Long 70.1
      against 123.1, Round 62.2 against 106.8. So the fix costs 1.72 to 1.77 times, about 2.2 to 2.7 ms more a body for
      each second played.
+   - **Luis's word (November 13, evening; [verbatim](Correspondence/2026-11-13_FIX_THE_TURNS_AND_THE_WEEK.md)): "1. Yes
+     please." to fixing the turns in the game behind a switch; and the week's limit need not hold the work back (he has
+     a reset to use once it is full; the five-hour window still applies). So, now:** (1) the switch, in `OwnBody`: a
+     static `TurnsAsMeant` (on: 14 and 4; off: 6 and 1, as tuned and played until now), checked each physics step against
+     what the root reads back and set again when it differs (so a link added later, a toe, cannot lose it silently);
+     `BodysOwnBench` follows it; a toggle on the miner panel (`MinerPanel.cs`, beside "Stands by its own joints") so
+     Luis can flip it live while playing. (2) `EachMinersOwnBodyRunsAtItsOwnTurns` passes with it on, and reads 6 and 1
+     with it off. (3) One review workflow (two opus reviewers, medium): the finding and the fix; K4(a)'s reading, R1's
+     floor and K5's summed bar. (4) `OwnBodyTests` as a whole, on and off, read side by side; the flows as played. (5)
+     A build for Luis with the switch, its default and its place named in the report's first line.
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for
