@@ -537,7 +537,31 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      design from the research, the baseline and the game's philosophies (each named, and how the design keeps it),
      checked by judge agents on mechanics and aesthetics, sent to Luis to agree before the turn is rebuilt, as a switch
      beside the walk as it is; (b)'s faults outside the turn's design (such as at the hand-overs) fixed one at a time
-     meanwhile; then (c) and (d).
+     meanwhile; then (c) and (d). **And (moments later, verbatim in the same file):** a deep research into all kinds
+     of movement that can be seen as unnatural, for the rest of the project too: the workflow `wf_89a9400c-95e` (three
+     researchers: how people perceive it; animation craft, motion-quality measures and biomechanics; the project's own
+     record of every fault and detector; then a sceptic who re-opens the load-bearing sources and writes
+     `Docs/Research/2026-11-13_UnnaturalMovement/catalogue.md`, each kind with a per-frame measure, a bar and its
+     source). The scan's kinds and bars come from it, set before the bench's first run. **The bench's draft and its
+     review came back** (`wf_8f312c44-139`): "ready after fixes", eleven of them; the two that matter at the
+     hand-overs: a picture taken inside the bone loop corrupts that frame, and the top bone's turn must be read in the
+     world (OwnBody.Follows turns the root under the drawn pelvis, so its local turn jumps falsely). Kept in this
+     session's scratchpad, folder `turnbench` (`TurnBench.cs`, `suspects.md`, `review.md`), to go into `D:/Dev/WG`
+     with the fixes and the catalogue's scan once the runs are read; a first quick run with `-turnCourses 32` (all four
+     kinds; 480 courses are about 360k frames). A lead found on the way, not yet measured: the walk always points the
+     knee along the pelvis (`ProceduralBiped.cs:1300`), so in a turn a planted knee may point up to 62 degrees off its
+     own foot (F6 measures it): a likely cause of the odd legs.
+     **Stopped at the usage limit (November 13, afternoon), in this order:** (1) the as-played runs read: of the 15
+     that fail both ways, 13 are the October kind (tests that take the body by hand or measure a hand against the old
+     body; Validation's October 10 and 14 entries, `TheBodysOwn.md` "The whole suite, as the game is played"); 2 are
+     new, both `ArticulationFactsTests` (Small falls at 1.04 s, its ankle 147 degrees off), not yet run in the normal
+     suite with the default on: run `facts_default_on` with filter `WonderGather.Tests.ArticulationFactsTests` (no
+     `-ownAsPlayed`) and read it before committing `OwnBody.cs` and `TestArguments.cs` in `D:/Dev/WG`. (2) The catalogue
+     workflow was stopped before its last stage: `U1_perception.md`, `U2_craft_measures_biomechanics.md`,
+     `U3_project_record.md` and `sceptic_notes.md` are written in `Docs/Research/2026-11-13_UnnaturalMovement/`;
+     `catalogue.md` is not. Resume with `resumeFromRunId` `wf_89a9400c-95e` (the script is kept in this session's
+     folder), or hand a fresh agent those four files to write the catalogue. (3) Then Validation, the build
+     `WindowsOrdinaryPlace_Nov13b`, and the bench as above.
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for

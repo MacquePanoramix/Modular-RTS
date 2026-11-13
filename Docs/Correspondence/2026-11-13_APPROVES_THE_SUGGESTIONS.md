@@ -27,3 +27,11 @@ before anything is rebuilt.
 
 > Oh also always check for movements that feel unnatural. Be very rigorous about trying to capture all kinds of
 > unnatural movements.
+
+## And then, verbatim
+
+> Oh and if it was not done before please do a deep dive research also into all kinds of movement that can be seen as
+> unnatural, not just for this step but hopefully to be able to be used for the rest of the project moving forward.
+
+(It had been done only in part: the October note on judging real bodies, the getting-up research's note on twitches
+and broken-looking limbs, and the turning research's section on what looks wrong. No catalogue of every kind existed.)
