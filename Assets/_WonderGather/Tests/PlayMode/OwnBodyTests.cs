@@ -1008,7 +1008,9 @@ namespace WonderGather.Tests
         {
             Time.captureFramerate = 50;
             var inv = System.Globalization.CultureInfo.InvariantCulture;
-            var turns = new (int place, int speed)[] { (14, 4), (28, 4), (60, 4) };
+            // (6 and 1 added on November 13: the project's defaults, which the game's own bodies were found to run at,
+            // their 14 and 4 set before their links and lost: EachMinersOwnBodyRunsAtItsOwnTurns.)
+            var turns = new (int place, int speed)[] { (6, 1), (14, 4), (28, 4), (60, 4) };
             const int Copies = 20, Rounds = 6, Steps = 100;
             for (int index = 0; index < choice.Count; index++)
             {

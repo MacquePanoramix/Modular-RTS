@@ -1198,7 +1198,6 @@ namespace WonderGather.Tests
             hips.automaticCenterOfMass = false; hips.centerOfMass = new Vector3(0, .25f * scale, 0);
             hips.automaticInertiaTensor = false; hips.inertiaTensor = HipsTurning(of); hips.inertiaTensorRotation = Quaternion.identity;
             hips.linearDamping = 0; hips.angularDamping = 0; hips.maxAngularVelocity = 1000;
-            hips.solverIterations = 14; hips.solverVelocityIterations = 4; hips.sleepThreshold = 0;
             LegPart[] parts = { of.Thigh, of.Shin, of.Boot };
             var links = new ArticulationBody[4]; links[0] = hips;
             Vector3 joint = at + new Vector3(.09f * scale, 0, 0);
@@ -1217,6 +1216,9 @@ namespace WonderGather.Tests
                 links[i + 1] = link;
                 if (i < 2) joint += new Vector3(0, -2 * Mathf.Abs(p.Joint.y), 0);
             }
+            // (The solver's turns set after the links: set before, they are lost and it runs at 6 and 1, November 13:
+            // TheSolversTurnsSetBeforeTheLinksAreKept.)
+            hips.solverIterations = 14; hips.solverVelocityIterations = 4; hips.sleepThreshold = 0;
             return links;
         }
 
@@ -1329,7 +1331,9 @@ namespace WonderGather.Tests
         // ankle) with its sole on Stood's ground and flat; every hinge about the line across, its zero the leg straight under
         // the weight; the knee bent 20 degrees, the shin forward and the thigh back so the whole body's centre is 5.5 cm ahead
         // of the ankle. Made in that pose; the pose is written again after (AsMade's way). Stood's link settings and solver.
-        private (ArticulationBody[] parts, float[] goal) StandingLeg(Leg of, Vector3 at)
+        // turnsFirst: the solver's turns set on the weight before its links, as it was made until November 13, when that
+        // was found to lose them (TheSolversTurnsSetBeforeTheLinksAreKept); else after the links, where they are kept.
+        private (ArticulationBody[] parts, float[] goal) StandingLeg(Leg of, Vector3 at, bool turnsFirst = false)
         {
             float scale = LegScale(of), hipsKg = of.Body - of.Mass, high = .25f * scale, lean = 10 * Mathf.Deg2Rad, bent = 20 * Mathf.Deg2Rad;
             float lt = 2 * Mathf.Abs(of.Thigh.Joint.y), ls = 2 * Mathf.Abs(of.Shin.Joint.y);
@@ -1357,7 +1361,7 @@ namespace WonderGather.Tests
             weight.mass = hipsKg; weight.automaticCenterOfMass = false; weight.centerOfMass = new Vector3(0, high, 0);
             weight.automaticInertiaTensor = false; weight.inertiaTensor = HipsTurning(of); weight.inertiaTensorRotation = Quaternion.identity;
             weight.linearDamping = 0; weight.angularDamping = 0;
-            weight.solverIterations = 14; weight.solverVelocityIterations = 4; weight.sleepThreshold = 0;
+            if (turnsFirst) { weight.solverIterations = 14; weight.solverVelocityIterations = 4; weight.sleepThreshold = 0; }
             var parts = new ArticulationBody[4]; parts[0] = weight;
             Vector3[] place = { hip, hip, knee, ankle };
             Quaternion[] turned = { Quaternion.identity, Quaternion.AngleAxis(-thighBack * Mathf.Rad2Deg, Vector3.right), Quaternion.AngleAxis(shinOn * Mathf.Rad2Deg, Vector3.right), Quaternion.identity };
@@ -1376,6 +1380,7 @@ namespace WonderGather.Tests
             var box = parts[3].gameObject.AddComponent<BoxCollider>();
             box.size = of.Sole; box.center = bootCentre; box.sharedMaterial = surface;
             foreach (var link in parts) { link.maxAngularVelocity = 20; link.maxDepenetrationVelocity = 1.5f; link.collisionDetectionMode = CollisionDetectionMode.Continuous; }
+            if (!turnsFirst) { weight.solverIterations = 14; weight.solverVelocityIterations = 4; weight.sleepThreshold = 0; }
             return (parts, new[] { 0, -(thighBack + lean), bent, -shinOn });
         }
 
@@ -1616,18 +1621,20 @@ namespace WonderGather.Tests
         [UnityTest]
         public IEnumerator TheSolversTurnsSetBeforeTheLinksAreKept()
         {
-            string[] ways = { "as made", "set again to 6 and 1", "set again to 14 and 4" };
-            int[][] turns = { null, new[] { 6, 1 }, new[] { 14, 4 } };
+            // (The fourth way, added once this was found: the leg made as StandingLeg now makes it, its turns set after its
+            // links; it should read back 14 and 4 and run the same course as the third way to the last bit.)
+            string[] ways = { "as made", "set again to 6 and 1", "set again to 14 and 4", "made with its turns after its links" };
+            int[][] turns = { null, new[] { 6, 1 }, new[] { 14, 4 }, null };
             for (int m = 0; m < Legs.Length; m++)
             {
                 var of = Legs[m];
-                var course = new List<Vector3>[3];
+                var course = new List<Vector3>[4];
                 string told = "";
-                for (int w = 0; w < 3; w++)
+                for (int w = 0; w < 4; w++)
                 {
                     TakeAway();
                     Vector3 at = new Vector3(-600 - 10 * m, 20, 300);
-                    var (parts, goal) = StandingLeg(of, at);
+                    var (parts, goal) = StandingLeg(of, at, turnsFirst: w < 3);
                     string readBack = $"{parts[0].solverIterations} and {parts[0].solverVelocityIterations}";
                     if (turns[w] != null) { parts[0].solverIterations = turns[w][0]; parts[0].solverVelocityIterations = turns[w][1]; }
                     yield return null;
@@ -1660,14 +1667,16 @@ namespace WonderGather.Tests
                     string same = "";
                     if (w > 0)
                     {
-                        int n = Mathf.Min(course[w].Count, course[0].Count); bool exact = course[w].Count == course[0].Count; float apart = 0;
+                        int against = w == 3 ? 2 : 0;
+                        string named = w == 3 ? "the third way's" : "as made";
+                        int n = Mathf.Min(course[w].Count, course[against].Count); bool exact = course[w].Count == course[against].Count; float apart = 0;
                         for (int i = 0; i < n; i++)
                         {
-                            Vector3 x = course[w][i], y = course[0][i];
+                            Vector3 x = course[w][i], y = course[against][i];
                             exact &= x.x == y.x && x.y == y.y && x.z == y.z;
                             apart = Mathf.Max(apart, (x - y).magnitude);
                         }
-                        same = exact ? ", the same course as made to the last bit" : $", not the same course as made (the weights' centres up to {apart * 1000:0.000} mm apart over the {n} steps both ran)";
+                        same = exact ? $", the same course as {named} to the last bit" : $", not the same course as {named} (the weights' centres up to {apart * 1000:0.000} mm apart over the {n} steps both ran)";
                     }
                     told += $" {ways[w]} (read back as made: {readBack}): the ankle gave {first:0.000} of what it asked in the first step, {(fellStep < 0 ? "stood the 60 steps" : "fell at step " + (fellStep + 1))}{same};";
                 }
