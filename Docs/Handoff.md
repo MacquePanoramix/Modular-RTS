@@ -441,8 +441,12 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
    - **Cost** (`turnscost.log`): a body a step at 6/1 against 14/4: Small 62.3 against 110.5 microseconds, Long 70.1
      against 123.1, Round 62.2 against 106.8. So the fix costs 1.72 to 1.77 times, about 2.2 to 2.7 ms more a body for
      each second played.
+   - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
+     93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
+     spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for
+     his word; record it verbatim in `Correspondence`.
    - **Next:** (1) one independent review (opus, medium): the turns finding and the game's fix; K4(a)'s reading and
-     what R1's making-up should floor at; K5's summed bar. (2) The report to Luis: the finding; the fix, its cost, and
+     what R1's making-up should floor at; K5's summed bar. (2) The report to Luis (sent): the finding; the fix, its cost, and
      that it changes how every own body moves (his to decide, perhaps as a switch to compare); step 0's results. (3)
      Then, by his word: the game's fix with its own review, `OwnBodyTests` as a whole at the true turns, and R1's
      making-up changed and K4(a) run again.
