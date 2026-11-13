@@ -470,6 +470,19 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      `Builds/WindowsOrdinaryPlace_Nov13` in `D:/Dev/WG` made (Result: Success) and the report sent (November 13,
      night), its first line the switch, off by default. **Wait for Luis's word on which way the game plays**; then
      A's 7 as above, and the next step under B's bars (it waits on the week's reset as well).
+     **Luis's first look (November 13, night; [verbatim](Correspondence/2026-11-13_WHAT_TO_JUDGE_AND_THE_TURNS.md)):**
+     answered: the switch changes only the body standing by its own joints (at ease, the catch step, Small's own
+     getting up when "Gets up by its own body" is ticked, off by default), not the walk (`ProceduralBiped`, unchanged
+     since October 13); the getting up in the build is October's, the design's new one is not built (step 0 only).
+     **His asks, the first work after the reset, before the step-1 work above unless he says otherwise:** (a) a deep
+     research of how people turn while walking, sharp turns and turning right round (a workflow: studies and motion
+     capture read frame by frame), then the walk's turns rebuilt from it; (b) the odd leg positions in turns and the
+     rarer twitches to **zero**: found by reading every frame of many turns as played, with numbers (one lead, not
+     checked: the walk turns the body at up to 420 degrees a second and holds it where a planted leg is twisted 62
+     degrees in its hip, `MostTwist`, then lets it go on: a stop and start at a limit); (c) a leg seen detached while a
+     miner lay trying to get up (his picture; which miner and which boxes were ticked, to ask): the fall's body is
+     jointed rigid bodies whose joints can pull apart (projection at 2 cm and 5 degrees, `PhysicalFall.cs:388`), the
+     standing body's cannot; or the drawn leg; not checked.
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for
