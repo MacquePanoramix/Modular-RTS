@@ -220,7 +220,9 @@ namespace WonderGather
         // OwnBodyTests.EachMinersOwnBodyRunsAtItsOwnTurns, Docs/Validation.md.) They are set once all its parts are joined,
         // and read back each step and set again whenever its root reads otherwise, so that a part joined later, or the
         // switch turned while it stands, cannot change them unseen. 14 and 4 cost about 1.7 times 6 and 1 a step.
-        public static bool TurnsAsMeant;
+        // On from the start since Luis played both ways (November 13, 2026, night: "it is a delicate change but I think
+        // I do prefer the new one"); the switch stays on the panel, and off is still the game as it was played before.
+        public static bool TurnsAsMeant = true;
         public const int TurnsMeant = 14, SpeedTurnsMeant = 4;
         public static int TurnsNow => TurnsAsMeant ? TurnsMeant : Physics.defaultSolverIterations;
         public static int SpeedTurnsNow => TurnsAsMeant ? SpeedTurnsMeant : Physics.defaultSolverVelocityIterations;
