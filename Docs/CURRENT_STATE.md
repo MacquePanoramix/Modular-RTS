@@ -12,7 +12,8 @@
   passed, 2 failed (K5 and K4(a), findings since November 12); as played, on fails nothing that off passes
   ([Validation](Validation.md)). A catalogue of every kind of unnatural movement, researched and checked
   ([the folder](Research/2026-11-13_UnnaturalMovement/)), and the detached leg investigated, read-only
-  ([most likely the cut trousers showing](Research/2026-11-13_DetachedLeg/investigation.md)). Next: the turn bench
+  ([most likely the cut trousers showing](Research/2026-11-13_DetachedLeg/investigation.md)); its first check run
+  since rules out the unit's capsule ([Validation](Validation.md)), and the posed cover grid comes next. Next: the turn bench
   with the catalogue's scan, its bars set before its first run; then the turning design for Luis to agree
   ([the hand-over](Handoff.md)).
 

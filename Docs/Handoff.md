@@ -588,7 +588,20 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      five-hour window from 9% to 53% in 25 minutes): a builder puts the review's eleven fixes and the catalogue's scan
      (the kinds today's trace supports, at 50 fixed and at the game's own rate, the drawn body at 100) into the turn
      bench in the scratchpad, a reviewer checks it, then it goes into `D:/Dev/WG`, a quick run with `-turnCourses 32`,
-     read, then the full baseline; then the turning design for Luis.
+     read, then the full baseline; then the turning design for Luis. **Meanwhile, no agents before the 22:30 UTC
+     reset:** (c)'s capsule check is done and **rules the capsule out**
+     (`OwnSolidAgainstOwnBodyTests.SmallsOwnSolidLeavesItsOwnBodyAlone`, work branch, run `solid_vs_own2`, passed;
+     Validation, "The unit's capsule against its own body": 25 tries, the capsule inside the body on 14,557 of 14,562
+     frames, every pair ignored on every frame, 0 contacts from either side, while the controls saw contacts). Next in
+     (c): (a), the posed cover grid. Small's drawn body is held still as the atlas does it (`AtlasPoser`), lying on its
+     back, one leg through a grid of hip and knee angles, the other foot down or raised. The cut trousers' ring is cast
+     toward the game camera and straight up through the baked skin, and the flaps' faces are set against the thigh's
+     true front. Run alone, read, then pictures at the worst poses; any fix to the drawn body goes to aesthetic judges
+     first.
+   - *(The two items below are the morning's, kept as written, and done since: the review came back,
+     `Reviews/2026-11-13_SolverTurns`, A and B "sound with changes", and A's sleep check passed (Validation); the
+     report went; Luis played both ways and chose the new turns, now on by default. What B asks of R1's making-up and
+     K5's bar stays open, under "Later".)*
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for

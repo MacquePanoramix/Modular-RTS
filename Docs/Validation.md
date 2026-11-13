@@ -5195,3 +5195,27 @@ switch, so that the step and the getting up can be played both ways before he ch
 - **The build for Luis:** `Builds/WindowsOrdinaryPlace_Nov13b` in `D:/Dev/WG`, at `6773465` (`BuildWindows -buildOut
   WindowsOrdinaryPlace_Nov13b`; "Build Finished, Result: Success.", `ORDINARY_PLACE_BUILD_OK`). Not launched or looked
   at before it went to him.
+
+## The unit's capsule against its own body, getting up (November 13, afternoon)
+
+- **Why:** (c), the leg Luis saw looking detached while Small got up by its own body. The sceptic's cheap check
+  (`Research/2026-11-13_DetachedLeg/investigation.md`, "A cause missed"): the unit's capsule (radius 0.213, height
+  1.42) is told to ignore every own part while it is switched off (`OwnBody.cs:866`, before `PhysicalFall.cs:808`
+  switches it on again), and through a try it stands in the hips; were the ignoring lost, it would shove the thighs
+  apart.
+- **The measure:** `OwnSolidAgainstOwnBodyTests.SmallsOwnSolidLeavesItsOwnBodyAlone` (new, explicit; work branch), run
+  `solid_vs_own2`: Small pushed over three times through the game's flow ("Gets up by its own body" on, everything else
+  as built, the solver's turns 14 and 4; 50 frames a second, a frame a step). Every frame of every try: whether physics
+  ignores each pair of the capsule and an own part (`Physics.GetIgnoreCollision`), whether the capsule is in the body
+  at all (`Physics.ComputePenetration`), and the contacts between them, counted on the capsule and on every part. Bars
+  set before the run: 0 frames with a pair not ignored, 0 contacts. Controls: a ball dropped on the capsule, passing
+  through everything else of the miner; the parts' contacts with anything.
+- **Result: passed; the capsule is not the cause.** 25 tries by its own body, 14,562 frames in a try: the capsule on in
+  all of them and inside the body in 14,557 (at most 0.358 m deep); 0 frames with a pair not ignored; 0 contacts from
+  either side. The controls saw: the ball, 23 contacts on the capsule; the parts, 121,010 contacts with anything.
+- (The first run, `solid_vs_own`, stopped before the pushes on the test's own fault: `PhysicalFall` is added at the
+  first push. Fixed as `GettingUpByItsOwnTests` does; the ball's control had already passed, 23 contacts.)
+- **Seen on the way, not what was measured:** the push straight ahead was not up after 240 s and 15 tries; the pushes
+  20 degrees to either side were up by its own body after 141.5 s (9 tries) and 17.4 s (1 try).
+- **Not tested:** Round and Long; other strengths; a frame rate other than 50; whether the cut trousers show (the
+  next check, the posed cover grid).

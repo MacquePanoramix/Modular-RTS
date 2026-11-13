@@ -297,3 +297,10 @@ of hip flexion (MinerBody.cs:655-656), uncovering the ring inside the living ran
 while disabled (OwnBody.cs:866 before PhysicalFall.cs:807), worth one call. Order to test: (a) the posed-model cover
 grid (no physics), (b) GetIgnoreCollision on the capsule, (c) game-flow courses on Small with cover, flap face, hip
 angles, balance.Fell and second-body log, Round old way and Small switch off as controls, (d) gaps, projection, blends.
+
+## Checked since
+
+- **(b), the capsule: ruled out** (November 13, afternoon; Validation, "The unit's capsule against its own body"). Small
+  pushed over three times through the game's flow, 25 tries: the capsule inside the body on 14,557 of 14,562 frames,
+  every pair ignored on every frame, 0 contacts from either side; the controls saw contacts (a ball on the capsule, 23;
+  the parts with anything, 121,010).
