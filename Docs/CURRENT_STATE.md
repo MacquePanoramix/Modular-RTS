@@ -12,7 +12,10 @@
   ([the review](Reviews/2026-11-13_SolverTurns/review.md)): both "sound with changes"; that the switch off is the game
   as played is shown on the facts' leg only (the rise bench does not repeat itself run to run): open. B's findings
   bound the next step: R1's unfloored share must not run until what caps Round's ankle is found; K8's law to be fed
-  the joint's response in the whole articulation; K5's count from the joint's own change of place.
+  the joint's response in the whole articulation; K5's count from the joint's own change of place. **Luis, having
+  played both: he prefers it on**, and loves the idle standing ("Makes it feel really alive!"); the default becomes on
+  after the week's reset, and his asks come next: a deep research of turning while walking, the walk's odd leg
+  positions and twitches in turns to zero, a leg seen detached while getting up ([the hand-over](Handoff.md)).
   ([Validation](Validation.md), November 13; [the hand-over](Handoff.md).)
 
 - **Now (November 12): the stiff ankle holds under the game's solver; the work passes to Opus 5.5.** Luis agreed to

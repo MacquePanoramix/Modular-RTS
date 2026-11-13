@@ -483,6 +483,12 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      miner lay trying to get up (his picture; which miner and which boxes were ticked, to ask): the fall's body is
      jointed rigid bodies whose joints can pull apart (projection at 2 cm and 5 degrees, `PhysicalFall.cs:388`), the
      standing body's cannot; or the drawn leg; not checked.
+     **His word on the switch (the same night, [verbatim](Correspondence/2026-11-13_PREFERS_THE_NEW_AND_LOVES_THE_IDLE.md)):**
+     he prefers the new one (on, 14 and 4), and "really really" likes the idle standing, its little movements and how
+     the body answers them ("really alive"). **First after the reset:** the switch's default made on
+     (`OwnBody.TurnsAsMeant = true` in `D:/Dev/WG`; the switch stays on the panel), `OwnBodyTests` and the flows as
+     played (`-ownAsPlayed 1`) run and read before its commit; then (a) to (c) above. The idle standing at 14 and 4 is
+     loved: every change to the own body keeps it, set side by side with this build, switch on.
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for
