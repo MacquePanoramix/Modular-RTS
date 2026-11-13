@@ -1,6 +1,6 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 12, 2026 (evening), by Claude Opus 5.5, which carries the work on from Fable 5.2. Kept
+**Last updated:** November 13, 2026 (afternoon), by Claude Opus 5.5, which carries the work on from Fable 5.2. Kept
 current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, the top entry of [CURRENT_STATE.md](CURRENT_STATE.md), then
@@ -20,11 +20,14 @@ Opus 5.5's, at max thinking with ultracode on. Everything it needs is in the rep
    reviewed; what it left open is in item 3.
 3. **The rest of step 0** ("Next steps", item 2), each fact with its bar set before its run and read before it is
    claimed; then step 1; then **step 2, whose clips are the first thing Luis sees** (he has seen no motion from this
-   work since October 30). **Where it stopped** (November 13, midday): the five other facts of step 0 have had one
-   run (three meet their bars) and the two that did not have been read with three diagnostics. K5's miss is a lag in
-   its count (a summed bar is proposed); K4(a)'s is real: under a body that tips, the ankle's drive gets a third to a
-   quarter of K8's share and the light boot's heel sinks ("Next steps", item 2, "Where it stopped (November 13,
-   midday)"). Begin there: the review of both readings, then the solver run, then the report to Luis.
+   work since October 30). **Where it stopped** (November 13, afternoon): the five other facts of step 0 have had one
+   run (three meet their bars). The two misses (K4(a), K5) came from test rigs that ran the solver at 6 and 1 turns,
+   not 14 and 4: **turns set on an articulation's root before its links are added are lost**, and the game's own
+   bodies have the same fault (`OwnBody.cs:760`; `OwnBodyTests.EachMinersOwnBodyRunsAtItsOwnTurns` fails, all three
+   miners at 6 and 1). The midday reading of K4(a) ("K8's law fails under a body that tips") is withdrawn; at the
+   true 14 and 4 the ankle's share is 0.74 to 0.89 of the law's ("Next steps", item 2, "Where it stopped (November 13,
+   afternoon)"). Begin there: the rigs given their turns after their links and step 0's misses rerun; the cost of 14/4
+   over 6/1 measured; one independent review; then the report to Luis, who decides the game's fix.
 
 What binds every step: quality above speed; never a played animation; nothing that switches at a threshold; one body
 for everything; every step reviewed by agents who did not make it; a result said only after its run was read; Luis's
@@ -373,7 +376,8 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      Proposed new bar (to be reviewed before its run): the clause taken over the whole second (the summed gain beyond
      the count at most half the summed dampers' take), the first clause as it was; by these numbers every miner holds
      at 10 and Long fails at 30.
-   - **K4(a)'s fall traced: the rig is sound, the fall is the solver's.** The control, Round with gravity off, stood
+   - **K4(a)'s fall traced** (*withdrawn in the afternoon block below: this rig and K5's ran at 6 and 1 turns, not 14
+     and 4; the numbers stand as a record of a leg at 7 turns*)**: the rig is sound, the fall is the solver's.** The control, Round with gravity off, stood
      exactly (0.001 degrees, 0.0 mm); after the first step every part was where it was made (0.0 mm, 0.00 degrees), so
      the hinge's reading runs as assumed and the pose is written right. With gravity, the **ankle's drive gives only a
      small part of what it asks**: Round without the making-up, 8.9 of 47.2 N m in the first step, then 12 to 14 while
@@ -392,8 +396,41 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      each), and TGS at 14/4, to learn whether more turns or the other solver give the ankle its share and hold the
      heel; (4) then the report to Luis, since the drive writer's making-up by K8's law does not hold the stance and the
      lever has a cost he should weigh (1.5 times at 28, 2.7 to 2.8 at 60).
-   - Then: write it all into `Validation.md`, one independent review, commit and push both branches, the 25th outlook,
-     and the report to Luis (with the items above).
+
+   **Where it stopped (November 13, afternoon; Opus 5.5): the midday reading was wrong; the cause is the solver's
+   turns, and it is in the game.** The 25th outlook is taken. Three runs were made, all read:
+   - `TheStandingLegsShareUnderTheSolversTurns` (`TestRuns/levers_pgs.log`): setting the turns again after the leg was
+     built gave the ankle's first-step share near K8's law: at "14/4", Small 0.514, Long 0.471, Round 0.395 (the law
+     0.697, 0.532, 0.451); at 28/4, 0.691, 0.637, 0.560 (law 0.880, 0.741, 0.656); at 60/4, 0.881, 0.829, 0.764 (law
+     0.986, 0.933, 0.882). So measured over the law is 0.74 to 0.89, everywhere. Without the making-up: at 14/4 all
+     fell (steps 49, 66, 34); at 60/4 Small and Long stood two seconds and Round fell at step 79. The heel did not sink
+     there (0 to 2.4 mm at 14/4 for Small and Long; 6.0 for Round).
+   - `TheSolversTurnsSetBeforeTheLinksAreKept` (`TestRuns/turnskept.log`): **turns set on an articulation's root
+     before its links are added are lost.** The root reads back 6 and 1 (the project's defaults,
+     `DynamicsManager.asset`); the leg as made and the leg set again to 6 and 1 run the same course to the last bit;
+     set again to 14 and 4 it does not (Round's share 0.189 against 0.395; it falls at step 6 against 34). So
+     `StandingLeg` (K4(a), the trace) and `BareLeg` (K5) ran at 7 turns, and the midday reading ("K8's law fails under
+     a body that tips") is withdrawn: at 7 turns the law gives 0.21 at Round's ankle and the trace read 0.19. The
+     stiff-ankle rig set its turns after its links and was right.
+   - `OwnBodyTests.EachMinersOwnBodyRunsAtItsOwnTurns` (bar set before the run: 14 and 4; `TestRuns/ownturns.log`):
+     **fails. Each miner's own body in the game runs at 6 and 1** ("OWN_TURNS Small: its hips the root, 6 and 1"; the
+     same for Long and Round). The cause is `OwnBody.cs:760`, which sets the turns on the hips in the loop that adds
+     the links, before the others exist. `BodysOwnBench.cs:317` does the same, so the benches ran at 6 and 1 too. The
+     game's `PhysicalFall` parts are Rigidbodies and are not affected. The cost measurement (`OwnBodyTests` near line
+     1011: 14/4, 28/4, 60/4 on copies with the turns set after) never measured 6/1, so what 14/4 costs over what the
+     game runs now is not known.
+   - **What it means.** Every own-body behaviour tuned since `OwnBody` was written (the standing balance, the step, the
+     shove test, the getting up, the benches' searches) was tuned at 6 and 1, believed to be 14 and 4. The fix is one
+     line (set the turns on the root after the loop), but it changes how every own body behaves and costs CPU: so it is
+     put to Luis, not made silently. It is consequential: an independent review of the finding before the report.
+   - **Next:** (1) commit the three tests (done with this block) and push; (2) give `StandingLeg` and `BareLeg` their
+     turns after the links (keep a `turnsFirst` way for `TheSolversTurnsSetBeforeTheLinksAreKept`), and rerun K4(a),
+     K5, the K5 count read, the trace and the lever run at the true 14 and 4; (3) measure what 14/4 costs over 6/1 on
+     the game's body; (4) one independent review (opus, medium); (5) the report to Luis: the finding, the fix and its
+     cost, and that step 0's two misses must be read again at the true turns. Weekly usage: 91%.
+   - Then: the November 13 entry in `Validation.md` and the top of `CURRENT_STATE.md`. The report to Luis also carries
+     the earlier items: the stiff-ankle bar reshaped after its first run; the reading that runs past π; that naive goal
+     writing does not arrive (the y control); the floating gravity forces; the K3b y-case control.
 3. **Step 1**: `BodyFrame` moved into the game with the pose read off the body, tested lying flat and at the hard poses.
 4. **Step 2**: one stance held by its own joints, nudged; then **clips for Luis**.
 5. Steps 3 to 8 as the design has them.

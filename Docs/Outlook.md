@@ -58,6 +58,37 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 13, 2026 — the twenty-fifth (250 steps since the last; after a compaction, before a choice and a report)
+
+- **Where we are.** S3b step 2, step 0 of the design's §6.3, now on its third day. The five other facts have had one
+  run, and three meet their full bars. The two misses were read with three diagnostics (committed `4585636` and
+  `8d4abab`). *Corrected the same afternoon:* the midday reading of K4(a) (the ankle getting a third to a quarter of
+  K8's share under a body that tips) is withdrawn. The lever run showed why. The test rigs set the solver's turns on
+  the root before adding its links, and Unity drops turns set that way, so the rigs ran at 6 and 1. At the true 14 and
+  4 the ankle gets 0.74 to 0.89 of the law's share. **The game's own bodies have the same fault** (`OwnBody.cs:760`):
+  all three miners run at 6 and 1. So everything own-body since October was tuned at 7 turns, believed to be 18.
+- **Waiting on Luis:** nothing asked yet. **His to decide soon:** the game's fix is one line, but it changes how every
+  own body moves, and it costs physics time (not yet measured from 6/1). It is his, so it goes in the report together
+  with step 0's misses read again at the true turns.
+- **Built, not in a build:** everything since October 30, as before. None of it changes play.
+- **Put off, not to be forgotten:** the fall onto the front, forced in the runs; the toe's 3x/10x excess; the
+  making-up's loop stability; Round's unexplained course under TGS; the shove test, still failing as known; the whole
+  PlayMode suite not re-run since step 0 began; the bear crawl, Long's coat, Round's apron, the weighed centres; the
+  creator's warning; strength by region; one unit helping another up; the mining skill; the merge to main, only on
+  Luis's word.
+- **Does the task serve the stage?** Yes. The drive writer carries every stance, and this is the fact that decides
+  whether it can. The drift is still real, though: fourteen days without motion reaching Luis. So the lever run stays
+  to one run (and one more if the other solver needs its own), and then the report goes to Luis. Building layer 0
+  waits on his choice.
+- **Drift watched.** (1) The allowance: 90% of the week's all-model use is spent, with three days to its reset (Monday,
+  November 16, 16:00 UTC). The review, the lever run and the report fit in what is left. The build will mostly fall
+  after the reset, and Luis should hear this plainly. (2) A making-up can be stretched to hide the solver's shortfall:
+  a larger offset reaches the bound and makes a boot that is let go fly. No bound is loosened without its reason
+  written down and reviewed.
+- **What Luis would want to know:** that the work found, before building, why a stance would sink: the solver's turns
+  were silently lost, in the tests and in the game. What the fix costs and changes, and that it is recommended. And the
+  pace of the allowance.
+
 ### November 12, 2026 — the twenty-fourth (250 steps since the last; Fable's share used up, the work passes to Opus 5.5)
 
 - **Where we are.** S3b step 2, the getting up for any body: layers 0 and 1 in the code; layers 2 and 3 designed,
