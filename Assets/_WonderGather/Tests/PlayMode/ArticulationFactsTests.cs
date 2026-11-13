@@ -949,5 +949,494 @@ namespace WonderGather.Tests
             Debug.Log($"FACTS spun to {turned:0} degrees, its body frame turned {Quaternion.Angle(Quaternion.identity, bodyFrame):0} degrees from the joint's: the reading's largest step {biggest:0.00} rad, its first jump {(jumpedAt < 0 ? "none" : "at " + jumpedAt.ToString("0") + " degrees")}; at 90 degrees it read {readAt90.x:0.000}, {readAt90.y:0.000}, {readAt90.z:0.000}, at the end {read.x:0.000}, {read.y:0.000}, {read.z:0.000}");
             done(jumpedAt, readAt90, read, turned);
         }
+
+        // ---- The rest of step 0 (Docs/Handoff.md, "Next steps" item 2), each bar and decision set here before any run. ----
+
+        private const float EFull = 35 * Mathf.Deg2Rad;
+
+        // One part of a miner's leg as parts_r4.log has it: its weight, its turning weight about its centre, its strength S
+        // (N m), where its joint sits in its own frame, and its top speed (rad/s); joint_model 2.3's drive k = S/eFull, c = S/top.
+        private struct LegPart
+        {
+            public float Kg, Has, Top; public Vector3 Turning, Joint;
+            public float Spring => Has / EFull; public float Damper => Has / Top;
+            public LegPart(float kg, Vector3 turning, float has, Vector3 joint, float top) { Kg = kg; Turning = turning; Has = has; Joint = joint; Top = top; }
+        }
+
+        private struct Leg
+        {
+            public string Name; public float Body; public LegPart Thigh, Shin, Boot; public Vector3 Sole;
+            public float Mass => Thigh.Kg + Shin.Kg + Boot.Kg;
+            public float Length => 2 * (Mathf.Abs(Thigh.Joint.y) + Mathf.Abs(Shin.Joint.y));
+        }
+
+        private static readonly Leg[] Legs =
+        {
+            new Leg { Name = "Small", Body = 40.7f, Sole = new Vector3(.100f, .060f, .157f),
+                Thigh = new LegPart(2.38f, new Vector3(.0131f, .0029f, .0131f), 130, new Vector3(0, -.136f, 0), 24.9f),
+                Shin = new LegPart(1.35f, new Vector3(.0074f, .0011f, .0074f), 87, new Vector3(0, -.136f, 0), 29.9f),
+                Boot = new LegPart(1.29f, new Vector3(.0030f, .0037f, .0015f), 61, new Vector3(0, .055f, -.006f), 19.9f) },
+            new Leg { Name = "Long", Body = 58.5f, Sole = new Vector3(.100f, .060f, .187f),
+                Thigh = new LegPart(4.87f, new Vector3(.0701f, .0077f, .0701f), 303, new Vector3(0, -.220f, 0), 20.1f),
+                Shin = new LegPart(2.74f, new Vector3(.0400f, .0028f, .0400f), 202, new Vector3(0, -.220f, 0), 24.2f),
+                Boot = new LegPart(1.83f, new Vector3(.0059f, .0069f, .0021f), 141, new Vector3(0, .055f, -.007f), 16.1f) },
+            new Leg { Name = "Round", Body = 87.6f, Sole = new Vector3(.100f, .060f, .172f),
+                Thigh = new LegPart(5.60f, new Vector3(.0430f, .0137f, .0430f), 331, new Vector3(0, -.160f, 0), 23.2f),
+                Shin = new LegPart(3.14f, new Vector3(.0239f, .0050f, .0239f), 220, new Vector3(0, -.160f, 0), 27.8f),
+                Boot = new LegPart(1.55f, new Vector3(.0043f, .0051f, .0018f), 154, new Vector3(0, .055f, -.007f), 18.5f) },
+        };
+
+        // The hips' stand-in (said so): the body less the leg; Small's turning weight (1.2, 0.4, 1.2) scaled by that weight and
+        // by the square of the leg's length; and (decided here) FloatingLeg's centre 0.25 above the hip's line and hip 0.09
+        // aside, both scaled by the leg's length.
+        private static float LegScale(Leg of) => of.Length / Legs[0].Length;
+        private static Vector3 HipsTurning(Leg of) => new Vector3(1.2f, .4f, 1.2f) * ((of.Body - of.Mass) / (Legs[0].Body - Legs[0].Mass) * LegScale(of) * LegScale(of));
+
+        private static string Three(Vector3 v) => $"({v.x:0.000}, {v.y:0.000}, {v.z:0.000})";
+        private static ArticulationDrive DriveOf(float spring, float damper, float limit, float target) => new ArticulationDrive { stiffness = spring, damping = damper, forceLimit = limit, target = target, driveType = ArticulationDriveType.Force };
+
+        // The joint's turn: from the parent's anchor to the child's, in the parent anchor's axes; and the joint's reading.
+        private static Quaternion JointTurn(ArticulationBody link)
+        {
+            var parent = link.transform.parent.GetComponentInParent<ArticulationBody>();
+            return Quaternion.Inverse(parent.transform.rotation * link.parentAnchorRotation) * (link.transform.rotation * link.anchorRotation);
+        }
+
+        private static Vector3 Reading(ArticulationBody link) { var jp = link.jointPosition; return new Vector3(jp[0], jp[1], jp[2]); }
+
+        // A free ball joint on a fixed root, gravity off, no drives, as Spun's.
+        private ArticulationBody FreeBall(Vector3 at, string name, float kilograms, Vector3 centre, Vector3 inertia)
+        {
+            var root = Root(at);
+            var link = Link(root.transform, name, at, Quaternion.identity, kilograms, centre, inertia);
+            link.useGravity = false;
+            link.jointType = ArticulationJointType.SphericalJoint;
+            link.twistLock = ArticulationDofLock.FreeMotion; link.swingYLock = ArticulationDofLock.FreeMotion; link.swingZLock = ArticulationDofLock.FreeMotion;
+            link.anchorPosition = Vector3.zero; link.anchorRotation = Quaternion.identity; link.matchAnchors = true;
+            return link;
+        }
+
+        // K3, the reading about two axes. A link with the same turning weight about every line on a free ball joint, moved
+        // only by setting its joint's speeds each step: (a) spun about an oblique line (x and y together) to 175 degrees;
+        // (b) 60 degrees about x, then 60 about y; (c) swung 60 degrees about y, then the swing's direction taken once round
+        // and back. Bar: at every step the reading is the rotation vector of the joint's turn (the parent's anchor to the
+        // child's, signed as MadeLyingStaysAsMade fixes it) within 0.02 rad (0.05 along the spin of (a)): a function of the
+        // pose, not the sum of the turns ((b) would read 1.05, 1.05, 0 summed; (c) would gather half a turn about x). If it
+        // fails, joint_model 1.1 is wrong for two axes. (b) also tells in whose axes the joint's speeds are counted (x then
+        // the child's own y gives (0.946, 0.946, 0.546); x then the parent's y gives (0.946, 0.946, -0.546)); (c) follows its
+        // asked path in those axes, each step's speed the turn from where it is to where the path is next.
+        [UnityTest]
+        public IEnumerator ABallJointReadsItsPoseAboutTwoAxes()
+        {
+            var failed = new List<string>();
+            var even = new Vector3(.01f, .01f, .01f);
+
+            var link = FreeBall(new Vector3(40, 50, 900), "Read a", 1, Vector3.zero, even);
+            yield return null;
+            Vector3 line = new Vector3(1, 1, 0).normalized, was = Vector3.zero, summed = Vector3.zero;
+            int n = 150; float speed = 175 * Mathf.Deg2Rad / (n * Dt), across = 0, along = 0, lagged = 0, worst = 0;
+            for (int k = 0; k < n; k++)
+            {
+                link.jointVelocity = new ArticulationReducedSpace(speed * line.x, speed * line.y, speed * line.z);
+                Physics.Simulate(Dt);
+                Vector3 truth = RotationVector(JointTurn(link)), read = Reading(link), off = read - truth;
+                float on = Vector3.Dot(off, line);
+                along = Mathf.Max(along, Mathf.Abs(on)); across = Mathf.Max(across, (off - on * line).magnitude);
+                lagged = Mathf.Max(lagged, (read - was).magnitude); was = truth;
+            }
+            Debug.Log($"FACTS ball reading (a), spun about (1, 1, 0) to {Quaternion.Angle(Quaternion.identity, JointTurn(link)):0.0} degrees: off the pose's rotation vector at most {across:0.0000} rad across the spin and {along:0.0000} along it (against the pose a step before, {lagged:0.0000}); at the end it read {Three(Reading(link))} for {Three(RotationVector(JointTurn(link)))}");
+            if (across > .02f || along > .05f) failed.Add($"(a) off {across:0.000} across the spin, {along:0.000} along it");
+
+            TakeAway();
+            link = FreeBall(new Vector3(42, 50, 900), "Read b", 1, Vector3.zero, even);
+            yield return null;
+            n = 105; speed = 60 * Mathf.Deg2Rad / (n * Dt); lagged = 0; was = Vector3.zero;
+            for (int k = 0; k < 2 * n; k++)
+            {
+                Vector3 v = k < n ? new Vector3(speed, 0, 0) : new Vector3(0, speed, 0);
+                link.jointVelocity = new ArticulationReducedSpace(v.x, v.y, v.z);
+                Physics.Simulate(Dt);
+                summed += v * Dt;
+                Vector3 truth = RotationVector(JointTurn(link)), read = Reading(link);
+                worst = Mathf.Max(worst, (read - truth).magnitude); lagged = Mathf.Max(lagged, (read - was).magnitude); was = truth;
+            }
+            Quaternion ownY = Quaternion.AngleAxis(60, Vector3.right) * Quaternion.AngleAxis(60, Vector3.up), parentsY = Quaternion.AngleAxis(60, Vector3.up) * Quaternion.AngleAxis(60, Vector3.right);
+            float offOwn = Quaternion.Angle(JointTurn(link), ownY), offParents = Quaternion.Angle(JointTurn(link), parentsY);
+            bool childAxes = offOwn <= offParents;
+            Debug.Log($"FACTS ball reading (b), 60 degrees about x and then 60 about y: the joint's speeds are counted in the {(childAxes ? "child's own" : "parent's")} axes (the pose {offOwn:0.00} degrees from x then its own y, {offParents:0.00} from x then the parent's y); off the pose's rotation vector at most {worst:0.0000} rad (against the pose a step before, {lagged:0.0000}); at the end it read {Three(Reading(link))} for {Three(RotationVector(JointTurn(link)))}, the turns summed {Three(summed)}");
+            if (worst > .02f) failed.Add($"(b) off {worst:0.000}");
+
+            TakeAway();
+            link = FreeBall(new Vector3(44, 50, 900), "Read c", 1, Vector3.zero, even);
+            yield return null;
+            int round = 600; float strayed = 0; worst = 0; lagged = 0; was = Vector3.zero; summed = Vector3.zero;
+            for (int k = 0; k < n + round; k++)
+            {
+                float f = 2 * Mathf.PI * (k + 1 - n) / round;
+                Quaternion next = k < n ? Quaternion.AngleAxis(60f * (k + 1) / n, Vector3.up) : Quaternion.AngleAxis(60, new Vector3(0, Mathf.Cos(f), Mathf.Sin(f)));
+                Quaternion now = JointTurn(link);
+                Vector3 v = (childAxes ? RotationVector(Quaternion.Inverse(now) * next) : RotationVector(next * Quaternion.Inverse(now))) / Dt;
+                link.jointVelocity = new ArticulationReducedSpace(v.x, v.y, v.z);
+                Physics.Simulate(Dt);
+                summed += v * Dt;
+                Vector3 truth = RotationVector(JointTurn(link)), read = Reading(link);
+                worst = Mathf.Max(worst, (read - truth).magnitude); lagged = Mathf.Max(lagged, (read - was).magnitude); was = truth;
+                strayed = Mathf.Max(strayed, Quaternion.Angle(JointTurn(link), next));
+            }
+            Debug.Log($"FACTS ball reading (c), swung 60 degrees and its swing's direction taken once round: it strayed at most {strayed:0.00} degrees from the asked path; off the pose's rotation vector at most {worst:0.0000} rad (against the pose a step before, {lagged:0.0000}); at the end it read {Three(Reading(link))} for {Three(RotationVector(JointTurn(link)))}, the turns summed {Three(summed)}");
+            if (worst > .02f) failed.Add($"(c) off {worst:0.000}");
+            Assert.IsEmpty(failed, "the ball joint's reading is not its pose's rotation vector: " + string.Join("; ", failed));
+        }
+
+        // K3, a drive across a half turn: Small's thigh on a free ball joint, gravity off, spun to 170 degrees about x and
+        // stopped; then the design's drive (k = 130/eFull = 212.8, c = 130/24.9 = 5.22, limit 130) written by K3's rule each
+        // step: the reading plus the shortest turn from the pose to the goal in the child anchor's axes, at most eFull (no
+        // load). Goals: 20 degrees on about x; 30 degrees about its own y. Bar: within 1 degree of the goal after a second,
+        // never more than 25 degrees from the start (45 for the second). Control: the goal written as its own rotation vector
+        // from zero must go the long way (more than 90 degrees from the start), or the fact proves nothing. Decided before the
+        // run: that bar is on the first goal; the second goal's own rotation vector lies near the reading (about 44 degrees
+        // off it, mostly about z), so its control need not go the long way, and it is logged, not barred.
+        [UnityTest]
+        public IEnumerator ADriveWrittenByTheShortestTurnCrossesAHalfTurn()
+        {
+            var failed = new List<string>();
+            float spring = 130 / EFull, damper = 130 / 24.9f;
+            for (int c = 0; c < 4; c++)
+            {
+                bool aboutY = c % 2 == 1, control = c >= 2;
+                TakeAway();
+                var thigh = FreeBall(new Vector3(50 + 2 * c, 50, 900), "Driven thigh", 2.38f, new Vector3(0, -.13f, 0), new Vector3(.0131f, .0029f, .0131f));
+                yield return null;
+                int n = 150; float speed = 170 * Mathf.Deg2Rad / (n * Dt);
+                for (int k = 0; k < n; k++) { thigh.jointVelocity = new ArticulationReducedSpace(speed, 0, 0); Physics.Simulate(Dt); }
+                thigh.jointVelocity = new ArticulationReducedSpace(0, 0, 0);
+                Quaternion start = JointTurn(thigh), goal = start * Quaternion.AngleAxis(aboutY ? 30 : 20, aboutY ? Vector3.up : Vector3.right);
+                Vector3 began = Reading(thigh), asItsOwn = RotationVector(goal) * Mathf.Rad2Deg;
+                float farthest = 0;
+                for (int k = 0; k < 50; k++)
+                {
+                    Vector3 target = asItsOwn;
+                    if (!control)
+                    {
+                        Vector3 shortest = RotationVector(Quaternion.Inverse(JointTurn(thigh)) * goal);
+                        if (shortest.magnitude > EFull) shortest = shortest.normalized * EFull;
+                        target = (Reading(thigh) + shortest) * Mathf.Rad2Deg;
+                    }
+                    thigh.xDrive = DriveOf(spring, damper, 130, target.x); thigh.yDrive = DriveOf(spring, damper, 130, target.y); thigh.zDrive = DriveOf(spring, damper, 130, target.z);
+                    Physics.Simulate(Dt);
+                    farthest = Mathf.Max(farthest, Quaternion.Angle(start, JointTurn(thigh)));
+                }
+                float left = Quaternion.Angle(JointTurn(thigh), goal);
+                Debug.Log($"FACTS drive across a half turn, the goal {(aboutY ? "30 degrees about its own y" : "20 degrees on about x")} from {Quaternion.Angle(Quaternion.identity, start):0.0} degrees, written {(control ? "as its own rotation vector from zero" : "by the shortest turn")}: after a second {left:0.00} degrees from the goal, at most {farthest:0.0} from the start; it read {Three(began)} at the start and {Three(Reading(thigh))} at the end");
+                if (!control && (left > 1 || farthest > (aboutY ? 45 : 25))) failed.Add($"written by the shortest turn, the goal {(aboutY ? "about y" : "about x")}: {left:0.00} degrees left, {farthest:0.0} from the start");
+                if (control && !aboutY && farthest <= 90) failed.Add($"the control went at most {farthest:0.0} degrees from the start, so the fact proves nothing");
+            }
+            Assert.IsEmpty(failed, string.Join("; ", failed));
+        }
+
+        // K4(b): the engine's gravity forces (GetJointGravityForces) of Hung's two links, on a fixed root and on a floating
+        // one in the same pose. Expected from the engine's source (getGeneralizedGravityForce reckons a floating base with no
+        // joint accelerations, all falling together): about nothing on the floating root, so the load through the target is
+        // worked out from the pose. Bar: every floating value under 1% of the largest fixed one.
+        [UnityTest]
+        public IEnumerator GravityForcesOnAFloatingRootAreAboutNothing()
+        {
+            var roots = new ArticulationBody[2]; var links = new ArticulationBody[2, 2];
+            for (int r = 0; r < 2; r++)
+            {
+                Vector3 at = new Vector3(-500 - 3 * r, 50, -520);
+                ArticulationBody root;
+                if (r == 0) root = Root(at);
+                else
+                {
+                    var g = new GameObject("Facts floating root"); g.transform.position = at; made.Add(g);
+                    root = g.AddComponent<ArticulationBody>();
+                    root.mass = 35; root.automaticCenterOfMass = false; root.centerOfMass = Vector3.zero;
+                    root.automaticInertiaTensor = false; root.inertiaTensor = new Vector3(1.2f, .4f, 1.2f); root.inertiaTensorRotation = Quaternion.identity;
+                    root.linearDamping = 0; root.angularDamping = 0;
+                }
+                var a = Link(root.transform, "A", root.transform.position, Quaternion.Euler(0, 0, 90), 3, new Vector3(0, -.2f, 0), new Vector3(.02f, .005f, .02f));
+                var b = Link(a.transform, "B", a.transform.TransformPoint(new Vector3(0, -.4f, 0)), a.transform.rotation * Quaternion.Euler(0, 0, -45), 2, new Vector3(0, -.2f, 0), new Vector3(.015f, .004f, .015f));
+                foreach (var link in new[] { a, b })
+                {
+                    link.jointType = ArticulationJointType.SphericalJoint;
+                    link.twistLock = ArticulationDofLock.FreeMotion; link.swingYLock = ArticulationDofLock.FreeMotion; link.swingZLock = ArticulationDofLock.FreeMotion;
+                    link.anchorPosition = Vector3.zero; link.anchorRotation = Quaternion.identity; link.matchAnchors = true;
+                }
+                roots[r] = root; links[r, 0] = a; links[r, 1] = b;
+            }
+            yield return null;
+            var forces = new[] { new List<float>(), new List<float>() }; var starts = new[] { new List<int>(), new List<int>() };
+            for (int r = 0; r < 2; r++) { roots[r].GetJointGravityForces(forces[r]); roots[r].GetDofStartIndices(starts[r]); }
+            float most = 0, floating = 0; string told = "";
+            for (int i = 0; i < 2; i++)
+                for (int d = 0; d < 3; d++)
+                {
+                    float f0 = forces[0][starts[0][links[0, i].index] + d], f1 = forces[1][starts[1][links[1, i].index] + d];
+                    most = Mathf.Max(most, Mathf.Abs(f0)); floating = Mathf.Max(floating, Mathf.Abs(f1));
+                    told += $" {(i == 0 ? "A" : "B")}{d} {f0:0.000} / {f1:0.000};";
+                }
+            Debug.Log($"FACTS gravity forces, fixed root / floating root ({forces[0].Count} and {forces[1].Count} values):{told} the largest floating {floating:0.0000} against the largest fixed {most:0.000}");
+            Assert.Greater(most, 1f, "the fixed root's gravity forces were not read at all");
+            Assert.Less(floating, .01f * most, "the floating root's gravity forces are not about nothing");
+        }
+
+        // A miner's floating leg as FloatingLeg, built from its parts: the hips the stand-in above; each part's centre its
+        // joint's distance below that joint and the next joint twice it; the boot's centre at minus its joint's place; the
+        // hip and ankle balls, the knee a hinge about the line across; gravity off; the solver's turns as the game's; each
+        // link's top turning speed out of the way (the game's 20 is a drag of its own and would hide a gain). Driven: the
+        // drives of joint_model 2.3 on every axis, target zero; else left alone.
+        private ArticulationBody[] BareLeg(Leg of, Vector3 at, bool driven)
+        {
+            float scale = LegScale(of);
+            var g = new GameObject("Facts hips"); g.transform.position = at; made.Add(g);
+            var hips = g.AddComponent<ArticulationBody>();
+            hips.useGravity = false; hips.mass = of.Body - of.Mass;
+            hips.automaticCenterOfMass = false; hips.centerOfMass = new Vector3(0, .25f * scale, 0);
+            hips.automaticInertiaTensor = false; hips.inertiaTensor = HipsTurning(of); hips.inertiaTensorRotation = Quaternion.identity;
+            hips.linearDamping = 0; hips.angularDamping = 0; hips.maxAngularVelocity = 1000;
+            hips.solverIterations = 14; hips.solverVelocityIterations = 4; hips.sleepThreshold = 0;
+            LegPart[] parts = { of.Thigh, of.Shin, of.Boot };
+            var links = new ArticulationBody[4]; links[0] = hips;
+            Vector3 joint = at + new Vector3(.09f * scale, 0, 0);
+            for (int i = 0; i < 3; i++)
+            {
+                var p = parts[i];
+                Vector3 centre = i < 2 ? new Vector3(0, -Mathf.Abs(p.Joint.y), 0) : -p.Joint;
+                var link = Link(links[i].transform, i == 0 ? "Thigh" : i == 1 ? "Shin" : "Boot", joint, Quaternion.identity, p.Kg, centre, p.Turning);
+                link.useGravity = false; link.maxAngularVelocity = 1000;
+                link.jointType = i == 1 ? ArticulationJointType.RevoluteJoint : ArticulationJointType.SphericalJoint;
+                link.anchorPosition = Vector3.zero; link.anchorRotation = Quaternion.identity; link.matchAnchors = true;
+                link.twistLock = ArticulationDofLock.FreeMotion;
+                if (i != 1) { link.swingYLock = ArticulationDofLock.FreeMotion; link.swingZLock = ArticulationDofLock.FreeMotion; }
+                var drive = driven ? DriveOf(p.Spring, p.Damper, p.Has, 0) : DriveOf(0, 0, 0, 0);
+                link.xDrive = drive; if (i != 1) { link.yDrive = drive; link.zDrive = drive; }
+                links[i + 1] = link;
+                if (i < 2) joint += new Vector3(0, -2 * Mathf.Abs(p.Joint.y), 0);
+            }
+            return links;
+        }
+
+        private struct Swept { public bool Failed, Rose; public string Why; public float First, Most; }
+
+        // One run of the sweep: set turning as Whirled sets it, a second, and the count as Whirled's: what it holds (the
+        // motion's energy, true speeds) after each step, less what the drives were counted to give (each drive's force times
+        // its joint's mean speed over the step). It fails if it ever holds more than after its first step (beyond 1.0001 of
+        // it), or in any step gains beyond the count more than half of what its dampers took (per axis min(c|v|, S)|v|dt);
+        // while it holds under a thousandth of what it began with, nothing counts.
+        private IEnumerator SweepAt(Leg of, float speed, bool driven, Vector3 at, System.Action<Swept> done)
+        {
+            var parts = BareLeg(of, at, driven);
+            yield return null;
+            parts[1].jointVelocity = new ArticulationReducedSpace(speed, .3f * speed, 0);
+            parts[2].jointVelocity = new ArticulationReducedSpace(-speed);
+            parts[3].jointVelocity = new ArticulationReducedSpace(.5f * speed, speed, 0);
+            float[] damper = { 0, driven ? of.Thigh.Damper : 0, driven ? of.Shin.Damper : 0, driven ? of.Boot.Damper : 0 }, has = { 0, of.Thigh.Has, of.Shin.Has, of.Boot.Has };
+            var before = new float[4][];
+            for (int i = 1; i < 4; i++) before[i] = new float[parts[i].dofCount];
+            var r = new Swept();
+            float held = 0;
+            for (int k = 0; k <= Mathf.RoundToInt(1 / Dt); k++)
+            {
+                Physics.Simulate(Dt);
+                float now = Held(parts), given = 0, took = 0;
+                for (int i = 1; i < 4; i++)
+                {
+                    var v = parts[i].jointVelocity; var force = parts[i].driveForce;
+                    for (int d = 0; d < before[i].Length; d++)
+                    {
+                        float mean = k == 0 ? v[d] : .5f * (v[d] + before[i][d]);
+                        given += force[d] * mean * Dt;
+                        took += Mathf.Min(damper[i] * Mathf.Abs(mean), has[i]) * Mathf.Abs(mean) * Dt;
+                        before[i][d] = v[d];
+                    }
+                }
+                if (k == 0) { r.First = r.Most = held = now; continue; }
+                if (Mathf.Max(held, now) >= .001f * r.First)
+                {
+                    if (now > 1.0001f * r.First) { r.Rose = true; if (!r.Failed) { r.Failed = true; r.Why = $"held {now / r.First:0.0000} of its first step's at step {k}"; } }
+                    float gained = now - held - given;
+                    if (gained > .5f * took && !r.Failed) { r.Failed = true; r.Why = $"gained {gained:0.0000} J beyond the count at step {k}, its dampers took {took:0.0000}"; }
+                }
+                r.Most = Mathf.Max(r.Most, now);
+                held = now;
+            }
+            TakeAway();
+            done(r);
+        }
+
+        // K5, the speed sweep: each miner's floating leg, driven, set turning at 10 to 50 rad/s, a second each. Each joint's
+        // bound: its top speed, or the lowest failing speed over 1.5 if lower. Bar: every miner holds at 10 (so every bound
+        // is at least 6.7 rad/s, above the 5 a rise asks at its quickest). Control: left alone at 30, each must fail.
+        [UnityTest]
+        public IEnumerator EachMinersLegHoldsItsDrivesAtTheSpeedsARiseAsks()
+        {
+            var failed = new List<string>();
+            float[] speeds = { 10, 15, 20, 25, 30, 35, 40, 45, 50 };
+            for (int m = 0; m < Legs.Length; m++)
+            {
+                var of = Legs[m];
+                float lowest = float.PositiveInfinity; string told = "";
+                foreach (float speed in speeds)
+                {
+                    Swept r = default;
+                    yield return SweepAt(of, speed, true, new Vector3(300 + 10 * m, 50, -900), x => r = x);
+                    told += $" {speed:0}: {(r.Failed ? "fails, " + r.Why : "holds")}, most {r.Most / r.First:0.0000} of its first step's;";
+                    if (r.Failed && speed < lowest) lowest = speed;
+                }
+                Swept alone = default;
+                yield return SweepAt(of, 30, false, new Vector3(300 + 10 * m, 50, -900), x => alone = x);
+                float hip = Mathf.Min(of.Thigh.Top, lowest / 1.5f), knee = Mathf.Min(of.Shin.Top, lowest / 1.5f), ankle = Mathf.Min(of.Boot.Top, lowest / 1.5f);
+                Debug.Log($"FACTS speed sweep, {of.Name} (hips {of.Body - of.Mass:0.00} kg turning {Three(HipsTurning(of))}):{told} left alone at 30 it {(alone.Failed ? "fails, " + alone.Why : "holds")}, most {alone.Most / alone.First:0.0000} of its first step's; bounds: hip {hip:0.0}, knee {knee:0.0}, ankle {ankle:0.0} rad/s");
+                if (lowest <= 10) failed.Add($"{of.Name} fails at 10 rad/s");
+                if (!alone.Failed) failed.Add($"{of.Name} left alone at 30 holds, so the sweep proves nothing for it");
+            }
+            Assert.IsEmpty(failed, string.Join("; ", failed));
+        }
+
+        // K8's law: the share of a drive's asked force the solver gives a light part pressed on the ground: x = I/(I + a),
+        // a = dt (dt k + c), share = 1 - (1 - x)^18 (the game's 14 + 4 turns of the solver); I the part's turning weight about
+        // the joint's axis, its centre's distance from the joint counted in.
+        private static float LawShare(float turning, float spring, float damper) { float a = Dt * (Dt * spring + damper), x = turning / (turning + a); return 1 - Mathf.Pow(1 - x, 18); }
+
+        private static float AboutItsJoint(LegPart p, Vector3 centre) => p.Turning.x + p.Kg * (centre.y * centre.y + centre.z * centre.z);
+
+        // The moment of gravity of all on the root's side of a joint, about it, along its axis (N m); and that side's m g h
+        // over the joint (its load's gradient against a turn of it).
+        private static float GravityLoad(ArticulationBody[] parts, int joint, out float mgh)
+        {
+            var child = parts[joint];
+            Vector3 at = child.transform.TransformPoint(child.anchorPosition), axis = child.transform.rotation * child.anchorRotation * Vector3.right;
+            float tau = 0; mgh = 0;
+            for (int i = 0; i < joint; i++)
+            {
+                Vector3 arm = parts[i].worldCenterOfMass - at;
+                tau += Vector3.Dot(Vector3.Cross(arm, parts[i].mass * Physics.gravity), axis);
+                mgh += parts[i].mass * Physics.gravity.magnitude * Vector3.Dot(arm, Vector3.up);
+            }
+            return tau;
+        }
+
+        // K4(a)'s rig: the weight (the body less the leg) a floating root on top, as in the game, its centre at the stand-in
+        // height over the hip and leaning 10 degrees forward; the thigh on a hinge (the hip), the shin (the knee), the boot (the
+        // ankle) with its sole on Stood's ground and flat; every hinge about the line across, its zero the leg straight under
+        // the weight; the knee bent 20 degrees, the shin forward and the thigh back so the whole body's centre is 5.5 cm ahead
+        // of the ankle. Made in that pose; the pose is written again after (AsMade's way). Stood's link settings and solver.
+        private (ArticulationBody[] parts, float[] goal) StandingLeg(Leg of, Vector3 at)
+        {
+            float scale = LegScale(of), hipsKg = of.Body - of.Mass, high = .25f * scale, lean = 10 * Mathf.Deg2Rad, bent = 20 * Mathf.Deg2Rad;
+            float lt = 2 * Mathf.Abs(of.Thigh.Joint.y), ls = 2 * Mathf.Abs(of.Shin.Joint.y);
+            Vector3 bootCentre = -of.Boot.Joint;
+            System.Func<float, float> ahead = a =>
+            {
+                float b = bent - a, kneeZ = ls * Mathf.Sin(a), hipZ = kneeZ - lt * Mathf.Sin(b);
+                return (hipsKg * (hipZ + high * Mathf.Sin(lean)) + of.Thigh.Kg * (hipZ + .5f * lt * Mathf.Sin(b)) + of.Shin.Kg * .5f * ls * Mathf.Sin(a) + of.Boot.Kg * bootCentre.z) / of.Body;
+            };
+            float lo = -30 * Mathf.Deg2Rad, hi = 60 * Mathf.Deg2Rad;
+            for (int i = 0; i < 40; i++) { float mid = .5f * (lo + hi); if (ahead(mid) < .055f) lo = mid; else hi = mid; }
+            float shinOn = .5f * (lo + hi), thighBack = bent - shinOn;
+            Vector3 ankle = at + new Vector3(0, .5f * of.Sole.y - bootCentre.y, 0);
+            Vector3 knee = ankle + ls * new Vector3(0, Mathf.Cos(shinOn), Mathf.Sin(shinOn)), hip = knee + lt * new Vector3(0, Mathf.Cos(thighBack), -Mathf.Sin(thighBack));
+
+            var ground = new GameObject("Facts ground");
+            ground.transform.position = at + .5f * Vector3.down;
+            made.Add(ground);
+            var surface = new PhysicsMaterial("Facts") { dynamicFriction = .7f, staticFriction = .8f, bounciness = 0, bounceCombine = PhysicsMaterialCombine.Minimum };
+            var slab = ground.AddComponent<BoxCollider>();
+            slab.size = new Vector3(6, 1, 6); slab.sharedMaterial = surface;
+
+            var g = new GameObject("Facts weight"); g.transform.SetPositionAndRotation(hip, Quaternion.AngleAxis(lean * Mathf.Rad2Deg, Vector3.right)); made.Add(g);
+            var weight = g.AddComponent<ArticulationBody>();
+            weight.mass = hipsKg; weight.automaticCenterOfMass = false; weight.centerOfMass = new Vector3(0, high, 0);
+            weight.automaticInertiaTensor = false; weight.inertiaTensor = HipsTurning(of); weight.inertiaTensorRotation = Quaternion.identity;
+            weight.linearDamping = 0; weight.angularDamping = 0;
+            weight.solverIterations = 14; weight.solverVelocityIterations = 4; weight.sleepThreshold = 0;
+            var parts = new ArticulationBody[4]; parts[0] = weight;
+            Vector3[] place = { hip, hip, knee, ankle };
+            Quaternion[] turned = { Quaternion.identity, Quaternion.AngleAxis(-thighBack * Mathf.Rad2Deg, Vector3.right), Quaternion.AngleAxis(shinOn * Mathf.Rad2Deg, Vector3.right), Quaternion.identity };
+            LegPart[] of4 = { default, of.Thigh, of.Shin, of.Boot };
+            for (int i = 1; i < 4; i++)
+            {
+                var p = of4[i];
+                var link = Link(parts[i - 1].transform, i == 1 ? "Thigh" : i == 2 ? "Shin" : "Boot", place[i], turned[i], p.Kg, i < 3 ? new Vector3(0, -Mathf.Abs(p.Joint.y), 0) : bootCentre, p.Turning);
+                link.jointType = ArticulationJointType.RevoluteJoint; link.twistLock = ArticulationDofLock.FreeMotion;
+                link.anchorPosition = Vector3.zero; link.anchorRotation = Quaternion.identity;
+                link.matchAnchors = false;
+                link.parentAnchorPosition = i == 1 ? Vector3.zero : new Vector3(0, -2 * Mathf.Abs(of4[i - 1].Joint.y), 0);
+                link.parentAnchorRotation = Quaternion.identity;
+                parts[i] = link;
+            }
+            var box = parts[3].gameObject.AddComponent<BoxCollider>();
+            box.size = of.Sole; box.center = bootCentre; box.sharedMaterial = surface;
+            foreach (var link in parts) { link.maxAngularVelocity = 20; link.maxDepenetrationVelocity = 1.5f; link.collisionDetectionMode = CollisionDetectionMode.Continuous; }
+            return (parts, new[] { 0, -(thighBack + lean), bent, -shinOn });
+        }
+
+        // K4(a), the load through the target, all three miners: each step at each joint tau = the moment of gravity of all on
+        // the root's side of it, about it, along its axis, and target = goal + tau/(k share) (in degrees for the drive), with
+        // joint_model 2.3's drives. Both ways: share 1 everywhere, and the making-up at the ankle by K8's law (Small 0.70, Long
+        // 0.53, Round 0.45). The knee's and hip's shares are not known; the run reads each joint's, both to first order
+        // (1 - offset k / tau, the design's) and exactly (tau / (tau / its share + k offset)). Bar: with the making-up,
+        // every joint within 2 degrees of its goal after 2 s.
+        // Decided before the run, from the margins reckoned by hand: without the making-up a joint stands only if s k > (1 - s)
+        // m g h, and at the ankle it does not for any miner at the stand-in height (Small about 70 against 87, Long 122 against
+        // 307, Round 113 against 406). The weight is kept there all the same: lowering it far enough to stand would put it
+        // below the knee for Long and Round, which is no stance. So the run without is expected to fall, and that is the
+        // finding (the stance stands only through the making-up), not a fault of the rig. With the making-up the 2-degree bar
+        // tests the law: a true share 5% below it leaves about 1 to 2 degrees, 10% below it 3.6 to 3.9.
+        [UnityTest]
+        public IEnumerator TheLoadGoesThroughTheTargetOnEachMinersLeg()
+        {
+            var failed = new List<string>();
+            string[] named = { "", "hip", "knee", "ankle" };
+            for (int m = 0; m < Legs.Length; m++)
+                for (int way = 0; way < 2; way++)
+                {
+                    var of = Legs[m]; bool madeUp = way == 1;
+                    TakeAway();
+                    var (parts, goal) = StandingLeg(of, new Vector3(-300 - 10 * m, 20, 300 + 10 * way));
+                    yield return null;
+                    string atMaking = Three(new Vector3(parts[1].jointPosition[0], parts[2].jointPosition[0], parts[3].jointPosition[0]) * Mathf.Rad2Deg);
+                    var starts = new List<int>(); parts[0].GetDofStartIndices(starts);
+                    var q = new List<float>(); parts[0].GetJointPositions(q);
+                    for (int j = 1; j < 4; j++) q[starts[parts[j].index]] = goal[j];
+                    parts[0].SetJointPositions(q);
+                    parts[0].SetJointVelocities(new List<float>(new float[q.Count]));
+                    float[] k = { 0, of.Thigh.Spring, of.Shin.Spring, of.Boot.Spring }, c = { 0, of.Thigh.Damper, of.Shin.Damper, of.Boot.Damper }, has = { 0, of.Thigh.Has, of.Shin.Has, of.Boot.Has };
+                    float[] law = { 0, LawShare(AboutItsJoint(of.Thigh, new Vector3(0, of.Thigh.Joint.y, 0)), k[1], c[1]), LawShare(AboutItsJoint(of.Shin, new Vector3(0, of.Shin.Joint.y, 0)), k[2], c[2]), LawShare(AboutItsJoint(of.Boot, of.Boot.Joint), k[3], c[3]) };
+                    float[] share = { 1, 1, 1, madeUp ? law[3] : 1 }, tau = new float[4], mgh = new float[4];
+                    Vector3 weightWas = parts[0].worldCenterOfMass; Quaternion turnWas = parts[0].transform.rotation;
+                    float fellAt = -1, firstAnkle = 0;
+                    for (int step = 0; step < 100; step++)
+                    {
+                        for (int j = 1; j < 4; j++)
+                        {
+                            tau[j] = GravityLoad(parts, j, out mgh[j]);
+                            parts[j].xDrive = DriveOf(k[j], c[j], has[j], (goal[j] + tau[j] / (k[j] * share[j])) * Mathf.Rad2Deg);
+                        }
+                        if (step == 0) firstAnkle = tau[3];
+                        Physics.Simulate(Dt);
+                        if (fellAt < 0)
+                        {
+                            bool fell = parts[0].worldCenterOfMass.y < weightWas.y - .1f;
+                            for (int j = 1; j < 4; j++) fell |= Mathf.Abs(parts[j].jointPosition[0] - goal[j]) > 15 * Mathf.Deg2Rad;
+                            if (fell) fellAt = (step + 1) * Dt;
+                        }
+                    }
+                    string told = "";
+                    for (int j = 1; j < 4; j++)
+                    {
+                        float off = goal[j] - parts[j].jointPosition[0];
+                        bool readable = Mathf.Abs(tau[j]) > .02f * has[j];
+                        string shares = !readable ? "its share unreadable, the load too small" : (share[j] == 1 ? $"its share {1 - off * k[j] / tau[j]:0.000} to first order, {tau[j] / (tau[j] + k[j] * off):0.000} exactly" : $"its share {tau[j] / (tau[j] / share[j] + k[j] * off):0.000} exactly, {tau[j] / (tau[j] / share[j] + k[j] * off) / share[j]:0.000} of the law's");
+                        told += $" {named[j]} goal {goal[j] * Mathf.Rad2Deg:0.00}, off by {-off * Mathf.Rad2Deg:0.00} degrees under a load of {tau[j]:0.00} N m (k {k[j]:0.0}, the law's share {law[j]:0.000}, s k {law[j] * k[j]:0.0} against (1 - s) m g h {(1 - law[j]) * mgh[j]:0.0}), {shares};";
+                        if (madeUp && Mathf.Abs(off) > 2 * Mathf.Deg2Rad) failed.Add($"{of.Name}'s {named[j]} off by {-off * Mathf.Rad2Deg:0.00} degrees with the making-up");
+                    }
+                    if (madeUp && fellAt >= 0) failed.Add($"{of.Name} fell at {fellAt:0.00} s with the making-up");
+                    string how = madeUp ? $"made up at the ankle by the law's share {law[3]:0.000}" : "without the making-up", ending = fellAt < 0 ? "it stood" : $"it fell at {fellAt:0.00} s";
+                    Debug.Log($"FACTS load through the target, {of.Name}, {how}: {ending}; read at its making {atMaking} degrees, the ankle's load at the first step {firstAnkle:0.00} N m; after 2 s:{told} the weight moved {Three(parts[0].worldCenterOfMass - weightWas)} m and turned {Quaternion.Angle(turnWas, parts[0].transform.rotation):0.00} degrees, the boot tilted {Quaternion.Angle(Quaternion.identity, parts[3].transform.rotation):0.00}");
+                }
+            Assert.IsEmpty(failed, string.Join("; ", failed));
+        }
     }
 }
