@@ -2,6 +2,16 @@
 
 **Updated:** November 13, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
+- **Now (November 13, afternoon): the research of turning and settling done; Luis approves its six recommendations.**
+  How people turn while walking, turn right round, settle after a push and shift while standing, from studies and
+  motion capture, re-checked by a sceptic ([the research](Research/2026-11-13_TurningAndSettling/research.md)). Luis
+  approved all six recommendations on its questions, and asks that every step be researched first, keep the game's
+  design philosophies of mechanics and aesthetics, and be checked rigorously for every kind of unnatural movement
+  ([his words](Correspondence/2026-11-13_APPROVES_THE_SUGGESTIONS.md)). The solver's turns are being made on by
+  default: `OwnBodyTests` 16 of 16; the whole suite as played, on and off, running. Next: the build with the default
+  on; a scan for every kind of unnatural movement and the turn bench, their bars set before their first runs; then the
+  turning design for Luis to agree ([the hand-over](Handoff.md)).
+
 - **Now (November 13, night): the solver's turns are fixed in the game behind a switch, off by default.** Unity loses
   turns set on an articulation's root before its links are added, so the game's own bodies have run at the project's
   6 and 1, not the 14 and 4 their code sets, since October (everything own-body was tuned at 6 and 1). Luis chose a

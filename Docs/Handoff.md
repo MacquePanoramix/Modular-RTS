@@ -512,6 +512,32 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      turn on the ground, the body's turning pace, and every bone's turn from frame to frame (a twitch is a spike there);
      then each fault found and fixed one at a time, to zero, all three miners. The turn itself rebuilt only after the
      research, in a design Luis agrees to.
+     **The research done and Luis's word (November 13, afternoon):** `research.md` and its three notes committed
+     (`604a1a3`) and sent to him with a recommendation on each of its six questions; **he approved all six**
+     ([verbatim](Correspondence/2026-11-13_APPROVES_THE_SUGGESTIONS.md); the vision's row of the same afternoon): the
+     body's turn tied to the steps; a planted leg stepping round at about 35 degrees of hip twist, once it is measured
+     whether 62 is what bends the legs; the head a little ahead of the hips; the foot that is down choosing a wide side
+     step or a crossing pivot, the swinging foot going round the standing leg; settling after a shove as an option
+     beside what it does now; the loved idle unchanged. **Standing, both from the same afternoon:** research the best
+     way forward before every step, and keep every step true to the game's design philosophies of mechanics and
+     aesthetics; and "always check for movements that feel unnatural. Be very rigorous about trying to capture all
+     kinds of unnatural movements." `ownbody_default_on` read: **16 of 16** (the shove test passing too). **The turn
+     bench** is drafted and reviewed outside the worktree by a workflow (`wf_8f312c44-139`; no Unity, nothing written
+     in `D:/Dev/WG`) while the suite runs: `TurnBench`, explicit, every frame, all three miners; its faults, bars set
+     before its first run, each 0: F1 a planted hip twisted past `MostTwist` + 2 degrees; F2 a flick (a bone over 6
+     degrees in a frame and back over 4 within 2); F3 a jump (a bone over 15 degrees in a frame); F4 the legs through
+     each other; F5 a planted foot sliding over 2 cm or turning over 25 degrees in a stance; F6 a knee over 35 degrees
+     off its foot. **To add before its first run, for Luis's second ask:** a catalogue of every kind of unnatural
+     movement (studies of how people judge motion, animation and biomechanics measures, and every fault Luis has
+     flagged), a detector for each with its bar, kept as one scan any bench can run (the walk, the turns, the catch,
+     the idle, the getting up), at 50 frames a second and at the game's own frame rate (the memory "every frame as
+     played"), the flagged frames shown to judges. **Next, in order:** read `asplayed_on` and `asplayed_off`, compare,
+     commit the default and push, a build (`WindowsOrdinaryPlace_Nov13b`, the switch on from the start); the scan and
+     the bench into `D:/Dev/WG` after their reviews, the baseline run on the walk as it is, read; then the turning
+     design from the research, the baseline and the game's philosophies (each named, and how the design keeps it),
+     checked by judge agents on mechanics and aesthetics, sent to Luis to agree before the turn is rebuilt, as a switch
+     beside the walk as it is; (b)'s faults outside the turn's design (such as at the hand-overs) fixed one at a time
+     meanwhile; then (c) and (d).
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for
