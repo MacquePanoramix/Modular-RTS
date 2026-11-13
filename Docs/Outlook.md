@@ -58,6 +58,22 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 13, 2026 (night) — the twenty-sixth, short (a stretch closed, before the report)
+
+- **Where we are.** Luis chose to fix the turns behind a switch so he can play both ways, and to spend the week's
+  last allowance on the review now (he has a reset to use). Done: the switch (off by default), its own review (both
+  "sound with changes"), its results, committed on both branches (`957a21b`, `38adadd`), a build for him.
+- **Waiting on Luis:** which way the game plays (his eye on the build, both ways). Nothing else is asked.
+- **Open, not to be forgotten:** that the switch off is the game as played is shown on the facts' leg only (the rise
+  bench does not repeat itself run to run; the way to show it is written down); B's bars bound the next step (R1's
+  unfloored share must not run until what caps Round's ankle at 21.6 N m is found; K8's R; K5's count); the knee's
+  share; everything put off in the twenty-fifth.
+- **Does the task serve the stage?** Yes: the turns decide whether the drive writer can carry any stance, and the
+  switch puts the difference in Luis's hands rather than ours. The drift of the twenty-fifth eases: after fourteen
+  days, a build changes how the bodies move (with the switch on), for Luis to play.
+- **Drift watched.** The allowance: 98% of the week, 93% of the five hours. The next step (R1 re-specified under B's
+  bounds) waits on the reset and on Luis's word on the switch, since which turns the work is tuned at is his.
+
 ### November 13, 2026 — the twenty-fifth (250 steps since the last; after a compaction, before a choice and a report)
 
 - **Where we are.** S3b step 2, step 0 of the design's §6.3, now on its third day. The five other facts have had one
