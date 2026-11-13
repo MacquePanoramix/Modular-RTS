@@ -18,7 +18,7 @@ namespace WonderGather
         // The least and the most strength the slider gives (1: ordinary for its build), and the step it moves by.
         public const float Weakest = .3f, Strongest = 3, Step = .05f;
         // Its size on the screen, and how far it stands from the screen's lower left corner.
-        private const float Width = 400, Height = 306, Margin = 12;
+        private const float Width = 400, Height = 332, Margin = 12;
 
         private MinerChoice choice;
         private MinerWorkPreview look;
@@ -88,6 +88,17 @@ namespace WonderGather
             // others as before), pushed over, gets up so, and tries again if it goes down.
             bool rises = GUI.Toggle(new Rect(x, y, inner, 20), PhysicalFall.GetsUpByItsOwn, " Gets up by its own body (Small; the others as before)", toggle);
             if (rises != PhysicalFall.GetsUpByItsOwn) PhysicalFall.GetsUpByItsOwn = rises;
+            y += 26;
+            // The solver's turns for its own body (November 13; Luis: fixed behind a switch, to play the step and the getting
+            // up both ways before choosing): on, the 14 and 4 its code meant; off, the project's 6 and 1, as everything was
+            // tuned and played until now (OwnBody.TurnsAsMeant). Beside it, what the chosen miner's own body runs at now.
+            bool meant = GUI.Toggle(new Rect(x, y, inner - 112, 20), OwnBody.TurnsAsMeant, " Solver turns as meant (14 and 4)", toggle);
+            if (meant != OwnBody.TurnsAsMeant) OwnBody.TurnsAsMeant = meant;
+            if (choice.Current.TryGetComponent(out OwnBody itsOwn) && itsOwn.Stands)
+            {
+                var root = itsOwn.Part(OwnBody.Hips);
+                GUI.Label(new Rect(x + inner - 108, y, 108, 20), $"runs at {root.solverIterations} and {root.solverVelocityIterations}", text);
+            }
             y += 26;
             // Its breath: how it is drawn (a look to choose between), and a miner tired at once to see it breathe so.
             GUI.Label(new Rect(x, y + 2, 50, 20), "Breath:", text);

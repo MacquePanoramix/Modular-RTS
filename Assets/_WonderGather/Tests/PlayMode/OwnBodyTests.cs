@@ -47,7 +47,7 @@ namespace WonderGather.Tests
             RestoreRest();
         }
 
-        private static void RestoreRest() { OwnBody.Told = null; OwnBody.StaysPut = false; OwnBody.AnyGround = false; Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.BreathShoulders = 1; OwnBody.BreathSeenInAir = true; OwnBody.BreathSize = OwnBody.BreathSizeAtFirst; OwnBody.Anatomical = false; OwnBody.Weighed = false; PhysicalBody.Rule = TestArguments.StrengthRule; }
+        private static void RestoreRest() { OwnBody.TurnsAsMeant = TestArguments.TurnsAsMeant; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; OwnBody.StaysPut = false; OwnBody.AnyGround = false; Time.captureFramerate = 0; OwnBody.Alive = true; OwnBody.BreathShown = OwnBody.BreathDrawn; OwnBody.BreathShoulders = 1; OwnBody.BreathSeenInAir = true; OwnBody.BreathSize = OwnBody.BreathSizeAtFirst; OwnBody.Anatomical = false; OwnBody.Weighed = false; PhysicalBody.Rule = TestArguments.StrengthRule; }
 
         private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0, v.z);
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
@@ -57,12 +57,23 @@ namespace WonderGather.Tests
         // loop that adds the links, before the others are added; the facts found that turns set on a root before its links
         // are lost, the articulation then running at the project's defaults, 6 and 1 (ArticulationFactsTests,
         // TheSolversTurnsSetBeforeTheLinksAreKept: read back so, and its course the same to the last bit as one set to 6
-        // and 1). Bar, set before the run: each miner's own body, once it stands, runs at the turns its code sets, 14 and
-        // 4. Expected before the run, if the facts carry over to the game: each reads 6 and 1, and the test fails.
+        // and 1). Bar, set before the first run: each miner's own body, once it stands, runs at the turns its code sets, 14
+        // and 4. Expected before it, if the facts carry over to the game: each reads 6 and 1, and the test fails. So it did
+        // (TestRuns/ownturns.log): all three at 6 and 1, their hips the root.
+        // Then (Luis, November 13: fixed in the game behind a switch, OwnBody.TurnsAsMeant) the turns are set on the root
+        // once all its parts are joined, and read back and set again each step. Bar, set before the switch's first run:
+        // with it on, each miner's own body once it stands reads 14 and 4; turned off while it stands, the project's 6 and 1
+        // after two steps; on again, 14 and 4 after two steps; and Small, pushed over and getting up by its own body (whose
+        // toes are joined after its other parts), 14 and 4 while it gets up. Told besides, with no bar: the root's own
+        // settings made before the other parts were joined (its mass, damping, top speeds), as read back once they were.
         [UnityTest]
         public IEnumerator EachMinersOwnBodyRunsAtItsOwnTurns()
         {
             var told = new System.Collections.Generic.List<string>(); var wrong = new System.Collections.Generic.List<string>();
+            string Reads(ArticulationBody root) => $"{root.solverIterations} and {root.solverVelocityIterations}";
+            bool At(ArticulationBody root, int place, int speed) => root.solverIterations == place && root.solverVelocityIterations == speed;
+            int asTunedPlace = Physics.defaultSolverIterations, asTunedSpeed = Physics.defaultSolverVelocityIterations;
+            OwnBody.TurnsAsMeant = true;
             foreach (string name in new[] { "Small", "Long", "Round" })
             {
                 int index = -1;
@@ -76,13 +87,93 @@ namespace WonderGather.Tests
                 for (float until = Time.time + 20; (own == null || !own.Stands) && Time.time < until;) { unit.TryGetComponent(out own); yield return null; }
                 Assert.That(own != null && own.Stands, Is.True, $"{name} did not come to stand by its own joints.");
                 var root = own.Part(OwnBody.Hips);
-                told.Add($"{name}: {(root.isRoot ? "its hips the root" : "its hips NOT the root")}, {root.solverIterations} and {root.solverVelocityIterations}");
-                if (root.solverIterations != 14 || root.solverVelocityIterations != 4) wrong.Add(name);
+                string made = Reads(root);
+                if (!At(root, OwnBody.TurnsMeant, OwnBody.SpeedTurnsMeant)) wrong.Add($"{name} as made, {made}");
+                OwnBody.TurnsAsMeant = false;
+                yield return new WaitForFixedUpdate(); yield return new WaitForFixedUpdate();
+                string off = Reads(root);
+                if (!At(root, asTunedPlace, asTunedSpeed)) wrong.Add($"{name} turned off, {off}");
+                OwnBody.TurnsAsMeant = true;
+                yield return new WaitForFixedUpdate(); yield return new WaitForFixedUpdate();
+                string again = Reads(root);
+                if (!At(root, OwnBody.TurnsMeant, OwnBody.SpeedTurnsMeant)) wrong.Add($"{name} on again, {again}");
+                told.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}: {1}; as made {2}, turned off {3}, on again {4}; its root's own: {5:0.000} kg, damped {6} and {7}, turning at most {8}, coming out at most {9}, {10}",
+                    name, root.isRoot ? "its hips the root" : "its hips NOT the root", made, off, again, root.mass, root.linearDamping, root.angularDamping, root.maxAngularVelocity, root.maxDepenetrationVelocity, root.collisionDetectionMode));
                 look.SetOwn(false);
                 yield return Wait(1);
             }
+            // (Small, pushed over and getting up by its own body: its toes are joined after its other parts.)
+            {
+                int index = -1;
+                for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == "Small") index = i;
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                PhysicalFall.GetsUpByItsOwn = true;
+                look.SetOwn(true);
+                OwnBody own = null;
+                for (float until = Time.time + 20; (own == null || !own.Stands) && Time.time < until;) { unit.TryGetComponent(out own); yield return null; }
+                Assert.That(own != null && own.Stands, Is.True, "Small did not come to stand by its own joints.");
+                Assert.That(own.KnowsAWayUp, Is.True, "Small knows no way up (Resources/RiseWays/Small.txt).");
+                yield return Wait(1.5f);
+                for (float until = Time.time + 10; !look.CanPushOver && Time.time < until;) yield return null;
+                Assert.That(look.CanPushOver, Is.True, "Small cannot be pushed over.");
+                look.PushOver(unit.transform.forward);
+                for (float until = Time.time + 30; !own.GettingUp && Time.time < until;) yield return null;
+                Assert.That(own.GettingUp, Is.True, "Small did not begin getting up by its own body.");
+                yield return new WaitForFixedUpdate(); yield return new WaitForFixedUpdate();
+                var root = own.Part(OwnBody.Hips);
+                int joined = root.GetComponentsInChildren<ArticulationBody>().Length;
+                string up = Reads(root);
+                if (!At(root, OwnBody.TurnsMeant, OwnBody.SpeedTurnsMeant)) wrong.Add($"Small getting up, {up}");
+                told.Add($"Small getting up by its own body: {joined} parts joined ({(joined > OwnBody.Count ? "its toes among them" : "NO toes")}), {up}");
+            }
             Debug.Log("OWN_TURNS " + string.Join("; ", told));
-            Assert.IsEmpty(wrong, "not at 14 and 4: " + string.Join(", ", wrong));
+            Assert.IsEmpty(wrong, "not as the switch has them: " + string.Join("; ", wrong));
+        }
+
+        // Whether a miner's own body standing still is put to sleep by the engine (the review of the switch, November 13,
+        // A's finding 3): OwnBody sets no sleep threshold, so its articulation sleeps below the default, 0.005, whatever
+        // the switch; asleep, its life at rest would stop until something woke it. Bar, set before its first run: none of
+        // the three is asleep in any step of ten seconds standing still, the switch off or on. If one is, it is Luis's to
+        // decide (it changes how it lives at rest), not mended here. At the strength each has as played.
+        [UnityTest, Explicit, Timeout(600000)]
+        public IEnumerator EachMinersOwnBodyStandingStillIsNotPutToSleep()
+        {
+            var culture = System.Globalization.CultureInfo.InvariantCulture;
+            var told = new System.Collections.Generic.List<string>(); var slept = new System.Collections.Generic.List<string>();
+            foreach (bool meant in new[] { false, true })
+                foreach (string name in new[] { "Small", "Long", "Round" })
+                {
+                    OwnBody.TurnsAsMeant = meant;
+                    int index = -1;
+                    for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == name) index = i;
+                    Assert.That(index, Is.GreaterThanOrEqualTo(0), $"No miner called {name}.");
+                    choice.Choose(index);
+                    yield return Wait(.3f);
+                    var unit = choice.Current;
+                    look.SetOwn(true);
+                    OwnBody own = null;
+                    for (float until = Time.time + 20; (own == null || !own.Stands) && Time.time < until;) { unit.TryGetComponent(out own); yield return null; }
+                    Assert.That(own != null && own.Stands, Is.True, $"{name} did not come to stand by its own joints.");
+                    var root = own.Part(OwnBody.Hips);
+                    int steps = 0, asleep = 0; float firstAt = -1;
+                    for (float from = Time.fixedTime; Time.fixedTime - from < 10 && own.Stands;)
+                    {
+                        yield return new WaitForFixedUpdate();
+                        steps++;
+                        if (root.IsSleeping()) { asleep++; if (firstAt < 0) firstAt = Time.fixedTime - from; }
+                    }
+                    string turns = meant ? "as meant" : "as played";
+                    told.Add(string.Format(culture, "{0}, turns {1} ({2} and {3}), sleeping below {4}: asleep in {5} of {6} steps{7}{8}", name, turns,
+                        root.solverIterations, root.solverVelocityIterations, root.sleepThreshold, asleep, steps,
+                        firstAt >= 0 ? ", first at " + firstAt.ToString("0.00", culture) + " s" : "", own.Stands ? "" : ", NOT standing at the end"));
+                    if (asleep > 0 || !own.Stands) slept.Add($"{name}, turns {turns}");
+                    look.SetOwn(false);
+                    yield return Wait(1);
+                }
+            Debug.Log("OWN_SLEEP " + string.Join("; ", told));
+            Assert.IsEmpty(slept, "put to sleep standing still, or not standing: " + string.Join("; ", slept));
         }
 
         // A miner stood on the path, facing along it.

@@ -1333,7 +1333,9 @@ namespace WonderGather.Tests
         // of the ankle. Made in that pose; the pose is written again after (AsMade's way). Stood's link settings and solver.
         // turnsFirst: the solver's turns set on the weight before its links, as it was made until November 13, when that
         // was found to lose them (TheSolversTurnsSetBeforeTheLinksAreKept); else after the links, where they are kept.
-        private (ArticulationBody[] parts, float[] goal) StandingLeg(Leg of, Vector3 at, bool turnsFirst = false)
+        // (turnsNot, with turnsFirst: the turns not set at all, its sleep threshold set before the links as with turnsFirst;
+        // as the game's own body is now made with OwnBody.TurnsAsMeant off.)
+        private (ArticulationBody[] parts, float[] goal) StandingLeg(Leg of, Vector3 at, bool turnsFirst = false, bool turnsNot = false)
         {
             float scale = LegScale(of), hipsKg = of.Body - of.Mass, high = .25f * scale, lean = 10 * Mathf.Deg2Rad, bent = 20 * Mathf.Deg2Rad;
             float lt = 2 * Mathf.Abs(of.Thigh.Joint.y), ls = 2 * Mathf.Abs(of.Shin.Joint.y);
@@ -1361,7 +1363,7 @@ namespace WonderGather.Tests
             weight.mass = hipsKg; weight.automaticCenterOfMass = false; weight.centerOfMass = new Vector3(0, high, 0);
             weight.automaticInertiaTensor = false; weight.inertiaTensor = HipsTurning(of); weight.inertiaTensorRotation = Quaternion.identity;
             weight.linearDamping = 0; weight.angularDamping = 0;
-            if (turnsFirst) { weight.solverIterations = 14; weight.solverVelocityIterations = 4; weight.sleepThreshold = 0; }
+            if (turnsFirst) { if (!turnsNot) { weight.solverIterations = 14; weight.solverVelocityIterations = 4; } weight.sleepThreshold = 0; }
             var parts = new ArticulationBody[4]; parts[0] = weight;
             Vector3[] place = { hip, hip, knee, ankle };
             Quaternion[] turned = { Quaternion.identity, Quaternion.AngleAxis(-thighBack * Mathf.Rad2Deg, Vector3.right), Quaternion.AngleAxis(shinOn * Mathf.Rad2Deg, Vector3.right), Quaternion.identity };
@@ -1623,19 +1625,23 @@ namespace WonderGather.Tests
         {
             // (The fourth way, added once this was found: the leg made as StandingLeg now makes it, its turns set after its
             // links; it should read back 14 and 4 and run the same course as the third way to the last bit.)
-            string[] ways = { "as made", "set again to 6 and 1", "set again to 14 and 4", "made with its turns after its links" };
-            int[][] turns = { null, new[] { 6, 1 }, new[] { 14, 4 }, null };
+            // (The fifth, added with the game's switch, OwnBody.TurnsAsMeant: the leg made with no turns set at all, as the
+            // game's own body is now made with the switch off; it should read back 6 and 1 and run the same course as the leg
+            // as made to the last bit, so that the switch off is the game as it was played. And each way tells its sleep
+            // threshold read back, set before the links in the first three and the fifth, after them in the fourth.)
+            string[] ways = { "as made", "set again to 6 and 1", "set again to 14 and 4", "made with its turns after its links", "made with no turns set" };
+            int[][] turns = { null, new[] { 6, 1 }, new[] { 14, 4 }, null, null };
             for (int m = 0; m < Legs.Length; m++)
             {
                 var of = Legs[m];
-                var course = new List<Vector3>[4];
+                var course = new List<Vector3>[ways.Length];
                 string told = "";
-                for (int w = 0; w < 4; w++)
+                for (int w = 0; w < ways.Length; w++)
                 {
                     TakeAway();
                     Vector3 at = new Vector3(-600 - 10 * m, 20, 300);
-                    var (parts, goal) = StandingLeg(of, at, turnsFirst: w < 3);
-                    string readBack = $"{parts[0].solverIterations} and {parts[0].solverVelocityIterations}";
+                    var (parts, goal) = StandingLeg(of, at, turnsFirst: w != 3, turnsNot: w == 4);
+                    string readBack = $"{parts[0].solverIterations} and {parts[0].solverVelocityIterations}, sleeping below {parts[0].sleepThreshold.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
                     if (turns[w] != null) { parts[0].solverIterations = turns[w][0]; parts[0].solverVelocityIterations = turns[w][1]; }
                     yield return null;
                     var starts = new List<int>(); parts[0].GetDofStartIndices(starts);

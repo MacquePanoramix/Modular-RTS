@@ -46,6 +46,11 @@ namespace WonderGather.Tests
             public float depth = float.NaN, stageAt, stages, heldFor;
             public bool upOff;
             public float stepFurthest;
+            // (The bits of where its parts are and how they are turned, folded together each step it stands by its own,
+            // RISE_BITS: two runs that are the same to the last bit have the same. November 13: to show that the solver's
+            // turns switched off, OwnBody.TurnsAsMeant, is the game as it was played.)
+            public ulong bits = 14695981039346656037UL;
+            public int bitSteps;
             // (How many times it moved its weight off a limb before lifting it, and how many it lifted it all the same.)
             public int shifts, shiftsFailed;
             // (When it first came to its last pose; NaN: not yet.)
@@ -641,6 +646,18 @@ namespace WonderGather.Tests
                         int takenBefore = GroundTouch.Taken;
                         Physics.Simulate(dt);
                         int takenBySimulate = GroundTouch.Taken - takenBefore;
+                        foreach (var body in bodies)
+                            if (body.own != null && body.own.Stands)
+                            {
+                                body.bitSteps++;
+                                for (int p = 0; p < OwnBody.Count; p++)
+                                {
+                                    var t = body.own.Part(p).transform;
+                                    Vector3 at = t.position; Quaternion turned = t.rotation;
+                                    foreach (float f in new[] { at.x, at.y, at.z, turned.x, turned.y, turned.z, turned.w })
+                                        unchecked { body.bits ^= (uint)BitConverter.SingleToInt32Bits(f); body.bits *= 1099511628211UL; }
+                                }
+                            }
                         // (-riseFrames 5: a frame of the game every so many steps of the physics, pictures or not, as the game
                         // has them between its steps.)
                         if (frames > 0 && step % frames == 0 && !(pictured != null && step % every == 0))
@@ -717,6 +734,7 @@ namespace WonderGather.Tests
                         foreach (var body in bodies) if (!string.IsNullOrEmpty(shots) && string.Equals(shots, body.name, StringComparison.OrdinalIgnoreCase)) pictured = body;
                         yield return Try(j, pictured, pictured != null ? pictured.name.ToLowerInvariant() + "_" + from[j] + j : "");
                         foreach (var body in bodies) Debug.Log(Told(body, j));
+                        foreach (var body in bodies) { Debug.Log(string.Format(Plain, "RISE_BITS {0} from {1}: {2:X16} over {3} steps by its own", body.name, from[j], body.bits, body.bitSteps)); body.bits = 14695981039346656037UL; body.bitSteps = 0; }
                         foreach (var body in bodies) Debug.Log(string.Format(Plain, "RISE_HELD {0} from {1}: at pose {2} of {3}, kept its weight within what bears it there, up off the ground, {4:0.00} s; {5:0} mm within at the end, {6}; furthest foot {7:0.00} legs forward; moved off {8}, lifted all the same {9}", body.name, from[j], body.stageAt + 1, body.stages, body.heldFor, body.depth * 1000, body.upOff ? "up" : "down", body.stepFurthest, body.shifts, body.shiftsFailed));
                         yield return null;
                     }

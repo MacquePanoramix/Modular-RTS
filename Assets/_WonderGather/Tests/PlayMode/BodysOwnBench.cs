@@ -51,6 +51,10 @@ namespace WonderGather.Tests
         private static readonly int[] From = { -1, Hips, Trunk, Trunk, Trunk, UpperArm, UpperArm + 1, Hips, Hips, Thigh, Thigh + 1, Shin, Shin + 1 };
         private static float Step = .02f;
         private static int Iterations = 14, VelocityIterations = 4;
+        // (Whether -ownIterations was given: if so its articulated body runs at them whatever OwnBody.TurnsAsMeant says.
+        // Until November 13 they were set before its links and lost, so it ran at the project's 6 and 1 whatever was
+        // asked, while its body of joints ran at what was asked. Its report says the turns each body runs at, read back.)
+        private static bool TurnsAsked;
         // (A boot's turning weight, so many times what its shape gives it; and its weight, if it is set.)
         private static float BootTurns = 1, BootWeighs = 0;
         // (A joint's spring set by rule: no stiffer than makes its own rate, times the step, this much, by the turning
@@ -314,7 +318,9 @@ namespace WonderGather.Tests
                     link.useGravity = true;
                     link.maxAngularVelocity = 20; link.maxDepenetrationVelocity = 1.5f;
                     link.collisionDetectionMode = CollisionDetectionMode.Continuous;
-                    if (From[i] < 0) { link.immovable = false; link.solverIterations = Iterations; link.solverVelocityIterations = VelocityIterations; }
+                    // (Its root's solver turns are set once all its parts are joined, below; set here, before them, they
+                    // were lost, and it ran at the project's 6 and 1 whatever -ownIterations said. November 13.)
+                    if (From[i] < 0) link.immovable = false;
                     else
                     {
                         link.jointType = p.hinge ? ArticulationJointType.RevoluteJoint : ArticulationJointType.SphericalJoint;
@@ -340,6 +346,11 @@ namespace WonderGather.Tests
                     built.solid[i] = solid;
                 }
             }
+            // (As the game's own body has them, OwnBody.TurnsAsMeant: on, 14 and 4, set on the root now that all its parts
+            // are joined; off, the project's own, as it ran until now. Turns given with -ownIterations, either way.)
+            if (articulated && (OwnBody.TurnsAsMeant || TurnsAsked))
+                for (int i = 0; i < Count; i++)
+                    if (From[i] < 0) { built.link[i].solverIterations = Iterations; built.link[i].solverVelocityIterations = VelocityIterations; }
             if (!articulated)
                 for (int i = 0; i < Count; i++)
                 {
@@ -584,8 +595,10 @@ namespace WonderGather.Tests
                             ArticulationBody link = null; Rigidbody solid = null;
                             if (articulated)
                             {
-                                var root = post.AddComponent<ArticulationBody>(); root.immovable = true; root.solverIterations = 14; root.solverVelocityIterations = 4;
+                                var root = post.AddComponent<ArticulationBody>(); root.immovable = true;
                                 link = arm.AddComponent<ArticulationBody>();
+                                // (Its turns after its link, as the game's own body has them: set before, they were lost.)
+                                if (OwnBody.TurnsAsMeant) { root.solverIterations = 14; root.solverVelocityIterations = 4; }
                                 link.mass = 1; link.linearDamping = 0; link.angularDamping = 0; link.jointFriction = 0;
                                 link.jointType = ArticulationJointType.RevoluteJoint;
                                 link.anchorPosition = new Vector3(0, 0, -.5f); link.anchorRotation = Quaternion.identity; link.matchAnchors = true;
@@ -657,6 +670,8 @@ namespace WonderGather.Tests
                                 if (fromBoot) above.transform.SetParent(boot.transform, true); else boot.transform.SetParent(above.transform, true);
                                 var first = (fromBoot ? boot : above).AddComponent<ArticulationBody>();
                                 var second = (fromBoot ? above : boot).AddComponent<ArticulationBody>();
+                                // (Its turns set after its second link, so kept, at 14 and 4 since it was made: a study of one
+                                // ankle's law at many steps a second, not the game's body, so it does not follow OwnBody.TurnsAsMeant.)
                                 first.immovable = false; first.solverIterations = 14; first.solverVelocityIterations = 4;
                                 foreach (var link in new[] { first, second }) { link.linearDamping = 0; link.angularDamping = 0; link.jointFriction = 0; }
                                 (fromBoot ? first : second).mass = bootWeighs; (fromBoot ? second : first).mass = 86;
@@ -910,6 +925,7 @@ namespace WonderGather.Tests
             // compass (so that they are so many different starts, and not one start so many times).
             float jolt = Numbers("-ownJolt", 0)[0];
             Iterations = (int)Numbers("-ownIterations", 14, 4)[0]; VelocityIterations = (int)Numbers("-ownIterations", 14, 4)[1];
+            TurnsAsked = CaptureTools.Argument("-ownIterations") != null;
             Step = Numbers("-ownStep", .02f)[0];
             BootTurns = Numbers("-ownBootTurns", 1)[0]; BootWeighs = Numbers("-ownBootWeighs", 0)[0];
             Rule = Numbers("-ownRule", 0)[0]; Damped = Numbers("-ownDamped", 1)[0];
@@ -1039,9 +1055,12 @@ namespace WonderGather.Tests
                                             float ahead = Vector3.Dot(corner - spot, away);
                                             back = Mathf.Min(back, ahead); front = Mathf.Max(front, ahead);
                                         }
-                                Debug.Log(string.Format(culture, "OWN   {0}, {1}: its weight is {2:0} mm ahead of where it stands and {3:0} mm up; its boots reach from {4:0} to {5:0} mm; its ankles are at {6:0} mm",
+                                // (And the solver's turns it runs at, read back from its root: November 13.)
+                                string turns = body.link[Hips] != null ? string.Format(culture, "; it runs at {0} and {1} turns of the solver", body.link[Hips].solverIterations, body.link[Hips].solverVelocityIterations)
+                                    : body.solid[Hips] != null ? string.Format(culture, "; its parts run at {0} and {1} turns of the solver", body.solid[Hips].solverIterations, body.solid[Hips].solverVelocityIterations) : "";
+                                Debug.Log(string.Format(culture, "OWN   {0}, {1}: its weight is {2:0} mm ahead of where it stands and {3:0} mm up; its boots reach from {4:0} to {5:0} mm; its ankles are at {6:0} mm{7}",
                                     name, called, Vector3.Dot(body.Weight() - spot, away) * 1000, (body.Weight().y - spot.y) * 1000, back * 1000, front * 1000,
-                                    Vector3.Dot(plan[Foot].at + plan[Foot].turned * plan[Foot].anchor - spot, away) * 1000));
+                                    Vector3.Dot(plan[Foot].at + plan[Foot].turned * plan[Foot].anchor - spot, away) * 1000, turns));
                             }
                             float outside = 0;
                             for (int k = 0; k < steps; k++)

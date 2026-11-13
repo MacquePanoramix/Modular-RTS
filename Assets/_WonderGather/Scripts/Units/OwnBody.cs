@@ -212,6 +212,18 @@ namespace WonderGather
         // boots were seen at 115 to 154 rad/s, October 30.)
         public static float SpeedHeight = .6f;
         public static bool DampsAll, DampsBoots;
+        // The solver's turns for its whole body (Luis, November 13, 2026, "1. Yes please." to fixing them in the game behind
+        // a switch, so that the step and the getting up can be played both ways before choosing): on, the 14 and 4 turns a
+        // step its code always meant; off, the project's own 6 and 1, as everything was tuned and played until now. (Set on
+        // its root before its other parts were joined to it, as they were until November 13, the 14 and 4 were lost, and
+        // every miner's own body ran at 6 and 1: ArticulationFactsTests.TheSolversTurnsSetBeforeTheLinksAreKept,
+        // OwnBodyTests.EachMinersOwnBodyRunsAtItsOwnTurns, Docs/Validation.md.) They are set once all its parts are joined,
+        // and read back each step and set again whenever its root reads otherwise, so that a part joined later, or the
+        // switch turned while it stands, cannot change them unseen. 14 and 4 cost about 1.7 times 6 and 1 a step.
+        public static bool TurnsAsMeant;
+        public const int TurnsMeant = 14, SpeedTurnsMeant = 4;
+        public static int TurnsNow => TurnsAsMeant ? TurnsMeant : Physics.defaultSolverIterations;
+        public static int SpeedTurnsNow => TurnsAsMeant ? SpeedTurnsMeant : Physics.defaultSolverVelocityIterations;
         public float SpeedOf(JointFrame frame) => frame.Range.Speed * Mathf.Sqrt(SpeedHeight / Mathf.Max(.2f, body != null ? body.StandingHipHeight : SpeedHeight));
         private readonly float[] dampedAtLeast = new float[Count];
         public JointAim Aim { get; private set; }
@@ -757,7 +769,8 @@ namespace WonderGather
                 link.useGravity = true;
                 link.maxAngularVelocity = 20; link.maxDepenetrationVelocity = 1.5f;
                 link.collisionDetectionMode = CollisionDetectionMode.Continuous;
-                if (From[i] < 0) { link.immovable = false; link.solverIterations = 14; link.solverVelocityIterations = 4; }
+                // (Its root's solver turns are set once all its parts are joined: KeepTurns.)
+                if (From[i] < 0) link.immovable = false;
                 else
                 {
                     link.jointType = hinge[i] ? ArticulationJointType.RevoluteJoint : ArticulationJointType.SphericalJoint;
@@ -840,6 +853,8 @@ namespace WonderGather
                     toeTouches[i] = toe.AddComponent<GroundTouch>();
                     toeTouches[i].StillOnly = true;
                 }
+            // (The solver's turns for its whole body, on its root, now that all its parts are joined to it.)
+            KeepTurns();
             // Its own parts do not strike one another while it only stands; nor the unit's own solid, which stays
             // where it is to be picked by.
             var solids = held.GetComponentsInChildren<Collider>();
@@ -1044,10 +1059,19 @@ namespace WonderGather
             if (Physics.simulationMode == SimulationMode.FixedUpdate) Advance(Time.fixedDeltaTime);
         }
 
+        // The solver's turns on its root, as the switch has them (TurnsAsMeant): set only where its root reads otherwise.
+        private void KeepTurns()
+        {
+            var root = parts[Hips];
+            if (root.solverIterations != TurnsNow) root.solverIterations = TurnsNow;
+            if (root.solverVelocityIterations != SpeedTurnsNow) root.solverVelocityIterations = SpeedTurnsNow;
+        }
+
         // One step of its own doing.
         public void Advance(float dt)
         {
             if (!Stands) return;
+            KeepTurns();
             if (writesMade) { writesMade = false; WriteMade(); }
             // (Where it was and is, for drawing it between the steps.)
             for (int i = 0; i < Count; i++)
