@@ -495,6 +495,23 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      whether it is worth exploring or already a later step's. Answered: worth it; its research joins (a)'s (moving
      between stances: turning, recovering, settling, shifting weight); built on the design's stances and steps,
      growing smoothly with how far from comfortable the body stands (no threshold), beside the loved idle, never over it.
+     **After the reset (November 13, afternoon, Luis: "I did the reset"; the week and the five hours at 0%):** the
+     settling question answered (worth it; not in the design as written: searched; its research joins (a)'s). The
+     default made on, uncommitted in `D:/Dev/WG`: `OwnBody.TurnsAsMeant = true` (comment: Luis's word), and
+     `TestArguments`: `-turnsAsMeant 0` now runs as before (6 and 1), anything else 14 and 4; the suite gives back the
+     switch it found. **Running, one after the other (no edit in `D:/Dev/WG` until they are read):**
+     `ownbody_default_on` (`OwnBodyTests`, class named), `asplayed_on` (the whole suite, `-ownAsPlayed 1`),
+     `asplayed_off` (the same with `-turnsAsMeant 0`); then compare on and off as played, commit and push, a build.
+     Beside them, the research of (a) and (d) as a workflow, written to `Docs/Research/2026-11-13_TurningAndSettling/`.
+     (The workflow `wf_cb146d66-72d`: three researchers, R1 turning while walking, R2 turning right round and what
+     looks wrong, R3 settling and shifting, then one sceptic who re-checks the load-bearing claims and writes
+     `research.md` with a half page for Luis first.) **Next for (b), once the runs are read:** a turn bench in
+     `D:/Dev/WG` (explicit, its bars set before its first run) that sends each miner round at 45, 90, 135 and 180
+     degrees, from walking and from standing, both ways, at walking and jogging pace, many times, and reads every
+     rendered frame (as Luis sees it): each hip's twist against `MostTwist`, the knees, each planted foot's slide and
+     turn on the ground, the body's turning pace, and every bone's turn from frame to frame (a twitch is a spike there);
+     then each fault found and fixed one at a time, to zero, all three miners. The turn itself rebuilt only after the
+     research, in a design Luis agrees to.
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for
