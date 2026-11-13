@@ -1176,9 +1176,12 @@ namespace WonderGather.Tests
                     most = Mathf.Max(most, Mathf.Abs(f0)); floating = Mathf.Max(floating, Mathf.Abs(f1));
                     told += $" {(i == 0 ? "A" : "B")}{d} {f0:0.000} / {f1:0.000};";
                 }
-            Debug.Log($"FACTS gravity forces, fixed root / floating root ({forces[0].Count} and {forces[1].Count} values):{told} the largest floating {floating:0.0000} against the largest fixed {most:0.000}");
+            // (Every floating value counts, the root's own six with the joints': the first run checked only the joints'.)
+            float every = 0; foreach (float value in forces[1]) every = Mathf.Max(every, Mathf.Abs(value));
+            string startsTold = string.Join(",", starts[0]) + " / " + string.Join(",", starts[1]);
+            Debug.Log($"FACTS gravity forces, fixed root / floating root ({forces[0].Count} and {forces[1].Count} values, the links' first values at {startsTold}):{told} the largest floating {floating:0.0000} at the joints and {every:0.0000} of all its values, against the largest fixed {most:0.000}");
             Assert.Greater(most, 1f, "the fixed root's gravity forces were not read at all");
-            Assert.Less(floating, .01f * most, "the floating root's gravity forces are not about nothing");
+            Assert.Less(every, .01f * most, "the floating root's gravity forces are not about nothing");
         }
 
         // A miner's floating leg as FloatingLeg, built from its parts: the hips the stand-in above; each part's centre its
@@ -1217,7 +1220,7 @@ namespace WonderGather.Tests
             return links;
         }
 
-        private struct Swept { public bool Failed, Rose; public string Why; public float First, Most; }
+        private struct Swept { public bool Failed, Rose; public string Why, Early; public float First, Most, Last, Gained, Took; }
 
         // One run of the sweep: set turning as Whirled sets it, a second, and the count as Whirled's: what it holds (the
         // motion's energy, true speeds) after each step, less what the drives were counted to give (each drive's force times
@@ -1251,16 +1254,20 @@ namespace WonderGather.Tests
                         before[i][d] = v[d];
                     }
                 }
-                if (k == 0) { r.First = r.Most = held = now; continue; }
+                if (k == 0) { r.First = r.Most = held = now; r.Early = ""; continue; }
+                // (Read besides, for the count's diagnostic: each of the first six steps, and the second summed.)
+                float gained = now - held - given;
+                r.Gained += gained; r.Took += took;
+                if (k <= 6) r.Early += $" step {k}: holds {now / r.First:0.0000}, given {given:+0.0000;-0.0000}, taken {took:0.0000}, beyond {gained:+0.0000;-0.0000};";
                 if (Mathf.Max(held, now) >= .001f * r.First)
                 {
                     if (now > 1.0001f * r.First) { r.Rose = true; if (!r.Failed) { r.Failed = true; r.Why = $"held {now / r.First:0.0000} of its first step's at step {k}"; } }
-                    float gained = now - held - given;
                     if (gained > .5f * took && !r.Failed) { r.Failed = true; r.Why = $"gained {gained:0.0000} J beyond the count at step {k}, its dampers took {took:0.0000}"; }
                 }
                 r.Most = Mathf.Max(r.Most, now);
                 held = now;
             }
+            r.Last = held / r.First;
             TakeAway();
             done(r);
         }
@@ -1437,6 +1444,96 @@ namespace WonderGather.Tests
                     Debug.Log($"FACTS load through the target, {of.Name}, {how}: {ending}; read at its making {atMaking} degrees, the ankle's load at the first step {firstAnkle:0.00} N m; after 2 s:{told} the weight moved {Three(parts[0].worldCenterOfMass - weightWas)} m and turned {Quaternion.Angle(turnWas, parts[0].transform.rotation):0.00} degrees, the boot tilted {Quaternion.Angle(Quaternion.identity, parts[3].transform.rotation):0.00}");
                 }
             Assert.IsEmpty(failed, string.Join("; ", failed));
+        }
+
+        // K5's count read step by step (a diagnostic with no bar, November 13). The sweep's first run failed at 10 rad/s by its
+        // second clause, in steps whose gain beyond the count was about what the dampers took, both small. Before its bar is
+        // set again: each miner at 5, 10, 20 and 30 rad/s, its first six steps one by one, and the whole second summed (the
+        // gain beyond the count, what the dampers took, what it held at most and at the end against its first step).
+        [UnityTest]
+        public IEnumerator TheSweepsCountReadStepByStep()
+        {
+            float[] speeds = { 5, 10, 20, 30 };
+            for (int m = 0; m < Legs.Length; m++)
+                foreach (float speed in speeds)
+                {
+                    Swept r = default;
+                    yield return SweepAt(Legs[m], speed, true, new Vector3(300 + 10 * m, 50, -900), x => r = x);
+                    string verdict = r.Failed ? "fails, " + r.Why : "holds";
+                    Debug.Log($"FACTS sweep count, {Legs[m].Name} at {speed:0} rad/s, {r.First:0.0000} J after its first step:{r.Early} over the whole second: beyond the count {r.Gained:+0.0000;-0.0000} J, the dampers took {r.Took:0.0000} J, it held at most {r.Most / r.First:0.0000} and at the end {r.Last:0.000000} of its first step's; by the first run's bar it {verdict}");
+                }
+        }
+
+        // K4(a)'s fall traced (a diagnostic with no bar, November 13). Every case of the first run fell, Round without the
+        // making-up within 0.12 s: far sooner than its ankle's want of stiffness explains (by hand, from the unbalanced 26 N m a
+        // growth of about 2 a second takes about a second to reach 15 degrees), so the rig is suspected before the design.
+        // Three cases: Round without the making-up and Small with it, each step to its fall and two after (every step for the
+        // first eight, then every fourth); and Round with gravity off, the control: no load and its pose written as made, so it
+        // must stand exactly (expected before the run: every joint within 0.01 degrees of its goal at every step, the weight
+        // within a millimetre of where it began). After the first step, how far each part is from where it was made: had the
+        // hinge's reading run the other way, the written pose would be the made one's mirror, the boot turned by twice the
+        // ankle's goal (about 21 degrees) and the knee centimetres away. Each logged step: each joint's offset from its goal,
+        // the force its drive gave and what its spring and damper asked from the state before the step, and its load; the
+        // weight's drop and pitch; the boot's tilt and its centre's rise and run.
+        [UnityTest]
+        public IEnumerator TheStandingLegsFallTraced()
+        {
+            string[] named = { "", "hip", "knee", "ankle" };
+            int[] miner = { 2, 0, 2 }; bool[] madeUpIn = { false, true, false }, gravityIn = { true, true, false };
+            string[] called = { "Round without the making-up", "Small with the making-up", "Round with gravity off" };
+            for (int n = 0; n < called.Length; n++)
+            {
+                var of = Legs[miner[n]]; bool madeUp = madeUpIn[n], gravity = gravityIn[n];
+                TakeAway();
+                var (parts, goal) = StandingLeg(of, new Vector3(-400 - 10 * n, 20, 300));
+                yield return null;
+                var madeAt = new Vector3[4]; var madeTurn = new Quaternion[4];
+                for (int j = 0; j < 4; j++) { madeAt[j] = parts[j].transform.position; madeTurn[j] = parts[j].transform.rotation; }
+                var starts = new List<int>(); parts[0].GetDofStartIndices(starts);
+                var q = new List<float>(); parts[0].GetJointPositions(q);
+                for (int j = 1; j < 4; j++) q[starts[parts[j].index]] = goal[j];
+                parts[0].SetJointPositions(q);
+                parts[0].SetJointVelocities(new List<float>(new float[q.Count]));
+                if (!gravity) foreach (var p in parts) p.useGravity = false;
+                float[] k = { 0, of.Thigh.Spring, of.Shin.Spring, of.Boot.Spring }, c = { 0, of.Thigh.Damper, of.Shin.Damper, of.Boot.Damper }, has = { 0, of.Thigh.Has, of.Shin.Has, of.Boot.Has };
+                float[] share = { 1, 1, 1, madeUp ? LawShare(AboutItsJoint(of.Boot, of.Boot.Joint), k[3], c[3]) : 1 }, tau = new float[4], asked = new float[4];
+                Vector3 weightWas = parts[0].worldCenterOfMass, bootWas = parts[3].worldCenterOfMass; Quaternion turnWas = parts[0].transform.rotation;
+                int fellStep = -1; float most = 0;
+                for (int step = 0; step < 100; step++)
+                {
+                    for (int j = 1; j < 4; j++)
+                    {
+                        tau[j] = gravity ? GravityLoad(parts, j, out _) : 0;
+                        float target = goal[j] + tau[j] / (k[j] * share[j]);
+                        asked[j] = Mathf.Clamp(k[j] * (target - parts[j].jointPosition[0]) - c[j] * parts[j].jointVelocity[0], -has[j], has[j]);
+                        parts[j].xDrive = DriveOf(k[j], c[j], has[j], target * Mathf.Rad2Deg);
+                    }
+                    Physics.Simulate(Dt);
+                    if (step == 0)
+                    {
+                        string where = "";
+                        for (int j = 0; j < 4; j++) where += $" {(j == 0 ? "the weight" : "the " + named[j])} {(parts[j].transform.position - madeAt[j]).magnitude * 1000:0.0} mm and {Quaternion.Angle(madeTurn[j], parts[j].transform.rotation):0.00} degrees;";
+                        Debug.Log($"FACTS fall traced, {called[n]}: after the first step, each part from where it was made:{where}");
+                    }
+                    bool fell = parts[0].worldCenterOfMass.y < weightWas.y - .1f;
+                    for (int j = 1; j < 4; j++) { float off = Mathf.Abs(parts[j].jointPosition[0] - goal[j]); most = Mathf.Max(most, off); fell |= off > 15 * Mathf.Deg2Rad; }
+                    if (fell && fellStep < 0) fellStep = step;
+                    if (step < 8 || (step + 1) % 4 == 0 || fellStep >= 0)
+                    {
+                        string told = "";
+                        for (int j = 1; j < 4; j++) told += $" {named[j]} off {(parts[j].jointPosition[0] - goal[j]) * Mathf.Rad2Deg:+0.00;-0.00}, gave {parts[j].driveForce[0]:+0.0;-0.0} of {asked[j]:+0.0;-0.0} asked, load {tau[j]:+0.0;-0.0};";
+                        Vector3 boot = parts[3].worldCenterOfMass - bootWas;
+                        float tilt = Vector3.SignedAngle(Vector3.up, parts[3].transform.up, Vector3.right), pitch = Vector3.SignedAngle(turnWas * Vector3.up, parts[0].transform.up, Vector3.right);
+                        Debug.Log($"FACTS fall traced, {called[n]}, step {step + 1} ({(step + 1) * Dt:0.00} s):{told} the weight dropped {(weightWas.y - parts[0].worldCenterOfMass.y) * 1000:0.0} mm and pitched {pitch:+0.00;-0.00}, the boot tilted {tilt:+0.00;-0.00} degrees, its centre rose {boot.y * 1000:+0.0;-0.0} mm and ran {boot.z * 1000:+0.0;-0.0} mm");
+                    }
+                    if (fellStep >= 0 && step >= fellStep + 2) break;
+                }
+                float moved = (parts[0].worldCenterOfMass - weightWas).magnitude;
+                string ending = fellStep < 0 ? "it stood" : "it fell at step " + (fellStep + 1);
+                string control = gravity ? "" : most <= .01f * Mathf.Deg2Rad && moved <= .001f ? "; the control is as expected" : "; the control is NOT as expected, so the rig is at fault";
+                Debug.Log($"FACTS fall traced, {called[n]}: {ending}; the most any joint was off its goal {most * Mathf.Rad2Deg:0.000} degrees, the weight moved {moved * 1000:0.0} mm{control}");
+            }
+            TakeAway();
         }
     }
 }
