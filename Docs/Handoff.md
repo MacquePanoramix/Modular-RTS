@@ -428,7 +428,25 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      K5, the K5 count read, the trace and the lever run at the true 14 and 4; (3) measure what 14/4 costs over 6/1 on
      the game's body; (4) one independent review (opus, medium); (5) the report to Luis: the finding, the fix and its
      cost, and that step 0's two misses must be read again at the true turns. Weekly usage: 91%.
-   - Then: the November 13 entry in `Validation.md` and the top of `CURRENT_STATE.md`. The report to Luis also carries
+   **Where it stopped (November 13, late afternoon; Opus 5.5): step 0's misses rerun at the true turns; the cost
+   measured.** All of it is in `Validation.md` ("step 0's other facts; the solver's turns lost ...").
+   - The rigs now set their turns after their links (`StandingLeg(..., turnsFirst)` keeps the old way for the turns
+     test, which gained a fourth way: made with the turns after, it reads back 14 and 4 and runs the same course to the
+     last bit as one set again to 14 and 4). Run `step0true`: K4(a) and K5 fail their bars, the four diagnostics pass.
+   - **K4(a) at 14 and 4 still falls**, two to six times later (with the making-up: Small 1.04 s, Long 1.54, Round
+     1.16). The ankle gives about 0.66 of the law's share when made up (0.46 of its ask for Small), and less as it asks
+     more, so a making-up by the law's share, and R1's read share floored at the law's, fall short. **K5 is unchanged by
+     the turns**: its per-step clause trips on the count's lag and on rounding at every speed (even at 5 rad/s); the
+     summed clause would hold every miner at 10 and 20 rad/s and fail Small (0.52) and Long (0.69) at 30.
+   - **Cost** (`turnscost.log`): a body a step at 6/1 against 14/4: Small 62.3 against 110.5 microseconds, Long 70.1
+     against 123.1, Round 62.2 against 106.8. So the fix costs 1.72 to 1.77 times, about 2.2 to 2.7 ms more a body for
+     each second played.
+   - **Next:** (1) one independent review (opus, medium): the turns finding and the game's fix; K4(a)'s reading and
+     what R1's making-up should floor at; K5's summed bar. (2) The report to Luis: the finding; the fix, its cost, and
+     that it changes how every own body moves (his to decide, perhaps as a switch to compare); step 0's results. (3)
+     Then, by his word: the game's fix with its own review, `OwnBodyTests` as a whole at the true turns, and R1's
+     making-up changed and K4(a) run again.
+   - Then: the November 13 entry in `Validation.md` (written) and the top of `CURRENT_STATE.md`. The report to Luis also carries
      the earlier items: the stiff-ankle bar reshaped after its first run; the reading that runs past π; that naive goal
      writing does not arrive (the y control); the floating gravity forces; the K3b y-case control.
 3. **Step 1**: `BodyFrame` moved into the game with the pose read off the body, tested lying flat and at the hard poses.

@@ -5004,3 +5004,101 @@ The work branch (`D:/Dev/WG`, `claude/wip-round`); nothing in play calls the sol
   parent turning; the share read with the drive at its limit or an axis on its stop; an edge case with the making-up
   on, its estimate read step by step (a hold that comes and goes could rock); what the making-up does with the tip
   read as error (1/share times the torque into the ground); nothing of this as played or in a build.
+
+## S3b step 2 — step 0's other facts; the solver's turns lost when set before the links (November 13)
+
+Work branch `claude/wip-round`: the five facts `6c7380d`, the diagnostics `4585636`, the turns tests `37565da`. Logs in
+`D:/Dev/WG/TestRuns/` (`step0rest`, `step0diag`, `levers_pgs`, `turnskept`, `ownturns`). Every result below was read
+from its log before it was written here.
+
+- **The five facts' first run** (`step0rest.log`; each bar set before its run, `motion_design.md` §6.2):
+  - **K3, the reading** (`ABallJointReadsItsPoseAboutTwoAxes`): passes. In all three cases the reading is the pose's
+    rotation vector to 0.0000 rad. The joint's speeds are counted in the child's own axes ((b) read 0.946, 0.946,
+    0.546). In (c) the reading came back to (0, 1.047, 0) while the summed turns gathered −π about x.
+  - **K3, the drive across a half turn** (`ADriveWrittenByTheShortestTurnCrossesAHalfTurn`): passes. The shortest-turn
+    writer reached both goals (0.00 degrees left), and the reading ran past a half turn without a jump (3.317 rad).
+    The control about x went the long way (167.6 degrees). The control about y, logged only, was still 90.8 degrees
+    off after a second: a far goal written as its own rotation vector does not arrive at all.
+  - **K4(b), gravity on a floating root** (`GravityForcesOnAFloatingRootAreAboutNothing`): passes as written, but it
+    checked 6 of the floating root's 12 values. Widened to all 12 and run again (`step0diag.log`): all 12 are 0.0000
+    against the fixed root's 16.508. The start indices are 0,0,3 (fixed) and 0,6,9 (floating: the root's own 6 first).
+  - **K5, the speed sweep** (`EachMinersLegHoldsItsDrivesAtTheSpeedsARiseAsks`): fails its bar. All three miners fail
+    at 10 rad/s by the second clause (a step's gain beyond the count more than half its dampers' take: Small 0.0108
+    against 0.0109 J at step 3; Long 0.0443 against 0.0376 at step 4; Round 0.0225 against 0.0256 at step 3). By the
+    first clause the driven legs hold to 40, 35 and 45 rad/s. The control, left alone at 30, fails as it must.
+  - **K4(a), the load through the target** (`TheLoadGoesThroughTheTargetOnEachMinersLeg`): fails its bar. Every case
+    fell. With the making-up: Small at 0.48 s, Long 0.82, Round 0.38. Without: 0.40, 0.68, 0.12. The ankle's load at the
+    first step matched the hand-reckoned stance (Small 21.88 N m).
+- **The diagnostics** (`step0diag.log`; no bars). K5's count read step by step: the gain beyond the count runs negative
+  in the first step and positive in the next two or three, a lag of the count. Summed over the second it is about
+  nothing at 5 rad/s and grows with speed (+0.4 to +0.8% at 10, +3.4 to +5.1% at 20, +6.1 to +8.2% at 30). K4(a)'s fall
+  traced: the control with gravity off stood exactly (0.001 degrees, 0.0 mm). With gravity the ankle gave a small part
+  of what it asked (Round without the making-up: 8.9 of 47.2 N m in the first step); the boot rocked toe-up and its
+  heel sank. *Both diagnostics ran on rigs at 6 and 1 turns (below), so their reading at midday ("K8's law fails under
+  a body that tips") is withdrawn.*
+- **The turns lost** (`TheSolversTurnsSetBeforeTheLinksAreKept`, `turnskept.log`; no bar, its expectations written
+  before the run). **Turns set on an articulation's root before its links are added are lost.** The articulation then
+  runs at the project's defaults, 6 and 1 (`DynamicsManager.asset`), and its root reads back 6 and 1. Each miner's
+  standing leg as it was made, and the same leg set again to 6 and 1 after its links, ran the same course to the last
+  bit. Set again to 14 and 4 it did not. The ankle's first-step share, as made against set again to 14 and 4: Small
+  0.268 against 0.514 (it fell at step 21 against 49); Long 0.234 against 0.471 (step 34 against standing the 60
+  steps); Round 0.189 against 0.395 (step 6 against 34). The "as made" falls reproduce K4(a)'s first run (Small 0.40 s,
+  Long 0.68, Round 0.12). `StandingLeg` (K4(a), the trace) and `BareLeg` (K5, its count read) set their turns before
+  their links. The stiff-ankle rig set them after, so K8's validation stands.
+- **The share under the solver's turns** (`TheStandingLegsShareUnderTheSolversTurns`, `levers_pgs.log`; PGS; no bar;
+  the turns set again after the leg was built; no making-up). The ankle's first-step share by what it asked, against
+  K8's law:
+
+  | Miner | 14 and 4 | 28 and 4 | 60 and 4 |
+  |---|---|---|---|
+  | Small | 0.514 (law 0.697), fell at step 49 | 0.691 (0.880), step 57 | 0.881 (0.986), stood 2 s |
+  | Long | 0.471 (0.532), step 66 | 0.637 (0.741), step 75 | 0.829 (0.933), stood 2 s |
+  | Round | 0.395 (0.451), step 34 | 0.560 (0.656), step 56 | 0.764 (0.882), step 79 |
+
+  So the measured share is 0.74 to 0.89 of the law's, in every case. The knee gave 0.77 to 1.54 of what it asked. The
+  boot's largest tilt was +16 to +45 degrees as it fell (Round at 14 and 4: −4.65). The heel sank at most 6.0 mm (Round,
+  14 and 4); the toe lifted 4.8 to 24.2 mm.
+- **The game's own bodies** (`OwnBodyTests.EachMinersOwnBodyRunsAtItsOwnTurns`, `ownturns.log`; bar set before the
+  run: each miner's own body, once it stands, runs at the turns its code sets, 14 and 4). **Fails**: "OWN_TURNS Small:
+  its hips the root, 6 and 1", and the same for Long and Round. The cause is `OwnBody.cs:760`, which sets the turns on
+  the hips inside the loop that adds the links. `BodysOwnBench.cs:317` does the same, so the benches ran at 6 and 1
+  too. `PhysicalFall`'s parts are Rigidbodies and are not touched by this. The game code is not changed: the fix
+  changes how every own body moves, so it goes to Luis.
+- **Step 0's two misses and the diagnostics again, at the true 14 and 4** (`step0true.log`; the rigs now set their
+  turns and sleep threshold after their links; the work branch after `37565da`). Read:
+  - **The rigs' fix holds.** The turns test's fourth way, the leg made with its turns after its links, read back 14
+    and 4 and ran the same course as the leg set again to 14 and 4, to the last bit, for all three miners. The lever
+    run's nine lines came out identical to the earlier run's.
+  - **K4(a) still fails its bar**, but every leg stands two to six times longer. Fell with the making-up: Small at
+    1.04 s (0.48 at 6 and 1), Long 1.54 (0.82), Round 1.16 (0.38). Without it: 0.98 (0.40), 1.32 (0.68), 0.68 (0.12).
+    The trace (Small with the making-up at the law's share 0.697): the ankle asked 31.4 N m against a load of 21.9 and
+    gave 14.8, then about 15 to 16 while asking 33 to 36. So it gives about 0.46 of what it asks, 0.66 of the law's
+    share. Its offset grew about 0.4 degrees a step, the knee buckled with it, and Small fell at step 52. Round without
+    the making-up gave 18.6 of 47.2 in the first step, then 21 of 62 and 22 of 69 (0.39, 0.34, 0.31): the share falls
+    as the ask grows. The gravity-off control stood exactly (0.000 degrees, 0.0 mm).
+  - **K5 still fails its bar at 10 rad/s by the per-step clause, by nearly what it did at 6 and 1** (Small 0.0099 J
+    beyond the count against its dampers' 0.0096 at step 3; Long 0.0426 against 0.0375 at step 4; Round 0.0211 against
+    0.0258 at step 3). By the first clause the legs hold to 40, 35 and 45 rad/s as before (Long rises at 40, 1.0388).
+    Read step by step, the per-step clause trips at 5 rad/s too, on gains of about a ten-thousandth of a joule at steps
+    19 to 25. Summed over the second, the gain beyond the count over the dampers' take: at 10 rad/s 0.036, 0.064, 0.030
+    (Small, Long, Round); at 20, 0.31, 0.43, 0.24; at 30, 0.52, 0.69, 0.43. At 6 and 1 these were 0.035, 0.063, 0.029;
+    0.30, 0.43, 0.24; 0.49, 0.69, 0.42. The free leg's drives hardly depend on the turns.
+- **Read from this.** The turns lost explain about half of K4(a)'s miss, and none of K5's. At the true turns the
+  stance still falls, because the ankle gives less than K8's law says (0.74 to 0.89 of it with the load alone, 0.66
+  with the making-up's larger ask), so a making-up by the law's share falls short. R1's read share is floored at the
+  law's share, so as designed it would fall short too. K5's per-step clause trips on the count's lag and on
+  rounding, at every speed run; the summed clause proposed at midday would hold every miner at 10 and 20 rad/s and fail
+  Small (0.52) and Long (0.69) at 30. Both bars are for review before any further run.
+- **What the true turns cost** (`OwnBodyTests.WhatMoreTurnsOfTheSolverCost` with 6 and 1 added, `turnscost.log`;
+  explicit, no bar; twenty copies of each miner's own body lying awake, the engine stepped by hand, in the editor;
+  passed). Microseconds a body a step at 6 and 1, 14 and 4, 28 and 4, 60 and 4: Small 62.3, 110.5, 173.0, 314.7; Long
+  70.1, 123.1, 184.2, 352.6; Round 62.2, 106.8, 166.7, 301.9. So the turns the code means cost 1.72 to 1.77 times what
+  the game runs now: about 45 to 53 microseconds more a body a step, or 2.2 to 2.7 ms more a body for each second
+  played. The 14 and 4 numbers are within 2% of November 11's.
+- **Not tested:** the game's fix (`OwnBody.cs:760` is not changed); how the standing balance, the step, the shove test
+  and the getting up behave at 14 and 4, and the whole PlayMode suite at either count; the cost of a standing body, of
+  many touching, or in a player build; whether any other root setting made before the links (the sleep threshold
+  among them) is lost the same way (the rigs' moved sleep threshold changed nothing in these courses); the benches'
+  other articulations (`BodysOwnBench.cs` near lines 587 and 660); a making-up by the share read from what the drive
+  gave, or with a floor below the law's; K5's summed bar as a bar; TGS at the true turns; nothing of this as played or
+  in a build. No independent review yet.
