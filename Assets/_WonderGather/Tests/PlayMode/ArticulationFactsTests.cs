@@ -1535,5 +1535,145 @@ namespace WonderGather.Tests
             }
             TakeAway();
         }
+
+        // The levers on the standing leg's shortfall (a diagnostic with no bar; November 13). The trace found the ankle's
+        // drive giving a tenth to a quarter of what it asked under a body that tips, against K8's law's 0.45 to 0.70 at 14
+        // and 4 turns. If that is the solver's turns not converging through the light boot, the share rises with the turns.
+        // Expected before the run: by K8's law re-reckoned for the turns (place and speed together, as the law counts 18),
+        // Round's ankle 0.45 at 18, 0.66 at 32 and 0.88 at 64; by a law fitted to the trace's first step (0.19 at 18), 0.31
+        // at 32 and 0.53 at 64. If it does not rise, the turns are not the cause. Each miner without the making-up (so the
+        // share is read clean), at 14/4, 28/4 and 60/4 on its articulation, for two seconds or to its fall, under the
+        // project's solver as set (run once under each). Told: the ankle's given over asked (from the state before the
+        // step) and over said (the spring's pull less what spring and damper take for the speed at the step's end: R1's
+        // reading), in the first step and over the first five; the knee's given over asked; the fall; the boot's largest
+        // tilt, how deep its heel went and how high its toe rose.
+        [UnityTest]
+        public IEnumerator TheStandingLegsShareUnderTheSolversTurns()
+        {
+            int[][] turns = { new[] { 14, 4 }, new[] { 28, 4 }, new[] { 60, 4 } };
+            for (int m = 0; m < Legs.Length; m++)
+                for (int t = 0; t < turns.Length; t++)
+                {
+                    var of = Legs[m]; int place = turns[t][0], speed = turns[t][1];
+                    TakeAway();
+                    Vector3 at = new Vector3(-500 - 10 * m, 20, 300 + 10 * t);
+                    var (parts, goal) = StandingLeg(of, at);
+                    parts[0].solverIterations = place; parts[0].solverVelocityIterations = speed;
+                    yield return null;
+                    var starts = new List<int>(); parts[0].GetDofStartIndices(starts);
+                    var q = new List<float>(); parts[0].GetJointPositions(q);
+                    for (int j = 1; j < 4; j++) q[starts[parts[j].index]] = goal[j];
+                    parts[0].SetJointPositions(q);
+                    parts[0].SetJointVelocities(new List<float>(new float[q.Count]));
+                    float[] k = { 0, of.Thigh.Spring, of.Shin.Spring, of.Boot.Spring }, c = { 0, of.Thigh.Damper, of.Shin.Damper, of.Boot.Damper }, has = { 0, of.Thigh.Has, of.Shin.Has, of.Boot.Has };
+                    float turning = AboutItsJoint(of.Boot, of.Boot.Joint), a = Dt * (Dt * k[3] + c[3]), law = 1 - Mathf.Pow(1 - turning / (turning + a), place + speed);
+                    float[] asked = new float[4], said = new float[4], was = new float[4], pull = new float[4];
+                    Vector3 weightWas = parts[0].worldCenterOfMass, heel = -of.Boot.Joint + new Vector3(0, -.5f * of.Sole.y, -.5f * of.Sole.z), toe = heel + new Vector3(0, 0, of.Sole.z);
+                    float firstAsked = 0, firstSaid = 0, fiveAsked = 0, fiveSaid = 0, kneeFive = 0, tilt = 0, sink = 0, lift = 0; int fellStep = -1;
+                    for (int step = 0; step < 100; step++)
+                    {
+                        for (int j = 1; j < 4; j++)
+                        {
+                            float target = goal[j] + GravityLoad(parts, j, out _) / k[j];
+                            was[j] = parts[j].jointPosition[0]; pull[j] = k[j] * (target - was[j]);
+                            asked[j] = Mathf.Clamp(pull[j] - c[j] * parts[j].jointVelocity[0], -has[j], has[j]);
+                            parts[j].xDrive = DriveOf(k[j], c[j], has[j], target * Mathf.Rad2Deg);
+                        }
+                        Physics.Simulate(Dt);
+                        for (int j = 2; j < 4; j++)
+                        {
+                            float turned = (parts[j].jointPosition[0] - was[j]) / Dt, spoke = pull[j] - (Dt * k[j] + c[j]) * turned;
+                            said[j] = Mathf.Sign(spoke) * Mathf.Min(Mathf.Abs(spoke), has[j]);
+                        }
+                        float byAsked = parts[3].driveForce[0] / asked[3], bySaid = parts[3].driveForce[0] / said[3];
+                        if (step == 0) { firstAsked = byAsked; firstSaid = bySaid; }
+                        if (step < 5) { fiveAsked += byAsked / 5; fiveSaid += bySaid / 5; kneeFive += parts[2].driveForce[0] / asked[2] / 5; }
+                        float tl = Vector3.SignedAngle(Vector3.up, parts[3].transform.up, Vector3.right);
+                        if (Mathf.Abs(tl) > Mathf.Abs(tilt)) tilt = tl;
+                        sink = Mathf.Max(sink, at.y - parts[3].transform.TransformPoint(heel).y);
+                        lift = Mathf.Max(lift, parts[3].transform.TransformPoint(toe).y - at.y);
+                        bool fell = parts[0].worldCenterOfMass.y < weightWas.y - .1f;
+                        for (int j = 1; j < 4; j++) fell |= Mathf.Abs(parts[j].jointPosition[0] - goal[j]) > 15 * Mathf.Deg2Rad;
+                        if (fell) { fellStep = step; break; }
+                    }
+                    string fate = fellStep < 0 ? "it stood the two seconds" : "it fell at step " + (fellStep + 1);
+                    Debug.Log($"FACTS share under turns, {SolverInForce()}, {of.Name} at {place}/{speed} (the law's share at the ankle {law:0.000}): the ankle gave {firstAsked:0.000} of what it asked and {firstSaid:0.000} of what it said in the first step, {fiveAsked:0.000} and {fiveSaid:0.000} over the first five; the knee {kneeFive:0.000} of what it asked; {fate}; the boot's largest tilt {tilt:+0.00;-0.00} degrees, its heel {sink * 1000:0.0} mm deep and its toe {lift * 1000:0.0} mm up");
+                }
+            TakeAway();
+        }
+
+        // Whether the solver's turns set on an articulation's root before its links are added are kept (a diagnostic with
+        // no bar; November 13). StandingLeg and BareLeg set 14 and 4 on the root before adding the links, and so does the
+        // game's OwnBody; the stiff-ankle rig set them after. The lever run, which set them again after the links, found
+        // the ankle's share near K8's law, against the trace's and K4(a)'s third to a quarter of it. If turns set before the
+        // links are lost, the articulation runs at the project's defaults (6 and 1; K8's law at 7 turns gives Round's ankle
+        // 0.21, and the trace read 0.19). Expected before the run, if they are lost: the leg as made and the leg set again
+        // to 6 and 1 after its links run the same to the last bit, and the leg set again to 14 and 4 does not. If they are
+        // kept: the leg as made and the leg set again to 14 and 4 run the same. Each miner three ways, in the same place,
+        // 60 steps or to its fall. Told: the turns read back from the root as made, the ankle's given over asked in the
+        // first step, the fall, and whether each course is the same as the leg's as made to the last bit (else how far
+        // apart the weight's centres came).
+        [UnityTest]
+        public IEnumerator TheSolversTurnsSetBeforeTheLinksAreKept()
+        {
+            string[] ways = { "as made", "set again to 6 and 1", "set again to 14 and 4" };
+            int[][] turns = { null, new[] { 6, 1 }, new[] { 14, 4 } };
+            for (int m = 0; m < Legs.Length; m++)
+            {
+                var of = Legs[m];
+                var course = new List<Vector3>[3];
+                string told = "";
+                for (int w = 0; w < 3; w++)
+                {
+                    TakeAway();
+                    Vector3 at = new Vector3(-600 - 10 * m, 20, 300);
+                    var (parts, goal) = StandingLeg(of, at);
+                    string readBack = $"{parts[0].solverIterations} and {parts[0].solverVelocityIterations}";
+                    if (turns[w] != null) { parts[0].solverIterations = turns[w][0]; parts[0].solverVelocityIterations = turns[w][1]; }
+                    yield return null;
+                    var starts = new List<int>(); parts[0].GetDofStartIndices(starts);
+                    var q = new List<float>(); parts[0].GetJointPositions(q);
+                    for (int j = 1; j < 4; j++) q[starts[parts[j].index]] = goal[j];
+                    parts[0].SetJointPositions(q);
+                    parts[0].SetJointVelocities(new List<float>(new float[q.Count]));
+                    float[] k = { 0, of.Thigh.Spring, of.Shin.Spring, of.Boot.Spring }, c = { 0, of.Thigh.Damper, of.Shin.Damper, of.Boot.Damper }, has = { 0, of.Thigh.Has, of.Shin.Has, of.Boot.Has };
+                    Vector3 weightWas = parts[0].worldCenterOfMass;
+                    course[w] = new List<Vector3>();
+                    float first = 0; int fellStep = -1;
+                    for (int step = 0; step < 60; step++)
+                    {
+                        float askedAtAnkle = 0;
+                        for (int j = 1; j < 4; j++)
+                        {
+                            float target = goal[j] + GravityLoad(parts, j, out _) / k[j];
+                            float asked = Mathf.Clamp(k[j] * (target - parts[j].jointPosition[0]) - c[j] * parts[j].jointVelocity[0], -has[j], has[j]);
+                            if (j == 3) askedAtAnkle = asked;
+                            parts[j].xDrive = DriveOf(k[j], c[j], has[j], target * Mathf.Rad2Deg);
+                        }
+                        Physics.Simulate(Dt);
+                        if (step == 0) first = parts[3].driveForce[0] / askedAtAnkle;
+                        course[w].Add(parts[0].worldCenterOfMass);
+                        bool fell = parts[0].worldCenterOfMass.y < weightWas.y - .1f;
+                        for (int j = 1; j < 4; j++) fell |= Mathf.Abs(parts[j].jointPosition[0] - goal[j]) > 15 * Mathf.Deg2Rad;
+                        if (fell) { fellStep = step; break; }
+                    }
+                    string same = "";
+                    if (w > 0)
+                    {
+                        int n = Mathf.Min(course[w].Count, course[0].Count); bool exact = course[w].Count == course[0].Count; float apart = 0;
+                        for (int i = 0; i < n; i++)
+                        {
+                            Vector3 x = course[w][i], y = course[0][i];
+                            exact &= x.x == y.x && x.y == y.y && x.z == y.z;
+                            apart = Mathf.Max(apart, (x - y).magnitude);
+                        }
+                        same = exact ? ", the same course as made to the last bit" : $", not the same course as made (the weights' centres up to {apart * 1000:0.000} mm apart over the {n} steps both ran)";
+                    }
+                    told += $" {ways[w]} (read back as made: {readBack}): the ankle gave {first:0.000} of what it asked in the first step, {(fellStep < 0 ? "stood the 60 steps" : "fell at step " + (fellStep + 1))}{same};";
+                }
+                Debug.Log($"FACTS turns kept, {SolverInForce()}, {of.Name}:{told}");
+            }
+            TakeAway();
+        }
     }
 }

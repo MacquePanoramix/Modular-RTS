@@ -53,6 +53,38 @@ namespace WonderGather.Tests
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
         private Vector3 OnGround(Vector3 p) => new Vector3(p.x, ground.Height(p.x, p.z), p.z);
 
+        // The solver's turns on each miner's own body (November 13). OwnBody sets 14 and 4 on its hips, the root, in the
+        // loop that adds the links, before the others are added; the facts found that turns set on a root before its links
+        // are lost, the articulation then running at the project's defaults, 6 and 1 (ArticulationFactsTests,
+        // TheSolversTurnsSetBeforeTheLinksAreKept: read back so, and its course the same to the last bit as one set to 6
+        // and 1). Bar, set before the run: each miner's own body, once it stands, runs at the turns its code sets, 14 and
+        // 4. Expected before the run, if the facts carry over to the game: each reads 6 and 1, and the test fails.
+        [UnityTest]
+        public IEnumerator EachMinersOwnBodyRunsAtItsOwnTurns()
+        {
+            var told = new System.Collections.Generic.List<string>(); var wrong = new System.Collections.Generic.List<string>();
+            foreach (string name in new[] { "Small", "Long", "Round" })
+            {
+                int index = -1;
+                for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == name) index = i;
+                Assert.That(index, Is.GreaterThanOrEqualTo(0), $"No miner called {name}.");
+                choice.Choose(index);
+                yield return Wait(.3f);
+                var unit = choice.Current;
+                look.SetOwn(true);
+                OwnBody own = null;
+                for (float until = Time.time + 20; (own == null || !own.Stands) && Time.time < until;) { unit.TryGetComponent(out own); yield return null; }
+                Assert.That(own != null && own.Stands, Is.True, $"{name} did not come to stand by its own joints.");
+                var root = own.Part(OwnBody.Hips);
+                told.Add($"{name}: {(root.isRoot ? "its hips the root" : "its hips NOT the root")}, {root.solverIterations} and {root.solverVelocityIterations}");
+                if (root.solverIterations != 14 || root.solverVelocityIterations != 4) wrong.Add(name);
+                look.SetOwn(false);
+                yield return Wait(1);
+            }
+            Debug.Log("OWN_TURNS " + string.Join("; ", told));
+            Assert.IsEmpty(wrong, "not at 14 and 4: " + string.Join(", ", wrong));
+        }
+
         // A miner stood on the path, facing along it.
         private IEnumerator Stand(SelectableUnit unit, System.Action<Vector3, Vector3> at)
         {
