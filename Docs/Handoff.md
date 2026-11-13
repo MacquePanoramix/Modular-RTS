@@ -20,9 +20,9 @@ Opus 5.5's, at max thinking with ultracode on. Everything it needs is in the rep
    reviewed; what it left open is in item 3.
 3. **The rest of step 0** ("Next steps", item 2), each fact with its bar set before its run and read before it is
    claimed; then step 1; then **step 2, whose clips are the first thing Luis sees** (he has seen no motion from this
-   work since October 30). **Where it stopped** (November 12, night, when Luis had to pack his computer): the other
-   facts of step 0 are designed with their bars, and nothing of them is written yet ("Next steps", item 2, "Where it
-   stopped"). Begin there.
+   work since October 30). **Where it stopped** (November 13, morning): the five other facts of step 0 are written
+   and have had one run. Three meet their bars and two do not, and both of those are being read ("Next steps", item 2,
+   "Where it stopped (November 13)"). Begin there.
 
 What binds every step: quality above speed; never a played animation; nothing that switches at a threshold; one body
 for everything; every step reviewed by agents who did not make it; a result said only after its run was read; Luis's
@@ -285,6 +285,77 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
    branches. Still to tell Luis in the next report: the stiff-ankle test's bar was reshaped after its first run; more
    turns of the solver are a lever with a known cost (1.5 times at 28, 2.7 to 2.8 at 60); the review's verdicts; the
    pace of the plan's usage (about one five-hour window left before it resets on November 16).
+
+   **Where it stopped (November 13, morning; Opus 5.5).** The five facts are written at the end of
+   `ArticulationFactsTests.cs` in `D:/Dev/WG`, not committed yet. They compiled clean and have had one run
+   (`TestRuns/step0rest.log` and `step0rest_r.xml`). Weekly usage then: 88%.
+   - **K3, the reading** (`ABallJointReadsItsPoseAboutTwoAxes`): **passes.**
+     - In all three cases the reading is the pose's rotation vector to 0.0000 rad.
+     - The joint's speeds are counted in the child's own axes: (b) read (0.946, 0.946, 0.546).
+     - In (c) the reading came back to (0, 1.047, 0), while the summed turns gathered −π about x.
+   - **K3, the drive across a half turn** (`ADriveWrittenByTheShortestTurnCrossesAHalfTurn`): **passes.**
+     - The shortest-turn writer reached both goals (0.00 degrees left; at most 20.1 and 30.0 degrees from the start).
+     - The reading ran on past a half turn without a jump (3.317 rad).
+     - The control about x went the long way (167.6 degrees).
+     - The control about y, logged only, was still 90.8 degrees off after a second. So a far goal written as its own
+       rotation vector does not merely go the long way: it does not arrive.
+   - **K4(b), gravity on a floating root** (`GravityForcesOnAFloatingRootAreAboutNothing`): **passes as written, but
+     the test checks less than its bar says.**
+     - The fixed root read A2 16.508 and B2 2.775. The floating root read 0.000 at every index checked.
+     - The floating root's list holds 12 values (6 of them the root's) against the fixed root's 6, and only 6 were
+       checked. The bar says "every value", so check all 12 and log the start indices.
+   - **K5, the speed sweep** (`EachMinersLegHoldsItsDrivesAtTheSpeedsARiseAsks`): **fails its bar.**
+     - All three miners "fail at 10 rad/s", each by the second clause: a step's gain beyond the count was more than
+       half of what its dampers took. At 10 rad/s:
+
+       | Miner | Gain beyond the count (J) | Dampers' take (J) | Step |
+       |---|---|---|---|
+       | Small | 0.0108 | 0.0109 | 3 |
+       | Long | 0.0443 | 0.0376 | 4 |
+       | Round | 0.0225 | 0.0256 | 3 |
+
+     - By the first clause (never holding more than after its first step), the driven legs hold up to 40 rad/s
+       (Small), 35 (Long) and 45 (Round). They first rise at 45 (1.0197), 40 (1.0383) and 50 (1.0109).
+     - The control, left alone at 30, fails as it must: 1.32 of its first step's after one step, then 1e21 to 1e30.
+     - Reading, not yet shown: at 10 rad/s the drives stop the leg within two or three steps, and the clause trips on
+       what is left, about 0.2% of what the leg began with. The gain beyond the count grows with speed (Small: about
+       0.2% of its first step's at 10, 3% at 30, 9% at 50).
+     - The bounds this run's rule gives are 6.7 rad/s everywhere. That is not shown, because nothing below 10 was
+       run.
+     - **To do:** a diagnostic with no bar, at 5, 10, 20 and 30 rad/s. It logs each of the first six steps, and the
+       whole second summed: the gain beyond the count, what the dampers took, and what the leg holds against its first
+       step. Then a re-specified bar, put to an independent reviewer before its run.
+   - **K4(a), the load through the target** (`TheLoadGoesThroughTheTargetOnEachMinersLeg`): **fails its bar.**
+     - Every case fell, with the making-up as well as without (without was predicted):
+
+       | Miner | Fell with the making-up | Fell without |
+       |---|---|---|
+       | Small | 0.48 s | 0.40 s |
+       | Long | 0.82 s | 0.68 s |
+       | Round | 0.38 s | 0.12 s |
+
+     - As made, the joints read (0, 0, 0). The engine reads a link made posed as being at zero, as
+       `MadeLyingStaysAsMade` found. The pose is then written AsMade's way.
+     - The ankle's load at the first step matched the hand-reckoned stance (Small 21.88 N m).
+     - Round fell in six steps. That needs hundreds of N m, far beyond gravity's imbalance of tens, so **suspect the
+       rig before the design**.
+     - The shares logged after 2 s were read off the fallen body and mean nothing.
+     - **To do:** a trace of each step up to the fall: the three joints' offsets, drive forces and loads; the weight's
+       drop and pitch; the boot's pitch. With two controls: gravity off (it must stand exactly), and drives ten times
+       as stiff.
+     - One more effect to read in the trace. A one-step lag in the load put through the target acts as a negative
+       damping of about m·g·h·dt, against the damping s·c:
+
+       | Joint | m·g·h·dt | s·c |
+       |---|---|---|
+       | Small's ankle | 5.7 | 2.1 |
+       | Long's ankle | 13.1 | 4.7 |
+       | Round's ankle | 14.8 | 3.8 |
+       | Round's knee | 9.2 | 7.9 |
+
+       That growth is slow (seconds), so it is not this fall.
+   - Then: write it all into `Validation.md`, one independent review, commit and push both branches, the 25th outlook,
+     and the report to Luis (with the items above).
 3. **Step 1**: `BodyFrame` moved into the game with the pose read off the body, tested lying flat and at the hard poses.
 4. **Step 2**: one stance held by its own joints, nudged; then **clips for Luis**.
 5. Steps 3 to 8 as the design has them.
