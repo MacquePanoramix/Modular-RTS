@@ -5167,3 +5167,5 @@ switch, so that the step and the getting up can be played both ways before he ch
   only); a miner standing still at a lower strength than its own; TGS; K4(a), R1's making-up and K5 at the true turns
   (the next step, under B's bars); anything by Luis's eye. The fallen body (`PhysicalFall`) runs at 14 and 4 whatever
   the switch (A's 8): the switch is the own body's alone.
+- **The build for Luis:** `Builds/WindowsOrdinaryPlace_Nov13` in `D:/Dev/WG`, at `957a21b` (`BuildWindows`; "Build
+  Finished, Result: Success", `ORDINARY_PLACE_BUILD_OK`). Not launched or looked at before it went to him.

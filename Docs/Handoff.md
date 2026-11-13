@@ -465,9 +465,11 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      Next for it: both makings in one run from one kept start, the new one run twice first. B's are for the next
      step (B4 blocks the unfloored share of R1; K8's R; K5's count); B7 said in `motion_design.md` K8. (4) `ownoff`
      and `ownon` read: 14 of 15 each way, only the shove test failing (Small 25.0 and 22.7 m/s; Round 17.1 off, 4.2
-     on). The decision is in `GAME_VISION.md` (2026-11-13 row). Records written (Validation, review.md). **Next:**
-     commit and push both branches, the build `WindowsOrdinaryPlace_Nov13`, the report (its first line: the switch,
-     off by default); then A's 7 as above, and the next step under B's bars.
+     on). The decision is in `GAME_VISION.md` (2026-11-13 row). Records written (Validation, review.md); committed and
+     pushed (`957a21b` on `claude/wip-round`, `38adadd` on `claude/worker-showcase`); the build
+     `Builds/WindowsOrdinaryPlace_Nov13` in `D:/Dev/WG` made (Result: Success) and the report sent (November 13,
+     night), its first line the switch, off by default. **Wait for Luis's word on which way the game plays**; then
+     A's 7 as above, and the next step under B's bars (it waits on the week's reset as well).
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for
