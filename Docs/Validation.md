@@ -5169,3 +5169,29 @@ switch, so that the step and the getting up can be played both ways before he ch
   the switch (A's 8): the switch is the own body's alone.
 - **The build for Luis:** `Builds/WindowsOrdinaryPlace_Nov13` in `D:/Dev/WG`, at `957a21b` (`BuildWindows`; "Build
   Finished, Result: Success", `ORDINARY_PLACE_BUILD_OK`). Not launched or looked at before it went to him.
+
+## The solver's turns on by default (November 13, afternoon)
+
+- **The change** (work branch `6773465`): `OwnBody.TurnsAsMeant` starts true, as Luis chose after playing both ways
+  (November 13, night); the switch stays on the miner's panel, off being the game as played before. `TestArguments`:
+  `-turnsAsMeant 0` runs every own body at 6 and 1 to compare, anything else at 14 and 4; the suite gives the game
+  back the value it found.
+- **`OwnBodyTests`, the default on** (`ownbody_default_on`): 16 of 16, `ShovedAgainAndAgainNothingOfItFlies` among them.
+- **The whole suite the normal way, the default on** (`normal_default_on`, 17:35 to 18:04 UTC, nothing else running
+  in the worktree): **240 tests, 206 passed, 2 failed, 32 run only when asked.** The two are K5 and K4(a)
+  (`ArticulationFactsTests`), failing their bars as they have since November 12 (above); they build their own legs at
+  14 and 4 and never read the switch (`facts_default_on`: 20 of 22, the same two).
+- **The whole suite as played** (`-ownAsPlayed 1`, 240 tests each way; `asplayed_on`, `asplayed_off`): on 193
+  passed, 15 failed; off 192 passed, 16 failed; 32 run only when asked. **On fails nothing that off passes**, and
+  passes `OwnBodyTests.EachMinerStandsByItsOwnJointsStill`, which off fails. The 15 failing both ways: K5 and K4(a),
+  and 13 that are all on the list sorted on October 10 (`TheBodysOwn.md`, "The whole suite, as the game is played":
+  tests that take the body by hand, or measure a hand against the old body): `PhysicalBodyTests` five,
+  `PhysicalFallTests` two (of its three), `PhysicalBalanceTests` two, `MinerToolTests`, `EvidenceTests`,
+  `HungThingTests` and `MinerTests` one each. On October 14 twelve of that list failed as played; which one fails
+  again since is not read.
+- **Said wrongly in the session, before this record was read:** that K5 and K4(a) had passed on November 12 and 13.
+- **Not tested:** the built game opened or played; anything by Luis's eye beyond his play of November 13 (both ways,
+  on the build `WindowsOrdinaryPlace_Nov13`); a miner at a lower strength than its own with the default on.
+- **The build for Luis:** `Builds/WindowsOrdinaryPlace_Nov13b` in `D:/Dev/WG`, at `6773465` (`BuildWindows -buildOut
+  WindowsOrdinaryPlace_Nov13b`; "Build Finished, Result: Success.", `ORDINARY_PLACE_BUILD_OK`). Not launched or looked
+  at before it went to him.

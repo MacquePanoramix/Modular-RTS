@@ -58,6 +58,27 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 13, 2026 (afternoon) — the twenty-seventh, short (a stretch closed, before the report)
+
+- **Where we are.** Luis approved the six recommendations on turning and settling, and asked that every step be
+  researched first, keep the philosophies of mechanics and aesthetics, and be checked rigorously for every kind of
+  unnatural movement. Done: the solver's turns on by default (14 and 4) after the whole suite both ways; the build
+  `WindowsOrdinaryPlace_Nov13b`; the catalogue of unnatural movement (108 kinds, researched, checked by a sceptic,
+  reviewed); the detached leg investigated (most likely the cut trousers showing: a drawing fault, not a joint).
+- **Waiting on Luis:** his eye on the build with the default on; the catalogue's questions (its section 1), the hip
+  twist bar (people 31 to 35 degrees, the walk 62) among them.
+- **Open, not to be forgotten:** the turn bench (the review's eleven fixes and the catalogue's scan), its baseline,
+  then the turning design for Luis; (b)'s faults to zero; (c)'s order of tests; (d) settling as an option beside the
+  idle; a recorder for what the catalogue needs and the game does not record (contacts, centre of mass, masses, drive
+  forces, mode changes); one test of the October list failing again as played since October 14 (which, not read); K5,
+  K4(a), R1 under B's bounds, K8's R.
+- **Does the task serve the stage?** Yes: the catalogue makes "natural" something every later step can measure (the
+  walk, the getting up, the work with tools), and turning is the movement most often seen. **Drift watched:** the
+  getting up for any body (S3b step 2, the milestone's core) has not moved since November 12; Luis's asks come first by
+  his word, and the hand-over keeps it named.
+- **The allowance:** 60% of the five hours, 22% of the week. Two high-effort workflows side by side cost 44% in 25
+  minutes: one agent at a time from here.
+
 ### November 13, 2026 (night) — the twenty-sixth, short (a stretch closed, before the report)
 
 - **Where we are.** Luis chose to fix the turns behind a switch so he can play both ways, and to spend the week's

@@ -553,15 +553,42 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      own foot (F6 measures it): a likely cause of the odd legs.
      **Stopped at the usage limit (November 13, afternoon), in this order:** (1) the as-played runs read: of the 15
      that fail both ways, 13 are the October kind (tests that take the body by hand or measure a hand against the old
-     body; Validation's October 10 and 14 entries, `TheBodysOwn.md` "The whole suite, as the game is played"); 2 are
-     new, both `ArticulationFactsTests` (Small falls at 1.04 s, its ankle 147 degrees off), not yet run in the normal
-     suite with the default on: run `facts_default_on` with filter `WonderGather.Tests.ArticulationFactsTests` (no
-     `-ownAsPlayed`) and read it before committing `OwnBody.cs` and `TestArguments.cs` in `D:/Dev/WG`. (2) The catalogue
-     workflow was stopped before its last stage: `U1_perception.md`, `U2_craft_measures_biomechanics.md`,
-     `U3_project_record.md` and `sceptic_notes.md` are written in `Docs/Research/2026-11-13_UnnaturalMovement/`;
-     `catalogue.md` is not. Resume with `resumeFromRunId` `wf_89a9400c-95e` (the script is kept in this session's
-     folder), or hand a fresh agent those four files to write the catalogue. (3) Then Validation, the build
-     `WindowsOrdinaryPlace_Nov13b`, and the bench as above.
+     body; Validation's October 10 and 14 entries, `TheBodysOwn.md` "The whole suite, as the game is played"); the
+     other 2 are K5 and K4(a) (`ArticulationFactsTests`), **findings that have failed their bars since November 12**
+     (Validation, "K5, the speed sweep" and "K4(a), the load through the target"; they build their own legs at 14 and 4
+     and never read the switch). Run the normal way with the default on (`facts_default_on`): 20 of 22, the same two.
+     (Said wrongly in the session, before the record was read: that they had passed on November 12 and 13.)
+     **After the reset:** the whole suite the normal way with the default on (`normal_default_on`) running; the
+     catalogue's workflow resumed (`wf_89a9400c-95e`; the three researches cached; the sceptic and writer continue from
+     `sceptic_notes.md`; an independent reviewer added after it); (c) investigated read-only, nothing run (`wf_ac0e021a-bd0`, an
+     investigator and a sceptic; [the write-up](Research/2026-11-13_DetachedLeg/investigation.md)): most likely **the
+     cut trousers showing**, a drawing fault (Small's and Round's trouser mesh ends at 0.486 m under the coat, with no
+     leg drawn above it, so a thigh out of the skirt shows an open tube end; the picture's tube length and square end
+     fit), uncovered by the lying own body's free hips (no hip limits, `OwnBody.cs:763, 789-821`) or by the skirt's
+     flaps turning to the thigh's wrong face past 90 degrees of hip bend (`MinerBody.cs:655-656`). Also confirmed in
+     the code, effect unknown: during each try `PhysicalFall.cs:806-808` puts the posed body's and the balance's acting
+     back on after `OwnBody.cs:881-883`, and `PhysicalBalance.Falls` (213-219) does not check the own body. Order to
+     test: Small's drawn model posed without physics over a grid of hip bend, spread and twist, with a cover test of the
+     cut ring seen from the game's camera; `Physics.GetIgnoreCollision` for the unit's capsule against the own body;
+     then the getting up through the game's own flow on Small, with Round on the old way and Small with the switch off
+     as controls. Any fix to the drawn body goes to aesthetic judges first. **Done since:** the default on committed (work
+     branch `6773465`) after the whole suite the normal way, 206 passed, 2 failed (K5, K4(a)) (Validation, "The solver's
+     turns on by default"); the build `WindowsOrdinaryPlace_Nov13b` made from it. **The catalogue is written and
+     reviewed** ([catalogue.md](Research/2026-11-13_UnnaturalMovement/catalogue.md); its section 1 is for Luis): 108
+     kinds in 11 families (C contact, B balance, T timing and effort, S smoothness, J joints, O coordination, W weight
+     cause and reaction, L life and variation, H held things and clothing, Z body size, V the screen), each with a
+     per-frame measure, a bar and where the bar comes from; Luis's flags mapped to kinds; the reviewer fixed false alarms
+     (C1 had measured the foot's own rolling centre of pressure) and misses (the drawn body to be recorded at 100 fps),
+     and added 12 kinds. **Its blocker:** the game records no contacts, segment masses, centre of mass, drive forces or
+     controller mode changes, which about a third of the kinds need; a recorder for them comes before those kinds run.
+     **For the turn bench:** F5 (planted-foot slide) becomes 1 cm per stance, 2 cm a fail; J4 flags a hip twist over 35
+     degrees and faults it over 45, while the walk allows 62 (`MostTwist`): both bars kept, the choice Luis's. Its
+     questions for Luis are in section 1 (how a bigger body slows, which camera views count, how long a get-up may take,
+     among others). **Next, one agent at a time, medium effort** (two high-effort workflows side by side took the
+     five-hour window from 9% to 53% in 25 minutes): a builder puts the review's eleven fixes and the catalogue's scan
+     (the kinds today's trace supports, at 50 fixed and at the game's own rate, the drawn body at 100) into the turn
+     bench in the scratchpad, a reviewer checks it, then it goes into `D:/Dev/WG`, a quick run with `-turnCourses 32`,
+     read, then the full baseline; then the turning design for Luis.
    - **The report went to Luis (November 13, late afternoon), before the review**, because the weekly allowance stood at
      93%: he is asked (a) whether to fix the turns in the game, outright or as a switch to compare, and (b) whether to
      spend what is left of the week on the review now or wait for the reset (Monday, November 16, 16:00 UTC). Wait for

@@ -7,10 +7,14 @@
   motion capture, re-checked by a sceptic ([the research](Research/2026-11-13_TurningAndSettling/research.md)). Luis
   approved all six recommendations on its questions, and asks that every step be researched first, keep the game's
   design philosophies of mechanics and aesthetics, and be checked rigorously for every kind of unnatural movement
-  ([his words](Correspondence/2026-11-13_APPROVES_THE_SUGGESTIONS.md)). The solver's turns are being made on by
-  default: `OwnBodyTests` 16 of 16; the whole suite as played, on and off, running. Next: the build with the default
-  on; a scan for every kind of unnatural movement and the turn bench, their bars set before their first runs; then the
-  turning design for Luis to agree ([the hand-over](Handoff.md)).
+  ([his words](Correspondence/2026-11-13_APPROVES_THE_SUGGESTIONS.md)). **The solver's turns are on by default**
+  (work branch `6773465`; the switch stays on the panel): `OwnBodyTests` 16 of 16; the whole suite the normal way 206
+  passed, 2 failed (K5 and K4(a), findings since November 12); as played, on fails nothing that off passes
+  ([Validation](Validation.md)). A catalogue of every kind of unnatural movement, researched and checked
+  ([the folder](Research/2026-11-13_UnnaturalMovement/)), and the detached leg investigated, read-only
+  ([most likely the cut trousers showing](Research/2026-11-13_DetachedLeg/investigation.md)). Next: the turn bench
+  with the catalogue's scan, its bars set before its first run; then the turning design for Luis to agree
+  ([the hand-over](Handoff.md)).
 
 - **Now (November 13, night): the solver's turns are fixed in the game behind a switch, off by default.** Unity loses
   turns set on an articulation's root before its links are added, so the game's own bodies have run at the project's
