@@ -13,7 +13,9 @@ The bars, as the plan states them (set before any course ran):
     apart: from the feet at 32 degrees, known to show the art's cut).
  2. The flap face: each flap's stop face on its thigh's true front or back, every frame.
  3. The drawn hip: flexion -20 to 120 degrees, abduction at most 45 (5 degrees' tolerance each); twist flagged past 35,
-    a fault past 45.
+    a fault past 45. Read turn-free: each angle as its reading gives it, in (-180, 180]. (The test's flex and twist
+    columns are unwrapped by continuity, and over a run that drifts by whole turns: November 14, late evening, the
+    courses' reading, Validation "The cut ring as played". A fold past 180 reads below -25 turn-free and still fails.)
  4. The knee: -145 to +3 degrees (5 degrees' tolerance); never the wrong way by more than 8, never past 150
     (FrameRecorder's). The drawn knee is read bent positive (DrawnHip), so the range is -8 to 150 in its sign; the
     wrong way and past 150 are FrameRecorder's, on its own body's links while it stands.
@@ -54,6 +56,16 @@ def num(s, default=float('nan')):
         return float(s)
     except (TypeError, ValueError):
         return default
+
+
+def turn_free(x):
+    """An angle in degrees brought into (-180, 180]: the reading as atan2 gives it, whatever whole turns an unwrap added."""
+    if math.isnan(x):
+        return x
+    y = math.fmod(x + 180.0, 360.0)
+    if y <= 0:
+        y += 360.0
+    return y - 180.0
 
 
 def flat(v):
@@ -103,7 +115,8 @@ def faults(row, ways, groups, taken_back=False):
     out = {}
     hip = hipflag = knee = kneefr = False
     for l in 'LR':
-        flex, abd, twist, kn = num(row[f'{l}_flex']), num(row[f'{l}_abd']), num(row[f'{l}_twist']), num(row[f'{l}_knee'])
+        flex, abd, twist, kn = (turn_free(num(row[f'{l}_flex'])), num(row[f'{l}_abd']), turn_free(num(row[f'{l}_twist'])),
+                                num(row[f'{l}_knee']))
         if flex < -25 or flex > 125 or abs(abd) > 50 or abs(twist) > 45:
             hip = True
         if abs(twist) > 35:
@@ -201,11 +214,11 @@ def hip_check(rows):
                 n += 1
                 for k in ('flex', 'abd', 'twist', 'knee'):
                     d, k2 = num(r[f'{l}_{k}']), num(r[f'{l}_link_{k}'])
-                    most[k] = max(most[k], abs(d - k2))
+                    most[k] = max(most[k], abs(turn_free(d - k2)) if k in ('flex', 'twist') else abs(d - k2))
                 most['fold'] = max(most['fold'], abs(num(r[f'{l}_fold']) - num(r[f'{l}_link_fold'])))
-                fd, fl = num(r[f'{l}_flex']), num(r[f'{l}_link_flex'])
+                fd, fl = turn_free(num(r[f'{l}_flex'])), turn_free(num(r[f'{l}_link_flex']))
                 ad, al = num(r[f'{l}_abd']), num(r[f'{l}_link_abd'])
-                td, tl = num(r[f'{l}_twist']), num(r[f'{l}_link_twist'])
+                td, tl = turn_free(num(r[f'{l}_twist'])), turn_free(num(r[f'{l}_link_twist']))
                 bar_d += fd < -25 or fd > 125 or abs(ad) > 50 or abs(td) > 45
                 bar_l += fl < -25 or fl > 125 or abs(al) > 50 or abs(tl) > 45
                 if fd > 125:
@@ -215,10 +228,13 @@ def hip_check(rows):
         bend = sum(1 for r in group for l in 'LR' if r[f'{l}_front_by_bend'] == '1')
         splits = sorted(num(r[f'{l}_front_split']) for r in group for l in 'LR' if r[f'{l}_front_split'] != '')
         wrapped = sum(1 for r in group for l in 'LR' if abs(num(r[f'{l}_flex']) - num(r[f'{l}_flex_raw'])) > 1)
+        off_raw = sum(1 for r in group for l in 'LR'
+                      if abs(turn_free(num(r[f'{l}_flex'])) - num(r[f'{l}_flex_raw'])) > 0.01)
         print(f'    {state}: {len(group)} frames; {n} leg-frames with the links: most apart flex {most["flex"]:.2f}, abd {most["abd"]:.2f}, '
               f'twist {most["twist"]:.2f}, knee {most["knee"]:.2f}, fold {most["fold"]:.2f} degrees; bar 3 failed {bar_d} | {bar_l} leg-frames, '
               f'flexion past 125 {deep_d} | {deep_l}' + (f' (their fold {min(folds):.0f} to {max(folds):.0f})' if folds else '') +
-              f'; the drawn flexion unwrapped past 180 on {wrapped} leg-frames')
+              f'; read turn-free (the test\'s unwrap had added whole turns on {wrapped} leg-frames; turn-free and the raw '
+              f'reading apart on {off_raw})')
         if splits:
             q = lambda f: splits[min(len(splits) - 1, int(f * len(splits)))]
             print(f"      the thigh's front by the bend plane on {bend} of {2 * len(group)} leg-frames; the bend plane and the drawing's pole apart: "
