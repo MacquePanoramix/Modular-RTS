@@ -5390,8 +5390,14 @@ third of its rows; the old way rarely does.
   - by frame 23448 the fastest link was at 1e8 rad/s, and from 23472 the body was gone (NaN).
   This fits the engine's own gain of energy in a fast-turning chain (K1, November 10: past about 30 rad/s, each step
   adds more than the dampers take). It is not shown, as no energy was counted. The next step is the count
-  (`OwnBodyTests`' `-ownShoveTrace` count, brought into the live test), on the same course run again, after checking
-  that a course runs again the same.
+  (`OwnBodyTests`' `-ownShoveTrace` count, brought into the live test).
+- **A course does not run again the same** (`cc_det`: wip-round `e9213d3`, the same build and arguments as `cc_c1`,
+  one push; passed).
+  - The settling course began on frame 105, against 91, and its second frame was already apart (the pelvis by 2e-5 m).
+  - Course 0 was the same push (-20 degrees), and the own get-up amplified the difference: it stood after 3 tries and
+    42.5 s, against 6 tries and 102.4 s.
+  - So course 4's blow-up cannot be replayed. The count has to ride in the live courses themselves, run until a
+    blow-up comes again. Eight courses gave one.
 
 **Not tested:**
 - Long; other strengths and frame rates; LOD1 (LOD0 forced); grass; the cinematic camera.

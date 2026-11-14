@@ -670,11 +670,13 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      - Next, by his answers and the order below:
        - **the blow-up's energy count.** How it began is read from the frames (Validation): footB's fast left thigh
          and a knee at 165, a jump to 63 rad/s at the step to pike, then the right arm whirling to 1e8. To do:
-         - check that a course runs again the same (re-run `cc_c1`'s first course, compare `frames.csv`);
+         - checked: a course does not run again the same (`cc_det`, Validation). The blow-up cannot be replayed;
          - bring `OwnBodyTests`' `-ownShoveTrace` count (what the body holds against what its joints give, each step;
-           see the memory "engine-step-adds-energy") into `CoverRingLiveTests`;
-         - run course 4 again (`-ownPushes 5`) and read which part gains first;
-         - make the courses fail on a body gone NaN or past the engine's bound;
+           see the memory "engine-step-adds-energy") into `CoverRingLiveTests`, kept for the steps before anything
+           whirls;
+         - make the courses fail on a body gone NaN or past the engine's bound, and end that course;
+         - run Small's own get-up for many courses (say 24) until a blow-up comes again, and read which part gains
+           first;
        - natural joint ranges for the own body, researched first (a switch, judged); the memory's K1 already names
          stops and dampers as the mend, so the ranges serve both the folds and the blow-up;
        - the skirt clipping detector;
