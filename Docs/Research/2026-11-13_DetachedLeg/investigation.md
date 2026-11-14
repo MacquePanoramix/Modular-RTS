@@ -304,3 +304,13 @@ angles, balance.Fell and second-body log, Round old way and Small switch off as 
   pushed over three times through the game's flow, 25 tries: the capsule inside the body on 14,557 of 14,562 frames,
   every pair ignored on every frame, 0 contacts from either side; the controls saw contacts (a ball on the capsule, 23;
   the parts with anything, 121,010).
+- **(a), the posed cover grid: the cut ring is seen, and the flaps were most of why** (November 13-14, night;
+  Validation, "The posed cover grid"). Small lying on its back, the left leg through 36 poses: the trousers' cut ring
+  seen in all 36 as until now; legs straight, 49+51 of its 100 points. Three causes in `MinerBody.Drape`: a flap
+  pressed onto a level face kept whatever way it came to lie (square across the thigh, off it); the ground's flap took
+  the pelvis's forward (the back flaps toward the head); the stop face's side flipped past 90 degrees of hip bend (the
+  check's "missed" item, confirmed: 4 of 12 poses past 90 agreed). Fixed behind `MinerBody.FlapsOnTheirSeams` (off by
+  default; on the miner panel): legs straight, 36+30 seen, as with the flaps laid as worn; the face agrees in all 36;
+  standing, walking and turning, the flaps hang within 0.14 degrees of before (bars 1 and 2). Left: from its feet and
+  with a leg raised past square the ring still shows, as a real skirt opens there; the root is the art cut (trousers
+  stop 6 cm above the hem on Small and Round), an exploration for Luis. Next: the aesthetic judges, then (c).

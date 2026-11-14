@@ -5219,3 +5219,72 @@ switch, so that the step and the getting up can be played both ways before he ch
   20 degrees to either side were up by its own body after 141.5 s (9 tries) and 17.4 s (1 try).
 - **Not tested:** Round and Long; other strengths; a frame rate other than 50; whether the cut trousers show (the
   next check, the posed cover grid).
+
+## The posed cover grid: the skirt's flaps and the trousers' cut tops (November 13-14, night)
+
+- **Why:** (c), the leg Luis saw looking detached while Small got up by its own body; the sceptic's second check
+  (`Research/2026-11-13_DetachedLeg/investigation.md`): are the trousers' cut tops (the open edge of the trousers'
+  mesh, 470-481 mm above the feet, hidden under the skirt standing) seen in the poses of getting up?
+- **The measure:** `DrawnCoverGridTests.SmallsCutTrousersStayCovered` (new, explicit; work branch). Small, posed lying
+  on its back, its left leg moved through a grid (quick: hip bend -20 to 130, spread 0/45/90, knee 0/90; 36 poses) as
+  one continuous movement, each pose held until the flaps settle; the drawn body skinned by hand (checked against the
+  graphics card: within 2 mm) and each of the cut ring's 100 points (49 left, 51 right) looked for from the game
+  camera's heights (32, 47 and 62 degrees down) on eight ways round and from straight above. Controls: standing, every
+  garment, 0 of 100 seen; the trousers alone, 100 of 100. A second control lays the flaps as worn standing.
+- **Result, as until now (`cover_quick5`):** lying on its back, legs straight, 49+51 of the ring seen; with the flaps
+  laid as worn, 36+30, and only from the ways at its feet (up the skirt). Every one of the 36 poses showed some of it.
+  The front flaps lay square across the thighs, off them; the back flaps pointed toward the head and into the ground.
+- **The causes, in `MinerBody.Drape`:** (1) a flap pressed onto a level face (a thigh on top, lying) has no way down
+  it, and every way along the face is kept, so whatever way it came to lie it stays (a small nudge sideways, made
+  whole, became square across); (2) a flap come straight down onto the ground took the pelvis's forward, straight up
+  when lying, so the unit's own forward: toward the head for the back flaps; (3) the stop face's side was the pelvis's
+  forward, which flips onto the thigh's underside once the hip bends past square (it agreed with the thigh's own front
+  in 22 of 24 poses bent 90 degrees or less and in 4 of 12 past 90): a jump from one side of the thigh to the other.
+- **The fix, behind `MinerBody.FlapsOnTheirSeams` (off by default).** First try, a hard seam (every flap held to its
+  seam's plane at all times), with the worn way on the ground and the thigh's own front:
+  - `cover_quick6`: lying on its back, legs straight, 36+30 of the ring seen, the same as with the flaps laid as worn;
+    the front flaps along the thighs, the back flaps toward the feet. Over the 36 poses, the views seeing any of the
+    ring 17,903 to 13,204; ring points seen, the moving leg 1,561 to 1,460, the other 1,763 to 1,313. Worse where the
+    leg stands raised past square with its knee straight (bend 100: 35 to 49 points; 130: 20 to 41): the front flap,
+    kept now on the thigh's own front, falls off it toward the head, into the body (Drape has no belly to stop it).
+  - `FlapSeamTests.StandingAndWalkingHangAsBefore` (new, explicit; `seam_same1`): each miner as the game starts it
+    stands, walks 8 m out, turns right round, walks back and stands; every frame the flaps are hung both ways from
+    the same body (the way not drawn worked out beside it from its own last state, the drawn one put back). Bars set
+    before the run: standing 1 degree, walking and turning 2. **Failed:** standing 0.00 degrees apart for all three;
+    walking out and turning round up to 4.36 and 9.34 (Small), 3.47 and 7.54 (Long), 6.48 and 8.20 (Round), 1.3 to
+    2.6 on average. The hard seam changed the walk's flaps, so it was replaced (below).
+- **The fix as kept: a held flap, not a hard seam.** Only a flap pressed onto a face that gives it no way down is
+  turned toward the line its seam lets it lie along on that face, at 20 a second times (1 - the way down)^4: about
+  nothing on a walking or turning thigh, whole on a level one; the ground's flap is turned so too, and comes down the
+  way it is worn. A flap hanging free swings as until now.
+  - `seam_same2` (`FlapSeamTests`, the same bars): **passed.** Standing 0.00 degrees apart for all three; walking
+    out at most 0.04 (Small), 0.03 (Long), 0.06 (Round); turning round and walking back 0.08, 0.04, 0.14; 0.00 on
+    average; no frame with any flap over 1 degree apart.
+  - `cover_quick7` (the grid, held, its face check now following the switch): lying on its back, legs straight,
+    36+30 of the ring seen, the same as laid as worn and as the hard seam; front flaps along the thighs, back flaps
+    toward the feet (up -0.57, feet 0.82). The flap's face agrees with the thigh's own front in 24 of 24 poses bent 90
+    or less and 12 of 12 past 90. Over the 36 poses: views seeing any of the ring 17,903 to 13,260; ring points seen,
+    the moving leg 1,561 to 1,451, the other 1,763 to 1,313. The same loss as the hard seam at bend 100 and 130 with
+    the knee straight (35 to 49; 20 to 41): the front flap falls off the raised thigh toward the head. Pictures
+    (lying; raised to 100) show the flaps along the legs where they were bunched sideways over the bare trouser tops.
+- **What is left, and why it is not the flaps:** from its feet (up the skirt) and with a leg raised past square, a
+  real coat's skirt opens too; what shows there is what is under it. Under this coat, Small's and Round's trousers
+  stop 6 cm above the hem (`Art/Blender/Worker/workers.py`, `hidden_above`; Long's are whole), by the practice of
+  removing geometry no one sees (`ArtDirection/CharacterPractices.md`). Lying down and getting up, it is seen. The
+  root fix is the drawn body's: an exploration for Luis, judged first.
+- **Not tested:** the full grid; Round (cut too) and Long; the flaps in the game's own getting up (as played); the
+  cinematic camera's views; Luis's eye.
+- **A run that hung (November 14):** the panel's picture (`MinerPanelPicture`, which reads the screen and says in its
+  header that it needs a window) was run in batch mode beside the panel's click test, to check the new toggle. It
+  waited 16.5 hours on a frame's end that never comes in batch mode; its 10-minute `[Timeout]` did not fire, and
+  nothing reported it until Luis asked. Stopped (the worktree's Unity only), nothing written. The runner
+  (`unity_tests.sh`) now stops any run past a wall-clock `LIMIT` (default three hours) and prints STOPPED, and runs
+  with a window when `WINDOW=1`.
+- **The runs after it (November 14, evening, each under a limit):** `panel_click` **passed** (the panel with its new
+  row; a click on it is not a click in the world). `panel_picture` (`WINDOW=1`) **passed**; the row fits, off.
+  `cover_show_off` and `cover_show_on` (the quick grid with the switch off and on, and `-coverShow` picturing the same
+  seven poses from the same three ways for the aesthetic judges) gave the rest as before (49+51 off; 36+30 on), the
+  face agreeing in 26 of 36 poses off and 36 of 36 on. The pictured poses, the moving leg's ring points seen (of 49)
+  and the views seeing any, off then on: legs straight 49/858, 36/210; spread 45 49/823, 36/380; knee 90, bend 10
+  49/879, 37/214; knee 90, bend 70 49/551, 49/583; knee 90, spread 90, bend 40 48/547, 48/547; bend 100 35/418,
+  49/639; bend 130 20/156, 41/304. The poses were chosen to show the losses as well as the gains.

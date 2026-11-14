@@ -58,6 +58,51 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 14, 2026 (evening) — the twenty-ninth, short (by the counter; a run found hung)
+
+- **Where we are.** (c)(a) has its answer: the trousers' cut top showed mostly because of three faults in how the
+  skirt's flaps lie, fixed behind "Skirt's flaps on their seams" (off by default, on the miner panel): lying, legs
+  straight, 100 to 66 ring points seen; standing, walking and turning within 0.14 degrees of before. What is left
+  (seen from the feet, a leg raised past square) is the art cut of Small's and Round's trousers: an exploration to
+  propose, not to make unasked. Now: the same seven poses pictured both ways, three aesthetic judges and a referee
+  (blind), commit, push, the report. Then (c)(c), the courses as played.
+- **A failure, and its fix.** The panel's picture was run in batch mode though it needs a window; it hung 16.5 hours
+  and nothing said so until Luis asked. The runner now stops any run past a wall-clock limit and says STOPPED; the
+  memory of Unity runs has the lesson; long waits are checked at their expected length, not only by the "done" notice.
+- **Waiting on Luis:** his eye on `WindowsOrdinaryPlace_Nov13b` (the solver's turns on); the flaps, once judged, both
+  ways on the panel; whether to explore the trousers continued under the coat.
+- **Open, not to be forgotten:** (c)(c); the turn bench (the eleven fixes, the scan, the baseline) and the turning
+  design (a), honouring J4; (b) to zero; (d) settling as an option; the recorder; the catalogue's close and cinematic
+  views; the size-and-speed research; the October-list test; K5, K4(a), R1, K8's R; LawShare; BodyFrame step 1; the
+  clips of step 2.
+- **Does the task serve the stage?** Yes: a body that looks cut apart breaks "a body that is its own" in every get-up.
+  **Drift watched:** the milestone's core, getting up for any body, has not moved since November 12, two days; Luis's
+  four asks of November 13 come first by his word, and after (c) the turn bench is next.
+- **The allowance:** 4% of a fresh five hours, 36% of the week; the conversation near its compaction.
+
+### November 13, 2026 (late night) — the twenty-eighth, short (after a compaction; Luis's answers in)
+
+- **Where we are.** (c), the leg seen detached: the unit's capsule was ruled out; the posed cover grid is built and its
+  measure proven (the skin worked out by hand is where the graphics card draws it, 0.00 mm). First finding: the
+  trousers' cut top shows whenever Small lies down, in every pose of the quick grid, and is hidden standing. Now the
+  control that says why (the skirt's flaps held as worn standing), then the full grid. S3b step 2's core, getting up
+  for any body, has not moved since November 12: Luis's asks of November 13 come first by his word.
+- **Luis's answers** to the catalogue's questions, by voice: every view the game can show counts, the cinematic
+  camera's too (Explore's close three-quarter follow, so close and low views count, which the catalogue's scan must
+  add); a little stylised but reading natural; a get-up as long as is natural, longer only with visible effort; the
+  size-and-speed rule from research, or moving examples for him to choose. Left to us: the reaction's size (question 4)
+  and the turns' twist limit (leaning to the 35/45 degrees taken from people), to decide with research and a reviewer,
+  explain plainly and record.
+- **Waiting on Luis:** his eye on `WindowsOrdinaryPlace_Nov13b` (the solver's turns on by default). The cover fix,
+  when it comes, changes the drawn body: aesthetic judges first, then him.
+- **Open, not to be forgotten:** (c)(c), the courses as played; the turn bench (the eleven fixes, the scan, the
+  baseline, then the turning design); (b) to zero; (d) settling as an option; the recorder; the October-list test that
+  came back; K5, K4(a), R1, K8's R; LawShare, BodyFrame step 1, the clips of step 2.
+- **Does the task serve the stage?** Yes: a body that looks cut apart when it lies down breaks "a body that is its own"
+  in every get-up Luis watches, and it would stay under any rise. **Drift watched:** the grid must not grow into a
+  garment redesign before the cause is known; the fix is the smallest that hides the cut from every view.
+- **The allowance:** 17% of the five hours, 29% of the week; the conversation at 60% of its window.
+
 ### November 13, 2026 (afternoon) — the twenty-seventh, short (a stretch closed, before the report)
 
 - **Where we are.** Luis approved the six recommendations on turning and settling, and asked that every step be

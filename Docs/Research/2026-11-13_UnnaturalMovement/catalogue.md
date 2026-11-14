@@ -41,9 +41,48 @@ pictures. Any fault you see that the catalogue does not have is added to it, wit
    fresh and for a tired miner, that feels right to you, so that a bar can be set from it?
 4. **More than the push, or exactly the push.** Viewers forgive a reaction that is a little bigger than the push
    deserves more readily than one that is smaller. Should the miners stay strictly true to the physics, or is a
-   slightly larger answer welcome?
+   slightly larger answer welcome? *(Corrected November 14, in review: the study's leniency held only for pushes
+   from behind with the contact shown; see the decision below.)*
 5. **True to people, or a little stylised.** The miners look stylised. Should every bar be a real person's, or may some
    (quickness, the size of the breath, arm swing) lean toward the look of the game?
+
+**Luis's answers (November 13, night; [verbatim](../../Correspondence/2026-11-13_ANSWERS_THE_FIVE_QUESTIONS.md)):**
+1. Part reality, part what feels natural; size should matter. Research decides; if it does not convince, he chooses
+   from moving examples of a big body.
+2. Every view the game can show, the cinematic camera's included: a fault counts if any of them would show it.
+3. What feels natural for each body and situation. Longer is allowed when getting up is hard, but a longer get-up must
+   show why (bodily cues of effort), always with a design reason. No number from him.
+4. Left to judgment by the design principles (he did not follow the question): to be decided and explained plainly.
+5. A little stylised, as long as it reads natural and fits the game's visual philosophy; true people are the guide.
+
+The turns' twist limit (J4's 35 and 45 degrees against the walk's 62) was also left to a full review and judgment,
+leaning to the limit taken from people.
+
+**The two calls left to judgment, decided (November 14; checked by a separate reviewing agent; Luis may overrule
+either):**
+- **Q4, the reaction to a push: true to the physics.** A miner answers a push with what the push and its own body
+  give; nothing is enlarged on purpose. A reaction a little bigger than the push is tolerated, never aimed at; a
+  smaller one is held to the tighter bar, which matters most for pushes the body cannot see coming. Why, plainly: the
+  game's bodies are meant to have real weight and real strength (pillar 4, "Physical expression without farce": no
+  comedy physics; slapstick instability is listed as a failure, DESIGN_RATIONALE section 3); the breath was not to be
+  enlarged just because judges could not see it (October 10); no fake animations; and a body's answer grows with the
+  push by what that body can do (October 13). The study behind the question says less than the question did: viewers
+  forgave a reaction a little bigger than the push more than a smaller one only for pushes from behind with the hand's
+  contact shown; from the front both errors were judged alike, and the true reaction was judged best (82% accepted,
+  against 70% one force level off) (Hoyet, McDonnell, O'Sullivan 2012, full text, sections 5.2-5.3). When a reaction
+  reads too small, the fix goes into its cause (the mass, the friction, the drive) or into effort the body visibly
+  makes, never into a bigger push.
+- **J4, the hip wrung over a planted foot: the people's bar.** Flagged over 35 degrees, a fault over 45, measured from
+  the foot's yaw at plant less its natural toe-out. The walk's `MostTwist = 62` is a runaway cap (added after a leg
+  twisted 140 degrees in a turn right round, `ProceduralBiped.cs:477-479`), not a measure of people. Why, plainly: in
+  abrupt 90-degree turns, healthy older adults' stance hips turned at most about 23 degrees inward (step turn) and 15
+  outward (spin turn); the 31-35 degrees quoted before is their range through stance, not their twist (Steingrebe
+  2024, Table 3, checked). A hip turned by someone else's hands goes about 40-45 degrees each way, lying and bearing no
+  weight. So 35 is already past what people use, and 45 is about the end of what a hip can do at all. `MostTwist` is
+  lowered to the fault level only once the foot can pivot or step round: lowered before that, the turns would stall,
+  since the walk then waits for the step.
+
+The bars below are changed to match (C1, J4, W7, and section 6).
 
 ---
 
@@ -154,7 +193,8 @@ pose, i.e. its slip velocity `v + w x r`), not of the force-weighted contact cen
 centre of pressure, which rolls heel to toe in every normal step and would flag every step. Net drift, not summed
 path, so contact jitter over a long idle stance does not add up. Per frame, the horizontal slip speed of those points
 while loaded, whether the foot is flat or on heel or ball. In the kinematic walk: the drawn sole's lowest points while
-planted (3.0).
+planted (3.0). (Added November 14, with J4: a foot pivoting on its heel or ball turns about the loaded point; that
+turning is not slide, only the loaded point's own drift is.)
 *Bar:* drift over 1 cm in a stance phase flagged; over 2 cm a fail (judgment, from the study: the 21 mm figure is an
 upper figure that slides below it were still seen, so 2 cm is not safe). Per frame: over 1 mm a frame at 100 fps
 (0.1 m/s) while loaded (project, `motion_breaks.py:26`). Note: `motion_breaks.py` checks the slide only while the
@@ -741,11 +781,16 @@ not re-opened]); sitting on a limit reads as a doll (U2 B5, craft [U]).
 **J4. The hip wrung round over a planted foot.**
 *Looks:* in a turn the body twists round over a foot that stays put; "weird leg positions while turning" (Luis,
 November 13, L24).
-*Why:* people use about 31-35 degrees of stance-hip twist in a 90 degree turn (older adults, Steingrebe 2024, turning
-file [1S, checked there]); the walk allows 62 degrees (`ProceduralBiped.cs:480`; `MostTwist` is a cap, not a
-measurement).
-*Measure:* per frame, the yaw of the pelvis relative to the planted foot; the time spent above each level.
-*Bar:* over 35 degrees flagged, over 45 a fault (judgment from the study); past `MostTwist` plus 2 degrees a fault
+*Why:* (corrected November 14) in abrupt 90-degree turns, healthy older adults' stance hips peaked at about 23
+degrees inward (step turn, SD 16) and 15 outward (spin turn, SD 15); the 31-35 degrees quoted before is the range
+through stance, not a twist (Steingrebe 2024, Table 3 [1S, checked November 14]; which leg, inner or outer, the paper
+does not say). A hip turned passively goes about 40-45 degrees each way, lying and bearing no weight (secondary
+summaries of the AAOS tables [U]). The walk allows 62 degrees (`ProceduralBiped.cs:480`; `MostTwist` is a runaway cap,
+added after a leg twisted 140 degrees in a turn right round, :477-479, not a measurement).
+*Measure:* per frame, the yaw of the pelvis relative to the planted foot's yaw at plant, less the foot's natural
+toe-out; the time spent above each level.
+*Bar:* over 35 degrees flagged, over 45 a fault (judgment from the study and the hip's passive range; decided
+November 14, section 1); past `MostTwist` plus 2 degrees a fault
 (project, `TurnBench` F1). The two disagree (section 6). Review: the comparison is not like for like. The study's
 figure is the hip's own transverse rotation (femur against pelvis); the measure here is pelvis yaw against the
 planted foot, which also contains the knee's and shank's rotation. In the kinematic leg, whose knee always points
@@ -1011,12 +1056,19 @@ Luis's rule).
 
 **W7. A reaction that does not match the push.**
 *Looks:* a big shove and a small answer, or a reaction thrown off to one side.
-*Why:* over-reaction was more acceptable than under-reaction; angular distortions lowered acceptance; reactions
-moving away from the pusher were preferred (Hoyet, McDonnell, O'Sullivan 2012 [1S, abstract]).
-*Measure:* in the first 100 ms after a shove, the centre of mass velocity change against impulse over mass, and its
-direction against the push's.
-*Bar:* direction off by over 30 degrees, or a velocity change under 80% of impulse over mass (judgment; on a physics
-body this flags a helper or a wrong mass).
+*Why:* (corrected November 14) viewers forgave a reaction a little bigger than the push more than a smaller one, but
+only for pushes from behind with the contact shown; from the front both errors were judged alike, and the true
+reaction was judged best; a reaction turned off the push's line lowered acceptance (0, 22, 45 and 67 degrees off were
+accepted 83, 71, 61 and 41% of the time); reactions moving away from the pusher were preferred (Hoyet, McDonnell,
+O'Sullivan 2012 [1S, full text, sections 5.2-5.3]). The study's reactions were motion-captured people, so its
+"over-reaction" is a person's active answer, not the centre of mass's change in speed measured here.
+*Measure:* in the first 100 ms after a shove, the centre of mass velocity change against the net external impulse
+over mass (the push plus the ground's: a braced body's planted feet can rightly take about mu times g times 0.1 s,
+some 0.6 m/s, off it), and its direction against the push's.
+*Bar:* direction off by over 30 degrees, or a velocity change under 80% of the net external impulse over mass, a
+fault; over 120% flagged (judgment; one force level of mismatch was noticed about 30% of the time). On a physics body
+anything far from 100% is a force nobody counted: a helper, a wrong mass, or energy the engine's step added. Larger is
+tolerated, never aimed at (Q4, decided November 14, section 1).
 *Applies:* shoves, pulls, being struck, tool recoil.
 *Detector:* none.
 *Eye:* does the body go where the push sent it?
@@ -1619,11 +1671,13 @@ catalogue.
 
 ## 6. Gaps and disagreements
 
-**Disagreements to settle (not settled here).**
+**Disagreements to settle (not settled here, except where marked).**
 1. **The hip's twist in a turn (J4).** The walk allows `MostTwist = 62` degrees (`ProceduralBiped.cs:480`), and
-   `TurnBench` F1 fails only past 64. People's hips turned 31-35 degrees in 90-degree turns (Steingrebe et al. 2024,
-   turning file [1S]). The catalogue flags over 35 and faults over 45, so both bars stand and the gap is shown, not
-   hidden. Lowering `MostTwist` is a design step for Luis, not for this page.
+   `TurnBench` F1 fails only past 64. People's stance hips peaked at about 23 degrees in 90-degree turns; their 31-35
+   is the range through stance (Steingrebe et al. 2024, Table 3 [1S, checked November 14]). The catalogue flags over
+   35 and faults over 45, so both bars stand and the gap is shown, not hidden. *Settled November 14 (left to
+   judgment, section 1):* the people's bar is the aim. `MostTwist` is lowered to the fault level only once the foot
+   can pivot or step round; until then it stays as the runaway cap, and lowering it is run as played.
 2. **The foot's slide (C1).** `TurnBench` F5 fails a slide over 2 cm a stance. The study's "under 21 mm" is the size of
    slides that were still seen, not a safe size (Prazak, Hoyet, O'Sullivan 2011). The catalogue flags 1 cm and fails
    2 cm; F5's own bar should be 1 cm to agree. Since F5's bar was set before its first run, changing it needs this
@@ -1632,8 +1686,9 @@ catalogue.
    NVIDIA's Kimodo benchmark (0.2 m/s near the ground). The project's stays.
 4. **Smooth is not minimum jerk (T4, S5).** Minimum-jerk profiles fit reaching, but a smoother (lower jerk) robot was not
    always liked more (Hirose et al. 2020 [1S]). Low jerk is not a target; only spikes and constant speed are flagged.
-5. **More than the push (W7).** Viewers accept a slightly larger reaction (Hoyet 2012); a physics body should not give
-   one. This is Luis's question 4.
+5. **More than the push (W7).** Viewers accepted a slightly larger reaction more readily only for pushes from behind
+   with the contact shown (Hoyet 2012, full text); a physics body should not give one. *Settled November 14 (Luis's
+   question 4, left to judgment, section 1):* true to the physics; larger tolerated, never aimed at.
 6. **Size and speed (Z4, T7, T8).** Pendulum scaling and Hill's scaling disagree by a factor of `sqrt(L)`; real animals
    lie between. Luis's question 1.
 7. **A hinge past straight (J1), added in review.** `FrameRecorder` calls an elbow or knee "wrongway" past 8 degrees
@@ -1697,6 +1752,13 @@ Detector lines cited in section 3 were read in this working copy on November 13:
 `ProceduralBiped.cs:480`; `motion_breaks.py:24-28`. An independent review re-read all 21 test names by search the same
 day: every line is right in this copy; for `D:/Dev/WG` see the offsets in section 3.0.
 
+November 14, for the two calls left to judgment (section 1): a separate reviewing agent read Hoyet 2012 in full
+(sections 5.2-5.3) and Steingrebe 2024's Table 3, and question 4, W7 and J4 were corrected from them. Table 3 was
+read again here the same night: healthy older adults' stance hip, step turn peak inward rotation 23.1 degrees (SD
+16.0), outward 7.7 (14.3), range 30.8; spin turn 19.6 (13.9), 15.4 (15.0), range 35.0. Not checked: the hip's
+passive range at its primary source, hip rotation standing and bearing weight or in young adults, knee and foot
+rotation measured in turns, and turns of 180 degrees.
+
 ---
 
 ## 8. Sources
@@ -1717,7 +1779,8 @@ entries are in `U1_perception.md` section 10 and `U2_craft_measures_biomechanics
   throwing animations. ACM TAP. https://studios.disneyresearch.com/wp-content/uploads/2019/03/Perceptual-Evaluation-of-Motion-Editing-for-Realistic-Throwing-Animations-Paper.pdf
   (read by U1; not re-opened)
 - Hoyet L., McDonnell R., O'Sullivan C. 2012. Push it real: perceiving causality in virtual interactions. ACM TOG
-  31(4):90. https://history.siggraph.org/?p=110569 (abstract)
+  31(4):90. https://history.siggraph.org/?p=110569 (abstract); full text
+  https://gv2.scss.tcd.ie/cosulliv/Pubs/TOG2012-Hoyet.pdf (read November 14 in review, sections 5.2-5.3)
 - Hodgins J., Jorg S., O'Sullivan C., Park S. I., Mahler M. 2010. The saliency of anomalies in animated human
   characters. ACM TAP 7(4). (citing papers)
 - Jokisch D., Troje N. 2003. Biological motion as a cue for the perception of size. Journal of Vision 3(4).
@@ -1839,7 +1902,10 @@ entries are in `U1_perception.md` section 10 and `U2_craft_measures_biomechanics
 - Flash T., Hogan N. 1985. The coordination of arm movements. J Neurosci 5. (secondary)
 - Steingrebe H., Sell S., Stein T. 2024. Mobility requirements and joint loading during straight walking and 90 degree
   turns in healthy older people and those with hip osteoarthritis. J Clin Med 13(17):5021.
-  https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11396374/fullTextXML (full, via the turning file)
+  https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11396374/fullTextXML (full, via the turning file); Table 3
+  checked November 14 at https://pmc.ncbi.nlm.nih.gov/articles/PMC11396374
+- Hip rotation norms, a summary of the AAOS values (secondary, not checked at the source [U]):
+  https://achievable.me/define/hip-rom-norms/
 - Khobkhun F., Hollands M., Richards J. 2021. The effect of different turn speeds on whole-body coordination in younger
   and older healthy adults. Sensors 21(8):2827. https://knowledge.lancashire.ac.uk/id/eprint/37496/1/sensors-21-02827.pdf (full, via the turning file)
 - Khobkhun F., Hollands M., Richards J. 2022. A comparison of turning kinematics at different amplitudes during

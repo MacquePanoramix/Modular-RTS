@@ -11,6 +11,7 @@ why it is this one, is in
 | `sceptic.md` | The sceptic | Where is the fake? |
 | `referee.md` | The referee | Which of the judges' findings are really in the frames? |
 | `alive.md` | Given to every judge beside its brief (since October 9) | Is it alive? Eight things a living body does |
+| `aesthetic_flaps.md` | The aesthetic judges of a drawn-body change (since November 14): the cloth, the guide, the player | Which of two ways, shown blind, reads truer to the game's aesthetic guide? |
 
 **How a judge is called.** A separate agent, starting with nothing, is
 given: its brief (the whole file) and `alive.md`; the sheet or sheets of frames (their

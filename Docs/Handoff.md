@@ -598,6 +598,23 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      toward the game camera and straight up through the baked skin, and the flaps' faces are set against the thigh's
      true front. Run alone, read, then pictures at the worst poses; any fix to the drawn body goes to aesthetic judges
      first.
+     **Where (c)(a) stands (November 14, night):** run and read (`DrawnCoverGridTests`, work branch; Validation, "The
+     posed cover grid"). The cut ring is seen in all 36 poses as until now; most of it was the flaps (three causes in
+     `MinerBody.Drape`). Fixed behind `MinerBody.FlapsOnTheirSeams` (off by default; a toggle on the miner panel): a
+     flap pressed onto a face with no way down turns toward its seam's line; standing and walking unchanged
+     (`FlapSeamTests`, `seam_same2`, within 0.14 degrees). Lying, legs straight: 100 to 66 ring points seen. Left: from
+     the feet and with a leg raised past square (the front flap falls toward the head); the root is the art cut
+     (`Art/Blender/Worker/workers.py`, `hidden_above`, Small and Round), an exploration to propose to Luis. Next: the
+     two picture runs with `-coverShow` (the same poses and ways, switch off and on), three aesthetic judges one at a
+     time (brief in the scratchpad's `judges_flaps`, copied to `Art/Review/judges/aesthetic_flaps.md`), commit by
+     path, push both branches, report (first line: the switch, off by default); then (c)(c). **Run and read
+     (November 14, evening),** each under the runner's new wall-clock `LIMIT` (a picture run in batch mode had hung
+     16.5 hours unnoticed; Validation): `panel_click` and `panel_picture` (`WINDOW=1`) passed; `cover_show_off` and
+     `cover_show_on` (`-coverQuick 1 -flapSeam 0|1 -coverOut Captures/CoverGrid/show_off|show_on -coverShow
+     "0,0,45,10;90,0,0,10;90,0,0,70;90,0,90,40;0,0,0,100;0,0,0,130"`) gave the rest as before (49+51; 36+30). The
+     seven blind sheets: scratchpad `judges_flaps/pose_0..6.png` (made by `judge_sheets.py`; which row is which, in
+     the scratchpad's `private/key_flaps.txt`, not shown to the judges). The pose pictures carry no red marks (only
+     the control pictures do); the brief says so. Next: the judges, one at a time, then the referee.
    - *(The two items below are the morning's, kept as written, and done since: the review came back,
      `Reviews/2026-11-13_SolverTurns`, A and B "sound with changes", and A's sleep check passed (Validation); the
      report went; Luis played both ways and chose the new turns, now on by default. What B asks of R1's making-up and

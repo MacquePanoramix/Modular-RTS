@@ -1,6 +1,16 @@
 # Wonder Gather — Current State
 
-**Updated:** November 13, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 14, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
+
+- **Now (November 14, night): the detached leg's main cause found and fixed behind a switch, off by default.** The
+  posed cover grid shows the trousers' cut top seen while Small lies and moves a leg, mostly because the skirt's flaps
+  kept whatever way they came to lie on a level thigh (square across it) and the back flaps lay toward the head.
+  **"Skirt's flaps on their seams"** on the miner panel (`MinerBody.FlapsOnTheirSeams`): lying, legs straight, 100 to
+  66 ring points seen; standing, walking and turning, the flaps within 0.14 degrees of before. What is left (from the
+  feet, a leg raised past square) is the art cut of Small's and Round's trousers, an exploration to propose. Luis's
+  answers to the five questions recorded ([his words](Correspondence/2026-11-13_ANSWERS_THE_FIVE_QUESTIONS.md)); Q4
+  and J4 decided as he left them to judgment ([GAME_VISION](GAME_VISION.md)). Next: aesthetic judges on the same poses
+  both ways, then the report ([Validation](Validation.md); [the investigation](Research/2026-11-13_DetachedLeg/investigation.md)).
 
 - **Now (November 13, afternoon): the research of turning and settling done; Luis approves its six recommendations.**
   How people turn while walking, turn right round, settle after a push and shift while standing, from studies and
