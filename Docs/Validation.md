@@ -5342,15 +5342,18 @@ from the old way 0.14 degrees (Round, walking back) and no flap over 1 degree, f
 
 **Bar 3, the drawn hip: the own get-up folds past a human's range.**
 - The summary's printed bar 3 counts are wrong. Its unwrap by continuity drifts by whole turns (non-zero on 45154 of
-  57656 leg-frames in `cc_c1`), so its printed counts and its hip_check extremes are inflated. A test tool's fault, still
-  to fix.
+  57656 leg-frames in `cc_c1`), so its printed counts and its hip_check extremes are inflated. A test tool's fault.
+  **Fixed (wip-round `e9213d3`):** the summary now reads bar 3 turn-free. Checked against an independent reading of the
+  raw columns, it gives 0 rows apart on all three runs (34452 rows) and the counts below.
 - Read turn-free (atan2's raw values), the getting-up rows failing are:
   - `cc_c1`, without the blow-up: 8146 of 19376 (lying 10). The deepest fold is 172.4 degrees (course 3, frame 11517,
     the right leg, footB); the stages are footA, footB, rollup, pike, prop and rising.
   - `cc_c2`: 77 of 1112.
   - `cc_c3`: 65 of 2319, only in the old way's Rising.
-- Turn-free, the drawn hip follows the own body's links to a median 0.5 degrees. These are real folds: the own body's
-  hip is a free spherical joint with no limits.
+- Turn-free, the drawn hip follows the own body's links. On `cc_c1`'s getting-up leg-frames without the blow-up
+  (38752), bar 3 fails on 12331 drawn and on 12353 by the links. The three angles are 0.78 degrees apart at the
+  median, 3.7 at 90% and 17.5 at 99%, and over 10 on 931 (near the hip's pole, where flexion and twist are one).
+  These are real folds: the own body's hip is a free spherical joint with no limits.
 
 **Bar 4, the knee.**
 - `cc_c1`, getting up: 1929 rows, without the blow-up. The own body's knee is bent past 150 degrees on 1574
@@ -5382,7 +5385,6 @@ third of its rows; the old way rarely does.
 - Long; other strengths and frame rates; LOD1 (LOD0 forced); grass; the cinematic camera.
 - The cause of the blow-up.
 - Pictures of the deepest fold (172.4).
-- Bar 3's fix in the committed summary.
 - The self-check by points rather than counts.
 - The garment colliders' possible effect on game queries.
 

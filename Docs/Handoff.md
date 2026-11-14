@@ -657,15 +657,18 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
          the old way 77 and 65). The own knee is past 150 degrees on 1574 leg-frames;
        - jumps and spins in the own get-up;
        - the drape under the ground on a third of the own get-up's rows.
-       **The summary script's printed bar 3 is wrong:** its unwrap drifts by whole turns. Read bar 3 turn-free (the raw
-       columns, as the scratchpad's `cc_turnfree_check.py` does), and fix the script.
+       **The summary script's printed bar 3 was wrong** (the test's unwrap drifts by whole turns); fixed, it reads bar
+       3 turn-free (wip-round `e9213d3`), checked row for row against the raw columns.
+     - **Reported to Luis (November 14, late evening)** with the picture `Research/2026-11-13_DetachedLeg/courses_on_off.jpg` (the same frame both ways).
+       Proposed order: (a) the blow-up's trace, and a test that fails on it; (b) natural joint ranges researched, then
+       a switch, judged, proposed before it is built; (c) the clipping detector; (d) the models' research; (e) the
+       flap's rest and the hem. Wait for his word on (b)'s build; (a) and the research may go on.
      - **The models' deep research, part one, running** (workflow `models-research-gather`): the internal map, the
        visual audit with pictures, the outside research, in `Docs/Research/2026-11-14_TheModelsRedrawn/`
        (`internal.md`, `audit.md`, `pictures/`, `external.md`). Part two still to come: the synthesis, a sceptic,
        the revision, then the proposal to Luis.
-     - Next: report to Luis, the switch named first (on by default). Then, by his answers and the order below:
+     - Next, by his answers and the order below:
        - the blow-up's energy trace (`shoves.sh`);
-       - the summary's bar 3 fixed;
        - natural joint ranges for the own body, researched first (a switch, judged);
        - the skirt clipping detector;
        - the models' research, part two.
