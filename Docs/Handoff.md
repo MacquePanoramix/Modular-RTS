@@ -663,10 +663,30 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
        Proposed order: (a) the blow-up's trace, and a test that fails on it; (b) natural joint ranges researched, then
        a switch, judged, proposed before it is built; (c) the clipping detector; (d) the models' research; (e) the
        flap's rest and the hem. Wait for his word on (b)'s build; (a) and the research may go on.
-     - **The models' deep research, part one, running** (workflow `models-research-gather`): the internal map, the
-       visual audit with pictures, the outside research, in `Docs/Research/2026-11-14_TheModelsRedrawn/`
-       (`internal.md`, `audit.md`, `pictures/`, `external.md`). Part two still to come: the synthesis, a sceptic,
-       the revision, then the proposal to Luis.
+     - **The models' deep research, part one, done and committed (`6b48126`)** in
+       `Docs/Research/2026-11-14_TheModelsRedrawn/`:
+       - `internal.md`: the guides, the vision and the code;
+       - `audit.md`, `pictures/` (sheets in `pictures/sheets/`) and `audit_tools/`: the three LOD0 miners rendered
+         in Blender, at rest and in six bone-turned poses, and measured;
+       - `external.md`: 44 tagged sources.
+
+       What it found:
+       - The guides never ask for a thin waist. It comes from the garments: the top is tucked to 0.82 and the
+         skirt is fitted to that tuck.
+       - The visible waists are about 0.09 H (natural is about 0.15-0.18 H). Round is the worst: her waist is 0.41
+         of her chest and 0.30 of her hips, so she reads corseted.
+       - Small's and Round's trousers end 13 cm and 7 cm below the hip joint (the floating legs). Long's trousers
+         are whole, which is the pattern to follow.
+       - The skirts act as four rigid boards that thighs pierce or push out.
+       - Further faults: thin limbs with no elbows or kneecaps, flat side profiles, and the same front silhouette
+         on all three.
+       - To keep: the faces, the colours, the heights, the props, the boots and the gestures.
+       - Natural waist-to-hip ratios are 0.5 and up. Tailoring makes a coat's waist with a seam, and the skirt
+         flares below it.
+
+       **Part two is running** (workflow `models-research-synthesis`, run `wf_88c9a312-d23`). An opus synthesis
+       writes `research.md`, a sonnet critic writes `critique.md`, and an opus revision follows. Then the proposal
+       goes to Luis.
      - Next, by his answers and the order below:
        - **the blow-up's energy count.** How it began is read from the frames (Validation): footB's fast left thigh
          and a knee at 165, a jump to 63 rad/s at the step to pike, then the right arm whirling to 1e8. To do:
@@ -683,7 +703,7 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
        - natural joint ranges for the own body, researched first (a switch, judged); the memory's K1 already names
          stops and dampers as the mend, so the ranges serve both the folds and the blow-up;
        - the skirt clipping detector;
-       - the models' research, part two (after the five hours' reset if the allowance is past about 75%).
+       - the models' research, part two (launched at 71% of the five hours, see above), then the proposal to Luis.
      - The review's "should" items left open: the self-check compares counts, not points; the garment colliders
        stay in the scene; LOD0 is forced.
      - The thirtieth and thirty-first outlooks were taken (`Outlook.md`).
