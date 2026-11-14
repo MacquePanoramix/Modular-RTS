@@ -640,16 +640,35 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
        - real hip folds past 125 degrees in the own get-up (footB, pike, rising): the own hip is a free spherical
          joint with no limits, and Luis sees the getting up's legs as unnatural.
      - **The flaps on by default:** wip-round `b7e24de`.
-     - **Courses 1-3 and `FlapSeamTests` as played: run** (18:03 to 18:26 UTC; the runs `cc_c1`, `cc_c2`, `cc_c3`,
-       `cc_seam_played` in `TestRuns/CoverLive/<run>`). All four completed as tests; the bars are not read yet. They
-       are being read by the workflow `read-cc-courses`: a reader (its report in the scratchpad's `cc_read.md`), then
-       an independent verifier.
+     - **Courses 1-3 and `FlapSeamTests` as played: run, read and recorded** (18:03 to 18:26 UTC; the runs `cc_c1`,
+       `cc_c2`, `cc_c3`, `cc_seam_played` in `TestRuns/CoverLive/<run>`; Validation, "The cut ring as played"). Read
+       by the workflow `read-cc-courses` (a reader, then an independent verifier with its own script; every number
+       agreed), and the turn-free hip counts a third time by Claude. In short:
+       - the cut ring is seen from the game camera's ways on nearly every lying and getting-up row, both ways: the
+         art cut, so the models' redraw;
+       - the flaps on their seams bring the wrong-face flaps from thousands to a handful;
+       - `FlapSeamTests` as played passed;
+       - one body always (bar 5: 0).
+       **Found:**
+       - course 4 of `cc_c1` (Small's own get-up) blew up: spin to 8e21 rad/s, then NaN. The test still passed,
+         because failing log messages are ignored;
+       - `cc_c1`'s own get-ups: up by its own body 7, not up 1;
+       - the own get-up's hip folds to 172.4 degrees, past a human's range on 8146 of 19376 getting-up rows (turn-free;
+         the old way 77 and 65). The own knee is past 150 degrees on 1574 leg-frames;
+       - jumps and spins in the own get-up;
+       - the drape under the ground on a third of the own get-up's rows.
+       **The summary script's printed bar 3 is wrong:** its unwrap drifts by whole turns. Read bar 3 turn-free (the raw
+       columns, as the scratchpad's `cc_turnfree_check.py` does), and fix the script.
      - **The models' deep research, part one, running** (workflow `models-research-gather`): the internal map, the
        visual audit with pictures, the outside research, in `Docs/Research/2026-11-14_TheModelsRedrawn/`
        (`internal.md`, `audit.md`, `pictures/`, `external.md`). Part two still to come: the synthesis, a sceptic,
        the revision, then the proposal to Luis.
-     - Next: read each run's `_r.xml` and its summary (`live_cover_summary.py`, with bar 6 leaving out the take-back
-       frame), record them in Validation, then report to Luis, the switch named first.
+     - Next: report to Luis, the switch named first (on by default). Then, by his answers and the order below:
+       - the blow-up's energy trace (`shoves.sh`);
+       - the summary's bar 3 fixed;
+       - natural joint ranges for the own body, researched first (a switch, judged);
+       - the skirt clipping detector;
+       - the models' research, part two.
      - The review's "should" items left open: the self-check compares counts, not points; the garment colliders
        stay in the scene; LOD0 is forced.
      - The thirtieth outlook was taken after the reset (`Outlook.md`).

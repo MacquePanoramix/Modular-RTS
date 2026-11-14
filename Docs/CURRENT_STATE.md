@@ -2,7 +2,7 @@
 
 **Updated:** November 14, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 14, night): the detached leg's main cause found and fixed behind a switch, off by default.** The
+- **Now (November 14, night): the detached leg's main cause found and fixed behind a switch, now on by default.** The
   posed cover grid shows the trousers' cut top seen while Small lies and moves a leg, mostly because the skirt's flaps
   kept whatever way they came to lie on a level thigh (square across it) and the back flaps lay toward the head.
   **"Skirt's flaps on their seams"** on the miner panel (`MinerBody.FlapsOnTheirSeams`): lying, legs straight, 100 to
@@ -15,8 +15,18 @@
   [his words](Correspondence/2026-11-14_THE_FLAPS_ON_AND_THE_MODELS_REDRAWN.md)): the switch **on by default**; the
   **models redrawn**, a big step (the trousers continued under the coat, the waist less extreme, all three miners made
   much prettier and natural by the guides; how far, open for research); a raised leg's front flap given a rest and
-  the hem rounded. New faults he sees: the leg clipping straight through the skirt; getting up's leg movements. Being
-  built now: (c)(c), the game's own falls and get-ups with the cut ring checked every frame, the switch both ways ([Validation](Validation.md); [the investigation](Research/2026-11-13_DetachedLeg/investigation.md)).
+  the hem rounded. New faults he sees: the leg clipping straight through the skirt; getting up's leg movements.
+  **Run and read (late evening):** the game's own falls and get-ups, the cut ring checked every frame both ways
+  ([Validation](Validation.md); [the investigation](Research/2026-11-13_DetachedLeg/investigation.md)).
+  - The ring is seen from the game camera on nearly every lying and getting-up frame, either way: the art cut, so
+    the models' redraw is the answer.
+  - The flaps on their seams bring the wrong-face flaps from thousands to a handful; standing and walking are as
+    before.
+  - One of Small's 8 own get-ups blew up (the physics exploded).
+  - The own get-up's hip folds to 172 degrees, past a human's range on about 8,000 frames, and its knee bends past
+    150. This is a measure of the leg movements Luis sees.
+
+  The models' deep research is running.
 
 - **Now (November 13, afternoon): the research of turning and settling done; Luis approves its six recommendations.**
   How people turn while walking, turn right round, settle after a push and shift while standing, from studies and

@@ -5294,3 +5294,94 @@ switch, so that the step and the getting up can be played both ways before he ch
   Standing against the old way: the lying leg's trouser end floating apart from the coat from above (the detached
   leg), a crushed bag, board-like sheets. Against the switch: a pointed front hem to the ground. Against both: a flap
   standing up over a leg raised past square. Not Luis's verdict.
+
+## The cut ring as played: the game's own falls and get-ups, both ways on the same frames (November 14, late evening)
+
+- **The switch:** the skirt's flaps on their seams (`MinerBody.FlapsOnTheirSeams`) are now **on by default**, by
+  Luis's word (wip-round `b7e24de`).
+- **The plan:** `Docs/Research/2026-11-13_DetachedLeg/courses_plan.md`, with its amendment written before any course
+  ran.
+- **The test:** `CoverRingLiveTests.TheCutRingAsPlayed` (wip-round `b80a7bd`, `46124ca`, `3261ae1`), with the summary
+  by the amended plan (`fb5b1e7`).
+- **The runs:** all with `-ownAsPlayed 1 -ownRate 50 -liveSeam 1 -liveOther 0 -liveCap 240`, pushed front, back, left
+  and right:
+  - `cc_c1`: Small, its own get-up, 8 courses;
+  - `cc_c2`: Small the old way, 4 courses;
+  - `cc_c3`: Round, 4 courses (always the old way: "no way up for lying so").
+- **How they were read:** by a reader agent, then a verifier agent with its own script; every recomputed number agreed.
+  The turn-free hip numbers were recomputed a third time, on the raw columns.
+
+**The self-checks** (the two ways equal, `cc_self_off2` and `cc_self_on2`): 0 mismatches on 2597 and 1187 frames; the
+played flaps restored bit for bit; about 35 ms a measured frame.
+
+**Bar 1, the cut ring: fails, both ways.** Rows with the ring seen from the game camera's ways, ON | OFF:
+
+| Run | Lying | Getting up | Standing |
+|---|---|---|---|
+| `cc_c1` | 7052 \| 7061 of 7324 | 18533 \| 20066 of 21445 | 14 \| 14 of 59 |
+| `cc_c2` | 886 \| 886 of 898 | 1064 \| 1091 of 1112 | 9 \| 7 of 50 |
+| `cc_c3` | 1039 \| 1046 of 1195 | 2198 \| 2242 of 2319 | 1 \| 5 of 50 |
+
+- All 25 ways add only a few percent. The whole ring (100 points) is seen at once at the worst frames.
+- The pictures show the trouser tubes ending in hard cut edges or open hollows short of the coat, the ground seen
+  between legs and coat.
+- The flaps barely change it. It is the art's cut, so the trousers continued under the coat belong to the models'
+  redraw.
+
+**Bar 2, the flap face: the switch does its job.** Rows with a flap turned onto the wrong face, ON | OFF:
+- `cc_c1` without course 4's blow-up: lying 3 | 538, getting up 143 | 10897;
+- `cc_c2`: 0 | 82 and 1 | 697;
+- `cc_c3`: 0 | 107 and 0 | 1375.
+
+In the pictures, ON's coat drapes over a folded hip, while OFF shows a flap standing out like a fin.
+
+**`FlapSeamTests` as played (`cc_seam_played`): passed.** Standing and walking hang as before, with the most apart
+from the old way 0.14 degrees (Round, walking back) and no flap over 1 degree, for all three miners.
+
+**Bar 3, the drawn hip: the own get-up folds past a human's range.**
+- The summary's printed bar 3 counts are wrong. Its unwrap by continuity drifts by whole turns (non-zero on 45154 of
+  57656 leg-frames in `cc_c1`), so its printed counts and its hip_check extremes are inflated. A test tool's fault, still
+  to fix.
+- Read turn-free (atan2's raw values), the getting-up rows failing are:
+  - `cc_c1`, without the blow-up: 8146 of 19376 (lying 10). The deepest fold is 172.4 degrees (course 3, frame 11517,
+    the right leg, footB); the stages are footA, footB, rollup, pike, prop and rising.
+  - `cc_c2`: 77 of 1112.
+  - `cc_c3`: 65 of 2319, only in the old way's Rising.
+- Turn-free, the drawn hip follows the own body's links to a median 0.5 degrees. These are real folds: the own body's
+  hip is a free spherical joint with no limits.
+
+**Bar 4, the knee.**
+- `cc_c1`, getting up: 1929 rows, without the blow-up. The own body's knee is bent past 150 degrees on 1574
+  leg-frames.
+- The old way: 0 to 3 rows.
+
+**Bar 5, one body: 0 on every clause, every run, every state.** Never two bodies, and the let-go body is never there
+through an own try. It does not catch an exploded body (below).
+
+**Bar 6, motion,** without the take-back row (one row, `cc_c1` course 4). Rows over the bar, lying / getting up:
+- `cc_c1` without the blow-up: spin 26 / 214, jump 145 / 962, whip 0 / 344. The largest spin was 165.4 degrees in a
+  frame (the left shin).
+- `cc_c2`: jump 9 / 33.
+- `cc_c3`: jump 49 / 225, and one spin row standing: 125.5 degrees, the right thigh, just after rising.
+
+**Bar 7, the drape's ground (logged).** Small's own get-up has the drape more than 20 mm under the ground on about a
+third of its rows; the old way rarely does.
+
+**A failure: course 4 of `cc_c1` blew up.**
+- From frame 23418, the own body's spin grew past 30 rad/s and reached 8e21 at frame 23469, with the pelvis 1e17 m away.
+  The body then went NaN.
+- The course ran on to the 240-second cap and was taken back.
+- The test still passed, because the courses ignore failing log messages (an open item in the plan).
+- This is the own get-up exploding in the game as played. It needs its own energy trace before the own get-up's
+  numbers are trusted.
+- Course 4 lies outside every count marked "without the blow-up" (frames 23417 to 26855).
+
+**Not tested:**
+- Long; other strengths and frame rates; LOD1 (LOD0 forced); grass; the cinematic camera.
+- The cause of the blow-up.
+- Pictures of the deepest fold (172.4).
+- Bar 3's fix in the committed summary.
+- The self-check by points rather than counts.
+- The garment colliders' possible effect on game queries.
+
+No judgment here of feel or look: that is Luis's.
