@@ -105,7 +105,8 @@ namespace WonderGather
         // pelvis's forward, which turned the stop face over onto the thigh's underside once the hip bent past square
         // (sitting, a knee drawn up). (The first try held every flap to its seam's plane all the time: the walk's flaps
         // then moved up to 9 degrees from what Luis has seen, FlapSeamTests, run seam_same1.) Off: as until now.
-        public static bool FlapsOnTheirSeams = false;
+        // On by default since Luis's word of November 14, 2026 (evening): better than before, with more to do.
+        public static bool FlapsOnTheirSeams = true;
 
         // How firmly a pressed flap with no way down is turned toward its seam's line, a second (on their seams).
         private const float SeamHold = 20;
