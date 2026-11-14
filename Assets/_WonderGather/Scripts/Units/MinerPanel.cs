@@ -18,7 +18,7 @@ namespace WonderGather
         // The least and the most strength the slider gives (1: ordinary for its build), and the step it moves by.
         public const float Weakest = .3f, Strongest = 3, Step = .05f;
         // Its size on the screen, and how far it stands from the screen's lower left corner.
-        private const float Width = 400, Height = 332, Margin = 12;
+        private const float Width = 400, Height = 358, Margin = 12;
 
         private MinerChoice choice;
         private MinerWorkPreview look;
@@ -99,6 +99,12 @@ namespace WonderGather
                 var root = itsOwn.Part(OwnBody.Hips);
                 GUI.Label(new Rect(x + inner - 108, y, 108, 20), $"runs at {root.solverIterations} and {root.solverVelocityIterations}", text);
             }
+            y += 26;
+            // The skirt's flaps on their seams (November 14; the leg Luis saw detached while Small got up): on, a flap
+            // pressed onto a face that gives it no way down (lying, sitting, getting up) is turned to lie along the line
+            // its seam lets it; standing and walking they hang as before. Off: as until now (MinerBody.FlapsOnTheirSeams).
+            bool seams = GUI.Toggle(new Rect(x, y, inner, 20), MinerBody.FlapsOnTheirSeams, " Skirt's flaps on their seams (lying and getting up)", toggle);
+            if (seams != MinerBody.FlapsOnTheirSeams) MinerBody.FlapsOnTheirSeams = seams;
             y += 26;
             // Its breath: how it is drawn (a look to choose between), and a miner tired at once to see it breathe so.
             GUI.Label(new Rect(x, y + 2, 50, 20), "Breath:", text);

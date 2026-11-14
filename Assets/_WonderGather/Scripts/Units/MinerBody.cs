@@ -90,6 +90,26 @@ namespace WonderGather
             public bool front;
         }
 
+        // The flaps on their seams (November 14, 2026; Luis, November 13: a leg seen "detached" while Small got up by
+        // its own body). A flap is a panel sewn along its top edge to the belt: it swings about the seam's line, and its
+        // seam keeps it from turning about its own face. Hung as a weight on a string, as until now, a flap pressed onto
+        // a level face (the top of a thigh with the miner on its back, the ground under it) had no way it should lie, so
+        // it kept whatever way it lay: Small's front flaps were found square across its thighs, off them, and its back
+        // flaps laid toward its head, with the trousers' cut tops bare between (DrawnCoverGridTests, the investigation
+        // in Docs/Research/2026-11-13_DetachedLeg). On: a flap pressed onto a face that gives it no way down (a thigh
+        // lying level, a thigh rising from the hip, the ground) is turned toward the line its seam lets it lie along on
+        // that face (along the thigh; on the ground, square to the seam), at SeamHold a second, by how little way down
+        // gravity gives it there; a flap hanging free, or pressed onto a face it can slide down (standing, walking,
+        // turning), swings exactly as until now. Where it comes straight down onto the ground, it lies the way it is
+        // worn rather than the way the pelvis faces; and which side of a thigh is its front is the thigh's own, not the
+        // pelvis's forward, which turned the stop face over onto the thigh's underside once the hip bent past square
+        // (sitting, a knee drawn up). (The first try held every flap to its seam's plane all the time: the walk's flaps
+        // then moved up to 9 degrees from what Luis has seen, FlapSeamTests, run seam_same1.) Off: as until now.
+        public static bool FlapsOnTheirSeams = false;
+
+        // How firmly a pressed flap with no way down is turned toward its seam's line, a second (on their seams).
+        private const float SeamHold = 20;
+
         // A free hand that closes: its fingers' bones (the four fingers, then the thumb; three each, the knuckle
         // first), and how each turns, in its own frame, from its rest to the open hand and to the hand closed round
         // handles of several thicknesses. The model's build finds those turns on the skinned mesh, so that the
@@ -616,7 +636,11 @@ namespace WonderGather
 
         // A direction kept on one side of a face (its component along the face no less than `least`): turned onto
         // it, down the face's slope, if it is not; and where there is no slope (the face lies level), along `lies`.
-        private static Vector3 Stopped(Vector3 hangs, Vector3 face, float least, Vector3 lies)
+        // With a hold (`seamHold` a second, over `dt`): turned on the face toward `lies` by how little way down the face
+        // gravity gives it (none where the face lies level or its slope runs back up the limb; nearly all of it on a
+        // face standing up, as a walking thigh's does), so a flap lying where it has no way of its own goes the way
+        // its seam lets it, and one sliding down a face slides as it did.
+        private static Vector3 Stopped(Vector3 hangs, Vector3 face, float least, Vector3 lies, float seamHold = 0, float dt = 0)
         {
             float into = Vector3.Dot(hangs, face);
             if (into >= least) return hangs;
@@ -625,6 +649,14 @@ namespace WonderGather
             float backUp = Vector3.Dot(slides, lies);
             if (backUp < 0) slides -= backUp * lies;
             slides = slides.sqrMagnitude > 1e-4f ? slides.normalized : lies;
+            if (seamHold > 0)
+            {
+                Vector3 way = Vector3.ProjectOnPlane(Vector3.down, face);
+                float wayBack = Vector3.Dot(way, lies);
+                if (wayBack < 0) way -= wayBack * lies;
+                float none = 1 - Mathf.Min(1, way.magnitude);
+                slides = Vector3.Slerp(slides, lies, 1 - Mathf.Exp(-seamHold * none * none * none * none * dt));
+            }
             return (slides * Mathf.Sqrt(Mathf.Max(0, 1 - least * least)) + face * least).normalized;
         }
 
@@ -644,24 +676,37 @@ namespace WonderGather
                 if (flap.bone == null) continue;
                 // By its own weight, a little late.
                 Vector3 hangs = Vector3.Slerp(flapHangs[k], Vector3.down, falls);
+                Vector3 across = bones.pelvis.rotation * pelvisAcross;
+                // The way it is worn: as it hangs from the belt of the body standing, carried with the pelvis.
+                flap.bone.localRotation = flapRest[k];
+                Vector3 worn = flap.bone.rotation * flapDown[k];
                 // Stopped by its thigh: by the thigh's front (a front flap) or its back. The thigh counts by how far
                 // it comes forward or goes back under the flap, not by how far it goes out to the side: a knee that
                 // opens outwards goes out from under the cloth, which then hangs between the knees. (Laid along a
                 // thigh that pointed out to the side, a long coat's front stood out there as a board: the sceptic,
                 // October 8, "a stiff sheet of coat standing out on Long's right side".)
-                Vector3 across = bones.pelvis.rotation * pelvisAcross;
                 Vector3 along = Vector3.ProjectOnPlane(ThighAlong(flap.leg), across);
                 along = along.sqrMagnitude > 1e-4f ? along.normalized : Vector3.down;
                 Vector3 front = Vector3.Cross(across, along);
-                if (Vector3.Dot(front, bones.pelvis.rotation * pelvisForward) < 0) front = -front;
+                // Which side is the thigh's front: on their seams, the thigh's own; until then, the pelvis's forward.
+                Vector3 frontWay = FlapsOnTheirSeams ? bones.thighs[flap.leg].rotation * thighFront[flap.leg] : bones.pelvis.rotation * pelvisForward;
+                if (Vector3.Dot(front, frontWay) < 0) front = -front;
                 float slack = (flap.front ? flapSlack.x : flapSlack.y) * Mathf.Deg2Rad;
-                hangs = Stopped(hangs, flap.front ? front : -front, -Mathf.Sin(slack), along);
+                hangs = Stopped(hangs, flap.front ? front : -front, -Mathf.Sin(slack), along, FlapsOnTheirSeams ? SeamHold : 0, dt);
                 // Stopped by the ground: its hem lies on it, out the way it hangs (or the way it is worn).
-                flap.bone.localRotation = flapRest[k];
                 float room = (flap.bone.position.y - ground) / Mathf.Max(.01f, flapLong);
                 if (-hangs.y > room && room < 1)
                 {
                     Vector3 level = Vector3.ProjectOnPlane(hangs, Vector3.up);
+                    if (FlapsOnTheirSeams)
+                    {
+                        // Come straight down onto the ground, with no way of its own: the way it is worn. Lying on it
+                        // (where gravity gives it no way at all), turned toward the line its seam lets it lie along.
+                        if (level.sqrMagnitude <= 1e-4f) level = Vector3.ProjectOnPlane(worn, Vector3.up);
+                        Vector3 line = Vector3.ProjectOnPlane(level, across);
+                        if (level.sqrMagnitude > 1e-4f && line.sqrMagnitude > 1e-4f)
+                            level = Vector3.Slerp(level.normalized, line.normalized, 1 - Mathf.Exp(-SeamHold * dt));
+                    }
                     level = level.sqrMagnitude > 1e-4f ? level.normalized : flap.front ? ahead : -ahead;
                     float drops = Mathf.Clamp(room, -.2f, 1);
                     hangs = (level * Mathf.Sqrt(1 - drops * drops) + Vector3.down * drops).normalized;
