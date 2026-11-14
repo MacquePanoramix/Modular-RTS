@@ -5308,6 +5308,8 @@ switch, so that the step and the getting up can be played both ways before he ch
   - `cc_c1`: Small, its own get-up, 8 courses;
   - `cc_c2`: Small the old way, 4 courses;
   - `cc_c3`: Round, 4 courses (always the old way: "no way up for lying so").
+  - Courses are numbered as the test logs them, from 0. In `cc_c1`, course 3 took 7 own tries and 133.5 s to stand,
+    and course 4 took 14 tries and was not up at the cap.
 - **How they were read:** by a reader agent, then a verifier agent with its own script; every recomputed number agreed.
   The turn-free hip numbers were recomputed a third time, on the raw columns.
 

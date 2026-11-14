@@ -58,6 +58,37 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 14, 2026 (late evening) — the thirty-first, short (by the counter; the courses read and reported)
+
+- **Where we are.** (c)(c) is read, recorded (Validation, "The cut ring as played") and reported to Luis:
+  - the cut ring is the art: it is seen from the game camera on nearly every lying and getting-up frame, both ways;
+  - the flaps on their seams fix the flaps' face, and standing and walking are unchanged;
+  - one body always.
+  Found:
+  - one of Small's 8 own get-ups blew up, and the test passed through it;
+  - the own get-up swings a thigh up to 172 degrees from hanging, past a person's range on 8146 of 19376 getting-up
+    rows, and bends the knee past 150;
+  - jumps and spins, and the drape under the ground;
+  - the summary's printed bar 3 is wrong (whole-turn drift).
+- **Waiting on Luis:**
+  - his word on the proposed order: the blow-up's trace; the joint ranges researched, then a switch; the clipping
+    detector; the models' research; the flap's rest and the hem;
+  - his eye on `WindowsOrdinaryPlace_Nov13b`.
+- **Running:** the models' research, part one (the internal map written; the audit and the outside research under way).
+- **Open, not to be forgotten:** as the thirtieth, plus:
+  - the summary's bar 3;
+  - bar 5 not catching an exploded body;
+  - the courses ignoring failing log messages;
+  - Long never run in the courses.
+- **Does the task serve the stage?** Yes, and it points back to the core. The blow-up and the free hip are both in the
+  own get-up, which is the milestone's core. The joint ranges are the nearest step that serves both Luis's "unnatural
+  leg movements" and getting up for any body.
+- **Drift watched:** as in the thirtieth, Round and Long still get up only the old way. The models' redraw is the
+  bigger pull away from that. Keep it to research and a proposal until Luis agrees, and put the own get-up's blow-up and
+  joint ranges first.
+- **The allowance:** 43% of the five hours (resets in about four and a half hours), 54% of the week; the conversation at
+  49% of its window.
+
 ### November 14, 2026 (late evening) — the thirtieth, short (by the counter, after the five hours' reset)
 
 - **Where we are.** (c)(c) is built and reviewed:
