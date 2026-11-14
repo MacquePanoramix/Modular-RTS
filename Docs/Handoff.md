@@ -635,8 +635,10 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      played (`-ownAsPlayed 1`), and name the switch and its new default first in the report; (2) **the models
      redrawn**, a big step: Small's and Round's trousers continued under the coat, the waist less extreme, all three
      miners made much prettier and natural by the aesthetic guides, everything unnatural in every model looked for;
-     how far (mesh only, or rig and body too) is open: **research first** (the guides, `Art/Blender/Worker/workers.py`,
-     what the physics body takes from the rig, pictures of all three), then a proposal; a second version beside the
+     how far (mesh only, or rig and body too) is open: **a really deep research first, as Luis asked a moment later**
+     (like the turning research: the project's aesthetic vision and guides, `Art/Blender/Worker/workers.py`, what the
+     physics body takes from the rig, an audit of all three with pictures, outside research on appealing natural
+     stylised proportions and on garments over legs in motion, a sceptic's check), then a proposal he agrees to; a second version beside the
      first, aesthetic judges before Luis; (3) a raised leg's front flap given a rest and the hem's point rounded, the
      switch-on version only (Claude's call, as he left it), judged again. **New faults he sees:** the leg sometimes
      clips straight through the skirt (find when, and measure it: a detector beside the cut ring's); getting up still

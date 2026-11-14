@@ -46,3 +46,13 @@ trousers", "the raised legs from flap" is "the raised leg's front flap"):
 - **Faults he sees:** the leg sometimes clips straight through the skirt; the getting up still shows unnatural leg
   movements.
 - "Smaller scale, not smaller quality."
+
+## A moment later, the same evening (by voice, verbatim)
+
+> Oh, for these new visual designs and all that and model, I think we didn't do it in the first time we're doing, so
+> I will do a really deep dive research like we were doing for the other subjects to really see what makes sense for
+> what we want with our aesthetic design vision. So yeah, I was just going to add this also.
+
+Read as: the models' new design starts with a really deep research, as the turning and the getting up did, of what
+fits the game's aesthetic design vision (the first models were made without one). Told to Luis as read, so he can
+say if he meant to research it himself.
