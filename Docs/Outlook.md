@@ -58,6 +58,41 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 14, 2026 (late evening) — the thirtieth, short (by the counter, after the five hours' reset)
+
+- **Where we are.** (c)(c) is built and reviewed:
+  - the grid's meter is shared, its results unchanged;
+  - the drawn hip's reader is exact, posed and live;
+  - the paired measure's self-check is exact.
+  The plan was amended before any course ran: bar 5's third clause went against how `ByItsOwn` is meant to work.
+  Courses 1-3 and `FlapSeamTests` have run as played, with the flaps on their seams now on by default by Luis's word.
+  None is read against the bars yet. The self-checks already show:
+  - the ring is seen from some way on 383 of 386 lying frames;
+  - the own get-up's hip folds past 125 degrees (its joint is free, with no limits).
+- **Luis's answers are in** (November 14, evening):
+  - the flaps on by default;
+  - the three miners redrawn much prettier and natural (the legs joined under the coat, the waist less thin), with a
+    deep research first, a second version, and judges before him;
+  - the raised leg's flap given a rest and the hem rounded;
+  - new faults: the leg clipping through the skirt, and the getting up's legs.
+- **Waiting on Luis:** his eye on `WindowsOrdinaryPlace_Nov13b` (the solver's turns on).
+- **Open, not to be forgotten:**
+  - the models' research and proposal;
+  - the flap's rest and the hem;
+  - a detector for the skirt's clipping;
+  - the getting up's legs (the folds now measured; the catalogue's scan);
+  - the turn bench and the turning design (a), honouring J4; (b) to zero; (d) settling;
+  - the recorder; the catalogue's close and cinematic views; the size-and-speed research;
+  - the October-list test; K5, K4(a), R1, K8's R; LawShare; BodyFrame step 1; the clips of step 2.
+- **Does the task serve the stage?** Yes. (c)(c) measures "a body that is its own" as played, and now also the get-up's
+  legs Luis named.
+- **Drift watched:** the milestone's core, getting up for any body, has not moved since November 12, now two and a half
+  days. Round and Long still get up only the old way. The models' redraw is a large new step that could pull further
+  from it, so the report says so. The folds found in the own get-up are the nearest way back to the core: Luis's "unnatural leg
+  movements" in getting up.
+- **The allowance:** 3% of a fresh five hours, 49% of the week (resets November 16, 16:00 UTC); the conversation at 63%
+  of its window.
+
 ### November 14, 2026 (evening) — the twenty-ninth, short (by the counter; a run found hung)
 
 - **Where we are.** (c)(a) has its answer: the trousers' cut top showed mostly because of three faults in how the
