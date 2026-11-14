@@ -684,9 +684,27 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
        - Natural waist-to-hip ratios are 0.5 and up. Tailoring makes a coat's waist with a seam, and the skirt
          flares below it.
 
-       **Part two is running** (workflow `models-research-synthesis`, run `wf_88c9a312-d23`). An opus synthesis
-       writes `research.md`, a sonnet critic writes `critique.md`, and an opus revision follows. Then the proposal
-       goes to Luis.
+       **Part two is done** (workflow `models-research-synthesis`): the synthesis `research.md`, revised after the
+       critic's 21 points (`critique.md`; 20 were taken, 1 in part). Its findings:
+       - Two causes. The garment's build makes the waist and the floating legs. The rigid flaps and the drape rule
+         make the clipping. Long's thin waist is his own body numbers.
+       - Reference E: the round woman's coat hangs straight over a barrel body.
+       - The getting-up leg folds are most likely the physical body, not the model. Unconfirmed.
+
+       Its path:
+       - Step 0: Blender stills of each miner, three ways side by side (today's, "look only", "fuller body"). The
+         aesthetic judges see them first, then Luis picks the depth. Nothing is built before that.
+       - Then A1: static art (the waist from each body's own numbers plus looseness, whole trousers or a simple body
+         under the coat, the coat's top weighted to the thighs).
+       - Then A2: flaps that follow the thigh, with leg capsules, behind a version switch.
+       - B (proportions) only with Luis's word.
+       - Safeguards: the new script paths off by default; a check that the first version exports as shipped; a
+         table of the physics numbers that stay and those that follow the cloth.
+
+       **Sent to Luis (November 14, night) as a proposal**, with his questions (the research's section of
+       questions). **Next:** after the reset, the energy count first (the check-in launches it), then step 0's
+       stills (an opus builder in Blender, aesthetic judges on sonnet, before Luis), unless his answer changes
+       the order.
      - Next, by his answers and the order below:
        - **the blow-up's energy count.** How it began is read from the frames (Validation): footB's fast left thigh
          and a knee at 165, a jump to 63 rad/s at the step to pike, then the right arm whirling to 1e8. To do:
