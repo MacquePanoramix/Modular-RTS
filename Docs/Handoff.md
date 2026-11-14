@@ -705,6 +705,22 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
        questions). **Next:** after the reset, the energy count first (the check-in launches it), then step 0's
        stills (an opus builder in Blender, aesthetic judges on sonnet, before Luis), unless his answer changes
        the order.
+
+       **Luis's answers (November 14, night; [his words](Correspondence/2026-11-14_THE_MODELS_PROPOSAL_ANSWERED.md)):**
+       1. The order stands: the energy count first, then the pictures.
+       2. He likes today's faces. Ways to make them even prettier, by the aesthetic guides, are to be explored. The
+          stills show today's face beside the explored ones.
+       3. The stills may try a head change. Head proportions stay Open until he picks.
+       4. A super deep dive research, if worth it, into the best way of making the models and all the visual parts
+          Claude can do, for the best quality possible, "no efforts saved". Claude is also to think proactively
+          about quality everywhere.
+
+       **After the reset:**
+       - the energy count's build (the check-in launches it);
+       - the super deep dive as a workflow, beside the build if the allowance allows, else after it;
+       - then step 0's stills, built by the deep dive's findings.
+
+       The register rows for these answers are still to be written in GAME_VISION.
      - Next, by his answers and the order below:
        - **the blow-up's energy count.** How it began is read from the frames (Validation): footB's fast left thigh
          and a knee at 165, a jump to 63 rad/s at the step to pike, then the right arm whirling to 1e8. To do:
