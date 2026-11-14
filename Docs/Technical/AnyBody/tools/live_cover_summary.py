@@ -18,10 +18,16 @@ The bars, as the plan states them (set before any course ran):
     (FrameRecorder's). The drawn knee is read bent positive (DrawnHip), so the range is -8 to 150 in its sign; the
     wrong way and past 150 are FrameRecorder's, on its own body's links while it stands.
  5. One body: no frame with two bodies; the fall body never let go while the own body stands; through every own try
-    (its own body getting up), the posed body let go and balance not acting. Changes of balance's fall during a try
-    are counted.
+    (its own body getting up), the let-go body has no parts (fall_parts 0), the own body has all its links (own_links
+    13) and the two never exist at once (two_bodies 0). Changes of balance's fall during a try are counted.
+    (The plan's amendment, written before courses 1-3 ran: the old third clause, "the posed body let go and balance not
+    acting", contradicts the game's design - PhysicalFall.ByItsOwn sets the posed body's LetGo false and balance.Acts
+    to balanced during a try. It is still counted, printed beside, marked replaced; LetGo and balance.Acts are logged
+    only.)
  6. FrameRecorder's: no limb turning more than 30 degrees in a frame, no hand or foot jumping more than 6 cm, no link
-    faster than 30 rad/s (its own body's links, standing by its own joints).
+    faster than 30 rad/s (its own body's links, standing by its own joints). Leaving out the take-back (the amendment):
+    the row that carries the frame of a "taken back" event in events.txt (the posed body takes the miner back where it
+    lies at the cap), and the first row after it only if a hand or foot jumps more than 6 cm there.
  7. Logged beside, not a bar: Drape's ground against the terrain.
 A standing row (measured every few frames) carries the most of bar 6's measures since the last row.
 """
@@ -37,8 +43,9 @@ GAME = list(range(8, 25))          # 47 and 62 degrees down, and straight above
 ALL = list(range(25))
 STATES = ['lying', 'getting up', 'standing']
 BARS = ['1 ring game', '1 ring all 25', '1 ring all but feet 32', '2 flap face', '3 hip', '3 hip twist flagged',
-        '4 knee', '4 knee wrong way/past 150', '5 two bodies', '5 fall let go, own stands', '5 own try: posed not let go or balance acts',
-        '6 spin', '6 jump', '6 whip']
+        '4 knee', '4 knee wrong way/past 150', '5 two bodies', '5 fall let go, own stands', '5 own try: fall parts, own links <13 or two',
+        '5 REPLACED own try: posed not let go or balance acts', '6 spin', '6 jump', '6 whip']
+OWN_LINKS = 13
 GROUPS = ['feet', 'head', 'sides', 'front', 'back', 'above']
 
 
@@ -90,9 +97,9 @@ def side_of(row, p):
     }
 
 
-def faults(row, ways, groups):
+def faults(row, ways, groups, taken_back=False):
     """The frame's faults under each bar, for each way (keyed by the column prefix p or o); the way-independent bars
-    (3 to 6) are the same on both."""
+    (3 to 6) are the same on both. taken_back: the row carries the take-back, left out of bar 6."""
     out = {}
     hip = hipflag = knee = kneefr = False
     for l in 'LR':
@@ -111,8 +118,11 @@ def faults(row, ways, groups):
         '3 hip': hip, '3 hip twist flagged': hipflag, '4 knee': knee, '4 knee wrong way/past 150': kneefr,
         '5 two bodies': row['two_bodies'] == '1',
         '5 fall let go, own stands': int(row['fall_parts'] or 0) > 0 and row['own_stands'] == '1',
-        '5 own try: posed not let go or balance acts': try_on and (row['posed_let_go'] != '1' or row['balance_acts'] == '1'),
-        '6 spin': num(row['spin_most'], 0) > 30, '6 jump': num(row['jump_most'], 0) > 0.06, '6 whip': num(row['whip_own_most'], 0) > 30,
+        '5 own try: fall parts, own links <13 or two': try_on and (int(row['fall_parts'] or 0) != 0 or int(row['own_links'] or 0) != OWN_LINKS
+                                                                   or row['two_bodies'] == '1'),
+        '5 REPLACED own try: posed not let go or balance acts': try_on and (row['posed_let_go'] != '1' or row['balance_acts'] == '1'),
+        '6 spin': not taken_back and num(row['spin_most'], 0) > 30, '6 jump': not taken_back and num(row['jump_most'], 0) > 0.06,
+        '6 whip': not taken_back and num(row['whip_own_most'], 0) > 30,
     }
     for p in 'po':
         s = side_of(row, p)
@@ -141,6 +151,32 @@ def read_run(folder):
             for r in csv.DictReader(fh):
                 pictures[(int(r['course']), int(r['frame']))].append(r)
     return rows, ways, pictures
+
+
+def taken_back_rows(folder, rows):
+    """Bar 6 leaves out the take-back (the plan's amendment). events.txt says "<course> <frame> <t> taken back" on the
+    frame the posed body took the miner back; its frame's movement is carried by the first row of that course at or after
+    that frame (a standing row carries the most since the last row). That row is left out, and the first row after it
+    only if a hand or foot jumps more than 6 cm there. Returns {row index: why}."""
+    path = os.path.join(folder, 'events.txt')
+    out = {}
+    if not os.path.exists(path):
+        return out
+    with open(path, encoding='utf-8') as fh:
+        backs = []
+        for line in fh:
+            parts = line.split(' ', 3)
+            if len(parts) == 4 and parts[3].strip() == 'taken back':
+                backs.append((int(parts[0]), int(parts[1])))
+    for course, frame in backs:
+        at = next((i for i, r in enumerate(rows) if int(r['course']) == course and int(r['frame']) >= frame), None)
+        if at is None:
+            continue
+        out[at] = f'course {course}: taken back on frame {frame}, carried by the row of frame {rows[at]["frame"]}'
+        after = at + 1
+        if after < len(rows) and int(rows[after]['course']) == course and num(rows[after]['jump_most'], 0) > 0.06:
+            out[after] = f'course {course}: the first row after the take-back, frame {rows[after]["frame"]}, a jump of {num(rows[after]["jump_most"]):.3f} m'
+    return out
 
 
 def hip_check(rows):
@@ -208,6 +244,9 @@ def summarise(folder):
     ms = [num(r['pair_ms']) for r in rows[:200]]
     if ms:
         print(f'  pair ms over the first {len(ms)}: mean {sum(ms) / len(ms):.2f}, largest {max(ms):.2f}')
+    backs = taken_back_rows(folder, rows)
+    left_out = {id(rows[i]) for i in backs}
+    print(f'  bar 6 leaves out {len(backs)} rows for the take-back' + ''.join(f'\n    {why}' for why in backs.values()))
 
     by = defaultdict(list)
     for r in rows:
@@ -226,7 +265,7 @@ def summarise(folder):
             ground = [num(r['drape_ground_mm']) for r in group if r['drape_ground_mm'] != '']
             for r in group:
                 g = way_groups(r, ways[course])
-                fa = faults(r, ways[course], g)
+                fa = faults(r, ways[course], g, id(r) in left_out)
                 for c, p in cols:
                     f, s = fa[p]
                     for b in BARS:
