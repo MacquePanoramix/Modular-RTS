@@ -677,6 +677,9 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
          - make the courses fail on a body gone NaN or past the engine's bound, and end that course;
          - run Small's own get-up for many courses (say 24) until a blow-up comes again, and read which part gains
            first;
+         - the build's brief is written (the scratchpad's `brief_energy_count.md`): an opus builder, then a fresh
+           opus reviewer, launched after the five hours' reset (02:10 UTC, November 15; a check-in is set for just
+           after it), as the allowance was at 60% with the models' research still running;
        - natural joint ranges for the own body, researched first (a switch, judged); the memory's K1 already names
          stops and dampers as the mend, so the ranges serve both the folds and the blow-up;
        - the skirt clipping detector;
