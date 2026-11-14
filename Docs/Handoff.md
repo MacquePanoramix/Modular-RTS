@@ -623,12 +623,32 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      code for the game-flow courses with a cover check every frame is in the scratchpad's `cc_map.md`. **Planned and
      its bars set before any run** ([courses_plan.md](Research/2026-11-13_DetachedLeg/courses_plan.md), main `9cb85de`):
      the switch only changes what is drawn, so each frame is measured as played and again with the flaps laid the
-     other way (paired), with a self-check that equal ways read equal. **Being built (November 14, evening)** by one
-     workflow, one agent at a time: (a) the grid's meter moved into `CoverMeter` unchanged (the grid's quick run both
-     ways before and after) and a drawn-hip reader checked on the posed poses; (b) `CoverRingLiveTests`, its CSV,
-     `live_cover_summary.py`, the self-check runs `cc_self_off`/`cc_self_on`; then an independent review and its
-     must-fixes. Their reports: the scratchpad's `cc_buildA.md`, `cc_buildB.md`, `cc_fix.md`. Then the plan's courses
-     1 to 3, run one at a time under the runner's limit, read, recorded, reported.
+     other way (paired), with a self-check that equal ways read equal. **Built (November 14, evening; wip-round
+     `b80a7bd`, `46124ca`, `3261ae1`):**
+     - (a) The grid's meter moved into `CoverMeter`. Its results are md5-equal before and after, both ways.
+     - The drawn-hip reader `DrawnHip` is exact: `DrawnHipPoseTests` reads 160 poses exactly; live, it agrees with
+       the own body's links to a median 0.4-0.5 degrees.
+     - (b) `CoverRingLiveTests.TheCutRingAsPlayed`, with `live_cover_summary.py` and its `hip_check`. The
+       self-checks `cc_self_off2` and `cc_self_on2` passed: 0 mismatches, the played flaps restored bit for bit, about
+       35 ms a measured frame.
+     - The review was "sound with changes". Its two must-fixes are done: the thigh's true front, and the hip reader
+       checked live. The plan's amendment, written before any course ran, is in `courses_plan.md` (bar 5's third
+       clause replaced: by design, `ByItsOwn` sets LetGo false).
+     - Seen already in the self-checks:
+       - the ring is seen from some way on 383 of 386 lying frames;
+       - flaps on: 0 flap-face faults;
+       - real hip folds past 125 degrees in the own get-up (footB, pike, rising): the own hip is a free spherical
+         joint with no limits, and Luis sees the getting up's legs as unnatural.
+     - **The flaps on by default:** wip-round `b7e24de`.
+     - **Courses 1-3 and `FlapSeamTests` as played: running.** They run in one background chain (the scratchpad's
+       `cc_courses_chain.sh`, its log `cc_chain.log`), in the runs `cc_c1`, `cc_c2`, `cc_c3` and `cc_seam_played`
+       (`TestRuns/CoverLive/<run>`).
+     - Next: read each run's `_r.xml` and its summary (`live_cover_summary.py`, with bar 6 leaving out the take-back
+       frame), record them in Validation, then report to Luis, the switch named first.
+     - The review's "should" items left open: the self-check compares counts, not points; the garment colliders
+       stay in the scene; LOD0 is forced.
+     - **The thirtieth outlook is due** (the hook counted 500 tool calls). Usage was at 97% of the 5-hour window,
+       so it is to be taken first after the reset (21:10 UTC, November 14), before reading the courses.
    - **Luis's answers (November 14, evening; [his words](Correspondence/2026-11-14_THE_FLAPS_ON_AND_THE_MODELS_REDRAWN.md),
      the decisions in GAME_VISION):** (1) the flaps on their seams **on by default**: change the default in
      `MinerBody` once the build workflow's runs are over (never edit the worktree during a run), then run the flows as

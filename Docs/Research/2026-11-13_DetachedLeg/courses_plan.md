@@ -81,3 +81,31 @@ far off (LOD0 measured); grass (drawn, not counted as cover); the cinematic came
   hip's turn in `Kinematics`), checked on the grid's posed poses (read as set, within a degree).
 - (b) `CoverRingLiveTests`, the per-frame log, a summary script, the self-check run.
 - (c) An independent review of both; then the courses, each under the runner's time limit.
+
+## Amendment, written before courses 1-3 ran (November 14, 2026, evening)
+
+The build's independent review came before any course ran: only the two self-checks, with the two ways equal, had
+been run. It found that bar 5's third clause contradicts the game's design. When the own body takes a try,
+`PhysicalFall.ByItsOwn` destroys the let-go body, sets the posed body's LetGo to false and balance.Acts to balanced,
+and the unit is Up while its own body gets up. The clause would fail most own-try frames by design, not by a fault.
+
+**Bar 5, third clause, replaced** by what it was for: through every own try, the let-go body has no parts
+(`fall_parts` 0), the own body has all its links (`own_links` 13), and the two never exist at once (`two_bodies` 0).
+LetGo and balance.Acts are logged only.
+
+**Also settled from the review before the runs:**
+- **Bar 2** reads the thigh's true front from the drawn knee's bend plane (`DrawnHip.TrueFront`). The solved thigh's
+  forward is wrong wherever the posed body or the fall's rising blend builds the thighs.
+- **Bar 3** reads the drawn hip unwrapped by continuity, checked against the own body's links:
+  - `DrawnHipPoseTests` read 160 poses exactly;
+  - live, the drawn reading and the links agree to a median 0.4-0.5 degrees.
+- Bar 3's abduction limit applies both ways: adduction past 50 also counts.
+- The summary leaves the take-back frame out of bar 6.
+- Course 1 runs with the played way on (`-liveSeam 1`), now the default (Luis, November 14 evening).
+
+**Not fixed before the runs, recorded:**
+- The self-check compares the counts of seen points per way, not the points themselves.
+- The meter's garment colliders stay in the scene. Game queries on every layer could hit them; the camera's
+  collision and the tool's and workplace's casts were named, not the body's own.
+- LOD0 is forced.
+- Failing log messages are ignored during the test.
