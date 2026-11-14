@@ -617,8 +617,9 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      the control pictures do); the brief says so. **Judged (November 14, evening;
      `Reviews/2026-11-14_Flaps_Judges`):** the referee found the switch on truer in 6 of 7 poses, the same in pose 4
      (which leans on too, enlarged); left against it: a pointed front hem, and (both ways) a flap standing over a leg
-     raised past square. Next: report to Luis (first line: the switch, off by default; the picture `off_on.jpg`; asks:
-     the default, the art-cut exploration, a stop for the raised leg's front flap), then (c)(c): a read-only map of the
+     raised past square. **The report went to Luis (November 14, about 18:00 local)** with the picture `off_on.jpg`;
+     asked: the default, the art-cut exploration, a stop for the raised leg's front flap; wait for his answers on
+     those three. Meanwhile (c)(c), which needs none of them: a read-only map of the
      code for the game-flow courses with a cover check every frame is in the scratchpad's `cc_map.md`.
    - *(The two items below are the morning's, kept as written, and done since: the review came back,
      `Reviews/2026-11-13_SolverTurns`, A and B "sound with changes", and A's sleep check passed (Validation); the

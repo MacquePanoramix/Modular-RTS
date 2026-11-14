@@ -9,8 +9,12 @@
   66 ring points seen; standing, walking and turning, the flaps within 0.14 degrees of before. What is left (from the
   feet, a leg raised past square) is the art cut of Small's and Round's trousers, an exploration to propose. Luis's
   answers to the five questions recorded ([his words](Correspondence/2026-11-13_ANSWERS_THE_FIVE_QUESTIONS.md)); Q4
-  and J4 decided as he left them to judgment ([GAME_VISION](GAME_VISION.md)). Next: aesthetic judges on the same poses
-  both ways, then the report ([Validation](Validation.md); [the investigation](Research/2026-11-13_DetachedLeg/investigation.md)).
+  and J4 decided as he left them to judgment ([GAME_VISION](GAME_VISION.md)). **Judged blind (November 14, evening):**
+  the switch on truer in 6 of 7 poses, the same in the seventh ([the verdicts](Reviews/2026-11-14_Flaps_Judges/verdicts.md));
+  left: a pointed front hem, a flap standing over a leg raised past square, the art cut. **Reported to Luis** with three
+  asks (the default; the trousers continued under the coat as a switchable exploration; a rest for the raised leg's
+  front flap and a rounder hem): wait for his answers. Next, needing none of them: (c)(c), the game's own falls and
+  get-ups with the cut ring checked every frame, the switch both ways ([Validation](Validation.md); [the investigation](Research/2026-11-13_DetachedLeg/investigation.md)).
 
 - **Now (November 13, afternoon): the research of turning and settling done; Luis approves its six recommendations.**
   How people turn while walking, turn right round, settle after a push and shift while standing, from studies and
