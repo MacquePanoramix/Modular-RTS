@@ -640,15 +640,19 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
        - real hip folds past 125 degrees in the own get-up (footB, pike, rising): the own hip is a free spherical
          joint with no limits, and Luis sees the getting up's legs as unnatural.
      - **The flaps on by default:** wip-round `b7e24de`.
-     - **Courses 1-3 and `FlapSeamTests` as played: running.** They run in one background chain (the scratchpad's
-       `cc_courses_chain.sh`, its log `cc_chain.log`), in the runs `cc_c1`, `cc_c2`, `cc_c3` and `cc_seam_played`
-       (`TestRuns/CoverLive/<run>`).
+     - **Courses 1-3 and `FlapSeamTests` as played: run** (18:03 to 18:26 UTC; the runs `cc_c1`, `cc_c2`, `cc_c3`,
+       `cc_seam_played` in `TestRuns/CoverLive/<run>`). All four completed as tests; the bars are not read yet. They
+       are being read by the workflow `read-cc-courses`: a reader (its report in the scratchpad's `cc_read.md`), then
+       an independent verifier.
+     - **The models' deep research, part one, running** (workflow `models-research-gather`): the internal map, the
+       visual audit with pictures, the outside research, in `Docs/Research/2026-11-14_TheModelsRedrawn/`
+       (`internal.md`, `audit.md`, `pictures/`, `external.md`). Part two still to come: the synthesis, a sceptic,
+       the revision, then the proposal to Luis.
      - Next: read each run's `_r.xml` and its summary (`live_cover_summary.py`, with bar 6 leaving out the take-back
        frame), record them in Validation, then report to Luis, the switch named first.
      - The review's "should" items left open: the self-check compares counts, not points; the garment colliders
        stay in the scene; LOD0 is forced.
-     - **The thirtieth outlook is due** (the hook counted 500 tool calls). Usage was at 97% of the 5-hour window,
-       so it is to be taken first after the reset (21:10 UTC, November 14), before reading the courses.
+     - The thirtieth outlook was taken after the reset (`Outlook.md`).
    - **Luis's answers (November 14, evening; [his words](Correspondence/2026-11-14_THE_FLAPS_ON_AND_THE_MODELS_REDRAWN.md),
      the decisions in GAME_VISION):** (1) the flaps on their seams **on by default**: change the default in
      `MinerBody` once the build workflow's runs are over (never edit the worktree during a run), then run the flows as
