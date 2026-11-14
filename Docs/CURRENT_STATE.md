@@ -11,10 +11,12 @@
   answers to the five questions recorded ([his words](Correspondence/2026-11-13_ANSWERS_THE_FIVE_QUESTIONS.md)); Q4
   and J4 decided as he left them to judgment ([GAME_VISION](GAME_VISION.md)). **Judged blind (November 14, evening):**
   the switch on truer in 6 of 7 poses, the same in the seventh ([the verdicts](Reviews/2026-11-14_Flaps_Judges/verdicts.md));
-  left: a pointed front hem, a flap standing over a leg raised past square, the art cut. **Reported to Luis** with three
-  asks (the default; the trousers continued under the coat as a switchable exploration; a rest for the raised leg's
-  front flap and a rounder hem): wait for his answers. Next, needing none of them: (c)(c), the game's own falls and
-  get-ups with the cut ring checked every frame, the switch both ways ([Validation](Validation.md); [the investigation](Research/2026-11-13_DetachedLeg/investigation.md)).
+  left: a pointed front hem, a flap standing over a leg raised past square, the art cut. **Luis answered** (evening,
+  [his words](Correspondence/2026-11-14_THE_FLAPS_ON_AND_THE_MODELS_REDRAWN.md)): the switch **on by default**; the
+  **models redrawn**, a big step (the trousers continued under the coat, the waist less extreme, all three miners made
+  much prettier and natural by the guides; how far, open for research); a raised leg's front flap given a rest and
+  the hem rounded. New faults he sees: the leg clipping straight through the skirt; getting up's leg movements. Being
+  built now: (c)(c), the game's own falls and get-ups with the cut ring checked every frame, the switch both ways ([Validation](Validation.md); [the investigation](Research/2026-11-13_DetachedLeg/investigation.md)).
 
 - **Now (November 13, afternoon): the research of turning and settling done; Luis approves its six recommendations.**
   How people turn while walking, turn right round, settle after a push and shift while standing, from studies and

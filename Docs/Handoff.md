@@ -620,7 +620,29 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      raised past square. **The report went to Luis (November 14, about 18:00 local)** with the picture `off_on.jpg`;
      asked: the default, the art-cut exploration, a stop for the raised leg's front flap; wait for his answers on
      those three. Meanwhile (c)(c), which needs none of them: a read-only map of the
-     code for the game-flow courses with a cover check every frame is in the scratchpad's `cc_map.md`.
+     code for the game-flow courses with a cover check every frame is in the scratchpad's `cc_map.md`. **Planned and
+     its bars set before any run** ([courses_plan.md](Research/2026-11-13_DetachedLeg/courses_plan.md), main `9cb85de`):
+     the switch only changes what is drawn, so each frame is measured as played and again with the flaps laid the
+     other way (paired), with a self-check that equal ways read equal. **Being built (November 14, evening)** by one
+     workflow, one agent at a time: (a) the grid's meter moved into `CoverMeter` unchanged (the grid's quick run both
+     ways before and after) and a drawn-hip reader checked on the posed poses; (b) `CoverRingLiveTests`, its CSV,
+     `live_cover_summary.py`, the self-check runs `cc_self_off`/`cc_self_on`; then an independent review and its
+     must-fixes. Their reports: the scratchpad's `cc_buildA.md`, `cc_buildB.md`, `cc_fix.md`. Then the plan's courses
+     1 to 3, run one at a time under the runner's limit, read, recorded, reported.
+   - **Luis's answers (November 14, evening; [his words](Correspondence/2026-11-14_THE_FLAPS_ON_AND_THE_MODELS_REDRAWN.md),
+     the decisions in GAME_VISION):** (1) the flaps on their seams **on by default**: change the default in
+     `MinerBody` once the build workflow's runs are over (never edit the worktree during a run), then run the flows as
+     played (`-ownAsPlayed 1`), and name the switch and its new default first in the report; (2) **the models
+     redrawn**, a big step: Small's and Round's trousers continued under the coat, the waist less extreme, all three
+     miners made much prettier and natural by the aesthetic guides, everything unnatural in every model looked for;
+     how far (mesh only, or rig and body too) is open: **research first** (the guides, `Art/Blender/Worker/workers.py`,
+     what the physics body takes from the rig, pictures of all three), then a proposal; a second version beside the
+     first, aesthetic judges before Luis; (3) a raised leg's front flap given a rest and the hem's point rounded, the
+     switch-on version only (Claude's call, as he left it), judged again. **New faults he sees:** the leg sometimes
+     clips straight through the skirt (find when, and measure it: a detector beside the cut ring's); getting up still
+     shows unnatural leg movements (the catalogue's scan on getting up; the live test's hip and knee bars are a first
+     part). Order: the build and its courses (running, Unity only); the default; the models' research (a workflow,
+     when the usage allows; it resets 21:10 UTC); the flap's rest and the hem; the clipping; then the turn bench.
    - *(The two items below are the morning's, kept as written, and done since: the review came back,
      `Reviews/2026-11-13_SolverTurns`, A and B "sound with changes", and A's sleep check passed (Validation); the
      report went; Luis played both ways and chose the new turns, now on by default. What B asks of R1's making-up and
