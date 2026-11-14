@@ -285,6 +285,13 @@ namespace WonderGather.Tests
         private readonly Vector3[] endWas = new Vector3[4];
         private bool hadLimbs;
         private float spinMost, jumpMost, whipOwnMost, whipFallMost;
+        // The hip's reading checked (November 14, the review): the drawn reading as read (in (-180, 180]) before it is
+        // taken the nearest whole turn to the last frame's; the fold as one angle; the own body's links read the same way.
+        private readonly float[] flexWas = { float.NaN, float.NaN }, twistWas = { float.NaN, float.NaN };
+        private readonly float[] linkFlexWas = { float.NaN, float.NaN }, linkTwistWas = { float.NaN, float.NaN };
+        private readonly DrawnHip.Read[] hipsRaw = new DrawnHip.Read[2], hipsLink = new DrawnHip.Read[2];
+        private readonly bool[] hasLink = new bool[2];
+        private readonly float[] foldDrawn = new float[2], foldLink = new float[2];
         private string spinWhich = "", jumpWhich = "";
 
         // The criteria's pictures in this course.
@@ -304,6 +311,10 @@ namespace WonderGather.Tests
         {
             public bool[] Has, Agrees;
             public float[] FrontOn, BackOn;
+            // How the thigh's front was taken (the knee's bend plane, or the drawing's pole), and the degrees between the
+            // two where the knee is bent enough to tell (NaN where it is not).
+            public bool[] ByBend;
+            public float[] Split;
         }
 
         public void Begin(CoverMeter meter, CoverMeter.Ring ring, MinerBody miner, Transform unit, bool seamPlayed, bool seamOther, int every, int standEvery, string folder, Camera pictures, int picsMost, string who)
@@ -421,6 +432,7 @@ namespace WonderGather.Tests
             for (int k = 0; k < flaps.Length; k++) if (flaps[k].bone != null) flapLocal[k] = flaps[k].bone.localRotation;
             Array.Copy(played, snapshot, played.Length);
             var hips = new[] { DrawnHip.Of(miner, 0), DrawnHip.Of(miner, 1) };
+            ReadHips(hips);
             string[] fire = null;
             float[] values = null;
             try
@@ -540,11 +552,40 @@ namespace WonderGather.Tests
             return Mathf.Atan2(Vector3.Dot(on, -point), Vector3.Dot(on, along)) * Mathf.Rad2Deg;
         }
 
+        // The drawn hip unwrapped (a fold past 180 reads past 180, the twist likewise), and beside it, where the own body
+        // stands, the same angles from its articulation's parts (DrawnHip.OfLinks) and the fold as one angle both ways.
+        private void ReadHips(DrawnHip.Read[] hips)
+        {
+            var bones = miner.Rig;
+            Quaternion frame = bones.pelvis.rotation * Quaternion.Inverse((Quaternion)pelvisRestField.GetValue(miner));
+            for (int l = 0; l < 2; l++)
+            {
+                hipsRaw[l] = hips[l];
+                hips[l].Flex = DrawnHip.Unwrap(hips[l].Flex, flexWas[l]); flexWas[l] = hips[l].Flex;
+                hips[l].Twist = DrawnHip.Unwrap(hips[l].Twist, twistWas[l]); twistWas[l] = hips[l].Twist;
+                DrawnHip.DrawnThigh(miner, l, out var line, out _);
+                foldDrawn[l] = DrawnHip.Fold(frame * Vector3.up, line);
+                var hl = own != null && own.Stands ? own.Part(OwnBody.Hips) : null;
+                var th = own != null && own.Stands ? own.Part(OwnBody.Thigh + l) : null;
+                var sh = own != null && own.Stands ? own.Part(OwnBody.Shin + l) : null;
+                hasLink[l] = hl != null && th != null && sh != null;
+                if (hasLink[l])
+                {
+                    var r = DrawnHip.OfLinks(hl.transform, th.transform, sh.transform, l);
+                    r.Flex = DrawnHip.Unwrap(r.Flex, linkFlexWas[l]); linkFlexWas[l] = r.Flex;
+                    r.Twist = DrawnHip.Unwrap(r.Twist, linkTwistWas[l]); linkTwistWas[l] = r.Twist;
+                    hipsLink[l] = r;
+                    foldLink[l] = DrawnHip.Fold(hl.transform.up, th.transform.up);
+                }
+                else { linkFlexWas[l] = linkTwistWas[l] = float.NaN; }
+            }
+        }
+
         // Each flap's stop face as Drape works it out, against the thigh's own front (the cover grid's Measure, both
         // legs), and how each flap hangs on that front: read with the way laid now (the switch and flapHangs as they are).
         private Faces FacesNow()
         {
-            var f = new Faces { Has = new bool[2], Agrees = new bool[2], FrontOn = new float[2], BackOn = new float[2] };
+            var f = new Faces { Has = new bool[2], Agrees = new bool[2], FrontOn = new float[2], BackOn = new float[2], ByBend = new bool[2], Split = new float[2] };
             var bones = miner.Rig;
             var hangs = (Vector3[])hangsField.GetValue(miner);
             var thighFront = (Vector3[])thighFrontField.GetValue(miner);
@@ -557,7 +598,9 @@ namespace WonderGather.Tests
                 Vector3 face = Vector3.Cross(across, flat);
                 Vector3 frontWay = MinerBody.FlapsOnTheirSeams ? bones.thighs[leg].rotation * thighFront[leg] : forward;
                 if (Vector3.Dot(face, frontWay) < 0) face = -face;
-                Vector3 front = Vector3.ProjectOnPlane(miner.Solved.thighs[leg].forward, across);
+                // The thigh's true front (November 14, the review): not the solved thigh's forward (DrawnHip.TrueFront).
+                Vector3 trueFront = DrawnHip.TrueFront(miner, leg, out f.ByBend[leg], out f.Split[leg]);
+                Vector3 front = Vector3.ProjectOnPlane(trueFront, across);
                 front = front.sqrMagnitude > 1e-6f ? front.normalized : Vector3.zero;
                 f.Agrees[leg] = Vector3.Dot(face, front) > 0;
                 f.FrontOn[leg] = f.BackOn[leg] = float.NaN;
@@ -729,6 +772,8 @@ namespace WonderGather.Tests
                 }
             }
             h.Append(",pair_ms,ways_same,restored_exact");
+            foreach (string leg in new[] { "L", "R" })
+                h.Append($",{leg}_flex_raw,{leg}_twist_raw,{leg}_fold,{leg}_link,{leg}_link_flex,{leg}_link_abd,{leg}_link_twist,{leg}_link_knee,{leg}_link_fold,{leg}_front_by_bend,{leg}_front_split");
             return h.ToString();
         }
 
@@ -772,6 +817,13 @@ namespace WonderGather.Tests
                 }
             }
             V(ms.ToString("0.###", Inv)); V(same ? "1" : "0"); V(exact ? "1" : "0");
+            for (int l = 0; l < 2; l++)
+            {
+                V(F(hipsRaw[l].Flex)); V(F(hipsRaw[l].Twist)); V(F(foldDrawn[l])); V(hasLink[l] ? "1" : "0");
+                if (hasLink[l]) { V(F(hipsLink[l].Flex)); V(F(hipsLink[l].Abd)); V(F(hipsLink[l].Twist)); V(F(hipsLink[l].Knee)); V(F(foldLink[l])); }
+                else for (int k = 0; k < 5; k++) V("");
+                V(fp.ByBend != null && fp.ByBend[l] ? "1" : "0"); V(fp.Split != null ? F(fp.Split[l]) : "");
+            }
             rows.WriteLine(r.ToString());
         }
 

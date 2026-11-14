@@ -143,6 +143,52 @@ def read_run(folder):
     return rows, ways, pictures
 
 
+def hip_check(rows):
+    """The hip's reading checked (November 14, the review): the drawn reading (DrawnHip.Of, unwrapped) against the own
+    body's links read the same way (DrawnHip.OfLinks), on the frames the own body stands; the fold as one angle; the
+    thigh's front for bar 2 (the knee's bend plane, or the drawing's pole) and how far apart the two are."""
+    if not rows or 'L_link' not in rows[0]:
+        return
+    print("  the hip's reading checked (the drawn bones | the own body's links, on the frames it stands):")
+    for state in ('lying', 'getting up', 'standing'):
+        group = [r for r in rows if r['state'] == state]
+        if not group:
+            continue
+        n = 0
+        most = {k: 0.0 for k in ('flex', 'abd', 'twist', 'knee', 'fold')}
+        bar_d = bar_l = deep_d = deep_l = 0
+        folds = []
+        for r in group:
+            for l in 'LR':
+                if r[f'{l}_link'] != '1':
+                    continue
+                n += 1
+                for k in ('flex', 'abd', 'twist', 'knee'):
+                    d, k2 = num(r[f'{l}_{k}']), num(r[f'{l}_link_{k}'])
+                    most[k] = max(most[k], abs(d - k2))
+                most['fold'] = max(most['fold'], abs(num(r[f'{l}_fold']) - num(r[f'{l}_link_fold'])))
+                fd, fl = num(r[f'{l}_flex']), num(r[f'{l}_link_flex'])
+                ad, al = num(r[f'{l}_abd']), num(r[f'{l}_link_abd'])
+                td, tl = num(r[f'{l}_twist']), num(r[f'{l}_link_twist'])
+                bar_d += fd < -25 or fd > 125 or abs(ad) > 50 or abs(td) > 45
+                bar_l += fl < -25 or fl > 125 or abs(al) > 50 or abs(tl) > 45
+                if fd > 125:
+                    deep_d += 1
+                    folds.append(num(r[f'{l}_fold']))
+                deep_l += fl > 125
+        bend = sum(1 for r in group for l in 'LR' if r[f'{l}_front_by_bend'] == '1')
+        splits = sorted(num(r[f'{l}_front_split']) for r in group for l in 'LR' if r[f'{l}_front_split'] != '')
+        wrapped = sum(1 for r in group for l in 'LR' if abs(num(r[f'{l}_flex']) - num(r[f'{l}_flex_raw'])) > 1)
+        print(f'    {state}: {len(group)} frames; {n} leg-frames with the links: most apart flex {most["flex"]:.2f}, abd {most["abd"]:.2f}, '
+              f'twist {most["twist"]:.2f}, knee {most["knee"]:.2f}, fold {most["fold"]:.2f} degrees; bar 3 failed {bar_d} | {bar_l} leg-frames, '
+              f'flexion past 125 {deep_d} | {deep_l}' + (f' (their fold {min(folds):.0f} to {max(folds):.0f})' if folds else '') +
+              f'; the drawn flexion unwrapped past 180 on {wrapped} leg-frames')
+        if splits:
+            q = lambda f: splits[min(len(splits) - 1, int(f * len(splits)))]
+            print(f"      the thigh's front by the bend plane on {bend} of {2 * len(group)} leg-frames; the bend plane and the drawing's pole apart: "
+                  f'median {q(.5):.1f}, 95% {q(.95):.1f}, most {splits[-1]:.1f} degrees; more than 90 on {sum(1 for x in splits if x > 90)}')
+
+
 def summarise(folder):
     rows, ways, pictures = read_run(folder)
     print(f'=== {folder}')
@@ -223,6 +269,7 @@ def summarise(folder):
                 near = [pic for (cc, ff), pics in pictures.items() if cc == course and abs(ff - frame) <= 25 for pic in pics]
                 for pic in near[:8]:
                     print(f'       picture {pic["file"]} ({pic["criteria"]} {pic["values"]}, skin {pic["skin_before_mm"]}->{pic["skin_after_mm"]} mm)')
+    hip_check(rows)
     total = sum(len(v) for v in pictures.values())
     print(f'  pictures: {total} files in {len(pictures)} picture frames')
     for (course, frame), pics in sorted(pictures.items()):

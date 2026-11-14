@@ -45,9 +45,19 @@ namespace WonderGather.Tests
             var bones = miner.Rig;
             Quaternion root = miner.transform.rotation;
             Quaternion hips = bones.pelvis.rotation * Quaternion.Inverse((Quaternion)pelvisRest.GetValue(miner));
-            Frame(hips * Vector3.forward, hips * Vector3.up, out var px, out var py, out var pz);
-            Limb(bones.thighs[leg].rotation, root, ((Quaternion[])thighRest.GetValue(miner))[leg], ((Vector3[])thighAim.GetValue(miner))[leg], out var tx, out var ty, out var tz);
-            Limb(bones.shins[leg].rotation, root, ((Quaternion[])shinRest.GetValue(miner))[leg], ((Vector3[])shinAim.GetValue(miner))[leg], out var sx, out var sy, out var sz);
+            Limb(bones.thighs[leg].rotation, root, ((Quaternion[])thighRest.GetValue(miner))[leg], ((Vector3[])thighAim.GetValue(miner))[leg], out var thighLine, out var thighBend);
+            Limb(bones.shins[leg].rotation, root, ((Quaternion[])shinRest.GetValue(miner))[leg], ((Vector3[])shinAim.GetValue(miner))[leg], out var shinLine, out var shinBend);
+            return FromFrames(hips * Vector3.forward, hips * Vector3.up, thighLine, thighBend, shinLine, shinBend, leg);
+        }
+
+        // The same angles from any hips' frame (its forward the solver's x, its up its z) and a thigh's and a shin's line
+        // (from the joint above to the joint below) and bend's way: the drawn bones' (Of), or the own body's links'
+        // (OfLinks, November 14: the reader checked against the articulation's own parts on the very frames).
+        public static Read FromFrames(Vector3 hipsForward, Vector3 hipsUp, Vector3 thighLine, Vector3 thighBend, Vector3 shinLine, Vector3 shinBend, int leg)
+        {
+            Frame(hipsForward, hipsUp, out var px, out var py, out var pz);
+            Frame(Vector3.ProjectOnPlane(thighBend, thighLine), -thighLine, out var tx, out var ty, out var tz);
+            Frame(Vector3.ProjectOnPlane(shinBend, shinLine), -shinLine, out var sx, out var sy, out var sz);
             float sg = leg == 0 ? 1 : -1;
             // M_ij = (hips' axis i) . (thigh's axis j).
             float m00 = Vector3.Dot(px, tx), m01 = Vector3.Dot(px, ty), m02 = Vector3.Dot(px, tz), m22 = Vector3.Dot(pz, tz);
@@ -71,13 +81,58 @@ namespace WonderGather.Tests
             };
         }
 
-        // A drawn limb bone's frame in the solver's axes: its line the solver's -z, the bend's way its x.
-        private static void Limb(Quaternion drawn, Quaternion root, Quaternion rest, Vector3 aim, out Vector3 x, out Vector3 y, out Vector3 z)
+        // The own body's hip and knee from its articulation's parts themselves (OwnBody.Part): a link's up is its line
+        // (a thigh's from the hip to the knee, OwnBody.Along) and its forward the way its joint bends; the hips' link
+        // forward and up are the solver's x and z. Nothing of MinerBody's drawing is in it.
+        public static Read OfLinks(Transform hips, Transform thigh, Transform shin, int leg)
+            => FromFrames(hips.forward, hips.up, thigh.up, thigh.forward, shin.up, shin.forward, leg);
+
+        // The drawn thigh's line (hip to knee) and the way the drawing bends it (MinerBody's pole for the knee, square to
+        // the line): the thigh's front as the drawing has it.
+        public static void DrawnThigh(MinerBody miner, int leg, out Vector3 line, out Vector3 bend)
+        {
+            if (pelvisRest == null) Of(miner, leg);
+            var bones = miner.Rig;
+            Limb(bones.thighs[leg].rotation, miner.transform.rotation, ((Quaternion[])thighRest.GetValue(miner))[leg], ((Vector3[])thighAim.GetValue(miner))[leg], out line, out bend);
+            bend = Vector3.ProjectOnPlane(bend, line).normalized;
+        }
+
+        // The thigh's true front, for the flap face (the courses' bar 2; November 14, the review): not the solved thigh's
+        // forward, which only the posed grid's poser and the physical bodies turn as the knee bends (ProceduralBiped and the
+        // fall's rising blend turn a segment from up alone, FromToRotation). Where the knee is bent 15 degrees or more, the
+        // knee's own bend plane (hip, knee, ankle, the drawn bones): the way the knee sticks out, square to the thigh. Nearer
+        // straight, where that plane says little, the pole the drawing bends the knee by (DrawnThigh). split: the degrees
+        // between the two where the knee is bent enough (NaN where it is not).
+        public static Vector3 TrueFront(MinerBody miner, int leg, out bool byBend, out float split)
+        {
+            var bones = miner.Rig;
+            DrawnThigh(miner, leg, out _, out var drawnBend);
+            Vector3 hip = bones.thighs[leg].position, knee = bones.shins[leg].position, ankle = bones.feet[leg].position;
+            float bent = Vector3.Angle(knee - hip, ankle - knee);
+            Vector3 sticks = Vector3.ProjectOnPlane(Vector3.ProjectOnPlane(knee - .5f * (hip + ankle), ankle - hip), knee - hip);
+            byBend = bent >= 15 && sticks.sqrMagnitude > 1e-10f;
+            split = byBend ? Vector3.Angle(sticks, drawnBend) : float.NaN;
+            return byBend ? sticks.normalized : drawnBend;
+        }
+
+        // The fold at the hip as one angle, free of any order of turns: between the thigh's line and the hips' down (0
+        // hanging straight, 90 square to the hips, 180 along their up).
+        public static float Fold(Vector3 hipsUp, Vector3 thighLine) => Vector3.Angle(-hipsUp, thighLine);
+
+        // An angle read in (-180, 180] taken the nearest whole turn to the one before (a fold past 180 reads past 180, not
+        // as -179: the reading wraps, the leg does not).
+        public static float Unwrap(float now, float was)
+        {
+            if (float.IsNaN(was) || float.IsNaN(now)) return now;
+            return now + 360f * Mathf.Round((was - now) / 360f);
+        }
+
+        // A drawn limb bone's line and the way it is bent, as world directions (the solver's -z and x).
+        private static void Limb(Quaternion drawn, Quaternion root, Quaternion rest, Vector3 aim, out Vector3 line, out Vector3 bend)
         {
             Quaternion turn = drawn * Quaternion.Inverse(root * rest);
-            Vector3 line = turn * (root * aim);
-            Vector3 bend = turn * (root * Vector3.forward);
-            Frame(Vector3.ProjectOnPlane(bend, line), -line, out x, out y, out z);
+            line = turn * (root * aim);
+            bend = turn * (root * Vector3.forward);
         }
 
         // The solver's x (forward), y (left) and z (up) as world directions, from a forward and an up: the solver's frame
