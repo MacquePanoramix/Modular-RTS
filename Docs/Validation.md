@@ -5288,3 +5288,9 @@ switch, so that the step and the getting up can be played both ways before he ch
   and the views seeing any, off then on: legs straight 49/858, 36/210; spread 45 49/823, 36/380; knee 90, bend 10
   49/879, 37/214; knee 90, bend 70 49/551, 49/583; knee 90, spread 90, bend 40 48/547, 48/547; bend 100 35/418,
   49/639; bend 130 20/156, 41/304. The poses were chosen to show the losses as well as the gains.
+- **The aesthetic judges (November 14, evening; `Reviews/2026-11-14_Flaps_Judges`):** three blind judges (the cloth,
+  the guide, the player) and a referee, the two ways as rows shuffled per sheet. The referee found the switch on truer
+  in 6 of 7 poses and the same in pose 4 (enlarged after, pose 4 leans on too: off shows the lying leg's cut rim).
+  Standing against the old way: the lying leg's trouser end floating apart from the coat from above (the detached
+  leg), a crushed bag, board-like sheets. Against the switch: a pointed front hem to the ground. Against both: a flap
+  standing up over a leg raised past square. Not Luis's verdict.

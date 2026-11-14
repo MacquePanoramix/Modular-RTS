@@ -614,7 +614,12 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      "0,0,45,10;90,0,0,10;90,0,0,70;90,0,90,40;0,0,0,100;0,0,0,130"`) gave the rest as before (49+51; 36+30). The
      seven blind sheets: scratchpad `judges_flaps/pose_0..6.png` (made by `judge_sheets.py`; which row is which, in
      the scratchpad's `private/key_flaps.txt`, not shown to the judges). The pose pictures carry no red marks (only
-     the control pictures do); the brief says so. Next: the judges, one at a time, then the referee.
+     the control pictures do); the brief says so. **Judged (November 14, evening;
+     `Reviews/2026-11-14_Flaps_Judges`):** the referee found the switch on truer in 6 of 7 poses, the same in pose 4
+     (which leans on too, enlarged); left against it: a pointed front hem, and (both ways) a flap standing over a leg
+     raised past square. Next: report to Luis (first line: the switch, off by default; the picture `off_on.jpg`; asks:
+     the default, the art-cut exploration, a stop for the raised leg's front flap), then (c)(c): a read-only map of the
+     code for the game-flow courses with a cover check every frame is in the scratchpad's `cc_map.md`.
    - *(The two items below are the morning's, kept as written, and done since: the review came back,
      `Reviews/2026-11-13_SolverTurns`, A and B "sound with changes", and A's sleep check passed (Validation); the
      report went; Luis played both ways and chose the new turns, now on by default. What B asks of R1's making-up and

@@ -1,0 +1,1197 @@
+{
+ "verdicts": [
+  {
+   "judge": "cloth",
+   "answer": {
+    "sheets": [
+     {
+      "sheet": "pose_0",
+      "truer": "A",
+      "why": "A lies like a heavy skirt: soft folds, a pointed front panel resting on the ground, and the bag sitting on the coat. B is a stiff flat boxy sheet with hard straight edges, and its bag is crumpled."
+     },
+     {
+      "sheet": "pose_1",
+      "truer": "B",
+      "why": "B's coat settles over the hip and the bag stays whole. A's skirt bunches into a boxy slab and the bag is folded and crushed."
+     },
+     {
+      "sheet": "pose_2",
+      "truer": "A",
+      "why": "A's coat stays close and drapes over the bent leg. B pulls the coat into a lifted ridge and leaves the trousers' flat cut ends showing beside the coat."
+     },
+     {
+      "sheet": "pose_3",
+      "truer": "A",
+      "why": "A's panel lies along the thigh like hanging cloth. B throws a flap up into a pointed wing."
+     },
+     {
+      "sheet": "pose_4",
+      "truer": "A",
+      "why": "A lets the coat fall to the ground beside the raised leg. B sticks a panel up as a spike and shows a flat trouser cut in the top view."
+     },
+     {
+      "sheet": "pose_5",
+      "truer": "the same",
+      "why": "Both let the leg rise through the coat front. Neither lets the cloth fall away from the lifted leg or lie on the ground. Column 1 reads slightly more natural in B, column 3 in A."
+     },
+     {
+      "sheet": "pose_6",
+      "truer": "B",
+      "why": "B's side view (column 1) drapes the cloth in a heavy lump, not a standing tent. Both rows still have a standing flap in the top view and a detached trouser tube."
+     }
+    ],
+    "flaws": [
+     {
+      "sheet": "pose_0",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a shape no cloth could make",
+      "what": "The skirt is a wide flat board with straight edges and square corners, as if it were stiff card."
+     },
+     {
+      "sheet": "pose_0",
+      "row": "B",
+      "column": "head and right",
+      "kind": "a sharp spike or fold",
+      "what": "The bag is crumpled and the coat edge around it is a hard fold."
+     },
+     {
+      "sheet": "pose_1",
+      "row": "A",
+      "column": "head and right",
+      "kind": "a sharp spike or fold",
+      "what": "The bag is crushed under a stiff coat panel with a sharp edge."
+     },
+     {
+      "sheet": "pose_1",
+      "row": "A",
+      "column": "straight above",
+      "kind": "the trousers cut top edge showing",
+      "what": "A dark ring of the trouser cut shows at the hip where the leg leaves the coat."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "B",
+      "column": "straight above",
+      "kind": "the trousers cut top edge showing",
+      "what": "Two grey trouser tubes with flat cut ends lie apart from the coat, so the legs look detached."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "A",
+      "column": "straight above",
+      "kind": "a leg that looks detached",
+      "what": "The bent leg's grey tube ends in a rounded blank end beside the coat."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "B",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A cloth panel stands up at the upper left like a pointed wing, held against gravity."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "B",
+      "column": "straight above",
+      "kind": "floating",
+      "what": "A flap sticks out sideways above the hip with a hard straight edge."
+     },
+     {
+      "sheet": "pose_4",
+      "row": "B",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A panel stands up at the upper left, unsupported."
+     },
+     {
+      "sheet": "pose_4",
+      "row": "B",
+      "column": "straight above",
+      "kind": "the trousers cut top edge showing",
+      "what": "The raised leg's top is a flat cut tube beside the coat."
+     },
+     {
+      "sheet": "pose_4",
+      "row": "A",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "The front panel's hem is a sharp point at the ground."
+     },
+     {
+      "sheet": "pose_5",
+      "row": "A",
+      "column": "head and right",
+      "kind": "through the body or the ground",
+      "what": "The raised leg and boot cover the lantern, with the coat around it."
+     },
+     {
+      "sheet": "pose_5",
+      "row": "B",
+      "column": "head and right",
+      "kind": "through the body or the ground",
+      "what": "The raised leg and boot cover the lantern, with the coat around it."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "A",
+      "column": "feet and left",
+      "kind": "floating",
+      "what": "A flap stands up like a hooked tent over the raised thigh."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "A",
+      "column": "straight above",
+      "kind": "the trousers cut top edge showing",
+      "what": "The raised leg shows a flat cut end apart from the coat; it looks detached."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a sharp spike or fold",
+      "what": "A coat flap hooks up and over the leg, and the lantern is mostly hidden."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "B",
+      "column": "head and right",
+      "kind": "floating",
+      "what": "A flap rises like a hood over the lantern, standing against gravity."
+     }
+    ],
+    "guide": [
+     {
+      "sheet": "pose_0",
+      "row": "B",
+      "file": "CharacterPractices.md",
+      "words": "A skirt hangs in flaps",
+      "how": "B's board-like sheet does not hang in flaps."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "B",
+      "file": "CharacterPractices.md",
+      "words": "lets it hang when the thigh moves away",
+      "how": "B's standing flaps in poses 3, 4 and 6 do not hang when the thigh moves away."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "B",
+      "file": "CharacterPractices.md",
+      "words": "Remove geometry no one can see",
+      "how": "The trouser cut ends are visible in the top view, so the leg looks detached."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "A",
+      "file": "VisualSoul.md",
+      "words": "Cloth have weight",
+      "how": "Flaps standing up in poses 3, 4 and 6 in either row read weightless, against the guide's 'cloth have weight'."
+     }
+    ],
+    "worst_left": "In the rows I preferred, the worst is the trouser tube's flat cut end showing beside the coat, so the leg looks detached. The next is a flap standing up against gravity in the raised-leg poses.",
+    "reject_both": "Neither way handles the raised-leg poses 5 and 6. In both rows the cloth stays stuck to the lifted leg or stands up against gravity, and the trouser end still shows. I would also reject any row where the flap stands as a rigid wing, which happens in both rows on some sheet."
+   }
+  },
+  {
+   "judge": "guide",
+   "answer": {
+    "sheets": [
+     {
+      "sheet": "pose_0",
+      "truer": "A",
+      "why": "Row A: the skirt hangs as a plain bell lying on the hips, the bag sits whole on it, and the leg tube goes under the hem. Row B: the coat is a flattened, angular sheet with a folded flap over the bag, and the trousers show a hard cut end."
+     },
+     {
+      "sheet": "pose_1",
+      "truer": "B",
+      "why": "Row B keeps the skirt as one soft sheet over the hip with the bag whole and the leg running under it. Row A has the skirt lifted into a hard faceted sheet that crumples the bag."
+     },
+     {
+      "sheet": "pose_2",
+      "truer": "A",
+      "why": "Row A shows a calm skirt, an intact bag, and a trouser tube that reaches the coat. Row B in the top view has the raised thigh as a tube with a visible gap from the coat, and the coat edge is cut straight."
+     },
+     {
+      "sheet": "pose_3",
+      "truer": "A",
+      "why": "Row A: the knee comes up from under the hem, the skirt falls to the ground with a soft point, and the bag is whole. Row B: a spike of cloth stands up on the left in the first view, and the bag is crumpled in the middle view."
+     },
+     {
+      "sheet": "pose_4",
+      "truer": "the same",
+      "why": "Both rows are nearly identical: a skirt draped over the hip with the leg splayed out. Neither stands out, and the flaws are shared."
+     },
+     {
+      "sheet": "pose_5",
+      "truer": "A",
+      "why": "In row A the skirt lies roughly like cloth and the bag is whole. Row B has a crumpled bag and a flap standing up like a fin at the first view's left edge."
+     },
+     {
+      "sheet": "pose_6",
+      "truer": "B",
+      "why": "Row B keeps the bag whole, and the cloth is tented over the leg as cloth might be. Row A has a crumpled bag, a flap lifted like a fin, and the trouser tube floating clear of the coat in the top view. Neither is good."
+     }
+    ],
+    "flaws": [
+     {
+      "sheet": "pose_0",
+      "row": "B",
+      "column": "straight above",
+      "kind": "the trousers cut top edge showing",
+      "what": "The grey legs end in a hard tube end with a clear gap below the coat, so the legs look detached."
+     },
+     {
+      "sheet": "pose_0",
+      "row": "B",
+      "column": "head and right",
+      "kind": "a shape no cloth could make",
+      "what": "The coat is folded into a hard-edged slab and the orange bag is crushed flat and bent."
+     },
+     {
+      "sheet": "pose_0",
+      "row": "A",
+      "column": "straight above",
+      "kind": "a sharp spike or fold",
+      "what": "A small cloth flap sticks out sideways at the coat's corner."
+     },
+     {
+      "sheet": "pose_1",
+      "row": "A",
+      "column": "head and right",
+      "kind": "a shape no cloth could make",
+      "what": "The skirt is a hard faceted board that crushes the bag."
+     },
+     {
+      "sheet": "pose_1",
+      "row": "A",
+      "column": "straight above",
+      "kind": "floating",
+      "what": "The cloth is a stiff, angular plate standing off the hip."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a leg that looks detached",
+      "what": "The raised grey thigh is a tube with a hard flat end, well clear of the coat."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "B",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A pointed flap rises at the top-left of the skirt."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "B",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A spike of cloth stands up at the skirt's top-left corner."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "B",
+      "column": "head and right",
+      "kind": "a shape no cloth could make",
+      "what": "The bag is crumpled and the cloth is folded over it."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a leg that looks detached",
+      "what": "The raised leg is a tube with its end floating well above the coat."
+     },
+     {
+      "sheet": "pose_4",
+      "row": "A",
+      "column": "straight above",
+      "kind": "the trousers cut top edge showing",
+      "what": "A hard-ended trouser tube enters the coat's edge with a visible cut."
+     },
+     {
+      "sheet": "pose_4",
+      "row": "B",
+      "column": "straight above",
+      "kind": "the trousers cut top edge showing",
+      "what": "A hard cut end of the other leg shows beside the coat."
+     },
+     {
+      "sheet": "pose_5",
+      "row": "B",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A pointed flap stands up like a fin at the skirt's top-left."
+     },
+     {
+      "sheet": "pose_5",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a leg that looks detached",
+      "what": "The raised leg's cut end floats clear above the coat."
+     },
+     {
+      "sheet": "pose_5",
+      "row": "A",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A long dark point hangs from the hem to the ground."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "A",
+      "column": "straight above",
+      "kind": "a leg that looks detached",
+      "what": "The grey tube ends in a flat cut with a clear gap before the coat."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "A",
+      "column": "head and right",
+      "kind": "a shape no cloth could make",
+      "what": "The bag is crumpled and the cloth folded hard."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "B",
+      "column": "head and right",
+      "kind": "floating",
+      "what": "A blue cloth tent stands up over the lantern and the leg."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a sharp spike or fold",
+      "what": "A lifted flap looks like a cloth tent beside the leg."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "A",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A flap fin stands up beside the raised leg."
+     }
+    ],
+    "guide": [
+     {
+      "sheet": "pose_0",
+      "row": "B",
+      "file": "CharacterPractices.md",
+      "words": "A skirt hangs in flaps",
+      "how": "The way that crushes the bag and lifts flaps into slabs does not keep the skirt as hanging cloth lying on the body."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "B",
+      "file": "VisualSoul.md",
+      "words": "Surfaces feel alive",
+      "how": "The hard-cut tubes and straight cut edges read as 3D giveaways, not a cloth surface with weight."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "A",
+      "file": "TheEssence.md",
+      "words": "No 3D giveaways: no faceted silhouettes",
+      "how": "The faceted sheets and the folded bag break the frame test."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "B",
+      "file": "CharacterPractices.md",
+      "words": "A carried thing hangs from its handle",
+      "how": "The tented cloth lifts the lantern, so what is worn no longer rests on the body."
+     }
+    ],
+    "worst_left": "In the preferred rows, the trouser tube's hard cut end shows and the leg looks detached from the coat at high hip angles, and in pose 6 a lifted cloth tent rises over the lantern.",
+    "reject_both": "Pose 4 and pose 6 show no way that is good: both rows have a hard-ended trouser tube or a standing flap fin. Neither keeps the soft hanging coat when the leg is raised high."
+   }
+  },
+  {
+   "judge": "player",
+   "answer": {
+    "sheets": [
+     {
+      "sheet": "pose_0",
+      "truer": "A",
+      "why": "A shows a smooth, broad skirt lying on the hips with the legs coming out under it. B is angular and faceted, with the bag crushed into the coat."
+     },
+     {
+      "sheet": "pose_1",
+      "truer": "B",
+      "why": "B lies smooth and keeps the bag whole. A folds the coat sharply at the bag, and its trouser top edge shows as a dark ring in the top view."
+     },
+     {
+      "sheet": "pose_2",
+      "truer": "A",
+      "why": "A has a pointed flap and a crumpled bag. In B both trouser tubes in the top view end in hard cut edges with a visible gap before the coat, which looks detached and is more noticeable than A's folds. A is only slightly truer."
+     },
+     {
+      "sheet": "pose_3",
+      "truer": "A",
+      "why": "In B the raised-knee leg is a free grey tube with a hard cut end, clearly cut off from the body in the top view. A keeps the leg under the coat, though its front hem has a spike."
+     },
+     {
+      "sheet": "pose_4",
+      "truer": "A",
+      "why": "A reads as a leg lying over the coat. B has a spiky flap sticking out to the left, a crumpled bag, and a cut tube end with a gap in the top view."
+     },
+     {
+      "sheet": "pose_5",
+      "truer": "the same",
+      "why": "Both are close. Each has a bulging skirt and the leg curling out of it, and the leg looks attached in both. B's skirt is a little tidier in view 1, but not enough to choose."
+     },
+     {
+      "sheet": "pose_6",
+      "truer": "A",
+      "why": "B shows the cut tube end floating well clear of the coat in the top view, and a jagged flap in view 1. A has a sharp flap near the hip but the leg joins the body."
+     }
+    ],
+    "flaws": [
+     {
+      "sheet": "pose_0",
+      "row": "B",
+      "column": "head and right",
+      "kind": "through the body or the ground",
+      "what": "The orange bag is crushed and pushed into the folded coat. The coat edge is faceted and angular."
+     },
+     {
+      "sheet": "pose_0",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a shape no cloth could make",
+      "what": "A stiff, angular flap sits over the bag, like a folded board and not cloth."
+     },
+     {
+      "sheet": "pose_1",
+      "row": "A",
+      "column": "head and right",
+      "kind": "a sharp spike or fold",
+      "what": "The coat is folded into a hard crease with the bag crumpled beneath it."
+     },
+     {
+      "sheet": "pose_1",
+      "row": "A",
+      "column": "straight above",
+      "kind": "the trousers cut top edge showing",
+      "what": "A dark hollow ring shows where the trousers end beside the hem."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a leg that looks detached",
+      "what": "Both grey tubes end in flat cut edges with a gap before the coat. They look like severed pipes."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "A",
+      "column": "head and right",
+      "kind": "a sharp spike or fold",
+      "what": "The bag is crushed and the coat has an angular pointed flap."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "A",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A sharp triangular flap points down at the hem."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a leg that looks detached",
+      "what": "The raised leg is a tube with a hard cut end, floating with a clear gap above the coat."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "A",
+      "column": "straight above",
+      "kind": "the trousers cut top edge showing",
+      "what": "The tube's rounded top end shows at the hem, with a slight gap."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "A",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "The front hem comes to a sharp point."
+     },
+     {
+      "sheet": "pose_4",
+      "row": "B",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A pointed flap sticks out sideways, away from the body."
+     },
+     {
+      "sheet": "pose_4",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a leg that looks detached",
+      "what": "The tube's cut end floats clear of the coat."
+     },
+     {
+      "sheet": "pose_4",
+      "row": "A",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A long pointed hem spike hangs down to the ground."
+     },
+     {
+      "sheet": "pose_5",
+      "row": "A",
+      "column": "head and right",
+      "kind": "the trousers cut top edge showing",
+      "what": "A dark hollow shows at the other hip where the leg meets the coat."
+     },
+     {
+      "sheet": "pose_5",
+      "row": "B",
+      "column": "head and right",
+      "kind": "the trousers cut top edge showing",
+      "what": "The same dark hollow shows at the hip."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "B",
+      "column": "straight above",
+      "kind": "a leg that looks detached",
+      "what": "The grey tube ends in a hard flat edge floating well above the coat."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "B",
+      "column": "feet and left",
+      "kind": "a shape no cloth could make",
+      "what": "The coat is a jagged, boxy pocket-like shape that the leg passes through."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "A",
+      "column": "feet and left",
+      "kind": "a sharp spike or fold",
+      "what": "A dark spike hangs below the raised leg."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "A",
+      "column": "straight above",
+      "kind": "a sharp spike or fold",
+      "what": "A small blue spike juts out at the coat's upper left."
+     }
+    ],
+    "guide": [
+     {
+      "sheet": "pose_0",
+      "row": "B",
+      "file": "CharacterPractices.md",
+      "words": "A skirt hangs in flaps; a long coat lies over the knees",
+      "how": "The crushed bag and boxy folded flaps do not read as a coat lying under gravity."
+     },
+     {
+      "sheet": "pose_2",
+      "row": "B",
+      "file": "CharacterPractices.md",
+      "words": "Hidden body or garment parts poke through what covers them / trousers cut away",
+      "how": "The cut tubes end in the open and break the covered join the guide asks for."
+     },
+     {
+      "sheet": "pose_3",
+      "row": "B",
+      "file": "TheEssence.md",
+      "words": "No 3D giveaways: no faceted silhouettes",
+      "how": "The flat cut tube end and boxy flaps are exactly that kind of giveaway."
+     },
+     {
+      "sheet": "pose_6",
+      "row": "B",
+      "file": "CharacterPractices.md",
+      "words": "A carried thing hangs from its handle / a bag leans on the coat's real surface",
+      "how": "The lantern and bag are hidden or crushed inside a boxy flap."
+     }
+    ],
+    "worst_left": "In the rows I preferred, the worst is pointed hem spikes and flaps (pose_3, pose_4, pose_6) and a dark hollow at the trouser top at the hip. In pose_2 the preferred row also still crumples the bag.",
+    "reject_both": "Nothing breaks both rows. Both are weak where a raised leg leaves a visible dark hollow or gap at the coat, and both have spiky flaps. The way that leaves the cut tube ends visibly floating, which I would reject outright, is the one that otherwise looks smoother.",
+    "sheets_note": "unused"
+   }
+  }
+ ],
+ "referee": {
+  "findings": [
+   {
+    "judge": "cloth",
+    "sheet": "pose_0",
+    "row": "B",
+    "column": "straight above",
+    "finding": "skirt a flat board with square corners",
+    "verdict": "there",
+    "note": "Wide angular sheet, hard edges."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_0",
+    "row": "B",
+    "column": "head and right",
+    "finding": "bag crumpled, hard fold",
+    "verdict": "there",
+    "note": "Bag bent and folded under a hard coat edge."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_1",
+    "row": "A",
+    "column": "head and right",
+    "finding": "bag crushed under stiff panel",
+    "verdict": "there",
+    "note": "Bag crumpled, sharp coat edge."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_1",
+    "row": "A",
+    "column": "straight above",
+    "finding": "dark ring of trouser cut at hip",
+    "verdict": "there",
+    "note": "Raised leg's end shows a dark rim beside the coat."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_2",
+    "row": "B",
+    "column": "straight above",
+    "finding": "two grey tubes with flat cut ends apart from coat",
+    "verdict": "there",
+    "note": "Clear gap, flat ends; worst of the sheet."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_2",
+    "row": "A",
+    "column": "straight above",
+    "finding": "bent leg ends in rounded blank end beside coat",
+    "verdict": "there",
+    "note": "Real but mild; end sits close to the coat."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_3",
+    "row": "B",
+    "column": "feet and left",
+    "finding": "panel stands up like a wing",
+    "verdict": "there",
+    "note": "Pointed flap at upper left."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_3",
+    "row": "B",
+    "column": "straight above",
+    "finding": "flap sticks out sideways above hip",
+    "verdict": "there",
+    "note": "Hard straight-edged flap on the right of the coat. The leg tube floating clear above the coat is the larger fault here."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_4",
+    "row": "B",
+    "column": "feet and left",
+    "finding": "panel stands up upper left",
+    "verdict": "not there",
+    "note": "Pose_4 rows are near identical; the coat lies flat with no standing panel. The spike belongs to pose_3 B."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_4",
+    "row": "B",
+    "column": "straight above",
+    "finding": "raised leg top is a flat cut tube beside coat",
+    "verdict": "not there",
+    "note": "The knee tube joins the coat in both rows; no cut end shows."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_4",
+    "row": "A",
+    "column": "feet and left",
+    "finding": "front hem sharp point at ground",
+    "verdict": "not there",
+    "note": "Hem is a rounded lower edge here; the hem point is in pose_3 and pose_5 A."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_5",
+    "row": "A",
+    "column": "head and right",
+    "finding": "leg and boot cover lantern, cloth through body",
+    "verdict": "not there",
+    "note": "The leg is in front of the lantern, not through anything. Not a cloth fault."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_5",
+    "row": "B",
+    "column": "head and right",
+    "finding": "leg and boot cover lantern",
+    "verdict": "not there",
+    "note": "Same; the real fault in B is the detached tube in the top view."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_6",
+    "row": "A",
+    "column": "feet and left",
+    "finding": "flap stands up like hooked tent over thigh",
+    "verdict": "there",
+    "note": "A flap hooks up at the upper left."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_6",
+    "row": "A",
+    "column": "straight above",
+    "finding": "raised-leg flat cut end apart from coat",
+    "verdict": "there",
+    "note": "The lying leg's flat cut end floats above the coat with a gap (the lying leg, not the raised one)."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_6",
+    "row": "B",
+    "column": "straight above",
+    "finding": "coat flap hooks over leg, lantern hidden",
+    "verdict": "there",
+    "note": "Flap folded up and over at upper left."
+   },
+   {
+    "judge": "cloth",
+    "sheet": "pose_6",
+    "row": "B",
+    "column": "head and right",
+    "finding": "flap rises like a hood over lantern",
+    "verdict": "there",
+    "note": "A blue hood-like cloth stands above the lantern."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_0",
+    "row": "B",
+    "column": "straight above",
+    "finding": "grey legs end in hard tube end with gap",
+    "verdict": "not there",
+    "note": "Tubes run up to the coat edge with no visible gap or cut end."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_0",
+    "row": "B",
+    "column": "head and right",
+    "finding": "hard-edged slab, bag crushed",
+    "verdict": "there",
+    "note": "Same as cloth."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_0",
+    "row": "A",
+    "column": "straight above",
+    "finding": "small flap sticks out at coat corner",
+    "verdict": "there",
+    "note": "A small flare at the coat's upper corner; minor."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_1",
+    "row": "A",
+    "column": "head and right",
+    "finding": "hard faceted board crushes bag",
+    "verdict": "there",
+    "note": "Bag crumpled, coat faceted."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_1",
+    "row": "A",
+    "column": "straight above",
+    "finding": "stiff angular plate standing off hip",
+    "verdict": "there",
+    "note": "Angular coat panel; 'floating' is a stretch but the stiffness is there."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_2",
+    "row": "B",
+    "column": "straight above",
+    "finding": "raised thigh a tube with flat end, clear of coat",
+    "verdict": "there",
+    "note": "Clear gap and flat cut ends."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_2",
+    "row": "B",
+    "column": "feet and left",
+    "finding": "pointed flap at top-left",
+    "verdict": "there",
+    "note": "A pointed flap rises at the upper left."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_3",
+    "row": "B",
+    "column": "feet and left",
+    "finding": "spike of cloth at top-left",
+    "verdict": "there",
+    "note": "Clear."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_3",
+    "row": "B",
+    "column": "head and right",
+    "finding": "bag crumpled, cloth folded over it",
+    "verdict": "there",
+    "note": "Clear."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_3",
+    "row": "B",
+    "column": "straight above",
+    "finding": "raised leg tube end floating above coat",
+    "verdict": "there",
+    "note": "Flat cut end with a gap."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_4",
+    "row": "A",
+    "column": "straight above",
+    "finding": "hard-ended tube enters coat with visible cut",
+    "verdict": "cannot be told",
+    "note": "No cut end is clear in the top view; both rows join smoothly."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_4",
+    "row": "B",
+    "column": "straight above",
+    "finding": "hard cut end of other leg beside coat",
+    "verdict": "not there",
+    "note": "Nothing floats; rows are almost the same."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_5",
+    "row": "B",
+    "column": "feet and left",
+    "finding": "pointed flap like a fin at top-left",
+    "verdict": "there",
+    "note": "Standing flap at the upper left."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_5",
+    "row": "B",
+    "column": "straight above",
+    "finding": "leg cut end floats above coat",
+    "verdict": "there",
+    "note": "The lying leg's flat dark end hangs clear above the coat with a large gap. Strong."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_5",
+    "row": "A",
+    "column": "feet and left",
+    "finding": "long dark point hangs from hem to ground",
+    "verdict": "there",
+    "note": "Dark pointed front hem under the raised leg."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_6",
+    "row": "A",
+    "column": "straight above",
+    "finding": "grey tube flat cut with gap before coat",
+    "verdict": "there",
+    "note": "Clear."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_6",
+    "row": "A",
+    "column": "head and right",
+    "finding": "bag crumpled, cloth folded hard",
+    "verdict": "there",
+    "note": "Clear."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_6",
+    "row": "B",
+    "column": "head and right",
+    "finding": "cloth tent over lantern and leg",
+    "verdict": "there",
+    "note": "Hood-like flap above the lantern."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_6",
+    "row": "B",
+    "column": "straight above",
+    "finding": "lifted flap like a tent beside the leg",
+    "verdict": "there",
+    "note": "Flap folded up at left."
+   },
+   {
+    "judge": "guide",
+    "sheet": "pose_6",
+    "row": "A",
+    "column": "feet and left",
+    "finding": "flap fin beside raised leg",
+    "verdict": "there",
+    "note": "Same hook as cloth saw."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_0",
+    "row": "B",
+    "column": "head and right",
+    "finding": "bag crushed into coat, faceted edge",
+    "verdict": "there",
+    "note": "Crushed yes; 'through the body' cannot be told."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_0",
+    "row": "B",
+    "column": "straight above",
+    "finding": "stiff angular flap over bag",
+    "verdict": "there",
+    "note": "Boxy fold."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_1",
+    "row": "A",
+    "column": "head and right",
+    "finding": "hard crease, bag crumpled",
+    "verdict": "there",
+    "note": "Clear."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_1",
+    "row": "A",
+    "column": "straight above",
+    "finding": "dark ring where trousers end",
+    "verdict": "there",
+    "note": "Clear."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_2",
+    "row": "B",
+    "column": "straight above",
+    "finding": "tubes flat cut, gap, like severed pipes",
+    "verdict": "there",
+    "note": "Clear and the most visible fault on the sheet."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_2",
+    "row": "A",
+    "column": "head and right",
+    "finding": "bag crushed, angular flap",
+    "verdict": "not there",
+    "note": "A's bag is whole here. At most a small coat corner at top."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_2",
+    "row": "A",
+    "column": "feet and left",
+    "finding": "triangular flap points down at hem",
+    "verdict": "there",
+    "note": "Mild pointed hem corner."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_3",
+    "row": "B",
+    "column": "straight above",
+    "finding": "raised leg tube floating with gap",
+    "verdict": "there",
+    "note": "Clear."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_3",
+    "row": "A",
+    "column": "straight above",
+    "finding": "tube rounded end shows at hem with slight gap",
+    "verdict": "not there",
+    "note": "The A tubes meet the coat; no gap I can see."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_3",
+    "row": "A",
+    "column": "feet and left",
+    "finding": "front hem sharp point",
+    "verdict": "there",
+    "note": "Pointed hem at ground."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_4",
+    "row": "B",
+    "column": "feet and left",
+    "finding": "pointed flap sticks out sideways",
+    "verdict": "not there",
+    "note": "Pose_4 is nearly the same in both rows; no flap. It is the pose_3 B picture."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_4",
+    "row": "B",
+    "column": "straight above",
+    "finding": "tube cut end floats clear",
+    "verdict": "not there",
+    "note": "Nothing floats in pose_4."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_4",
+    "row": "A",
+    "column": "feet and left",
+    "finding": "long hem spike to ground",
+    "verdict": "not there",
+    "note": "Hem is rounded in pose_4."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_5",
+    "row": "A",
+    "column": "head and right",
+    "finding": "dark hollow at the other hip",
+    "verdict": "cannot be told",
+    "note": "There is a small dark patch under the coat edge at the other hip, but I cannot say it is a trouser cut ring at this size."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_5",
+    "row": "B",
+    "column": "head and right",
+    "finding": "same dark hollow",
+    "verdict": "cannot be told",
+    "note": "Same."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_6",
+    "row": "B",
+    "column": "straight above",
+    "finding": "grey tube hard flat edge floating above coat",
+    "verdict": "not there",
+    "note": "It is row A that has the floating tube. In B the tube joins the coat."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_6",
+    "row": "B",
+    "column": "feet and left",
+    "finding": "jagged boxy pocket-like coat the leg passes through",
+    "verdict": "there",
+    "note": "Lumpy folded coat; 'passes through' is too strong."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_6",
+    "row": "A",
+    "column": "feet and left",
+    "finding": "dark spike below raised leg",
+    "verdict": "not there",
+    "note": "No dark spike under the leg."
+   },
+   {
+    "judge": "player",
+    "sheet": "pose_6",
+    "row": "A",
+    "column": "straight above",
+    "finding": "small blue spike at coat upper left",
+    "verdict": "cannot be told",
+    "note": "A small point at the coat corner; the stronger flap is in col 1."
+   }
+  ],
+  "preferences": [
+   {
+    "sheet": "pose_0",
+    "judges_said": "cloth A / guide A / player A",
+    "borne_out": "A",
+    "why": "A is a soft bell with a whole bag; B is a boxy slab with a crushed bag."
+   },
+   {
+    "sheet": "pose_1",
+    "judges_said": "cloth B / guide B / player B",
+    "borne_out": "B",
+    "why": "A crumples the bag, is faceted, and shows a dark ring; B is smooth with a whole bag."
+   },
+   {
+    "sheet": "pose_2",
+    "judges_said": "cloth A / guide A / player A",
+    "borne_out": "A",
+    "why": "B's two flat-cut tubes float clear of the coat and a flap points up; A keeps the bag whole and the leg close."
+   },
+   {
+    "sheet": "pose_3",
+    "judges_said": "cloth A / guide A / player A",
+    "borne_out": "A",
+    "why": "B has a standing spike, a crumpled bag and a floating tube; A has only a hem point."
+   },
+   {
+    "sheet": "pose_4",
+    "judges_said": "cloth A / guide the same / player A",
+    "borne_out": "the same",
+    "why": "The rows are nearly identical, no spikes or floating tubes in either; A's bell is a little fuller. Cloth and player's A preference rests on flaws that are not in these pictures."
+   },
+   {
+    "sheet": "pose_5",
+    "judges_said": "cloth the same / guide A / player the same",
+    "borne_out": "A",
+    "why": "B has a fin, crumpled bag and a clear floating tube in the top view; A has a hem point only. Cloth and player missed this."
+   },
+   {
+    "sheet": "pose_6",
+    "judges_said": "cloth B / guide B / player A",
+    "borne_out": "B",
+    "why": "A has the floating tube, crumpled bag and a flap; B keeps tube and bag whole though its flap hoods the lantern. Player had the rows reversed on the tube."
+   }
+  ],
+  "stands": [
+   "Raised-leg poses (5 and 6): in both rows a coat flap stands up against gravity (a fin or hood), and in pose 6 B it hoods the lantern; neither way yet drapes cloth away from a lifted thigh.",
+   "One way leaves the lying leg's flat trouser end visibly floating above the coat in the top view: pose_2 B, pose_3 B, pose_5 B, pose_6 A.",
+   "The same way crumples and folds the orange bag under a stiff coat panel: pose_0 B, pose_1 A, pose_3 B, pose_5 B, pose_6 A.",
+   "The same way makes boxy, faceted, board-like coat sheets: pose_0 B, pose_1 A.",
+   "Pointed hem tip to the ground in the other way's front panel: pose_3 A, pose_5 A, mild in pose_2 A.",
+   "Dark trouser rim showing beside the coat in the top view: pose_1 A.",
+   "Pose_4 shows no fault in either row; it is the clean sheet."
+  ],
+  "struck": [
+   "Pose_4 flaws attributed to B by cloth, guide and player (spike, floating tube, cut end, crumpled bag): not in the pictures; they belong to pose_3 B.",
+   "Pose_4 A 'hem spike to ground' (cloth, guide, player): hem is rounded; the spike is in pose_3 A and pose_5 A.",
+   "Cloth's 'cloth through body' at the lantern in pose_5: the boot and leg are in front of the lantern, nothing penetrates.",
+   "Player's pose_6 preference for A: the floating tube is in A, not B; B is the truer row.",
+   "Player's pose_2 A 'bag crushed': A's bag is whole.",
+   "Player's pose_3 A 'gap' at tube end and pose_6 A 'dark spike below leg': not seen.",
+   "Guide's pose_0 B 'tube gap': tubes meet the coat."
+  ],
+  "missed": "[\"Pose_5: the detached flat tube end in the top view in the less true row, and its crumpled bag, were missed by cloth and player, who called the sheet the same.\",\"Pose_4: both rows are the same, so nothing separates them.\",\"Pose_6: the lying leg's cut end is the detached-leg fault, not the raised leg.\"]",
+  "line": "these stand"
+ }
+}
