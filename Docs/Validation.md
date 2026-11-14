@@ -5380,6 +5380,18 @@ third of its rows; the old way rarely does.
 - This is the own get-up exploding in the game as played. It needs its own energy trace before the own get-up's
   numbers are trusted.
 - Course 4 lies outside every count marked "without the blow-up" (frames 23417 to 26855).
+- **How it began, as the frames show it** (`frames.csv`, every frame from 23376; its own body's fastest link `whip`,
+  the limb turned most in a frame `spin`):
+  - in footB, its 14th try: the left thigh turned up to 23 degrees a frame, the fastest link 24 to 28 rad/s, and the
+    right knee bent to 157 to 165 degrees;
+  - at the step from footB to pike (frame 23421), the fastest link rose to 63 rad/s within four frames;
+  - in pike, the right arm (forearm, then upper arm) whirled: 131, 312 and 405 rad/s by frame 23444, with a knee bent
+    127 degrees the wrong way;
+  - by frame 23448 the fastest link was at 1e8 rad/s, and from 23472 the body was gone (NaN).
+  This fits the engine's own gain of energy in a fast-turning chain (K1, November 10: past about 30 rad/s, each step
+  adds more than the dampers take). It is not shown, as no energy was counted. The next step is the count
+  (`OwnBodyTests`' `-ownShoveTrace` count, brought into the live test), on the same course run again, after checking
+  that a course runs again the same.
 
 **Not tested:**
 - Long; other strengths and frame rates; LOD1 (LOD0 forced); grass; the cinematic camera.

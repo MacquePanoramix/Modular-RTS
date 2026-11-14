@@ -668,13 +668,20 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
        (`internal.md`, `audit.md`, `pictures/`, `external.md`). Part two still to come: the synthesis, a sceptic,
        the revision, then the proposal to Luis.
      - Next, by his answers and the order below:
-       - the blow-up's energy trace (`shoves.sh`);
-       - natural joint ranges for the own body, researched first (a switch, judged);
+       - **the blow-up's energy count.** How it began is read from the frames (Validation): footB's fast left thigh
+         and a knee at 165, a jump to 63 rad/s at the step to pike, then the right arm whirling to 1e8. To do:
+         - check that a course runs again the same (re-run `cc_c1`'s first course, compare `frames.csv`);
+         - bring `OwnBodyTests`' `-ownShoveTrace` count (what the body holds against what its joints give, each step;
+           see the memory "engine-step-adds-energy") into `CoverRingLiveTests`;
+         - run course 4 again (`-ownPushes 5`) and read which part gains first;
+         - make the courses fail on a body gone NaN or past the engine's bound;
+       - natural joint ranges for the own body, researched first (a switch, judged); the memory's K1 already names
+         stops and dampers as the mend, so the ranges serve both the folds and the blow-up;
        - the skirt clipping detector;
-       - the models' research, part two.
+       - the models' research, part two (after the five hours' reset if the allowance is past about 75%).
      - The review's "should" items left open: the self-check compares counts, not points; the garment colliders
        stay in the scene; LOD0 is forced.
-     - The thirtieth outlook was taken after the reset (`Outlook.md`).
+     - The thirtieth and thirty-first outlooks were taken (`Outlook.md`).
    - **Luis's answers (November 14, evening; [his words](Correspondence/2026-11-14_THE_FLAPS_ON_AND_THE_MODELS_REDRAWN.md),
      the decisions in GAME_VISION):** (1) the flaps on their seams **on by default**: change the default in
      `MinerBody` once the build workflow's runs are over (never edit the worktree during a run), then run the flows as
