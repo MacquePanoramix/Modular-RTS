@@ -58,6 +58,30 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 15, 2026 (afternoon) — the thirty-fourth, short (after a compaction; a stretch closed, before the report)
+
+- **Where we are.** Luis's twelve answers are processed into the vision, the Handoff and memory, and he approved the
+  five delegated calls once they were explained plainly. The ankle mend is researched, revised and checked twice
+  (`Docs/Research/2026-11-15_NaturalRangesAndTheAnkle`, main `a60666c`):
+  - a second fault: a boot placed 0.55-0.71 m off its shin at the going down, which explains the hundredfold inertia;
+  - three switches, A, B and C, all off; forced checks first, then 24 courses per arm per miner on all three miners.
+- **Waiting on Luis:** his word on (b)'s build (the three switches); his call on `drivenNow`; his eye on
+  `WindowsOrdinaryPlace_Nov13b`. No merge to main without his word.
+- **Running:** the target-and-scale research (question 7): one opus researcher, then a sonnet critic. Research only.
+- **Open, not to be forgotten:**
+  - the mend's build: Long and Round worked numerically first, then §8.1's points;
+  - the visual turn: tier 0 instruments, step 0's stills;
+  - the assets search, before the world pass; question 11's options in that pass; the bigger world exploration;
+  - the clipping detector; the flap's rest and hem; the turn bench; (d) settling back.
+- **Does the task serve the stage?** Yes. The mend is the next getting-up turn. The target research opens the visual
+  turn, which Luis asked to alternate with it (question 12), and it sets the scale the foundations serve (question 7).
+- **Drift watched:** the visual programme must not build before the target exists. The scale research serves the
+  foundations only; it must not grow into an RTS design. The prototype's purpose, real weight and real strength at
+  work, stays first.
+- **The allowance:** 58% of the five hours (resets in about 4 hours), 94% of the week (resets in about a day and
+  2 hours). Once the target research is recorded, stop heavy work until the weekly reset. The conversation is at 44%
+  of its window, after one compaction.
+
 ### November 15, 2026 (morning) — the thirty-third, short (a stretch closed, before the report)
 
 - **Where we are.** The cause of the get-up's foot blow-ups has been found and verified (Validation, "The ankle split

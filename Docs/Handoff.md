@@ -1,6 +1,6 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 13, 2026 (afternoon), by Claude Opus 5.5, which carries the work on from Fable 5.2. Kept
+**Last updated:** November 15, 2026 (afternoon), by Claude Opus 5.5, which carries the work on from Fable 5.2. Kept
 current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, the top entry of [CURRENT_STATE.md](CURRENT_STATE.md), then
@@ -97,8 +97,11 @@ November 15 in `GAME_VISION.md`:
   garment shapes carried to every body) go to each item's judges when it is built.
 
 The order of the turns (his question 12: they take turns):
-1. the ankle mend's research (running), then its proposal to him;
-2. the visual turn: tier 0 instruments, step 0's stills, the target-budget research;
+1. the ankle mend's research: done, and proposed to him (November 15, afternoon); its build waits for his word;
+2. the visual turn: tier 0 instruments, step 0's stills, the target-budget research. **The target research is
+   running** (November 15, afternoon; `Research/2026-11-15_TargetAndScale/research.md`, one opus researcher, then a
+   sonnet critic writing `critique.md` beside it; research only). When it is back: read both, record the thread here
+   and in CURRENT_STATE, commit by path, tell Luis. Then stop heavy work until the weekly reset;
 3. the search of the best ways for Claude to make assets, before the world's first pass;
 4. the world's options (11) in that pass;
 5. the bigger exploration of the world and its assets.
