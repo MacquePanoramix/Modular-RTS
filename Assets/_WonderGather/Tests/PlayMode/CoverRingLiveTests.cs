@@ -99,6 +99,9 @@ namespace WonderGather.Tests
             float cap = Given("-liveCap", 240);
             int every = Mathf.Max(1, (int)Given("-liveEvery", 1)), standEvery = Mathf.Max(1, (int)Given("-liveStandEvery", 10));
             int picsMost = Mathf.Max(0, (int)Given("-livePics", 4));
+            // (-liveEnergy 1: the energy count of its own body every step, its columns in frames.csv and the steps before a
+            // link whirls; 0, as before. The guard against a body gone bad is on either way.)
+            bool energy = CaptureTools.Argument("-liveEnergy") == "1";
             string folder = CaptureTools.Argument("-liveOut");
             if (string.IsNullOrEmpty(folder))
                 folder = Path.Combine(Application.dataPath, "..", "TestRuns", "CoverLive", $"{who}_own{(ownWay ? 1 : 0)}_seam{(seam ? 1 : 0)}_other{(other ? 1 : 0)}");
@@ -109,7 +112,7 @@ namespace WonderGather.Tests
             MinerBody.FlapsOnTheirSeams = seam;
             // (A measure, not a test that must pass: what the engine says of a body gone wild is told, and it goes on.)
             LogAssert.ignoreFailingMessages = true;
-            Debug.Log($"LIVE_RUN {who}, gets up by its own body {ownWay}, played way (flaps on their seams) {seam}, other way {other}, {Time.captureFramerate} frames a second, cap {cap.ToString(Inv)} s, every {every} down, every {standEvery} standing, out {folder}");
+            Debug.Log($"LIVE_RUN {who}, gets up by its own body {ownWay}, played way (flaps on their seams) {seam}, other way {other}, {Time.captureFramerate} frames a second, cap {cap.ToString(Inv)} s, every {every} down, every {standEvery} standing, energy counted {energy}, out {folder}");
 
             int index = -1;
             for (int i = 0; i < choice.Count; i++) if (choice.NameOf(i) == who) index = i;
@@ -148,6 +151,7 @@ namespace WonderGather.Tests
             GrassField.NotFor = pictures;
 
             pair = new GameObject("Cover pair").AddComponent<CoverPair>();
+            pair.Energy = energy;
             pair.Begin(meter, ring, miner, unit.transform, seam, other, every, standEvery, folder, pictures, picsMost, who);
             pair.SetCourse(-1, 0, Quaternion.LookRotation(Vector3.ProjectOnPlane(unit.transform.forward, Vector3.up)));
 
@@ -161,6 +165,17 @@ namespace WonderGather.Tests
                 for (float until = Time.time + 15; !(own.Stands && !own.GettingUp && !own.Rising) && Time.time < until;) yield return null;
                 yield return Wait(1.5f);
                 var fall = unit.GetComponent<PhysicalFall>();
+                // (Gone bad between the courses, standing: taken back before the push, as at the cap.)
+                if (pair.WentBad)
+                {
+                    pair.WentBad = false;
+                    if (own.Stands) own.Drop();
+                    if (fall != null) fall.TakeBack();
+                    pair.Event("taken back");
+                    for (float until = Time.time + 20; !(own.Stands && !own.GettingUp && !own.Rising) && Time.time < until;) yield return null;
+                    yield return Wait(1.5f);
+                    fall = unit.GetComponent<PhysicalFall>();
+                }
                 int roseBefore = fall != null ? fall.RoseByItsOwn : 0, feetBefore = own.OnItsFeetFromLying, oldBefore = fall != null ? fall.GotUp : 0;
                 // (As GettingUpByItsOwnTests: forward, or -ownPushBack 1 back, or -ownPushWays 0,180,90,270 in turn; each
                 // round of ways turned a little aside.)
@@ -189,23 +204,26 @@ namespace WonderGather.Tests
                 float began = Time.time;
                 bool lay = false;
                 bool Up() => fall.Now == PhysicalFall.State.Up && (own.Stands ? !own.GettingUp && !own.Rising : true);
-                while (Time.time - began < 2 || (!Up() && Time.time - began < cap))
+                // (A body gone bad ends its course at once, as the cap does: CoverPair's guard.)
+                while (!pair.WentBad && (Time.time - began < 2 || (!Up() && Time.time - began < cap)))
                 {
                     lay |= fall.Now == PhysicalFall.State.Lying;
                     yield return null;
                 }
+                bool wentBad = pair.WentBad;
+                pair.WentBad = false;
                 int tries = fall.RoseByItsOwn - roseBefore, feet = own.OnItsFeetFromLying - feetBefore;
-                bool itsOwn = feet > 0 && own.Stands && Up();
-                bool old = !itsOwn && fall.GotUp > oldBefore;
+                bool itsOwn = !wentBad && feet > 0 && own.Stands && Up();
+                bool old = !wentBad && !itsOwn && fall.GotUp > oldBefore;
                 if (itsOwn) byItsOwn++; else if (old) oldWay++; else never++;
                 triesAll += tries;
                 string said = string.Format(Inv, "LIVE_COURSE {0} ({1:0} degrees): it lay {2}; tries by its own body {3}; {4} after {5:0.0} s; the fall said: {6}",
-                    k, turned, lay, tries, itsOwn ? "up by its own body" : old ? "up the old way" : "not up", Time.time - began, fall.ByItsOwnSaid);
+                    k, turned, lay, tries, itsOwn ? "up by its own body" : old ? "up the old way" : wentBad ? "gone bad (LIVE_BLOWUP)" : "not up", Time.time - began, fall.ByItsOwnSaid);
                 Debug.Log(said);
                 pair.Event(said);
-                // (Not up at the cap: the posed body takes it back where it lies and stands, so that the courses go on, as
-                // OwnSolidAgainstOwnBodyTests does.)
-                if (!Up())
+                // (Not up at the cap, or gone bad: the posed body takes it back where it lies and stands, so that the
+                // courses go on, as OwnSolidAgainstOwnBodyTests does.)
+                if (wentBad || !Up())
                 {
                     if (own.Stands) own.Drop();
                     fall.TakeBack();
@@ -223,6 +241,8 @@ namespace WonderGather.Tests
             foreach (var line in pair.FirstDifferences) Debug.Log("LIVE_DIFFERENCE " + line);
             Debug.Log(pair.SkinLine());
             Debug.Log($"LIVE_METER hits off the plane of the face they were counted on: {meter.Mismatches} of {meter.FaceChecks}");
+            Debug.Log(pair.EnergyLine());
+            Assert.That(pair.Blowups, Is.EqualTo(0), $"{pair.Blowups} blow-up(s): its own body went bad (a link not finite, turning past {CoverPair.BadTurning} rad/s, or its root {CoverPair.BadAway} m from where the course began):" + pair.BlowupsSaid);
             Assert.That(pair.Measured, Is.GreaterThan(0), "No frame was measured.");
             Assert.That(pair.NotRestored, Is.EqualTo(0), "The played flaps did not come back bit for bit.");
             if (seam == other) Assert.That(pair.Differing, Is.EqualTo(0), "The two ways, set equal, measured differently:\n" + string.Join("\n", pair.FirstDifferences));
@@ -248,6 +268,29 @@ namespace WonderGather.Tests
         public FrameRecorder Recorder;
         public int Measured, Differing, Laid, NotRestored;
         public readonly List<string> FirstDifferences = new List<string>();
+
+        // The energy count (-liveEnergy 1) and the guard of the test against a body gone bad (on either way): both read
+        // its own body after each step of the physics, and write nothing to it (the blow-up's trace, November 15).
+        public bool Energy;
+        // Gone bad: any link of its own body not finite, turning past BadTurning rad/s, or its root BadAway metres from
+        // where the course began. Then LIVE_BLOWUP in events.txt, the course ended as at the cap (the test reads WentBad
+        // and clears it), and the test fails at the end with how many.
+        public const float BadTurning = 100, BadAway = 50, TraceTurning = 30;
+        public bool WentBad;
+        public int Blowups;
+        public string BlowupsSaid = "";
+        private readonly LiveEnergy energy = new LiveEnergy();
+        private Vector3 courseFrom;
+        private bool courseFromKnown;
+        private long tracedTry = long.MinValue;
+        private int traces, energySteps, energyStepsAll;
+        // (The count since the last row, as the bar-6 columns: the most held, the step of the largest gain with what was
+        // given on it, the gain summed, the fastest turning link.)
+        private float eHeldMost = float.NaN, eGainMost = float.NaN, eGivenAtMost = float.NaN, eGainSum, fastestMost = float.NaN;
+        private string fastestWhich = "";
+        private float eGainMostAll = float.NaN, eGainLeastAll = float.NaN, fastestAll = float.NaN;
+        private static readonly string[] OwnNames = { "Hips", "Trunk", "Head", "UpperArmL", "UpperArmR", "ForearmL", "ForearmR", "ThighL", "ThighR", "ShinL", "ShinR", "FootL", "FootR" };
+        private readonly ArticulationBody[] ownKnown = new ArticulationBody[OwnBody.Count];
 
         private CoverMeter meter;
         private CoverMeter.Ring ring;
@@ -350,9 +393,103 @@ namespace WonderGather.Tests
             picturesOut = new StreamWriter(Path.Combine(folder, "pictures.csv"));
             waysOut.WriteLine("course,way,elevation,x,y,z");
             picturesOut.WriteLine("course,frame,criteria,values,way,which,view,file,skin_before_mm,skin_after_mm");
-            rows.WriteLine(Header());
+            rows.WriteLine(Header(Energy));
             events.WriteLine($"EVENTS {who}: played way {(seamPlayed ? "on" : "off")}, other way {(seamOther ? "on" : "off")}; {flaps.Length} flaps, {under.Length} flap bones and what they carry; ring {ring.Legs[0].Count}+{ring.Legs[1].Count} points");
+            // (Its weight lifted is reckoned from where the miner stood as the run began.)
+            energy.Level = unit.position.y;
+            StartCoroutine(AfterEachStep());
         }
+
+        // Last thing before each step of the physics (after every script has pushed on its own body): the count's start.
+        private void FixedUpdate()
+        {
+            if (!Energy || own == null || !own.Stands) { energy.Forget(); return; }
+            if (TakeOwn()) energy.Before(Time.fixedDeltaTime);
+        }
+
+        private bool TakeOwn()
+        {
+            for (int i = 0; i < OwnBody.Count; i++) ownKnown[i] = own.Part(i);
+            return energy.Take(own.Part(OwnBody.Hips), ownKnown, OwnNames);
+        }
+
+        // After each step of the physics: the count's end (-liveEnergy 1), then the guard.
+        private IEnumerator AfterEachStep()
+        {
+            var step = new WaitForFixedUpdate();
+            while (true)
+            {
+                yield return step;
+                if (own == null || !own.Stands || !TakeOwn()) { energy.Forget(); continue; }
+                if (Energy)
+                {
+                    string label = Group() + (own.GettingUp && own.Riser != null ? ":" + own.Riser.StageNow : "") + (own.Rising ? ":rising" : "") + (fall != null ? " try " + (fall.RoseByItsOwn - roseBefore).ToString(Inv) : "");
+                    if (energy.After(Time.fixedDeltaTime, Time.frameCount, Time.time, label)) Counted();
+                }
+                Guard();
+            }
+        }
+
+        private void Counted()
+        {
+            energySteps++; energyStepsAll++;
+            float held = energy.Held, gain = energy.Gain;
+            if (float.IsNaN(eHeldMost) || held > eHeldMost) eHeldMost = held;
+            if (float.IsNaN(eGainMost) || gain > eGainMost) { eGainMost = gain; eGivenAtMost = energy.Given; }
+            eGainSum += gain;
+            if (float.IsNaN(fastestMost) || energy.Fastest > fastestMost) { fastestMost = energy.Fastest; fastestWhich = energy.FastestName; }
+            if (float.IsNaN(eGainMostAll) || gain > eGainMostAll) eGainMostAll = gain;
+            if (float.IsNaN(eGainLeastAll) || gain < eGainLeastAll) eGainLeastAll = gain;
+            if (float.IsNaN(fastestAll) || energy.Fastest > fastestAll) fastestAll = energy.Fastest;
+            // (The first time in a try that a link turns past TraceTurning: the steps before it.)
+            long tryNow = ((long)course << 32) + (fall != null ? fall.RoseByItsOwn : -1);
+            if (tryNow != tracedTry && energy.Fastest > TraceTurning)
+            {
+                tracedTry = tryNow;
+                WriteTrace(string.Format(Inv, "ENERGY_TRACE course {0} frame {1} t {2:0.000}: {3} turns at {4:0.0} rad/s, past {5} for the first time in this try", course, Time.frameCount, Time.time, energy.FastestName, energy.Fastest, TraceTurning));
+            }
+        }
+
+        private void WriteTrace(string heading)
+        {
+            string path = Path.Combine(folder, string.Format(Inv, "energy_trace_c{0}_f{1}.txt", course, Time.frameCount));
+            File.AppendAllText(path, energy.Trace(heading));
+            traces++;
+            Event(heading + " -> " + Path.GetFileName(path));
+        }
+
+        private static bool Finite(Vector3 v) => !(float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z) || float.IsInfinity(v.x) || float.IsInfinity(v.y) || float.IsInfinity(v.z));
+
+        // The guard of the test, not of the body: it reads, and says.
+        private void Guard()
+        {
+            if (WentBad) return;
+            var links = energy.Links;
+            string part = null, why = null;
+            for (int i = 0; i < links.Length && why == null; i++)
+            {
+                var link = links[i];
+                Vector3 at = link.worldCenterOfMass, turns = link.angularVelocity, goes = link.linearVelocity;
+                if (!Finite(at) || !Finite(turns) || !Finite(goes) || !Finite(link.transform.position)) { part = energy.Names[i]; why = "not finite"; }
+                else if (turns.magnitude > BadTurning) { part = energy.Names[i]; why = string.Format(Inv, "turning at {0:0.0} rad/s", turns.magnitude); }
+            }
+            if (why == null && courseFromKnown && links.Length > 0)
+            {
+                float away = Vector3.Distance(links[0].worldCenterOfMass, courseFrom);
+                if (away > BadAway) { part = energy.Names[0]; why = string.Format(Inv, "{0:0.0} m from where the course began", away); }
+            }
+            if (why == null) return;
+            WentBad = true;
+            Blowups++;
+            string said = $"LIVE_BLOWUP {course} {Time.frameCount} {part} ({why})";
+            if (BlowupsSaid.Length < 2000) BlowupsSaid += " " + said + ";";
+            Event(said);
+            Debug.Log(said);
+            if (Energy) WriteTrace(string.Format(Inv, "ENERGY_TRACE course {0} frame {1} t {2:0.000}: gone bad, {3} {4}", course, Time.frameCount, Time.time, part, why));
+        }
+
+        public string EnergyLine() => string.Format(Inv, "LIVE_ENERGY counted {0}: {1} steps counted; gained in a step at most {2:+0.###;-0.###} J and at least {3:+0.###;-0.###} J; the fastest link {4:0.0} rad/s; {5} traces written; {6} blow-up(s){7}",
+            Energy, energyStepsAll, eGainMostAll, eGainLeastAll, fastestAll, traces, Blowups, BlowupsSaid.Length > 0 ? ":" + BlowupsSaid : "");
 
         private FieldInfo Field(string name)
         {
@@ -364,6 +501,10 @@ namespace WonderGather.Tests
         public void SetCourse(int k, float turned, Quaternion facing)
         {
             course = k; round = turned; frameInCourse = 0; courseStart = Time.time;
+            // (Where the course began, for the guard; a new course is not yet gone bad.)
+            courseFrom = own != null && own.Stands && own.Part(OwnBody.Hips) != null ? own.Part(OwnBody.Hips).worldCenterOfMass : unit.position;
+            courseFromKnown = true;
+            WentBad = false;
             for (int c = 0; c < Criteria.Length; c++) { pictured[c] = 0; picturedAt[c] = -1 << 20; picturedCount[c] = 0; }
             meter.SetWays(facing);
             for (int w = 0; w < meter.Ways.Length; w++)
@@ -507,6 +648,7 @@ namespace WonderGather.Tests
             }
             Row(group, fallParts, ownLinks, two, hips, seenPlayed, seenOther, facesPlayed, facesOther, ms, differs == null, exact);
             spinMost = jumpMost = whipOwnMost = whipFallMost = 0; spinWhich = jumpWhich = "";
+            eHeldMost = eGainMost = eGivenAtMost = fastestMost = float.NaN; eGainSum = 0; energySteps = 0; fastestWhich = "";
         }
 
         // FrameRecorder.Fault's measures, kept as the most since the last row: a drawn limb's turn and a drawn hand's or
@@ -754,7 +896,8 @@ namespace WonderGather.Tests
         private static string F(float v) => float.IsNaN(v) || float.IsInfinity(v) ? "" : v.ToString("0.#####", Inv);
         private static string Clean(string s) => (s ?? "").Replace(',', ';').Replace('\n', ' ').Replace('\r', ' ');
 
-        private static string Header()
+        // (-liveEnergy 1 adds its columns at the end; without it the columns are as they were.)
+        private static string Header(bool energy)
         {
             var h = new StringBuilder("course,push_way,frame,frame_in_course,t,state,fall_now,fall_stage,own_stands,own_getting_up,own_rising,riser_stage,own_feet_from_lying,tries,"
                 + "posed_let_go,balance_acts,balance_fell,fall_parts,own_links,two_bodies,fall_root,own_root,"
@@ -774,6 +917,10 @@ namespace WonderGather.Tests
             h.Append(",pair_ms,ways_same,restored_exact");
             foreach (string leg in new[] { "L", "R" })
                 h.Append($",{leg}_flex_raw,{leg}_twist_raw,{leg}_fold,{leg}_link,{leg}_link_flex,{leg}_link_abd,{leg}_link_twist,{leg}_link_knee,{leg}_link_fold,{leg}_front_by_bend,{leg}_front_split");
+            // (Since the last row: e_held the most its own body held (J, moving and lifted); e_gain the largest a step
+            // gained beyond what was given, e_given what was given on that step; e_gain_sum the gains summed; e_steps the
+            // steps counted; fastest_rads and fastest_part the fastest any link truly turned. Empty without a step counted.)
+            if (energy) h.Append(",e_held,e_given,e_gain,e_gain_sum,e_steps,fastest_rads,fastest_part");
             return h.ToString();
         }
 
@@ -823,6 +970,12 @@ namespace WonderGather.Tests
                 if (hasLink[l]) { V(F(hipsLink[l].Flex)); V(F(hipsLink[l].Abd)); V(F(hipsLink[l].Twist)); V(F(hipsLink[l].Knee)); V(F(foldLink[l])); }
                 else for (int k = 0; k < 5; k++) V("");
                 V(fp.ByBend != null && fp.ByBend[l] ? "1" : "0"); V(fp.Split != null ? F(fp.Split[l]) : "");
+            }
+            if (Energy)
+            {
+                bool any = energySteps > 0;
+                V(any ? F(eHeldMost) : ""); V(any ? F(eGivenAtMost) : ""); V(any ? F(eGainMost) : ""); V(any ? F(eGainSum) : "");
+                V(energySteps.ToString(Inv)); V(any ? F(fastestMost) : ""); V(any ? Clean(fastestWhich) : "");
             }
             rows.WriteLine(r.ToString());
         }
