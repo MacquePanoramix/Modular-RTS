@@ -103,16 +103,18 @@ The order of the turns (his question 12: they take turns):
    (November 16, about 17:00 his time); what it holds is in "Next steps", the get-up blow-up thread;
 2. the visual turn: tier 0 instruments, step 0's stills, the target-budget research. **The target research**
    (November 15, afternoon; `Research/2026-11-15_TargetAndScale/`, research only): written (opus); critiqued (sonnet,
-   `critique.md`: a sound frame, not ready, six fixes). **Its revision is running:** one opus reviser edits
-   `research.md` in place and maps every critique point; a fresh sonnet critic then writes `critique2.md`. When it is
-   back: read both, record the thread here and in CURRENT_STATE, commit the folder by path, and send Luis the first
-   group of questions (at most four) in plain words. Then stop heavy work until the weekly reset;
+   `critique.md`: a sound frame, not ready, six fixes). Revised in place (opus, its section 7); a fresh critic
+   (`critique2.md`) finds it **sound to propose after five small corrections**. They are listed at the end of section
+   7 and are made after the weekly reset, before tier 0 builds anything. Group A's four questions went to Luis in
+   plain words (November 15, afternoon): which screen, the strokes' size, a steady 60 or higher, the lines that stop
+   the visual work. Groups B and C come after the crowd measurement and later;
 3. the search of the best ways for Claude to make assets, before the world's first pass;
 4. the world's options (11) in that pass;
 5. the bigger exploration of the world and its assets.
 
 Still waiting:
-- his eye on the build `WindowsOrdinaryPlace_Nov13b`.
+- his eye on the build `WindowsOrdinaryPlace_Nov13b`;
+- his answers to the target research's first four questions (group A, sent November 15, afternoon).
 
 His word on (b)'s build and his call on Small's learnt addition came on November 15, afternoon: build it, and the
 addition off as played.

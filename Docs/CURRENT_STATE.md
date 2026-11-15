@@ -33,6 +33,13 @@
       - **Luis approved the build** (November 15, afternoon;
         [his words](Correspondence/2026-11-15_THE_ANKLE_MEND_ANSWERED.md)): the three switches built off and tested;
         Small's learnt addition off as played, kept for training. The build starts after the weekly reset.
+  - **The target and the scale, researched** (November 15, afternoon;
+    [the research](Research/2026-11-15_TargetAndScale/research.md)). Research only. It was revised against a critic,
+    and a second critic finds it sound to propose after five small corrections, which are made after the weekly reset.
+    - The CPU's physics decides the unit count, not the graphics. The fight, with bodies pressed together, is likely
+      the binding case. The aim is a range to be tested, not a result.
+    - Its first four questions went to Luis in plain words: which screen the looks are judged on, the strokes' size,
+      a steady 60 or higher, and the lines that stop the visual work.
   - **The deep dive is done** ([the programme](Research/2026-11-15_TheBestVisualQuality/research.md); part one's five
     files beside it). It was researched only: no Unity or Blender run and no pictures.
     - It ranks the gaps: the miners' bodies and cloth first, then how the loved faces and the hair are carried.
