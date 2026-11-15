@@ -100,8 +100,13 @@ namespace WonderGather.Tests
             int every = Mathf.Max(1, (int)Given("-liveEvery", 1)), standEvery = Mathf.Max(1, (int)Given("-liveStandEvery", 10));
             int picsMost = Mathf.Max(0, (int)Given("-livePics", 4));
             // (-liveEnergy 1: the energy count of its own body every step, its columns in frames.csv and the steps before a
-            // link whirls; 0, as before. The guard against a body gone bad is on either way.)
-            bool energy = CaptureTools.Argument("-liveEnergy") == "1";
+            // link whirls; 0, as before. The guard against a body gone bad is on either way. -liveEnergy 2: level 1 as it
+            // is, and beside each trace its detail, energy_detail_c<course>_f<frame>.txt: the given work split into
+            // pushes, torques (the riser's, the keeper's, other) and drive; the ankles' and the toes' joints; each link's
+            // contacts; what the riser asks of the feet. The ankle split, November 15.)
+            string energyLevel = CaptureTools.Argument("-liveEnergy");
+            bool energy = energyLevel == "1" || energyLevel == "2", energyDetail = energyLevel == "2";
+            if (energyDetail) Assert.That(LiveEnergyDetail.Reads(out string unread), Is.True, "-liveEnergy 2 cannot read what it reads: " + unread);
             string folder = CaptureTools.Argument("-liveOut");
             if (string.IsNullOrEmpty(folder))
                 folder = Path.Combine(Application.dataPath, "..", "TestRuns", "CoverLive", $"{who}_own{(ownWay ? 1 : 0)}_seam{(seam ? 1 : 0)}_other{(other ? 1 : 0)}");
@@ -152,6 +157,7 @@ namespace WonderGather.Tests
 
             pair = new GameObject("Cover pair").AddComponent<CoverPair>();
             pair.Energy = energy;
+            pair.EnergyDetail = energyDetail;
             pair.Begin(meter, ring, miner, unit.transform, seam, other, every, standEvery, folder, pictures, picsMost, who);
             pair.SetCourse(-1, 0, Quaternion.LookRotation(Vector3.ProjectOnPlane(unit.transform.forward, Vector3.up)));
 
@@ -242,6 +248,7 @@ namespace WonderGather.Tests
             Debug.Log(pair.SkinLine());
             Debug.Log($"LIVE_METER hits off the plane of the face they were counted on: {meter.Mismatches} of {meter.FaceChecks}");
             Debug.Log(pair.EnergyLine());
+            if (energyDetail) Debug.Log(pair.EnergyDetailLine());
             Assert.That(pair.Blowups, Is.EqualTo(0), $"{pair.Blowups} blow-up(s): its own body went bad (a link not finite, turning past {CoverPair.BadTurning} rad/s, or its root {CoverPair.BadAway} m from where the course began):" + pair.BlowupsSaid);
             Assert.That(pair.Measured, Is.GreaterThan(0), "No frame was measured.");
             Assert.That(pair.NotRestored, Is.EqualTo(0), "The played flaps did not come back bit for bit.");
@@ -272,6 +279,10 @@ namespace WonderGather.Tests
         // The energy count (-liveEnergy 1) and the guard of the test against a body gone bad (on either way): both read
         // its own body after each step of the physics, and write nothing to it (the blow-up's trace, November 15).
         public bool Energy;
+        // (-liveEnergy 2: and the detail beside each trace.)
+        public bool EnergyDetail;
+        private LiveEnergyDetail detail;
+        private int details;
         // Gone bad: any link of its own body not finite, turning past BadTurning rad/s, or its root BadAway metres from
         // where the course began. Then LIVE_BLOWUP in events.txt, the course ended as at the cap (the test reads WentBad
         // and clears it), and the test fails at the end with how many.
@@ -397,14 +408,22 @@ namespace WonderGather.Tests
             events.WriteLine($"EVENTS {who}: played way {(seamPlayed ? "on" : "off")}, other way {(seamOther ? "on" : "off")}; {flaps.Length} flaps, {under.Length} flap bones and what they carry; ring {ring.Legs[0].Count}+{ring.Legs[1].Count} points");
             // (Its weight lifted is reckoned from where the miner stood as the run began.)
             energy.Level = unit.position.y;
+            if (Energy && EnergyDetail) { energy.Split = true; detail = new LiveEnergyDetail(); }
             StartCoroutine(AfterEachStep());
         }
 
         // Last thing before each step of the physics (after every script has pushed on its own body): the count's start.
         private void FixedUpdate()
         {
+            // (-liveEnergy 2: whose torques were put on, read every step, counted or not.)
+            if (detail != null && own != null) detail.Track(own);
             if (!Energy || own == null || !own.Stands) { energy.Forget(); return; }
-            if (TakeOwn()) energy.Before(Time.fixedDeltaTime);
+            if (TakeOwn())
+            {
+                if (detail != null) detail.Onto(energy, own);
+                energy.Before(Time.fixedDeltaTime);
+                if (detail != null) detail.Before(energy, own);
+            }
         }
 
         private bool TakeOwn()
@@ -424,7 +443,11 @@ namespace WonderGather.Tests
                 if (Energy)
                 {
                     string label = Group() + (own.GettingUp && own.Riser != null ? ":" + own.Riser.StageNow : "") + (own.Rising ? ":rising" : "") + (fall != null ? " try " + (fall.RoseByItsOwn - roseBefore).ToString(Inv) : "");
-                    if (energy.After(Time.fixedDeltaTime, Time.frameCount, Time.time, label)) Counted();
+                    if (energy.After(Time.fixedDeltaTime, Time.frameCount, Time.time, label))
+                    {
+                        if (detail != null) detail.After(energy, Time.frameCount);
+                        Counted();
+                    }
                 }
                 Guard();
             }
@@ -455,7 +478,11 @@ namespace WonderGather.Tests
             string path = Path.Combine(folder, string.Format(Inv, "energy_trace_c{0}_f{1}.txt", course, Time.frameCount));
             File.AppendAllText(path, energy.Trace(heading));
             traces++;
-            Event(heading + " -> " + Path.GetFileName(path));
+            if (detail == null) { Event(heading + " -> " + Path.GetFileName(path)); return; }
+            string more = Path.Combine(folder, string.Format(Inv, "energy_detail_c{0}_f{1}.txt", course, Time.frameCount));
+            File.AppendAllText(more, energy.SplitTrace(heading + "\n" + LiveEnergyDetail.Legend, detail.Lines));
+            details++;
+            Event(heading + " -> " + Path.GetFileName(path) + " and " + Path.GetFileName(more));
         }
 
         private static bool Finite(Vector3 v) => !(float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z) || float.IsInfinity(v.x) || float.IsInfinity(v.y) || float.IsInfinity(v.z));
@@ -490,6 +517,8 @@ namespace WonderGather.Tests
 
         public string EnergyLine() => string.Format(Inv, "LIVE_ENERGY counted {0}: {1} steps counted; gained in a step at most {2:+0.###;-0.###} J and at least {3:+0.###;-0.###} J; the fastest link {4:0.0} rad/s; {5} traces written; {6} blow-up(s){7}",
             Energy, energyStepsAll, eGainMostAll, eGainLeastAll, fastestAll, traces, Blowups, BlowupsSaid.Length > 0 ? ":" + BlowupsSaid : "");
+
+        public string EnergyDetailLine() => detail == null ? "LIVE_ENERGY_DETAIL off" : string.Format(Inv, "{0}; {1} detail files written", detail.Line(), details);
 
         private FieldInfo Field(string name)
         {

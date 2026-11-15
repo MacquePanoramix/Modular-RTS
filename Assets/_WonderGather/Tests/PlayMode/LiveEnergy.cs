@@ -39,16 +39,40 @@ namespace WonderGather.Tests
         public int FastestLink = -1;
         public string FastestName => FastestLink >= 0 && FastestLink < Names.Length ? Names[FastestLink] : "";
 
+        // The split (-liveEnergy 2, the ankle split, November 15): what was given to each link in its three parts, each
+        // the very term the given work is summed from (so they add up to it, but for the order of the sums):
+        //   pushes, the linear force the scripts put on it times how its centre went;
+        //   torques, the scripts' torque across its joint (its link's and its children's, as for the given work) times its
+        //   turning against what it hangs from (a root: its own turning); of which ByRiser and ByKeeper, if the caller
+        //   says what the riser's and the keeper's own torques across that joint were for the step (world, N m; set
+        //   before After, zero where none), are each that torque times the same turning; the rest is "other" (the
+        //   moments of pushes put on off a link's centre, and anything else that turned it);
+        //   drive, its joint's drive force times how its joint turned.
+        // Off (Split false): nothing of this is reckoned, and level 1 is as it was.
+        public bool Split;
+        public Vector3[] ByRiser = new Vector3[0], ByKeeper = new Vector3[0];
+        public float[] GivenPushes, GivenTorques, GivenRiser, GivenKeeper, GivenDrive;
+        // (The last step: the most, over its links, of how far its three parts' sum is from what was given to it, J; and
+        // that as a share of the sum of the parts' sizes. The parts are the very terms g is summed of, in single
+        // precision: they are off only by g's own rounding (more as a share where a joint's drive axes cancel).)
+        public double SplitOff, SplitShare;
+
         private int[] up = new int[0];
-        private Vector3[] wBefore, vBefore, force, torque, jointTorque, vAfter, wAfter;
+        private Vector3[] wBefore, vBefore, force, torque, jointTorque, vAfter, wAfter, centreBefore;
         private float[][] jointBefore;
+
+        // How a link went and turned over the last step counted (the means of its start and its end, as the given work
+        // is reckoned with), and where its centre was at the step's start: for what reads the step beside the count.
+        public Vector3 MeanGoes(int i) => .5f * (vBefore[i] + vAfter[i]);
+        public Vector3 MeanTurns(int i) => .5f * (wBefore[i] + wAfter[i]);
+        public Vector3 CentreBefore(int i) => centreBefore[i];
         private float heldBefore;
         private bool before;
         public float[] Speed, Turning, LinkGiven;
 
         // The ring of the last steps: per step its frame, time, label, held, given, gain; per link its true speed, its
         // turning and what was given to it (its joint's work, and any push on it).
-        private struct Step { public int Frame; public float Time, Held, Given, Gain; public string Label; public float[] Speed, Turning, ToLinks; }
+        private struct Step { public int Frame; public float Time, Held, Given, Gain; public string Label; public float[] Speed, Turning, ToLinks, Pushes, Torques, Riser, Keeper, Drive; public double SplitOff; }
         private readonly Step[] ring = new Step[RingSteps];
         private int ringNext, ringCount;
 
@@ -82,10 +106,13 @@ namespace WonderGather.Tests
                 }
             }
             wBefore = new Vector3[n]; vBefore = new Vector3[n]; force = new Vector3[n]; torque = new Vector3[n]; jointTorque = new Vector3[n];
-            vAfter = new Vector3[n]; wAfter = new Vector3[n];
+            vAfter = new Vector3[n]; wAfter = new Vector3[n]; centreBefore = new Vector3[n];
             jointBefore = new float[n][];
             Speed = new float[n]; Turning = new float[n]; LinkGiven = new float[n];
-            for (int s = 0; s < RingSteps; s++) ring[s] = new Step { Speed = new float[n], Turning = new float[n], ToLinks = new float[n] };
+            ByRiser = new Vector3[n]; ByKeeper = new Vector3[n];
+            GivenPushes = new float[n]; GivenTorques = new float[n]; GivenRiser = new float[n]; GivenKeeper = new float[n]; GivenDrive = new float[n];
+            for (int s = 0; s < RingSteps; s++)
+                ring[s] = new Step { Speed = new float[n], Turning = new float[n], ToLinks = new float[n], Pushes = new float[n], Torques = new float[n], Riser = new float[n], Keeper = new float[n], Drive = new float[n] };
             ringNext = ringCount = 0;
             Forget();
             return true;
@@ -132,6 +159,7 @@ namespace WonderGather.Tests
                 wBefore[i] = Turns(link);
                 force[i] = link.GetAccumulatedForce(dt);
                 torque[i] = link.GetAccumulatedTorque(dt);
+                if (Split) centreBefore[i] = link.worldCenterOfMass;
                 int dofs = i == 0 ? 0 : link.dofCount;
                 if (jointBefore[i] == null || jointBefore[i].Length != dofs) jointBefore[i] = new float[dofs];
                 if (dofs > 0) { var jv = link.jointVelocity; for (int d = 0; d < dofs; d++) jointBefore[i][d] = jv[d]; }
@@ -153,22 +181,36 @@ namespace WonderGather.Tests
             // (Each joint's torque, leaves first: its link's accumulated torque, and what its children's joints put back.)
             for (int i = 0; i < n; i++) jointTorque[i] = torque[i];
             for (int i = n - 1; i >= 1; i--) if (up[i] >= 0) jointTorque[up[i]] += jointTorque[i];
-            Given = 0; Fastest = 0; FastestLink = -1;
+            Given = 0; Fastest = 0; FastestLink = -1; SplitOff = 0; SplitShare = 0;
             for (int i = 0; i < n; i++)
             {
                 var link = Links[i];
                 Vector3 w = .5f * (wBefore[i] + wAfter[i]), v = .5f * (vBefore[i] + vAfter[i]);
-                float by = Vector3.Dot(force[i], v) * dt;
-                if (i == 0 || up[i] < 0) by += Vector3.Dot(jointTorque[i], w) * dt;
+                // (Each term as it was summed before the split: the given work is the same sum, in the same order.)
+                float pushes = Vector3.Dot(force[i], v) * dt, torques, drive = 0;
+                Vector3 against;
+                float by = pushes;
+                if (i == 0 || up[i] < 0) { against = w; torques = Vector3.Dot(jointTorque[i], w) * dt; by += torques; }
                 else
                 {
-                    by += Vector3.Dot(jointTorque[i], w - .5f * (wBefore[up[i]] + wAfter[up[i]])) * dt;
+                    against = w - .5f * (wBefore[up[i]] + wAfter[up[i]]);
+                    torques = Vector3.Dot(jointTorque[i], against) * dt;
+                    by += torques;
                     int dofs = link.dofCount;
                     if (dofs > 0 && jointBefore[i] != null && jointBefore[i].Length == dofs)
                     {
                         var jv = link.jointVelocity; var push = link.driveForce;
-                        for (int d = 0; d < dofs; d++) by += push[d] * .5f * (jv[d] + jointBefore[i][d]) * dt;
+                        for (int d = 0; d < dofs; d++) { float e = push[d] * .5f * (jv[d] + jointBefore[i][d]) * dt; by += e; drive += e; }
                     }
+                }
+                if (Split)
+                {
+                    GivenPushes[i] = pushes; GivenTorques[i] = torques; GivenDrive[i] = drive;
+                    GivenRiser[i] = i < ByRiser.Length ? Vector3.Dot(ByRiser[i], against) * dt : 0;
+                    GivenKeeper[i] = i < ByKeeper.Length ? Vector3.Dot(ByKeeper[i], against) * dt : 0;
+                    double off = System.Math.Abs((double)pushes + torques + drive - by), size = System.Math.Abs((double)pushes) + System.Math.Abs((double)torques) + System.Math.Abs((double)drive);
+                    SplitOff = System.Math.Max(SplitOff, off);
+                    if (size > 0) SplitShare = System.Math.Max(SplitShare, off / size);
                 }
                 LinkGiven[i] = by;
                 Given += by;
@@ -180,10 +222,39 @@ namespace WonderGather.Tests
             var s = ring[ringNext];
             s.Frame = frame; s.Time = time; s.Label = label; s.Held = Held; s.Given = Given; s.Gain = Gain;
             System.Array.Copy(Speed, s.Speed, n); System.Array.Copy(Turning, s.Turning, n); System.Array.Copy(LinkGiven, s.ToLinks, n);
+            if (Split)
+            {
+                System.Array.Copy(GivenPushes, s.Pushes, n); System.Array.Copy(GivenTorques, s.Torques, n); System.Array.Copy(GivenRiser, s.Riser, n);
+                System.Array.Copy(GivenKeeper, s.Keeper, n); System.Array.Copy(GivenDrive, s.Drive, n);
+            }
+            s.SplitOff = SplitOff;
             ring[ringNext] = s;
             ringNext = (ringNext + 1) % RingSteps;
             ringCount = Mathf.Min(RingSteps, ringCount + 1);
             return true;
+        }
+
+        // The split of the ring as text, oldest step first (-liveEnergy 2): each step's line, then its split, link by
+        // link, then what more says of that step (its k-th of the ring, oldest first, and its frame).
+        public string SplitTrace(string heading, System.Func<int, int, string> more)
+        {
+            var t = new StringBuilder(heading).Append('\n');
+            t.Append("(Each step: frame, time, what it does; given, gained (J); the most any link's three parts are off what was given to it (J).\n");
+            t.Append(" split: each link's given work in parts (J): p pushes (linear force times its going), r the riser's torque across its joint, k the keeper's, o the other torques across it (pushes' moments), d its drive; p + r + k + o + d = g.)\n");
+            for (int k = 0; k < ringCount; k++)
+            {
+                var s = ring[(ringNext - ringCount + k + RingSteps) % RingSteps];
+                t.Append(string.Format(Inv, "frame {0} t {1:0.000} [{2}] given {3:+0.###;-0.###} gained {4:+0.###;-0.###} split off {5:0.0E+0} J", s.Frame, s.Time, s.Label, s.Given, s.Gain, s.SplitOff)).Append('\n');
+                t.Append("  split |");
+                for (int i = 0; i < Links.Length && i < s.Pushes.Length; i++)
+                {
+                    float other = s.Torques[i] - s.Riser[i] - s.Keeper[i];
+                    t.Append(string.Format(Inv, " {0} p {1:+0.###;-0.###;0} r {2:+0.###;-0.###;0} k {3:+0.###;-0.###;0} o {4:+0.###;-0.###;0} d {5:+0.###;-0.###;0};", Names[i], s.Pushes[i], s.Riser[i], s.Keeper[i], other, s.Drive[i]));
+                }
+                t.Append('\n');
+                if (more != null) t.Append(more(k, s.Frame));
+            }
+            return t.ToString();
         }
 
         // The ring as text, oldest step first.
