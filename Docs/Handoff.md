@@ -114,8 +114,15 @@ The order of the turns (his question 12: they take turns):
 4. the world's options (11) in that pass;
 5. the bigger exploration of the world and its assets.
 
-Still waiting:
-- his eye on the build `WindowsOrdinaryPlace_Nov13b`.
+Still waiting: nothing from Luis right now. His next questions come with the work: group B after the crowd
+measurement, and the turning proposal, `AnkleBrakes` and the natural ankle when the ankle build reaches them.
+
+The build `WindowsOrdinaryPlace_Nov13b` is off the list, by his word (November 15, afternoon;
+[his words](Correspondence/2026-11-15_THE_NOV13B_BUILD_SKIPPED.md)). Nothing new was left to judge in it: it is the
+November 13 build with his chosen turns on from the start, but it lacks the skirt's flaps on their seams (on since
+November 14), and Small still uses its learnt addition when getting up by its own body (it carries the models and
+`RiseAgent.Unheard` is false). The next build, after the reset, goes to him with a short list of what to switch on,
+do, watch and tell.
 
 He answered the target research's first four questions on November 15, afternoon.
 
