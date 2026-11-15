@@ -91,7 +91,10 @@ November 15 in `GAME_VISION.md`:
   numbers to be proposed by research, the unit count still Open;
 - his new asks, ordered by Claude;
 - **the five calls left to judgment** (3, 4, 5, 9, 10), made by the design principles, each an option behind a switch,
-  off, and **not Locked**. A separate reviewing agent's check is still to come; then explain them to him in plain words.
+  off. Explained to him in plain words, **he approved all five** (November 15, early afternoon;
+  [his words](Correspondence/2026-11-15_THE_FIVE_CALLS_APPROVED.md)). They are rulings, not looks: each look still goes
+  to judges, then to him. The planned pre-review was not run; its two questions (the rest blinks never a timer; the
+  garment shapes carried to every body) go to each item's judges when it is built.
 
 The order of the turns (his question 12: they take turns):
 1. the ankle mend's research (running), then its proposal to him;

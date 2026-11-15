@@ -39,7 +39,9 @@
       - the target: his computer at the best settings, "very well"; lower settings for weaker ones; the foundations
         for the final RTS's unit count;
       - five calls he left to judgment (the blink, garment shapes, correctives, landmarks, vents): made by the design
-        principles as switches, off, **not Locked**; a reviewer's check to come.
+        principles as switches, off, then explained in plain words; **he approved all five**
+        ([his words](Correspondence/2026-11-15_THE_FIVE_CALLS_APPROVED.md)). Each look still goes to judges, then to
+        him.
 
 - **Now (November 14, night): the detached leg's main cause found and fixed behind a switch, now on by default.** The
   posed cover grid shows the trousers' cut top seen while Small lies and moves a leg, mostly because the skirt's flaps
