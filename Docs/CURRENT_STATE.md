@@ -1,6 +1,22 @@
 # Wonder Gather — Current State
 
-**Updated:** November 14, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 15, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
+
+- **Now (November 15, early): where the get-up's blow-ups begin, found; the best visual quality researched.**
+  - **Luis answered the models' proposal** ([his words](Correspondence/2026-11-14_THE_MODELS_PROPOSAL_ANSWERED.md)):
+    - the order is kept;
+    - today's faces are kept, and prettier ones are explored beside them;
+    - the stills may try a head change;
+    - a deep dive into the best quality of every visual part;
+    - quality is sought proactively.
+  - **The energy count:** a test switch, `-liveEnergy 1`, default 0; nothing in the game changed. It counts the own
+    body's energy every step and stops a course that blows up. In Small's own get-up as played, 6 of 24 courses blew
+    up ([Validation](Validation.md)).
+    - Every blow-up was in a foot and its toe, while a foot was being placed.
+    - Within one 20 ms step the foot went past 100 rad/s, the energy coming in through the ankle.
+    - Next: split what acts on the ankle (its drive, the riser's or keeper's torque, a pull on the foot).
+  - **The deep dive:** part one done
+    ([its five files](Research/2026-11-15_TheBestVisualQuality/)); its synthesis and critic are running.
 
 - **Now (November 14, night): the detached leg's main cause found and fixed behind a switch, now on by default.** The
   posed cover grid shows the trousers' cut top seen while Small lies and moves a leg, mostly because the skirt's flaps

@@ -58,6 +58,39 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 15, 2026 (early) — the thirty-second, short (by the counter; the energy count's long run read)
+
+- **Where we are.**
+  - Luis kept the order: the get-up blow-up's energy count first, then step 0's stills. The count is built, reviewed
+    sound and run.
+  - **The long run:** Small's own get-up as played, 24 courses. 6 blew up, every one in a foot and its toe, while a
+    foot was being placed (footA, footB, rollup). Within one 20 ms step the foot went from 6-37 rad/s to 102-128,
+    the energy coming in through the ankle. It is narrowed to the ankle's drive, the riser's or keeper's torque, or a
+    pull on the foot; the count does not yet split them.
+  - The deep dive into the best visual quality: part one done (five files); part two running.
+  - The GAME_VISION rows for Luis's November 14 night answers are written.
+- **Waiting on Luis:**
+  - his eye on `WindowsOrdinaryPlace_Nov13b`;
+  - his word on (b)'s build;
+  - no merge to main without his word.
+- **Running:** the deep dive's part two (the synthesis done, the critic, then the revision).
+- **Open, not to be forgotten:** as the thirty-first, plus:
+  - the ankle split;
+  - whether the 100 rad/s line ends courses that would have recovered;
+  - large single-step gains in plant and hands (the ground's push-out, a hypothesis);
+  - the arms past 30 rad/s (up to 61);
+  - Long and Round never run with the count;
+  - the game itself has no guard, so a foot whirl as played is a fault to be seen.
+- **Does the task serve the stage?** Yes. The blow-up is in the own get-up, the milestone's core. A foot past 100
+  rad/s in a quarter of Small's own get-ups is the worst fault found in the get-up as played, and it bears on Luis's
+  "unnatural leg movements". The deep dive serves his standing ask, but it is research and must not take over from the
+  get-up.
+- **Drift watched:** the visual research is large (seven files). Its programme stays a proposal for Luis. The stills
+  are the next thing he sees; the ankle is the next technical step. Round and Long still get up only the old way.
+- **The allowance:** 83% of the five hours (resets in about four hours), 72% of the week (resets in a day and a
+  half), about two windows of work left this week. So: the deep dive's part two now; the ankle split after the reset;
+  then step 0's stills, paced against the week. The conversation is at 70% of its window.
+
 ### November 14, 2026 (late evening) — the thirty-first, short (by the counter; the courses read and reported)
 
 - **Where we are.** (c)(c) is read, recorded (Validation, "The cut ring as played") and reported to Luis:

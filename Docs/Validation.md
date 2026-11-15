@@ -5407,3 +5407,89 @@ third of its rows; the old way rarely does.
 - The garment colliders' possible effect on game queries.
 
 No judgment here of feel or look: that is Luis's.
+
+## The energy count in the live courses, and where the blow-ups begin (November 15, early)
+
+**What must be on.** The count is a test switch, `-liveEnergy 1` (default 0), in `CoverRingLiveTests` only. The
+blow-up guard is in the same test and is always on. Nothing in the game changed.
+
+- **The build** (wip-round `34316c6`, tests only; a fresh opus reviewer found it sound).
+  - `LiveEnergy.cs`, the instrument:
+    - It counts what the own body holds: kinetic energy from the root's going and each link's turning (as `TrulyGoes`;
+      no told linear speed), plus m g h.
+    - It counts what was given over each step: each link's accumulated force and torque from the game's scripts (the
+      keeper's and the riser's torques, and any push), read just before the step; the joints' torques recovered leaves
+      first; and each drive's work.
+    - What is left is the gain: what the ground, the stops and the engine's own step gave or took.
+  - frames.csv gets seven columns at its end: `e_held`, `e_given`, `e_gain`, `e_gain_sum`, `e_steps`, `fastest_rads`
+    and `fastest_part`.
+  - A ring of the last 32 steps, link by link, is written to `energy_trace_c<course>_f<frame>.txt`: the first time in
+    a try that a link passes 30 rad/s, and again at the guard.
+  - **The guard:** a link not finite, a link past 100 rad/s, or the root 50 m from where the course began. It logs
+    `LIVE_BLOWUP`, ends the course (taken back), and fails the test at the end. The 100 rad/s line is Claude's call,
+    kept after the review.
+- **The one-part checks** (`LiveEnergyTests`, 4 of 4 passed, within 0.0001 J):
+  - a free part spun at 30 rad/s holds its energy;
+  - under gravity it loses only the step's own integration loss, ½ m (g dt)², 0.046 J a step;
+  - pushes are counted as given;
+  - a damped hinge's loss is counted as given.
+- **The self-checks**, one push each:
+  - `cc_en_on` (`-liveEnergy 1`) passed.
+    - Standing still, held energy 299.15-299.18 J, losing 0.02 J a step.
+    - Getting up, the gain per step had a median of 0.20 J and a 90th percentile of 1.42 J, with extremes of +41.5 J
+      and -44.3 J.
+  - `cc_en_off` (`-liveEnergy 0`) failed by the guard: `LIVE_BLOWUP 0 2121 FootR`, 108.8 rad/s, the right knee
+    folded past 180 degrees, footA of try 3.
+  - `cc_en_off2` passed. The cover columns are unchanged in meaning.
+- **The long run** (`cc_en24`): Small's own get-up as played, 24 courses, `-liveEnergy 1`.
+  - The arguments: `-ownAsPlayed 1 -ownRate 50 -liveWho Small -liveOwn 1 -liveSeam 1 -liveOther 0 -ownPushes 24
+    -ownPushWays 0,180,90,270 -liveCap 240 -liveEnergy 1`.
+  - It ran 02:39-03:08 UTC: 40,130 rows and 47 traces.
+  - It was read with `Docs/Technical/AnyBody/tools/live_energy_read.py` and `live_energy_last.py` (wip-round
+    `cb893d2`).
+  - **The test failed, as the guard is built to report: 6 blow-ups in 24 courses** (courses 3, 4, 7, 9, 15 and 16).
+    The other 18 stood by their own body; course 13 took 11 tries and 164 s.
+  - **Every blow-up began in a foot and its toe, while getting up:**
+    - footA in courses 4 and 9 (tries 1 and 10);
+    - footB in courses 3, 7 and 15 (tries 2, 1 and 2);
+    - rollup in course 16 (try 3).
+  - **In one step of 20 ms:** the fast part went from 6-37 rad/s to 102-128 rad/s. The foot and the toe turned
+    together, except in course 3, where the toe whirled alone, from 28 to 124 rad/s, with its foot at 13.
+  - **The energy came in through the ankle.** In that one step:
+    - the foot's link was counted as given +22.5, +25.7, +103.4, +30.2 and +30.4 J (courses 4, 7, 9, 15 and 16);
+    - the toe's joint gave nothing;
+    - in courses 15 and 16 the same leg's thigh joint gave +15 J and +41 J as well.
+  - **Little came unaccounted:** in 5 of the 6, what the engine's step and the ground gave beyond the count was small
+    or less than nothing (-25.1 to -0.5 J). In course 9 it was +90.0 J, half of a 177 J rise in one step. Before that
+    step the body was losing energy, as damping does, so it was not a slow build-up.
+  - **The same thing, short of the line, in courses that went on to stand:**
+    - course 14: FootL 90.2 rad/s at footA;
+    - course 13: Toeleft 65.5 at footB and Toeright 64.2 at footA;
+    - course 9, before its end: FootL 99.7 at footB and Toeleft 98.5 at pike, both recovered.
+  - **The arms:** the upper arms were most often the first part past 30 rad/s (28 of the 41 "past 30" traces), up to
+    61 rad/s. In this run none went past 100. The blow-up of `cc_c1` (November 14) was in the right arm.
+  - **Large single-step gains at low turning,** +15 to +84 J at 5-20 rad/s, mostly in plant and hands (hands and knees
+    meeting the ground), and in courses that stood as well. The likely giver is the ground pushing out a part pressed
+    into it. That is a hypothesis; the count does not separate it.
+- **What it means.** The get-up's blow-up is narrowed to the ankle, while a foot is being placed. Within one step,
+  what acts on the foot puts tens of joules into the light foot and toe. That is one of three things, and the count
+  does not yet split them:
+  - the ankle's drive;
+  - the keeper's or the riser's torque across the ankle;
+  - a pull on the foot itself.
+
+  A stiff controller acting on the lightest links, the foot and the toe, would do this, but that is not shown. The
+  standing body's flying boot (November 10) was in the same links. By K1's rule the mend belongs in the controller
+  (stops and dampers), not in more guards.
+
+**Not tested:**
+- The split of the foot's given work into drive, torques and pulls.
+- The ankle's target, angle, limits and gains in the ring.
+- The foot's and the toe's contacts.
+- Long and Round; other rates.
+- Whether a course stopped at 100 rad/s would have recovered. Course 9 recovered from 99.7; `cc_c1` went on to NaN
+  without a guard.
+- The pictures of these courses (not read).
+- The game itself: the guard lives only in the test.
+
+No judgment here of feel or look: that is Luis's.

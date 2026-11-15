@@ -740,25 +740,32 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
          The 100 rad/s line is kept: the onset trace is written at 30 rad/s either way, and a foot past 100 with
          the knee past 180 is already a fault. The report is in the scratchpad's `energy_build_report.md`, and the
          review in the workflow's journal.
-       - **The long run is running** (background, `cc_en24`): Small's own get-up, 24 courses, `-liveEnergy 1`, the
-         cc_c1 arguments, `LIMIT=10800`, into `TestRuns/CoverLive/cc_en24`. Next: read the `LIVE_BLOWUP` events
-         and the `energy_trace_c*_f*.txt` files, find which part gains first, then write it all into Validation.
-       - **The deep dive's part one is running beside it** (workflow `best-visual-quality-gather`, run
-         `wf_b5fbb0bf-7e4`), into `Docs/Research/2026-11-15_TheBestVisualQuality/`, one agent at a time:
-         - `inventory.md` (sonnet): every visual part today, and what Claude's tools can do;
-         - `modelling.md` (opus);
-         - `faces_heads_hair.md` (opus);
-         - `surfaces_light_render.md` (sonnet);
-         - `world_and_props.md` (sonnet).
+       - **The long run, done and read** (`cc_en24`, Small's own get-up, 24 courses, `-liveEnergy 1`; Validation,
+         "The energy count in the live courses"). The test failed, as the guard reports: **6 blow-ups in 24**, every
+         one in a foot and its toe, while getting up (footA, footB, rollup).
+         - In one 20 ms step the foot went from 6-37 rad/s to 102-128.
+         - The energy came in through the ankle: the foot's link was counted as given 22-103 J in that step, and the
+           toe's joint gave nothing.
+         - Little came unaccounted, in 5 of the 6.
+         - Short of the line, feet reached 64-99.7 rad/s in courses that went on to stand.
 
-         None of them runs Unity or Blender. Part two follows, as for the models: a synthesis on opus, a sceptic and
-         completeness critic on sonnet, a revision on opus. Check the usage before it.
+         The readers are `live_energy_read.py` and `live_energy_last.py` (wip-round `cb893d2`).
+
+         **Next in this thread:** split the foot's given work into the ankle's drive, the keeper's or riser's
+         torque, and a pull on the foot. Add to the ring the ankle's target, angle, limits and gains, and the foot's
+         and toe's contacts. Then read the cause, and research the mend in the controller (stops and dampers, not
+         guards; K1).
+       - **The deep dive:**
+         - Part one is done and committed (`22ff7f3`: `inventory.md`, `modelling.md`, `faces_heads_hair.md`,
+           `surfaces_light_render.md`, `world_and_props.md`).
+         - **Part two is running** (workflow `best-visual-quality-synthesis`, run `wf_e6ad801c-a2d`): a synthesis
+           `research.md` on opus, `critique.md` on sonnet, then a revision on opus.
        - Then step 0's stills, built by the deep dive's findings: today's faces beside prettier explorations, and a
          head change tried. The aesthetic judges see them first, then Luis.
-       - The weekly allowance is the binding limit (62%, resetting November 16, 16:00 UTC). One five-hour window
-         costs about 13 to 14 points of the week, so pace the work.
+       - The weekly allowance is the binding limit (resetting November 16, 16:00 UTC). One five-hour window costs
+         about 13 to 14 points of the week, so pace the work.
 
-       The register rows for these answers are still to be written in GAME_VISION.
+       The register rows for these answers are written in GAME_VISION (two rows, 2026-11-14 night).
      - Next, by his answers and the order below:
        - **the blow-up's energy count.** How it began is read from the frames (Validation): footB's fast left thigh
          and a knee at 165, a jump to 63 rad/s at the step to pike, then the right arm whirling to 1e8. To do:
