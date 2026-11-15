@@ -758,8 +758,14 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
        - **The deep dive:**
          - Part one is done and committed (`22ff7f3`: `inventory.md`, `modelling.md`, `faces_heads_hair.md`,
            `surfaces_light_render.md`, `world_and_props.md`).
-         - **Part two is running** (workflow `best-visual-quality-synthesis`, run `wf_e6ad801c-a2d`): a synthesis
-           `research.md` on opus, `critique.md` on sonnet, then a revision on opus.
+         - **Part two, two thirds done** (workflow `best-visual-quality-synthesis`, run `wf_e6ad801c-a2d`):
+           - the synthesis `research.md` (opus) and `critique.md` (sonnet) are written, not yet committed;
+           - the revision (opus) was stopped as it began, at 91% of the five hours, so as not to leave
+             `research.md` half revised.
+           - **After the reset (07:10 UTC), resume it:** Workflow with the run's `scriptPath` (the session's
+             `workflows/scripts/best-visual-quality-synthesis-wf_e6ad801c-a2d.js`) and
+             `resumeFromRunId: "wf_e6ad801c-a2d"`. The synthesis and the critic come back cached.
+           - Then read its summary, check the folder (no private paths), commit, push, and tell Luis.
        - Then step 0's stills, built by the deep dive's findings: today's faces beside prettier explorations, and a
          head change tried. The aesthetic judges see them first, then Luis.
        - The weekly allowance is the binding limit (resetting November 16, 16:00 UTC). One five-hour window costs
