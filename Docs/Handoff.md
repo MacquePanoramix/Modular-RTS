@@ -83,7 +83,15 @@ played animation ([the vision's rows of October 30 to November 9](GAME_VISION.md
 
 ## Waiting on Luis
 
-Nothing. On November 11 he answered the six questions of `motion_design.md` section 7: **yes to all six, as
+Now (November 15, morning):
+- his answers to the deep dive's **twelve questions** (`Research/2026-11-15_TheBestVisualQuality/research.md`,
+  section 8);
+- his eye on the build `WindowsOrdinaryPlace_Nov13b`;
+- his word on (b)'s build ("Next steps", the thread of November 14).
+
+The work goes on meanwhile. No merge to main without his word.
+
+Before that, on November 11, he answered the six questions of `motion_design.md` section 7: **yes to all six, as
 recommended, "and please proceed"** ([his message](Correspondence/2026-11-11_YES_TO_THE_SIX_AND_PROCEED.md); the row of
 November 11 in `GAME_VISION.md`). The design is agreed and may be built. He adds that "a miner falling forward should
 still also be able to get up": the fall onto the front is built and tested as fully as the common one (forced in the
@@ -755,11 +763,40 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
          torque, and a pull on the foot. Add to the ring the ankle's target, angle, limits and gains, and the foot's
          and toe's contacts. Then read the cause, and research the mend in the controller (stops and dampers, not
          guards; K1).
-         - **The split is being built** (November 15, morning: workflow `ankle-split-build`, run
-           `wf_2a07ec56-c1a`, an opus builder then a fresh opus reviewer). It sits behind `-liveEnergy 2`; level 1
-           is unchanged.
+         - **The split is built and reviewed sound:** wip-round `1a9f803`, pushed. It sits behind
+           `-liveEnergy 2`; level 1 is unchanged. Tests only.
+           - Each ring step's given work is split into p (pushes), r (the riser's torque), k (the keeper's),
+             o (other torques) and d (drive).
+           - It also records the ankles' and toes' joints per axis, every link's contacts, and the riser's asks of
+             each boot.
            - The brief is the scratchpad's `brief_ankle_split.md`, and the report `ankle_split_report.md`.
-           - After the review comes Claude's long run: 24 courses as `cc_en24`, with `-liveEnergy 2`.
+         - **The long run is done** (`cc_es24`, 24 courses, `-liveEnergy 2`, November 15, morning). **9 of 24 blew
+           up**, all in a foot or a toe.
+           - **Read and verified** by a fresh opus verifier (workflow `es24-verify`). It is recorded in Validation,
+             "The ankle split in the live courses: what kicks the foot (November 15, morning)". In short:
+             - In all ten blow-ups (and as_l2's), 0 to 3 steps before the guard, the same leg's ankle target turned
+               140 to 153 degrees in one step.
+             - In 8 of 9 (and as_l2), it is `OwnRiser.AnkleCan`'s clamp flipping from +110 to -110 degrees as the
+               ask passes 180 degrees from stood (`AnkleAtMost` 110, rate limit off): 140 the short way, for any
+               stood (reproduced in Python). c19 is the ask itself jumping, with the boot far from its aim.
+             - The flip's step puts +12 to +38 J into the ankle's drive. In six of the ten, other flows were as large:
+               the engine's gain, a knee or a hip.
+             - The flip came 7 more times without a blow-up. Three of those had an ankle damper 5 to 8 times
+               stronger. The damper comes from the riser's inertia estimate `lighter[foot]`, which differed about a
+               hundredfold between tries. Why is not found yet: **a lead**.
+             - As played, the learnt policy's additions (`drivenNow`) were 14 to 23 degrees in some courses. Whether
+               that is meant was not checked.
+           - The reader is `live_energy_split_read.py` in the tools folder (wip-round `3182e08`), with the verifier's
+             nine faults mended. It gives the verifier's numbers.
+           - **Next: the mend, researched first** (stops and dampers, not guards; K1). It joins the natural joint
+             ranges research. To research:
+             - a clamp that cannot flip, choosing the side nearest the last ask, or a swing-twist limit within
+               natural ankle ranges;
+             - stops on the ankle joint, which is free today;
+             - why `lighter[foot]`, and so the damper, differs a hundredfold;
+             - the stages' asks beyond the ankle's reach (clamped for long stretches: in c0 and c3, in 32 of 32
+               steps), and when a boot is far from its aim;
+             - whether `drivenNow` should act as played.
        - **The deep dive:**
          - Part one is done and committed (`22ff7f3`: `inventory.md`, `modelling.md`, `faces_heads_hair.md`,
            `surfaces_light_render.md`, `world_and_props.md`).

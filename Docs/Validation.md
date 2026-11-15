@@ -5493,3 +5493,117 @@ blow-up guard is in the same test and is always on. Nothing in the game changed.
 - The game itself: the guard lives only in the test.
 
 No judgment here of feel or look: that is Luis's.
+
+## The ankle split in the live courses: what kicks the foot (November 15, morning)
+
+**What must be on:** `-liveEnergy 2` (default 0) in `CoverRingLiveTests`. Only tests changed; nothing in the game did.
+
+### The build
+The build is wip-round `1a9f803`, pushed. A fresh opus reviewer found it sound, with nothing that must be fixed.
+
+At level 2, each ring step splits each link's given work into five parts:
+- p: pushes;
+- r: the riser's torque;
+- k: the keeper's torque;
+- o: other torques;
+- d: the drive.
+
+The parts add up to g within 1e-6 J: at most 7.5e-9 J in the tests, and 8.9e-7 J live.
+
+`energy_detail_c<course>_f<frame>.txt` also holds:
+- the ankles' and toes' joints, per axis;
+- every link's contacts. Only normal impulses are reported, so friction's work is missed; in calibration the
+  estimate found 83% of the ground's work;
+- what the riser asks of each boot.
+
+Level 1 is unchanged. Its format and line shapes were compared, since courses do not repeat.
+
+### Checks
+- `LiveEnergyTests`: 5 of 5, twice.
+- The contact case: a part dropped on the ground shows its contacts, with an impulse and a separation.
+- Self-checks with one push:
+  - `as_l2` blew up (FootL 105.9 rad/s);
+  - `as_l2b` and `as_l2c` passed;
+  - `as_l1`, at level 1, also blew up, and its format matched the old one.
+
+### The long run
+`cc_es24`: Small's own get-up as played, 24 courses, run with `-ownAsPlayed 1 -ownRate 50 -liveWho Small -liveOwn 1
+-liveSeam 1 -liveOther 0 -ownPushes 24 -ownPushWays 0,180,90,270 -liveCap 240 -liveEnergy 2`.
+
+**9 of 24 blew up**, all in a foot or a toe:
+
+| Link | Courses (stage) |
+|---|---|
+| Toeleft | c0 (rollup) |
+| Toeright | c3 (footA), c12 (pike) |
+| FootR | c6, c17 and c19 (footA), c15 (footB) |
+| FootL | c8 (footA), c16 (stay) |
+
+15 courses stood up by their own body, 12 of them in one try. 9 of 24 against `cc_en24`'s 6 of 24 is chance (Fisher p 0.53).
+
+### What was found
+This is Claude's reading, checked by a fresh opus verifier (read only).
+
+1. **Holds.** In all ten blow-ups (these nine and `as_l2`'s), the same leg's ankle drive target turned 140 to 153
+   degrees in one step. It came 0 to 3 steps before the guard.
+2. **Holds in part.** In 8 of the 9 and in `as_l2`, this is `OwnRiser.AnkleCan`'s clamp flipping:
+   - the ask is held at `AnkleAtMost` (110 degrees) from stood, and the rate limit is off (`AnkleTurnsAtMost` 0);
+   - when the ask passes 180 degrees from stood, the clamp's side flips from +110 to -110 degrees about the same axis;
+   - that is a turn of 220 degrees, 140 the short way, whatever the stood pose. Python reproduces it exactly on the
+     clamp's own math;
+   - in that step the ask itself moved only 6.6 to 18.5 degrees, except in c6 (58.3).
+3. **Holds in part. c19 is not a flip.** The ask itself jumped, 153 and then 137 degrees in a step. Its stepping boot
+   was 0.73 to 0.96 m above its aim, and 121 to 179 degrees off its aimed turn. Asks moving 30 to 153 degrees a step
+   with the boot far from its aim also came in c6, c15 and part of c12.
+4. **Holds in part.** The flip's step gives the ankle's drive +12 to +38 J, with p, r, k and o at 0 on the foot. In
+   six of the ten, other flows were as large:
+   - the engine's unaccounted gain: in c3, +66.7 J, with the toe 99.8 degrees past its stop;
+   - a knee or a hip, up to plus or minus 82 J;
+   - a second foot flipping in the same step (c16).
+5. **Holds. The flip is not enough on its own.** There were 16 flips in the 64 rings, 7 of them without a blow-up.
+   - Three of those 7 had a five to eight times stronger ankle damper: spring over damper of 8.7 to 14.4 per second,
+     against 72.3. The same jump in the target then commanded 27 to 38 rad/s instead of 230 to 277.
+   - The damper comes from the riser's inertia estimate `lighter[foot]`. It differed about a hundredfold between
+     tries: 0.0055 to 0.0079 against 0.245 to 0.669 kg m². Why is not yet found.
+6. **Ruled out at the guard steps:**
+   - deep contacts (the deepest was 2.9 mm);
+   - a wrap of `Aims`'s own angle (0 in 64 rings);
+   - the hands (|d| at most 7.2 J).
+
+**Also seen:** as played, the learnt policy's additions to the drive targets (`drivenNow`, from `RiseAgent`) are not zero
+in some courses: 14 to 23 degrees in c0, c4, c6, c12 and c15. Whether that is meant was not checked.
+
+### What it means
+The blow-ups are triggered in the riser's ankle asks, in two ways:
+- a clamp that flips when the ask passes 180 degrees from stood;
+- asks beyond any ankle's reach. They are held at 110 degrees from stood for long stretches: in c0 and c3, clamped in
+  32 of 32 steps.
+
+A weak ankle damper makes them violent. The cause is the controller, not the engine's step. The mend is therefore K1's:
+stops and dampers, not guards.
+
+### Not tested
+- How the engine reads a spherical joint's three drive targets. They were treated as the rotation vector the code
+  builds.
+- The drive force's units.
+- Whether the level-1 blow-ups had the flip: level 1 writes no detail.
+- True rates: rings exist only around traces and guards.
+- The cause of the hundredfold difference in the inertia estimate.
+- Whether `drivenNow` is meant as played.
+- Long and Round.
+- Any mend.
+
+### The reader
+The verifier found nine faults in Claude's first reader. Among them, it dropped every contact with a body part, because
+the writer prints `n 2(2 body)` with no space. They are mended in `Docs/Technical/AnyBody/tools/live_energy_split_read.py`
+(wip-round `3182e08`): `python -I live_energy_split_read.py <run folder> [steps=4] [--all]`.
+
+On `cc_es24` and `as_l2` it gives the verifier's numbers:
+- the ten flips;
+- c8's ShinL 22.3 mm in, c12's ThighR 10.7 mm, and `as_l2`'s FootL 35.9 mm;
+- the feet's +27.9, +35.5 and +25.6 J under the toe blow-ups;
+- the additions, 16.0 and 23.3 degrees.
+
+The verifier's report and scripts stay in the session's scratchpad, not in the repository.
+
+No judgment here of feel or look: that is Luis's.

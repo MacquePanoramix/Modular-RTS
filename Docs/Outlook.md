@@ -58,6 +58,29 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 15, 2026 (morning) — the thirty-third, short (a stretch closed, before the report)
+
+- **Where we are.** The cause of the get-up's foot blow-ups has been found and verified (Validation, "The ankle split
+  in the live courses"):
+  - the riser's ankle limit flips sides when the ask passes 180 degrees from stood;
+  - a weak ankle damper makes the flip violent.
+  Its reader is in the tools folder (wip-round `3182e08`). The deep dive is done; its twelve questions wait on Luis.
+- **Waiting on Luis:** the twelve questions; his eye on `WindowsOrdinaryPlace_Nov13b`; his word on (b)'s build. No
+  merge to main without his word.
+- **Running:** nothing.
+- **Open, not to be forgotten:** as the thirty-second, less the ankle split, plus:
+  - the mend, to research first: a limit that cannot flip, natural ankle ranges with stops, and the damper. Why does
+    the inertia estimate differ a hundredfold?
+  - whether the learnt policy's additions should act as played;
+  - asks beyond the ankle's reach, held at the limit for long stretches.
+- **Does the task serve the stage?** Yes. The ankle limit's flip is the worst fault found in the own get-up as played,
+  and it bears on Luis's "unnatural leg movements". The mend belongs to the controller, so K1 holds: no guards.
+- **Drift watched:** two research threads, the mend and step 0's stills, now compete for a short week. The mend comes
+  first, because Luis's eye waits on a get-up that does not blow up.
+- **The allowance:** 97% of the five hours (resets in about two and a half hours), 86% of the week (resets in about a
+  day and six hours). About one window of work is left this week. So: stop now. After the reset, research the mend
+  (one agent), then build it, paced against the week. The conversation is at 64% of its window.
+
 ### November 15, 2026 (early) — the thirty-second, short (by the counter; the energy count's long run read)
 
 - **Where we are.**

@@ -2,7 +2,8 @@
 
 **Updated:** November 15, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 15, early): where the get-up's blow-ups begin, found; the best visual quality researched.**
+- **Now (November 15, morning): what kicks the foot in the get-up's blow-ups, found and verified; the best visual
+  quality researched.**
   - **Luis answered the models' proposal** ([his words](Correspondence/2026-11-14_THE_MODELS_PROPOSAL_ANSWERED.md)):
     - the order is kept;
     - today's faces are kept, and prettier ones are explored beside them;
@@ -14,9 +15,23 @@
     up ([Validation](Validation.md)).
     - Every blow-up was in a foot and its toe, while a foot was being placed.
     - Within one 20 ms step the foot went past 100 rad/s, the energy coming in through the ankle.
-    - Next: split what acts on the ankle (its drive, the riser's or keeper's torque, a pull on the foot).
-  - **The deep dive:** part one done
-    ([its five files](Research/2026-11-15_TheBestVisualQuality/)); its synthesis and critic are running.
+  - **The ankle split:** a test switch, `-liveEnergy 2`, default 0; nothing in the game changed. It splits what acts
+    on each link. 9 of 24 courses blew up ([Validation](Validation.md), "The ankle split in the live courses"), and a
+    fresh verifier checked the reading:
+    - In 9 of the 10 blow-ups read, the riser's ankle limit flips. It holds the asked ankle turn at 110 degrees from
+      standing, but when the ask passes 180 degrees it jumps to the other side: a 140-degree jump of the drive's
+      target in one step.
+    - In the other, the ask itself jumped.
+    - A weak ankle damper makes the jump violent. The flip came seven more times without a blow-up: three of those
+      had a damper five to eight times stronger, and the other four came close.
+    - Next: research the mend in the controller (a limit that cannot flip, natural ankle ranges with stops, the
+      damper), joined with the natural joint ranges research.
+  - **The deep dive is done** ([the programme](Research/2026-11-15_TheBestVisualQuality/research.md); part one's five
+    files beside it). It was researched only: no Unity or Blender run and no pictures.
+    - It ranks the gaps: the miners' bodies and cloth first, then how the loved faces and the hair are carried.
+    - The order it proposes: instruments, then step 0's stills, then small switches, then a first improved miner on
+      today's bodies.
+    - **Twelve questions wait on Luis** (section 8; sent November 15, morning).
 
 - **Now (November 14, night): the detached leg's main cause found and fixed behind a switch, now on by default.** The
   posed cover grid shows the trousers' cut top seen while Small lies and moves a leg, mostly because the skirt's flaps
