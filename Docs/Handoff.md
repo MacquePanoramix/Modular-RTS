@@ -107,14 +107,17 @@ The order of the turns (his question 12: they take turns):
    (`critique2.md`) finds it **sound to propose after five small corrections**. They are listed at the end of section
    7 and are made after the weekly reset, before tier 0 builds anything. Group A's four questions went to Luis in
    plain words (November 15, afternoon): which screen, the strokes' size, a steady 60 or higher, the lines that stop
-   the visual work. Groups B and C come after the crowd measurement and later;
+   the visual work. **He answered all four as recommended**, and asked that every common screen size work, since other
+   people will test and play the game ([his words](Correspondence/2026-11-15_THE_TARGET_QUESTIONS_ANSWERED.md)): tier 0
+   measures the common sizes too. Groups B and C come after the crowd measurement and later;
 3. the search of the best ways for Claude to make assets, before the world's first pass;
 4. the world's options (11) in that pass;
 5. the bigger exploration of the world and its assets.
 
 Still waiting:
-- his eye on the build `WindowsOrdinaryPlace_Nov13b`;
-- his answers to the target research's first four questions (group A, sent November 15, afternoon).
+- his eye on the build `WindowsOrdinaryPlace_Nov13b`.
+
+He answered the target research's first four questions on November 15, afternoon.
 
 His word on (b)'s build and his call on Small's learnt addition came on November 15, afternoon: build it, and the
 addition off as played.
