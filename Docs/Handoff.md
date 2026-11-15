@@ -806,15 +806,30 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
                that is meant was not checked.
            - The reader is `live_energy_split_read.py` in the tools folder (wip-round `3182e08`), with the verifier's
              nine faults mended. It gives the verifier's numbers.
-           - **Next: the mend, researched first** (stops and dampers, not guards; K1). It joins the natural joint
-             ranges research. To research:
-             - a clamp that cannot flip, choosing the side nearest the last ask, or a swing-twist limit within
-               natural ankle ranges;
-             - stops on the ankle joint, which is free today;
-             - why `lighter[foot]`, and so the damper, differs a hundredfold;
-             - the stages' asks beyond the ankle's reach (clamped for long stretches: in c0 and c3, in 32 of 32
-               steps), and when a boot is far from its aim;
-             - whether `drivenNow` should act as played.
+           - **The mend, researched** (November 15, early afternoon; stops and dampers, not guards; K1), joined
+             with the natural joint ranges: `Research/2026-11-15_NaturalRangesAndTheAnkle/`.
+             - `research.md` (opus; workflow `ankle-mend-research`, run `wf_979da6b6-89d`). Its findings:
+               - a second fault: in c0 and c8 a boot came 0.55-0.71 m off its shin. `GoDown` takes the ankle
+                 point from the physics boot, while the let-go body is built from the lagging drawn pose. This,
+                 not the ankle's range, explains the hundredfold `lighter`;
+               - every clamp onto a ball of turns flips at 180°. The best fit is swing-twist with an elliptical
+                 cone, smoothly saturated, folding back to neutral at the far side;
+               - the laid-boot kneel needs about 90-130° of plantarflexion, where people give 50-63°. Form the
+                 asks in joint space;
+               - `drivenNow`: as played, Small's learnt models add up to 20° after the clamp, never cleared after
+                 their stages. Long and Round get none. Whether to switch it off is Luis's call;
+               - three switches, all off; 24 courses per arm per miner tell a full fix from chance.
+             - `critique.md` (sonnet, 12 points). Two refutations:
+               - a damper floor alone does not bound the boot's speed while the drive saturates;
+               - the fold still jumps at a pure 180° twist.
+               It also warns that the boot-off-shin fix removes the damper that made three flips harmless, so it
+               must come after the others.
+             - **Revision running** (workflow `ankle-mend-revision`, run `wf_a12e80b8-163`, task `wfxwbf3om`):
+               - an opus reviser answers every critique point in `research.md`, section 8;
+               - then a fresh sonnet critic writes `critique2.md`;
+               - briefs in the scratchpad: `brief_ankle_revision.md`, `brief_ankle_recheck.md`.
+             - **Then:** record it, commit the folder by path, push, and send Luis the proposal in plain words. The
+               build waits for his word on (b).
        - **The deep dive:**
          - Part one is done and committed (`22ff7f3`: `inventory.md`, `modelling.md`, `faces_heads_hair.md`,
            `surfaces_light_render.md`, `world_and_props.md`).
