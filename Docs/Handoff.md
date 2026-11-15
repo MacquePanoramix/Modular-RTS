@@ -715,10 +715,29 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
           Claude can do, for the best quality possible, "no efforts saved". Claude is also to think proactively
           about quality everywhere.
 
-       **After the reset:**
-       - the energy count's build (the check-in launches it);
-       - the super deep dive as a workflow, beside the build if the allowance allows, else after it;
-       - then step 0's stills, built by the deep dive's findings.
+       **After the reset (02:10 UTC, November 15), launched at 3% of the five hours and 62% of the week:**
+       - **The energy count's build is running** (workflow `energy-count-build`, run `wf_8e2de76e-32b`). An opus
+         builder works from the scratchpad's `brief_energy_count.md` and writes `energy_build_report.md` there.
+         A fresh opus reviewer follows, then one fix round and a second look only if the review finds a blocking
+         fault. When it returns:
+         - read the report and the review;
+         - push `claude/wip-round`;
+         - run the long run myself: Small's own get-up, 24 courses, `-liveEnergy 1`, through the runner's `LIMIT`;
+         - read which part gains first.
+       - **The deep dive's part one is running beside it** (workflow `best-visual-quality-gather`, run
+         `wf_b5fbb0bf-7e4`), into `Docs/Research/2026-11-15_TheBestVisualQuality/`, one agent at a time:
+         - `inventory.md` (sonnet): every visual part today, and what Claude's tools can do;
+         - `modelling.md` (opus);
+         - `faces_heads_hair.md` (opus);
+         - `surfaces_light_render.md` (sonnet);
+         - `world_and_props.md` (sonnet).
+
+         None of them runs Unity or Blender. Part two follows, as for the models: a synthesis on opus, a sceptic and
+         completeness critic on sonnet, a revision on opus. Check the usage before it.
+       - Then step 0's stills, built by the deep dive's findings: today's faces beside prettier explorations, and a
+         head change tried. The aesthetic judges see them first, then Luis.
+       - The weekly allowance is the binding limit (62%, resetting November 16, 16:00 UTC). One five-hour window
+         costs about 13 to 14 points of the week, so pace the work.
 
        The register rows for these answers are still to be written in GAME_VISION.
      - Next, by his answers and the order below:
