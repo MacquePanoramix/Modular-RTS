@@ -716,14 +716,33 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
           about quality everywhere.
 
        **After the reset (02:10 UTC, November 15), launched at 3% of the five hours and 62% of the week:**
-       - **The energy count's build is running** (workflow `energy-count-build`, run `wf_8e2de76e-32b`). An opus
-         builder works from the scratchpad's `brief_energy_count.md` and writes `energy_build_report.md` there.
-         A fresh opus reviewer follows, then one fix round and a second look only if the review finds a blocking
-         fault. When it returns:
-         - read the report and the review;
-         - push `claude/wip-round`;
-         - run the long run myself: Small's own get-up, 24 courses, `-liveEnergy 1`, through the runner's `LIMIT`;
-         - read which part gains first.
+       - **The energy count is built and reviewed: wip-round `34316c6`, pushed.** Only tests changed:
+         - new: `LiveEnergy.cs` (the instrument) and `LiveEnergyTests.cs` (the one-part checks);
+         - changed: `CoverRingLiveTests.cs`, behind `-liveEnergy`, which defaults to 0.
+
+         What the build found:
+         - The energy is reckoned from the root's going and each link's turning. What the joints give comes from
+           the engine's accumulated force and torque plus each drive's work. The shove trace's way would have
+           missed the riser's torques.
+         - The one-part checks: 4 of 4 pass, within 0.0001 J.
+         - The self-check with the count on passed. Standing still, the body loses 0.02 J a step. Getting up,
+           single steps swing from +41.5 J to -44.3 J.
+         - The self-check with the count off was failed by the guard, as built: **a second whirl, FootR at 108.8
+           rad/s with the right knee folded past 180 degrees**, in footA of the third try. The course was taken
+           back.
+
+         A fresh opus reviewer found it **sound**, with only optional suggestions:
+         - an off-axis two-part check;
+         - an `e_gain_least` column;
+         - guarding the let-go body too;
+         - whether 100 rad/s should end a course or only log.
+
+         The 100 rad/s line is kept: the onset trace is written at 30 rad/s either way, and a foot past 100 with
+         the knee past 180 is already a fault. The report is in the scratchpad's `energy_build_report.md`, and the
+         review in the workflow's journal.
+       - **The long run is running** (background, `cc_en24`): Small's own get-up, 24 courses, `-liveEnergy 1`, the
+         cc_c1 arguments, `LIMIT=10800`, into `TestRuns/CoverLive/cc_en24`. Next: read the `LIVE_BLOWUP` events
+         and the `energy_trace_c*_f*.txt` files, find which part gains first, then write it all into Validation.
        - **The deep dive's part one is running beside it** (workflow `best-visual-quality-gather`, run
          `wf_b5fbb0bf-7e4`), into `Docs/Research/2026-11-15_TheBestVisualQuality/`, one agent at a time:
          - `inventory.md` (sonnet): every visual part today, and what Claude's tools can do;
