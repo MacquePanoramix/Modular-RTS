@@ -24,8 +24,13 @@
     - In the other, the ask itself jumped.
     - A weak ankle damper makes the jump violent. The flip came seven more times without a blow-up: three of those
       had a damper five to eight times stronger, and the other four came close.
-    - Next: research the mend in the controller (a limit that cannot flip, natural ankle ranges with stops, the
-      damper), joined with the natural joint ranges research.
+    - **The mend, researched** (November 15, afternoon;
+      [the research](Research/2026-11-15_NaturalRangesAndTheAnkle/research.md)), joined with the natural joint ranges.
+      It was revised against a critic and checked by a second one, who finds it sound to propose.
+      - Found on the way: a second fault, a boot put 0.55-0.71 m off its shin at the going down.
+      - The proposal: three switches on the riser, all off. A is a limit that cannot flip. B is a speed bound: Small's
+        boot at most about 20 rad/s against 81 today. C puts the boot back on its own shin, and comes last.
+      - **The build waits for Luis's word** on (b), and on whether Small's learnt addition stays as played.
   - **The deep dive is done** ([the programme](Research/2026-11-15_TheBestVisualQuality/research.md); part one's five
     files beside it). It was researched only: no Unity or Blender run and no pictures.
     - It ranks the gaps: the miners' bodies and cloth first, then how the loved faces and the hair are carried.

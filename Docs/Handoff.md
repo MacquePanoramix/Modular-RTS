@@ -105,7 +105,9 @@ The order of the turns (his question 12: they take turns):
 
 Still waiting:
 - his eye on the build `WindowsOrdinaryPlace_Nov13b`;
-- his word on (b)'s build ("Next steps", the thread of November 14).
+- his word on (b)'s build: the ankle mend's three switches, proposed November 15, afternoon ("Next steps", the get-up
+  blow-up thread; `Research/2026-11-15_NaturalRangesAndTheAnkle/research.md` section 7);
+- his call on Small's learnt addition as played (`drivenNow`): off, or kept for training and corrected.
 
 The work goes on meanwhile. No merge to main without his word.
 
@@ -824,12 +826,24 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
                - the fold still jumps at a pure 180° twist.
                It also warns that the boot-off-shin fix removes the damper that made three flips harmless, so it
                must come after the others.
-             - **Revision running** (workflow `ankle-mend-revision`, run `wf_a12e80b8-163`, task `wfxwbf3om`):
-               - an opus reviser answers every critique point in `research.md`, section 8;
-               - then a fresh sonnet critic writes `critique2.md`;
-               - briefs in the scratchpad: `brief_ankle_revision.md`, `brief_ankle_recheck.md`.
-             - **Then:** record it, commit the folder by path, push, and send Luis the proposal in plain words. The
-               build waits for his word on (b).
+             - **Revised and checked again** (workflow `ankle-mend-revision`, run `wf_a12e80b8-163`):
+               - the opus reviser answered all 12 points; `research.md` section 8 maps each one;
+               - the fresh sonnet critic's `critique2.md` says **sound to propose, as switches, off**. It reproduced
+                 the bound: Small at most 19.6 rad/s against 81 today, no overshoot, and the drive brakes;
+               - its remaining points change nothing in the design. They are carried to the build in
+                 `research.md` section 8.1. Read them before building.
+             - **The proposal** (section 7). Three switches on the riser only, all off by default:
+               - **A**, `OwnRiser.AnkleLimit`: the fold-safe limit (1 at today's 110°; 2 the natural ankle);
+               - **B**, `OwnRiser.AnkleSpeed`: the error held within τcap/k of the joint's reading, with a smooth
+                 damper floor;
+               - **C**, `OwnBody.BootsFromOwnShin`: the boot put back on its own shin at the going down.
+               - The order: B, then A = 1, then both, then C, never C alone. Then A = 2 with the asks formed in
+                 joint space. The forced checks come first, then 24 courses per arm per miner, on Small, Long and
+                 Round.
+               - **Luis's call:** the learnt addition (`drivenNow`) on Small as played. The proposal is off, since only
+                 Small has it; or kept for training, added before the limit and cleared after its stages.
+             - **Sent to Luis in plain words** (November 15, afternoon). **The build waits for his word on (b)** and
+               on `drivenNow`.
        - **The deep dive:**
          - Part one is done and committed (`22ff7f3`: `inventory.md`, `modelling.md`, `faces_heads_hair.md`,
            `surfaces_light_render.md`, `world_and_props.md`).
