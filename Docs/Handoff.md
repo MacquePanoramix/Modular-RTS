@@ -755,17 +755,34 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
          torque, and a pull on the foot. Add to the ring the ankle's target, angle, limits and gains, and the foot's
          and toe's contacts. Then read the cause, and research the mend in the controller (stops and dampers, not
          guards; K1).
+         - **The split is being built** (November 15, morning: workflow `ankle-split-build`, run
+           `wf_2a07ec56-c1a`, an opus builder then a fresh opus reviewer). It sits behind `-liveEnergy 2`; level 1
+           is unchanged.
+           - The brief is the scratchpad's `brief_ankle_split.md`, and the report `ankle_split_report.md`.
+           - After the review comes Claude's long run: 24 courses as `cc_en24`, with `-liveEnergy 2`.
        - **The deep dive:**
          - Part one is done and committed (`22ff7f3`: `inventory.md`, `modelling.md`, `faces_heads_hair.md`,
            `surfaces_light_render.md`, `world_and_props.md`).
-         - **Part two, two thirds done** (workflow `best-visual-quality-synthesis`, run `wf_e6ad801c-a2d`):
-           - the synthesis `research.md` (opus) and `critique.md` (sonnet) are written, not yet committed;
-           - the revision (opus) was stopped as it began, at 91% of the five hours, so as not to leave
-             `research.md` half revised.
-           - **After the reset (07:10 UTC), resume it:** Workflow with the run's `scriptPath` (the session's
-             `workflows/scripts/best-visual-quality-synthesis-wf_e6ad801c-a2d.js`) and
-             `resumeFromRunId: "wf_e6ad801c-a2d"`. The synthesis and the critic come back cached.
-           - Then read its summary, check the folder (no private paths), commit, push, and tell Luis.
+         - **Part two is done and committed** (workflow `best-visual-quality-synthesis`, run `wf_e6ad801c-a2d`,
+           resumed after the reset on November 15, morning). The files are:
+           - `research.md`: the programme, by opus, revised against the critic;
+           - `critique.md`: the critic's 32 points, by sonnet. The revision agreed with 28 and with 4 in part,
+             saying why.
+
+           The programme's order:
+           - instruments first: a Blender stills kit, a Unity shot set (with the 42 m Strategy frame, CPU time and
+             a 100-miner crowd), and a range-of-motion sweep of today's miners;
+           - step 0's stills on today's pipeline, flags off;
+           - small Unity switches, off by default;
+           - a v2 'carrier' rung (smooth face normals, hair without facets, a face map, faint vertex AO);
+           - the template trial while Luis looks;
+           - after his picks: the v3 body, then v4 garments, gated on the get-up on all three miners and an
+             unchanged idle;
+           - then the world, in rank order.
+
+           Its 12 questions for Luis are in `research.md` and in the message sent on November 15, morning.
+           **Waiting on his answers.** Not done by it: no Unity or Blender run, no pictures, no web search, and
+           no re-read of the revision by another agent.
        - Then step 0's stills, built by the deep dive's findings: today's faces beside prettier explorations, and a
          head change tried. The aesthetic judges see them first, then Luis.
        - The weekly allowance is the binding limit (resetting November 16, 16:00 UTC). One five-hour window costs
