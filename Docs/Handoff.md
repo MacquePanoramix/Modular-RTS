@@ -84,27 +84,21 @@ played animation ([the vision's rows of October 30 to November 9](GAME_VISION.md
 ## Waiting on Luis
 
 **Luis answered the twelve questions** (November 15, morning; his words are in
-[Correspondence](Correspondence/2026-11-15_THE_TWELVE_QUESTIONS_ANSWERED.md)). They are not yet processed. To do after
-the five hours' reset:
-- Record his decisions in GAME_VISION:
-  - 1, the order: yes;
-  - 2, step 0's pictures: the right amount, and more may be added;
-  - 6: explore everything, and add new promising options;
-  - 8: the optional downloads are approved;
-  - 11: explore those options now;
-  - 12: the visual work and the getting up take turns.
-- Questions 3, 4, 5, 9 and 10 are **left to Claude's judgment** under the design principles. Make each call, explain
-  it to him in plain words, and do not Lock it.
-- Question 7, the target computer:
-  - his computer: i9-14900HX, RTX 4060 Laptop GPU (8 GB), 32 GB;
-  - the best graphics on it, with no compromise; lower settings for weaker computers;
-  - this is a one-miner prototype, but its foundations must scale to the final modular RTS's "good RTS amount of
-    units". Read the vision's final scale;
-  - research a budget for this.
-- **His new asks** (Claude orders them):
-  - later, a much bigger visual exploration of the whole world and all its assets;
-  - a big search of the best ways for Claude (Opus 5.5 or similar) to make the best assets and models for the
-    aesthetic.
+[Correspondence](Correspondence/2026-11-15_THE_TWELVE_QUESTIONS_ANSWERED.md)). **Processed** (November 15): four rows of
+November 15 in `GAME_VISION.md`:
+- his decisions (1, 2, 6, 8, 11, 12);
+- the target computer and the scale (7): his computer at the best settings, "very well"; lower settings below; the
+  numbers to be proposed by research, the unit count still Open;
+- his new asks, ordered by Claude;
+- **the five calls left to judgment** (3, 4, 5, 9, 10), made by the design principles, each an option behind a switch,
+  off, and **not Locked**. A separate reviewing agent's check is still to come; then explain them to him in plain words.
+
+The order of the turns (his question 12: they take turns):
+1. the ankle mend's research (running), then its proposal to him;
+2. the visual turn: tier 0 instruments, step 0's stills, the target-budget research;
+3. the search of the best ways for Claude to make assets, before the world's first pass;
+4. the world's options (11) in that pass;
+5. the bigger exploration of the world and its assets.
 
 Still waiting:
 - his eye on the build `WindowsOrdinaryPlace_Nov13b`;

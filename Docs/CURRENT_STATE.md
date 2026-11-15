@@ -31,7 +31,15 @@
     - It ranks the gaps: the miners' bodies and cloth first, then how the loved faces and the hair are carried.
     - The order it proposes: instruments, then step 0's stills, then small switches, then a first improved miner on
       today's bodies.
-    - **Twelve questions wait on Luis** (section 8; sent November 15, morning).
+    - **Luis answered the twelve questions** (November 15, morning;
+      [his words](Correspondence/2026-11-15_THE_TWELVE_QUESTIONS_ANSWERED.md)), recorded in four rows of November 15
+      in [the vision](GAME_VISION.md):
+      - the order kept; everything explored; the optional downloads and the world's options approved;
+      - the visual work and the getting up take turns;
+      - the target: his computer at the best settings, "very well"; lower settings for weaker ones; the foundations
+        for the final RTS's unit count;
+      - five calls he left to judgment (the blink, garment shapes, correctives, landmarks, vents): made by the design
+        principles as switches, off, **not Locked**; a reviewer's check to come.
 
 - **Now (November 14, night): the detached leg's main cause found and fixed behind a switch, now on by default.** The
   posed cover grid shows the trousers' cut top seen while Small lies and moves a leg, mostly because the skirt's flaps
