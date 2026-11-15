@@ -97,20 +97,25 @@ November 15 in `GAME_VISION.md`:
   garment shapes carried to every body) go to each item's judges when it is built.
 
 The order of the turns (his question 12: they take turns):
-1. the ankle mend's research: done, and proposed to him (November 15, afternoon); its build waits for his word;
-2. the visual turn: tier 0 instruments, step 0's stills, the target-budget research. **The target research is
-   running** (November 15, afternoon; `Research/2026-11-15_TargetAndScale/research.md`, one opus researcher, then a
-   sonnet critic writing `critique.md` beside it; research only). When it is back: read both, record the thread here
-   and in CURRENT_STATE, commit by path, tell Luis. Then stop heavy work until the weekly reset;
+1. the ankle mend: researched, proposed, and **approved by Luis** (November 15, afternoon;
+   [his words](Correspondence/2026-11-15_THE_ANKLE_MEND_ANSWERED.md)). The three switches are built off and tested;
+   Small's learnt addition is off as played, kept for training. **The build starts after the weekly reset**
+   (November 16, about 17:00 his time); what it holds is in "Next steps", the get-up blow-up thread;
+2. the visual turn: tier 0 instruments, step 0's stills, the target-budget research. **The target research**
+   (November 15, afternoon; `Research/2026-11-15_TargetAndScale/`, research only): written (opus); critiqued (sonnet,
+   `critique.md`: a sound frame, not ready, six fixes). **Its revision is running:** one opus reviser edits
+   `research.md` in place and maps every critique point; a fresh sonnet critic then writes `critique2.md`. When it is
+   back: read both, record the thread here and in CURRENT_STATE, commit the folder by path, and send Luis the first
+   group of questions (at most four) in plain words. Then stop heavy work until the weekly reset;
 3. the search of the best ways for Claude to make assets, before the world's first pass;
 4. the world's options (11) in that pass;
 5. the bigger exploration of the world and its assets.
 
 Still waiting:
-- his eye on the build `WindowsOrdinaryPlace_Nov13b`;
-- his word on (b)'s build: the ankle mend's three switches, proposed November 15, afternoon ("Next steps", the get-up
-  blow-up thread; `Research/2026-11-15_NaturalRangesAndTheAnkle/research.md` section 7);
-- his call on Small's learnt addition as played (`drivenNow`): off, or kept for training and corrected.
+- his eye on the build `WindowsOrdinaryPlace_Nov13b`.
+
+His word on (b)'s build and his call on Small's learnt addition came on November 15, afternoon: build it, and the
+addition off as played.
 
 The work goes on meanwhile. No merge to main without his word.
 
@@ -693,7 +698,8 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
      - **Reported to Luis (November 14, late evening)** with the picture `Research/2026-11-13_DetachedLeg/courses_on_off.jpg` (the same frame both ways).
        Proposed order: (a) the blow-up's trace, and a test that fails on it; (b) natural joint ranges researched, then
        a switch, judged, proposed before it is built; (c) the clipping detector; (d) the models' research; (e) the
-       flap's rest and the hem. Wait for his word on (b)'s build; (a) and the research may go on.
+       flap's rest and the hem. Wait for his word on (b)'s build; (a) and the research may go on. **His word came**
+       (November 15, afternoon): build it.
      - **The models' deep research, part one, done and committed (`6b48126`)** in
        `Docs/Research/2026-11-14_TheModelsRedrawn/`:
        - `internal.md`: the guides, the vision and the code;
@@ -845,8 +851,17 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
                  Round.
                - **Luis's call:** the learnt addition (`drivenNow`) on Small as played. The proposal is off, since only
                  Small has it; or kept for training, added before the limit and cleared after its stages.
-             - **Sent to Luis in plain words** (November 15, afternoon). **The build waits for his word on (b)** and
-               on `drivenNow`.
+             - **Sent to Luis in plain words** (November 15, afternoon). **He answered** "Sure." to the build, and
+               "Yes option a sounds good." to the learnt addition: off as played, kept for training
+               ([his words](Correspondence/2026-11-15_THE_ANKLE_MEND_ANSWERED.md)).
+             - **The build, after the weekly reset** (November 16, about 17:00 his time), in `D:/Dev/WG`:
+               - first read `research.md` section 8.1, and work Long and Round numerically;
+               - `RiseAgent.Unheard` true by default (the learnt addition off as played), and the live test taught
+                 to read `-ownUnheard`. Small's baseline runs both ways once, to show what turning it off changes;
+                 the mend's arms then run as played;
+               - the three switches, off; the forced checks; then the arms in section 7.2's order, 24 courses per
+                 arm per miner, on Small, Long and Round; the idle's tick-by-tick proof;
+               - since a default changes, the flows as played (`-ownAsPlayed 1`) before any build goes to him.
        - **The deep dive:**
          - Part one is done and committed (`22ff7f3`: `inventory.md`, `modelling.md`, `faces_heads_hair.md`,
            `surfaces_light_render.md`, `world_and_props.md`).

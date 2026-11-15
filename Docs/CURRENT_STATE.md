@@ -30,7 +30,9 @@
       - Found on the way: a second fault, a boot put 0.55-0.71 m off its shin at the going down.
       - The proposal: three switches on the riser, all off. A is a limit that cannot flip. B is a speed bound: Small's
         boot at most about 20 rad/s against 81 today. C puts the boot back on its own shin, and comes last.
-      - **The build waits for Luis's word** on (b), and on whether Small's learnt addition stays as played.
+      - **Luis approved the build** (November 15, afternoon;
+        [his words](Correspondence/2026-11-15_THE_ANKLE_MEND_ANSWERED.md)): the three switches built off and tested;
+        Small's learnt addition off as played, kept for training. The build starts after the weekly reset.
   - **The deep dive is done** ([the programme](Research/2026-11-15_TheBestVisualQuality/research.md); part one's five
     files beside it). It was researched only: no Unity or Blender run and no pictures.
     - It ranks the gaps: the miners' bodies and cloth first, then how the loved faces and the hair are carried.
