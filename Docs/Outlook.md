@@ -61,6 +61,43 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 18, 2026 (just after midnight) — the thirty-ninth, short (by the counter, 606 tool calls, after a compaction; git's own check read)
+
+- **Where we are.** S3b, step 2: getting up for any body. The ankle build is at step 4. 4a″ is next; its script is
+  written, not run. Beside it, git's own check was built (`29faa56`), mended (run `wf_b6045c97-a55`, 23:04-00:32) and
+  read to the end.
+  - With the hooks on, 103 of 103 cases passed and none of the 63 refusal cases went through.
+  - With no hooks, 61 went through; the 62nd failed on a count flake.
+  - The candidate guard passed 263 of 263.
+  - One finding was confirmed by a run. A `-m` or `-F` message that also holds git's template lines, or a scissors
+    line, keeps the path, and commit-msg lets it into the local commit; the push refuses it. Four more are low.
+- **Waiting on Luis:** nothing the work needs. To ask him once the hooks are live: whether to widen the guard's matcher
+  to Write and Edit.
+- **He waits on:** the ankle build and a build to play; step 0's stills; the first motion clips.
+- **Built, not in a build:** as in the 38th, plus the patched House and Nature (tested on a rig, not as played). The
+  flows as played have still not been run since the default changed (step 5).
+- **The list of holds:** not read again. Nothing it lists has run since the 37th.
+- **Luis had to correct, repeat or ask:** none since the 38th (no message from him).
+- **Rules broken again:** none that reached anyone. Two slips of the master's own were caught in the brief before the
+  run: git's cleanup was stated wrongly (`-m` and `-F` keep `#` lines), and `install.sh` uses the current folder's
+  repository when given none. **The tool:** a brief that says how a tool behaves quotes its manual or a probe, not
+  memory. The second mend's item 1 starts with a probe.
+- **Does the task serve the stage?** The privacy work does not; it keeps Luis's name out of a public repository, as he
+  approved. The 38th set its finish line: the hooks, G7 and M1 live after two reviews, and nothing more this week
+  unless a review finds a must-fix. One was found, but the push already catches it, so it cannot reach GitHub.
+  - The week decides the order. It was 82% used at 00:38. 4a″ needs about 8-10% and the second mend about 2.5-3%.
+  - Both before 4a″ would leave 4a″ about 9% under the 95% guard, so it might be cut off midway, which Luis asked to
+    avoid.
+  - **So:** the hooks are installed now, as mended, with the gap stated plainly. 4a″ runs at the 04:00 reset. The
+    second mend (`g6_git_mend2_workflow.js`, written) runs after 4a″ if the week then has room for all of it, and
+    otherwise after the week's reset on November 23.
+- **What Luis would want to know:**
+  - that the hooks are live, and how to skip them for one commit of his own (`--no-verify`);
+  - the one gap, and why it cannot reach GitHub;
+  - the week's pace: after 4a″ about 3-4% of the week is left, so 4b, Small's arms and step 5 wait for November 23.
+- **The allowance:** at 00:38, 51% of the five hours (it resets at 04:00) and 82% of the week (it resets on
+  November 23 at 17:00). The first mend took about 46% of a window, about 6% of the week.
+
 ### November 17, 2026 (afternoon) — the thirty-eighth, short (by the counter, 434 tool calls; the FBX re-export stopped)
 
 - **Where we are.** S3b, step 2: getting up for any body. The ankle build is at step 4. 4a′, the forced checks' mend,

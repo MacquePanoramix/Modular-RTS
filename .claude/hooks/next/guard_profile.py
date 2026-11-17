@@ -431,7 +431,8 @@ def worktree_copies(ctx, blobs):
     Python opening the file: measured; the second read is fast). The breaker's 500, 1500 and 3000 files were that
     cost, not the --batch-check format: a commit of 3000 new files needed about 50 s just to be read. So, for more
     than MANY staged blobs, a staged file that is the same as its copy in the working tree (not in git diff
-    --name-only), is a plain file (mode 100644 or 100755) and has no filter attribute is read from the working tree,
+    --name-only), is a plain file (mode 100644 or 100755) and has no filter, working-tree-encoding or ident attribute
+    is read from the working tree,
     which holds the same text up to line endings and was read moments ago by git add. The rest go to cat-file.
     Returns {oid: bytes} for the copies read."""
     if len(blobs) <= MANY:
@@ -442,7 +443,9 @@ def worktree_copies(ctx, blobs):
     cand = [(o, p) for o, p, m in blobs if m in ('100644', '100755') and p not in dirty]
     if not cand:
         return {}
-    attrs = split0(tctx.git(['check-attr', '-z', '--stdin', 'filter'],
+    # filter, working-tree-encoding and ident each make the staged bytes differ from the working copy's (mend,
+    # November 17-18: the latter two added); a path with any of them set goes to cat-file
+    attrs = split0(tctx.git(['check-attr', '-z', '--stdin', 'filter', 'working-tree-encoding', 'ident'],
                             ('\0'.join(p for _, p in cand) + '\0').encode('utf-8', 'surrogateescape')))
     filtered = {attrs[i] for i in range(0, len(attrs) - 2, 3) if attrs[i + 2] not in ('unspecified', 'unset')}
     out = {}

@@ -23,6 +23,17 @@
 #       redirection, sed -i, chmod, touch, Remove-Item, Move-Item, Copy-Item, Set-Content, Add-Content, Out-File,
 #       New-Item, Rename-Item and their aliases). Reading passes (ls, cat, grep). Installing goes through
 #       .claude/hooks/git/install.sh, whose inside the guard does not see.
+#       Mended November 17-18 (g6_git_report.md, "Mend"): flags are compared word by word after the shell's quote
+#       removal ("--no-verify", '-n', --no-ver""ify are flags; -m "the -n flag" is one word, a message); also refused:
+#       git merge --no-verify; git send-pack and git http-push (they push without running pre-push); git lfs install
+#       or update with --force or -f (they overwrite pre-push); a git commit, push or merge in a command that sets
+#       GIT_DIR, a GIT_CONFIG* variable, USERPROFILE or HOME, or gives git --git-dir; an alias, include.path or
+#       includeIf set with git config or -c, and git config -e/--edit. Passes: git config core.hooksPath with no
+#       value (a read); grep, cat, diff, ls and head reading a file in .git/hooks whatever their pattern; cp from
+#       .git/hooks to a place outside it.
+#       It is a seat belt for the assistant's own ordinary commands: a variable or a $(...) can build any word, and a
+#       script, an interpreter, or the Write and Edit tools are not read at all. git's hooks and Luis's review are
+#       the protection.
 # It reads the command's text, so text that only mentions such a command (a search pattern, an echo, a commit message
 # given inline) is refused too: put such text in a file. It does not see inside a script that a command runs.
 # A deliberate, approved use passes when the command carries the words WG_GUARD_OK=G1 (or G2, G3, G4, G6, G7).
@@ -63,8 +74,67 @@ esac ;; esac
 # "git" where a word starts (also right after a quote mark, a backtick or a slash), then any of its own options that
 # stand before the subcommand: -C <dir> (quoted or not), -c <name=value>, --no-pager, --git-dir=<dir>, -P.
 ARG="(\"[^\"]*\"|'[^']*'|[^[:space:]]+)"
-G="(^|[[:space:]\"'\`/])git(\.exe)?([[:space:]]+(-[Cc][[:space:]]+${ARG}|--[a-z-]+(=${ARG})?|-[Pp]))*[[:space:]]+"
+GOPTS="([[:space:]]+(-[Cc][[:space:]]+${ARG}|--git-dir[[:space:]]+${ARG}|--[a-z-]+(=${ARG})?|-[Pp]))*[[:space:]]+"
+G="(^|[[:space:]\"'\`/])git(\.exe)?${GOPTS}"
+G6LEAD="(^|[[:space:]\"'\`/;&|(])git(\.exe)?${GOPTS}"      # G6's call: also right after ; & | ( and $( (no space)
 QS="^([^\"']*)(\"[^\"]*\"|'[^']*')(.*)\$"
+# G7: the variables that move git's folder, its config or the profile check's own needle.
+SETS="(^|[[:space:];&|(\`])(git_dir|git_config[a-z0-9_]*|userprofile|home)="
+PSSETS="\\\$env:(git_dir|git_config[a-z0-9_]*|userprofile|home)[[:space:]]*="
+words() {  # $1 a text: W, its shell words after quote removal (' and ", and \ outside single quotes); an open quote
+  W=(); local s=$1 i=0 n=${#1} c w="" in=0 q=""   # runs to the end
+  while [ $i -lt $n ]; do
+    c=${s:i:1}
+    if [ -n "$q" ]; then
+      if [ "$c" = "$q" ]; then q=""
+      elif [ "$q" = '"' ] && [ "$c" = '\' ] && [[ ${s:i+1:1} == [\"\\\$\`] ]]; then i=$((i + 1)); w+=${s:i:1}
+      else w+=$c; fi
+    else
+      case "$c" in
+        "'"|'"') q=$c; in=1 ;;
+        '\') i=$((i + 1)); w+=${s:i:1}; in=1 ;;
+        [[:space:]]) [ $in = 1 ] && W+=("$w"); w=""; in=0 ;;
+        *) w+=$c; in=1 ;;
+      esac
+    fi
+    i=$((i + 1))
+  done
+  [ $in = 1 ] && W+=("$w")
+}
+noverify() {  # $1 also -n and short clusters holding n (git commit): whether a word of W skips git's hooks
+  local w
+  for w in "${W[@]}"; do
+    [[ $w =~ ^--no-veri(f|fy)?$ ]] && return 0
+    [ "$1" = n ] && [[ $w =~ ^-[^-[:space:]mFCctSu]*n[^[:space:]]*$ ]] && return 0
+  done
+  return 1
+}
+config_writes() {  # W, the words after git config: 0 when it writes or edits; key, the key it names (lower case)
+  local i=0 w pos=() wr=0 rd=0
+  key=""; edits=0
+  while [ $i -lt ${#W[@]} ]; do
+    w=${W[i]}
+    case "$w" in
+      [0-9]'>'*|[0-9]'<'*|'>'*|'<'*) [[ $w =~ ^[0-9]*[\<\>]+\&?$ ]] && i=$((i + 1)) ;;     # a redirection
+      -e|--edit) edits=1 ;;
+      --get|--get-all|--get-regexp|--get-urlmatch|--get-color|--get-colorbool|-l|--list) rd=1 ;;
+      --add|--replace-all|--unset|--unset-all|--rename-section|--remove-section) wr=1 ;;
+      -f|--file|--blob|--type|--default|--comment|--value) i=$((i + 1)) ;;
+      -*) ;;
+      *) pos+=("${w,,}") ;;
+    esac
+    i=$((i + 1))
+  done
+  case "${pos[0]}" in
+    get|list) return 1 ;;
+    edit) edits=1; return 0 ;;
+    set|unset|rename-section|remove-section) key=${pos[1]}; return 0 ;;
+  esac
+  key=${pos[0]}
+  [ $edits = 1 ] || [ $wr = 1 ] && return 0
+  [ $rd = 1 ] && return 1
+  [ ${#pos[@]} -ge 2 ]
+}
 # G7: the hooks folder (any case, either slash), a redirection into it, and the commands that write, move or delete.
 HOOKS='\.git[/\\]+hooks'
 HOOKSREDIR='>[>|]?[[:space:]]*[^[:space:]]*\.git[/\\]+hooks'
@@ -94,27 +164,54 @@ while IFS= read -r seg; do
       refuse G1 "git commit -a stages everything at once. Stage by path (git add <file>), then git commit without -a."
     fi
     # G7: -n or --no-verify (or its unique prefixes) skips pre-commit and commit-msg. In a short cluster the n counts
-    # until a letter that takes a value (m F C c t S u): -mn is the message "n".
-    if [[ $c =~ [[:space:]](--no-veri(f|fy)?|-[^-[:space:]mFCctSu]*n[^[:space:]]*)[[:space:]] ]]; then
+    # until a letter that takes a value (m F C c t S u): -mn is the message "n". Each word after quote removal.
+    words "$araw"
+    if noverify n; then
       refuse G7 "git commit --no-verify (or -n) skips git's own hooks, which hold the profile check; only Luis decides to skip them."
     fi
   fi
   if args push; then                                  # G7: git push --no-verify skips pre-push (-n is a dry run)
-    s=$araw; c=""
-    while [[ $s =~ $QS ]]; do c+="${BASH_REMATCH[1]} "; s=${BASH_REMATCH[3]}; done
-    c+=$s
-    if [[ $c =~ [[:space:]]--no-veri(f|fy)?[[:space:]] ]]; then
+    words "$araw"
+    if noverify; then
       refuse G7 "git push --no-verify skips git's own pre-push hook, which holds the profile check; only Luis decides to skip it."
     fi
   fi
-  # G7: core.hooksPath set or unset for git (it moves git's hooks, and the profile check, away from .git/hooks).
+  if args merge; then                                 # G7: git merge --no-verify skips commit-msg (-n is --no-stat)
+    words "$araw"
+    if noverify; then
+      refuse G7 "git merge --no-verify skips git's own commit-msg hook, which holds the profile check; only Luis decides to skip it."
+    fi
+  fi
+  if args send-pack || args http-push; then           # G7: they push and run no pre-push hook
+    refuse G7 "git send-pack and git http-push push without git's pre-push hook, which holds the profile check; push with git push."
+  fi
+  if args lfs; then                                   # G7: git lfs install/update --force overwrites git's pre-push hook
+    words "$araw"
+    if [[ ${W[0]} == install || ${W[0]} == update ]] && [[ " ${W[*]} " == *" --force "* || " ${W[*]} " == *" -f "* ]]; then
+      refuse G7 "git lfs ${W[0]} --force overwrites git's pre-push hook, which holds the profile check; only Luis decides that."
+    fi
+  fi
+  # G7: core.hooksPath set or unset for git (it moves git's hooks, and the profile check, away from .git/hooks); an
+  # alias or an include (another config file) set, or the config edited in an editor: none is needed here.
   low=${seg,,}
-  if [[ $low == *hookspath* ]] && [[ $low =~ (^|[[:space:]\"\'\`/])git(\.exe)?[[:space:]] ]]; then
-    if [[ $low =~ (^|[[:space:]])(-c|--config-env)[[:space:]=]*[\"\']?core\.hookspath ]]; then
+  if [[ $low =~ (^|[[:space:]\"\'\`/])git(\.exe)?[[:space:]] ]]; then
+    if [[ $low == *hookspath* ]] && [[ $low =~ (^|[[:space:]])(-c|--config-env)[[:space:]=]*[\"\']?core\.hookspath ]]; then
       refuse G7 "core.hooksPath given to git moves its hooks away from .git/hooks, and the profile check with them; only Luis decides that."
     fi
-    if args config && ! [[ ${a,,} =~ [[:space:]](--get|--get-all|--get-regexp|get)[[:space:]] ]]; then
-      refuse G7 "git config of core.hooksPath moves git's hooks away from .git/hooks, and the profile check with them; only Luis decides that."
+    if [[ $low =~ (^|[[:space:]])(-c|--config-env)[[:space:]=]*[\"\']?(alias\.|include\.path|includeif\.) ]]; then
+      refuse G7 "an alias or an include given to git with -c can run a commit or push past its hooks, or bring in another config; not needed here."
+    fi
+    if args config; then
+      words "$araw"
+      if config_writes; then
+        if [ $edits = 1 ]; then
+          refuse G7 "git config -e opens the config in an editor (it can set core.hooksPath unseen); set one key by name."
+        elif [ "$key" = core.hookspath ]; then
+          refuse G7 "git config of core.hooksPath moves git's hooks away from .git/hooks, and the profile check with them; only Luis decides that."
+        elif [[ $key =~ ^(alias|include|includeif)(\.|$) ]]; then
+          refuse G7 "git config of an alias or an include can run a commit or push past its hooks, or bring in another config; not needed here."
+        fi
+      fi
     fi
   fi
   # G7: a file in .git/hooks written, moved or deleted (where git's own profile check lives). The path may be quoted;
@@ -126,7 +223,17 @@ while IFS= read -r seg; do
       u+="${BASH_REMATCH[1]}$q"; s=${BASH_REMATCH[3]}
     done
     u+="$s "
-    if [[ $u =~ $HOOKSREDIR ]] || [[ $u =~ $WRITERS ]] || { [[ $u =~ (^|[[:space:]/])sed(\.exe)?[[:space:]] ]] && [[ $u =~ [[:space:]](-[a-z]*i|--in-place)([[:space:]=]|$) ]]; }; then
+    # Reads pass: grep, cat, diff, ls or head (whatever their pattern), and cp from .git/hooks to a place outside it.
+    reads=0
+    [[ $u =~ ^[[:space:]]*(grep|cat|diff|ls|head)(\.exe)?[[:space:]] ]] && reads=1
+    if [[ $u =~ ^[[:space:]]*cp(\.exe)?[[:space:]] ]]; then
+      words "$seg"; dest=""; t=0
+      for w in "${W[@]:1}"; do
+        case "$w" in -t|--target-directory*|-[a-z]*t) t=1 ;; -*) ;; *) dest=$w ;; esac
+      done
+      [ $t = 0 ] && [ -n "$dest" ] && ! [[ ${dest,,} =~ $HOOKS ]] && reads=1
+    fi
+    if [[ $u =~ $HOOKSREDIR ]] || { [ $reads = 0 ] && [[ $u =~ $WRITERS ]]; } || { [[ $u =~ (^|[[:space:]/])sed(\.exe)?[[:space:]] ]] && [[ $u =~ [[:space:]](-[a-z]*i|--in-place)([[:space:]=]|$) ]]; }; then
       refuse G7 "this writes into, moves or deletes files in .git/hooks, where git's own profile check lives; only Luis decides that (install with .claude/hooks/git/install.sh)."
     fi
   fi
@@ -156,10 +263,18 @@ done <<< "$segs"
 if [[ ${cmd,,} == *git_config* ]] && [[ ${cmd,,} == *hookspath* ]]; then
   refuse G7 "core.hooksPath given through GIT_CONFIG_* moves git's hooks away from .git/hooks, and the profile check with them; only Luis decides that."
 fi
+# G7: a commit, push or merge in a command that sets GIT_DIR, a GIT_CONFIG* variable, USERPROFILE or HOME (bash, cmd's
+# set, PowerShell's $env:), or gives git --git-dir: another repository's hooks, another config, another needle.
+if [[ $cmd =~ ${G6LEAD}(commit|push|merge)([[:space:]]|$) ]]; then
+  if [[ ${BASH_REMATCH[0]} == *--git-dir* ]] || [[ ${cmd,,} =~ $SETS ]] || [[ ${cmd,,} =~ $PSSETS ]]; then
+    refuse G7 "a git commit, push or merge with GIT_DIR, --git-dir, GIT_CONFIG*, USERPROFILE or HOME set in the same command runs past this repository's hooks or changes what they look for; run it plainly."
+  fi
+fi
 
 # G6: a commit or a push that would carry the profile folder's path. Only the checker can tell (it reads the files, the
-# message and the objects); the guard asks it only when the command holds git followed by commit or push.
-if [[ $cmd =~ ${G}(commit|push)([[:space:]]|$) ]] && [[ $cmd != *"WG_GUARD_OK=G6"* ]]; then
+# message and the objects); the guard asks it only when the command holds git followed by commit or push (also right
+# after ; & | ( or $( with no space).
+if [[ $cmd =~ ${G6LEAD}(commit|push)([[:space:]]|$) ]] && [[ $cmd != *"WG_GUARD_OK=G6"* ]]; then
   here=${0%[/\\]*}; [ "$here" = "$0" ] && here=.      # $0 may come with backslashes (from CLAUDE_PROJECT_DIR) or slashes
   py=$(command -v python 2>/dev/null || command -v py 2>/dev/null)
   if [ -n "$py" ] && [ -f "$here/guard_profile.py" ]; then

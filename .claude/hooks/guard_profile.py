@@ -22,6 +22,9 @@ What it reads:
   heredoc or a here-string not in single quotes;
 - for a push: every object it would send (git rev-list --objects <what is pushed> --not --remotes): the files, the
   names in its folders, and its commits (their messages and names).
+With more than 32 staged files, a staged file that is the same as its working-tree copy is read from the working
+tree (M1, November 17 evening: a just-written loose object costs about 16 ms to open the first time; see
+worktree_copies).
 It does not read the rest of the command: a message file's own path, or a cd into the profile folder, is not what a
 commit stores. It cannot see a commit or a push made by a script that the command runs, by a git alias, or through
 a variable that the command does not set itself, nor a command substitution other than $(cat <file>) in -m.
@@ -414,9 +417,44 @@ def parse_raw(raw):
         if f[4][:1] != b'D':
             names.append(path)
             if f[1] != b'160000' and f[3].strip(b'0'):
-                blobs.append((f[3].decode(), path))
+                blobs.append((f[3].decode(), path, f[1].decode()))
         i += n
     return blobs, names
+
+
+MANY = 32
+
+
+def worktree_copies(ctx, blobs):
+    """M1 (November 17, evening). A blob that git add has just written is a new loose object, and on this machine the
+    first read of each such file costs about 16 ms, whoever reads it (git cat-file with any format, --batch, or
+    Python opening the file: measured; the second read is fast). The breaker's 500, 1500 and 3000 files were that
+    cost, not the --batch-check format: a commit of 3000 new files needed about 50 s just to be read. So, for more
+    than MANY staged blobs, a staged file that is the same as its copy in the working tree (not in git diff
+    --name-only), is a plain file (mode 100644 or 100755) and has no filter, working-tree-encoding or ident attribute
+    is read from the working tree,
+    which holds the same text up to line endings and was read moments ago by git add. The rest go to cat-file.
+    Returns {oid: bytes} for the copies read."""
+    if len(blobs) <= MANY:
+        return {}
+    top = ctx.top()
+    tctx = Ctx(top, ctx.pre)                          # paths from git diff are from the top
+    dirty = set(split0(tctx.git(['diff', '--name-only', '-z', '--no-renames', '--'])))
+    cand = [(o, p) for o, p, m in blobs if m in ('100644', '100755') and p not in dirty]
+    if not cand:
+        return {}
+    # filter, working-tree-encoding and ident each make the staged bytes differ from the working copy's (mend,
+    # November 17-18: the latter two added); a path with any of them set goes to cat-file
+    attrs = split0(tctx.git(['check-attr', '-z', '--stdin', 'filter', 'working-tree-encoding', 'ident'],
+                            ('\0'.join(p for _, p in cand) + '\0').encode('utf-8', 'surrogateescape')))
+    filtered = {attrs[i] for i in range(0, len(attrs) - 2, 3) if attrs[i + 2] not in ('unspecified', 'unset')}
+    out = {}
+    for o, p in cand:
+        if p not in filtered and o not in out:
+            data = readfile(os.path.join(top, p))
+            if data is not None:
+                out[o] = data
+    return out
 
 
 def parse_add(args):
@@ -569,14 +607,17 @@ def check_commit(ctx, args, stdin, adds, hits):
     for name in names + later:
         if has(name):
             hits.append(('commit', 'a file name, ' + name))
-    objs = cat(ctx, [o for o, _ in blobs])
-    for o, name in blobs:
-        if o in objs and has(objs[o][1]):
+    copies = worktree_copies(ctx, blobs)
+    objs = cat(ctx, [o for o, _, _ in blobs if o not in copies])
+    for o, name, _ in blobs:
+        data = copies[o] if o in copies else objs[o][1] if o in objs else None
+        if data is not None and has(data):
             hits.append(('commit', name + ' (staged)'))
     for name in later:
         if has(readfile(os.path.join(top, name))):
             hits.append(('commit', name + ' (staged by this same command)'))
-    trace('commit checked: %d messages, %d staged files, %d staged by the command' % (len(msgs), len(blobs), len(later)))
+    trace('commit checked: %d messages, %d staged files (%d read from the working tree), %d staged by the command'
+          % (len(msgs), len(blobs), len(copies), len(later)))
 
 
 def check_push(ctx, args, hits):

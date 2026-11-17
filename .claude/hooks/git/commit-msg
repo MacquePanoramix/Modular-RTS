@@ -3,14 +3,20 @@
 # folder. It runs profile_check.py beside it (python -I); see that file for what it reads and cannot see.
 # With no Python, or on any error of the check's own, the commit goes on, with one warning line.
 here=$(dirname "$0")
-py=; IFS0=$IFS; IFS=:                      # python, else python3, else py, in PATH order, never from a WindowsApps
-for c in python python3 py; do           # folder (the Microsoft Store stub lives there and runs no Python)
-  for d in $PATH; do
-    case "$d" in ''|*[Ww][Ii][Nn][Dd][Oo][Ww][Ss][Aa][Pp][Pp][Ss]*) continue ;; esac
-    for f in "$d/$c.exe" "$d/$c"; do [ -f "$f" ] && [ -x "$f" ] && { py=$f; break 3; }; done
+# install.sh writes on the next line the full path of the Python it found; if that is gone, PATH is searched.
+wg_python=
+# (a hook of your own, merged by hand, is called on the next line: install.sh says how)
+py=
+if [ -n "$wg_python" ] && [ -f "$wg_python" ] && [ -x "$wg_python" ]; then py=$wg_python; else
+  IFS0=$IFS; IFS=:                         # python, else python3, else py, in PATH order, never from a WindowsApps
+  for c in python python3 py; do           # folder (the Microsoft Store stub lives there and runs no Python)
+    for d in $PATH; do
+      case "$d" in ''|*[Ww][Ii][Nn][Dd][Oo][Ww][Ss][Aa][Pp][Pp][Ss]*) continue ;; esac
+      for f in "$d/$c.exe" "$d/$c"; do [ -f "$f" ] && [ -x "$f" ] && { py=$f; break 3; }; done
+    done
   done
-done
-IFS=$IFS0
+  IFS=$IFS0
+fi
 if [ -z "$py" ]; then echo "profile check skipped: no Python found" >&2; exit 0; fi
 if [ ! -f "$here/profile_check.py" ]; then echo "profile check skipped: profile_check.py is not beside this hook" >&2; exit 0; fi
 "$py" -I "$here/profile_check.py" commit-msg "$@"

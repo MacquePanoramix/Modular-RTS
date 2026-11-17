@@ -4,9 +4,10 @@
 # Exits 1 if any case fails. Run: bash .claude/hooks/guard_test.sh
 # GUARD=<path> runs the same cases against another copy of the guard (used on November 16 to show that the cases added
 # after the review fail on the guard as it was before its mend).
-# ONLY=G6 runs the G6 section alone (used on November 17 to show that its refusal cases fail on the guard without G6).
+# ONLY=G6 runs the G6 section alone (used on November 17 to show that its refusal cases fail on the guard without G6);
+# ONLY=G7 the G7 section alone (the same evening: its refusal cases fail on the guard without G7).
 G="${GUARD:-$(cd "$(dirname "$0")" && pwd)/guard.sh}"
-ok=0; bad=0; g6miss=0; g6refuse=0
+ok=0; bad=0; g6miss=0; g6refuse=0; g7miss=0; g7refuse=0
 enc() { local s=$1; s=${s//\\/\\\\}; s=${s//\"/\\\"}; s=${s//$'\n'/\\n}; s=${s//$'\t'/\\t}; printf '%s' "$s"; }
 # The name in the profile folder's path (the last part of USERPROFILE) is private: no output of this file shows it.
 NAME=${USERPROFILE##*[\\/]}
@@ -29,6 +30,7 @@ raw() {  # $1 expect (refuse Gn | pass), $2 label, $3 the payload as is; WANT, i
   if [ -n "$NAME" ] && [[ ${both,,} == *"${NAME,,}"* ]]; then r=FAIL; err="(the guard's own output shows the name) $err"; fi
   [ $r = pass ] && ok=$((ok + 1)) || bad=$((bad + 1))
   if [ "$1" = G6 ]; then g6refuse=$((g6refuse + 1)); [ $r = FAIL ] && g6miss=$((g6miss + 1)); fi
+  if [ "$1" = G7 ]; then g7refuse=$((g7refuse + 1)); [ $r = FAIL ] && g7miss=$((g7miss + 1)); fi
   printf '%-4s  expect %-6s got exit %s  %s\n' "$r" "$1" "$code" "$2"
   [ $r = FAIL ] && [ -n "$err" ] && echo "      stderr: $(mask "$err")"
 }
@@ -37,7 +39,7 @@ t() {  # $1 expect, $2 tool, $3 the command
   raw "$1" "[$2] $label" "{\"session_id\":\"t\",\"hook_event_name\":\"PreToolUse\",\"tool_name\":\"$2\",\"tool_input\":{\"command\":\"$(enc "$3")\",\"description\":\"a test\"}}"
 }
 
-if [ "${ONLY:-all}" != G6 ]; then
+if [ "${ONLY:-all}" = all ]; then
 echo "-- G1 everything staged at once"
 t G1 Bash 'git add -A'
 t G1 Bash 'git add --all'
@@ -151,6 +153,7 @@ raw pass 'compact JSON, harmless' '{"tool_input":{"command":"ls -la"}}'
 raw G1 'compact JSON, spaces around colon' '{"tool_input":{"command" : "git add -A"}}'
 fi
 
+if [ "${ONLY:-all}" = all ] || [ "$ONLY" = G6 ]; then
 echo "-- G6 the profile folder's path carried by a commit or a push (November 17)"
 # Every repository here is a new one in a temporary folder, with a bare temporary one as its remote. The profile
 # folder's path is built here from USERPROFILE, in the forms below, and is never written in this file.
@@ -281,6 +284,27 @@ tc G6 Bash "$RW" "git push origin main:feature (a refspec)" 'git push origin mai
 repo; mkdir -p "$R/sub"; put sub/a.txt "$PM"; stage sub/a.txt
 tc G6 Bash "$TW" "cd <repo>/sub && git commit -m x" "cd \"$RM/sub\" && git commit -m x"
 
+echo "   M1 (November 17, evening): 3000 staged files, read within the time limit"
+many() {  # 3000 small staged files in R; $1, if given, the text of the last one
+  mkdir -p "$R/many"; for i in $(seq 1 3000); do printf 'small file %d\n' "$i" > "$R/many/f$i.txt"; done
+  [ -n "$1" ] && printf '%s\n' "$1" > "$R/many/f3000.txt"; stage many
+}
+repo; many "kept in $PM"; t0=$(date +%s%N)
+WANT="would carry" tc G6 Bash "$RW" "3000 staged files, the path in the last one: refused for it, not as too large" 'git commit -m x'
+echo "      (that case took $(( ($(date +%s%N) - t0) / 1000000 )) ms)"
+repo; many; t0=$(date +%s%N)
+tc pass Bash "$RW" "3000 clean staged files: passes, not refused as too large" 'git commit -m x'
+echo "      (that case took $(( ($(date +%s%N) - t0) / 1000000 )) ms)"
+tcc Bash "$RW" "the same, the checker shown to have read it" 'git commit -m x'
+echo "   must refuse: the mend (November 17-18): e, git right after ; && | ( or \$( with no space"
+repo; put a.txt "$PM"; stage a.txt
+tc G6 Bash "$RW" "mend e: echo hi;git commit" 'echo hi;git commit -m x'
+tc G6 Bash "$RW" "mend e: true&&git commit" 'true&&git commit -m x'
+tc G6 Bash "$RW" "mend e: (git commit)" '(git commit -m x)'
+tc G6 Bash "$RW" "mend e: echo \$(git commit)" 'echo $(git commit -m x)'
+tc G6 Bash "$RW" "mend e: false||git commit" 'false||git commit -m x'
+tc G6 Bash "$RW" "mend e: echo x|git commit" 'echo x|git commit -m x'
+
 echo "   must pass"
 repo; put c.txt "clean"; stage c.txt; printf 'clean\n' > "$T/msg_ok.txt"
 tcc Bash "$TW" "a clean commit; cd into, and -F file under, the profile folder's temp" "cd \"$RM\" && git commit -F \"$TM/msg_ok.txt\""
@@ -334,6 +358,117 @@ tc pass Bash "$RW" "the checker hangs (30 s): the guard's timeout 8 ends it" 'gi
 echo "      (that case took $(( $(date +%s) - t0 )) s)"
 G=$G0
 echo "== G6: $g6refuse refusal cases, $g6miss of them not refused"
+fi
+fi
+
+if [ "${ONLY:-all}" = all ] || [ "$ONLY" = G7 ]; then
+echo "-- G7 git's own hooks skipped, moved or changed (November 17, evening)"
+t G7 Bash 'git commit --no-verify -m x'
+t G7 Bash 'git commit -n -m x'
+t G7 Bash 'git commit -nm "x"'
+t G7 Bash 'git commit -qn -F msg.txt'
+t G7 Bash 'git commit --no-veri -m x'
+t G7 Bash 'git -C D:/Dev/WG commit --amend --no-verify --no-edit'
+t G7 PowerShell 'git commit -m "a fix" --no-verify'
+t G7 Bash 'git push --no-verify'
+t G7 Bash 'git push --no-verify origin claude/wip-round'
+t G7 PowerShell 'git push origin main --no-verify'
+t G7 Bash 'git -c core.hooksPath=/dev/null commit -m x'
+t G7 Bash 'git -c CORE.HOOKSPATH=x push'
+t G7 Bash 'git --config-env=core.hooksPath=H commit -m x'
+t G7 Bash 'git config core.hooksPath D:/elsewhere'
+t G7 Bash 'git config --global core.hooksPath ~/hooks'
+t G7 Bash 'git config --unset core.hooksPath'
+t G7 Bash 'git config set core.hooksPath x'
+t G7 Bash 'GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=/x git commit -m x'
+t G7 Bash 'export GIT_CONFIG_PARAMETERS="'"'"'core.hooksPath=x'"'"'"; git push'
+t G7 PowerShell '$env:GIT_CONFIG_KEY_0 = "core.hooksPath"; $env:GIT_CONFIG_COUNT = 1; git push'
+t G7 Bash 'rm .git/hooks/pre-push'
+t G7 Bash 'rm -f "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer/.git/hooks/pre-commit"'
+t G7 Bash 'mv .git/hooks/pre-commit /tmp/x'
+t G7 Bash 'cp x.sh .git/hooks/pre-commit'
+t G7 Bash 'echo "exit 0" > .git/hooks/pre-commit'
+t G7 Bash 'printf x >> .GIT/Hooks/commit-msg'
+t G7 Bash 'echo x | tee .git/hooks/pre-push'
+t G7 Bash "sed -i 's/exit 1/exit 0/' .git/hooks/profile_check.py"
+t G7 Bash 'chmod -x .git/hooks/pre-push'
+t G7 PowerShell 'Remove-Item .git\hooks\pre-commit'
+t G7 PowerShell 'Move-Item .git\hooks\pre-push .git\hooks\pre-push.off'
+t G7 PowerShell 'Copy-Item x.sh .git\hooks\pre-commit'
+t G7 PowerShell 'Set-Content -Path .git\hooks\pre-commit -Value "exit 0"'
+t G7 PowerShell '"exit 0" | Out-File .git\hooks\pre-commit'
+t G7 PowerShell 'New-Item -ItemType File .git\hooks\pre-commit -Force'
+echo "   the mend (November 17-18): a, other commands that skip or bypass the hooks"
+t G7 Bash 'git merge --no-verify side'
+t G7 Bash 'git send-pack ../x.git HEAD'
+t G7 Bash 'git http-push https://example.invalid/x.git main'
+t G7 Bash 'git lfs install --local --force'
+t G7 Bash 'git lfs update -f'
+echo "   the mend: b, each word compared after the shell's quote removal"
+t G7 Bash 'git commit -m x "--no-verify"'
+t G7 Bash "git commit -m x '-n'"
+t G7 Bash 'git commit --no-ver""ify -m x'
+t G7 Bash 'git push "--no-verify"'
+echo "   the mend: c, the repository, config or profile folder changed on the command itself; aliases and includes"
+t G7 Bash 'GIT_DIR=x git commit -m y'
+t G7 Bash 'git --git-dir=x push'
+t G7 Bash 'git --git-dir x commit -m y'
+t G7 Bash 'GIT_CONFIG_GLOBAL=x git commit -m y'
+t G7 Bash 'USERPROFILE=x git commit -m y'
+t G7 Bash 'HOME=/x git push'
+t G7 Bash 'GIT_DIR=x git merge side'
+t G7 PowerShell "\$env:USERPROFILE = 'x'; git commit -m y"
+t G7 Bash 'git config alias.ci "commit -n"'
+t G7 Bash 'git -c alias.ci=commit ci -m x'
+t G7 Bash 'git config include.path x'
+t G7 Bash 'git -c include.path=x commit -m y'
+t G7 Bash 'git config --add includeIf.gitdir:x.path y'
+t G7 Bash 'git config -e'
+t G7 Bash 'git config --edit --global'
+echo "   the mend: d, writes into the hooks folder are still refused"
+t G7 Bash 'cat x > .git/hooks/y'
+t G7 Bash 'cp -t .git/hooks x'
+t G7 Bash 'cp .git/hooks/pre-push .git/hooks/pre-push.off'
+t pass Bash 'git push -n'
+t pass Bash 'git push --dry-run origin main'
+t pass Bash 'git add -n Docs/x.md'
+t pass Bash 'git commit -m "never use --no-verify here"'
+t pass Bash 'git commit -m "the -n flag"'
+t pass Bash 'git commit -mn'
+t pass Bash 'git commit --amend --no-edit'
+t pass Bash 'git log --oneline -3'
+t pass Bash 'ls .git/hooks'
+t pass Bash 'ls -la .git/hooks/ 2>/dev/null'
+t pass Bash 'cat .git/hooks/pre-commit'
+t pass Bash 'grep -n "rm " .git/hooks/pre-commit'
+t pass Bash 'grep -c ">" .git/hooks/pre-push'
+t pass Bash 'git config --get core.hooksPath'
+t pass Bash 'echo "core.hooksPath stays unset"'
+t pass Bash 'bash .claude/hooks/git/install.sh'
+t pass PowerShell 'Get-ChildItem .git\hooks'
+t pass PowerShell 'Get-Content .git\hooks\pre-commit'
+t pass Bash 'WG_GUARD_OK=G7 git commit --no-verify -m x'
+echo "   must pass: the mend (November 17-18)"
+t pass Bash 'git merge --no-ff side'
+t pass Bash 'git lfs install --local'
+t pass Bash 'git lfs update'
+t pass Bash 'git commit -m "say -n here" -m "and --no-verify in words"'
+t pass Bash 'git config --get alias.x'
+t pass Bash 'git config --list --show-origin'
+t pass Bash 'git config --get-regexp include'
+t pass Bash 'HOMEDIR=x git commit -m y'
+t pass Bash 'echo $HOME; git commit -m y'
+t pass Bash 'git -C D:/Dev/WG commit -m y'
+t pass Bash 'git config core.hooksPath'
+t pass Bash 'grep install .git/hooks/pre-commit'
+t pass Bash 'grep -n "mv \|cp \|chmod" .git/hooks/pre-commit'
+t pass Bash 'cat .git/hooks/pre-commit | grep touch'
+t pass Bash 'diff .git/hooks/pre-commit .claude/hooks/git/pre-commit'
+t pass Bash 'head -5 .git/hooks/pre-push'
+t pass Bash 'ls .git/hooks | grep rm'
+t pass Bash 'cp .git/hooks/pre-push /tmp/backup'
+t pass Bash 'ls .git/hooks | tee hooks_list.txt'
+echo "== G7: $g7refuse refusal cases, $g7miss of them not refused"
 fi
 echo "== $ok passed, $bad failed, $((ok + bad)) cases"
 [ $bad -eq 0 ] || exit 1

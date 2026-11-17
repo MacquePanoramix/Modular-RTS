@@ -17,5 +17,6 @@ for f in $FILES; do
   else
     say "$f left: it was not installed by install.sh"
   fi
+  [ -e "$dest/$f.local" ] && say "$f.local is there (a hook of yours, merged by hand): move it back to $f yourself if it should run"
 done
 exit 0

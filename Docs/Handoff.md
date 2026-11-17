@@ -1,17 +1,17 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 17, 2026 (evening, about 20:25), by Claude Opus 5.5: the forced checks' mend read
+**Last updated:** November 18, 2026 (about 00:55), by Claude Opus 5.5. Done: the forced checks' mend read
 (`7c6edf0` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and committed on both
-branches; git's own check, approved for this project only, built and reviewed (`29faa56`), not installed; its mend
-running from 23:04 (run `wf_b6045c97-a55`); then the install; then 4a″. The master is Opus 5.5 at max effort with
-ultracode, by Luis's word.
+branches. Git's own check, approved for this project only, was built, mended, reviewed twice and read; it was
+installed at 00:42 on November 18, and its guard side (G7, M1) went live at 00:43. Next: 4a″ at the 04:00 reset. The
+master is Opus 5.5 at max effort with ultracode, by Luis's word.
 Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
 [CURRENT_STATE.md](CURRENT_STATE.md). Luis's preferences and the lessons already paid for are in the assistant's memory directory (its index is
 `MEMORY.md`; it is loaded into every session of this project).
 
-## Start here (November 17, 2026)
+## Start here (November 18, 2026)
 
 **As of November 17, 2026, early morning (Luis's clock, UTC+1):** the work is the ankle build, which Luis approved on
 November 15 ("Sure."; `GAME_VISION.md`, row 2026-11-15 afternoon). **Steps 1 to 3 are done.** The three switches
@@ -24,10 +24,16 @@ back, and what Long's and Round's courses can show. Committed in `D:/Dev/WG` as 
 pushed). Rung: written, compiled, read back on a rig; no course counted yet. The milestone is S3b, step 2: getting up
 for any body the creator can make, by its own joints ("The task, and its state"). Luis passed the work to Opus 5.5 at
 max effort with ultracode and asked it to go on as before
-([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 38th outlook
-was taken on November 17 at about 14:30, by the counter, after the FBX re-export stopped.
+([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 39th outlook
+was taken on November 18 at about 00:41, by the counter, after a compaction (`Outlook.md`).
 
-**G6 is live since 13:57 on November 17, with known holes; its mend (G6′) is open, below.** Luis approved it
+**Next: 4a″, at the 04:00 reset of the five hours** (a wake-up is set for 04:04). Its script is
+`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`, written, not run; the items are below ("Next:
+4a″"). Begin it only when the window is low and the week has room for all of it. The week was 82% used at 00:38;
+4a″ needs about 8-10%, and the guard is 95%.
+
+**G6 is live since 13:57 on November 17. Git's own check has been live since 00:42 on November 18, and G7 and M1
+since 00:43 (below).** Luis approved G6
 (Correspondence of November 16, section 6): a guard rule refusing a commit or a push that would carry the path of his
 profile folder. `guard.sh` runs `.claude/hooks/guard_profile.py` on a git commit or push (python -I, within 8 s; it
 fails open). Built by the workflow `wf_54fbf190-d02` (script `Research/2026-11-16_HarnessGuideReview/g6_workflow.js`):
@@ -58,57 +64,62 @@ the same links in the scenes (GUIDs and the import's sub-asset IDs kept), the ol
   future export: write it into a folder outside the profile, or patch the three fields to "." after, as here; G6
   (and git's own check, once live) refuses a commit that still carries the profile path.
 
-**G6′, the mend still to do** (`Research/2026-11-16_HarnessGuideReview/`: `g6_report.md`, `review_g6_breaker.md`,
-`review_g6_code.md`; the mender stopped at its usage guard before touching anything). Must-fix:
-- M1: the slow `cat-file --batch-check` format. With 1500 staged files the commit was refused, and with 3000 one passed
-  unchecked after the 8 s timeout; `%(objectsize)` alone, or `--batch`, takes 0.1-0.2 s.
-- M2: a push never tests full path names (`Users/<name>/x.txt` went out).
-- M3: wildcard refspecs, `remote.<name>.push` and `push.default=matching` are unchecked, and a failed rev-list
-  passes.
-- M4: what the same command line does before the commit (a file written, `git mv`, `stash pop --index`, plumbing) is
-  invisible to a PreToolUse hook.
-- The gate misses `;git`, `&&git`, `$(...)`, `(git ...)`, `--git-dir X` and PowerShell's `& git`.
-- A PowerShell here-string holding an apostrophe loses the path.
-Should-fix: S1-S9 and the code reader's list.
-The breaker's best close for M4, and for most of M2, M3 and S1-S5: git's own pre-commit, commit-msg and pre-push
-hooks, running the same checker. They act on every git program on this machine, Luis's own too. **Luis approved them
-at about 14:15, "only for this project"** (Correspondence of November 16, section 7). That is possible: `D:/Dev/WG`
-and the other worktrees share this project's `.git`, and the hooks kept there act on no other repository.
-- **Built and reviewed, not installed** (run `wf_6627e112-6c8`, 18:25-20:12, script `g6_git_workflow.js` beside the
-  others; committed `29faa56`). In `.claude/hooks/git/`: `profile_check.py` behind pre-commit, commit-msg and
-  pre-push, with `install.sh` and `uninstall.sh`. In candidate copies (`.claude/hooks/next/`): G7, which refuses the
-  assistant's commands that skip or change the hooks (`--no-verify`, `core.hooksPath`, writing into `.git/hooks`), and
-  M1. On temporary repositories, with the hooks, 66 of 66 cases passed; with none, all 39 refusal cases failed. The
-  candidate guard passed 211 of 211. Report: `g6_git_report.md`, outputs `g6_git_test_output.txt`.
-- **The reviews:**
-  - The breaker (`review_g6git_breaker.md`) found five must-fix: git replace, `send-pack`, `lfs install --force`,
-    G7's matching, and hand-made tracking refs.
-  - The code reader (`review_g6git_code.md`) found one: commit-msg refuses a cleanup commit made with `-v` or the
-    editor's comments.
-  - The opus mender was stopped by a safety classifier after reading only, and changed nothing.
-- **The mend, split into narrow, listed items:** `g6_git_mend_workflow.js` beside the others, running from 23:04
-  (run `wf_b6045c97-a55`; the window at 0%, the week at 75%). The git side has nine items. The guard's candidate gets
-  five fixed changes, without a search for other ways past it; what it cannot see is named by kind. Then a rerunner
-  and a code reader on sonnet.
-- Read in that brief before it runs: `install.sh` acts on the current folder's repository when given none. The brief
-  says to pass the temporary repository every time. The real `.git/hooks` holds only git's samples, and core.hooksPath
-  is unset (read at 20:22).
-- **After it:** the master installs the hooks, makes the candidates live, checks them live, and tells Luis how to skip
-  the check for one commit of his own (`--no-verify`). Also asked about: the guard's matcher widened to the Write and
-  Edit tools (a settings change, not yet approved).
+**G6′ and git's own check** (`Research/2026-11-16_HarnessGuideReview/`). G6's reviews (`review_g6_breaker.md`,
+`review_g6_code.md`) found must-fix holes that a rule on the assistant's commands cannot close:
+- M1, a slow format: 3000 staged files passed unchecked after the 8 s timeout;
+- M2: a push never tested full path names;
+- M3: wildcard refspecs, `remote.<name>.push`, `push.default=matching`, and a failed rev-list;
+- M4: what the same command line does before the commit;
+- a gate that misses `;git`, `$(...)`, `--git-dir X` and PowerShell's `& git`;
+- a PowerShell here-string with an apostrophe.
+
+The breaker's close for most of them: git's own pre-commit, commit-msg and pre-push hooks, running one checker.
+**Luis approved them at about 14:15 on November 17, "only for this project"** (Correspondence of November 16,
+section 7). `D:/Dev/WG` and the other worktrees share this project's `.git`, and hooks kept there act on no other
+repository.
+- **Built** (run `wf_6627e112-6c8`, `29faa56`). In `.claude/hooks/git/`: `profile_check.py` behind the three hooks,
+  with `install.sh` and `uninstall.sh`. As candidates in `.claude/hooks/next/`: G7 (the guard refuses the assistant's
+  commands that skip or change the hooks) and M1. Reviewed by a breaker and a code reader (`review_g6git_*.md`).
+- **Mended** (run `wf_b6045c97-a55`, 23:04-00:32, `g6_git_mend_workflow.js`): nine items on the git side and five
+  fixed changes to the candidate guard. Reviewed again by a rerunner and a code reader (`review_g6git_mend_rerun.md`,
+  `review_g6git_mend_code.md`); both read to the end.
+  - On temporary repositories, with the hooks: 103 of 103 cases passed, and none of the 63 refusal cases went through.
+  - With no hooks: 61 of the 62 refusal cases went through; the 62nd failed on a count flake in the suite.
+  - The candidate guard: 263 of 263.
+  - No false refusal in ordinary work (the editor, `-v`, amend, tags, merge, rebase, pull, cherry-pick, revert). A
+    commit takes about half a second longer.
+- **Installed at 00:42 on November 18**, by `install.sh` given this project's folder; Python's full path is written
+  into each hook.
+  - The installed commit-msg, pre-commit and pre-push were each run by hand, on a scratch index and scratch objects
+    (nothing committed, no ref moved). Each refused a leak (rc 1) and passed a clean case (rc 0).
+  - **The candidate guard has been live since 00:43:** `next/` was copied over `.claude/hooks/guard.sh`,
+    `guard_profile.py` and `guard_test.sh`. The live suite, read to its end: 263 of 263 passed, and all 62 of G7's refusal cases
+    were refused (exit 0).
+  - Rung: tested on rigs and as installed. Not yet tested: a commit made with Luis's own tools (GitHub Desktop).
+- **The known gap.** A `-m` or `-F` message that also holds git's template lines, or a scissors line, keeps the path
+  past commit-msg and into the local commit. This is the code reader's finding 1, confirmed by a run. The push refuses
+  it, so it cannot reach GitHub.
+- **Four low findings:**
+  - an error in `needles()` refuses the commit with no "skipped" line;
+  - a failed read of the system's profile folder is silent;
+  - the 8.3 short names of long user names are not matched;
+  - the guard's working-tree read is blind to assume-unchanged and skip-worktree paths.
+- **The second mend** closes the gap, the four low findings and the suite's flake: `g6_git_mend2_workflow.js`,
+  written, not run (one opus mender, one sonnet reviewer; about 2.5-3% of the week).
+  - It runs after 4a″ if the week then has room for all of it, and otherwise after November 23.
+  - Then the master reinstalls (`install.sh` with the folder) and copies `next/` live again.
+- **What it cannot see, by kind** (the report): encodings (percent, `\u`, entities, base64, gzip), fullwidth and
+  no-break characters, and `Users\x\..\<name>`. It is a seat belt, not a vault.
+- **To tell Luis** (not yet told): it is live. To skip it for one commit of his own: `git commit --no-verify` (or
+  `git push --no-verify`). To take it out: `bash .claude/hooks/git/uninstall.sh "<the project's folder>"`. To ask him:
+  whether to widen the guard's matcher to the Write and Edit tools (a settings change, not approved).
 - **Found in the whole history** (the report; not changed): the path is in House.fbx and Nature.fbx as committed
   before `16b5636`, still on origin/main, and in older commits of `build.md` and `review_mends_physicist.md`. The
-  branch tips are clean. Mending main is a merge, Luis's word; rewriting history he declined.
-- **The breaker's temporary folder** `D:/Dev/g6git_tmp/breaker` (581 MB) at first would not go to the Recycle Bin
-  ("The system call level is not correct"). The cause was one file name holding a line break. Before the folder went,
-  checked:
-  - made 19:16-20:04, during the breaker's run;
-  - no reparse points;
-  - its two worktree links pointed only inside it;
-  - no worktree of this project in it;
-  - its review asks for it to be deleted.
-  The name was renamed and the folder moved to the Recycle Bin, which has room for it. It was found there by about
-  20:33 (bin on D: 12 GB used of 193 GB, NukeOnDelete 0).
+  branch tips are clean. Mending main is a merge, which is Luis's word; he declined rewriting history.
+- **Temporary folders.** The mend's agents' folders are gone from `D:/Dev/g6git_tmp`, which was read empty at 00:42.
+  Their briefs send them to the Recycle Bin; they were not looked up there. The breaker's (581 MB) went to the bin at
+  about 20:33 on November 17, once a file name holding a line break was renamed: such a name makes the bin refuse a
+  folder ("The system call level is not correct").
 The breaker's 250 temporary repositories (`D:/g6break_tmp`, 327 MB) and five more of its folders in the system's
 temporary folder were checked to be its own and moved to the Recycle Bin at about 14:20. Luis asked that spent files
 like these be kept cleaned up, with utmost care first (`AGENTS.md`, "Protect human workspace state"). Small, still to
@@ -139,10 +150,15 @@ or C, and arm B need not run again. Open, for 4a″:
    Long whirled at 0.0141 m and Round at 0.0148 m passed where they must fail; once, with C on, Round whipped at
    0.0398 m. Find what shows that C acted on a whirled boot, or call check 3 a reading.
 4. The report names the log file of each line number it quotes.
-Then 4b. The order, one workflow and one Unity at a time: the FBX patch, done (18:21)
-(`Research/2026-11-16_HarnessGuideReview/fbx_patch_workflow.js`; it uses Unity in `D:/Dev/WG`); then git's own check,
-built and reviewed 18:25-20:12 (`29faa56`), its mend running from 23:04 (run `wf_b6045c97-a55`, `g6_git_mend_workflow.js`; no Unity), read,
-then installed; then 4a″ (`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`, written, not run). Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+Then 4b. The order, one workflow and one Unity at a time:
+1. the FBX patch, done (18:21);
+2. git's own check, built, mended, read and installed (00:42, November 18);
+3. 4a″ (`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`, written, not run), at the 04:00 reset. Its
+   brief now says that git's own hooks refuse the path in `D:/Dev/WG` too;
+4. `D:/Dev/WG`'s `AGENTS.md`;
+5. the second mend of git's check, if the week has room for all of it.
+
+Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
    blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11

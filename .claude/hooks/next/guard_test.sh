@@ -296,6 +296,14 @@ repo; many; t0=$(date +%s%N)
 tc pass Bash "$RW" "3000 clean staged files: passes, not refused as too large" 'git commit -m x'
 echo "      (that case took $(( ($(date +%s%N) - t0) / 1000000 )) ms)"
 tcc Bash "$RW" "the same, the checker shown to have read it" 'git commit -m x'
+echo "   must refuse: the mend (November 17-18): e, git right after ; && | ( or \$( with no space"
+repo; put a.txt "$PM"; stage a.txt
+tc G6 Bash "$RW" "mend e: echo hi;git commit" 'echo hi;git commit -m x'
+tc G6 Bash "$RW" "mend e: true&&git commit" 'true&&git commit -m x'
+tc G6 Bash "$RW" "mend e: (git commit)" '(git commit -m x)'
+tc G6 Bash "$RW" "mend e: echo \$(git commit)" 'echo $(git commit -m x)'
+tc G6 Bash "$RW" "mend e: false||git commit" 'false||git commit -m x'
+tc G6 Bash "$RW" "mend e: echo x|git commit" 'echo x|git commit -m x'
 
 echo "   must pass"
 repo; put c.txt "clean"; stage c.txt; printf 'clean\n' > "$T/msg_ok.txt"
@@ -390,6 +398,37 @@ t G7 PowerShell 'Copy-Item x.sh .git\hooks\pre-commit'
 t G7 PowerShell 'Set-Content -Path .git\hooks\pre-commit -Value "exit 0"'
 t G7 PowerShell '"exit 0" | Out-File .git\hooks\pre-commit'
 t G7 PowerShell 'New-Item -ItemType File .git\hooks\pre-commit -Force'
+echo "   the mend (November 17-18): a, other commands that skip or bypass the hooks"
+t G7 Bash 'git merge --no-verify side'
+t G7 Bash 'git send-pack ../x.git HEAD'
+t G7 Bash 'git http-push https://example.invalid/x.git main'
+t G7 Bash 'git lfs install --local --force'
+t G7 Bash 'git lfs update -f'
+echo "   the mend: b, each word compared after the shell's quote removal"
+t G7 Bash 'git commit -m x "--no-verify"'
+t G7 Bash "git commit -m x '-n'"
+t G7 Bash 'git commit --no-ver""ify -m x'
+t G7 Bash 'git push "--no-verify"'
+echo "   the mend: c, the repository, config or profile folder changed on the command itself; aliases and includes"
+t G7 Bash 'GIT_DIR=x git commit -m y'
+t G7 Bash 'git --git-dir=x push'
+t G7 Bash 'git --git-dir x commit -m y'
+t G7 Bash 'GIT_CONFIG_GLOBAL=x git commit -m y'
+t G7 Bash 'USERPROFILE=x git commit -m y'
+t G7 Bash 'HOME=/x git push'
+t G7 Bash 'GIT_DIR=x git merge side'
+t G7 PowerShell "\$env:USERPROFILE = 'x'; git commit -m y"
+t G7 Bash 'git config alias.ci "commit -n"'
+t G7 Bash 'git -c alias.ci=commit ci -m x'
+t G7 Bash 'git config include.path x'
+t G7 Bash 'git -c include.path=x commit -m y'
+t G7 Bash 'git config --add includeIf.gitdir:x.path y'
+t G7 Bash 'git config -e'
+t G7 Bash 'git config --edit --global'
+echo "   the mend: d, writes into the hooks folder are still refused"
+t G7 Bash 'cat x > .git/hooks/y'
+t G7 Bash 'cp -t .git/hooks x'
+t G7 Bash 'cp .git/hooks/pre-push .git/hooks/pre-push.off'
 t pass Bash 'git push -n'
 t pass Bash 'git push --dry-run origin main'
 t pass Bash 'git add -n Docs/x.md'
@@ -409,6 +448,26 @@ t pass Bash 'bash .claude/hooks/git/install.sh'
 t pass PowerShell 'Get-ChildItem .git\hooks'
 t pass PowerShell 'Get-Content .git\hooks\pre-commit'
 t pass Bash 'WG_GUARD_OK=G7 git commit --no-verify -m x'
+echo "   must pass: the mend (November 17-18)"
+t pass Bash 'git merge --no-ff side'
+t pass Bash 'git lfs install --local'
+t pass Bash 'git lfs update'
+t pass Bash 'git commit -m "say -n here" -m "and --no-verify in words"'
+t pass Bash 'git config --get alias.x'
+t pass Bash 'git config --list --show-origin'
+t pass Bash 'git config --get-regexp include'
+t pass Bash 'HOMEDIR=x git commit -m y'
+t pass Bash 'echo $HOME; git commit -m y'
+t pass Bash 'git -C D:/Dev/WG commit -m y'
+t pass Bash 'git config core.hooksPath'
+t pass Bash 'grep install .git/hooks/pre-commit'
+t pass Bash 'grep -n "mv \|cp \|chmod" .git/hooks/pre-commit'
+t pass Bash 'cat .git/hooks/pre-commit | grep touch'
+t pass Bash 'diff .git/hooks/pre-commit .claude/hooks/git/pre-commit'
+t pass Bash 'head -5 .git/hooks/pre-push'
+t pass Bash 'ls .git/hooks | grep rm'
+t pass Bash 'cp .git/hooks/pre-push /tmp/backup'
+t pass Bash 'ls .git/hooks | tee hooks_list.txt'
 echo "== G7: $g7refuse refusal cases, $g7miss of them not refused"
 fi
 echo "== $ok passed, $bad failed, $((ok + bad)) cases"

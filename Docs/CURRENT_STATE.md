@@ -1,8 +1,29 @@
 # Wonder Gather — Current State
 
-**Updated:** November 17, 2026 (morning). **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 18, 2026 (just after midnight). **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 17, morning): the ankle mend's three switches built, all off, reviewed and committed; Small's
+- **Now (November 18, just after midnight): nothing in the game changed but two models' path fields. The privacy
+  work Luis approved is live. Next: 4a″, at the 04:00 reset.**
+  - **G6**, live since 13:57 on November 17: a guard rule that refuses a commit or push of the assistant's that would
+    carry the path of Luis's profile folder (it holds his user name) into the public repository.
+  - **House.fbx and Nature.fbx:** the three fields that held that path became "." and every other byte stayed
+    (`D:/Dev/WG` `b76f311`, here `16b5636`). Unity's import was compared before and after: every sub-asset's ID, the
+    meshes and the scene's 39 references are the same. Rung: tested on a rig (the editor's batch mode); not as played.
+  - **Git's own check**, for this project and its worktrees only, as Luis approved:
+    - pre-commit, commit-msg and pre-push run one checker (`.claude/hooks/git/`). It was built (`29faa56`), reviewed
+      by a breaker and a code reader, mended, reviewed again by a rerunner and a reader, and installed at 00:42 on
+      November 18;
+    - beside it, the guard's G7 (it refuses the assistant's commands that skip or change the hooks) and M1 went live
+      at 00:43.
+    - Rung: tested on rigs, and as installed: on temporary repositories, 103 of 103 cases; with no hooks, 61 of the
+      62 refusal cases went through, the 62nd a count flake. The installed hooks were run by hand: each refused a
+      leak and passed a clean case. The live guard's suite passed 263 of 263.
+    - Not tested: a commit made with Luis's own tools.
+    - **Known gap:** a `-m` or `-F` message that also holds git's template lines keeps the path past commit-msg; the
+      push refuses it. A second mend for it and four low findings is written, not run (`Handoff.md`).
+
+    [The report](Research/2026-11-16_HarnessGuideReview/g6_git_report.md).
+- **Before (November 17, morning): the ankle mend's three switches built, all off, reviewed and committed; Small's
   learnt addition is off as played; the baselines and the first arm read; the forced checks built, reviewed and being
   mended.**
   - **What changed in the game** (`D:/Dev/WG` `262f4ca`, branch `claude/wip-round`, pushed):

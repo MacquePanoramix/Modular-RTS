@@ -12,6 +12,8 @@
 # A pass counts when: git exits 0; the output holds the trace line ("0 hits") of each hook that must have run, and no
 # "skipped" warning; the commit or the push really happened (the repository or its remote changed); no name shown.
 # Both judges are first shown known-bad hooks they must catch (section "the suite's own judges").
+# The cases named "mend N" were added on November 17-18 for the mend after the two reviews (g6_git_report.md, "Mend");
+# each was shown failing on the files of commit 29faa56 (the suite run beside copies of them) and passing on these.
 HERE=$(cd "$(dirname "$0")" && pwd)
 BASE=${G6GIT_DIR:-D:/Dev/g6git_tmp/builder}
 NOHOOKS=${NOHOOKS:-0}
@@ -236,6 +238,71 @@ repo; git init -q --bare "$R-bak.git"; git -C "$R" remote add bak "$R-bak.git"
 put a.txt "$PM"; stage a.txt; store "add a"; git -C "$R" push -q --no-verify bak main >/dev/null 2>&1
 refuse "a leak held by a second remote (bak) but not by origin, pushed to origin" "the file a.txt" 'git push origin main'
 
+echo "-- must refuse: the mend (November 17-18)"
+# 1. replace refs: what is read must be what git sends.
+repo; put a.txt "$PM"; stage a.txt; store "add a"
+cb=$(printf 'clean\n' | git -C "$R" hash-object -w --stdin); git -C "$R" replace -f "$(git -C "$R" rev-parse HEAD:a.txt)" "$cb"
+refuse "mend 1: a dirty blob hidden behind a replace ref (git replace)" "the file a.txt" 'git push origin main'
+repo; put c.txt "clean"; stage c.txt; store "kept in $PM"
+cc=$(git -C "$R" commit-tree "HEAD^{tree}" -p HEAD^ -m "clean"); git -C "$R" replace -f "$(git -C "$R" rev-parse HEAD)" "$cc"
+refuse "mend 1: a dirty commit message hidden behind a replace ref" "commit" 'git push origin main'
+# 2. the message as git stores it.
+printf '#!/bin/sh\n{ printf "notes kept in %%s\\n" "%s"; cat "$1"; } > "$1.new" && mv "$1.new" "$1"\n' "$PM" > "$T/ed_add.sh"
+repo; put c.txt "clean"; stage c.txt
+refuse "mend 2: the path on a non-comment line, typed above the editor's template" "commit message" 'GIT_EDITOR="sh $T/ed_add.sh" git commit'
+repo; put c.txt "clean"; stage c.txt
+refuse "mend 2: the path on a # line given with -m (git keeps it)" "commit message" 'git commit -m "x" -m "# kept in $PM"'
+repo; put c.txt "clean"; stage c.txt; printf 'x\n\n# kept in %s\n' "$PW" > "$T/msg_hash.txt"
+refuse "mend 2: the path on a # line given with -F (git keeps it)" "commit message" 'git commit -F "$T/msg_hash.txt"'
+repo; put c.txt "clean"; stage c.txt; printf 'x\n# ------------------------ >8 ------------------------\nkept in %s\n' "$PM" > "$T/msg_cut.txt"
+refuse "mend 2: the path below a scissors line that is not git's own (-F, no -v)" "commit message" 'git commit -F "$T/msg_cut.txt"'
+# 3. every changed full path of each pushed commit.
+repo; put A/f.txt "same"; put "$PARENT/$NAME/f.txt" "same"; stage A/f.txt "$PARENT/$NAME/f.txt"; store "two names, one blob"
+refuse "mend 3: A/f.txt and Users/<name>/f.txt with the same content (the code reader's run 1)" "file or folder name" 'git push origin main'
+repo; put "$PARENT/$NAME/f.txt" "same"; stage "$PARENT/$NAME/f.txt"; store "add"
+git -C "$R" rm -q -r "$PARENT" >/dev/null 2>&1; put zzz/f.txt "same"; stage zzz/f.txt; store "move"
+refuse "mend 3: Users/<name>/f.txt added, then moved to zzz/f.txt, pushed together (run 2)" "file or folder name" 'git push origin main'
+# 4. many staged files: the working-tree copies.
+repo; mkdir -p "$R/many"; for i in $(seq 1 2999); do printf 'small file %d\n' "$i" > "$R/many/f$i.txt"; done
+put many/f3000.txt "at $PM"; stage many
+refuse "mend 4: 3000 new files, the path in the last" "staged file many/f3000.txt" 'git commit -m "add 3000"'
+repo; mkdir -p "$R/many"; for i in $(seq 1 40); do printf 'small file %d\n' "$i" > "$R/many/f$i.txt"; done
+put many/f40.txt "at $PM"; stage many; put many/f40.txt "small file 40"
+refuse "mend 4: 40 staged files, the staged one holds the path, its working copy not" "staged file many/f40.txt" 'git commit -m "add 40"'
+repo; mkdir -p "$R/many"; for i in $(seq 1 40); do printf 'small file %d\n' "$i" > "$R/many/f$i.txt"; done
+printf '*.txt filter=leak\n' > "$R/.gitattributes"; git -C "$R" config filter.leak.clean "sed 's|XXX|$PM|'"
+put many/f40.txt "at XXX"; stage .gitattributes many
+refuse "mend 4: 40 staged files, a clean filter puts the path in the staged blob only" "staged file many/f40.txt" 'git commit -m "add 40"'
+repo; mkdir -p "$R/many"; for i in $(seq 1 40); do printf 'small file %d\r\n' "$i" > "$R/many/f$i.txt"; done
+printf 'at %s\r\n' "$PW" > "$R/many/f40.txt"; printf '* text=auto\n' > "$R/.gitattributes"; stage .gitattributes many
+refuse "mend 4: 40 CRLF files with text=auto, the path in the last" "staged file many/f40.txt" 'git commit -m "add 40"'
+# 5. other spellings.
+repo; put a.txt "at $DRIVE\\$PARENT\\.\\$NAME\\x"; stage a.txt
+refuse "mend 5: a dot segment, Users\\.\\<name>" "staged file a.txt" 'git commit -m "add a"'
+repo; put a.txt "at $DRIVE/$PARENT/./$NAME/x"; stage a.txt
+refuse "mend 5: a dot segment, Users/./<name>" "staged file a.txt" 'git commit -m "add a"'
+repo; put a.txt "at $DRIVE/${PARENT}_$NAME/x"; stage a.txt
+refuse "mend 5: an underscore, Users_<name>" "staged file a.txt" 'git commit -m "add a"'
+repo; put a.txt "the $PARENT $NAME folder"; stage a.txt
+refuse "mend 5: a space, Users <name>" "staged file a.txt" 'git commit -m "add a"'
+repo; put a.txt "at $DRIVE\\$PARENT\\"$'\n'"$NAME\\x"; stage a.txt
+refuse "mend 5: a line break between Users\\ and the name" "staged file a.txt" 'git commit -m "add a"'
+repo; printf 'at %s\n' "$PW" | iconv -f utf-8 -t utf-16be > "$R/be.txt"; stage be.txt
+refuse "mend 5: UTF-16BE" "staged file be.txt" 'git commit -m "add be"'
+repo; printf 'at %s\n' "$PW" | iconv -f utf-8 -t utf-32le > "$R/w.txt"; stage w.txt
+refuse "mend 5: UTF-32LE" "staged file w.txt" 'git commit -m "add w"'
+# 6. not only the caller's USERPROFILE.
+repo; put a.txt "$PM"; stage a.txt
+refuse "mend 6: USERPROFILE set to another folder on the commit, a staged leak" "staged file a.txt" "USERPROFILE='$DRIVE\\$PARENT\\zzzz' git commit -m 'add a'"
+repo; put a.txt "$PM"; stage a.txt
+refuse "mend 6: USERPROFILE and HOME empty, a staged leak (the system's profile folder)" "staged file a.txt" 'USERPROFILE= HOME= git commit -m "add a"'
+# 7. the Python written into the hooks at install.
+repo; put a.txt "$PM"; stage a.txt
+refuse "mend 7: no Python on PATH, the installed hook still checks" "staged file a.txt" 'PATH=/usr/bin:/bin:/mingw64/bin git commit -m "add a"'
+repo; put a.txt "$PM"; stage a.txt
+for h in pre-commit commit-msg pre-push; do [ -f "$R/.git/hooks/$h" ] && sed -i "s|^wg_python=.*|wg_python='$T/gone/python.exe'|" "$R/.git/hooks/$h"; done
+refuse "mend 7: the installed Python gone, the hook searches PATH" "staged file a.txt" 'git commit -m "add a"'
+
 echo "-- must refuse: a 200 MB staged blob with the path at its end"
 repo; { head -c 209715200 /dev/zero | tr '\0' a; printf '\n%s\n' "$PW"; } > "$R/big.txt"; stage big.txt
 say "      (the blob: $(git -C "$R" cat-file -s :big.txt 2>/dev/null) bytes)"
@@ -271,13 +338,49 @@ allow "a clean commit in a linked worktree" "pre-commit commit-msg" 'git commit 
 R=$R0
 repo; mkdir -p "$R/many"; for i in $(seq 1 3000); do printf 'small file %d\n' "$i" > "$R/many/f$i.txt"; done; stage many
 allow "3000 small files: the commit" "pre-commit commit-msg" 'git commit -m "add 3000"'
+check "mend 4: the 3000-file commit said first how many files it reads, and read them from the working tree" \
+  '[[ $out == *"profile check: reading 3000 files"* ]] && [[ $out == *"3000 read from the working tree"* ]]'
 allow "3000 small files: the push" "pre-push" 'git push origin main'
+
+echo "-- must pass: the mend (November 17-18)"
+# 2. a cleanup commit made through the editor's template (GIT_EDITOR=true keeps git's template as it is).
+repo; put l.txt "$PM"; stage l.txt; store "leak"; git -C "$R" rm -q l.txt >/dev/null 2>&1
+allow "mend 2: git rm of the leaking file, commit -v (the diff below git's scissors line)" "pre-commit commit-msg" 'git commit -v -e -m "remove l"'
+repo; put l.txt "$PM"; stage l.txt; store "leak"; git -C "$R" rm -q l.txt >/dev/null 2>&1; git -C "$R" config commit.verbose true
+allow "mend 2: the same with commit.verbose=true" "pre-commit commit-msg" 'git commit -e -m "remove l"'
+repo; put l.txt "$PM"; stage l.txt; store "leak"; put l.txt "clean now"; stage l.txt
+allow "mend 2: the path edited out of a file, commit -v" "pre-commit commit-msg" 'git commit -v -e -m "take the path out"'
+repo; put "$PF.txt" "clean"; stage "$PF.txt"; store "leak"; git -C "$R" rm -q "$PF.txt" >/dev/null 2>&1
+allow "mend 2: git rm of a file whose name holds the path, the editor's template (status comments)" "pre-commit commit-msg" 'git commit -q -e -m "remove f"'  # -q: git's own summary line names the file
+# 3. a cleanup push: the deletion of a name already on the remote.
+repo; put "$PF.txt" "clean"; stage "$PF.txt"; store "leak"; git -C "$R" push -q --no-verify >/dev/null 2>&1
+git -C "$R" rm -q "$PF.txt" >/dev/null 2>&1; store "remove f"
+allow "mend 3: a push whose commit deletes a file named with the path, already on the remote" "pre-push" 'git push origin main'
+# 4. many CRLF files read from the working tree (the hash with CRLF made LF is the staged blob).
+repo; mkdir -p "$R/many"; for i in $(seq 1 40); do printf 'small file %d\r\n' "$i" > "$R/many/f$i.txt"; done
+printf '* text=auto\n' > "$R/.gitattributes"; stage .gitattributes many
+allow "mend 4: 40 CRLF files with text=auto" "pre-commit commit-msg" 'git commit -m "add 40"'
+check "mend 4: those 40 (and .gitattributes) were read from the working tree" '[[ $out == *"41 read from the working tree"* ]]'
+# 5. the name's right boundary, and the innocent forms.
+repo; put a.txt "at $DRIVE/$PARENT/${NAME}x/notes and $DRIVE\\$PARENT\\${NAME}2"; stage a.txt
+allow "mend 5: Users/<name>x and Users\\<name>2 (other users)" "pre-commit commit-msg" 'git commit -m "add a"'
+repo; put a.txt 'see ~/Documents and %USERPROFILE%\Documents'; stage a.txt
+allow "mend 5: ~/Documents and %USERPROFILE%" "pre-commit commit-msg" 'git commit -m "see ~/Documents"'
+# 3. the time for many commits: 1000 new commits pushed.
+repo; fi_=$T/fi_$n.txt; : > "$fi_"
+for i in $(seq 1 1000); do
+  printf 'commit refs/heads/many\ncommitter t <t@example.invalid> %d +0000\ndata %d\nc%d\n' $((1700000000 + i)) $(( ${#i} + 2 )) "$i" >> "$fi_"
+  [ "$i" = 1 ] && printf 'from refs/heads/main^0\n' >> "$fi_"
+  printf 'M 100644 inline d%d/f%d.txt\ndata %d\nv%d\n\n' $((i % 37)) $((i % 50)) $(( ${#i} + 2 )) "$i" >> "$fi_"
+done
+git -C "$R" fast-import --quiet < "$fi_" >/dev/null 2>&1
+say "      (branch many: $(git -C "$R" rev-list --count main..many 2>/dev/null) new commits)"
+allow "mend 3: a push of 1000 new commits" "pre-push" 'git push origin many'
 
 echo "-- must pass unchecked, saying so (the hooks fail open)"
 repo; put a.txt "$PM"; stage a.txt
-fails_open "no Python on PATH (the path staged)" "no Python found" 'PATH=/usr/bin:/bin:/mingw64/bin git commit -m "add a"'
-repo; put a.txt "$PM"; stage a.txt
-fails_open "USERPROFILE and HOME empty (the path staged)" "USERPROFILE and HOME name no profile folder" 'USERPROFILE= HOME= git commit -m "add a"'
+for h in pre-commit commit-msg pre-push; do [ -f "$R/.git/hooks/$h" ] && sed -i "s|^wg_python=.*|wg_python='$T/gone/python.exe'|" "$R/.git/hooks/$h"; done
+fails_open "no Python on PATH and the installed one gone (the path staged)" "no Python found" 'PATH=/usr/bin:/bin:/mingw64/bin git commit -m "add a"'
 
 echo "-- install.sh and uninstall.sh"
 repo; o=$(bash "$HERE/install.sh" "$R" 2>&1)
@@ -285,11 +388,34 @@ check "install.sh a second time: all four unchanged" '[ "$(printf "%s\n" "$o" | 
 check "the installed files: LF line endings and the marker line" \
   '! grep -l $'"'"'\r'"'"' "$R/.git/hooks/pre-commit" "$R/.git/hooks/commit-msg" "$R/.git/hooks/pre-push" "$R/.git/hooks/profile_check.py" &&
    [ "$(grep -l "^# wg-profile-check: installed by" "$R/.git/hooks/pre-commit" "$R/.git/hooks/commit-msg" "$R/.git/hooks/pre-push" "$R/.git/hooks/profile_check.py" | wc -l)" = 4 ]'
+PYW=$(sed -n "s/^wg_python='\(.*\)'\$/\1/p" "$R/.git/hooks/pre-commit" 2>/dev/null)
+check "mend 7: install.sh wrote the full path of a Python (not the Store stub) into the three hooks" \
+  '[ -n "$PYW" ] && [ -x "$PYW" ] && [[ $PYW != *[Ww]indows[Aa]pps* ]] && "$PYW" -I -c "import sys" &&
+   [ "$(grep -lxF "wg_python='"'"'$PYW'"'"'" "$R/.git/hooks/pre-commit" "$R/.git/hooks/commit-msg" "$R/.git/hooks/pre-push" | wc -l)" = 3 ]'
 n=$((n + 1)); R="$T/r$n"; git init -q "$R"; printf '#!/bin/sh\necho mine\n' > "$R/.git/hooks/pre-commit"
 o=$(bash "$HERE/install.sh" "$R" 2>&1); orc=$?
 check "install.sh beside a foreign pre-commit: refuses, says so, changes nothing" \
   '[ $orc -ne 0 ] && [[ $o == *"refusing to overwrite"* ]] && [ "$(cat "$R/.git/hooks/pre-commit")" = "#!/bin/sh
 echo mine" ] && [ ! -e "$R/.git/hooks/commit-msg" ] && [ ! -e "$R/.git/hooks/pre-push" ] && [ ! -e "$R/.git/hooks/profile_check.py" ]'
+# 8. beside a foreign pre-commit and pre-push: refuses, changes nothing, says per hook how to merge by hand; the
+# merge done as it says (for pre-push, the hardest: git's ref lines on stdin), both run.
+NOHOOKS=1 repo
+printf '#!/bin/sh\necho mine\n' > "$R/.git/hooks/pre-commit"
+printf '#!/bin/sh\ncat > "$(dirname "$0")/../foreign_saw.txt"\nexit 0\n' > "$R/.git/hooks/pre-push"; chmod +x "$R/.git/hooks/pre-push"
+o=$(bash "$HERE/install.sh" "$R" 2>&1); orc=$?
+LINE_PP=$(printf '%s\n' "$o" | sed -n 's/^install:      *\(printf .*pre-push\.local.*\)$/\1/p' | head -1)
+check "mend 8: install.sh beside a foreign pre-commit and pre-push: refuses, changes nothing, says per hook how to merge" \
+  '[ $orc -ne 0 ] && [[ $o == *"pre-commit is already there"*"mv "*"pre-commit.local"*"\"\$here/pre-commit.local\" \"\$@\" || exit \$?"* ]] &&
+   [[ $o == *"pre-push is already there"*"mv "*"pre-push.local"* ]] && [ -n "$LINE_PP" ] && [[ $o == *"Nothing changed."* ]] &&
+   [ ! -e "$R/.git/hooks/commit-msg" ] && [ ! -e "$R/.git/hooks/profile_check.py" ] && [ "$(cat "$R/.git/hooks/pre-commit")" = "#!/bin/sh
+echo mine" ]'
+rm -f "$R/.git/hooks/pre-commit"; mv "$R/.git/hooks/pre-push" "$R/.git/hooks/pre-push.local"
+bash "$HERE/install.sh" "$R" >/dev/null 2>&1
+printf '%s\n' "$LINE_PP" > "$T/line_pp.txt"
+sed -i "/^# (a hook of your own, merged by hand/r $T/line_pp.txt" "$R/.git/hooks/pre-push"
+put a.txt "$PM"; stage a.txt; store "add a"
+refuse "mend 8: the pre-push merged by hand as install.sh says: the check refuses" "the file a.txt" 'git push origin main'
+check "mend 8: and the foreign pre-push ran first and was given git's ref lines" '[[ "$(cat "$R/.git/foreign_saw.txt" 2>/dev/null)" == "refs/heads/main "* ]]'
 n=$((n + 1)); R="$T/r$n"; git init -q "$R"; git -C "$R" config core.hooksPath elsewhere
 o=$(bash "$HERE/install.sh" "$R" 2>&1); orc=$?
 check "install.sh with core.hooksPath set: refuses, changes nothing" '[ $orc -ne 0 ] && [[ $o == *"core.hooksPath"* ]] && [ ! -e "$R/.git/hooks/pre-commit" ]'
