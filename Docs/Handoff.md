@@ -24,7 +24,7 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 36th outlook
 was taken on November 17, in the morning.
 
-**Next: step 4.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+**Next: step 4a is running (item 5); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
    blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11
@@ -42,10 +42,13 @@ runs take `-liveRing 0`. The live test is not the same run to run, so runs are c
 4. From the review of the mends: **done.** The heard A run (`ank_heardA`) passed. The three once-only messages are
    forgotten when a test begins and ends (`AnkleMendArguments.ForgetSaid`, `e8bac96`): compiled, not yet exercised by a
    check that expects a message twice. Both test changes of `e8bac96` go to step 4's reviewers.
-5. Step 4, after the five-hour window resets (08:00 for Luis), a builder and reviewers who did not build it:
-   - the forced checks (research section 7.2, and build.md's "Still not read back");
-   - `CoverRingLiveTests` learning `-ankleWays`, and a watch of what learns adds at the boots;
-   - a course on which Long and Round go down by themselves.
+5. Step 4, in two parts, each a builder and then reviewers who did not build it:
+   - **4a, running (a workflow, from 08:15):** the forced checks (research section 7.2, and build.md's "Still not
+     read back"); the live test saying at its end when a switch is on but its event never happened; a check that
+     expects a once-said message twice. The builder's report is `forced_checks.md` in the research folder, and the
+     reviews go beside it (`review_forced_*.md`). No run of mine in `D:/Dev/WG` while it works.
+   - **4b, after 4a is read:** a course on which Long and Round go down by themselves; `CoverRingLiveTests` learning
+     `-ankleWays`, and a watch of what learns adds at the boots.
 
    Then Small's other arms in 7.2's order (A = 1, both, then C; never C alone) at strengths 1, 0.7 and 1.3; C on Long
    and Round on the new course; the rig arms (`-ankleWays Small`, arms 0 and 3) only if Small's arms show the mend
