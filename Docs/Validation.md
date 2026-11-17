@@ -5725,9 +5725,42 @@ In the same edit, `AnkleMendArguments` now forgets OwnRiser's three once-said an
 when it ends (`ForgetSaid`, by reflection; no runtime code touched). This is the should-fix from the review of the
 mends. It compiles in the Long run.
 
+### Small's arm B as played (`ank1_small`)
+Build `e8bac96`, `-ownAsPlayed 1`, `-riseSet AnkleSpeed=20`. Read back at the start and at the end: `AnkleSpeed 20`,
+every other switch off, `RiseAgent.Unheard True`, strength 1. It ran before the forced checks. It ended by itself
+after 5860 s (the limit was 15000 s), and is marked Failed for its blow-ups, as always.
+
+| | `ank0_small` (all off) | `ank1_small` (B on) |
+|---|---|---|
+| Up by its own body / the old way / not up | 10 / 0 / 14 | 11 / 1 / 12 |
+| Tries by its own body | 101 | 165 |
+| Blow-ups | 12 (11 in a foot or its toes) | 5 (3 in a foot or its toes, 2 in a forearm) |
+| Not up after the 240 s cap, without a blow-up | 2 | 7 |
+| Boots over 30 rad/s: touching nothing / touching | 141 / 141 | 1 / 18 |
+| Fastest boot: touching nothing / touching (rad/s) | 93.6 / 91.3 | 35.3 / 70.8 |
+| Target jumps over 60° as a turn (most) | 205 (177.8) | 158 (137.8) |
+| Gone down by itself / let go by a push | 77 / 38 | 144 / 34 |
+| Frames measured | 85421 | 151501 |
+
+The blow-ups: the right toes in course 7 (124.8 rad/s), ForearmR in 13 (227.2), ForearmL in 15 (139.7), FootR in 17
+(102.8), the left toes in 18 (100.1).
+
+Read:
+- **B was exercised.** The damping read back from the boots' drives was B's smooth maximum in all 216604 boot-steps the
+  watch compared, and today's form in none. (With B off, the watch's B form is today's, so the baseline's "as the
+  smooth maximum 120736 of 120736" shows nothing.) The boots that turned faster than 30 rad/s while touching nothing
+  went from 141 to 1.
+- **Fewer blow-ups:** 12 to 5, and in the feet 11 to 3.
+- **No more get-ups:** 11 against 10, which is within what one run can tell. Courses that no longer blew up ran out of
+  time instead (7 against 2), with more tries (165 against 101).
+- The two forearm blow-ups (one at 227 rad/s) are not the ankle's. They are counted, not explained.
+- One run each, and this test is not the same run to run, so the difference was seen once. The blow-ups differ more
+  than the heard and unheard baselines did (8 and 12), but no spread has been measured at 24 courses.
+
 ### Not tested
 - That every switch off is the old build, on courses (this test is not the same run to run).
-- Any arm, the forced checks, the idle's proof, the flows as played, and any strength but 1.
+- Any arm but B on Small at strength 1; the forced checks, the idle's proof, the flows as played, and any strength
+  but 1.
 - `GettingUpByItsOwnTests` with its new arguments.
 - `ForgetSaid` by a check that expects one message in two tests.
 

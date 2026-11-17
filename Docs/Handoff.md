@@ -24,12 +24,12 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 36th outlook
 was taken on November 17, in the morning.
 
-**Next: read Small's arm B, then step 4.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while
-one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+**Next: step 4.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
-1. **Running** (background, from about 06:25): Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build
-   `e8bac96`). It runs before the forced checks so that Unity works while the allowance waits; if the checks change
-   B's code, it is run again. Read it against `ank0_small`.
+1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
+   blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11
+   against 10, and 7 courses out of time against 2. It ran before the forced checks; if they change B's code, it is
+   run again.
 2. Baselines, as played, 24 courses each: **all read** (`Validation.md`, the last section).
    - Small as played (`ank0_small`): 10 up by its own body, 0 the old way, 14 not up; 12 blow-ups, 11 in a foot or
      its toes. The arms are read against this run.

@@ -47,8 +47,10 @@
       (`e8bac96`); Small's runs keep the ring.
 
     [The record](Validation.md), its last section.
-  - **Running:** Small's arm B as played (`ank1_small`, `AnkleSpeed` 20), before the forced checks, so that Unity
-    works while the allowance waits. If the checks change B's code, it is run again.
+  - **Small's arm B as played** (`ank1_small`, `AnkleSpeed` 20, run before the forced checks): 5 blow-ups against 12
+    (in the feet 3 against 11). The boots no longer whirl in the air: over 30 rad/s touching nothing, 1 against 141.
+    But it got up no more often (11 against 10); courses that no longer blew up ran out of time (7 against 2). One
+    run each. If the checks change B's code, it is run again.
   - **Next:** step 4 after the five-hour window resets: the forced checks and a course on which Long and Round go
     down by themselves; then the other arms (the Handoff's "Start here").
 - **Before (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
