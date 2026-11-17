@@ -11,6 +11,10 @@
 #   G3  a commit chained behind a test in one command (a commit said 8 of 8 for a run of 7 of 8): read, then commit.
 #   G4  a shell heredoc holding a doubled backslash (the shell halved it; work lost three times): use Write or Edit.
 #   (G5, a Unity run with no time limit, is not here: unity_tests.sh already sets LIMIT=10800 s when none is given.)
+#   G6  a git commit or push that would carry the path of the user's own profile folder (it names the person) into the
+#       public repository (approved by Luis, November 17). Unlike G1 to G4 it reads what the commit or push would store,
+#       not the command's text: guard_profile.py, beside this file, run by python -I with the payload on stdin, within
+#       8 s. Its exit 2 with a line refuses; anything else (no python, an error, a timeout) passes.
 # It reads the command's text, so text that only mentions such a command (a search pattern, an echo, a commit message
 # given inline) is refused too: put such text in a file. It does not see inside a script that a command runs.
 # A deliberate, approved use passes when the command carries the words WG_GUARD_OK=G1 (or G2, G3, G4).
@@ -98,4 +102,16 @@ while IFS= read -r seg; do
       *) refuse G2 "git stash that saves takes the files out of the working copy: $why" ;; esac
   fi
 done <<< "$segs"
+
+# G6: a commit or a push that would carry the profile folder's path. Only the checker can tell (it reads the files, the
+# message and the objects); the guard asks it only when the command holds git followed by commit or push.
+if [[ $cmd =~ ${G}(commit|push)([[:space:]]|$) ]] && [[ $cmd != *"WG_GUARD_OK=G6"* ]]; then
+  here=${0%[/\\]*}; [ "$here" = "$0" ] && here=.      # $0 may come with backslashes (from CLAUDE_PROJECT_DIR) or slashes
+  py=$(command -v python 2>/dev/null || command -v py 2>/dev/null)
+  if [ -n "$py" ] && [ -f "$here/guard_profile.py" ]; then
+    why=$(printf '%s' "$raw" | timeout 8 "$py" -I "$here/guard_profile.py" 2>/dev/null); rc=$?
+    why=${why//$'\r'/}; why=${why//$'\n'/ }
+    [ $rc -eq 2 ] && [ -n "$why" ] && refuse G6 "$why"
+  fi
+fi
 exit 0

@@ -1,0 +1,268 @@
+G6 cases, November 17, 2026. The profile folder's path is shown as <profile>, its name as <name>.
+Run 1: the whole suite against .claude/hooks/guard_next.sh (GUARD=.../guard_next.sh bash .claude/hooks/guard_test.sh).
+
+-- G1 everything staged at once
+pass  expect G1     got exit 2  [Bash] git add -A
+pass  expect G1     got exit 2  [Bash] git add --all
+pass  expect G1     got exit 2  [Bash] git add .
+pass  expect G1     got exit 2  [Bash] git add -u
+pass  expect G1     got exit 2  [Bash] git add -A --dry-run
+pass  expect G1     got exit 2  [Bash] cd Docs && git add . && git status
+pass  expect G1     got exit 2  [Bash] git commit -a -m "x"
+pass  expect G1     got exit 2  [Bash] git commit -am "a fix"
+pass  expect G1     got exit 2  [PowerShell] git add -A; git status
+pass  expect pass   got exit 0  [Bash] git add Docs/Handoff.md
+pass  expect pass   got exit 0  [Bash] git add ./Docs/Outlook.md "Docs/a b.md"
+pass  expect pass   got exit 0  [Bash] git commit -F msg.txt
+pass  expect pass   got exit 0  [Bash] git commit --amend -m "stage a file by path"
+pass  expect pass   got exit 0  [Bash] git -C D:/Dev/WG status
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G1 git add -A
+-- G2 uncommitted work discarded
+pass  expect G2     got exit 2  [Bash] git reset --hard
+pass  expect G2     got exit 2  [Bash] git -C D:/Dev/WG reset --hard origin/main
+pass  expect G2     got exit 2  [Bash] git clean -fd
+pass  expect G2     got exit 2  [Bash] git checkout -- Assets/_WonderGather/Scenes/TheGroup.unity
+pass  expect G2     got exit 2  [Bash] git checkout .
+pass  expect G2     got exit 2  [Bash] git restore Docs/Outlook.md
+pass  expect G2     got exit 2  [Bash] git restore --staged --worktree Docs/Outlook.md
+pass  expect G2     got exit 2  [Bash] git stash
+pass  expect G2     got exit 2  [Bash] git stash push -m wip
+pass  expect G2     got exit 2  [Bash] git stash save wip
+pass  expect G2     got exit 2  [Bash] git stash -u
+pass  expect G2     got exit 2  [PowerShell] git status; git reset --hard HEAD~1
+pass  expect pass   got exit 0  [Bash] git reset HEAD Docs/Outlook.md
+pass  expect pass   got exit 0  [Bash] git reset --soft HEAD~1
+pass  expect pass   got exit 0  [Bash] git checkout -b claude/new-branch
+pass  expect pass   got exit 0  [Bash] git checkout main
+pass  expect pass   got exit 0  [Bash] git restore --staged Docs/Outlook.md
+pass  expect pass   got exit 0  [Bash] git stash list
+pass  expect pass   got exit 0  [Bash] git stash show -p stash@{0}
+pass  expect pass   got exit 0  [Bash] git stash pop
+pass  expect pass   got exit 0  [Bash] git stash apply
+pass  expect pass   got exit 0  [PowerShell] git status --short
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G2 git -C D:/Dev/WG reset --hard origin/main
+-- G3 a commit chained behind a test
+pass  expect G3     got exit 2  [Bash] bash D:/Dev/WG/Docs/Technical/AnyBody/tools/unity_tests.sh OwnBody && git commit -F msg.txt
+pass  expect G3     got exit 2  [Bash] LIMIT=600 bash unity_tests.sh X; git commit -m "8 of 8"
+pass  expect G3     got exit 2  [Bash] bash tools/shoves.sh trace | tail -5 \n git -C D:/Dev/WG commit -F m.txt
+pass  expect pass   got exit 0  [Bash] LIMIT=600 bash D:/Dev/WG/Docs/Technical/AnyBody/tools/unity_tests.sh OwnBody
+pass  expect pass   got exit 0  [Bash] git commit -F msg.txt
+pass  expect pass   got exit 0  [Bash] grep -n LIMIT unity_tests.sh && git log -1
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G3 bash unity_tests.sh X && git commit -F m.txt
+-- G4 a heredoc holding a doubled backslash
+pass  expect G4     got exit 2  [Bash] cat > fix.py <<"EOF" \n path = "D:\\Dev\\WG" \n EOF
+pass  expect G4     got exit 2  [Bash] python - <<EOF \n print("a\\nb") \n EOF
+pass  expect G4     got exit 2  [Bash] grep -c x <<< "D:\\Dev\\WG"
+pass  expect pass   got exit 0  [Bash] grep -P "\\d+" <<< "$x"
+pass  expect pass   got exit 0  [Bash] cat > fix.py <<"EOF" \n path = r"D:\Dev\WG" \n EOF
+pass  expect pass   got exit 0  [Bash] printf "a\\b\n"
+pass  expect pass   got exit 0  [Bash] cat <<EOF \n no backslash at all \n EOF
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G4 cat > f.py <<"EOF" \n s = "a\\b" \n EOF
+-- added after the review (November 16): forms that slipped through, and honest commands that were refused
+pass  expect G1     got exit 2  [Bash] git add ./
+pass  expect G1     got exit 2  [Bash] git add "."
+pass  expect G1     got exit 2  [Bash] git add '*'
+pass  expect G1     got exit 2  [Bash] git add :/
+pass  expect G1     got exit 2  [Bash] git add -vA
+pass  expect G1     got exit 2  [Bash] git add -fu Docs
+pass  expect G1     got exit 2  [Bash] bash -c "git add -A"
+pass  expect G1     got exit 2  [Bash] git --no-pager add -A
+pass  expect G1     got exit 2  [Bash] git -C "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer" add -A
+pass  expect G1     got exit 2  [PowerShell] git.exe add --all
+pass  expect G1     got exit 2  [Bash] git commit -qam "x"
+pass  expect pass   got exit 0  [Bash] git commit -m "Run with -ownAsPlayed 1, read to the end"
+pass  expect pass   got exit 0  [Bash] git commit -m "the -liveCap 240 and -ownRate 50 runs"
+pass  expect pass   got exit 0  [Bash] git -C "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer" add Docs/Handoff.md .claude/hooks/guard.sh
+pass  expect pass   got exit 0  [Bash] git add -f -- Docs/a.md
+pass  expect pass   got exit 0  [Bash] git add .gitignore ./Docs/x.md
+pass  expect pass   got exit 0  [Bash] git --no-pager log -3 --all --oneline
+pass  expect G2     got exit 2  [Bash] git --no-pager reset --hard
+pass  expect G2     got exit 2  [Bash] git -C "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer" reset --hard
+pass  expect G2     got exit 2  [Bash] git reset --merge
+pass  expect G2     got exit 2  [Bash] git checkout -f main
+pass  expect G2     got exit 2  [Bash] git switch --discard-changes main
+pass  expect G2     got exit 2  [Bash] git switch -f main
+pass  expect G2     got exit 2  [Bash] sh -c "git clean -fdx"
+pass  expect G2     got exit 2  [Bash] git checkout claude/wip-round -- Assets/_WonderGather/Scripts
+pass  expect pass   got exit 0  [Bash] git clean -n
+pass  expect pass   got exit 0  [Bash] git clean -nd
+pass  expect pass   got exit 0  [Bash] git clean --dry-run -d
+pass  expect pass   got exit 0  [Bash] git switch claude/wip-round
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G2 git checkout claude/wip-round -- Assets/_WonderGather/Scripts
+pass  expect G3     got exit 2  [Bash] T=Docs/Technical/AnyBody/tools/unity_tests.sh; bash $T ank0 X && git commit -F m.txt
+pass  expect G3     got exit 2  [Bash] "C:/Program Files/Unity/Editor/Unity.exe" -batchmode -runTests -projectPath D:/Dev/WG; git commit -F m.txt
+pass  expect pass   got exit 0  [Bash] "C:/Program Files/Unity/Editor/Unity.exe" -batchmode -runTests -projectPath D:/Dev/WG
+-- broken or foreign payloads (all must pass)
+pass  expect pass   got exit 0  empty payload
+pass  expect pass   got exit 0  not JSON
+pass  expect pass   got exit 0  no command key
+pass  expect pass   got exit 0  unterminated string
+pass  expect pass   got exit 0  command not a string
+pass  expect pass   got exit 0  Write tool payload
+pass  expect pass   got exit 0  compact JSON, harmless
+pass  expect G1     got exit 2  compact JSON, spaces around colon
+-- G6 the profile folder's path carried by a commit or a push (November 17)
+      (the temporary repositories lie under the profile folder, as the cases need)
+   the suite's own checks, each shown a known-bad case first
+pass  the suite catches a refusal that shows the path
+pass  the suite catches a refusal for another reason than the one the case is about
+pass  the suite catches a pass that is refused
+pass  the suite catches a pass whose commit the checker could not read (cwd not a repository)
+   must refuse
+pass  expect G6     got exit 2  [Bash] a staged file holds the path (backslash form)
+pass  expect G6     got exit 2  [Bash] a -F message file holds the path (MSYS form; the file named in MSYS form)
+pass  expect G6     got exit 2  [Bash] -m holds the path
+pass  expect G6     got exit 2  [Bash] cd <repo> && git add <new file> && git commit -F <file>
+pass  expect G6     got exit 2  [Bash] git -C <repo> commit
+pass  expect G6     got exit 2  [Bash] git commit <tracked, modified, unstaged file> -m x
+pass  expect G6     got exit 2  [Bash] WG_GUARD_OK=G1 git commit -a: G1 lets it by, G6 does not
+pass  expect G6     got exit 2  [Bash] a staged file whose name holds the folder-name form
+pass  expect G6     got exit 2  [Bash] the JSON-escaped form in a staged file
+pass  expect G6     got exit 2  [Bash] a small binary file with the path inside
+pass  expect G6     got exit 2  [Bash] UTF-16LE content
+pass  expect G6     got exit 2  [Bash] upper case
+pass  expect G6     got exit 2  [Bash] URL-encoded
+pass  expect G6     got exit 2  [Bash] --amend --no-edit, HEAD's message holds the path
+pass  expect G6     got exit 2  [Bash] bash -c "git -C <repo> commit ..."
+pass  expect G6     got exit 2  [Bash] git commit -F - fed by a heredoc
+pass  expect G6     got exit 2  [PowerShell] Set-Location <repo>; git commit -m x
+pass  expect G6     got exit 2  [Bash] git push <remote> <branch>, a commit carrying the path
+pass  expect G6     got exit 2  [Bash] plain git push with an upstream set (the path in a message)
+pass  expect G6     got exit 2  [Bash] a staged file bigger than WG_G6_MAXMB=0.01: too large to check
+   must refuse (added: other forms)
+pass  expect G6     got exit 2  [Bash] the guard run by a path with backslashes only
+pass  expect G6     got exit 2  [Bash] the guard run by a mixed path, as from CLAUDE_PROJECT_DIR
+pass  expect G6     got exit 2  [Bash] -m "$HOME/notes": the shell would put the path in
+pass  expect G6     got exit 2  [Bash] -m "$USERPROFILE" in double quotes
+pass  expect G6     got exit 2  [PowerShell] PowerShell -m "$env:USERPROFILE"
+pass  expect G6     got exit 2  [Bash] -m "$(cat <file>)", the file holding the path
+pass  expect G6     got exit 2  [Bash] an unquoted heredoc that expands $USERPROFILE
+pass  expect G6     got exit 2  [Bash] git push origin main:feature (a refspec)
+pass  expect G6     got exit 2  [Bash] cd <repo>/sub && git commit -m x
+   must pass
+pass  expect pass   got exit 0  [Bash] a clean commit; cd into, and -F file under, the profile folder's temp
+pass  expect pass   got exit 0  [Bash] a clean commit; -F file named in the /tmp form
+pass  expect pass   got exit 0  [Bash] a staged file holding only the bare name
+pass  expect pass   got exit 0  [Bash] a staged file holding b<name>
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G6 with bad content
+pass  expect pass   got exit 0  [Bash] a clean push
+pass  expect pass   got exit 0  [Bash] a push of a clean commit; an older commit, already pushed, holds the path
+pass  expect pass   got exit 0  [Bash] git rm of a file that held the path, then commit
+pass  expect pass   got exit 0  [Bash] git rm <that file> && git commit, in one command
+pass  expect pass   got exit 0  [Bash] an edit that takes the path out of a file
+pass  expect pass   got exit 0  [Bash] a clean commit in repo B (git -C) while repo A, the cwd, has bad content staged
+pass  expect pass   got exit 0  [Bash] the same with cd <B> &&
+pass  expect pass   got exit 0  [Bash] grep -n "git commit" <file holding the path>
+pass  expect pass   got exit 0  [Bash] echo of the path, no git
+pass  expect pass   got exit 0  [Bash] git log and git status in repo A
+pass  expect pass   got exit 0  [Bash] git push --delete, with a bad commit not yet pushed
+pass  expect pass   got exit 0  [PowerShell] a clean PowerShell commit
+pass  expect pass   got exit 0  [Bash] a message that says "the profile folder" in words
+pass  expect pass   got exit 0  [Bash] a message that says ~ and %USERPROFILE%
+pass  expect pass   got exit 0  [Bash] -m '$USERPROFILE' in single quotes: the shell leaves it as words
+pass  expect pass   got exit 0  [Bash] a quoted heredoc holding $USERPROFILE as words
+pass  expect pass   got exit 0  [PowerShell] PowerShell -m '$env:USERPROFILE' in single quotes
+   must pass: the guard fails open (bad content staged in each)
+pass  expect pass   got exit 0  [Bash] no python on PATH
+pass  expect pass   got exit 0  [Bash] no guard_profile.py beside the guard
+pass  expect pass   got exit 0  [Bash] the checker exits 2 with no line
+pass  expect pass   got exit 0  [Bash] the checker fails (not Python)
+pass  expect pass   got exit 0  [Bash] the checker hangs (30 s): the guard's timeout 8 ends it
+      (that case took 9 s)
+== G6: 29 refusal cases, 0 of them not refused
+== 154 passed, 0 failed, 154 cases
+== the suite exited 0 after 118 s
+
+Run 2: the G6 section alone against the live guard without G6 (GUARD=.../guard.sh ONLY=G6 bash .claude/hooks/guard_test.sh).
+
+-- G6 the profile folder's path carried by a commit or a push (November 17)
+      (the temporary repositories lie under the profile folder, as the cases need)
+   the suite's own checks, each shown a known-bad case first
+pass  the suite catches a refusal that shows the path
+pass  the suite catches a refusal for another reason than the one the case is about
+pass  the suite catches a pass that is refused
+pass  the suite catches a pass whose commit the checker could not read (cwd not a repository)
+   must refuse
+FAIL  expect G6     got exit 0  [Bash] a staged file holds the path (backslash form)
+FAIL  expect G6     got exit 0  [Bash] a -F message file holds the path (MSYS form; the file named in MSYS form)
+FAIL  expect G6     got exit 0  [Bash] -m holds the path
+FAIL  expect G6     got exit 0  [Bash] cd <repo> && git add <new file> && git commit -F <file>
+FAIL  expect G6     got exit 0  [Bash] git -C <repo> commit
+FAIL  expect G6     got exit 0  [Bash] git commit <tracked, modified, unstaged file> -m x
+FAIL  expect G6     got exit 0  [Bash] WG_GUARD_OK=G1 git commit -a: G1 lets it by, G6 does not
+FAIL  expect G6     got exit 0  [Bash] a staged file whose name holds the folder-name form
+FAIL  expect G6     got exit 0  [Bash] the JSON-escaped form in a staged file
+FAIL  expect G6     got exit 0  [Bash] a small binary file with the path inside
+FAIL  expect G6     got exit 0  [Bash] UTF-16LE content
+FAIL  expect G6     got exit 0  [Bash] upper case
+FAIL  expect G6     got exit 0  [Bash] URL-encoded
+FAIL  expect G6     got exit 0  [Bash] --amend --no-edit, HEAD's message holds the path
+FAIL  expect G6     got exit 0  [Bash] bash -c "git -C <repo> commit ..."
+FAIL  expect G6     got exit 0  [Bash] git commit -F - fed by a heredoc
+FAIL  expect G6     got exit 0  [PowerShell] Set-Location <repo>; git commit -m x
+FAIL  expect G6     got exit 0  [Bash] git push <remote> <branch>, a commit carrying the path
+FAIL  expect G6     got exit 0  [Bash] plain git push with an upstream set (the path in a message)
+FAIL  expect G6     got exit 0  [Bash] a staged file bigger than WG_G6_MAXMB=0.01: too large to check
+   must refuse (added: other forms)
+FAIL  expect G6     got exit 0  [Bash] the guard run by a path with backslashes only
+FAIL  expect G6     got exit 0  [Bash] the guard run by a mixed path, as from CLAUDE_PROJECT_DIR
+FAIL  expect G6     got exit 0  [Bash] -m "$HOME/notes": the shell would put the path in
+FAIL  expect G6     got exit 0  [Bash] -m "$USERPROFILE" in double quotes
+FAIL  expect G6     got exit 0  [PowerShell] PowerShell -m "$env:USERPROFILE"
+FAIL  expect G6     got exit 0  [Bash] -m "$(cat <file>)", the file holding the path
+FAIL  expect G6     got exit 0  [Bash] an unquoted heredoc that expands $USERPROFILE
+FAIL  expect G6     got exit 0  [Bash] git push origin main:feature (a refspec)
+FAIL  expect G6     got exit 0  [Bash] cd <repo>/sub && git commit -m x
+   must pass
+pass  expect pass   got exit 0  [Bash] a clean commit; cd into, and -F file under, the profile folder's temp
+pass  expect pass   got exit 0  [Bash] a clean commit; -F file named in the /tmp form
+pass  expect pass   got exit 0  [Bash] a staged file holding only the bare name
+pass  expect pass   got exit 0  [Bash] a staged file holding b<name>
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G6 with bad content
+pass  expect pass   got exit 0  [Bash] a clean push
+pass  expect pass   got exit 0  [Bash] a push of a clean commit; an older commit, already pushed, holds the path
+pass  expect pass   got exit 0  [Bash] git rm of a file that held the path, then commit
+pass  expect pass   got exit 0  [Bash] git rm <that file> && git commit, in one command
+pass  expect pass   got exit 0  [Bash] an edit that takes the path out of a file
+pass  expect pass   got exit 0  [Bash] a clean commit in repo B (git -C) while repo A, the cwd, has bad content staged
+pass  expect pass   got exit 0  [Bash] the same with cd <B> &&
+pass  expect pass   got exit 0  [Bash] grep -n "git commit" <file holding the path>
+pass  expect pass   got exit 0  [Bash] echo of the path, no git
+pass  expect pass   got exit 0  [Bash] git log and git status in repo A
+pass  expect pass   got exit 0  [Bash] git push --delete, with a bad commit not yet pushed
+pass  expect pass   got exit 0  [PowerShell] a clean PowerShell commit
+pass  expect pass   got exit 0  [Bash] a message that says "the profile folder" in words
+pass  expect pass   got exit 0  [Bash] a message that says ~ and %USERPROFILE%
+pass  expect pass   got exit 0  [Bash] -m '$USERPROFILE' in single quotes: the shell leaves it as words
+pass  expect pass   got exit 0  [Bash] a quoted heredoc holding $USERPROFILE as words
+pass  expect pass   got exit 0  [PowerShell] PowerShell -m '$env:USERPROFILE' in single quotes
+   must pass: the guard fails open (bad content staged in each)
+pass  expect pass   got exit 0  [Bash] no python on PATH
+pass  expect pass   got exit 0  [Bash] no guard_profile.py beside the guard
+pass  expect pass   got exit 0  [Bash] the checker exits 2 with no line
+pass  expect pass   got exit 0  [Bash] the checker fails (not Python)
+pass  expect pass   got exit 0  [Bash] the checker hangs (30 s): the guard's timeout 8 ends it
+      (that case took 0 s)
+== G6: 29 refusal cases, 29 of them not refused
+== 31 passed, 29 failed, 60 cases
+== the suite exited 1 after 60 s
+
+Timings (scratch script timing.sh; N=15 runs each; the checker alone on the main project only reads, GIT_OPTIONAL_LOCKS=0).
+
+-- a command with neither commit nor push
+guard.sh: ls -la                                               exit 0  median 210 ms, min 190, max 324 (15 runs)
+guard.sh: git status --short                                   exit 0  median 207 ms, min 191, max 242 (15 runs)
+guard_next.sh: ls -la                                          exit 0  median 218 ms, min 203, max 307 (15 runs)
+guard_next.sh: git status --short                              exit 0  median 195 ms, min 175, max 213 (15 runs)
+-- a commit and a push in a temporary repository (clean: both pass)
+guard.sh: git commit -m x (one staged file)                    exit 0  median 212 ms, min 178, max 237 (15 runs)
+guard.sh: git push origin main (one commit not pushed)         exit 0  median 205 ms, min 175, max 232 (15 runs)
+guard_next.sh: git commit -m x (one staged file)               exit 0  median 542 ms, min 500, max 602 (15 runs)
+guard_next.sh: git push origin main (one commit not pushed)    exit 0  median 413 ms, min 392, max 560 (15 runs)
+-- the checker alone, the payload's cwd the main project (it only reads)
+python -I guard_profile.py: git commit -m x                    exit 0  median 241 ms, min 215, max 445 (15 runs)
+python -I guard_profile.py: git push origin claude/worker-showcase exit 0  median 201 ms, min 177, max 280 (15 runs)
+python -I -c pass (the interpreter's own start)                exit 0  median 87 ms, min 83, max 98 (15 runs)
+-- what the checker says there (one run each, with WG_G6_TRACE=1)
+git commit -m x: exit 0: commit checked: 1 messages, 0 staged files, 0 staged by the command
+git push origin claude/worker-showcase: exit 0: push checked: 0 objects not yet on a remote

@@ -1,7 +1,7 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 17, 2026 (morning), by Claude Opus 5.5: the ankle build's forced checks built (`6b84d78`
-in `D:/Dev/WG`) and reviewed; their mend running. The master is Opus 5.5 at max effort with ultracode, by Luis's word.
+**Last updated:** November 17, 2026 (afternoon), by Claude Opus 5.5: the forced checks' mend read (`7c6edf0` in
+`D:/Dev/WG`); G6 made live; the FBX re-export next, then 4a″. The master is Opus 5.5 at max effort with ultracode, by Luis's word.
 Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
@@ -24,19 +24,33 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 37th outlook
 was taken on November 17, in the morning, after step 4a was read.
 
-**G6, half done (November 17, about 10:40; Luis approved it, Correspondence of November 16, section 6):** a guard
-rule refusing a commit or a push that would carry the path of Luis's profile folder. `.claude/hooks/guard_profile.py`
-is written but untracked, not wired into `guard.sh` and not tested: it does nothing yet. Being finished from about
-13:08 by a workflow beside the mend (run `wf_54fbf190-d02`; its script, to run again as it is if stopped,
-`Research/2026-11-16_HarnessGuideReview/g6_workflow.js`; a builder, a breaker and a code reader, then a mender
-only if they found something that must be fixed): wire it into a copy of the guard (`guard_next.sh`; `guard.sh` is the live hook,
-for the mend's agents too, and is swapped only after the mend's workflow ends); add G6 cases to `guard_test.sh` (the
-profile built from `$USERPROFILE` at run time, never written) and run them against the copy and against the old
-guard; one reviewer who tries to break it in temporary repositories; then make it live, commit and push. `House.fbx` and `Nature.fbx` (OrdinaryPlace) carry that path, pushed since c02df06; Luis
-chose (b) at about 10:50: export both again without it, as the same models with the same links in the scenes (GUIDs
-and the import's sub-asset IDs kept), the old versions staying in history. After the mend's launch, by a workflow:
-find how they were made, export again outside the profile folder, compare new with old (hierarchy, names, meshes,
-materials, the import's IDs, a still; Unity only when the mend's runs leave it free), commit on both branches.
+**G6 is live since 13:57 on November 17, with known holes; its mend (G6′) is open, below.** Luis approved it
+(Correspondence of November 16, section 6): a guard rule refusing a commit or a push that would carry the path of his
+profile folder. `guard.sh` runs `.claude/hooks/guard_profile.py` on a git commit or push (python -I, within 8 s; it
+fails open). Built by the workflow `wf_54fbf190-d02` (script `Research/2026-11-16_HarnessGuideReview/g6_workflow.js`):
+`guard_test.sh` has 154 cases, the profile built from `$USERPROFILE` at run time, never written; all 154 pass against
+the live guard (read at 14:01), and the old guard let all 29 G6 refusal cases through. `House.fbx` and `Nature.fbx`
+(OrdinaryPlace) carry that path, pushed since c02df06. Luis chose (b) at about 10:50: export both again without it,
+as the same models with the same links in the scenes (GUIDs and the import's sub-asset IDs kept), the old versions
+staying in history. Its workflow is written, not yet run (`Research/2026-11-16_HarnessGuideReview/fbx_reexport_workflow.js`):
+find how they were made, export again outside the profile folder, compare new with old in Blender and in Unity
+(hierarchy, names, meshes, materials, the import's IDs, a still), commit on both branches.
+
+**G6′, the mend still to do** (`Research/2026-11-16_HarnessGuideReview/`: `g6_report.md`, `review_g6_breaker.md`,
+`review_g6_code.md`; the mender stopped at its usage guard before touching anything). Must-fix:
+- M1: the slow `cat-file --batch-check` format. With 1500 staged files the commit was refused, and with 3000 one passed
+  unchecked after the 8 s timeout; `%(objectsize)` alone, or `--batch`, takes 0.1-0.2 s.
+- M2: a push never tests full path names (`Users/<name>/x.txt` went out).
+- M3: wildcard refspecs, `remote.<name>.push` and `push.default=matching` are unchecked, and a failed rev-list
+  passes.
+- M4: what the same command line does before the commit (a file written, `git mv`, `stash pop --index`, plumbing) is
+  invisible to a PreToolUse hook.
+- The gate misses `;git`, `&&git`, `$(...)`, `(git ...)`, `--git-dir X` and PowerShell's `& git`.
+- A PowerShell here-string holding an apostrophe loses the path.
+Should-fix: S1-S9 and the code reader's list.
+The breaker's best close for M4, and for most of M2, M3 and S1-S5: git's own pre-commit, commit-msg and pre-push
+hooks, running the same checker. Those would act on every git client on this machine, Luis's own too, so Luis was
+asked on November 17. The breaker's 250 temporary repositories are left in `D:/g6break_tmp`, to be deleted.
 
 **Next: 4a″. The mend (4a′) ran 13:01-13:41 on November 17 and was read** (`D:/Dev/WG` `7c6edf0`, only
 `AnkleForced.cs`; `forced_checks.md`, `review_forced2_physicist.md`, `review_forced2_sceptic.md`). No fault in A, B
@@ -50,7 +64,7 @@ or C, and arm B need not run again. Open, for 4a″:
    Long whirled at 0.0141 m and Round at 0.0148 m passed where they must fail; once, with C on, Round whipped at
    0.0398 m. Find what shows that C acted on a whirled boot, or call check 3 a reading.
 4. The report names the log file of each line number it quotes.
-Then 4b. The order, one Unity at a time: G6 made live once its workflow is read; then the FBX workflow
+Then 4b. The order, one Unity at a time: G6 is live (13:57); next the FBX workflow
 (`Research/2026-11-16_HarnessGuideReview/fbx_reexport_workflow.js`, written, not yet run); then 4a″. Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
