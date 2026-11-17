@@ -5607,3 +5607,56 @@ On `cc_es24` and `as_l2` it gives the verifier's numbers:
 The verifier's report and scripts stay in the session's scratchpad, not in the repository.
 
 No judgment here of feel or look: that is Luis's.
+
+## The ankle mend's switches: read back, and the first baselines (November 17, early morning)
+
+By Opus 5.5. The build is `D:/Dev/WG` `262f4ca` (branch `claude/wip-round`). It adds three switches, all off by
+default: A `OwnRiser.AnkleLimit`, B `OwnRiser.AnkleSpeed` and C `OwnBody.BootsFromOwnShin`. It also makes
+`RiseAgent.Unheard` true by default. What each switch is, the read-back on a rig and the five reviews are in
+[build.md](Research/2026-11-15_NaturalRangesAndTheAnkle/build.md). Rung: written, compiled, read back on a rig. The
+counts below are the build's first courses.
+
+### Small heard, as played (`ank0_small_heard`)
+The command line is `cc_es24`'s with `-ownUnheard 0`, which is the heard run now that unheard is the default:
+`-ownAsPlayed 1 -ownRate 50 -liveWho Small -liveOwn 1 -liveSeam 1 -liveOther 0 -ownPushes 24 -ownPushWays
+0,180,90,270 -liveCap 240 -liveEnergy 2 -ownUnheard 0`.
+- **Read back from the running body, at the start and at the end:** `RiseAgent.Unheard False`; AnkleLimit 0, AnkleSpeed 0,
+  AnkleSpeedHeight 0.605714, AnkleAtMost 110, AnkleTurnsAtMost 0; BootsFromOwnShin False; GetsUpByItsOwn True;
+  strength 1. The learnt model was consulted: its academy was made from `RiseAgent.Heard`.
+- **Ended by itself** after 2000 s, against a limit of 15000 s. The test is marked failed because courses blew up, as
+  `cc_es24` was.
+- **24 courses: up by its own body 15, the old way 1, not up 8; 58 tries by its own body; 47259 frames measured.**
+  `cc_es24` had 15, 0 and 9, with 56 tries and 45619 frames.
+- **All 8 not up blew up:**
+  - in a foot 6 times: FootL in courses 9, 10, 11 and 13; FootR in 14 and 22;
+  - in a toe once: Toeleft in 18;
+  - in a forearm once: ForearmL in 20, turning at 160 rad/s.
+
+  All 9 of `cc_es24`'s were in a foot or a toe.
+- **The old way once:** course 6 (90°), after 13 tries, at 228 s.
+- **What it shows:** the counts sit close to `cc_es24`'s. They cannot be matched course by course, because this test
+  is not the same run to run. Its warm-up course began 2 frames earlier (98 against 100), and every course file
+  differs. So this run does not show that every switch off is the old build. That rests on the traced code paths and
+  the read-back.
+
+### The heard A run (`ank_heardA`)
+`AnkleMendTests -riseSet AnkleLimit=1 -ownUnheard 0 -ankleWays Small -liveWho Small`: the one run so far that puts on
+what learns adds after the way's ask (the order changed after the reviews).
+- **Passed.** Read back at the start and at the end: Unheard False, AnkleLimit 1, the rest off.
+- 217 steps of its own body, 202 of them getting up, and 1 make that got up.
+- No target jump over 60° (most 11.4°, as written and as a turn); no boot over 30 rad/s (fastest touching 9.5).
+- **Beside the unheard A run** (`ank_fix_Aalone`, Small): the step counts, the jumps and the fastest boot are the same.
+  The target was written as today's on 175 of 404 boot-steps, against 178, and at most 6.4° apart, against 5.6°.
+
+So on this one get-up, what learns adds was small at the boots. How large it was was not logged: the new order has
+run, but has been exercised only lightly. A watch of what learns adds at the boots goes into step 4's forced checks.
+
+### Running
+`ank0_small`, `ank0_long` and `ank0_round`: the three miners as played, 24 courses each, one after another.
+
+### Not tested
+- That every switch off is the old build, on courses (this test is not the same run to run).
+- Any arm, the forced checks, the idle's proof, the flows as played, and any strength but 1.
+- `GettingUpByItsOwnTests` with its new arguments.
+
+No judgment here of feel or look: that is Luis's.

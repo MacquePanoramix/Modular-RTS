@@ -375,10 +375,16 @@ decision, and nothing in it is Locked.
   Round unknown"). **On the rig that lends them Small's ways**, arms 0 and 3 at strength 1, and only if Small's arms
   show the mend helps. That is a claim about the rig: whether the bound holds on their longer and heavier boots.
   `CoverRingLiveTests` must first learn `-ankleWays`.
-- **Small's heard baseline repeats `cc_es24`**: the same command line with `-ownUnheard 0`. If its 24 courses come
-  out as `cc_es24`'s did, course by course, then the off path is the old build's, shown on courses and not only on
-  the code paths. If they differ, the off path or the run is not what it was believed to be, and that is read before
-  any arm.
+- **Small's heard baseline beside `cc_es24`**: the same command line with `-ownUnheard 0`. This was first written as a
+  check course by course ("if its 24 courses come out as `cc_es24`'s did, the off path is the old build's"). That
+  check could not work, and was struck before it decided anything. This live test is not the same run to run, even
+  with the same code: `Validation.md` says so at four places (the falls not repeatable, a count of 36 moving by up to
+  7, the courses not the same, and `turnsoff_old2` differing from itself in every course). The heard run's first
+  course already began two frames earlier than `cc_es24`'s (frame 98 against 100), before any course was pushed, and
+  every course file differs. So the heard baseline is read by its counts, beside `cc_es24`'s and within that spread.
+  That nothing changes with every switch off rests on the traced code paths and the read-back, as before. A check
+  that could show it on the body needs a bench that repeats itself; none exists yet (`Validation.md`, the
+  `turnsoff` runs).
 
 The course counts differ a little from §4's on3 run (for Long, 268 boot-steps against 266). Different numbers on one
 course say nothing either way; the composition of what learns adds changed only by rounding when nothing is added.

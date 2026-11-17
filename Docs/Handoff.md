@@ -26,14 +26,16 @@ was taken on November 16, late evening.
 
 **Next: the baselines, then step 4.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one
 runs. The command lines are `research.md` section 7.3's, except that the heard run is now `-ownUnheard 0`.
-1. Baselines, as played, 24 courses each (build.md, "Long and Round: what their courses can show"). Small heard
-   (`ank0_small_heard`): it must repeat `cc_es24` course by course (15 up by its own body, none the old way, 9 not up,
-   56 tries, 45619 frames); if it does not, find why before any arm. Then Small as played (`ank0_small`), then Long and
-   Round as played (`ank0_long`, `ank0_round`). In the game Long and Round know no way up and get up the old way, so A
-   and B never act on them; C does, at their falls.
-2. After the runs, two small things from the review of the mends: reset the three once-only messages in
-   `AnkleMendArguments.Restore`; and one heard Small run with A on (`-ownUnheard 0 -riseSet AnkleLimit=1`) counting
-   target jumps over 60°, the only run that exercises the new order of what learns adds.
+1. Baselines, as played, 24 courses each (build.md, "Long and Round: what their courses can show"). **Read:** Small
+   heard (`ank0_small_heard`): 15 up by its own body, 1 the old way, 8 not up (all blown up, one in a forearm),
+   against `cc_es24`'s 15, 0 and 9. It cannot be matched course by course: this live test is not the same run to
+   run, even with the same code (`Validation.md`, the last section). **Running** (background, one after another, from
+   about 04:55): Small as played (`ank0_small`), then Long and Round as played (`ank0_long`, `ank0_round`). In the
+   game Long and Round know no way up and get up the old way, so A and B never act on them; C does, at their falls.
+2. From the review of the mends: **done**, one heard Small run with A on (`ank_heardA`): passed, no target jump over
+   60°, but what learns adds was small at the boots and not logged (a watch for it goes into step 4). **Left:** reset
+   the three once-only messages in `AnkleMendArguments.Restore`; no code in `D:/Dev/WG` is edited until the
+   baselines end.
 3. Step 4: the forced checks (research section 7.2, and build.md's "Still not read back"), with `CoverRingLiveTests`
    learning `-ankleWays`. Then Small's arms in 7.2's order (B, A = 1, both, then C; never C alone) at strengths 1, 0.7
    and 1.3; Long and Round as played, arm 4; the rig arms (`-ankleWays Small`, arms 0 and 3) only if Small's arms show

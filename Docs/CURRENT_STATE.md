@@ -30,8 +30,12 @@
   - **Long and Round as played know no way up.** Only Small has a way file, so the other two get up the old way. A
     and B never act on them; C does, at their falls. No ways are made for each body (Luis, October 30: no per-body
     teaching). Their own get-up comes with the new controller.
-  - **Running:** Small's heard baseline (`ank0_small_heard`, 24 courses as played, `-ownUnheard 0`). It should repeat
-    `cc_es24` course by course.
+  - **Small heard, as played** (`ank0_small_heard`, `-ownUnheard 0`, read back from the running body): 15 up by its
+    own body, 1 the old way, 8 not up, all blown up (one in a forearm). `cc_es24` had 15, 0 and 9. A plan to match
+    it course by course was struck before it decided anything: this live test is not the same run to run, even with
+    the same code, as `Validation.md` already said. The heard run with A on (`ank_heardA`) passed, with no target
+    jump over 60°.
+  - **Running:** the three miners as played (`ank0_small`, `ank0_long`, `ank0_round`), one after another.
   - **Next:** the other baselines (Small as played, then Long and Round), then step 4's forced checks and the arms
     (the Handoff's "Start here").
 - **Before (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
