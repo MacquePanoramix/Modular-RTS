@@ -1,8 +1,34 @@
 # Wonder Gather — Current State
 
-**Updated:** November 15, 2026. **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 17, 2026 (after midnight). **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 15, morning): what kicks the foot in the get-up's blow-ups, found and verified; the best visual
+- **Now (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
+  Opus 5.5 again.**
+  - **A friend's process guide, reviewed** (Luis's request of November 15,
+    [his words](Correspondence/2026-11-15_THE_FRIENDS_HARNESS_GUIDE.md); Fable 5.2's last task;
+    [the review](Research/2026-11-16_HarnessGuideReview/review.md)). Most of it is machinery for many agents and was
+    left. Adopted, in this project's own words:
+    - five lines on claims and checks in `AGENTS.md`, the page every agent loads: the rung reached; a rig result is a
+      claim about that rig; a pass must show the thing was exercised; a check is trusted after it has failed on
+      purpose; read, then write. They answer 33 process failures counted from this project's own record;
+    - a short "Start here" and one list of holds, switches left off and known red, at the top of the
+      [Handoff](Handoff.md);
+    - a guard hook that refuses a few commands which have cost work (`.claude/hooks/guard.sh`; live on this machine);
+    - at each outlook, a count of how often Luis had to correct or repeat, by reason.
+  - **Checked** by two agents that made none of it (a sceptic, and a cold entry by a fresh Opus 5.5), then mended.
+    Rung: written, checked once; the mends were not checked again. Nothing was run in Unity; no game code, scene or
+    test was touched.
+  - **Luis's messages of November 16**
+    ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)): the work
+    passes to Opus 5.5 at max effort with ultracode and goes on with the earlier plans; and a hint for the later
+    research into how things are built (a subreddit of people building with AI; its name is to be found first).
+  - **The handover** (November 17, after the five-hour reset): Fable's window ran out before its commit. Luis switched
+    this session to Opus 5.5 himself and asked it to finish Fable's step and go on as before
+    ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md), section 4).
+    Read back from the session: `claude-opus-5-5`, effort `max`, ultracode on. No scheduled task was made. This was
+    not a cold entry (the session carried its summary), so the next cold-entry test is the next fresh session's.
+  - **Next: the ankle build**, not begun (the Handoff's "Start here", steps 1 to 5).
+- **Before (November 15, morning): what kicks the foot in the get-up's blow-ups, found and verified; the best visual
   quality researched.**
   - **Luis answered the models' proposal** ([his words](Correspondence/2026-11-14_THE_MODELS_PROPOSAL_ANSWERED.md)):
     - the order is kept;
@@ -31,8 +57,9 @@
       - The proposal: three switches on the riser, all off. A is a limit that cannot flip. B is a speed bound: Small's
         boot at most about 20 rad/s against 81 today. C puts the boot back on its own shin, and comes last.
       - **Luis approved the build** (November 15, afternoon;
-        [his words](Correspondence/2026-11-15_THE_ANKLE_MEND_ANSWERED.md)): the three switches built off and tested;
-        Small's learnt addition off as played, kept for training. The build starts after the weekly reset.
+        [his words](Correspondence/2026-11-15_THE_ANKLE_MEND_ANSWERED.md)): to build the three switches, off, and test them;
+        Small's learnt addition off as played, kept for training. **Not built yet** on November 16 (late evening): it is the next
+        action ([Handoff.md](Handoff.md), "Start here").
   - **The target and the scale, researched** (November 15, afternoon;
     [the research](Research/2026-11-15_TargetAndScale/research.md)). Research only. It was revised against a critic,
     and a second critic finds it sound to propose after five small corrections, which are made after the weekly reset.

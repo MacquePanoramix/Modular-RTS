@@ -35,7 +35,10 @@ work goes back to the task in hand.
    - **What is built but not in a build**, and **what is in a build but not
      tested as played**?
    - **What has been put off** and must not be forgotten (faults, "not yet",
-     "waits for step N")?
+     "waits for step N")? These items live in one list in [Handoff.md](Handoff.md) ("Holds, switches left off
+     and known red"): check that list and say what changed; do not copy it here.
+   - **How often did Luis have to correct, repeat or ask what to do** since the last outlook, and why each time
+     (a count by reason)? **Which rule was broken again**, and can it become a tool, a switch or a check?
    - **Does the task in hand still serve the stage** (and the prototype's
      purpose: real weight and real strength at work, a body that is its own)?
      Has it grown past what it was asked to be?
@@ -57,6 +60,41 @@ work goes back to the task in hand.
   same, so it is known even where the hook is not.
 
 ## Log
+
+### November 16, 2026 (late evening) — the thirty-fifth, short (a stretch closed, before the report and the handover)
+
+- **Where we are.** The game has not changed since the thirty-fourth: no code, no scene, no run in Unity. Since then
+  Luis said yes to the ankle build, answered the target research's first four questions, and took the build
+  `WindowsOrdinaryPlace_Nov13b` off the waiting list (main `98b152d`). One side task filled November 15 and 16, at
+  his request: a friend's process guide reviewed for what fits here
+  (`Research/2026-11-16_HarnessGuideReview/review.md`).
+- **What it changed:** five lines on claims and checks in `AGENTS.md`; a short "Start here" and one list of holds at
+  the top of the Handoff; a guard hook for a few commands that have cost work; the count below. Two agents that made
+  none of it checked it, and it was mended after; the mends were not checked again.
+- **Waiting on Luis:** nothing. **He waits on:** the ankle build and a build to play; step 0's stills; the first
+  motion clips.
+- **Open, not to be forgotten:**
+  - the ankle build: next, not begun;
+  - the target research's five corrections, then tier 0 and step 0's stills;
+  - the assets search, with Luis's hint of a subreddit to study (its name found first); question 11's options; the
+    bigger world exploration;
+  - the clipping detector; the flap's rest and hem; the turn bench; (d) settling back; the three miners redrawn;
+  - small, from the review's section 9: a tidy of `CURRENT_STATE.md`; the memory consolidated; a comparison of judge
+    panels proposed to Luis.
+- **Does the task serve the stage?** The side task did not move the milestone. It was Luis's request and it cost
+  most of two five-hour windows. What it should buy is fewer results said beyond what was run; whether it does is not
+  known, and the count below is the measure. The next work is the body again.
+- **Drift watched:** process must not grow. `AGENTS.md` is 55 lines. The one list replaces the outlook's own copies
+  and is the only new thing to keep up. The prototype's purpose, real weight and real strength at work, stays first.
+- **Luis's corrections since the last outlook, by reason:** none of a claim or a result. He wrote "Try again" twice,
+  both times because the five-hour window had run out in the middle of the task: pace, not a wrong claim. Rules
+  broken again: none seen. One near miss, caught by a reviewer: a row of the review said of `AGENTS.md` what was true
+  of `PROJECT_CULTURE.md`.
+- **The list of holds** (Handoff, second section): checked in full on November 16 by its builder and by a reviewer;
+  three lines reworded after the review (the tries cap, the shove test, the history sentence).
+- **The allowance:** 79% of the five hours when this was written, with the commit, the handover and the report still
+  to pay (resets at 03:00 for Luis); 25% of the week (resets in six days and 18 hours). Fable 5.2 leaves the plan
+  after this window. Opus 5.5 at max effort with ultracode carries on, by Luis's word.
 
 ### November 15, 2026 (afternoon) — the thirty-fourth, short (after a compaction; a stretch closed, before the report)
 

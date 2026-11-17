@@ -1,13 +1,126 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 15, 2026 (afternoon), by Claude Opus 5.5, which carries the work on from Fable 5.2. Kept
-current at every milestone.
+**Last updated:** November 17, 2026 (after midnight), by Claude Opus 5.5, which committed Fable 5.2's last task (the
+review of a friend's process guide). The master is Opus 5.5 at max effort with ultracode, by Luis's word. Kept current
+at every milestone.
 
-If you are a new session or another model: read `AGENTS.md`, the top entry of [CURRENT_STATE.md](CURRENT_STATE.md), then
-this page. Luis's preferences and the lessons already paid for are in the assistant's memory directory (its index is
+If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
+[CURRENT_STATE.md](CURRENT_STATE.md). Luis's preferences and the lessons already paid for are in the assistant's memory directory (its index is
 `MEMORY.md`; it is loaded into every session of this project).
 
-## Start here (November 12, 2026): the work passes from Fable 5.2 to Opus 5.5
+## Start here (November 17, 2026)
+
+**As of November 17, 2026, after midnight (Luis's clock, UTC+1):** the next action is the ankle build, step 1 of 5, **not
+begun**: `D:/Dev/WG` stands at `3182e08` and the three switches are in no code file yet. The milestone is S3b, step 2:
+getting up for any body the creator can make, by its own joints ("The task, and its state"). Luis passed the work to
+Opus 5.5 at max effort with ultracode; after the five-hour reset he switched this session to it himself and asked it
+to finish Fable's last step and go on as before
+([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 35th outlook
+was taken on November 16, late evening.
+
+**Next: the ankle mend's build**, in `D:/Dev/WG` (branch `claude/wip-round`). Luis approved it on November 15
+("Sure."; `GAME_VISION.md`, row 2026-11-15 afternoon). The steps, in order; each run is read before the next:
+1. Read `Research/2026-11-15_NaturalRangesAndTheAnkle/research.md` section 8.1; work Long and Round numerically.
+2. `RiseAgent.Unheard` true by default (Small's learnt addition off as played). Teach the live test `-ownUnheard`,
+   `-riseSet`, `-ownBodySet`, `-liveStrength` (section 7.3). Small's baseline runs both ways once. Two things a cold
+   reader found: section 7.3's `-ownUnheard 1` was written when "heard" was the default, so write down which value
+   gives the heard run once the default is true; and `GettingUpByItsOwnTests.cs` sets `Unheard` itself (line 30 puts
+   it back to false, line 51 takes it from the argument), so it must put back the value it found.
+3. The three switches, all off: A `OwnRiser.AnkleLimit`, B `OwnRiser.AnkleSpeed`, C `OwnBody.BootsFromOwnShin`
+   (section 7.1). An opus builder, a fresh reviewer.
+4. The forced checks (7.2); then the baselines and the arms in 7.2's order (B, A = 1, both, then C; never C alone),
+   24 courses per arm per miner on Small, Long and Round, by 7.3's command lines; the idle's tick-by-tick proof.
+5. A default changed, so the flows as played (`-ownAsPlayed 1`); then a build for Luis, with what to switch on, do,
+   watch and tell.
+Finished when: the switches exist, off; the forced checks pass; every arm is read and written in `Validation.md`; the
+idle is unchanged tick by tick; the as-played suite fails nothing new; judges saw any visible change; the build and its
+list went to Luis. Detail: "Next steps", item 2, the get-up blow-up thread ("The build, after the weekly reset");
+`research.md` sections 7 and 8.1. `motion_design.md` sections 6 and 7 are for the controller's steps, not this build.
+
+**After it** (the order of the turns, "Waiting on Luis"):
+- the visual turn: first the target research's five corrections (`Research/2026-11-15_TargetAndScale/research.md`,
+  section 7, "After the second critique"), made before tier 0 builds anything; then tier 0; step 0's stills;
+- the search of the best ways for Claude to make assets, before the world's first pass. Luis's hint for it (November
+  16): include a deep dive into a subreddit of people who build games and software with AI, largely with Claude. He
+  was unsure of its name ("I think it was called Topology AI"), so the name is found first
+  ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md));
+- the world's options (question 11) in that pass; then the bigger exploration of the world and its assets.
+**Waiting on Luis:** nothing now; his next questions come with the work (group B after the crowd measurement; the
+turning proposal, `AnkleBrakes`, the natural ankle). **He waits on:** the ankle build and the next build to play;
+step 0's stills; the first motion clips, after step 2 ("Waiting on Luis").
+**Allowance and pace:** the plan is Pro and its five-hour window is small. Ask the usage tool
+(`mcp__ccd_session_mgmt__get_usage`) before a long stretch, and tell Luis how the allowance goes. The master runs at
+max effort; sub-agents one or two at a time, at medium effort, with tight briefs and their file written early ("The
+arrangement"). When the window is nearly used, bring the step to a state that reads from the pages and set a wake-up
+for after its reset. The week's allowance was renewed on November 16 (17:00 for Luis). Fable 5.2 left his plan on
+November 17; its last task was the review of a friend's process guide
+(`Research/2026-11-16_HarnessGuideReview/review.md`).
+**What binds every step** still holds as written at the end of the November 12 section below, though that section is
+now history: quality above speed; never a played animation; nothing that switches at a threshold; one body for
+everything; every step reviewed by agents who did not make it; and the rules for claims and checks in `AGENTS.md`.
+**The guard:** a hook refuses a few commands before they run: everything staged at once, uncommitted work discarded, a
+commit chained behind a test, a heredoc holding a doubled backslash. A line that starts "Guard G1" (to G4) is this
+project's own: do what it says. Text that only mentions such a command is refused too, so it goes in a file. Bringing
+files over from the work branch (`git checkout <branch> -- <path>`) needs `WG_GUARD_OK=G2` in the command, after
+`git status` shows those paths clean. Its code, and how to switch it off: `.claude/hooks/guard.sh` (wired in
+`.claude/settings.local.json`, which is on this machine only).
+**Left alone if found running:** JupyterLab and Blender's MCP servers are not this work's. Stop only the worktree's
+Unity.
+
+**Never committed, reset or discarded, main project:** `Assets/_WonderGather/Scenes/TheGroup.unity`,
+`ProjectSettings/PackageManagerSettings.asset`, `ProjectSettings/URPProjectSettings.asset`, `Assets/_Recovery` and
+`Assets/_Recovery.meta` (Luis's own). **Left out of commits in `D:/Dev/WG`:** `ProjectSettings/EditorBuildSettings.asset`,
+`ProjectSettings/ProjectSettings.asset`, `ProjectSettings/PackageManagerSettings.asset`, the untracked `Assets/ML-Agents*`,
+and in `Assets/_WonderGather/Resources/RiseModels/` `SmallRise.onnx`, `SmallRiseFullP.onnx`, `SmallRisePFull.onnx`,
+`SmallRisePaceP.onnx` with their metas (the learnt models, kept for training only). Stage by path only.
+
+**Upkeep:** this block is rewritten, never appended to, whenever the next action changes; what it replaces moves below
+under its date. Each fact names the page that owns it; if this block and its owner disagree, the owner wins and this
+block is mended.
+
+## Holds, switches left off and known red (one list)
+Each line: the item; why; what lifts it; where its detail lives.
+- The do-not-touch lists ("Start here") and no merge to main: Luis's work and Luis's call; his word; "Where things
+  are", "Waiting on Luis" ("The work goes on meanwhile").
+- Unity in batch mode in `D:/Dev/WG` only; nothing heavy beside the suite; no code edit during a run: runs collide;
+  not lifted; "Where things are", "Rules that have cost work before".
+- No more guards on the keeper (`Braced`, `BySpeed` stay off): the engine's step adds the energy; the keeper folded
+  into the new controller (`motion_design.md` §2.10); "Next steps", item 1.
+- R1's unfloored share does not run: review B's bound; what caps Round's ankle found; `CURRENT_STATE.md` near 112.
+- Ankle switches A, B, C off, C never alone; `AnkleBrakes` Open, his: the mend's order; it changes strength; any on by
+  default goes to judges, then Luis; `research.md` §7.1-7.2, `GAME_VISION.md` row 2026-11-15 (afternoon).
+- Small's learnt addition: off as played by Luis's word, still on in the code (`RiseAgent.Unheard` false); the ankle
+  build's step 2; "Waiting on Luis" (the Nov13b paragraph), the same row.
+- The idle Luis loves does not change: his word; not lifted; `GAME_VISION.md` row 2026-11-13 (night), `research.md` §7.1.
+- `OwnBody.Anatomical` off (for a body made standing only) and `OwnBody.Weighed` off (it breaks standing); no lift
+  stated; "The task", layer 0; `joint_model.md`; "Also open, smaller".
+- The five delegated calls, each a switch, off: rulings, not looks; each look to judges, then Luis; "Waiting on
+  Luis", `GAME_VISION.md` row 2026-11-15 (morning), the five calls.
+- No visual build before the target exists; the five corrections before tier 0; group B's questions wait: drift, and
+  numbers first; the corrections made, the crowd measured; `Outlook.md`, the 34th, "Drift watched"; "Waiting on Luis".
+- `PhysicalFall.TriesByItsOwn = 4` (a cap back to the old way) and the old way after 12 tries are still in the code,
+  against Luis's word (never the backup animation): left in place until the roll exists and the new way stands, then
+  removed; memory `never-the-backup-animation`, `any-body-direction-decided` item 6.
+- Open, not promoted: the unit count, head proportions, how far the redraw goes: Luis's; his answer; `GAME_VISION.md`
+  rows 2026-11-14 (evening, night), 2026-11-15 (morning).
+- Red: `ArticulationFactsTests` K5 and K4(a) fail their bars since November 12; step 0's open work ("Next steps",
+  item 2); `Validation.md`, "The solver's turns on by default (November 13, afternoon)".
+- Red: as played, 15 fail both ways (K5, K4(a), 13 of the October 10 list, `TheBodysOwn.md`); which one fails again
+  since October 14 is not read; no lift stated; the same Validation section; `Outlook.md` near line 267.
+- Red, flaky: the night light test (0.887 and 0.896 for 0.9), not explained; no lift; `Validation.md` near 3305, 3496.
+- Red: the own get-up blows up in `CoverRingLiveTests`, 6 of 24 (`cc_en24`) and 9 of 24: the ankle; the ankle build;
+  `Validation.md`, "The energy count in the live courses" (near 5450), "The ankle split" (near 5533).
+- The shove test (`OwnBodyTests.ShovedAgainAndAgainNothingOfItFlies`): passes the normal way in the last runs written
+  down (`Validation.md`, "The solver's turns on by default (November 13, afternoon)": `OwnBodyTests` 16 of 16 with it
+  among them, and the whole suite's only two failures are K5 and K4(a)). "Still fails as known" ("In hand", item 3,
+  November 12) is older. Whether it is among the 15 that fail as played is not read.
+An item leaves this list when it is lifted, and each outlook checks the list. Last checked in full: November 16, 2026
+(by its builder against the owner pages; by a reviewer for the do-not-touch lists and the red tests).
+
+## History: the start of November 12, 2026, when the work passed from Fable 5.2 to Opus 5.5
+
+Its "Begin there" is overtaken, not all done: K5 and K4(a) are still red (the list of holds above). The present is in
+"Start here" at the top of this page; "What binds every step", at this section's end, still holds.
 
 Luis, November 12, midday: "have everything prepared so Opus5.5 on these same thinking max ultracode settings can pick
 up your slack as much as they can"; and in the evening, after the switch: "Now Opus it's your time to continue this
@@ -42,6 +155,10 @@ a time, a tight brief, their file written early), and mechanical steps are done 
   ambitions" ([the message](Correspondence/2026-11-09_QUALITY_ABOVE_EVERYTHING_AND_FABLE.md)).
 - **The model.** From November 12 the session runs on **Opus 5.5 at max thinking, with ultracode on** (Luis moved it
   there when Fable 5.2's share of the plan was used up: [his messages](Correspondence/2026-11-12_PASS_THE_TORCH_TO_OPUS.md)).
+  Fable 5.2 came back for one side task on November 15 and 16, the last days it was in his plan, and Luis then passed
+  the work to **Opus 5.5 at max effort with ultracode** again
+  ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). "Max" is the
+  master's effort; sub-agents run at medium effort unless a task needs more.
   From November 9 to 12 it ran on Fable 5.2, which was included only up to half of the plan's limits and drew usage
   much faster. Subagents take the session's model unless told otherwise: pass `model: 'opus'` for builders and
   reviewers and `model: 'sonnet'` for judges.
@@ -62,12 +179,12 @@ a time, a tight brief, their file written early), and mechanical steps are done 
 | Code and tests | the worktree `D:/Dev/WG`, branch `claude/wip-round` (pushed). Unity (6000.6.0f1) is run in batch mode there only |
 | Run scripts | `D:/Dev/WG/Docs/Technical/AnyBody/tools/` (`unity_tests.sh`, `shoves.sh`, `testresults.py`, a README with the runs used most); test output in `D:/Dev/WG/TestRuns/` (ignored by git) |
 | The stance solver | `D:/Dev/WG/Assets/_WonderGather/Scripts/Units/Rising/AnyBody` (one source for Unity and for the console checks in `Docs/Technical/AnyBody/port/tests`) |
-| The newest build Luis has | October 30 (`getting-up-2026-10-30`, a GitHub release). Nothing since changes what he plays |
+| The newest build Luis has | `WindowsOrdinaryPlace_Nov13` (`D:/Dev/WG/Builds`), played by him both ways on November 13 (`Validation.md`, "The solver's turns on by default"; `GAME_VISION.md` row 2026-11-13, night). `WindowsOrdinaryPlace_Nov13b` went to him and is off his list by his word (November 15) |
 
 Luis's own uncommitted files in the main project are never committed, reset or discarded:
 `Assets/_WonderGather/Scenes/TheGroup.unity`, `ProjectSettings/PackageManagerSettings.asset`,
-`ProjectSettings/URPProjectSettings.asset`, `Assets/_Recovery*`. In the worktree, `ProjectSettings/EditorBuildSettings.asset`
-and `ProjectSettings.asset` stay out of commits. Stage by path.
+`ProjectSettings/URPProjectSettings.asset`, `Assets/_Recovery*`. What stays out of commits in the worktree is listed in full in "Start here" (three settings
+files, `Assets/ML-Agents*`, the learnt models). Stage by path.
 
 ## The task, and its state
 
@@ -98,9 +215,10 @@ November 15 in `GAME_VISION.md`:
 
 The order of the turns (his question 12: they take turns):
 1. the ankle mend: researched, proposed, and **approved by Luis** (November 15, afternoon;
-   [his words](Correspondence/2026-11-15_THE_ANKLE_MEND_ANSWERED.md)). The three switches are built off and tested;
-   Small's learnt addition is off as played, kept for training. **The build starts after the weekly reset**
-   (November 16, about 17:00 his time); what it holds is in "Next steps", the get-up blow-up thread;
+   [his words](Correspondence/2026-11-15_THE_ANKLE_MEND_ANSWERED.md)). What he approved: the three switches built, off, and
+   tested; Small's learnt addition off as played, kept for training. **Not built yet** (November 16, late evening):
+   the weekly reset has passed and the build is the next action ("Start here"); what it holds is in "Next steps", the
+   get-up blow-up thread;
 2. the visual turn: tier 0 instruments, step 0's stills, the target-budget research. **The target research**
    (November 15, afternoon; `Research/2026-11-15_TargetAndScale/`, research only): written (opus); critiqued (sonnet,
    `critique.md`: a sound frame, not ready, six fixes). Revised in place (opus, its section 7); a fresh critic
@@ -866,7 +984,8 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
              - **Sent to Luis in plain words** (November 15, afternoon). **He answered** "Sure." to the build, and
                "Yes option a sounds good." to the learnt addition: off as played, kept for training
                ([his words](Correspondence/2026-11-15_THE_ANKLE_MEND_ANSWERED.md)).
-             - **The build, after the weekly reset** (November 16, about 17:00 his time), in `D:/Dev/WG`:
+             - **The build, after the weekly reset** (November 16, about 17:00 his time; not begun that day, its steps
+               are in "Start here"), in `D:/Dev/WG`:
                - first read `research.md` section 8.1, and work Long and Round numerically;
                - `RiseAgent.Unheard` true by default (the learnt addition off as played), and the live test taught
                  to read `-ownUnheard`. Small's baseline runs both ways once, to show what turning it off changes;
@@ -895,7 +1014,7 @@ Each step has its evidence in `motion_design.md` §6.3. Report a result only aft
            - then the world, in rank order.
 
            Its 12 questions for Luis are in `research.md` and in the message sent on November 15, morning.
-           **Waiting on his answers.** Not done by it: no Unity or Blender run, no pictures, no web search, and
+           **Answered on November 15, morning** ("Waiting on Luis"). Not done by it: no Unity or Blender run, no pictures, no web search, and
            no re-read of the revision by another agent.
        - Then step 0's stills, built by the deep dive's findings: today's faces beside prettier explorations, and a
          head change tried. The aesthetic judges see them first, then Luis.
@@ -970,5 +1089,8 @@ the weighed centres' standing balance; the creator's warning; the mining skill (
 - Luis's messages are recorded verbatim in `Correspondence/`, his decisions in `GAME_VISION.md`.
 - Every step is reviewed by agents who did not make it (judges for movement and looks; a physicist, a sceptic and a
   builder for technical steps). Their verdicts are not Luis's.
-- The first line of a report to Luis names any switch that must be on. A result is said only after its run was read.
+- The first line of a report to Luis names any switch that must be on.
 - An outlook of the whole project is due every 250 tool calls or so ([Outlook.md](Outlook.md)).
+- The rules for claims and checks that every agent follows (a result said only after its run was read is one of
+  them) are in `AGENTS.md`, "Evidence boundaries" (November
+  16; why: [Research/2026-11-16_HarnessGuideReview/review.md](Research/2026-11-16_HarnessGuideReview/review.md)).

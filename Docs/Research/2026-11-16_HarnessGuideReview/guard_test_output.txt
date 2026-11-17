@@ -1,0 +1,101 @@
+-- G1 everything staged at once
+pass  expect G1     got exit 2  [Bash] git add -A
+pass  expect G1     got exit 2  [Bash] git add --all
+pass  expect G1     got exit 2  [Bash] git add .
+pass  expect G1     got exit 2  [Bash] git add -u
+pass  expect G1     got exit 2  [Bash] git add -A --dry-run
+pass  expect G1     got exit 2  [Bash] cd Docs && git add . && git status
+pass  expect G1     got exit 2  [Bash] git commit -a -m "x"
+pass  expect G1     got exit 2  [Bash] git commit -am "a fix"
+pass  expect G1     got exit 2  [PowerShell] git add -A; git status
+pass  expect pass   got exit 0  [Bash] git add Docs/Handoff.md
+pass  expect pass   got exit 0  [Bash] git add ./Docs/Outlook.md "Docs/a b.md"
+pass  expect pass   got exit 0  [Bash] git commit -F msg.txt
+pass  expect pass   got exit 0  [Bash] git commit --amend -m "stage a file by path"
+pass  expect pass   got exit 0  [Bash] git -C D:/Dev/WG status
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G1 git add -A
+-- G2 uncommitted work discarded
+pass  expect G2     got exit 2  [Bash] git reset --hard
+pass  expect G2     got exit 2  [Bash] git -C D:/Dev/WG reset --hard origin/main
+pass  expect G2     got exit 2  [Bash] git clean -fd
+pass  expect G2     got exit 2  [Bash] git checkout -- Assets/_WonderGather/Scenes/TheGroup.unity
+pass  expect G2     got exit 2  [Bash] git checkout .
+pass  expect G2     got exit 2  [Bash] git restore Docs/Outlook.md
+pass  expect G2     got exit 2  [Bash] git restore --staged --worktree Docs/Outlook.md
+pass  expect G2     got exit 2  [Bash] git stash
+pass  expect G2     got exit 2  [Bash] git stash push -m wip
+pass  expect G2     got exit 2  [Bash] git stash save wip
+pass  expect G2     got exit 2  [Bash] git stash -u
+pass  expect G2     got exit 2  [PowerShell] git status; git reset --hard HEAD~1
+pass  expect pass   got exit 0  [Bash] git reset HEAD Docs/Outlook.md
+pass  expect pass   got exit 0  [Bash] git reset --soft HEAD~1
+pass  expect pass   got exit 0  [Bash] git checkout -b claude/new-branch
+pass  expect pass   got exit 0  [Bash] git checkout main
+pass  expect pass   got exit 0  [Bash] git restore --staged Docs/Outlook.md
+pass  expect pass   got exit 0  [Bash] git stash list
+pass  expect pass   got exit 0  [Bash] git stash show -p stash@{0}
+pass  expect pass   got exit 0  [Bash] git stash pop
+pass  expect pass   got exit 0  [Bash] git stash apply
+pass  expect pass   got exit 0  [PowerShell] git status --short
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G2 git -C D:/Dev/WG reset --hard origin/main
+-- G3 a commit chained behind a test
+pass  expect G3     got exit 2  [Bash] bash D:/Dev/WG/Docs/Technical/AnyBody/tools/unity_tests.sh OwnBody && git commit -F msg.txt
+pass  expect G3     got exit 2  [Bash] LIMIT=600 bash unity_tests.sh X; git commit -m "8 of 8"
+pass  expect G3     got exit 2  [Bash] bash tools/shoves.sh trace | tail -5 \n git -C D:/Dev/WG commit -F m.txt
+pass  expect pass   got exit 0  [Bash] LIMIT=600 bash D:/Dev/WG/Docs/Technical/AnyBody/tools/unity_tests.sh OwnBody
+pass  expect pass   got exit 0  [Bash] git commit -F msg.txt
+pass  expect pass   got exit 0  [Bash] grep -n LIMIT unity_tests.sh && git log -1
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G3 bash unity_tests.sh X && git commit -F m.txt
+-- G4 a heredoc holding a doubled backslash
+pass  expect G4     got exit 2  [Bash] cat > fix.py <<"EOF" \n path = "D:\\Dev\\WG" \n EOF
+pass  expect G4     got exit 2  [Bash] python - <<EOF \n print("a\\nb") \n EOF
+pass  expect G4     got exit 2  [Bash] grep -c x <<< "D:\\Dev\\WG"
+pass  expect pass   got exit 0  [Bash] grep -P "\\d+" <<< "$x"
+pass  expect pass   got exit 0  [Bash] cat > fix.py <<"EOF" \n path = r"D:\Dev\WG" \n EOF
+pass  expect pass   got exit 0  [Bash] printf "a\\b\n"
+pass  expect pass   got exit 0  [Bash] cat <<EOF \n no backslash at all \n EOF
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G4 cat > f.py <<"EOF" \n s = "a\\b" \n EOF
+-- added after the review (November 16): forms that slipped through, and honest commands that were refused
+pass  expect G1     got exit 2  [Bash] git add ./
+pass  expect G1     got exit 2  [Bash] git add "."
+pass  expect G1     got exit 2  [Bash] git add '*'
+pass  expect G1     got exit 2  [Bash] git add :/
+pass  expect G1     got exit 2  [Bash] git add -vA
+pass  expect G1     got exit 2  [Bash] git add -fu Docs
+pass  expect G1     got exit 2  [Bash] bash -c "git add -A"
+pass  expect G1     got exit 2  [Bash] git --no-pager add -A
+pass  expect G1     got exit 2  [Bash] git -C "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer" add -A
+pass  expect G1     got exit 2  [PowerShell] git.exe add --all
+pass  expect G1     got exit 2  [Bash] git commit -qam "x"
+pass  expect pass   got exit 0  [Bash] git commit -m "Run with -ownAsPlayed 1, read to the end"
+pass  expect pass   got exit 0  [Bash] git commit -m "the -liveCap 240 and -ownRate 50 runs"
+pass  expect pass   got exit 0  [Bash] git -C "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer" add Docs/Handoff.md .claude/hooks/guard.sh
+pass  expect pass   got exit 0  [Bash] git add -f -- Docs/a.md
+pass  expect pass   got exit 0  [Bash] git add .gitignore ./Docs/x.md
+pass  expect pass   got exit 0  [Bash] git --no-pager log -3 --all --oneline
+pass  expect G2     got exit 2  [Bash] git --no-pager reset --hard
+pass  expect G2     got exit 2  [Bash] git -C "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer" reset --hard
+pass  expect G2     got exit 2  [Bash] git reset --merge
+pass  expect G2     got exit 2  [Bash] git checkout -f main
+pass  expect G2     got exit 2  [Bash] git switch --discard-changes main
+pass  expect G2     got exit 2  [Bash] git switch -f main
+pass  expect G2     got exit 2  [Bash] sh -c "git clean -fdx"
+pass  expect G2     got exit 2  [Bash] git checkout claude/wip-round -- Assets/_WonderGather/Scripts
+pass  expect pass   got exit 0  [Bash] git clean -n
+pass  expect pass   got exit 0  [Bash] git clean -nd
+pass  expect pass   got exit 0  [Bash] git clean --dry-run -d
+pass  expect pass   got exit 0  [Bash] git switch claude/wip-round
+pass  expect pass   got exit 0  [Bash] WG_GUARD_OK=G2 git checkout claude/wip-round -- Assets/_WonderGather/Scripts
+pass  expect G3     got exit 2  [Bash] T=Docs/Technical/AnyBody/tools/unity_tests.sh; bash $T ank0 X && git commit -F m.txt
+pass  expect G3     got exit 2  [Bash] "C:/Program Files/Unity/Editor/Unity.exe" -batchmode -runTests -projectPath D:/Dev/WG; git commit -F m.txt
+pass  expect pass   got exit 0  [Bash] "C:/Program Files/Unity/Editor/Unity.exe" -batchmode -runTests -projectPath D:/Dev/WG
+-- broken or foreign payloads (all must pass)
+pass  expect pass   got exit 0  empty payload
+pass  expect pass   got exit 0  not JSON
+pass  expect pass   got exit 0  no command key
+pass  expect pass   got exit 0  unterminated string
+pass  expect pass   got exit 0  command not a string
+pass  expect pass   got exit 0  Write tool payload
+pass  expect pass   got exit 0  compact JSON, harmless
+pass  expect G1     got exit 2  compact JSON, spaces around colon
+== 94 passed, 0 failed, 94 cases

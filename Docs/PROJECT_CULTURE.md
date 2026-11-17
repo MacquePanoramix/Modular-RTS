@@ -115,6 +115,11 @@ Usually unnecessary for:
 - HUD copy;
 - exploratory visual changes.
 
+An exception since October 9, 2026, by the Game Director's word: every step of the current body work, gait and
+getting up included, is reviewed by agents who did not make it (section 1; `AGENTS.md`).
+
+Since October 9, 2026, by the Keeper's word, every step of the current work is also seen by judges who did not make it. That is a different visitor from the Cartographer; the plain rule is in `AGENTS.md`.
+
 A Cartographer maps the dangerous ground first. If independence matters, they do not redraw the road while judging whether it is safe.
 
 ---
@@ -180,7 +185,8 @@ Authority:
 A fresh agent should begin with:
 
 1. `AGENTS.md`
-2. `Docs/CURRENT_STATE.md`
+2. the "Start here" block at the top of `Docs/Handoff.md`
+3. the top entry of `Docs/CURRENT_STATE.md`
 
 Then retrieve only the district of knowledge the task actually touches:
 
@@ -297,6 +303,10 @@ Add structure when:
 
 If a process becomes more expensive than the wound it prevents, prune it.
 
+A new rule names the wound it answers, the older rule it replaces or joins, and what would make us drop it.
+
+A rule that keeps being broken as a sentence should become a tool, a switch or a check. Those have held here; sentences have not.
+
 > **Good paths are worn into a garden by use.**
 
 ---
@@ -327,11 +337,24 @@ Uncommitted human work is real project state.
 
 ### **Invite a Guest Cartographer when a hidden wrong turn could become the landscape.**
 
-Use fresh independent review for silent, consequential risks—not ordinary iteration.
+Use fresh independent review for silent, consequential risks—not ordinary iteration. (The current body work is an
+exception by the Game Director's word of October 9, 2026: section 1.)
 
 ### **Grow paths where feet actually appear.**
 
 Governance should respond to real recurring needs.
+
+### **The workshop floor is level; the meadow is not.**
+
+A result from a bench or a rig is true of that rig until it is run as played.
+
+### **Name the strange thing's parent before you mend it.**
+
+A fault, the world's rules playing out, or a rule Luis would not choose.
+
+### **The newest signpost stands first; the old ones are kept, facing the past.**
+
+An entry page says the next step at its top. An old "next" is history.
 
 ---
 
@@ -343,7 +366,7 @@ This file does not maintain a second roadmap.
 - **Keeper of the Horizon:** Luis judges feel, aesthetics and the intended depth.
 - **Threadkeeper:** preserve the one-worker reference and distinguish current proof from final vision.
 - **Worldsmith:** turn the chosen question into a bounded, testable implementation.
-- **Guest Cartographer:** consider independent review when equipment changes saved faction meaning or identity; ordinary pose iteration remains lightweight.
+- **Guest Cartographer:** consider independent review when equipment changes saved faction meaning or identity; ordinary pose iteration remains lightweight. (Written before October 9, 2026; since then the body's movement is reviewed at every step: section 1.)
 
 The roles should change when the kind of risk changes.
 
@@ -362,3 +385,13 @@ A useful shorthand may become a project custom.
 A custom does not need to become policy.
 
 The Conservatory should feel inhabited, not administered.
+
+---
+
+# 10. What crossed the border a second time (November 16, 2026)
+
+The same neighbouring project later wrote a very large guide for finishing its own reform. Luis asked whether any of it belonged here.
+
+A small part did: how to speak of what was shown and what was not, how to trust a check, how a newcomer finds the present, and what a new rule must say for itself. It is in section 6, in five of the sayings above, and as plain rules in `AGENTS.md`.
+
+The machinery stayed on its side of the border. The reasons, and this project's own record that decided each choice, are in `Docs/Research/2026-11-16_HarnessGuideReview/review.md`.
