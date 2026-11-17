@@ -57,4 +57,12 @@ A few minutes after the step 4a workflow began (08:15), he wrote, word for word:
 What was done with it: the workflow was stopped at about 08:20, while its builder was still reading. It had written
 nothing but an empty report, which was removed. `D:/Dev/WG` was left unchanged at `e8bac96`, with no Unity running.
 The workflow's script was saved in the ankle research folder, to be run again as it is. The Handoff, CURRENT_STATE
-and a memory note record this. Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.
+and a memory note record this.
+
+At about 08:50 he wrote, word for word:
+
+> Actually I won't need to bring my laptop out anymore. So you can resume the tasks without needing to worry about time limit.
+
+What was done with it: step 4a was launched again from its saved script, unchanged, at about 08:52.
+
+Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.
