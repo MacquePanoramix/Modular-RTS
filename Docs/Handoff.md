@@ -39,18 +39,22 @@ the same links in the scenes (GUIDs and the import's sub-asset IDs kept), the ol
   Nature came out the same but for its time stamp. House's curtain kept its vertices, normals, UVs and materials, but
   44 of its 284 faces stood at other places in the face list. Found, not looked into: `house.py`'s curtain face order
   is not fixed from one export to the next.
-- **The master's call within (b): patch the old files instead.** Only the three fields that hold the path (each
-  Texture's FileName, each Video's Filename and its "Path"; House 30 fields, Nature 12) become ".", as their
-  RelativeFilename already is; every other byte stays. The first attempt's own reader writes the old House back byte
-  for byte. **Done, 18:04-18:21 (run `wf_85116e9c-5ed`), read by the master: the same models, the path gone; committed in
-`D:/Dev/WG` as `b76f311` and here beside this line; the sceptic found one miscount only. Rung: tested on a rig (the
-editor's batch mode); not as played, not seen by Luis. Section "Patched instead" of `fbx_reexport.md`.** The
-workflow: `fbx_patch_workflow.js` beside it. A sonnet builder patches, compares the node
-  trees and Blender's import, then compares in Unity in `D:/Dev/WG`: every sub-asset's local ID, the meshes' hashes,
-  the materials, and what the scenes and prefabs reference; each check is shown failing on a changed copy. A sonnet
-  sceptic follows. It commits in `D:/Dev/WG` and leaves the files in `D:/Dev/fbx_reexport/final`; the master copies
-  them into this project and commits. `D:/Dev/fbx_reexport` (the first attempt's tools and copies) is kept until
-  then, and recycled after.
+- **The master's call within (b): patch the old files instead. Done.** Only the three fields that held the path (each
+  Texture's FileName, each Video's Filename and its "Path"; House 30 fields, Nature 12) became ".", as their
+  RelativeFilename already was; every other byte stayed. Run `wf_85116e9c-5ed`, 18:04-18:21 (script
+  `fbx_patch_workflow.js` beside the others), read by the master: a sonnet builder patched, then compared the node
+  trees, Blender's import and Unity's import in `D:/Dev/WG` (every sub-asset's local ID, the meshes' hashes, the 39
+  references from the scene), each check shown failing on a changed copy; a sonnet sceptic with its own reader found
+  one miscount in the report only (mended). Committed in `D:/Dev/WG` as `b76f311` and here as `16b5636`, both
+  pushed. Rung: tested on a rig (the editor's batch mode); not as played, not seen by Luis. Report:
+  `fbx_reexport.md`, section "Patched instead"; review: `review_fbx_patch.md`. `D:/Dev/fbx_reexport` (66 MB) is
+  kept: the report cites it, and its tools serve the curtain question; recycled when that is closed or dropped.
+- **Small, found then (read in the exporter's code, not run):** Blender 4.4's FBX exporter fills FileName, Filename
+  and "Path" with the absolute path of the FBX's own output folder joined to the relative name, whatever `path_mode`
+  says (`_gen_vid_path` in `io_scene_fbx/export_fbx_bin.py`); `path_mode='STRIP'` changes only the relative name.
+  So the folder an export is written to decides what those fields hold, not `house.py` or `nature.py`. The mend for a
+  future export: write it into a folder outside the profile, or patch the three fields to "." after, as here; G6
+  (and git's own check, once live) refuses a commit that still carries the profile path.
 
 **G6′, the mend still to do** (`Research/2026-11-16_HarnessGuideReview/`: `g6_report.md`, `review_g6_breaker.md`,
 `review_g6_code.md`; the mender stopped at its usage guard before touching anything). Must-fix:
