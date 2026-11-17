@@ -138,7 +138,7 @@ namespace WonderGather.Tests
         // (The read-back: steps compared, how many wrote today's form of the ask within 0.01 degrees and the most any
         // differed; the most the written target was from the reading, in shares of E; damping steps that matched today's
         // form and B's.)
-        public int Compared, AsToday, DampTodaySame, DampBSame, DampCompared, OffCompared;
+        public int Compared, AsToday, AsTodayKind, DampTodaySame, DampBSame, DampCompared, OffCompared;
         public float FromTodayMost, OffOverEMost, ReplicaUnsure;
 
         private OwnRiser riserSeen;
@@ -281,6 +281,20 @@ namespace WonderGather.Tests
                 Compared++;
                 if (from < .01f) AsToday++;
                 FromTodayMost = Mathf.Max(FromTodayMost, from);
+                // (Check 7: today's form of the ask, slowed as B slows it (AnkleSlows, from the same reading and E): what
+                // is written with AnkleLimit 0 and B on. A step written unlike both is A's.)
+                bool kind = from < .01f;
+                var atNow = boot.jointPosition;
+                var dr = boot.xDrive;
+                if (!kind && OwnRiser.AnkleSpeed > 0 && atNow.dofCount == 3 && dr.stiffness > 0 && dr.forceLimit > 0)
+                {
+                    float most = dr.forceLimit / dr.stiffness;
+                    Vector3 at0 = new Vector3(atNow[0], atNow[1], atNow[2]), off = today * Mathf.Deg2Rad - at0;
+                    float far = off.magnitude;
+                    if (far > 1e-9f) off *= most * (float)System.Math.Tanh(far / most) / far;
+                    kind = (target - (at0 + off) * Mathf.Rad2Deg).magnitude < .01f;
+                }
+                if (kind) AsTodayKind++;
             }
             // How far the written target is from where the joint is, in shares of E (radians; never wrapped).
             var at = boot.jointPosition;
@@ -402,6 +416,26 @@ namespace WonderGather.Tests
                 foreach (var link in boot.GetComponentsInChildren<ArticulationBody>())
                     if (link != boot) toeTouch[leg] = link.TryGetComponent(out BootTouch toeHas) ? toeHas : link.gameObject.AddComponent<BootTouch>();
             }
+        }
+
+        // Check 7 (forced_checks.md): for each switch, whether the run went through what it changes, with the counts
+        // behind it. A: targets written unlike today's form of the ask (and, with B on, unlike today's form slowed as B
+        // slows it). B: damping written unlike today's form. C: boots slackened about the let-go shin's end at a going down
+        // by itself. A switch that is off says so.
+        public string[] Exercised()
+        {
+            string Line(string name, bool on, bool exercised, string counts) =>
+                (on ? exercised ? "LIVE_EXERCISED " : "LIVE_NOT_EXERCISED " : "LIVE_SWITCH_OFF ") + name + " " + Who + ": " + counts;
+            int unlike = Compared - AsTodayKind, dampUnlike = DampCompared - DampTodaySame;
+            return new[]
+            {
+                Line("AnkleLimit", OwnRiser.AnkleLimit == 1, unlike > 0, string.Format(Inv, "{0} of {1} boot-steps getting up written unlike today's form of the ask{2} ({3} as today's form itself)",
+                    unlike, Compared, OwnRiser.AnkleSpeed > 0 ? " or that form slowed as B slows it" : "", AsToday)),
+                Line("AnkleSpeed", OwnRiser.AnkleSpeed > 0, dampUnlike > 0, string.Format(Inv, "{0} of {1} boot-steps getting up with damping unlike today's form ({2} as B's smooth maximum)",
+                    dampUnlike, DampCompared, DampBSame)),
+                Line("BootsFromOwnShin", OwnBody.BootsFromOwnShin, SlackAboutShinEnd > 0, string.Format(Inv, "gone down by itself {0} times watched: boots slackened about the let-go shin's end {1}, about their own body's ankle {2}, neither {3}; let go by a push {4} times",
+                    Downs, SlackAboutShinEnd, SlackAboutOwnAnkle, SlackNeither, PushedDowns)),
+            };
         }
 
         public string Summary() => string.Format(Inv,

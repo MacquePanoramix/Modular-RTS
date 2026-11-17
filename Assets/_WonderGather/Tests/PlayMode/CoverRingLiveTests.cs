@@ -276,7 +276,9 @@ namespace WonderGather.Tests
             if (energyDetail) Debug.Log(pair.EnergyDetailLine());
             string ankleSaid = ankle.Summary();
             Debug.Log(ankleSaid);
-            File.WriteAllText(Path.Combine(folder, "ankle.txt"), "LIVE_SWITCHES at the end: " + AnkleMendArguments.ReadBack() + "\n" + string.Join("\n", ankle.Lines) + "\n" + ankleSaid + "\n");
+            string[] exercised = ankle.Exercised();
+            foreach (var line in exercised) { Debug.Log(line); if (line.StartsWith("LIVE_NOT_EXERCISED")) Debug.LogWarning(line); }
+            File.WriteAllText(Path.Combine(folder, "ankle.txt"), "LIVE_SWITCHES at the end: " + AnkleMendArguments.ReadBack() + "\n" + string.Join("\n", ankle.Lines) + "\n" + ankleSaid + "\n" + string.Join("\n", exercised) + "\n");
             Assert.That(pair.Blowups, Is.EqualTo(0), $"{pair.Blowups} blow-up(s): its own body went bad (a link not finite, turning past {CoverPair.BadTurning} rad/s, or its root {CoverPair.BadAway} m from where the course began):" + pair.BlowupsSaid);
             Assert.That(pair.Measured, Is.GreaterThan(0), "No frame was measured.");
             Assert.That(pair.NotRestored, Is.EqualTo(0), "The played flaps did not come back bit for bit.");
