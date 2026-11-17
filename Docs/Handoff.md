@@ -3,7 +3,7 @@
 **Last updated:** November 17, 2026 (evening, about 20:25), by Claude Opus 5.5: the forced checks' mend read
 (`7c6edf0` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and committed on both
 branches; git's own check, approved for this project only, built and reviewed (`29faa56`), not installed; its mend
-from about 23:04, when the five hours reset; then the install; then 4a″. The master is Opus 5.5 at max effort with
+running from 23:04 (run `wf_b6045c97-a55`); then the install; then 4a″. The master is Opus 5.5 at max effort with
 ultracode, by Luis's word.
 Kept current at every milestone.
 
@@ -86,8 +86,8 @@ and the other worktrees share this project's `.git`, and the hooks kept there ac
   - The code reader (`review_g6git_code.md`) found one: commit-msg refuses a cleanup commit made with `-v` or the
     editor's comments.
   - The opus mender was stopped by a safety classifier after reading only, and changed nothing.
-- **The mend, split into narrow, listed items:** `g6_git_mend_workflow.js` beside the others, to run from about 23:04,
-  when the five hours reset (a wake-up is set in the session). The git side has nine items. The guard's candidate gets
+- **The mend, split into narrow, listed items:** `g6_git_mend_workflow.js` beside the others, running from 23:04
+  (run `wf_b6045c97-a55`; the window at 0%, the week at 75%). The git side has nine items. The guard's candidate gets
   five fixed changes, without a search for other ways past it; what it cannot see is named by kind. Then a rerunner
   and a code reader on sonnet.
 - Read in that brief before it runs: `install.sh` acts on the current folder's repository when given none. The brief
@@ -141,7 +141,7 @@ or C, and arm B need not run again. Open, for 4a″:
 4. The report names the log file of each line number it quotes.
 Then 4b. The order, one workflow and one Unity at a time: the FBX patch, done (18:21)
 (`Research/2026-11-16_HarnessGuideReview/fbx_patch_workflow.js`; it uses Unity in `D:/Dev/WG`); then git's own check,
-built and reviewed 18:25-20:12 (`29faa56`), its mend from about 23:04 (`g6_git_mend_workflow.js`; no Unity), read,
+built and reviewed 18:25-20:12 (`29faa56`), its mend running from 23:04 (run `wf_b6045c97-a55`, `g6_git_mend_workflow.js`; no Unity), read,
 then installed; then 4a″ (`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`, written, not run). Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
