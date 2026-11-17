@@ -83,4 +83,14 @@ the settings is asked again. Found while preparing it: two models already pushed
 `Assets/_WonderGather/Art/OrdinaryPlace/`, carry that path, from the temporary folder they were exported through;
 what to do about them is Luis's call.
 
+I asked which of three ways Luis wanted: (a) leave them, the new check stopping any new version that still carries
+the path; (b) export the two models again without it, the same models with the same links in the scenes, the old
+versions staying in GitHub's history; (c) b, and erase the old versions from the history too, which rewrites every
+later commit on both branches and cannot be undone. At about 10:50 Luis answered, word for word:
+
+> Yes I think b would be better please.
+
+What is done with it: the two models are exported again without the path, after the ankle mend's launch at the
+five-hour reset; the history is left as it is.
+
 Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.

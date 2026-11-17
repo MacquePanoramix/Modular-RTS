@@ -30,8 +30,11 @@ is written but untracked, not wired into `guard.sh` and not tested: it does noth
 launch: wire it into a copy of the guard first (`guard.sh` is the live hook, for the mend's agents too); add G6
 cases to `guard_test.sh` (the profile built from `$USERPROFILE` at run time, never written) and run them against
 the copy and against the old guard; one reviewer who tries to break it in temporary repositories; then make it
-live, commit and push. Waiting on Luis: `House.fbx` and `Nature.fbx` (OrdinaryPlace) carry that path, pushed since
-c02df06.
+live, commit and push. `House.fbx` and `Nature.fbx` (OrdinaryPlace) carry that path, pushed since c02df06; Luis
+chose (b) at about 10:50: export both again without it, as the same models with the same links in the scenes (GUIDs
+and the import's sub-asset IDs kept), the old versions staying in history. After the mend's launch, by a workflow:
+find how they were made, export again outside the profile folder, compare new with old (hierarchy, names, meshes,
+materials, the import's IDs, a still; Unity only when the mend's runs leave it free), commit on both branches.
 
 **Next: step 4a's mend (4a′) starts when the five-hour window resets (13:00 for Luis; a wake-up launches it at
 13:05; item 5); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
