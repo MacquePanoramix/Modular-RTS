@@ -27,7 +27,25 @@ namespace WonderGather.Tests
         private static bool unheardWas, saved;
         private static readonly List<KeyValuePair<FieldInfo, object>> was = new List<KeyValuePair<FieldInfo, object>>();
 
-        public static void Save() { unheardWas = RiseAgent.Unheard; was.Clear(); saved = true; }
+        public static void Save() { unheardWas = RiseAgent.Unheard; was.Clear(); saved = true; ForgetSaid(); }
+
+        // OwnRiser says each wrong ankle setting once (ankleLimitSaid, ankleSpeedSaid, ankleTurnsSaid): forgotten when a
+        // test begins and when it ends, so that every test hears its own (a check that expects the message gets it).
+        private static readonly FieldInfo[] saidOnce =
+        {
+            typeof(OwnRiser).GetField("ankleLimitSaid", BindingFlags.NonPublic | BindingFlags.Static),
+            typeof(OwnRiser).GetField("ankleSpeedSaid", BindingFlags.NonPublic | BindingFlags.Static),
+            typeof(OwnRiser).GetField("ankleTurnsSaid", BindingFlags.NonPublic | BindingFlags.Static),
+        };
+
+        private static void ForgetSaid()
+        {
+            foreach (var f in saidOnce)
+            {
+                Assert.That(f, Is.Not.Null, "OwnRiser's once-said ankle flags are not where AnkleMendArguments looks for them.");
+                f.SetValue(null, false);
+            }
+        }
 
         // Sets what the arguments say; returns what it set.
         public static string Apply()
@@ -71,6 +89,7 @@ namespace WonderGather.Tests
             was.Clear();
             RiseAgent.Unheard = unheardWas;
             saved = false;
+            ForgetSaid();
         }
 
         // The switches as the game reads them now.

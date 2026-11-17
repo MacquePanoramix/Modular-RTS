@@ -23,7 +23,8 @@ namespace WonderGather.Tests
     // the played way, the two measures must agree on every frame and the played flap bones come back bit for bit: the
     // pair's own check (SELF_CHECK), before any result counts. A measure, not a test that must pass (but for that check).
     //
-    // Arguments: -liveWho Small|Round; -liveOwn 0|1 (PhysicalFall.GetsUpByItsOwn); -liveSeam 0|1 (the played way);
+    // Arguments: -liveWho Small|Round|Long (Long's trousers have no cut ring: with -liveRing 0 its courses run with nothing
+    // of the ring measured, COVER_RING none in meter.txt; without it the meter stops, as it always has);-liveOwn 0|1 (PhysicalFall.GetsUpByItsOwn); -liveSeam 0|1 (the played way);
     // -liveOther 0|1 (the other way; the opposite of -liveSeam if left out); -ownPushes, -ownPushWays, -ownPushBack (as
     // GettingUpByItsOwnTests reads them); -ownRate (frames a second, 50 if left out); -liveCap seconds (240); -liveEvery
     // (1: every frame while down or getting up); -liveStandEvery (10); -liveOut folder; -livePics (4 a criterion a
@@ -162,7 +163,7 @@ namespace WonderGather.Tests
             log.AppendLine($"COVER_SWITCH played way (MinerBody.FlapsOnTheirSeams) {seam}, the other way {other}; cover: the garments' layer {meter.Layer} and the terrain's layer 6 ({LayerMask.LayerToName(6)})");
             lods.AddRange(unit.GetComponentsInChildren<LODGroup>(true));
             meter.AddSkins(unit, log);
-            var ring = meter.FindRing(unit.transform, log);
+            var ring = meter.FindRing(unit.transform, log, CaptureTools.Argument("-liveRing") != "0");
             File.WriteAllText(Path.Combine(folder, "meter.txt"), log.ToString());
             Debug.Log(log.ToString());
 

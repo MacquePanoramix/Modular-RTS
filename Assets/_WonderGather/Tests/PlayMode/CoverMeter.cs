@@ -134,7 +134,9 @@ namespace WonderGather.Tests
         }
 
         // The cut ring, found with the miner standing (feet: the unit's position; left and right: its right).
-        public Ring FindRing(Transform unit, StringBuilder log)
+        // needed false (-liveRing 0): a miner whose trousers have no cut ring (Long's are closed) gets a ring of no points,
+        // said in the log (COVER_RING none), and its courses run on with nothing of the ring measured.
+        public Ring FindRing(Transform unit, StringBuilder log, bool needed = true)
         {
             // The drawn body is one mesh (rigging.py joins every part into it), so the trousers are found in it: the pieces
             // (whole once their seams are welded) that a thigh carries and that no bone outside the trousers' own moves.
@@ -250,6 +252,11 @@ namespace WonderGather.Tests
                     if (openSet.Add(a)) openWelded.Add(a);
                     if (openSet.Add(bb)) openWelded.Add(bb);
                 }
+            if (openWelded.Count == 0 && !needed)
+            {
+                log.AppendLine($"COVER_RING none: the trousers ({trouserTris.Count / 3} triangles) have no open edge, so no cut ring; not needed (-liveRing 0), so nothing of the ring is measured");
+                return new Ring { Body = body, Legs = new[] { new List<int>(), new List<int>() }, TrouserTris = trouserTris, TrouserSub = trouserSub };
+            }
             Assert.That(openWelded.Count, Is.GreaterThan(0), "Small's trousers have no open edge:\n" + log);
             float ringTop = -1e9f;
             foreach (int w in openWelded) ringTop = Mathf.Max(ringTop, body.Verts[rep[w]].y - feet.y);
@@ -264,7 +271,12 @@ namespace WonderGather.Tests
                 ring[Vector3.Dot(body.Verts[v] - feet, unit.right) < 0 ? 0 : 1].Add(v);
             }
             log.AppendLine($"COVER_RING the trousers: {trouserTris.Count / 3} triangles (in the body's part {trouserSub}), {openWelded.Count} open points; the cut ring: {ring[0].Count} on the left leg, {ring[1].Count} on the right, {1000 * ringLow:F0} to {1000 * ringTop:F0} mm above the feet as it stands");
-            Assert.That(ring[0].Count >= 8 && ring[1].Count >= 8, Is.True, "The cut ring was not found on both legs:\n" + log);
+            if (!(ring[0].Count >= 8 && ring[1].Count >= 8) && !needed)
+            {
+                log.AppendLine("COVER_RING none: the cut ring was not found on both legs; not needed (-liveRing 0), so nothing of the ring is measured");
+                ring = new[] { new List<int>(), new List<int>() };
+            }
+            else Assert.That(ring[0].Count >= 8 && ring[1].Count >= 8, Is.True, "The cut ring was not found on both legs:\n" + log);
             return new Ring { Body = body, Legs = ring, TrouserTris = trouserTris, TrouserSub = trouserSub };
         }
 
