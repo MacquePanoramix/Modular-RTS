@@ -1,0 +1,9 @@
+# Sceptic review of forced_checks.md, second build (November 17, 2026)
+Shown: report, three first reviews, TestRuns logs/xml by grep (forced_barfails, forced_good, forced_bad2, down_c0c/c0e/c1/c1b/c1c/c0d), AnkleForced.cs by grep (lines 127, 182-199, 584-588, 925-933, 1109-1122). Not read: the diff line by line, research.md, OwnRiser/OwnBody, per-step files, live_ex logs again, checks 7/8 (not rerun).
+Findings, most serious first:
+1. Check 3 bar fails its known-bad: down_c0e xml Failed(Child), log:3064 "BAR_C Long C off boot whirled PASSED ... 0.0141 m"; Round 0.0148. Report says so. Open. Sure.
+2. Staleness: AnkleForced.cs modified 13:36; forced_good 13:20, forced_barfails 13:19, forced_bad2 13:26. Only down_c0e/c1c ran on the committed file. The 420-bar verdict is from an older file; the report says so, but "mended" for 1,3-6 rests on it.
+3. BAR_AXES_READ: "0.00 deg" on every hold (forced_bad2:3587) says the bar compares a quantity with itself; its only contrast is X/Y swapped at least 5.76 deg, and it is not in -forcedMustFail (log:10121 lists five bars). No known-bad caught. Also BAR_A_SLERP, BAR_FOLLOW, BAR_FORM, BAR_WRAP, BAR_C_PLAIN have none (slerp admitted). Medium-high.
+4. Cites axes_far lines (3587, 3602, 6347, 6362, 9122) without a file; they are in forced_bad2, not forced_good. Minor.
+5. Else matched: barfails log:1554 and xml Failed; verdicts 12448, 10121, 3064, 2868; FORCED_CONFIG read-backs 1037/1863/3016/4245/1223; 1204 0.00 deg; 1315 95.1/-97.6; 1542 1.626; 1732 0.701; 1819 0.904; 2042 0.995; 2116 0.68/41.28; 2175; BAR_C table (1285, 1432, 1591, 1365, 904, 1105, 1252, 1399, 1185, down_c1 2728, 1967, down_c0d 1729). 108/45 profiles "ended by itself True"; no cap seen.
+6. First reviews: sceptic 1 open (plain C off 0.0208 passes now; whirl vs going-down still not separated); 2 mended (Failed results); 3, 6, 7 answered; 4 mended; 5 slerp still open. Code 4 mended; code 5 mended (finally, TearDown, 925-927, 1119).

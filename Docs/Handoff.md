@@ -38,8 +38,20 @@ and the import's sub-asset IDs kept), the old versions staying in history. After
 find how they were made, export again outside the profile folder, compare new with old (hierarchy, names, meshes,
 materials, the import's IDs, a still; Unity only when the mend's runs leave it free), commit on both branches.
 
-**Next: step 4a's mend (4a′) is running, from 13:01 on November 17 (workflow `wf_7e285553-35e`, launched after the
-five-hour reset; item 5); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+**Next: 4a″. The mend (4a′) ran 13:01-13:41 on November 17 and was read** (`D:/Dev/WG` `7c6edf0`, only
+`AnkleForced.cs`; `forced_checks.md`, `review_forced2_physicist.md`, `review_forced2_sceptic.md`). No fault in A, B
+or C, and arm B need not run again. Open, for 4a″:
+1. Run forced_good, forced_barfails and forced_bad2 again on `7c6edf0`: they ran on code older than its last change
+   (13:36), so the mends of findings 1 and 3-6 rest on older code.
+2. Give a known-bad to each bar that has none: BAR_AXES_READ (it reads 0.00° on every hold, a quantity against
+   itself), BAR_A_SLERP, BAR_FOLLOW, BAR_FORM, BAR_WRAP and BAR_C_PLAIN.
+3. Check 3. The whirl is now the engine's (50-80 rad/s read the step after the set), but the going down destroys the
+   boot, so the whirl is not carried on. BAR_C (0.025 m) does not separate C off from C on: in down_c0e, with C off,
+   Long whirled at 0.0141 m and Round at 0.0148 m passed where they must fail; once, with C on, Round whipped at
+   0.0398 m. Find what shows that C acted on a whirled boot, or call check 3 a reading.
+4. The report names the log file of each line number it quotes.
+Then 4b. The order, one Unity at a time: G6 made live once its workflow is read; then the FBX workflow
+(`Research/2026-11-16_HarnessGuideReview/fbx_reexport_workflow.js`, written, not yet run); then 4a″. Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
    blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11
@@ -76,8 +88,8 @@ runs take `-liveRing 0`. The live test is not the same run to run, so runs are c
        - Check 6 passes at 2 degrees and turns only about 60.
        - Check 5 has no bar.
      - The builder's "all 8 passed" is not taken as passes.
-   - **4a′, the mend, running from 13:01 on November 17** (run `wf_7e285553-35e`, launched just after the five-hour
-     reset, with the window at 0% and the week at 53%): a builder (opus, high) mends every finding of the three
+   - **4a′, the mend, ran 13:01-13:41 on November 17 and was read; what stays open is under "Next" above** (run
+     `wf_7e285553-35e`, launched just after the five-hour reset, with the window at 0% and the week at 53%): a builder (opus, high) mends every finding of the three
      reviews, or answers it with a log line, and runs the checks again, known-bad and known-good, on all three miners.
      Then a physicist and a sceptic (sonnet, medium) check each first finding against the new logs
      (`review_forced2_physicist.md`, `review_forced2_sceptic.md`). If it is cut off, run it again as it is:
