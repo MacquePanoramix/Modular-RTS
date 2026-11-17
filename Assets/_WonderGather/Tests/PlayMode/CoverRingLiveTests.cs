@@ -30,6 +30,10 @@ namespace WonderGather.Tests
     // course). Writes frames.csv (one row a measured frame), ways.csv (each course's 25 ways), events.txt, pictures.csv,
     // meter.txt and the pictures; per course FrameRecorder's course_<k>.bin/.txt. Read by
     // Docs/Technical/AnyBody/tools/live_cover_summary.py.
+    // The ankle mend (November 17, 2026; AnkleMend.cs): -ownUnheard 0|1 (RiseAgent.Unheard, true if left out, as the
+    // game has it); -riseSet Name=value,... (OwnRiser's public statics: AnkleLimit, AnkleSpeed, ...); -ownBodySet
+    // Name=value,... (OwnBody's: BootsFromOwnShin); -liveStrength s (the miner's strength, MinerWorkPreview.SetStrength).
+    // Each is put back when the test ends. The ankle watch (AnkleWatch) runs on every course and writes ankle.txt.
     public sealed class CoverRingLiveTests
     {
         private MinerChoice choice;
@@ -42,11 +46,14 @@ namespace WonderGather.Tests
         private int rateWas;
         private bool ownWas, seamsWas, backfacesWas;
         private Camera grassWas;
+        private AnkleWatch ankle;
+        private float strengthWas = float.NaN;
         private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
         [UnitySetUp]
         public IEnumerator Load()
         {
+            AnkleMendArguments.Save();
             rateWas = Time.captureFramerate;
             ownWas = PhysicalFall.GetsUpByItsOwn;
             seamsWas = MinerBody.FlapsOnTheirSeams;
@@ -66,6 +73,10 @@ namespace WonderGather.Tests
         {
             if (pair != null) { pair.Close(); Object.Destroy(pair.gameObject); pair = null; }
             if (recorder != null) { recorder.Close(); Object.Destroy(recorder.gameObject); recorder = null; }
+            if (ankle != null) { Object.Destroy(ankle.gameObject); ankle = null; }
+            if (!float.IsNaN(strengthWas) && look != null) look.SetStrength(strengthWas);
+            strengthWas = float.NaN;
+            AnkleMendArguments.Restore();
             if (meter != null) { meter.End(); meter = null; }
             foreach (var g in lods) if (g != null) g.ForceLOD(-1);
             lods.Clear();
@@ -125,6 +136,14 @@ namespace WonderGather.Tests
             choice.Choose(index);
             yield return Wait(.3f);
             var unit = choice.Current;
+            // (The ankle mend's switches, set before the body is made; read back from the running body below.)
+            Debug.Log("LIVE_SET " + AnkleMendArguments.Apply());
+            string strengthArg = CaptureTools.Argument("-liveStrength");
+            if (!string.IsNullOrEmpty(strengthArg))
+            {
+                strengthWas = look.Strength;
+                look.SetStrength(float.Parse(strengthArg, Inv));
+            }
             look.SetOwn(true);
             OwnBody own = null;
             for (float until = Time.time + 20; (own == null || !own.Stands) && Time.time < until;) { unit.TryGetComponent(out own); yield return null; }
@@ -160,6 +179,11 @@ namespace WonderGather.Tests
             pair.EnergyDetail = energyDetail;
             pair.Begin(meter, ring, miner, unit.transform, seam, other, every, standEvery, folder, pictures, picsMost, who);
             pair.SetCourse(-1, 0, Quaternion.LookRotation(Vector3.ProjectOnPlane(unit.transform.forward, Vector3.up)));
+            Assert.That(AnkleWatch.Reads(out string ankleUnread), Is.True, ankleUnread);
+            ankle = new GameObject("Ankle watch").AddComponent<AnkleWatch>();
+            ankle.Own = own; ankle.Who = who;
+            Debug.Log(string.Format(Inv, "LIVE_SWITCHES as the running body reads them: {0}; strength {1:0.###} (the panel's {2:0.###})", AnkleMendArguments.ReadBack(),
+                unit.TryGetComponent<PhysicalBody>(out var strong) ? strong.Strength : float.NaN, look.Strength));
 
             float pushes = 8;
             string given = CaptureTools.Argument("-ownPushes");
@@ -249,6 +273,9 @@ namespace WonderGather.Tests
             Debug.Log($"LIVE_METER hits off the plane of the face they were counted on: {meter.Mismatches} of {meter.FaceChecks}");
             Debug.Log(pair.EnergyLine());
             if (energyDetail) Debug.Log(pair.EnergyDetailLine());
+            string ankleSaid = ankle.Summary();
+            Debug.Log(ankleSaid);
+            File.WriteAllText(Path.Combine(folder, "ankle.txt"), "LIVE_SWITCHES at the end: " + AnkleMendArguments.ReadBack() + "\n" + string.Join("\n", ankle.Lines) + "\n" + ankleSaid + "\n");
             Assert.That(pair.Blowups, Is.EqualTo(0), $"{pair.Blowups} blow-up(s): its own body went bad (a link not finite, turning past {CoverPair.BadTurning} rad/s, or its root {CoverPair.BadAway} m from where the course began):" + pair.BlowupsSaid);
             Assert.That(pair.Measured, Is.GreaterThan(0), "No frame was measured.");
             Assert.That(pair.NotRestored, Is.EqualTo(0), "The played flaps did not come back bit for bit.");

@@ -131,6 +131,20 @@ namespace WonderGather
         // AnkleAtMost 0: as before.)
         public static float AnkleAtMost = 110, AnkleTurnsAtMost = 0;
         private readonly Quaternion[] ankleAsked = { Quaternion.identity, Quaternion.identity };
+        // The ankle mend's switches (Docs/Research/2026-11-15_NaturalRangesAndTheAnkle/research.md §1.4, §4.2, §7.1;
+        // built November 17, 2026, after Luis's word of November 15; all off by default, and off the code runs as
+        // before, line for line).
+        // AnkleLimit: 0, as before (the ask clamped at AnkleAtMost, what learns adds after it); 1, the limit that cannot
+        // flip: what learns adds comes first, then the ask is split into a swing and a twist about the shin, each
+        // saturated smoothly toward the reach (AnkleAtMost, the same both ways round: isotropic) and folded back toward
+        // how it stands as the turn nears half a turn (§1.4). Any other value is said once, as an error, and acts as 0.
+        // AnkleSpeed: 0, as before; above nothing, the speed a boot's own drive can give it, radians a second, for a body
+        // AnkleSpeedHeight tall at the hips (Small), slower by the square root of the height for a taller one: what an
+        // ankle is asked is written no further than E = force limit / stiffness from where the joint is (smoothly,
+        // E tanh(|e| / E)), and its damper is the smooth maximum (p = 4) of today's and force limit / speed - stiffness
+        // step (§4.2: then no drive's own doing turns the boot faster than that speed, whatever it is asked).
+        public static float AnkleLimit = 0, AnkleSpeed = 0, AnkleSpeedHeight = .605714f;
+        private static bool ankleLimitSaid, ankleSpeedSaid, ankleTurnsSaid;
         // (Where a leg reached for the ground bends its knee: 0, the way the body lies along the ground; 1, the way the
         // front of its hips faces; between, so much of the way from one to the other.)
         public static float KneeFaces = .759f;
@@ -369,6 +383,7 @@ namespace WonderGather
             slackNow[j] = share;
             float spring = springOf[j] * share, has = hasOf[j] * Mathf.Max(share, .3f);
             float damper = Damped * 2 * Mathf.Sqrt(Mathf.Max(spring, 1e-3f) * lighter[j]);
+            if (j >= Foot) { float speed = AnkleSpeedHere(); if (speed > 0) damper = AnkleDamper(damper, spring, has, speed); }
             var drive = parts[j].xDrive; drive.stiffness = spring; drive.damping = damper; drive.forceLimit = has; parts[j].xDrive = drive;
             if (hinge[j]) return;
             drive = parts[j].yDrive; drive.stiffness = spring; drive.damping = damper; drive.forceLimit = has; parts[j].yDrive = drive;
@@ -394,6 +409,7 @@ namespace WonderGather
             float size = own.x * own.x + own.y * own.y + own.z * own.z + own.w * own.w;
             if (float.IsNaN(size) || size < .5f || size > 1.5f) return;
             own = Quaternion.Normalize(own);
+            if (j >= Foot && (AnkleLimit != 0 || AnkleSpeed != 0) && AnkleMended(j, own)) return;
             if (j >= Foot && AnkleAtMost > 0) own = AnkleCan(j - Foot, own);
             own.ToAngleAxis(out float angle, out Vector3 axis);
             if (angle > 180) angle -= 360;
@@ -421,6 +437,142 @@ namespace WonderGather
             if (AnkleTurnsAtMost > 0) can = Quaternion.RotateTowards(ankleAsked[leg], can, AnkleTurnsAtMost * Mathf.Rad2Deg * Mathf.Max(lastStep, 1e-3f));
             ankleAsked[leg] = can;
             return can;
+        }
+
+        // ---- The ankle mend (AnkleLimit, AnkleSpeed; off: none of this runs) ----
+        // An ankle asked so (own: a turn from how it was made, in its own frame), with either switch on: its target
+        // written, and true. False: neither is on (AnkleLimit neither 0 nor 1 acts as 0), and Aims goes on as before.
+        private bool AnkleMended(int j, Quaternion own)
+        {
+            int leg = j - Foot;
+            bool limits = AnkleLimit == 1, slows = AnkleSpeedHere() > 0;
+            if (AnkleLimit != 0 && !limits && !ankleLimitSaid)
+            {
+                ankleLimitSaid = true;
+                Debug.LogError("OwnRiser.AnkleLimit is " + Said(AnkleLimit) + ": only 0 (as before) and 1 (the limit that cannot flip) are built; it acts as 0.");
+            }
+            if (!limits && !slows) return false;
+            Vector3 by;
+            if (limits)
+            {
+                // (What learns adds, first; then the limit. wayAsks: the way's ask, before both. What learns adds is put on
+                // as a turn after the way's ask: added to it as a target, the sum would jump where the ask crosses half a
+                // turn, since its target flips there. Whether this order is the one the model was taught by is open: it was
+                // taught with the two added as targets. Only a heard run has anything learnt to add.)
+                wayAsks[j] = RotationVector(own);
+                by = RotationVector(AnkleFolds(leg, own * FromRotationVector(drivenNow[j])));
+                // (AnkleTurnsAtMost belongs to AnkleCan, which the limit replaces: with AnkleLimit 1 it is not applied.)
+                if (AnkleTurnsAtMost > 0 && !ankleTurnsSaid)
+                {
+                    ankleTurnsSaid = true;
+                    Debug.LogWarning("OwnRiser.AnkleTurnsAtMost is " + Said(AnkleTurnsAtMost) + ", but it is not applied while AnkleLimit is 1 (AnkleFolds replaces AnkleCan).");
+                }
+            }
+            else
+            {
+                // (As Aims has it: the clamp, then what learns adds.)
+                if (AnkleAtMost > 0) own = AnkleCan(leg, own);
+                by = RotationVector(own);
+                wayAsks[j] = by;
+                by += drivenNow[j];
+            }
+            if (slows) by = AnkleSlows(j, by);
+            parts[j].SetDriveTarget(ArticulationDriveAxis.X, by.x);
+            if (hinge[j]) return true;
+            parts[j].SetDriveTarget(ArticulationDriveAxis.Y, by.y);
+            parts[j].SetDriveTarget(ArticulationDriveAxis.Z, by.z);
+            return true;
+        }
+
+        // A turn as Aims writes it: its angle (degrees, folded into (-180, 180]) times its axis.
+        private static Vector3 RotationVector(Quaternion q)
+        {
+            q.ToAngleAxis(out float angle, out Vector3 axis);
+            if (angle > 180) angle -= 360;
+            if (float.IsNaN(axis.x) || float.IsInfinity(axis.x)) { axis = Vector3.right; angle = 0; }
+            return angle * axis;
+        }
+        private static Quaternion FromRotationVector(Vector3 by)
+        {
+            float angle = by.magnitude;
+            return angle > 1e-6f ? Quaternion.AngleAxis(angle, by / angle) : Quaternion.identity;
+        }
+        private static float Eighth(float x) { x *= x; x *= x; return x * x; }
+
+        // AnkleLimit 1 (§1.4): the ask from how it stands, q = (w, v) with w >= 0, split into a twist about the shin and a
+        // swing; the swing saturated smoothly toward the reach, S(rho) = rho / (1 + rho^4)^(1/4), and both folded back
+        // toward how it stands as their turn nears half a turn: fold = 1 - (1 - w_swing^2)^8, gtwist = 1 - (1 -
+        // w_twist^2)^4; the twist within the reach by tanh. Nothing in it starts at an angle; at half a turn the target is
+        // how it stands, whichever way round the ask is read.
+        private Quaternion AnkleFolds(int leg, Quaternion ask)
+        {
+            float reach = (AnkleAtMost > 0 ? AnkleAtMost : 110) * Mathf.Deg2Rad;
+            Quaternion stood = toStood[Foot + leg], q = Quaternion.Inverse(stood) * ask;
+            if (q.w < 0) q = new Quaternion(-q.x, -q.y, -q.z, -q.w);
+            // (The shin's long line, in the frame of the boot as it stands: the boot hangs from the shin turned rested,
+            // then so much from how it was made.)
+            Vector3 t = Quaternion.Inverse(rested[Foot + leg] * stood) * Vector3.up;
+            float along = q.x * t.x + q.y * t.y + q.z * t.z;
+            float n = Mathf.Sqrt(q.w * q.w + along * along);
+            float wTwist = n > 1e-6f ? q.w / n : 1;
+            Quaternion twist = n > 1e-6f ? new Quaternion(along * t.x / n, along * t.y / n, along * t.z / n, wTwist) : Quaternion.identity;
+            Quaternion swing = q * Quaternion.Inverse(twist);
+            float wSwing = Mathf.Clamp01(Mathf.Abs(swing.w));
+            Vector3 v = new Vector3(swing.x, swing.y, swing.z);
+            float vLong = v.magnitude, s = 2 * Mathf.Atan2(vLong, wSwing);
+            Vector3 sigma = vLong > 1e-9f ? v * (s / vLong) : 2 * v;
+            float rho = s / reach;
+            float fold = 1 - Eighth(Mathf.Max(0, 1 - wSwing * wSwing));
+            float sinTwist = Mathf.Max(0, 1 - wTwist * wTwist), gTwist = 1 - sinTwist * sinTwist * sinTwist * sinTwist;
+            Vector3 swingCan = sigma * (fold / Mathf.Sqrt(Mathf.Sqrt(1 + rho * rho * rho * rho)));
+            float tau = 2 * Mathf.Atan2(along, q.w);
+            float twistCan = fold * gTwist * reach * (float)System.Math.Tanh(tau / reach);
+            Quaternion can = stood * FromRotationVector(swingCan * Mathf.Rad2Deg) * Quaternion.AngleAxis(twistCan * Mathf.Rad2Deg, t);
+            ankleAsked[leg] = can;
+            return can;
+        }
+
+        // AnkleSpeed (§4.2): the target written no further than E from where the joint is now (the difference taken
+        // as it is, never wrapped round), E = force limit / stiffness of the gains the drive holds now. by: degrees, the
+        // joint's reading radians.
+        private Vector3 AnkleSlows(int j, Vector3 by)
+        {
+            var now = parts[j].jointPosition;
+            if (now.dofCount < 3) return by;
+            var drive = parts[j].xDrive;
+            if (!(drive.stiffness > 0) || !(drive.forceLimit > 0)) return by;
+            float most = drive.forceLimit / drive.stiffness;
+            Vector3 at = new Vector3(now[0], now[1], now[2]), off = by * Mathf.Deg2Rad - at;
+            float far = off.magnitude;
+            if (far > 1e-9f) off *= most * (float)System.Math.Tanh(far / most) / far;
+            return (at + off) * Mathf.Rad2Deg;
+        }
+
+        // AnkleSpeed for this body, radians a second: slower by the square root of its height. 0 when the switch is off,
+        // and when what it was given cannot be used (a speed of 1e-3 rad/s or less, not a number, endless, or a height of
+        // none): then it says so once and acts as off, as AnkleLimit does.
+        private float AnkleSpeedHere()
+        {
+            if (AnkleSpeed == 0) return 0;
+            float speed = AnkleSpeed * Mathf.Sqrt(AnkleSpeedHeight / tall);
+            if (speed > 1e-3f && !float.IsInfinity(speed)) return speed;
+            if (!ankleSpeedSaid)
+            {
+                ankleSpeedSaid = true;
+                Debug.LogError("OwnRiser.AnkleSpeed is " + Said(AnkleSpeed) + " with AnkleSpeedHeight " + Said(AnkleSpeedHeight) + ": " + Said(speed) + " rad/s for this body cannot be used, so it acts as 0 (off).");
+            }
+            return 0;
+        }
+        // (A number as the logs are read, whatever the computer's language: a point before the decimals.)
+        private static string Said(float x) => x.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+        // AnkleSpeed: the damper, the smooth maximum (p = 4) of today's and has / speed - spring step (speed: from
+        // AnkleSpeedHere, above 1e-3).
+        private float AnkleDamper(float damper, float spring, float has, float speed)
+        {
+            float floor = Mathf.Max(0, has / speed - spring * lastStep);
+            float a = damper * damper, b = floor * floor;
+            return Mathf.Sqrt(Mathf.Sqrt(a * a + b * b));
         }
 
         // A joint's turn from how it stands, in its own frame, for the pose it is at. (A limb's part lies along its

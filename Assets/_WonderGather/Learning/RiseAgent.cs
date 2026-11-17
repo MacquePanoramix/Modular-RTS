@@ -105,8 +105,11 @@ namespace WonderGather
         // was taught; only while the Academy steps itself (the bench and the teaching step it themselves). None: as
         // searched.
         public static int DecidesEvery = 5;
-        // (Unheard: no model is given in the game, to measure the body as searched against it there.)
-        public static bool Unheard;
+        // (Unheard: no model is given in the game, to measure the body as searched against it there. True by default
+        // from November 17, 2026: Luis turned Small's learnt addition off in the game on November 15, and the ankle mend's
+        // research (Docs/Research/2026-11-15_NaturalRangesAndTheAnkle, step 2) does it here; the teaching and the bench
+        // step the Academy themselves and are not heard here either way. The tests set it from -ownUnheard.)
+        public static bool Unheard = true;
         private static readonly Dictionary<OwnBody, RiseAgent> learnt = new Dictionary<OwnBody, RiseAgent>(), paces = new Dictionary<OwnBody, RiseAgent>();
         private static readonly HashSet<string> none = new HashSet<string>();
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]

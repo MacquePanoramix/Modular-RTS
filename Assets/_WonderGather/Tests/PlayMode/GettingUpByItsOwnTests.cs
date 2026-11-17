@@ -15,10 +15,13 @@ namespace WonderGather.Tests
     {
         private MinerChoice choice;
         private MinerWorkPreview look;
+        // (RiseAgent.Unheard as the test found it, put back at its end: true by default from November 17.)
+        private bool unheardWas;
 
         [UnitySetUp]
         public IEnumerator Load()
         {
+            unheardWas = RiseAgent.Unheard;
             yield return SceneManager.LoadSceneAsync("TheOrdinaryPlace");
             CaptureTools.AsItWas();
             yield return null;
@@ -27,7 +30,7 @@ namespace WonderGather.Tests
         }
 
         [TearDown]
-        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; RiseAgent.Unheard = false; OwnBody.StoodHeightIs = 0; OwnBody.HingesStop = false; OwnBody.BootTurnsAtMost = 20; OwnBody.ElbowFolds = 145; OwnBody.KneeFolds = 150; }
+        public void Restore() { Time.captureFramerate = 0; PhysicalFall.GetsUpByItsOwn = false; OwnBody.Told = null; RiseAgent.Unheard = unheardWas; OwnBody.StoodHeightIs = 0; OwnBody.HingesStop = false; OwnBody.BootTurnsAtMost = 20; OwnBody.ElbowFolds = 145; OwnBody.KneeFolds = 150; }
 
         private static IEnumerator Wait(float seconds) { for (float until = Time.time + seconds; Time.time < until;) yield return null; }
 
@@ -47,8 +50,15 @@ namespace WonderGather.Tests
             OwnBody.BootTurnsAtMost = Given("-ownBootCap", OwnBody.BootTurnsAtMost);
             OwnBody.ElbowFolds = Given("-ownElbowFolds", OwnBody.ElbowFolds);
             OwnBody.KneeFolds = Given("-ownKneeFolds", OwnBody.KneeFolds);
-            // (-ownUnheard 1: no learnt model given, to set the body as searched beside it, October 27.)
-            RiseAgent.Unheard = CaptureTools.Argument("-ownUnheard") == "1";
+            // (-ownUnheard 1: no learnt model given, to set the body as searched beside it, October 27; -ownUnheard 0: the
+            // learnt model heard. Left out: as the game has it, unheard from November 17.)
+            string unheard = CaptureTools.Argument("-ownUnheard");
+            if (!string.IsNullOrEmpty(unheard))
+            {
+                // (Only 0 or 1: an argument left without its value takes the next one's name.)
+                Assert.That(unheard == "0" || unheard == "1", Is.True, "-ownUnheard takes 0 (the learnt model heard) or 1 (unheard), not " + unheard + ".");
+                RiseAgent.Unheard = unheard == "1";
+            }
             // (-ownStoodHeight 0.696: how high its weight rises to after getting up, as the teaching notes it, October 29.)
             string stoodHeight = CaptureTools.Argument("-ownStoodHeight");
             if (!string.IsNullOrEmpty(stoodHeight)) OwnBody.StoodHeightIs = float.Parse(stoodHeight, System.Globalization.CultureInfo.InvariantCulture);

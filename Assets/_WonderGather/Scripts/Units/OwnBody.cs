@@ -241,6 +241,14 @@ namespace WonderGather
         // degrees more (BootsLieAt; 0, as it stands): a body that lies lets its feet point. Tries begun where a failed one
         // left it lay with their boots 24 to 29 degrees from how they stand, fresh falls 40 to 43. October 29.)
         public static float BootsLieAt = 0;
+        // (BootsFromOwnShin, the ankle mend's switch C (Docs/Research/2026-11-15_NaturalRangesAndTheAnkle/research.md
+        // §4.1, §7.1; built November 17, 2026, off by default): gone down, each boot goes slack about the end of the let-go
+        // body's own shin, not about where the boot of its own body had its ankle (a whirling boot left the drawn shin
+        // up to 0.4 m behind it, and the boot was turned about a point that far off); made down, each boot is placed
+        // where it is from its shin's end as it stood (stoodAnkle, read at the plain make), its turn kept, its toe moved
+        // with it. False: as before.)
+        public static bool BootsFromOwnShin = false;
+        private readonly Vector3[] stoodAnkle = new Vector3[2], bootShift = new Vector3[2];
         // (A fall of its own, not a try again: whoever lays it down says so.)
         public void ForgetsItsTries() => rollFailedLeading = -1;
         private readonly GroundTouch[] toeTouches = new GroundTouch[2];
@@ -714,6 +722,7 @@ namespace WonderGather
             lengths[Head] = 2 * skull.radius;
             anchors[Head] = new Vector3(0, -neckLever, 0);
 
+            bool refits = BootsFromOwnShin && down && stoodKnown;
             for (int i = 0; i < 2; i++)
             {
                 string side = i == 0 ? " (left)" : " (right)", l = i == 0 ? "L" : "R";
@@ -742,6 +751,14 @@ namespace WonderGather
                 Rod(Shin + i, s.shins[i].localScale.y, leg, surface);
                 anchors[Shin + i] = new Vector3(0, -s.shins[i].localScale.y, 0);
                 var boot = Made(Foot + i, "Boot" + side, s.feet[i].position, s.feet[i].rotation, bootWeighs, knee * AnkleGives, false);
+                if (refits)
+                {
+                    // (BootsFromOwnShin: placed from its shin's end as it stood, its turn as the pose has it.)
+                    Vector3 shinEnd = segmentsMade[Shin + i].transform.TransformPoint(new Vector3(0, s.shins[i].localScale.y, 0));
+                    Vector3 placed = shinEnd - boot.transform.rotation * stoodAnkle[i];
+                    bootShift[i] = placed - boot.transform.position;
+                    boot.transform.position = placed;
+                }
                 var soleBox = boot.AddComponent<BoxCollider>();
                 soleBox.size = s.feet[i].localScale; soleBox.sharedMaterial = surface;
                 lengths[Foot + i] = Mathf.Max(soleBox.size.x, Mathf.Max(soleBox.size.y, soleBox.size.z));
@@ -750,6 +767,7 @@ namespace WonderGather
                 if (s.toes != null && s.toes.Length == 2 && s.toes[i] != null)
                 {
                     toeAt[i] = boot.transform.InverseTransformPoint(s.toes[i].position);
+                    if (refits) toeAt[i] = boot.transform.InverseTransformPoint(s.toes[i].position + bootShift[i]);
                     toeTurn[i] = Quaternion.Inverse(boot.transform.rotation) * s.toes[i].rotation;
                 }
             }
@@ -835,6 +853,7 @@ namespace WonderGather
                     var toe = new GameObject("Toe" + (i == 0 ? " (left)" : " (right)"));
                     toe.transform.SetParent(segmentsMade[Foot + i].transform, true);
                     toe.transform.SetPositionAndRotation(s.toes[i].position, s.toes[i].rotation);
+                    if (refits) toe.transform.position = s.toes[i].position + bootShift[i];
                     Vector3 size = s.toes[i].localScale;
                     var box = toe.AddComponent<BoxCollider>();
                     box.size = size; box.sharedMaterial = surface;
@@ -905,6 +924,7 @@ namespace WonderGather
             if (plain)
             {
                 for (int j = 1; j < Count; j++) stoodLocal[j] = rested[j];
+                for (int i = 0; i < 2; i++) stoodAnkle[i] = anchors[Foot + i];
                 Quaternion facesNow = Quaternion.LookRotation(Flat(parts[Hips].transform.forward).normalized);
                 stoodHips = Quaternion.Inverse(facesNow) * parts[Hips].transform.rotation;
                 for (int i = 0; i < 2; i++) stoodBoot[i] = Quaternion.Inverse(facesNow) * parts[Foot + i].transform.rotation;
@@ -1338,6 +1358,9 @@ namespace WonderGather
                 for (int i = 0; i < 2; i++)
                 {
                     fall.Slacken(i, ankleAt[i], slackBy[i]);
+                    // (BootsFromOwnShin: about the end of the let-go body's own shin instead; Slacken begins afresh.)
+                    if (BootsFromOwnShin && fall.Part(Shin + i) != null)
+                        fall.Slacken(i, fall.Part(Shin + i).transform.TransformPoint(new Vector3(0, miner.Solved.shins[i].localScale.y, 0)), slackBy[i]);
                     if (ToesSlacken && toesStoodKnown) fall.SlackenToes(i, stoodToeAt[i], stoodToe[i]);
                 }
         }
