@@ -1,9 +1,8 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 17, 2026 (afternoon, about 14:30), by Claude Opus 5.5: the forced checks' mend read
+**Last updated:** November 17, 2026 (evening, 18:05), by Claude Opus 5.5: the forced checks' mend read
 (`7c6edf0` in `D:/Dev/WG`); G6 made live; the FBX re-export stopped by its own rule, so the two models' path fields
-are to be patched instead; git's own check approved for this project only. Both wait for the five-hour reset at
-18:00; then 4a″. The master is Opus 5.5 at max effort with ultracode, by Luis's word.
+are being patched instead (from 18:04); git's own check, approved for this project only, comes next; then 4a″. The master is Opus 5.5 at max effort with ultracode, by Luis's word.
 Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
@@ -43,7 +42,7 @@ the same links in the scenes (GUIDs and the import's sub-asset IDs kept), the ol
 - **The master's call within (b): patch the old files instead.** Only the three fields that hold the path (each
   Texture's FileName, each Video's Filename and its "Path"; House 30 fields, Nature 12) become ".", as their
   RelativeFilename already is; every other byte stays. The first attempt's own reader writes the old House back byte
-  for byte. The workflow: `fbx_patch_workflow.js` beside it, not yet run. A sonnet builder patches, compares the node
+  for byte. The workflow: `fbx_patch_workflow.js` beside it, running from 18:04 (run `wf_85116e9c-5ed`). A sonnet builder patches, compares the node
   trees and Blender's import, then compares in Unity in `D:/Dev/WG`: every sub-asset's local ID, the meshes' hashes,
   the materials, and what the scenes and prefabs reference; each check is shown failing on a changed copy. A sonnet
   sceptic follows. It commits in `D:/Dev/WG` and leaves the files in `D:/Dev/fbx_reexport/final`; the master copies
@@ -90,7 +89,7 @@ or C, and arm B need not run again. Open, for 4a″:
    Long whirled at 0.0141 m and Round at 0.0148 m passed where they must fail; once, with C on, Round whipped at
    0.0398 m. Find what shows that C acted on a whirled boot, or call check 3 a reading.
 4. The report names the log file of each line number it quotes.
-Then 4b. The order, one workflow and one Unity at a time: at the 18:00 reset, the FBX patch
+Then 4b. The order, one workflow and one Unity at a time: the FBX patch, running from 18:04
 (`Research/2026-11-16_HarnessGuideReview/fbx_patch_workflow.js`; it uses Unity in `D:/Dev/WG`); then git's own check
 (`g6_git_workflow.js` beside it; no Unity); then 4a″. Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
