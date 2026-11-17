@@ -2,8 +2,9 @@
 
 **Updated:** November 17, 2026 (morning). **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 17, early morning): the ankle mend's three switches built, all off, reviewed and committed; Small's
-  learnt addition is off as played; the baselines read; the first arm running.**
+- **Now (November 17, morning): the ankle mend's three switches built, all off, reviewed and committed; Small's
+  learnt addition is off as played; the baselines and the first arm read; the forced checks built, reviewed and being
+  mended.**
   - **What changed in the game** (`D:/Dev/WG` `262f4ca`, branch `claude/wip-round`, pushed):
     - `RiseAgent.Unheard` is true by default, so Small's learnt addition is off as played, as Luis asked on
       November 15;
@@ -53,10 +54,19 @@
     run each. If the checks change B's code, it is run again.
   - **Step 4 split in two.** 4a is the forced checks, the live test's line saying a switch was on but never acted,
     and the once-said check. Its first launch (08:15) was stopped at 08:20, before anything was written, when Luis
-    had to leave with the computer. He then stayed, and it runs again from 08:52, from its saved workflow
+    had to leave with the computer. He then stayed, and it ran again from 08:52, from its saved workflow
     (`step4a_workflow.js` in the research folder). 4b, the course on which Long and Round go down by themselves,
     follows.
-  - **Next:** read 4a; then 4b and the other arms (the Handoff's "Start here").
+  - **4a built and reviewed** (`AnkleForced.cs`, `6b84d78` in `D:/Dev/WG`; report `forced_checks.md`, three reviews
+    beside it). No runtime file changed and no fault was found in A, B or C, so arm B stands. What stands: the live
+    test now says when a switch is on but never acted (Small: all three acted; Long and Round: none), and the
+    once-said check passes, its known-bad run failing as it must. What does not: check 3 never made a real whirl
+    (the engine read NaN the step after the set); no bar decides its test (`asserts="0"` in every result file); and
+    the gaps in checks 1, 2, 4, 5 and 6 that `Validation.md` lists. The builder's "all 8 passed" is not taken as
+    passes.
+  - **4a′, the mend, running from 10:00** (`step4a_mend_workflow.js`): a builder for every finding of the reviews,
+    then a physicist and a sceptic against the new logs.
+  - **Next:** read 4a′; then 4b and the other arms (the Handoff's "Start here").
 - **Before (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
   Opus 5.5 again.**
   - **A friend's process guide, reviewed** (Luis's request of November 15,

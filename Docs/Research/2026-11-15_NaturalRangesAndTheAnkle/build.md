@@ -20,9 +20,8 @@ runs unheard, as the game does.
 contact; its inputs were read back from the running body). The physicist recomputed them on its own and agrees to
 the digits shown; that is two readings of one model, not a measure of the game.
 
-**The script.** `ankle_build_miners.py` is my own copy, in the session scratchpad:
-`C:/Users/luish/AppData/Local/Temp/claude/e2b675c90a3db94d/86f16be5-fb94-46d4-a96c-f3f3e90cd18a/scratchpad/ankle_build_miners.py`.
-`ankle_speed2.py` was left untouched.
+**The script.** `ankle_build_miners.py` is my own copy. It was made in the session's scratchpad and is kept in
+`scripts/` beside this note (copied there on November 17). `ankle_speed2.py` was left untouched.
 
 **The model.**
 - One free boot, its shin held still, with no gravity and no contact.

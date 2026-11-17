@@ -1,8 +1,8 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 17, 2026 (early morning), by Claude Opus 5.5: the ankle build's switches written, reviewed,
-mended and committed in `D:/Dev/WG` (`262f4ca`); its baselines begun. The master is Opus 5.5 at max effort with
-ultracode, by Luis's word. Kept current at every milestone.
+**Last updated:** November 17, 2026 (morning), by Claude Opus 5.5: the ankle build's forced checks built (`6b84d78`
+in `D:/Dev/WG`) and reviewed; their mend running. The master is Opus 5.5 at max effort with ultracode, by Luis's word.
+Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
 [CURRENT_STATE.md](CURRENT_STATE.md). Luis's preferences and the lessons already paid for are in the assistant's memory directory (its index is
@@ -24,12 +24,12 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 36th outlook
 was taken on November 17, in the morning.
 
-**Next: step 4a is running again (item 5, from 08:52); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+**Next: step 4a's mend (4a′) is running (item 5, from 10:00); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
    blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11
-   against 10, and 7 courses out of time against 2. It ran before the forced checks; if they change B's code, it is
-   run again.
+   against 10, and 7 courses out of time against 2. It ran before the forced checks. Their first build changed no
+   runtime file, so it stands; if their mend changes B's code, it is run again.
 2. Baselines, as played, 24 courses each: **all read** (`Validation.md`, the last section).
    - Small as played (`ank0_small`): 10 up by its own body, 0 the old way, 14 not up; 12 blow-ups, 11 in a foot or
      its toes. The arms are read against this run.
@@ -40,19 +40,33 @@ runs take `-liveRing 0`. The live test is not the same run to run, so runs are c
    them go without `GoDown`, and C acts only at `GoDown`. An arm with C on them here would pass without C acting once.
    Small goes down by itself 77 times as played. build.md said otherwise and is corrected.
 4. From the review of the mends: **done.** The heard A run (`ank_heardA`) passed. The three once-only messages are
-   forgotten when a test begins and ends (`AnkleMendArguments.ForgetSaid`, `e8bac96`): compiled, not yet exercised by a
-   check that expects a message twice. Both test changes of `e8bac96` go to step 4's reviewers.
+   forgotten when a test begins and ends (`AnkleMendArguments.ForgetSaid`, `e8bac96`), now exercised by 4a's check 8
+   (below).
 5. Step 4, in two parts, each a builder and then reviewers who did not build it:
-   - **4a, running again from 08:52 on November 17:** the forced checks (research section 7.2, and build.md's "Still
-     not read back"); the live test saying at its end when a switch is on but its event never happened; a check that
-     expects a once-said message twice. The first launch (08:15) was stopped at 08:20, before anything was written,
-     when Luis had to leave with the computer. He then stayed, and it was launched again unchanged. If it is cut off,
-     run it again as it is:
-     `Workflow({scriptPath: "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer/Docs/Research/2026-11-15_NaturalRangesAndTheAnkle/step4a_workflow.js"})`.
-     The order: a builder (opus, high), then a physicist and a sceptic, then a code reviewer (sonnet, medium). The
-     builder's report will be `forced_checks.md` in that folder, with the reviews beside it (`review_forced_*.md`). No
-     run of mine in `D:/Dev/WG` while it works. If Luis has said when the computer must go, put that time in the
-     builder's brief: a workflow's agents cannot be messaged, only stopped.
+   - **4a, built and reviewed (November 17, morning):** the forced checks (research section 7.2, and build.md's "Still
+     not read back") are `AnkleForced.cs` (`6b84d78` in `D:/Dev/WG`, pushed). The builder's report is
+     `forced_checks.md` in the ankle research folder, with three reviews beside it (`review_forced_physicist.md`,
+     `review_forced_sceptic.md`, `review_forced_code.md`). What they show: `Validation.md`, "The forced checks, first
+     build". No runtime file changed and no fault was found in A, B or C, so arm B stands.
+     - **Stand:** the live test's exercised lines (check 7: on Small all three switches acted; on Long and Round none
+       did, as item 3 found) and the once-said check (check 8: the known-good run passed, the known-bad one failed).
+     - **Do not stand yet:**
+       - Check 3 (C) set a whirl on the boot, but no whirl went through a physics step: the engine read NaN the step
+         after.
+       - No bar decides its test: every result file says `asserts="0"`.
+       - Check 4 never reached 1.5 to 2 E, and its expected value copies the code's formula.
+       - Check 2's twist axis copies the code.
+       - Check 1's A bar is vacuous on `slerp_antipode`.
+       - Check 6 passes at 2 degrees and turns only about 60.
+       - Check 5 has no bar.
+     - The builder's "all 8 passed" is not taken as passes.
+   - **4a′, the mend, running from 10:00 on November 17:** a builder (opus, high) mends every finding of the three
+     reviews, or answers it with a log line, and runs the checks again, known-bad and known-good, on all three miners.
+     Then a physicist and a sceptic (sonnet, medium) check each first finding against the new logs
+     (`review_forced2_physicist.md`, `review_forced2_sceptic.md`). If it is cut off, run it again as it is:
+     `Workflow({scriptPath: "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer/Docs/Research/2026-11-15_NaturalRangesAndTheAnkle/step4a_mend_workflow.js"})`.
+     (4a's own script, `step4a_workflow.js`, is beside it.) No run of mine in `D:/Dev/WG` while it works. If Luis says
+     when the computer must go, stop it in time: a workflow's agents cannot be messaged, only stopped.
    - **4b, after 4a is read:** a course on which Long and Round go down by themselves; `CoverRingLiveTests` learning
      `-ankleWays`, and a watch of what learns adds at the boots.
 

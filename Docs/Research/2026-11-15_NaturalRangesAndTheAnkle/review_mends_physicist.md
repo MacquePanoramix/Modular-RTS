@@ -14,8 +14,8 @@ Reviewer: physicist, did not write the mends. Question asked, and only it: mend 
 
 ## What I ran
 
-Script: `C:/Users/luish/AppData/Local/Temp/claude/e2b675c90a3db94d/86f16be5-fb94-46d4-a96c-f3f3e90cd18a/scratchpad/mend4.py`
-(plus `mend4b.py` beside it); output in `mend4.out`. Run with `python -I`. numpy only. Quaternions (x,y,z,w), Hamilton product, which
+Script: `mend4.py` (plus `mend4b.py` beside it); output in `mend4.out`. All three were made in the session's
+scratchpad and are kept in `scripts/` beside this review (copied there on November 17). Run with `python -I`. numpy only. Quaternions (x,y,z,w), Hamilton product, which
 is Unity's `q1 * q2` (q2 applied first, in q1's frame). `RotationVector` is Unity's ToAngleAxis ([0,360]) folded into (-180,180]
 times the axis; `FromRotationVector` is `AngleAxis(|v|, v/|v|)`; both in degrees. "Angle between two turns" = 2 acos |q1.q2|
 (sign-blind). Own's axis uniform on the sphere, own's angle uniform on 0..180, d uniform in the box plus or minus 20 per axis

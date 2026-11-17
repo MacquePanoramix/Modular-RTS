@@ -5757,11 +5757,43 @@ Read:
 - One run each, and this test is not the same run to run, so the difference was seen once. The blow-ups differ more
   than the heard and unheard baselines did (8 and 12), but no spread has been measured at 24 courses.
 
+### The forced checks, first build (step 4a, `6b84d78` in `D:/Dev/WG`)
+A builder made `AnkleForced.cs`, a rig: Small's ways on every miner, the hips pinned, the boot freed, a flat floor. It
+also gave the live test lines saying whether each switch that is on acted (`LIVE_EXERCISED` / `LIVE_NOT_EXERCISED`,
+from `AnkleWatch.Exercised()`). Its report is `forced_checks.md` in the ankle research folder. A physicist, a sceptic
+and a code reviewer who did not build it reviewed it (`review_forced_*.md`, beside the report). It found no fault in A,
+B or C, and it changed no file under `Scripts`, so the game is unchanged and arm B stands.
+
+What stands, at its rung, as the builder reported it and the reviews did not dispute:
+- Check 7, as played, two courses per miner. On Small all three switches print EXERCISED. On Long and Round all three
+  print NOT EXERCISED, because neither gets up by its own body. So the live test now says when a switch never acted.
+- Check 8, rig: the once-said messages are said again in a second test (`forced_once_r.xml`: 2 of 2 passed), and the
+  known-bad run (`-onceSaidKeep 1`) failed, as it must (`forced_once_bad_r.xml`: 1 of 2 failed). So `ForgetSaid` is
+  now exercised.
+- Check 1, rig, all three miners: with B on, the freed boot stayed at most 19.5 rad/s on Small against its bound of 20
+  (Long 15.9, Round 17.3). These are the builder's numbers; I have not re-read them.
+
+What does not stand yet:
+- **Check 3 (C) did not make its event happen.** The whirl was a value set on the boot and read back before any step:
+  "the engine had it at 1.1 before the set, NaN the step after" (`forced_down_c0b.log:1296`, read by me; the other
+  miners say the same). With C on, the offset is 0.0000 m at every make, whirled or not, so its bar is met by
+  construction. With C off, plain makes already miss the 0.01 m bar (Small 0.0117, Round 0.0162; the reviews).
+- **No bar decides its test's result.** Every result file says `asserts="0"` (read by me). A BAR FAIL is a log line:
+  `forced_down_c0b` printed BAR_C FAIL and passed.
+- Check 4 (B near its edge) never reached 1.5-2 E (at most 1.8 on Small, 1.28 on Long, 0.92 on Round), and its
+  expected value copies the code's own formula.
+- Check 2's twist axis copies the code's own expression.
+- Check 1's A bar caught the switch off by 4% at 1800 degrees a second, and on `slerp_antipode` the off run passes it
+  too.
+- Check 6 passes at 2 degrees, not the 1 degree the report says, and was turned to about 60 degrees only.
+- Check 5 is a reading, with no bar.
+- Some of the report's ranges are misquoted (the sceptic quotes the log lines).
+- The switches the rig sets are restored on the normal path only, with no `finally`.
+
 ### Not tested
 - That every switch off is the old build, on courses (this test is not the same run to run).
-- Any arm but B on Small at strength 1; the forced checks, the idle's proof, the flows as played, and any strength
-  but 1.
+- Any arm but B on Small at strength 1; the forced checks as mended (see above), the idle's proof, the flows as played,
+  and any strength but 1.
 - `GettingUpByItsOwnTests` with its new arguments.
-- `ForgetSaid` by a check that expects one message in two tests.
 
 No judgment here of feel or look: that is Luis's.
