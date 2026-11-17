@@ -24,7 +24,7 @@ const RULES = [
   '- The live guard refuses some commands even when their text only mentions them: staging everything (git add -A and the like, git commit -a), discarding work, a test run and a commit in one command, a heredoc holding a doubled backslash, and a commit or push carrying the profile path. Put such commands in a script file written with the Write tool and run the file. Inside a temporary repository only, you may instead put WG_GUARD_OK=G1 (or the rule named) in the command.',
   '- Files with backslashes or apostrophes are written with the Write or Edit tool, not through the shell.',
   '- Python: D:/Programs/Python/Python 3.12/python.exe. python3 on PATH is the Windows Store stub, and does not run.',
-  '- The plan\'s usage is watched. Before long steps, check it with mcp__ccd_session_mgmt__get_usage (load it with ToolSearch "select:mcp__ccd_session_mgmt__get_usage"). If the 5-hour window passes 80% or the week passes 85%, stop at a point where your report is true, and return.',
+  '- The plan\'s usage is watched. Before long steps, check it with mcp__ccd_session_mgmt__get_usage (load it with ToolSearch "select:mcp__ccd_session_mgmt__get_usage"). If the 5-hour window passes 80% or the week passes 95%, stop at a point where your report is true, and return.',
 ].join('\n')
 
 const BUILD = [

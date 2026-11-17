@@ -89,9 +89,11 @@ work goes back to the task in hand.
 - **The allowance:**
   - At 14:22: 89% of the five hours (it resets at 18:00) and 65% of the week (it resets on November 23 at 17:00).
   - Since 10:00 the week went from 50% to 65%, over the rest of one window and 89 points of the next, so a full window
-    is about 12-13% of the week. 35% is left; keeping a tenth for Luis leaves about two windows for six days.
+    is about 12-13% of the week. 35% is left. A tenth of it was to be kept for Luis; he answered at about 14:59 that
+    it need not be (he uses this account only for this project). So all of it is for the work, about two and a half
+    windows, and the week is watched like the five hours, so that no step is cut off midway.
   - The plan for them: the FBX patch (sonnet, small) and the hooks (an opus builder, two sonnet reviewers), about half
-    a window by estimate; then 4a″ and 4b. Small's arms and step 5 may wait for the week's reset. Luis may change the
+    a window by estimate; then 4a″, 4b and Small's arms. Step 5 may wait for the week's reset. Luis may change the
     order, for example the ankle first and the hooks after.
 
 ### November 17, 2026 (morning) — the thirty-seventh, short (by the counter and the compaction; step 4a read)

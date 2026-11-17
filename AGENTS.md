@@ -53,4 +53,5 @@ The Game Director watches the usage of his plan (November 10, 2026: "please auto
 The project's Claude Code settings compact a conversation by themselves once it reaches 250,000 tokens (`autoCompactWindow` in `.claude/settings.json`); keep that setting, and say so if a session is seen past it.
 Keep the state of the work in files (`Docs/Handoff.md`, `Docs/CURRENT_STATE.md`, `Docs/Outlook.md`) so that a compaction or a fresh session loses nothing, and keep the conversation small: search before fetching a whole page, read logs through a filter, and give heavy reading to cheaper subagents.
 Do not count on a sub-agent having the assistant's memory: its brief carries the rules its task needs.
+Watch both limits, the five hours and the week, so that no step is cut off midway: begin a step only when both have room for all of it, and give each long agent a usage check that stops it at a clean point (past 80% of the five hours or 95% of the week). No share of the week is kept back for the Game Director, who uses this account only for this project (November 17, 2026).
 Quality still comes before speed and before cost.

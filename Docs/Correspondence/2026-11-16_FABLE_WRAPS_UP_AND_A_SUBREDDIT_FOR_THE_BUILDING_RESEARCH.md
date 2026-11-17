@@ -122,3 +122,18 @@ What is done with it:
    assistant's memory and in `AGENTS.md`.
 
 Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.
+
+## 8. November 17, afternoon: the whole week for the work
+
+I reported the five hours at 89% and the week at 65%, with about two windows left for six days once a tenth of the
+week was kept back for him. At about 14:59 Luis wrote, word for word:
+
+> Perfect! Oh I just wanted to add that you don't need to leave 10% of remaining usage on the week for me since I only use this account for working on this project with you. Just also pay attention to that usage also with same purpose of the 5h usage so the work is not interrupted midway due to hitting the limits.
+
+What is done with it: no share of the week is kept back for him. All of it is for the work, about two and a half
+windows from 65%. The week is watched as the five hours are: a step begins only when both limits have room for all of
+it, and each long agent checks the usage before its long steps and stops at a clean point (past 80% of the five hours
+or 95% of the week). Kept in the assistant's memory and in `AGENTS.md`, "Session cost"; the two waiting workflows'
+week guards were raised from 85% to 95%.
+
+Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.
