@@ -114,6 +114,18 @@ temporary folder were checked to be its own and moved to the Recycle Bin at abou
 like these be kept cleaned up, with utmost care first (`AGENTS.md`, "Protect human workspace state"). Small, still to
 do: a careful survey of the old worktrees (`D:/Dev/WG-bag`, `D:/Dev/WG-hung`, the four in `.claude/worktrees/`); any
 work of their own, uncommitted or unpushed, is asked about before anything goes.
+Small, found at 20:35 (read, not changed): `D:/Dev/WG`'s `AGENTS.md` (branch `claude/wip-round`) is the October 1
+version. It lacks:
+- the "Start here" line;
+- the junk line;
+- the claims-and-checks block;
+- the review lines;
+- the session-cost section.
+
+That branch has no `Docs/Handoff.md`, and its `CURRENT_STATE.md` is from October 8. Agents briefed from this session
+load this project's `AGENTS.md`. A session started in `D:/Dev/WG` would not. The mend, after 4a″ (so that its brief's
+head stays `b76f311`): this project's `AGENTS.md` in `D:/Dev/WG`, with one line at its top saying the documents are
+kept current here, on `claude/worker-showcase`.
 
 **Next: 4a″. The mend (4a′) ran 13:01-13:41 on November 17 and was read** (`D:/Dev/WG` `7c6edf0`, only
 `AnkleForced.cs`; `forced_checks.md`, `review_forced2_physicist.md`, `review_forced2_sceptic.md`). No fault in A, B
