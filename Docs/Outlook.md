@@ -61,6 +61,39 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 17, 2026 (afternoon) — the thirty-eighth, short (by the counter, 434 tool calls; the FBX re-export stopped)
+
+- **Where we are.** S3b, step 2: getting up for any body. The ankle build is at step 4. 4a′, the forced checks' mend,
+  ran 13:01-13:41 and was read (WG `7c6edf0`): no fault in A, B or C, and 4a″ has four items (Handoff). Beside it, the
+  privacy work: G6 live at 13:57; the FBX re-export stopped by its own rule (House's curtain came out with 44 of its
+  284 faces reordered), so the old files' path fields are to be patched instead; git's own check approved for this
+  project only. Both are scripted and wait for the 18:00 reset; then 4a″.
+- **Waiting on Luis:** nothing the work needs. **He waits on:** the ankle build and a build to play; step 0's stills;
+  the first motion clips.
+- **Built, not in a build:** as in the 37th. Nothing that runs in the game changed since (4a′ changed only
+  `AnkleForced.cs`, a test). The flows as played have still not been run since the default changed (step 5).
+- **The list of holds:** not read again, for the same reason: nothing it lists has run since the 37th.
+- **Luis had to correct, repeat or ask:** once, to ask. At the 13:00 reset he asked whether the work would go on. A
+  wake-up was set for 13:04, but he had not been told. **The tool:** whenever work waits for a reset, the message
+  before the wait says when it starts again by itself, and a wake-up is set for it (now for 18:04).
+  Also a new standing ask, after a reviewer left 250 test repositories behind: throw out spent files, with utmost care
+  first. It is now a line in `AGENTS.md`, so agents follow it too, and a memory.
+- **Rules broken again:** one, caught before the commit: a time written in the Handoff without reading the clock
+  ("about 14:45" for 13:57). The clock (`date`) is read before a time is written.
+- **Does the task serve the stage?** The privacy work does not; it keeps Luis's name out of a public repository, which
+  he approved. It grew from one rule (G6) to its mend, git's hooks with G7, and the FBX fix. Its finish line: the
+  patched models committed on both branches, and the hooks, G7 and M1 live after two reviews. Nothing more on it this
+  week unless a review finds a must-fix. Then 4a″.
+- **What Luis would want to know:** the FBX fix's change of method, in plain words; that the hooks can be this
+  project's alone; that the cleanup is done and can be undone from the Recycle Bin; the week's pace.
+- **The allowance:**
+  - At 14:22: 89% of the five hours (it resets at 18:00) and 65% of the week (it resets on November 23 at 17:00).
+  - Since 10:00 the week went from 50% to 65%, over the rest of one window and 89 points of the next, so a full window
+    is about 12-13% of the week. 35% is left; keeping a tenth for Luis leaves about two windows for six days.
+  - The plan for them: the FBX patch (sonnet, small) and the hooks (an opus builder, two sonnet reviewers), about half
+    a window by estimate; then 4a″ and 4b. Small's arms and step 5 may wait for the week's reset. Luis may change the
+    order, for example the ankle first and the hooks after.
+
 ### November 17, 2026 (morning) — the thirty-seventh, short (by the counter and the compaction; step 4a read)
 
 - **Where we are.** S3b, step 2: getting up for any body. The ankle build is at step 4.

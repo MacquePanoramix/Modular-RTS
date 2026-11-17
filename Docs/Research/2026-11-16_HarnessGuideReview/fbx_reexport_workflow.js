@@ -24,7 +24,7 @@ const RULES = [
   '- Do not touch the main project ' + MAIN + ' except to read it and to write your report there: it holds the user\'s own uncommitted files. Commit nothing there.',
   '- A guard hook refuses some git commands, even when a command\'s text only mentions them. These are: staging everything; discarding work; a test run and a commit in one command; a heredoc holding a doubled backslash; and a commit or push carrying the profile path. So write commit messages and scripts with the Write tool, commit with git commit -F <file>, and end each message with the line: Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>',
   '- Downloads need the user\'s approval: download nothing.',
-  '- The plan\'s usage is watched. Before each Unity run, check it with mcp__ccd_session_mgmt__get_usage (load it with ToolSearch "select:mcp__ccd_session_mgmt__get_usage"). If the 5-hour window passes 80% or the week passes 85%, stop at a point where your report is true, and return.',
+  '- The plan\'s usage is watched. Check it with mcp__ccd_session_mgmt__get_usage (load it with ToolSearch "select:mcp__ccd_session_mgmt__get_usage") before you begin, before each Blender or Unity run, and before copying the new files over the old ones in D:/Dev/WG. If the 5-hour window passes 80% or the week passes 85%, stop at a point where your report is true, and return. Never stop with the new files copied over the old ones in D:/Dev/WG but not yet compared: either finish that comparison, or copy the old files back from D:/Dev/fbx_reexport/old first.',
 ].join('\n')
 
 const BUILD = [
@@ -66,14 +66,21 @@ const BUILD = [
   '',
   RULES,
   '',
-  'Return as your final text, in at most 200 words:',
-  '- whether the two files are the same blobs on both branches;',
-  '- where the path was;',
-  '- the diffs in Blender and in Unity;',
-  '- the commit;',
-  '- the path of the final files;',
-  '- anything not done.',
+  'Return through the structured output:',
+  '- done: true only if both files were committed and pushed in D:/Dev/WG and copied to D:/Dev/fbx_reexport/final; false if you stopped for any reason (a difference, the usage guard, an error);',
+  '- worktreeClean: true if D:/Dev/WG holds no change of yours that is not committed (say which in the summary if false);',
+  '- summary, in at most 200 words: whether the two files are the same blobs on both branches; where the path was; the diffs in Blender and in Unity; the commit; the path of the final files; where you stopped and why, if you did; anything not done.',
 ].join('\n')
+
+const BUILT = {
+  type: 'object',
+  properties: {
+    done: { type: 'boolean' },
+    worktreeClean: { type: 'boolean' },
+    summary: { type: 'string' },
+  },
+  required: ['done', 'worktreeClean', 'summary'],
+}
 
 const CHECK = [
   'You check, as a sceptic, a claim that two re-exported models are the same models as before. You did not make them. In a Unity project, Assets/_WonderGather/Art/OrdinaryPlace/House.fbx and Nature.fbx were exported again from their Blender scripts so that they no longer hold the path of the user\'s profile folder.',
@@ -95,10 +102,14 @@ const CHECK = [
 ].join('\n')
 
 phase('Export')
-const built = await agent(BUILD, { label: 'builder', phase: 'Export', effort: 'high' })
+const built = await agent(BUILD, { label: 'builder', phase: 'Export', effort: 'high', schema: BUILT })
 if (!built) {
   log('The builder returned nothing; the check is skipped.')
   return { built: null }
+}
+if (!built.done) {
+  log('The builder stopped before the end; the check is skipped until the work is finished.')
+  return { built, checked: null }
 }
 phase('Check')
 const checked = await agent(CHECK, { label: 'sceptic', phase: 'Check', model: 'sonnet', effort: 'medium' })

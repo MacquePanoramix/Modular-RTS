@@ -22,6 +22,7 @@ Preserve asset GUIDs. Prefer Unity authoring APIs for scenes, prefabs, and navig
 Uncommitted human work is protected project state.
 Before broad/destructive work, inspect the working copy and do not reset, clean, normalize, overwrite, or discard human modifications without explicit permission.
 Prefer an isolated worktree/clone pinned to a known commit for destructive authoring, migration, or broad validation when local work could be endangered.
+When a task ends, throw out what it made and no longer needs (temporary repositories, scratch copies, spent test folders) unless a report cites it. Before deleting anything, be utmost sure it is the task's own: made during its run, with no link leading outside it and nothing unpushed or uncommitted in it. Send it to the Recycle Bin rather than deleting it for good (the Game Director, November 17, 2026).
 
 ## Evidence boundaries
 

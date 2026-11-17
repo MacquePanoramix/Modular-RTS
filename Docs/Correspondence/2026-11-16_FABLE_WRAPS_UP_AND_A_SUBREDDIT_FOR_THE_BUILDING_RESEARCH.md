@@ -94,3 +94,31 @@ What is done with it: the two models are exported again without the path, after 
 five-hour reset; the history is left as it is.
 
 Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.
+
+## 7. November 17, early afternoon: git's own check, and the junk
+
+G6 went live at 13:57 (`dd509b1`). I told Luis it has gaps, mostly unusual ways of writing a commit or a push, and
+asked two things. First: git has its own checkpoint (its hooks), which runs on every commit and push whatever program
+makes it; the same check placed there would close most gaps, but it would also check the commits he makes himself
+from any other program, and refuse one whose files held his folder's path, unless skipped for that one commit. May it
+be added? Second: may the 250 throwaway test folders the reviewer left in `D:/g6break_tmp` (327 MB) be deleted?
+At about 14:15 Luis answered, word for word:
+
+> 1. Yes I think but only for this project if it's possible. If not then I think there's no need.
+>
+> 2. Sure yes please. Try to keep this kind of files that have already served their purpose and hold no more potential use cleaned up by throwing out this kind of stuff that has already became junk. Thanks for letting me know. Be careful when deleting stuff though to be utmost sure it's nothing important.
+
+What is done with it:
+1. It is possible for this project alone. Git keeps hooks inside each repository's own `.git` folder, and the
+   validation copy `D:/Dev/WG` and the other worktrees share this project's `.git`, so a hook placed there acts on
+   this project's commits and pushes only, in every copy of it, and on no other repository. Its build and
+   review are a workflow after the five-hour reset.
+2. `D:/g6break_tmp` was looked at first: 250 folders that Python's temporary-folder naming made, created from 13:29
+   to 13:45, every file written from 13:29 to 13:47 (the reviewer's run), no links leading outside, one remote only,
+   a dummy repository inside the folder itself. GitHub's seven branches are all known ones, and the real repository's
+   branches were touched only by the master's own commits. Five more of the reviewer's folders of the same shape
+   were in the system's temporary folder. All six were moved to the Recycle Bin at about 14:20, so they can still be
+   restored. The standing ask, to throw out what has served its purpose with utmost care first, is kept in the
+   assistant's memory and in `AGENTS.md`.
+
+Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.
