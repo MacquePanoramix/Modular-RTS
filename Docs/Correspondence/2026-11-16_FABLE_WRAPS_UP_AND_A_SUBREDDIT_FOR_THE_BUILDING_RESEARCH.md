@@ -65,4 +65,22 @@ At about 08:50 he wrote, word for word:
 
 What was done with it: step 4a was launched again from its saved script, unchanged, at about 08:52.
 
+## 6. November 17, late morning: a check for the profile folder's path
+
+The path of Luis's own profile folder, which names the person, had reached two notes and was taken out of them.
+I then asked:
+
+> May I add a check that blocks any commit containing that path? It's a change to the project's settings, so I'm asking first.
+
+Luis answered, word for word:
+
+> Sure to answer your question.
+
+What was done with it: G6 was begun, a rule of the guard hook (`.claude/hooks/guard.sh`) that refuses a git commit
+or push which would carry that path. Its checker, `guard_profile.py` beside the guard, takes the path from the
+machine as it runs and writes it in no file. The approval covers this rule only: any other change to the hooks or
+the settings is asked again. Found while preparing it: two models already pushed, `House.fbx` and `Nature.fbx` in
+`Assets/_WonderGather/Art/OrdinaryPlace/`, carry that path, from the temporary folder they were exported through;
+what to do about them is Luis's call.
+
 Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.

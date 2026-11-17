@@ -24,6 +24,15 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 37th outlook
 was taken on November 17, in the morning, after step 4a was read.
 
+**G6, half done (November 17, about 10:40; Luis approved it, Correspondence of November 16, section 6):** a guard
+rule refusing a commit or a push that would carry the path of Luis's profile folder. `.claude/hooks/guard_profile.py`
+is written but untracked, not wired into `guard.sh` and not tested: it does nothing yet. To finish after the mend's
+launch: wire it into a copy of the guard first (`guard.sh` is the live hook, for the mend's agents too); add G6
+cases to `guard_test.sh` (the profile built from `$USERPROFILE` at run time, never written) and run them against
+the copy and against the old guard; one reviewer who tries to break it in temporary repositories; then make it
+live, commit and push. Waiting on Luis: `House.fbx` and `Nature.fbx` (OrdinaryPlace) carry that path, pushed since
+c02df06.
+
 **Next: step 4a's mend (4a′) starts when the five-hour window resets (13:00 for Luis; a wake-up launches it at
 13:05; item 5); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
