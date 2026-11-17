@@ -1,8 +1,8 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 17, 2026 (evening, 18:05), by Claude Opus 5.5: the forced checks' mend read
-(`7c6edf0` in `D:/Dev/WG`); G6 made live; the FBX re-export stopped by its own rule, so the two models' path fields
-are being patched instead (from 18:04); git's own check, approved for this project only, comes next; then 4a″. The master is Opus 5.5 at max effort with ultracode, by Luis's word.
+**Last updated:** November 17, 2026 (evening, about 18:30), by Claude Opus 5.5: the forced checks' mend read
+(`7c6edf0` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and committed on both
+branches; git's own check, approved for this project only, running from about 18:25 (run `wf_6627e112-6c8`); then 4a″. The master is Opus 5.5 at max effort with ultracode, by Luis's word.
 Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
@@ -42,7 +42,10 @@ the same links in the scenes (GUIDs and the import's sub-asset IDs kept), the ol
 - **The master's call within (b): patch the old files instead.** Only the three fields that hold the path (each
   Texture's FileName, each Video's Filename and its "Path"; House 30 fields, Nature 12) become ".", as their
   RelativeFilename already is; every other byte stays. The first attempt's own reader writes the old House back byte
-  for byte. The workflow: `fbx_patch_workflow.js` beside it, running from 18:04 (run `wf_85116e9c-5ed`). A sonnet builder patches, compares the node
+  for byte. **Done, 18:04-18:21 (run `wf_85116e9c-5ed`), read by the master: the same models, the path gone; committed in
+`D:/Dev/WG` as `b76f311` and here beside this line; the sceptic found one miscount only. Rung: tested on a rig (the
+editor's batch mode); not as played, not seen by Luis. Section "Patched instead" of `fbx_reexport.md`.** The
+workflow: `fbx_patch_workflow.js` beside it. A sonnet builder patches, compares the node
   trees and Blender's import, then compares in Unity in `D:/Dev/WG`: every sub-asset's local ID, the meshes' hashes,
   the materials, and what the scenes and prefabs reference; each check is shown failing on a changed copy. A sonnet
   sceptic follows. It commits in `D:/Dev/WG` and leaves the files in `D:/Dev/fbx_reexport/final`; the master copies
@@ -65,7 +68,7 @@ The breaker's best close for M4, and for most of M2, M3 and S1-S5: git's own pre
 hooks, running the same checker. They act on every git program on this machine, Luis's own too. **Luis approved them
 at about 14:15, "only for this project"** (Correspondence of November 16, section 7). That is possible: `D:/Dev/WG`
 and the other worktrees share this project's `.git`, and the hooks kept there act on no other repository. Their
-workflow, `g6_git_workflow.js` beside the others, not yet run, has an opus builder, then a breaker and a code reader
+workflow, `g6_git_workflow.js` beside the others, running from about 18:25 (run `wf_6627e112-6c8`), has an opus builder, then a breaker and a code reader
 on sonnet, and an opus mender only on a must-fix. It builds them in `.claude/hooks/git/`, with an installer, and
 tests them in temporary repositories only. Beside them, in candidate copies (`.claude/hooks/next/`): G7, which refuses
 the assistant's commands that skip or change the hooks (`--no-verify`, `core.hooksPath`, writing into `.git/hooks`),
@@ -89,9 +92,9 @@ or C, and arm B need not run again. Open, for 4a″:
    Long whirled at 0.0141 m and Round at 0.0148 m passed where they must fail; once, with C on, Round whipped at
    0.0398 m. Find what shows that C acted on a whirled boot, or call check 3 a reading.
 4. The report names the log file of each line number it quotes.
-Then 4b. The order, one workflow and one Unity at a time: the FBX patch, running from 18:04
+Then 4b. The order, one workflow and one Unity at a time: the FBX patch, done (18:21)
 (`Research/2026-11-16_HarnessGuideReview/fbx_patch_workflow.js`; it uses Unity in `D:/Dev/WG`); then git's own check
-(`g6_git_workflow.js` beside it; no Unity); then 4a″. Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+(`g6_git_workflow.js` beside it; no Unity; running from about 18:25); then 4a″. Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
    blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11
