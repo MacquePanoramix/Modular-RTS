@@ -26,18 +26,20 @@ was taken on November 17, in the morning, after step 4a was read.
 
 **G6, half done (November 17, about 10:40; Luis approved it, Correspondence of November 16, section 6):** a guard
 rule refusing a commit or a push that would carry the path of Luis's profile folder. `.claude/hooks/guard_profile.py`
-is written but untracked, not wired into `guard.sh` and not tested: it does nothing yet. To finish after the mend's
-launch: wire it into a copy of the guard first (`guard.sh` is the live hook, for the mend's agents too); add G6
-cases to `guard_test.sh` (the profile built from `$USERPROFILE` at run time, never written) and run them against
-the copy and against the old guard; one reviewer who tries to break it in temporary repositories; then make it
-live, commit and push. `House.fbx` and `Nature.fbx` (OrdinaryPlace) carry that path, pushed since c02df06; Luis
+is written but untracked, not wired into `guard.sh` and not tested: it does nothing yet. Being finished from about
+13:08 by a workflow beside the mend (run `wf_54fbf190-d02`; its script, to run again as it is if stopped,
+`Research/2026-11-16_HarnessGuideReview/g6_workflow.js`; a builder, a breaker and a code reader, then a mender
+only if they found something that must be fixed): wire it into a copy of the guard (`guard_next.sh`; `guard.sh` is the live hook,
+for the mend's agents too, and is swapped only after the mend's workflow ends); add G6 cases to `guard_test.sh` (the
+profile built from `$USERPROFILE` at run time, never written) and run them against the copy and against the old
+guard; one reviewer who tries to break it in temporary repositories; then make it live, commit and push. `House.fbx` and `Nature.fbx` (OrdinaryPlace) carry that path, pushed since c02df06; Luis
 chose (b) at about 10:50: export both again without it, as the same models with the same links in the scenes (GUIDs
 and the import's sub-asset IDs kept), the old versions staying in history. After the mend's launch, by a workflow:
 find how they were made, export again outside the profile folder, compare new with old (hierarchy, names, meshes,
 materials, the import's IDs, a still; Unity only when the mend's runs leave it free), commit on both branches.
 
-**Next: step 4a's mend (4a′) starts when the five-hour window resets (13:00 for Luis; a wake-up launches it at
-13:05; item 5); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+**Next: step 4a's mend (4a′) is running, from 13:01 on November 17 (workflow `wf_7e285553-35e`, launched after the
+five-hour reset; item 5); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
    blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11
@@ -74,8 +76,8 @@ runs take `-liveRing 0`. The live test is not the same run to run, so runs are c
        - Check 6 passes at 2 degrees and turns only about 60.
        - Check 5 has no bar.
      - The builder's "all 8 passed" is not taken as passes.
-   - **4a′, the mend, from 13:05 on November 17** (after the five-hour reset: 4a took about 40% of a window, and 65%
-     was used at 10:00): a builder (opus, high) mends every finding of the three
+   - **4a′, the mend, running from 13:01 on November 17** (run `wf_7e285553-35e`, launched just after the five-hour
+     reset, with the window at 0% and the week at 53%): a builder (opus, high) mends every finding of the three
      reviews, or answers it with a log line, and runs the checks again, known-bad and known-good, on all three miners.
      Then a physicist and a sceptic (sonnet, medium) check each first finding against the new logs
      (`review_forced2_physicist.md`, `review_forced2_sceptic.md`). If it is cut off, run it again as it is:

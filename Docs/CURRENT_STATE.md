@@ -65,8 +65,9 @@
     result files' `asserts="0"` proves nothing, since this Unity writes it even for a test failed by an assert); and
     the gaps in checks 1, 2, 4, 5 and 6 that `Validation.md` lists. The builder's "all 8 passed" is not taken as
     passes.
-  - **4a′, the mend, from 13:05**, after the five-hour reset (`step4a_mend_workflow.js`): a builder for every
-    finding of the reviews, then a physicist and a sceptic against the new logs.
+  - **4a′, the mend, running from 13:01**, just after the five-hour reset (`step4a_mend_workflow.js`, run
+    `wf_7e285553-35e`): a builder for every finding of the reviews, then a physicist and a sceptic against the new
+    logs.
   - **Next:** read 4a′; then 4b and the other arms (the Handoff's "Start here").
 - **Before (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
   Opus 5.5 again.**
