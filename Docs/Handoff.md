@@ -1,8 +1,10 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 17, 2026 (evening, about 18:30), by Claude Opus 5.5: the forced checks' mend read
+**Last updated:** November 17, 2026 (evening, about 20:25), by Claude Opus 5.5: the forced checks' mend read
 (`7c6edf0` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and committed on both
-branches; git's own check, approved for this project only, running from about 18:25 (run `wf_6627e112-6c8`); then 4a″. The master is Opus 5.5 at max effort with ultracode, by Luis's word.
+branches; git's own check, approved for this project only, built and reviewed (`29faa56`), not installed; its mend
+from about 23:04, when the five hours reset; then the install; then 4a″. The master is Opus 5.5 at max effort with
+ultracode, by Luis's word.
 Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
@@ -71,13 +73,34 @@ Should-fix: S1-S9 and the code reader's list.
 The breaker's best close for M4, and for most of M2, M3 and S1-S5: git's own pre-commit, commit-msg and pre-push
 hooks, running the same checker. They act on every git program on this machine, Luis's own too. **Luis approved them
 at about 14:15, "only for this project"** (Correspondence of November 16, section 7). That is possible: `D:/Dev/WG`
-and the other worktrees share this project's `.git`, and the hooks kept there act on no other repository. Their
-workflow, `g6_git_workflow.js` beside the others, running from about 18:25 (run `wf_6627e112-6c8`), has an opus builder, then a breaker and a code reader
-on sonnet, and an opus mender only on a must-fix. It builds them in `.claude/hooks/git/`, with an installer, and
-tests them in temporary repositories only. Beside them, in candidate copies (`.claude/hooks/next/`): G7, which refuses
-the assistant's commands that skip or change the hooks (`--no-verify`, `core.hooksPath`, writing into `.git/hooks`),
-and M1. After reading the reviews, the master installs the hooks, makes the candidates live, checks them live, and
-tells Luis how to skip the check for one commit of his own (`--no-verify`).
+and the other worktrees share this project's `.git`, and the hooks kept there act on no other repository.
+- **Built and reviewed, not installed** (run `wf_6627e112-6c8`, 18:25-20:12, script `g6_git_workflow.js` beside the
+  others; committed `29faa56`). In `.claude/hooks/git/`: `profile_check.py` behind pre-commit, commit-msg and
+  pre-push, with `install.sh` and `uninstall.sh`. In candidate copies (`.claude/hooks/next/`): G7, which refuses the
+  assistant's commands that skip or change the hooks (`--no-verify`, `core.hooksPath`, writing into `.git/hooks`), and
+  M1. On temporary repositories, with the hooks, 66 of 66 cases passed; with none, all 39 refusal cases failed. The
+  candidate guard passed 211 of 211. Report: `g6_git_report.md`, outputs `g6_git_test_output.txt`.
+- **The reviews:**
+  - The breaker (`review_g6git_breaker.md`) found five must-fix: git replace, `send-pack`, `lfs install --force`,
+    G7's matching, and hand-made tracking refs.
+  - The code reader (`review_g6git_code.md`) found one: commit-msg refuses a cleanup commit made with `-v` or the
+    editor's comments.
+  - The opus mender was stopped by a safety classifier after reading only, and changed nothing.
+- **The mend, split into narrow, listed items:** `g6_git_mend_workflow.js` beside the others, to run from about 23:04,
+  when the five hours reset (a wake-up is set in the session). The git side has nine items. The guard's candidate gets
+  five fixed changes, without a search for other ways past it; what it cannot see is named by kind. Then a rerunner
+  and a code reader on sonnet.
+- Read in that brief before it runs: `install.sh` acts on the current folder's repository when given none. The brief
+  says to pass the temporary repository every time. The real `.git/hooks` holds only git's samples, and core.hooksPath
+  is unset (read at 20:22).
+- **After it:** the master installs the hooks, makes the candidates live, checks them live, and tells Luis how to skip
+  the check for one commit of his own (`--no-verify`). Also asked about: the guard's matcher widened to the Write and
+  Edit tools (a settings change, not yet approved).
+- **Found in the whole history** (the report; not changed): the path is in House.fbx and Nature.fbx as committed
+  before `16b5636`, still on origin/main, and in older commits of `build.md` and `review_mends_physicist.md`. The
+  branch tips are clean. Mending main is a merge, Luis's word; rewriting history he declined.
+- **The breaker's temporary folder** `D:/Dev/g6git_tmp/breaker` (581 MB) would not go to the Recycle Bin ("The system
+  call level is not correct"). To look at before anything else is tried: a name holding a line break is suspected.
 The breaker's 250 temporary repositories (`D:/g6break_tmp`, 327 MB) and five more of its folders in the system's
 temporary folder were checked to be its own and moved to the Recycle Bin at about 14:20. Luis asked that spent files
 like these be kept cleaned up, with utmost care first (`AGENTS.md`, "Protect human workspace state"). Small, still to
@@ -97,8 +120,9 @@ or C, and arm B need not run again. Open, for 4a″:
    0.0398 m. Find what shows that C acted on a whirled boot, or call check 3 a reading.
 4. The report names the log file of each line number it quotes.
 Then 4b. The order, one workflow and one Unity at a time: the FBX patch, done (18:21)
-(`Research/2026-11-16_HarnessGuideReview/fbx_patch_workflow.js`; it uses Unity in `D:/Dev/WG`); then git's own check
-(`g6_git_workflow.js` beside it; no Unity; running from about 18:25); then 4a″. Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+(`Research/2026-11-16_HarnessGuideReview/fbx_patch_workflow.js`; it uses Unity in `D:/Dev/WG`); then git's own check,
+built and reviewed 18:25-20:12 (`29faa56`), its mend from about 23:04 (`g6_git_mend_workflow.js`; no Unity), read,
+then installed; then 4a″ (`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`, written, not run). Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
    blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11
