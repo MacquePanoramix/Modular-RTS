@@ -99,8 +99,16 @@ and the other worktrees share this project's `.git`, and the hooks kept there ac
 - **Found in the whole history** (the report; not changed): the path is in House.fbx and Nature.fbx as committed
   before `16b5636`, still on origin/main, and in older commits of `build.md` and `review_mends_physicist.md`. The
   branch tips are clean. Mending main is a merge, Luis's word; rewriting history he declined.
-- **The breaker's temporary folder** `D:/Dev/g6git_tmp/breaker` (581 MB) would not go to the Recycle Bin ("The system
-  call level is not correct"). To look at before anything else is tried: a name holding a line break is suspected.
+- **The breaker's temporary folder** `D:/Dev/g6git_tmp/breaker` (581 MB) at first would not go to the Recycle Bin
+  ("The system call level is not correct"). The cause was one file name holding a line break. Before the folder went,
+  checked:
+  - made 19:16-20:04, during the breaker's run;
+  - no reparse points;
+  - its two worktree links pointed only inside it;
+  - no worktree of this project in it;
+  - its review asks for it to be deleted.
+  The name was renamed and the folder moved to the Recycle Bin, which has room for it. It was found there by about
+  20:33 (bin on D: 12 GB used of 193 GB, NukeOnDelete 0).
 The breaker's 250 temporary repositories (`D:/g6break_tmp`, 327 MB) and five more of its folders in the system's
 temporary folder were checked to be its own and moved to the Recycle Bin at about 14:20. Luis asked that spent files
 like these be kept cleaned up, with utmost care first (`AGENTS.md`, "Protect human workspace state"). Small, still to
