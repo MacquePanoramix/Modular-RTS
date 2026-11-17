@@ -1,8 +1,40 @@
 # Wonder Gather — Current State
 
-**Updated:** November 17, 2026 (after midnight). **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 17, 2026 (early morning). **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
+- **Now (November 17, early morning): the ankle mend's three switches built, all off, reviewed and committed; Small's
+  learnt addition is off as played; the baselines begun.**
+  - **What changed in the game** (`D:/Dev/WG` `262f4ca`, branch `claude/wip-round`, pushed):
+    - `RiseAgent.Unheard` is true by default, so Small's learnt addition is off as played, as Luis asked on
+      November 15;
+    - three switches, all off by default: A `OwnRiser.AnkleLimit` (the limit that cannot flip); B
+      `OwnRiser.AnkleSpeed` (how fast the boot may turn, slower for a taller body); C `OwnBody.BootsFromOwnShin` (each
+      boot placed from its shin at the make and slackened afresh at a fall; never on alone);
+    - the live test and the getting-up test learn `-ownUnheard` (the heard run is now `0`), `-riseSet`,
+      `-ownBodySet` and `-liveStrength`; `AnkleMend.cs` reads the switches back from the running body.
+
+    [The build's note](Research/2026-11-15_NaturalRangesAndTheAnkle/build.md).
+  - **Reviewed** by three agents that did not build it (a physicist, a sceptic, a code reviewer): nothing that must be
+    fixed. The master mended what they asked:
+    - a speed that cannot be used says so once and acts as off;
+    - `-ownUnheard` takes only 0 or 1;
+    - with A on, the learnt addition is put on as a turn after the way's ask, where adding it jumped at half a turn.
+      Whether this order is the one the model would want is open;
+    - numbers are printed with a point.
+
+    Two more agents checked the mends: nothing that must be fixed. Two small things follow the runs: resetting the
+    once-only messages between tests, and one heard run with A on, the only one that exercises the new order.
+  - **Rung:** written, compiled, read back on a rig: one short get-up per miner, and each guard shown a bad value
+    and catching it. No course has been counted yet. That nothing changes with every switch off rests on the code
+    paths and the read-back.
+  - **Long and Round as played know no way up.** Only Small has a way file, so the other two get up the old way. A
+    and B never act on them; C does, at their falls. No ways are made for each body (Luis, October 30: no per-body
+    teaching). Their own get-up comes with the new controller.
+  - **Running:** Small's heard baseline (`ank0_small_heard`, 24 courses as played, `-ownUnheard 0`). It should repeat
+    `cc_es24` course by course.
+  - **Next:** the other baselines (Small as played, then Long and Round), then step 4's forced checks and the arms
+    (the Handoff's "Start here").
+- **Before (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
   Opus 5.5 again.**
   - **A friend's process guide, reviewed** (Luis's request of November 15,
     [his words](Correspondence/2026-11-15_THE_FRIENDS_HARNESS_GUIDE.md); Fable 5.2's last task;

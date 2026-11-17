@@ -1,8 +1,8 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 17, 2026 (after midnight), by Claude Opus 5.5, which committed Fable 5.2's last task (the
-review of a friend's process guide). The master is Opus 5.5 at max effort with ultracode, by Luis's word. Kept current
-at every milestone.
+**Last updated:** November 17, 2026 (early morning), by Claude Opus 5.5: the ankle build's switches written, reviewed,
+mended and committed in `D:/Dev/WG` (`262f4ca`); its baselines begun. The master is Opus 5.5 at max effort with
+ultracode, by Luis's word. Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
 [CURRENT_STATE.md](CURRENT_STATE.md). Luis's preferences and the lessons already paid for are in the assistant's memory directory (its index is
@@ -10,28 +10,36 @@ If you are a new session or another model: read `AGENTS.md`, then this page's "S
 
 ## Start here (November 17, 2026)
 
-**As of November 17, 2026, after midnight (Luis's clock, UTC+1):** the next action is the ankle build, step 1 of 5, **not
-begun**: `D:/Dev/WG` stands at `3182e08` and the three switches are in no code file yet. The milestone is S3b, step 2:
-getting up for any body the creator can make, by its own joints ("The task, and its state"). Luis passed the work to
-Opus 5.5 at max effort with ultracode; after the five-hour reset he switched this session to it himself and asked it
-to finish Fable's last step and go on as before
+**As of November 17, 2026, early morning (Luis's clock, UTC+1):** the work is the ankle build, which Luis approved on
+November 15 ("Sure."; `GAME_VISION.md`, row 2026-11-15 afternoon). **Steps 1 to 3 are done.** The three switches
+exist, all off, and `RiseAgent.Unheard` is true by default (Small's learnt addition off as played). An opus builder
+wrote them; three agents who did not build them reviewed them (`review_physicist.md`, `review_sceptic.md`,
+`review_code.md`); the master mended what they asked, and two more agents reviewed the mends (`review_mends_code.md`,
+`review_mends_physicist.md`). None found anything that must be fixed. All of it is in
+`Research/2026-11-15_NaturalRangesAndTheAnkle/build.md`; its last sections say what was mended, what is still not read
+back, and what Long's and Round's courses can show. Committed in `D:/Dev/WG` as `262f4ca` (branch `claude/wip-round`,
+pushed). Rung: written, compiled, read back on a rig; no course counted yet. The milestone is S3b, step 2: getting up
+for any body the creator can make, by its own joints ("The task, and its state"). Luis passed the work to Opus 5.5 at
+max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 35th outlook
 was taken on November 16, late evening.
 
-**Next: the ankle mend's build**, in `D:/Dev/WG` (branch `claude/wip-round`). Luis approved it on November 15
-("Sure."; `GAME_VISION.md`, row 2026-11-15 afternoon). The steps, in order; each run is read before the next:
-1. Read `Research/2026-11-15_NaturalRangesAndTheAnkle/research.md` section 8.1; work Long and Round numerically.
-2. `RiseAgent.Unheard` true by default (Small's learnt addition off as played). Teach the live test `-ownUnheard`,
-   `-riseSet`, `-ownBodySet`, `-liveStrength` (section 7.3). Small's baseline runs both ways once. Two things a cold
-   reader found: section 7.3's `-ownUnheard 1` was written when "heard" was the default, so write down which value
-   gives the heard run once the default is true; and `GettingUpByItsOwnTests.cs` sets `Unheard` itself (line 30 puts
-   it back to false, line 51 takes it from the argument), so it must put back the value it found.
-3. The three switches, all off: A `OwnRiser.AnkleLimit`, B `OwnRiser.AnkleSpeed`, C `OwnBody.BootsFromOwnShin`
-   (section 7.1). An opus builder, a fresh reviewer.
-4. The forced checks (7.2); then the baselines and the arms in 7.2's order (B, A = 1, both, then C; never C alone),
-   24 courses per arm per miner on Small, Long and Round, by 7.3's command lines; the idle's tick-by-tick proof.
-5. A default changed, so the flows as played (`-ownAsPlayed 1`); then a build for Luis, with what to switch on, do,
-   watch and tell.
+**Next: the baselines, then step 4.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one
+runs. The command lines are `research.md` section 7.3's, except that the heard run is now `-ownUnheard 0`.
+1. Baselines, as played, 24 courses each (build.md, "Long and Round: what their courses can show"). Small heard
+   (`ank0_small_heard`): it must repeat `cc_es24` course by course (15 up by its own body, none the old way, 9 not up,
+   56 tries, 45619 frames); if it does not, find why before any arm. Then Small as played (`ank0_small`), then Long and
+   Round as played (`ank0_long`, `ank0_round`). In the game Long and Round know no way up and get up the old way, so A
+   and B never act on them; C does, at their falls.
+2. After the runs, two small things from the review of the mends: reset the three once-only messages in
+   `AnkleMendArguments.Restore`; and one heard Small run with A on (`-ownUnheard 0 -riseSet AnkleLimit=1`) counting
+   target jumps over 60°, the only run that exercises the new order of what learns adds.
+3. Step 4: the forced checks (research section 7.2, and build.md's "Still not read back"), with `CoverRingLiveTests`
+   learning `-ankleWays`. Then Small's arms in 7.2's order (B, A = 1, both, then C; never C alone) at strengths 1, 0.7
+   and 1.3; Long and Round as played, arm 4; the rig arms (`-ankleWays Small`, arms 0 and 3) only if Small's arms show
+   the mend helps; the idle's tick-by-tick proof. Results in `Validation.md`.
+4. Step 5: a default changed, so the flows as played (`-ownAsPlayed 1`); then a build for Luis, with what to switch
+   on, do, watch and tell; judges for any visible change.
 Finished when: the switches exist, off; the forced checks pass; every arm is read and written in `Validation.md`; the
 idle is unchanged tick by tick; the as-played suite fails nothing new; judges saw any visible change; the build and its
 list went to Luis. Detail: "Next steps", item 2, the get-up blow-up thread ("The build, after the weekly reset");
