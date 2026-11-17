@@ -24,23 +24,33 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 35th outlook
 was taken on November 16, late evening.
 
-**Next: the baselines, then step 4.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one
-runs. The command lines are `research.md` section 7.3's, except that the heard run is now `-ownUnheard 0`.
-1. Baselines, as played, 24 courses each (build.md, "Long and Round: what their courses can show"). **Read:** Small
-   heard (`ank0_small_heard`): 15 up by its own body, 1 the old way, 8 not up (all blown up, one in a forearm),
-   against `cc_es24`'s 15, 0 and 9. It cannot be matched course by course: this live test is not the same run to
-   run, even with the same code (`Validation.md`, the last section). **Running** (background, one after another, from
-   about 04:55): Small as played (`ank0_small`), then Long and Round as played (`ank0_long`, `ank0_round`). In the
-   game Long and Round know no way up and get up the old way, so A and B never act on them; C does, at their falls.
-2. From the review of the mends: **done**, one heard Small run with A on (`ank_heardA`): passed, no target jump over
-   60°, but what learns adds was small at the boots and not logged (a watch for it goes into step 4). **Left:** reset
-   the three once-only messages in `AnkleMendArguments.Restore`; no code in `D:/Dev/WG` is edited until the
-   baselines end.
-3. Step 4: the forced checks (research section 7.2, and build.md's "Still not read back"), with `CoverRingLiveTests`
-   learning `-ankleWays`. Then Small's arms in 7.2's order (B, A = 1, both, then C; never C alone) at strengths 1, 0.7
-   and 1.3; Long and Round as played, arm 4; the rig arms (`-ankleWays Small`, arms 0 and 3) only if Small's arms show
-   the mend helps; the idle's tick-by-tick proof. Results in `Validation.md`.
-4. Step 5: a default changed, so the flows as played (`-ownAsPlayed 1`); then a build for Luis, with what to switch
+**Next: read Small's arm B, then step 4.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while
+one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
+1. **Running** (background, from about 06:25): Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build
+   `e8bac96`). It runs before the forced checks so that Unity works while the allowance waits; if the checks change
+   B's code, it is run again. Read it against `ank0_small`.
+2. Baselines, as played, 24 courses each: **all read** (`Validation.md`, the last section).
+   - Small as played (`ank0_small`): 10 up by its own body, 0 the old way, 14 not up; 12 blow-ups, 11 in a foot or
+     its toes. The arms are read against this run.
+   - Small heard (`ank0_small_heard`): 15, 1 and 8.
+   - Round (`ank0_round`) and Long (`ank0_long2`): 24 up the old way, none not up, no blow-up. Long's first run
+     stopped at the cover meter: its trousers have no cut ring, so the test learnt `-liveRing 0`.
+3. **Found:** on these courses Long and Round never go down by themselves. Every fall is the panel's push, which lets
+   them go without `GoDown`, and C acts only at `GoDown`. An arm with C on them here would pass without C acting once.
+   Small goes down by itself 77 times as played. build.md said otherwise and is corrected.
+4. From the review of the mends: **done.** The heard A run (`ank_heardA`) passed. The three once-only messages are
+   forgotten when a test begins and ends (`AnkleMendArguments.ForgetSaid`, `e8bac96`): compiled, not yet exercised by a
+   check that expects a message twice. Both test changes of `e8bac96` go to step 4's reviewers.
+5. Step 4, after the five-hour window resets (08:00 for Luis), a builder and reviewers who did not build it:
+   - the forced checks (research section 7.2, and build.md's "Still not read back");
+   - `CoverRingLiveTests` learning `-ankleWays`, and a watch of what learns adds at the boots;
+   - a course on which Long and Round go down by themselves.
+
+   Then Small's other arms in 7.2's order (A = 1, both, then C; never C alone) at strengths 1, 0.7 and 1.3; C on Long
+   and Round on the new course; the rig arms (`-ankleWays Small`, arms 0 and 3) only if Small's arms show the mend
+   helps; the idle's tick-by-tick proof. Results in `Validation.md`.
+6. Step 5: a default changed, so the flows as played (`-ownAsPlayed 1`); then a build for Luis, with what to switch
    on, do, watch and tell; judges for any visible change.
 Finished when: the switches exist, off; the forced checks pass; every arm is read and written in `Validation.md`; the
 idle is unchanged tick by tick; the as-played suite fails nothing new; judges saw any visible change; the build and its

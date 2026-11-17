@@ -5651,12 +5651,84 @@ what learns adds after the way's ask (the order changed after the reviews).
 So on this one get-up, what learns adds was small at the boots. How large it was was not logged: the new order has
 run, but has been exercised only lightly. A watch of what learns adds at the boots goes into step 4's forced checks.
 
-### Running
-`ank0_small`, `ank0_long` and `ank0_round`: the three miners as played, 24 courses each, one after another.
+### Small as played (`ank0_small`), the baseline the arms are read against
+Build `262f4ca`, `-ownAsPlayed 1`, every switch off. Read back from the running body at the start (`LIVE_SWITCHES`:
+`RiseAgent.Unheard True; OwnRiser.AnkleLimit 0, AnkleSpeed 0, AnkleSpeedHeight 0.605714, AnkleAtMost 110,
+AnkleTurnsAtMost 0; OwnBody.BootsFromOwnShin False; PhysicalFall.GetsUpByItsOwn True; strength 1`) and at the end
+(`ankle.txt`). 24 courses on the meadow, pushed from 0, 180, 90 and 270 degrees. It ended by itself after 3479 s
+(the limit was 15000 s).
+- **10 up by its own body, 0 the old way, 14 not up**; 101 tries by its own body; 85421 frames measured.
+- **12 blow-ups** (the test is marked Failed for them, as it always is):
+  - FootL in courses 0, 3, 11 and 19; FootR in 8, 15 and 16;
+  - the left toes in 5 and 13; the right toes in 18 and 22;
+  - ForearmR in 6.
+  
+  They turned at 101 to 160 rad/s. Eleven of the twelve are in a foot or its toes. The other two courses not up ran
+  out of time without blowing up.
+- The ankle watch (`ANKLE_DONE`): 63641 steps of its own body, 60368 of them getting up.
+  - The drive target jumped over 60 degrees 215 times as written (most 224.4) and 205 times as a turn (most 177.8).
+  - The boots turned faster than 30 rad/s on an axis 141 times touching something, and 141 touching nothing (139 of
+    those while getting up). The fastest were 91.3 and 93.6 rad/s.
+  - These are the counts A and B are meant to bring down.
+- Beside the heard run (15, 1 and 8, with eight blow-ups), this run has five fewer up and four more blown up. Each is
+  one run, and this test is not the same run to run, so the difference was seen once, not measured. The arms are read
+  against this run, as played, by their counts.
+
+### Round as played (`ank0_round`)
+The same switches, read back. It passed and ended by itself after 943 s.
+- **0 up by its own body, 24 the old way, 0 not up.** No try by its own body (Round knows no way up); 17805 frames;
+  no blow-up.
+- The ankle watch: 1803 steps of its own body, none of them getting up; no target jump over 60 degrees; the boots
+  turned at most 1.6 rad/s.
+
+This is as expected: A and B do nothing for Round. Arm 4 (C, at its falls) is the arm that can change it.
+
+### Long as played: the meter could not find a ring
+`ank0_long` stopped at its setup after 3.6 s. The cover meter found Long's trousers (785 points, 235 to 1000 mm above
+the feet) but no open edge in them, so there was no cut ring to measure. The test's own comment named only Small and
+Round; Long had never run in it.
+
+The fix, in the test only:
+- The meter's `FindRing` now takes `needed`, and the test takes `-liveRing 0`.
+- With it, a miner without a cut ring gets a ring of no points, said in `meter.txt` (`COVER_RING none`). Its courses
+  run with nothing of the ring measured.
+- Without it, the meter stops as before.
+
+**`ank0_long2`, Long as played with `-liveRing 0`:** passed, and ended by itself after 539 s.
+- `meter.txt` says `COVER_RING none: the trousers (1072 triangles) have no open edge`. The switches read back all off,
+  as in Small's run.
+- **0 up by its own body, 24 the old way, 0 not up.** No try by its own body; 17771 frames; no blow-up.
+- The ankle watch: 1803 steps of its own body, none of them getting up; no target jump over 60 degrees; the boots
+  turned at most 1.6 rad/s.
+
+Round's 1803 steps are the same number, and this is why: in both runs the own body stands for about 1.5 s before each
+of the 24 pushes (`frames.csv`, `own_stands`, in 24 of the 25 course groups), then the push lets it go.
+
+### Where C can act: the falls that go down by themselves
+`OwnBody.BootsFromOwnShin` (C) acts at `OwnBody.GoDown`, when the own body goes down by itself. A push from the panel
+lets the body go without it. The ankle watch counts the two apart (`ankle.txt`):
+
+| Run | Let go by a push | Gone down by itself |
+|---|---|---|
+| `ank0_small` | 38 | 77 (both boots slackened about their own body's ankle each time) |
+| `ank0_small_heard` | 32 | 35 |
+| `ank0_round` | 24 | **0** |
+| `ank0_long2` | 24 | **0** |
+
+So on these courses C acts on Small (in its failed tries), and **never on Long or Round**. Their 24 falls are all the
+panel's push. An arm with C on Long or Round in this test would pass without C acting once.
+
+Their falls by `GoDown` must come from another course, for instance a shove they cannot catch. Which course does
+this is left to step 4. `build.md` said that Long and Round fall by `GoDown` on these courses; it is corrected.
+
+In the same edit, `AnkleMendArguments` now forgets OwnRiser's three once-said ankle messages when a test begins and
+when it ends (`ForgetSaid`, by reflection; no runtime code touched). This is the should-fix from the review of the
+mends. It compiles in the Long run.
 
 ### Not tested
 - That every switch off is the old build, on courses (this test is not the same run to run).
 - Any arm, the forced checks, the idle's proof, the flows as played, and any strength but 1.
 - `GettingUpByItsOwnTests` with its new arguments.
+- `ForgetSaid` by a check that expects one message in two tests.
 
 No judgment here of feel or look: that is Luis's.

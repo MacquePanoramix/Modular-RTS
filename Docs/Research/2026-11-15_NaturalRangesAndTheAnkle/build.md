@@ -213,8 +213,13 @@ second time replaces the first call's point.
 
 **What else C touches (the sceptic's review):** it is more than a falling boot's hand-over. At the make it refits
 the made-down body's boot, its `toeAt` and its toe's collider. At GoDown the second `Slacken` acts on every fall
-once the stood pose is known, Long's and Round's too: they fall by GoDown, then get up the old way. So C stays off
-by default until a course that meets the 0.4 m case of the research has been run with it.
+that goes down by itself, once the stood pose is known. ~~Long's and Round's too: they fall by GoDown, then get up
+the old way.~~ **Corrected (November 17, morning):** on the live test's courses Long and Round never go down by
+themselves. All 24 of their falls are the panel's push, which lets them go without GoDown (`ank0_long2`,
+`ank0_round`: let go by a push 24 times, gone down by itself 0; Validation.md, "Where C can act"). Small goes down by
+itself in its failed tries (77 times as played). Whether anything in the game makes Long or Round go down by
+themselves, so that C acts on them, is not yet read. So C stays off by default until a course that meets the 0.4 m
+case of the research has been run with it.
 
 ### D. AnkleBrakes
 
@@ -364,15 +369,21 @@ joint-axis mapping under turns about several axes. These go into step 4's forced
 
 **Long and Round: what their courses can show.** This is the order of the work, set by Opus 5.5. It is not a design
 decision, and nothing in it is Locked.
-- In the game they know no way up: only `Resources/RiseWays/Small.txt` exists. Standing by their own joints, they
+- In the game they know no way up: only `Resources/RiseWays/Small.txt` exists. ~~Standing by their own joints, they
   fall by `GoDown` (`OwnBody.cs:1139`, `:1144`) and get up the old way (`PhysicalFall.ByItsOwn`: "no way up for lying
-  so"). So **A and B never act on them as played; C does, at their falls.**
+  so"). So **A and B never act on them as played; C does, at their falls.**~~ **Corrected (November 17, morning):**
+  they get up the old way (`PhysicalFall.ByItsOwn`: "no way up for lying so"), so A and B never act on them as
+  played. But on the live test's courses they never go down by themselves. All 24 of their falls are the panel's
+  push, which lets them go without `GoDown`, and C acts only at `GoDown` (`ank0_long2`, `ank0_round`). So on those
+  courses C does not act on them either.
 - Their own get-up belongs to the new controller (`motion_design.md`: the first build takes every fall of every
   miner), not to ways written for each body: Luis's word of October 30 rules out teaching each body its own. So no
   ways are made for them here.
-- **Small** takes every arm of §7.2 as played, at three strengths. **Long and Round as played** take arm 0 and arm 4
+- **Small** takes every arm of §7.2 as played, at three strengths. ~~**Long and Round as played** take arm 0 and arm 4
   (all on, where only C acts): their falls and the old way, counted for the first time (§7.2's table has "Long and
-  Round unknown"). **On the rig that lends them Small's ways**, arms 0 and 3 at strength 1, and only if Small's arms
+  Round unknown").~~ **Corrected (November 17, morning):** Long's and Round's arm 0 is done (`ank0_long2`,
+  `ank0_round`: 24 up the old way, none not up, no blow-up). Arm 4 on these courses would pass without C acting once.
+  It needs a course on which they go down by themselves; step 4 finds one or builds it. **On the rig that lends them Small's ways**, arms 0 and 3 at strength 1, and only if Small's arms
   show the mend helps. That is a claim about the rig: whether the bound holds on their longer and heavier boots.
   `CoverRingLiveTests` must first learn `-ankleWays`.
 - **Small's heard baseline beside `cc_es24`**: the same command line with `-ownUnheard 0`. This was first written as a

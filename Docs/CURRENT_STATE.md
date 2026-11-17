@@ -1,9 +1,9 @@
 # Wonder Gather — Current State
 
-**Updated:** November 17, 2026 (early morning). **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 17, 2026 (morning). **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
 - **Now (November 17, early morning): the ankle mend's three switches built, all off, reviewed and committed; Small's
-  learnt addition is off as played; the baselines begun.**
+  learnt addition is off as played; the baselines read; the first arm running.**
   - **What changed in the game** (`D:/Dev/WG` `262f4ca`, branch `claude/wip-round`, pushed):
     - `RiseAgent.Unheard` is true by default, so Small's learnt addition is off as played, as Luis asked on
       November 15;
@@ -22,22 +22,35 @@
       Whether this order is the one the model would want is open;
     - numbers are printed with a point.
 
-    Two more agents checked the mends: nothing that must be fixed. Two small things follow the runs: resetting the
-    once-only messages between tests, and one heard run with A on, the only one that exercises the new order.
+    Two more agents checked the mends: nothing that must be fixed. The two small things that followed are done: the
+    once-only messages are forgotten between tests (`e8bac96`; not yet exercised by a check that expects one twice),
+    and one heard run with A on, the only one that exercises the new order, passed.
   - **Rung:** written, compiled, read back on a rig: one short get-up per miner, and each guard shown a bad value
     and catching it. No course has been counted yet. That nothing changes with every switch off rests on the code
     paths and the read-back.
   - **Long and Round as played know no way up.** Only Small has a way file, so the other two get up the old way. A
-    and B never act on them; C does, at their falls. No ways are made for each body (Luis, October 30: no per-body
-    teaching). Their own get-up comes with the new controller.
+    and B never act on them. ~~C does, at their falls.~~ **Corrected:** on the live test's courses they never go
+    down by themselves. Every fall is the panel's push, which lets them go without `GoDown`, where C acts. So C does
+    not act on them there either, and a course on which they go down by themselves is part of step 4. No ways are
+    made for each body (Luis, October 30: no per-body teaching). Their own get-up comes with the new controller.
   - **Small heard, as played** (`ank0_small_heard`, `-ownUnheard 0`, read back from the running body): 15 up by its
     own body, 1 the old way, 8 not up, all blown up (one in a forearm). `cc_es24` had 15, 0 and 9. A plan to match
     it course by course was struck before it decided anything: this live test is not the same run to run, even with
     the same code, as `Validation.md` already said. The heard run with A on (`ank_heardA`) passed, with no target
     jump over 60°.
-  - **Running:** the three miners as played (`ank0_small`, `ank0_long`, `ank0_round`), one after another.
-  - **Next:** the other baselines (Small as played, then Long and Round), then step 4's forced checks and the arms
-    (the Handoff's "Start here").
+  - **The three miners as played**, every switch off and read back, 24 courses each:
+    - **Small** (`ank0_small`): 10 up by its own body, 0 the old way, 14 not up. It had 12 blow-ups, 11 of them in a
+      foot or its toes. Beside the heard run that is five fewer up, seen once, not measured. The arms are read
+      against this run.
+    - **Round** (`ank0_round`) and **Long** (`ank0_long2`): 24 up the old way, none not up, no blow-up.
+    - Long's first run stopped at the cover meter: its trousers have no cut ring. The test learnt `-liveRing 0`
+      (`e8bac96`); Small's runs keep the ring.
+
+    [The record](Validation.md), its last section.
+  - **Running:** Small's arm B as played (`ank1_small`, `AnkleSpeed` 20), before the forced checks, so that Unity
+    works while the allowance waits. If the checks change B's code, it is run again.
+  - **Next:** step 4 after the five-hour window resets: the forced checks and a course on which Long and Round go
+    down by themselves; then the other arms (the Handoff's "Start here").
 - **Before (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
   Opus 5.5 again.**
   - **A friend's process guide, reviewed** (Luis's request of November 15,
