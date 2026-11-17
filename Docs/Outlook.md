@@ -61,6 +61,45 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 17, 2026 (morning) — the thirty-seventh, short (by the counter and the compaction; step 4a read)
+
+- **Where we are.** S3b, step 2: getting up for any body. The ankle build is at step 4.
+  - Arm B on Small is read: blow-ups 12 to 5 in 24 courses, but no more get-ups (11 against 10).
+  - Step 4a, the forced checks, is built (WG `6b84d78`) and reviewed. Two checks stand: the live test now says when
+    a switch is on but never acted, and the once-said check. The others do not yet decide anything, so their mend
+    (4a′) is next, then 4b, the other arms and step 5.
+- **Waiting on Luis:** nothing the work needs. The week's pace is his to change if he wants (below). **He waits on:**
+  the ankle build and a build to play; step 0's stills; the first motion clips.
+- **Built, not in a build:** the switches and `Unheard`, as in the 36th, and now the forced checks and the exercised
+  lines (tests only). The flows as played have still not been run since the default changed (step 5).
+- **The list of holds:** checked. The ankle's red line still had the old counts (6 and 9 of 24); it now has this
+  morning's (12 of 24 as played, 5 with B on). Nothing else changed.
+- **Luis's corrections since the last outlook:** none. His two messages were about the computer: it had to leave by
+  9, then it stayed. The workflow was stopped cleanly and launched again from its saved script; that is now a memory.
+- **Rules broken again, all caught before they decided anything:**
+  - The builder's "all 8 passed": passes counted where the bars were only log lines, and where one check's event was
+    never forced. The reviews caught it. The check that follows: the mend makes every bar decide its test, and its
+    known-bad runs show it.
+  - Mine and the reviews': `asserts="0"` read as the proof that no bar decides. But this Unity writes 0 even for a
+    test failed by an assert: an instrument used before it was seen on a known-bad case, the very rule in `AGENTS.md`.
+    I caught it by reading a result file known to have failed, before the mend's brief went out. The brief,
+    `Validation.md`, the Handoff and CURRENT_STATE are corrected.
+  - Two committed notes carried the path of the user's profile folder (written in the early hours). Mended; their
+    scripts now live in the repository. **Can it become a check?** Yes: the guard could refuse a commit whose staged
+    text holds that path. The guard is standing configuration, so Luis is asked first.
+- **Does the task serve the stage?** Yes, but its size needs watching: the checks are now a second build pass. Its
+  finish line is fixed: each finding is mended, or answered by a log line, and then two reviewers read it. It must not
+  grow into a test suite for its own sake. Arm B says the mend helps against blow-ups but not with getting up. The
+  other arms (A, both, with C) must show more; the get-up itself waits for the new controller.
+- **What Luis would want to know:** 4a in plain words; that the mend waits for the window's reset; the week's pace.
+- **The allowance:**
+  - At 10:00 for Luis: 65% of the five hours (it resets at 13:00) and 50% of the week (it resets on November 23 at
+    17:00).
+  - This morning, 43 points of the five hours were 6 of the week. So a full window is about 14% of the week, and the
+    week holds about three and a half full windows. The rest of the ankle build should need about two (an estimate).
+  - The default: go on at full quality, one workflow at a time, and keep about a tenth of the week for Luis's
+    questions and small fixes. The visual turn may then begin after the week's reset.
+
 ### November 17, 2026 (morning) — the thirty-sixth, short (by the counter; the ankle build's baselines read)
 
 - **Where we are.** S3b, step 2: getting up for any body. The ankle build is past its steps 1 to 3: three switches,

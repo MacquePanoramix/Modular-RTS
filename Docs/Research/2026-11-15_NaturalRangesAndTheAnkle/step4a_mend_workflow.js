@@ -23,7 +23,7 @@ const RULES = [
   '- So write commit messages and scripts with the Write tool, and commit with git commit -F <file>. End each message with the line: Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>',
   '- Push with git push origin claude/wip-round.',
   '',
-  'The plan\'s usage is watched. Before each Unity run, check it with mcp__ccd_session_mgmt__get_usage (load it with ToolSearch "select:mcp__ccd_session_mgmt__get_usage"). If the 5-hour window passes 80%, stop at the next point where the report is true, commit what compiles, and return.',
+  'The plan\'s usage is watched. Before each Unity run, check it with mcp__ccd_session_mgmt__get_usage (load it with ToolSearch "select:mcp__ccd_session_mgmt__get_usage"). If the 5-hour window passes 80%, or the week passes 85%, stop at the next point where the report is true, commit what compiles, and return.',
 ].join('\n')
 
 const MEND = [
@@ -38,7 +38,7 @@ const MEND = [
   'The switches: A is OwnRiser.AnkleLimit, B is OwnRiser.AnkleSpeed (with AnkleSpeedHeight), C is OwnBody.BootsFromOwnShin. All are off by default and stay so; change nothing on the off path.',
   '',
   'Mend every finding of the three reviews, or answer it with evidence from a run. A finding you think wrong is answered by a log line you quote, not by an argument. Among them:',
-  '1. Each bar decides its test: a bar that fails fails the test. A known-bad run is the same test with an argument saying the bar must fail, and the test then asserts that it failed. The result files must show asserts above 0.',
+  '1. Each bar decides its test: a bar that fails fails the test. A known-bad run is the same test with an argument saying the bar must fail, and the test then asserts that it failed. The evidence: a run whose bar fails is marked Failed in its result file, with the bar\'s message; a known-bad run passes only because its bar failed, and its log says so. The result files\' asserts count is no evidence either way: this Unity writes asserts="0" even for a test that failed on an Assert.That (TestRuns/ank1_small_r.xml says Failed, with asserts="0"). The reviews of the first build read asserts="0" as their proof that no bar decides; the real proof is forced_down_c0b, which printed BAR_C FAIL and passed.',
   '2. Check 3 makes a real whirl. The engine\'s own reading of the boot\'s speed is 50-80 rad/s through at least one physics step before the going down, read back from the running joint, not right after a set. Find out why the boot reads NaN the step after the going down, and say why. Set the bar so that C off passes on plain makes and fails on whirled ones before trusting it for C on. If C on is zero by construction, say so, and find what does show that C acted on a whirled boot.',
   '3. Check 4 reaches 1.5-2 E on all three miners, and its expected value is computed apart from the code: written anew in the test from research.md\'s formula, not by calling the code\'s own function.',
   '4. Check 2 takes its twist axis from the shin\'s own bones, not from AnkleFolds\' expression, and adds a profile mixing twist and swing.',
@@ -83,7 +83,7 @@ const SCEP = [
   'Your file: ' + FOLDER + '/review_forced2_sceptic.md.',
   SHOWN,
   'Your question: is each claim in the report what its logs say?',
-  '- Does each bar now decide its test (asserts above 0; a failing bar fails the test; a known-bad run asserts that its bar failed)?',
+  '- Does each bar now decide its test (a failing bar marks its run Failed in the result file; a known-bad run passes only because it asserts that its bar failed)? The result files\' asserts count is no evidence either way: this Unity writes asserts="0" even for a test that failed on an Assert.That (TestRuns/ank1_small_r.xml).',
   '- Did each run end by itself?',
   '- Is each switch quoted as read back from the running body?',
   '- Does every number in the report match its log line? Quote both.',

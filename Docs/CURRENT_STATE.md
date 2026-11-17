@@ -61,11 +61,12 @@
     beside it). No runtime file changed and no fault was found in A, B or C, so arm B stands. What stands: the live
     test now says when a switch is on but never acted (Small: all three acted; Long and Round: none), and the
     once-said check passes, its known-bad run failing as it must. What does not: check 3 never made a real whirl
-    (the engine read NaN the step after the set); no bar decides its test (`asserts="0"` in every result file); and
+    (the engine read NaN the step after the set); no bar decides its test (a BAR FAIL line in a test that passed; the
+    result files' `asserts="0"` proves nothing, since this Unity writes it even for a test failed by an assert); and
     the gaps in checks 1, 2, 4, 5 and 6 that `Validation.md` lists. The builder's "all 8 passed" is not taken as
     passes.
-  - **4a′, the mend, running from 10:00** (`step4a_mend_workflow.js`): a builder for every finding of the reviews,
-    then a physicist and a sceptic against the new logs.
+  - **4a′, the mend, from 13:05**, after the five-hour reset (`step4a_mend_workflow.js`): a builder for every
+    finding of the reviews, then a physicist and a sceptic against the new logs.
   - **Next:** read 4a′; then 4b and the other arms (the Handoff's "Start here").
 - **Before (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
   Opus 5.5 again.**

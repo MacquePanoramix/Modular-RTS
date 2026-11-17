@@ -5778,8 +5778,11 @@ What does not stand yet:
   "the engine had it at 1.1 before the set, NaN the step after" (`forced_down_c0b.log:1296`, read by me; the other
   miners say the same). With C on, the offset is 0.0000 m at every make, whirled or not, so its bar is met by
   construction. With C off, plain makes already miss the 0.01 m bar (Small 0.0117, Round 0.0162; the reviews).
-- **No bar decides its test's result.** Every result file says `asserts="0"` (read by me). A BAR FAIL is a log line:
-  `forced_down_c0b` printed BAR_C FAIL and passed.
+- **No bar decides its test's result.** A BAR FAIL is only a log line: `forced_down_c0b` printed BAR_C FAIL, and its
+  test passed. ~~Every result file says `asserts="0"`.~~ **Corrected (the same morning):** that count is no evidence
+  either way. This Unity writes `asserts="0"` even for a test that failed on an `Assert.That`: `ank1_small_r.xml` says
+  Failed, for its five blow-ups, with `asserts="0"` (read by me). The reviews and I had used the count without first
+  seeing it on a test known to fail.
 - Check 4 (B near its edge) never reached 1.5-2 E (at most 1.8 on Small, 1.28 on Long, 0.92 on Round), and its
   expected value copies the code's own formula.
 - Check 2's twist axis copies the code's own expression.

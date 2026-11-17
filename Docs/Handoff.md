@@ -21,10 +21,11 @@ back, and what Long's and Round's courses can show. Committed in `D:/Dev/WG` as 
 pushed). Rung: written, compiled, read back on a rig; no course counted yet. The milestone is S3b, step 2: getting up
 for any body the creator can make, by its own joints ("The task, and its state"). Luis passed the work to Opus 5.5 at
 max effort with ultracode and asked it to go on as before
-([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 36th outlook
-was taken on November 17, in the morning.
+([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 37th outlook
+was taken on November 17, in the morning, after step 4a was read.
 
-**Next: step 4a's mend (4a′) is running (item 5, from 10:00); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+**Next: step 4a's mend (4a′) starts when the five-hour window resets (13:00 for Luis; a wake-up launches it at
+13:05; item 5); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
    blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11
@@ -53,14 +54,16 @@ runs take `-liveRing 0`. The live test is not the same run to run, so runs are c
      - **Do not stand yet:**
        - Check 3 (C) set a whirl on the boot, but no whirl went through a physics step: the engine read NaN the step
          after.
-       - No bar decides its test: every result file says `asserts="0"`.
+       - No bar decides its test: `forced_down_c0b` printed BAR_C FAIL and passed. (The result files' `asserts="0"`
+         is no evidence: this Unity writes it even for a test failed by an assert.)
        - Check 4 never reached 1.5 to 2 E, and its expected value copies the code's formula.
        - Check 2's twist axis copies the code.
        - Check 1's A bar is vacuous on `slerp_antipode`.
        - Check 6 passes at 2 degrees and turns only about 60.
        - Check 5 has no bar.
      - The builder's "all 8 passed" is not taken as passes.
-   - **4a′, the mend, running from 10:00 on November 17:** a builder (opus, high) mends every finding of the three
+   - **4a′, the mend, from 13:05 on November 17** (after the five-hour reset: 4a took about 40% of a window, and 65%
+     was used at 10:00): a builder (opus, high) mends every finding of the three
      reviews, or answers it with a log line, and runs the checks again, known-bad and known-good, on all three miners.
      Then a physicist and a sceptic (sonnet, medium) check each first finding against the new logs
      (`review_forced2_physicist.md`, `review_forced2_sceptic.md`). If it is cut off, run it again as it is:
@@ -151,8 +154,10 @@ Each line: the item; why; what lifts it; where its detail lives.
 - Red: as played, 15 fail both ways (K5, K4(a), 13 of the October 10 list, `TheBodysOwn.md`); which one fails again
   since October 14 is not read; no lift stated; the same Validation section; `Outlook.md` near line 267.
 - Red, flaky: the night light test (0.887 and 0.896 for 0.9), not explained; no lift; `Validation.md` near 3305, 3496.
-- Red: the own get-up blows up in `CoverRingLiveTests`, 6 of 24 (`cc_en24`) and 9 of 24: the ankle; the ankle build;
-  `Validation.md`, "The energy count in the live courses" (near 5450), "The ankle split" (near 5533).
+- Red: the own get-up blows up in `CoverRingLiveTests`: as played 12 of 24 (`ank0_small`, November 17; before, 6 of
+  24 in `cc_en24` and 9 of 24), and 5 of 24 with B on (`ank1_small`): the ankle; the ankle build; `Validation.md`,
+  "The energy count in the live courses" (near 5450), "The ankle split" (near 5533), and the ankle build's sections
+  after them.
 - The shove test (`OwnBodyTests.ShovedAgainAndAgainNothingOfItFlies`): passes the normal way in the last runs written
   down (`Validation.md`, "The solver's turns on by default (November 13, afternoon)": `OwnBodyTests` 16 of 16 with it
   among them, and the whole suite's only two failures are K5 and K4(a)). "Still fails as known" ("In hand", item 3,
