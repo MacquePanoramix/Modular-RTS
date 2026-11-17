@@ -21,8 +21,8 @@ back, and what Long's and Round's courses can show. Committed in `D:/Dev/WG` as 
 pushed). Rung: written, compiled, read back on a rig; no course counted yet. The milestone is S3b, step 2: getting up
 for any body the creator can make, by its own joints ("The task, and its state"). Luis passed the work to Opus 5.5 at
 max effort with ultracode and asked it to go on as before
-([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 35th outlook
-was taken on November 16, late evening.
+([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 36th outlook
+was taken on November 17, in the morning.
 
 **Next: read Small's arm B, then step 4.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while
 one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
@@ -109,8 +109,8 @@ Each line: the item; why; what lifts it; where its detail lives.
 - R1's unfloored share does not run: review B's bound; what caps Round's ankle found; `CURRENT_STATE.md` near 112.
 - Ankle switches A, B, C off, C never alone; `AnkleBrakes` Open, his: the mend's order; it changes strength; any on by
   default goes to judges, then Luis; `research.md` §7.1-7.2, `GAME_VISION.md` row 2026-11-15 (afternoon).
-- Small's learnt addition: off as played by Luis's word, still on in the code (`RiseAgent.Unheard` false); the ankle
-  build's step 2; "Waiting on Luis" (the Nov13b paragraph), the same row.
+- Small's learnt addition: off as played by Luis's word, and off in the code since `262f4ca` (`RiseAgent.Unheard` true
+  by default; `-ownUnheard 0` hears it); kept for training only; "Waiting on Luis" (the Nov13b paragraph), the same row.
 - The idle Luis loves does not change: his word; not lifted; `GAME_VISION.md` row 2026-11-13 (night), `research.md` §7.1.
 - `OwnBody.Anatomical` off (for a body made standing only) and `OwnBody.Weighed` off (it breaks standing); no lift
   stated; "The task", layer 0; `joint_model.md`; "Also open, smaller".

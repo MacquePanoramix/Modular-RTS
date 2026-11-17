@@ -61,6 +61,41 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 17, 2026 (morning) — the thirty-sixth, short (by the counter; the ankle build's baselines read)
+
+- **Where we are.** S3b, step 2: getting up for any body. The ankle build is past its steps 1 to 3: three switches,
+  all off, reviewed twice, and Small's learnt addition off in the code (WG `262f4ca`). All three miners have been run
+  as played with every switch off. Small got up by its own body in 10 of 24 courses and blew up in 12, 11 of them in a
+  foot or its toes; that is what the mend is for. Long and Round got up the old way in 24 of 24, with no blow-up.
+  Small's arm B is running. Then come step 4's forced checks, the other arms, and step 5.
+- **Waiting on Luis:** nothing. **He waits on:** the ankle build and a build to play; step 0's stills; the first
+  motion clips.
+- **Built, not in a build:** the three switches, and `RiseAgent.Unheard` true by default. **A default changed and the
+  flows as played have not been run since** (step 5); only the live courses were run as played.
+- **The list of holds:** checked. One line was stale (Small's learnt addition, "still on in the code"); mended. Nothing
+  else changed.
+- **Luis's corrections since the last outlook:** none of a claim or a result. His one other message was "Please
+  continue" after the five-hour window ran out mid-task: pace again. **Rules broken again, by me, both caught before
+  they decided anything:**
+  - a check planned without reading the record: the course-by-course match, when `Validation.md` already said four
+    times that this test is not the same run to run;
+  - a claim about the game read from the code and not from a run: "C acts at Long's and Round's falls". The ankle
+    watch's own count showed that their falls are all the panel's push, and C acts only when the body goes down by
+    itself.
+
+  **Can it become a check?** Yes: the live test should say, at its end, when a switch is on but its event never
+  happened (for C, gone down by itself 0 times). It goes to step 4's builder, so that an arm cannot pass unexercised.
+- **Does the task serve the stage?** Yes, for Small: its as-played blow-ups are in the feet. But the stage asks for
+  getting up for any body, and Long and Round still get up the old way. Their own get-up is the new controller's,
+  which has not begun. The ankle build must not grow into tuning each body. Its arms are many runs (about an hour
+  each), which costs Unity time, not the allowance.
+- **What Luis would want to know:** the baselines in plain numbers; that C cannot be judged on Long and Round
+  until they have a course that makes them go down by themselves; the allowance. After the ankle build, the visual
+  turn comes (the target research's five corrections), as the turns go.
+- **The allowance:** 96% of the five hours used when this was written (more than I had guessed: reading files cost
+  more than I had counted); it resets at 08:00 for Luis. 41% of the week is used, and it resets in six days. Until the
+  reset only the Unity run goes on.
+
 ### November 16, 2026 (late evening) — the thirty-fifth, short (a stretch closed, before the report and the handover)
 
 - **Where we are.** The game has not changed since the thirty-fourth: no code, no scene, no run in Unity. Since then
