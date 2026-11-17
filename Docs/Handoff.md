@@ -24,7 +24,7 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 36th outlook
 was taken on November 17, in the morning.
 
-**Next: step 4a is running (item 5); read it when the workflow ends.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
+**Next: run step 4a (item 5) from its saved workflow.** Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
 1. **Read:** Small's arm B as played (`ank1_small`, `-riseSet AnkleSpeed=20`, build `e8bac96`, `Validation.md`):
    blow-ups 12 to 5 (in the feet 11 to 3); boots over 30 rad/s touching nothing 141 to 1; up by its own body 11
@@ -43,10 +43,15 @@ runs take `-liveRing 0`. The live test is not the same run to run, so runs are c
    forgotten when a test begins and ends (`AnkleMendArguments.ForgetSaid`, `e8bac96`): compiled, not yet exercised by a
    check that expects a message twice. Both test changes of `e8bac96` go to step 4's reviewers.
 5. Step 4, in two parts, each a builder and then reviewers who did not build it:
-   - **4a, running (a workflow, from 08:15):** the forced checks (research section 7.2, and build.md's "Still not
-     read back"); the live test saying at its end when a switch is on but its event never happened; a check that
-     expects a once-said message twice. The builder's report is `forced_checks.md` in the research folder, and the
-     reviews go beside it (`review_forced_*.md`). No run of mine in `D:/Dev/WG` while it works.
+   - **4a, to run:** the forced checks (research section 7.2, and build.md's "Still not read back"); the live test
+     saying at its end when a switch is on but its event never happened; a check that expects a once-said message
+     twice. It was launched at 08:15 on November 17 and stopped at 08:20, before anything was written, because Luis
+     had to leave with the computer by 09:00. `D:/Dev/WG` is unchanged at `e8bac96`. Run it again as it is:
+     `Workflow({scriptPath: "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer/Docs/Research/2026-11-15_NaturalRangesAndTheAnkle/step4a_workflow.js"})`.
+     The order: a builder (opus, high), then a physicist and a sceptic, then a code reviewer (sonnet, medium). The
+     builder's report will be `forced_checks.md` in that folder, with the reviews beside it (`review_forced_*.md`). No
+     run of mine in `D:/Dev/WG` while it works. If Luis has said when the computer must go, put that time in the
+     builder's brief: a workflow's agents cannot be messaged, only stopped.
    - **4b, after 4a is read:** a course on which Long and Round go down by themselves; `CoverRingLiveTests` learning
      `-ankleWays`, and a watch of what learns adds at the boots.
 

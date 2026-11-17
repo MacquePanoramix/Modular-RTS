@@ -40,3 +40,21 @@ wrote, word for word:
 What was done with it: Opus 5.5 (read back from the session: `claude-opus-5-5`, effort `max`, ultracode on) mended the
 lines that described a handover by a scheduled task, which was never made and is no longer needed, committed Fable's
 work, and went on with the ankle build.
+
+## 5. November 17, morning
+
+Later, after a five-hour reset, Luis wrote, word for word:
+
+> I hit my usage limit while you were working, but it has reset now. Please continue from where you left off.
+
+What was done with it: the ankle build went on from the Handoff's "Start here": the baselines as played, then Small's
+arm B.
+
+A few minutes after the step 4a workflow began (08:15), he wrote, word for word:
+
+> By the way, I will need to leave home by 9, so actually please make sure to wrap up all you're doing by then since I'll need to bring my computer this time.
+
+What was done with it: the workflow was stopped at about 08:20, while its builder was still reading. It had written
+nothing but an empty report, which was removed. `D:/Dev/WG` was left unchanged at `e8bac96`, with no Unity running.
+The workflow's script was saved in the ankle research folder, to be run again as it is. The Handoff, CURRENT_STATE
+and a memory note record this. Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.

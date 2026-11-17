@@ -51,8 +51,12 @@
     (in the feet 3 against 11). The boots no longer whirl in the air: over 30 rad/s touching nothing, 1 against 141.
     But it got up no more often (11 against 10); courses that no longer blew up ran out of time (7 against 2). One
     run each. If the checks change B's code, it is run again.
-  - **Next:** step 4 after the five-hour window resets: the forced checks and a course on which Long and Round go
-    down by themselves; then the other arms (the Handoff's "Start here").
+  - **Step 4 split in two.** 4a is the forced checks, the live test's line saying a switch was on but never acted,
+    and the once-said check. It was launched at 08:15 and stopped at 08:20, before anything was written, because Luis
+    had to leave with the computer by 09:00. `D:/Dev/WG` is unchanged at `e8bac96`. Its workflow is saved in the
+    research folder (`step4a_workflow.js`) to be run again as it is. 4b, the course on which Long and Round go down by
+    themselves, follows.
+  - **Next:** run 4a; then 4b and the other arms (the Handoff's "Start here").
 - **Before (November 16, late evening): nothing in the game changed; the process pages did, and the work passes to
   Opus 5.5 again.**
   - **A friend's process guide, reviewed** (Luis's request of November 15,
