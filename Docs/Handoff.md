@@ -1,12 +1,13 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 18, 2026 (about 05:55), by Claude Opus 5.5. 4a‴ read: it found a fault in the rig itself;
-the look for its cause starts at 09:00 (`rig_blowup_workflow.js`). Done: the forced checks' third and fourth builds
-read (`a251444`, `6408d91` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and
-committed on both branches. Git's own check, approved for this project only, was built, mended, reviewed twice and
-read; it was installed at 00:42 on November 18, and its guard side (G7, M1) went live at 00:43. Luis's question on
-the cost of a check at every write was answered (it stays off). The master is Opus 5.5 at max effort with ultracode,
-by Luis's word.
+**Last updated:** November 18, 2026 (about 06:20), by Claude Opus 5.5. Luis approved the check at every write, for
+this project only (about 05:58); it is built from about 09:03 (`write_check_workflow.js`) if the week has room. At
+06:03 the week was 93% used, so the look for the rig's start blow-up (`rig_blowup_workflow.js`), which 4a‴ called for,
+waits for the week's reset (November 23, 17:00). Done: the forced checks' third and fourth builds read (`a251444`,
+`6408d91` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and committed on both
+branches. Git's own check, approved for this project only, was built, mended, reviewed twice and read; it was
+installed at 00:42 on November 18, and its guard side (G7, M1) went live at 00:43. The master is Opus 5.5 at max
+effort with ultracode, by Luis's word.
 Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
@@ -29,16 +30,31 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 40th outlook
 was taken on November 18 at about 05:55, as a stretch closed, after a compaction (`Outlook.md`).
 
-**Now: the look for the rig's start blow-up, to begin at 09:00 on November 18**, when the five hours reset (at 05:31
-they were 58% used, and the week 91%: the window had no room for all of it). Script:
+**Now: the check at every write, from about 09:03 on November 18**, when the five hours reset, and only if the week
+is then at most 93.5% (at 06:03 the window was 72% used and the week 93%). Luis approved it at about 05:58, for this
+project only ([section 10](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)).
+Script: `Research/2026-11-16_HarnessGuideReview/write_check_workflow.js`. One builder (opus, high) makes a candidate
+in `.claude/hooks/next/` (`guard_write.py`, `guard_write.sh`, `guard_write_test.sh`): a write or edit that adds the
+profile path to a file of this repository (not ignored by git; the main folder or a worktree such as `D:/Dev/WG`) is
+refused, judged on the file as it would be after the write; everything else passes, and it fails open. Then a breaker
+(sonnet) who did not build it (`review_write_check.md`). Their agents stop at a clean point past 80% of the five hours
+or 95% of the week. Nothing is live until both are read to the end; then the master copies it into `.claude/hooks/`,
+adds the PreToolUse entry (matcher `Write|Edit|MultiEdit|NotebookEdit`) to this project's `.claude/settings.local.json`
+only, and shows it firing with one refused edit of an untracked scratch file. A check-in scheduled in this session
+starts it at about 09:03; it lives only in this session. If this session is lost, start it from a new one with
+`Workflow({scriptPath: "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer/Docs/Research/2026-11-16_HarnessGuideReview/write_check_workflow.js"})`
+once both limits have room for all of it.
+
+**After the week's reset (November 23, 17:00): the look for the rig's start blow-up.** It was to begin at 09:00 on
+November 18, but it needs 2-3% of the week and at 06:03 the week was 93% used: no room for all of it before the 95%
+stop. Script:
 `Research/2026-11-15_NaturalRangesAndTheAnkle/rig_blowup_workflow.js` (committed with this page). One finder (opus,
 high) in `D:/Dev/WG` reads, from the running body step by step and counting the energy first, what sets the left boot
 whirling at the rig's start with every switch off. It forces the cause (a start that must blow, one that must not,
 differing by the cause alone, on all three miners), may mend the rig (`AnkleForced.cs` only, then forced_good and
 forced_bad once each), and changes no runtime code; at most 8 runs; it stops at a clean point past 80% of the five
 hours or 93.5% of the week. Then a physicist (sonnet) who did not make it reviews it (`review_blowup_physicist.md`).
-A check-in scheduled in this session starts it at about 09:03; it lives only in this session. If this session is
-lost: start it from a new one with `Workflow({scriptPath: "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer/Docs/Research/2026-11-15_NaturalRangesAndTheAnkle/rig_blowup_workflow.js"})`
+Start it with `Workflow({scriptPath: "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer/Docs/Research/2026-11-15_NaturalRangesAndTheAnkle/rig_blowup_workflow.js"})`
 once both limits have room, after making sure no Unity of `D:/Dev/WG` is running and `D:/Dev/WG` is at `6408d91`.
 When it ends, read its report (`forced_checks.md`, "The rig's start blow-up"), its commits and its review to their
 end before anything is written or committed.
@@ -124,15 +140,16 @@ repository.
   - the guard's working-tree read is blind to assume-unchanged and skip-worktree paths.
 - **The second mend** closes the gap, the four low findings and the suite's flake: `g6_git_mend2_workflow.js`,
   written, not run (one opus mender, one sonnet reviewer; about 2.5-3% of the week).
-  - It runs after the week's reset (November 23, 17:00): the room left before the guard went to the rig's blow-up.
+  - It runs after the week's reset (November 23, 17:00), after the rig's blow-up, where the week has room for all of it.
   - Then the master reinstalls (`install.sh` with the folder) and copies `next/` live again.
 - **What it cannot see, by kind** (the report): encodings (percent, `\u`, entities, base64, gzip), fullwidth and
   no-break characters, and `Users\x\..\<name>`. It is a seat belt, not a vault.
 - **Told Luis** (November 18, about 04:05): it is live. To skip it for one commit of his own: `git commit --no-verify`
   (or `git push --no-verify`). To take it out: `bash .claude/hooks/git/uninstall.sh "<the project's folder>"`. He
   asked what widening the guard's matcher to the Write and Edit tools would cost (Correspondence of November 16,
-  section 9): almost no usage to run, an estimated 1-2% of the week to build, a small gain. It stays off (not
-  approved) unless he asks for it.
+  section 9): almost no usage to run, an estimated 1-2% of the week to build, a small gain. At about 05:58 he
+  approved it, for this project only (section 10): it is built from about 09:03 ("Now" above) and registered in this
+  project's `.claude/settings.local.json` only after its report and review are read.
 - **Found in the whole history** (the report; not changed): the path is in House.fbx and Nature.fbx as committed
   before `16b5636`, still on origin/main, and in older commits of `build.md` and `review_mends_physicist.md`. The
   branch tips are clean. Mending main is a merge, which is Luis's word; he declined rewriting history.
@@ -152,8 +169,8 @@ own `CURRENT_STATE.md` is from October 8, and it has no `Handoff.md`).
 **The forced checks after four builds** (4a and 4a′ on November 17; 4a″ and 4a‴ on November 18; `forced_checks.md`
 holds every build's section, newest first, and `Validation.md` one section for each). No fault was found in A, B or
 C, and arm B need not run again. Open after 4a‴:
-1. **The rig's start blow-up** (with every switch off): its cause, and a mend if it is the rig's. Next, from 09:00
-   ("Now" above).
+1. **The rig's start blow-up** (with every switch off): its cause, and a mend if it is the rig's. Next on the
+   milestone, after the week's reset (above).
 2. Smaller, and only if they still matter after item 1: Small judged about 6 distinct courses in check 3, not 8;
    BAR_AXES_READ's 3° is set from its data; the floors are 10 steps where the profiles judge 85 to 352; BAR_DAMP has
    no floor and leaves its loop silently when the riser changes; a few numbers are still inline; BAR_FORM's known-bad
@@ -164,9 +181,10 @@ Then 4b. The order, one workflow and one Unity at a time:
 3. 4a″ (`step4a2_workflow.js`), ran 04:02-04:32 on November 18 and was read;
 4. `D:/Dev/WG`'s `AGENTS.md`, done (`ef12502`);
 5. 4a‴ (`step4a3_workflow.js`), ran 04:39-05:29 on November 18 and was read;
-6. the look for the rig's start blow-up (`rig_blowup_workflow.js`), from 09:00 on November 18;
-7. after the week's reset (November 23, 17:00): 4b, then Small's arms, then step 5; the second mend of git's check
-   where the week has room for all of it.
+6. the check at every write (`write_check_workflow.js`), from about 09:03 on November 18 if the week is then at most
+   93.5%;
+7. after the week's reset (November 23, 17:00): the look for the rig's start blow-up (`rig_blowup_workflow.js`), then
+   4b, then Small's arms, then step 5; the second mend of git's check where the week has room for all of it.
 
 Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.

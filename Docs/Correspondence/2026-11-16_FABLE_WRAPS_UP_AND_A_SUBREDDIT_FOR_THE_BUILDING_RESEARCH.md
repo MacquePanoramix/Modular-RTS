@@ -154,3 +154,27 @@ is small now that git's own check refuses the path at every commit and push, bef
 only catch the path earlier. Recommended: leave it off for now; it stays off unless he says otherwise.
 
 Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.
+
+## 10. November 18, about 05:58: the check at every write, approved for this project only
+
+At about 05:58 Luis wrote, word for word:
+
+> Oh by the way, I woke up now and saw your response to my question. We can implement that also then but if possible try to keep it restricted to this project too so it doesn't affect me using GitHub outside of this project please. Sorry for the delay in responding I was sleeping.
+
+What is answered: it is restricted to this project by how it is made. It is a hook of Claude Code registered in this
+project's own `.claude/settings.local.json`, not in the settings every project shares. So it runs only when the
+assistant writes or edits a file in a session of this project, and it acts only on files of this repository (the main
+folder and its worktrees, such as `D:/Dev/WG`). It runs no git command, never touches GitHub, and does nothing when he
+edits files himself or uses git or GitHub, here or anywhere else. Git's own check, live since 00:42, was already this
+repository's alone (its `.git/hooks`).
+
+When: at 06:03 the week was 93% used (between about 05:59 and 06:03, across a compaction of this conversation, it went
+from about 91.5%, and the five hours from about 60% to 72%). The look for the rig's start blow-up needs 2-3% of the
+week, so it no longer fits under the 95% stop and waits for the week's reset (Monday, November 23, 17:00). The check
+at every write, about 1-2%, starts at about 09:03, when the five hours reset, if the week is then at most 93.5%; its
+agents stop at a clean point at 95%. Script: `Research/2026-11-16_HarnessGuideReview/write_check_workflow.js` (one
+builder, then one breaker who did not build it). Nothing becomes live until its report and its review are read; then
+it is registered and shown to fire. Offered: if he would rather keep the rest of the week for talking, it waits for
+Monday too.
+
+Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.

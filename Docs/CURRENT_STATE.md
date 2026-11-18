@@ -1,9 +1,19 @@
 # Wonder Gather — Current State
 
-**Updated:** November 18, 2026 (about 05:55). **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 18, 2026 (about 06:20). **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 18, about 05:55): nothing in the game changed. The forced checks' fourth build (4a‴) ran and was
-  read. It found a fault in the rig itself; the look for its cause starts at 09:00.**
+- **Now (November 18, about 06:20): nothing in the game changed. Luis approved the check at every write, for this
+  project only (about 05:58); it is built from about 09:03 if the week has room. The look for the rig's start
+  blow-up waits for the week's reset (November 23, 17:00).**
+  - At 06:03 the week was 93% used and the five hours 72%. The rig look needs 2-3% of the week and does not fit under
+    the 95% stop; the check at every write, about 1-2%, does if the week is at most 93.5% at 09:03.
+  - The check is a hook of Claude Code in this project's `.claude/settings.local.json` only: it runs only when the
+    assistant writes a file in a session of this project, acts only on this repository's files, and runs no git. It
+    is built as a candidate in `.claude/hooks/next/` (`write_check_workflow.js`: one builder, one breaker) and is not
+    live until both are read. Luis's words and the answer: Correspondence of November 16, section 10.
+
+- **Before (November 18, about 05:55): nothing in the game changed. The forced checks' fourth build (4a‴) ran and was
+  read. It found a fault in the rig itself; the look for its cause was to start at 09:00.**
   - 4a‴ changed only the test file `AnkleForced.cs` (`6408d91` in `D:/Dev/WG`) and found no fault in A, B or C. Check
     3 with C on now passes in one run (`down_c1h`), and C off fails it as it must (`down_c0i`). B's own wrap count and
     each bar's NaN and empty cases were failed on purpose. Rung: tested on a rig, read to the end.
