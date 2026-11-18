@@ -1,11 +1,12 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 18, 2026 (about 04:42), by Claude Opus 5.5. 4a″ read; 4a‴ running since 04:39. Done: the forced checks' mend read
-(`7c6edf0` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and committed on both
-branches. Git's own check, approved for this project only, was built, mended, reviewed twice and read; it was
-installed at 00:42 on November 18, and its guard side (G7, M1) went live at 00:43. Luis's question on the cost of a
-check at every write was answered (it stays off). Now: 4a″, running since 04:02 (`wf_e7af121a-bc2`). The
-master is Opus 5.5 at max effort with ultracode, by Luis's word.
+**Last updated:** November 18, 2026 (about 05:55), by Claude Opus 5.5. 4a‴ read: it found a fault in the rig itself;
+the look for its cause starts at 09:00 (`rig_blowup_workflow.js`). Done: the forced checks' third and fourth builds
+read (`a251444`, `6408d91` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and
+committed on both branches. Git's own check, approved for this project only, was built, mended, reviewed twice and
+read; it was installed at 00:42 on November 18, and its guard side (G7, M1) went live at 00:43. Luis's question on
+the cost of a check at every write was answered (it stays off). The master is Opus 5.5 at max effort with ultracode,
+by Luis's word.
 Kept current at every milestone.
 
 If you are a new session or another model: read `AGENTS.md`, then this page's "Start here", then the top entry of
@@ -25,27 +26,29 @@ back, and what Long's and Round's courses can show. Committed in `D:/Dev/WG` as 
 pushed). Rung: written, compiled, read back on a rig; no course counted yet. The milestone is S3b, step 2: getting up
 for any body the creator can make, by its own joints ("The task, and its state"). Luis passed the work to Opus 5.5 at
 max effort with ultracode and asked it to go on as before
-([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 39th outlook
-was taken on November 18 at about 00:41, by the counter, after a compaction (`Outlook.md`).
+([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 40th outlook
+was taken on November 18 at about 05:55, as a stretch closed, after a compaction (`Outlook.md`).
 
-**Now: 4a‴ is running, since 04:39 on November 18** (run `wf_5594be6d-e18`; script
-`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a3_workflow.js`, committed in `8d90e11`; its six items are in its
-brief). They are what the reviews of 4a″ left open: a C-on run of check 3 that passes by itself (Long judged only 2
-of the 3 whirled courses needed); what check 3 shows (the physicist: C's branch, not a physical effect on a whirling
-boot); BAR_WRAP's known-bad through B's own count; no bar passing on a NaN or on nothing; each bar's number defined
-once, BAR_AXES_READ's 3° grounded apart from its data; every run again on the final code. At its start the five hours
-were 30% used and the week 87% (4a″ cost about 3% of the week); its agents stop at a clean point past 80% of the
-window or 95% of the week. `D:/Dev/WG` was at `ef12502` with only the known uncommitted files, and no Unity was
-running. When it ends, read its report (`forced_checks.md`, "Step 4a‴"), its commits and its three reviews
-(`review_forced4_*.md`) to their end before anything is written or committed. If this session is lost meanwhile: a
-run resumes only in its own session, so read `forced_checks.md` and `git -C D:/Dev/WG log ef12502..HEAD` to see what
-the mender reached, and make sure no Unity of `D:/Dev/WG` is still running before anything else.
+**Now: the look for the rig's start blow-up, to begin at 09:00 on November 18**, when the five hours reset (at 05:31
+they were 58% used, and the week 91%: the window had no room for all of it). Script:
+`Research/2026-11-15_NaturalRangesAndTheAnkle/rig_blowup_workflow.js` (committed with this page). One finder (opus,
+high) in `D:/Dev/WG` reads, from the running body step by step and counting the energy first, what sets the left boot
+whirling at the rig's start with every switch off. It forces the cause (a start that must blow, one that must not,
+differing by the cause alone, on all three miners), may mend the rig (`AnkleForced.cs` only, then forced_good and
+forced_bad once each), and changes no runtime code; at most 8 runs; it stops at a clean point past 80% of the five
+hours or 93.5% of the week. Then a physicist (sonnet) who did not make it reviews it (`review_blowup_physicist.md`).
+A check-in scheduled in this session starts it at about 09:03; it lives only in this session. If this session is
+lost: start it from a new one with `Workflow({scriptPath: "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer/Docs/Research/2026-11-15_NaturalRangesAndTheAnkle/rig_blowup_workflow.js"})`
+once both limits have room, after making sure no Unity of `D:/Dev/WG` is running and `D:/Dev/WG` is at `6408d91`.
+When it ends, read its report (`forced_checks.md`, "The rig's start blow-up"), its commits and its review to their
+end before anything is written or committed.
 
-**4a″ ran 04:02-04:32 and was read** (`wf_e7af121a-bc2`; `a251444` in `D:/Dev/WG`, only `AnkleForced.cs`; no fault
-in A, B or C, arm B stands). What stands and what does not: `Validation.md`, "The forced checks, third build".
-`D:/Dev/WG`'s `AGENTS.md` is now this project's, with a top line pointing here (`ef12502`). After 4a‴: the second
-mend of git's check if the week has room for all of it; 4b, Small's arms and step 5 after the weekly reset
-(November 23, 17:00).
+**4a‴ ran 04:39-05:29 and was read** (`wf_5594be6d-e18`; `6408d91` in `D:/Dev/WG`, only `AnkleForced.cs`; no fault in
+A, B or C, arm B stands). Check 3 with C on passes in one run, and the bars' NaN and empty cases and B's own wrap
+count were failed on purpose. It found a fault in the rig itself: with every switch off, the boot blows up at some
+starts (the list of holds, "Red, the rig"). What stands and what does not: `Validation.md`, "The forced checks, fourth
+build". After the look: the rig's small loose ends if they still matter; then 4b, Small's arms, step 5 and the second
+mend of git's check after the weekly reset (November 23, 17:00).
 
 **G6 is live since 13:57 on November 17. Git's own check has been live since 00:42 on November 18, and G7 and M1
 since 00:43 (below).** Luis approved G6
@@ -121,7 +124,7 @@ repository.
   - the guard's working-tree read is blind to assume-unchanged and skip-worktree paths.
 - **The second mend** closes the gap, the four low findings and the suite's flake: `g6_git_mend2_workflow.js`,
   written, not run (one opus mender, one sonnet reviewer; about 2.5-3% of the week).
-  - It runs after 4a″ if the week then has room for all of it, and otherwise after November 23.
+  - It runs after the week's reset (November 23, 17:00): the room left before the guard went to the rig's blow-up.
   - Then the master reinstalls (`install.sh` with the folder) and copies `next/` live again.
 - **What it cannot see, by kind** (the report): encodings (percent, `\u`, entities, base64, gzip), fullwidth and
   no-break characters, and `Users\x\..\<name>`. It is a seat belt, not a vault.
@@ -142,38 +145,28 @@ temporary folder were checked to be its own and moved to the Recycle Bin at abou
 like these be kept cleaned up, with utmost care first (`AGENTS.md`, "Protect human workspace state"). Small, still to
 do: a careful survey of the old worktrees (`D:/Dev/WG-bag`, `D:/Dev/WG-hung`, the four in `.claude/worktrees/`); any
 work of their own, uncommitted or unpushed, is asked about before anything goes.
-Small, found at 20:35 (read, not changed): `D:/Dev/WG`'s `AGENTS.md` (branch `claude/wip-round`) is the October 1
-version. It lacks:
-- the "Start here" line;
-- the junk line;
-- the claims-and-checks block;
-- the review lines;
-- the session-cost section.
+Done (November 18, `ef12502` in `D:/Dev/WG`): that worktree's `AGENTS.md`, which was the October 1 version, is now
+this project's, with one line at its top saying the documents are kept current here, on `claude/worker-showcase` (its
+own `CURRENT_STATE.md` is from October 8, and it has no `Handoff.md`).
 
-That branch has no `Docs/Handoff.md`, and its `CURRENT_STATE.md` is from October 8. Agents briefed from this session
-load this project's `AGENTS.md`. A session started in `D:/Dev/WG` would not. The mend, after 4a″ (so that its brief's
-head stays `b76f311`): this project's `AGENTS.md` in `D:/Dev/WG`, with one line at its top saying the documents are
-kept current here, on `claude/worker-showcase`.
-
-**Next: 4a″. The mend (4a′) ran 13:01-13:41 on November 17 and was read** (`D:/Dev/WG` `7c6edf0`, only
-`AnkleForced.cs`; `forced_checks.md`, `review_forced2_physicist.md`, `review_forced2_sceptic.md`). No fault in A, B
-or C, and arm B need not run again. Open, for 4a″:
-1. Run forced_good, forced_barfails and forced_bad2 again on `7c6edf0`: they ran on code older than its last change
-   (13:36), so the mends of findings 1 and 3-6 rest on older code.
-2. Give a known-bad to each bar that has none: BAR_AXES_READ (it reads 0.00° on every hold, a quantity against
-   itself), BAR_A_SLERP, BAR_FOLLOW, BAR_FORM, BAR_WRAP and BAR_C_PLAIN.
-3. Check 3. The whirl is now the engine's (50-80 rad/s read the step after the set), but the going down destroys the
-   boot, so the whirl is not carried on. BAR_C (0.025 m) does not separate C off from C on: in down_c0e, with C off,
-   Long whirled at 0.0141 m and Round at 0.0148 m passed where they must fail; once, with C on, Round whipped at
-   0.0398 m. Find what shows that C acted on a whirled boot, or call check 3 a reading.
-4. The report names the log file of each line number it quotes.
+**The forced checks after four builds** (4a and 4a′ on November 17; 4a″ and 4a‴ on November 18; `forced_checks.md`
+holds every build's section, newest first, and `Validation.md` one section for each). No fault was found in A, B or
+C, and arm B need not run again. Open after 4a‴:
+1. **The rig's start blow-up** (with every switch off): its cause, and a mend if it is the rig's. Next, from 09:00
+   ("Now" above).
+2. Smaller, and only if they still matter after item 1: Small judged about 6 distinct courses in check 3, not 8;
+   BAR_AXES_READ's 3° is set from its data; the floors are 10 steps where the profiles judge 85 to 352; BAR_DAMP has
+   no floor and leaves its loop silently when the riser changes; a few numbers are still inline; BAR_FORM's known-bad
+   flips a switch; BAR_A_SLERP is a reading.
 Then 4b. The order, one workflow and one Unity at a time:
 1. the FBX patch, done (18:21);
 2. git's own check, built, mended, read and installed (00:42, November 18);
 3. 4a″ (`step4a2_workflow.js`), ran 04:02-04:32 on November 18 and was read;
 4. `D:/Dev/WG`'s `AGENTS.md`, done (`ef12502`);
-5. 4a‴ (`step4a3_workflow.js`), running since 04:39 (`wf_5594be6d-e18`);
-6. the second mend of git's check, if the week has room for all of it.
+5. 4a‴ (`step4a3_workflow.js`), ran 04:39-05:29 on November 18 and was read;
+6. the look for the rig's start blow-up (`rig_blowup_workflow.js`), from 09:00 on November 18;
+7. after the week's reset (November 23, 17:00): 4b, then Small's arms, then step 5; the second mend of git's check
+   where the week has room for all of it.
 
 Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
@@ -212,7 +205,8 @@ runs take `-liveRing 0`. The live test is not the same run to run, so runs are c
        - Check 6 passes at 2 degrees and turns only about 60.
        - Check 5 has no bar.
      - The builder's "all 8 passed" is not taken as passes.
-   - **4a′, the mend, ran 13:01-13:41 on November 17 and was read; what stays open is under "Next" above** (run
+   - **4a′, the mend, ran 13:01-13:41 on November 17 and was read; 4a″ and 4a‴ followed, and what stays open is
+     under "The forced checks after four builds" above** (run
      `wf_7e285553-35e`, launched just after the five-hour reset, with the window at 0% and the week at 53%): a builder (opus, high) mends every finding of the three
      reviews, or answers it with a log line, and runs the checks again, known-bad and known-good, on all three miners.
      Then a physicist and a sceptic (sonnet, medium) check each first finding against the new logs
@@ -308,6 +302,9 @@ Each line: the item; why; what lifts it; where its detail lives.
   24 in `cc_en24` and 9 of 24), and 5 of 24 with B on (`ank1_small`): the ankle; the ankle build; `Validation.md`,
   "The energy count in the live courses" (near 5450), "The ankle split" (near 5533), and the ankle build's sections
   after them.
+- Red, the rig: the forced checks' boot blows up at some starts with every switch off (Small up to 9344.5 rad/s within
+  the first 10 steps, touching nothing; Long and Round 101.8 to 149.8 rad/s), so a pass on the rig is luck of the start,
+  most of all for Small; its cause found and the rig mended; `Validation.md`, "The forced checks, fourth build".
 - The shove test (`OwnBodyTests.ShovedAgainAndAgainNothingOfItFlies`): passes the normal way in the last runs written
   down (`Validation.md`, "The solver's turns on by default (November 13, afternoon)": `OwnBodyTests` 16 of 16 with it
   among them, and the whole suite's only two failures are K5 and K4(a)). "Still fails as known" ("In hand", item 3,

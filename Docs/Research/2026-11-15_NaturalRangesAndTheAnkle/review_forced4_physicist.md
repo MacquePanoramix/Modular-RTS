@@ -1,0 +1,9 @@
+# Physicist's fourth review of the forced ankle checks (Nov 18, 2026)
+Shown/read: forced_checks.md top section (4a''') and 4a'' head; review_forced3_* heads; AnkleForced.cs by sed (405-545, 740-792, 1196-1300); greps of down_c1h.log (FORCED_C_ACTS, FORCED_COURSES, BAR_C_PIVOT), forced_bad5.log (KNOWN_BAD, AXES_READ), feed_axesread2/wrap2/follow2 verdicts. Not read: OwnBody/OwnRiser/PhysicalFall source, research.md, down_c0i, forced_wrapbadB2 logs, xml, the rest of AnkleForced.cs.
+
+Findings, most serious first
+1. Check 3 courses (down_c1h.log:1519 vs 3199): Small "whirled" and "sooner (0.6 s)" are one course: slack asked 30.3 vs 30.0 deg, own boot 22.0 vs 21.1, made boot 42.3 vs 41.0. Small "second axis" 149.7 vs "third axis" 141.9 slack are close. "Distinct (axis, sense, moment)" labels the rig's settings, not the physical result; Small is about 6 courses, not 8. Long and Round differ. Sure.
+2. The reading (FORCED_C_ACTS) is read from the running body (madeHasBody by GetComponent, joint speed, slack turn, slackenedF), but "turned N deg from the plain course's made boot" compares to one earlier plain make; its own repeatability is never read. "C reaches the made boot only through two things" is inferred, not read. The slack is kinematic, so dS=0 is geometry; the 9 deg plain slack separates equally (down_c1h.log:1372), so "whirled" adds nothing to the bar. Fairly sure.
+3. BAR_AXES_READ 3 deg: report admits it is grounded in nothing but the data; sag explains 0.09-0.73 of 1.7-2.25 deg. Unmended, sure.
+4. WRAP_BAD_B: the rig writes the bad target and counts it, so it proves the counter, not B; reason claimed is honest. NaN/empty feeds fail for their stated reasons (feed_axesread2:4533, wrap2:1494, follow2:1395); the injection is into the measure, not the engine.
+5. Assumed, not read: Small's blowup confounds Small passes; settled (<1 rad/s) means gravity sag.

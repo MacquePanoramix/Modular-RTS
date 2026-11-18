@@ -1,3 +1,47 @@
+# Step 4a‴: the fourth build of the forced checks (November 18, 2026)
+
+**Commit 6408d91** (D:/Dev/WG, claude/wip-round, pushed): AnkleForced.cs only. No runtime file changed; A, B and C are untouched; arm B (ank1_small) need not be run again. **Rung: tested on a rig** (the hips pinned 1.5 m up, the riser's clock held, every miner given Small's ways up, level ground). Every run had `-ownAsPlayed 1 -ownRate 50`; the logs are in D:/Dev/WG/TestRuns.
+
+**New finding, unmended: the rig's Small boot blows up at some starts, with every switch off.** forced_bad5 (config off) logs FORCED_BLOW for all 15 of Small's cases: the boot passes 100 rad/s in steps 1 to 10, before the ask moves, touching nothing, its joint several radians from a written target of (-0.1, -0.1, 0.0) deg (e.g. "9344.5 -3740.8 -2306.9 rad/s" in forced_formbad3, Small A twist_instant). It comes and goes between runs of one code: forced_good4 blew on Small A's five swing cases (FORCED_READ 1600 to 13412 rad/s, against forced_good3's 23 to 42), forced_good5 did not blow at all, forced_formbad3 blew on Small A. The start pose differs from run to run (FORCED_PINNED Small's left boot at 1.959, 2.031, 2.055 and 2.115 m), because the body lives its own idle before the rig takes it. Long and Round never blew. **So a pass for Small on TheBootForced is luck of the start until the rig is mended.** This is a rig fault, not one in A, B or C: it shows with all three off. Its cause is not found.
+
+## The six items
+
+1. **Check 3 with C on: done, and it passes by itself.** down_c1h passed (verdict down_c1h.log:9383, 24 bars, 0 problems). Courses judged with C on: Small 8, Long 8, Round 7 of 9 whirled (down_c1h.log:3508, 6192, 9004), against at least 3. 33 makes read, 0 missed (:9328). The known-bad C off, down_c0i, passed as a known-bad: BAR_C_PIVOT failed on every case it judged, Small 9, Long 9, Round 7 of 9 (down_c0i.log:3357, 6225, 8921; verdict :9384). The 0.01 m threshold and the other bars are unchanged. A course differs in axis (0, 1, 2), sense (±) or moment (0.6 s, 1.5 s, the default), plus the whip; FORCED_SET names them (down_c1h.log:1090).
+   *Why down_c1e did not make Long's third-axis going down:* the rig, not the switch. At t 65.40 Long's body went down by itself (ANKLE_DOWN down_c1e.log:2787), while the rig was waiting for the planted boot to touch nothing ("touching still after 75 steps"). So the forced going down at :2800 had no riser to act on. The mend: when the riser ends by itself before the going down, the course is retried, at most 3 times (FORCED_RETRY). Neither down_c1h nor down_c0i needed one.
+   *The whirl mended too:* down_c1f's Small whipped read 102.7, 95.7 and 251.5 rad/s and went down at once at 2 × maxJointVelocity, so the whirl was not made. down_c0g's Long "the other way" missed in the same way (209.4). Now the rig goes down at once only past 10 × maxJointVelocity, and the set may go as low as 20 rad/s.
+2. **What C acts on: answered.** In all 30 makes of down_c1h, the made boot is "a body of its own False" (FORCED_C_ACTS, e.g. down_c1h.log:1291). So the whirl's speed is handed to nothing. C reaches the made boot only through two things: the pose at the going down, and the slack's turn. Per course, the own boot was turned 0 to 179.0 deg from the plain course's pose, and the made boot 0 to 171.0 deg (e.g. Long sooner 76.6 / 171.0, :5843; Long third axis 64.3 / 6.7, :4631). The slack OwnBody asks (slackBy) runs from 7.6 to 179.4 deg, and the slack turned exactly that much each time. **What check 3 shows:** with C on, the kinematic slack of the made boot turns about the let-go shin's end. With C off, it turns about another point, and BAR_C_PIVOT tells the two apart on whirled poses on all three miners. **What it does not show:** anything about speed, momentum or a body handed on (the made boot has none), the boot touching the ground while it slackens, or the right boot.
+3. **BAR_WRAP's known-bad on B's own counter: done.** `-forcedWrapBadB 1` writes B's target the long way round (`-T.normalized*(360-|T|)`). The rig reads it back by the very `wrapViolations` count, then writes B's own target back (FORCED_WRAP_BAD_B forced_wrapbadB2.log:1156). It failed on all 8 cases on each miner (FORCED_KNOWN_BAD :4981, :5009, :5037), and the run passed (:5513, 99 bars, 0 problems). The known-good B, AB and edge runs passed in forced_good5 (:12445, 420 bars, 0 problems).
+4. **No pass on a NaN or on nothing: done.** Every bar counts its NaNs and has a floor. BAR_A's floor is every step its profile's window names (25 for swing_instant, 4 for swing_1800dps). Its first floor of 5 was wrong for swing_1800dps, and forced_good4 caught that (:12536). BAR_B, BAR_FORM and BAR_WRAP need 10 steps. BAR_TANH needs every ask, BAR_AXES every hold, BAR_AXES_READ 5 holds at rest, and BAR_FOLLOW its step read. `-forcedFeed <bar>` feeds the first case one NaN and withholds the next case's values. Each feed run failed with its NaN case and its empty case (an event missed, and that bar failing), as it must: feed_a2:1394, feed_b2:1495, feed_follow2:1395, feed_form2:1394, feed_wrap2:1494, feed_axes2:1726, feed_axesread2:4533 (3 problems each), feed_damp2:1730 (1 problem: BAR_DAMP is judged once per config, so it has no empty case), feed_cpivot3:3796 (2 problems). feed_tanh2:1927 had 7 problems: its 3, plus Small's boot blowing up (2 FORCED_BLOW). BAR_A_SLERP shares BAR_A's code but was not fed by itself.
+5. **Numbers once, with units: done.** These are constants in AnkleForced.cs: BarAMarginDeg 1, FoldSlope 3.75, BarFormDeg .05, BarFollowDeg 5, BarAxesDeg 1, BarAxesReadDeg 3, WrapOutsideDeg 180.01, BarDampShare 1e-4, PivotMovedLeastM .01, PivotShare .25, PivotLeastCourses 3, and the floors. FORCED_SET names the bars judged now (e.g. forced_good5.log:899). **BAR_AXES_READ's 3 deg was set from the data** (forced_bad2's sags of 1.2 to 1.9 deg). Nothing apart from the data grounds it. Its margin: 0.88 deg above the worst pass in forced_bad5 (Long 2.12 deg, :8186; Round 1.67, :12631). The weight's own sag explains only 0.09 to 0.73 deg of that (FORCED_AXES_SAG forced_bad5.log:8201, feed_axesread2.log:2566). The rest is not explained.
+6. **The runs on the final code: done, with failures from the rig.** All 17 runs ended; every profile that ran "ended by itself True", none False.
+   - Passed, as each must: down_c1h, down_c0i, forced_good5 and forced_wrapbadB2.
+   - forced_barfails6 failed on BAR_DAMP, BAR_A and BAR_B, as it must (:1362).
+   - **forced_bad5 failed** (:15432) with 3 problems beyond its known-bads, all from Small's blowup: BAR_AXES on Small axes, and BAR_AXES_READ on Small axes_far, where nothing came to rest. Its named known-bads failed as they must (24 FORCED_KNOWN_BAD).
+   - **forced_formbad3 failed** (:2402): BAR_FORM failed as it must, but BAR_FOLLOW failed on Small A's 3 cases from the blowup.
+   - So the single runs that pass are down_c1h, down_c0i, forced_good5 and forced_wrapbadB2. forced_bad5 and forced_formbad3 pass only on Long and Round.
+   - The earlier batch on the code before the last edit (down_c1g, forced_good4 to feed_damp; summary in TestRuns/step4a3_summary2.txt) is superseded. One edit was made while its last run, feed_damp, was going; feed_damp2 replaced it.
+
+## Each bar's lazy way (unchanged in kind from 4a″, written again)
+
+- **BAR_A:** keep the form still in the window and move it before the window. The guard: the window must be read whole.
+- **BAR_B:** cap the speed only in the steps it judges. The guard: every step from 1 is judged.
+- **BAR_FORM:** compare the form with itself.
+- **BAR_FOLLOW:** read a step where the boot is at rest anyway.
+- **BAR_WRAP:** wrap only the steps that are counted. The known-bad is now on B's own count.
+- **BAR_AXES / BAR_AXES_READ:** judge only the near holds, or holds not at rest. The floor: holds past 110 deg at rest.
+- **BAR_DAMP:** read the damping where nothing writes it.
+- **BAR_C_PIVOT:** judge only the plain courses, or the slacks too small to tell the pivots apart. The floor: 3 whirled courses with at least 0.01 m between the pivots.
+
+## Not tested
+
+- The rig's Small blowup: its cause is not found, and it is not mended.
+- The meadow's uneven ground, and the game as played without the rig (the hips moving, each miner's own ways up).
+- The right boot and the toes.
+- C with a made boot that has a body.
+- BAR_A_SLERP fed by itself.
+- No reviewer has read this build.
+- The Game Director has seen and accepted none of it.
+
 # Step 4a″: the third build of the forced checks (November 18, 2026)
 
 **No fault was found in A, B or C. Nothing on their paths and nothing on the off path was changed; arm B (ank1_small) need not be run again.** Only `Assets/_WonderGather/Tests/PlayMode/AnkleForced.cs` changed: commit a251444 on claude/wip-round (pushed).

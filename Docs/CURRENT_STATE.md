@@ -1,8 +1,22 @@
 # Wonder Gather — Current State
 
-**Updated:** November 18, 2026 (about 04:42). **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 18, 2026 (about 05:55). **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 18, about 04:42): nothing in the game changed. The forced checks' third build (4a″) ran and was
+- **Now (November 18, about 05:55): nothing in the game changed. The forced checks' fourth build (4a‴) ran and was
+  read. It found a fault in the rig itself; the look for its cause starts at 09:00.**
+  - 4a‴ changed only the test file `AnkleForced.cs` (`6408d91` in `D:/Dev/WG`) and found no fault in A, B or C. Check
+    3 with C on now passes in one run (`down_c1h`), and C off fails it as it must (`down_c0i`). B's own wrap count and
+    each bar's NaN and empty cases were failed on purpose. Rung: tested on a rig, read to the end.
+  - New, not mended: with every switch off, the rig's boot blows up at some starts (Small up to 9344.5 rad/s within
+    the first 10 steps, touching nothing; Long and Round 101.8 to 149.8 rad/s). `forced_bad5` and `forced_formbad3`
+    failed from it alone, and a pass on the rig is luck of the start, most of all for Small. Its cause is not found.
+    The builder wrote that Long and Round never blew; the sceptic found 11 lines saying they did.
+  - Smaller, open: Small judged about 6 distinct courses, not 8; BAR_AXES_READ's 3° set from its data; loose floors.
+    The whole account: `Validation.md`, "The forced checks, fourth build".
+  - Next: one finder and one physicist look for the blow-up's cause (`rig_blowup_workflow.js`), from 09:00, when the
+    five hours reset. 4b, Small's arms, step 5 and the second mend of git's check wait for the week's reset (November
+    23, 17:00): the week was 91% used at 05:31.
+- **Before (November 18, about 04:42): nothing in the game changed. The forced checks' third build (4a″) ran and was
   read; 4a‴, for what its reviews left open, is running since 04:39 (`wf_5594be6d-e18`).**
   - 4a″ changed only the test file `AnkleForced.cs` (`a251444` in `D:/Dev/WG`) and found no fault in A, B or C. The
     three runs passed or failed as they must, on the final file; three more bars have known-bads; check 3 has a

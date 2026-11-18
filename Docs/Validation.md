@@ -5836,6 +5836,59 @@ What does not stand yet (the reviews; each found again in the report, a log or t
 Not tested: the meadow's uneven ground, each miner's own ways up, the hips moving, the right boot, the toes, contact
 while forced. Nothing here is a claim about the game as played, and nothing was seen by the Game Director.
 
+### The forced checks, fourth build (step 4a‴, `6408d91` in `D:/Dev/WG`, November 18)
+One builder (opus) mended the six items the reviews of 4a″ left open (run `wf_5594be6d-e18`, 04:39-05:29); a
+physicist, a sceptic and a code reader who did not build it reviewed it (`review_forced4_*.md`, beside the report).
+Only `AnkleForced.cs` changed: no runtime file, nothing on A's, B's or C's paths or on the off path, so arm B stands.
+Every run started after the file's last write (the sceptic compared the times). All 17 runs ended, and every profile
+that ran says "ended by itself True". I read the report's section ("Step 4a‴") and the three reviews to their end;
+the verdict lines below are the ones they cite.
+
+What stands, at its rung (tested on a rig, read to the end):
+- **Check 3 with C on passes in one run by itself:** `down_c1h` (`down_c1h.log:9383`, 24 bars, 0 problems; 33 makes
+  read, none missed). C off fails it, as a known-bad must, on every case it judged (`down_c0i`, verdict `:9384`). The
+  courses: Long 8 and Round 7 distinct, against at least 3. Small's "whirled" and "sooner" courses came out as one
+  (slack asked 30.3° and 30.0°, the boots within 1.3°, `down_c1h.log:1519` against `:3199`), so Small has about 6,
+  not the 8 the report counts (the physicist).
+- Why `down_c1e` missed Long's third-axis going down: Long went down by itself first (`down_c1e.log:2787`), so the
+  forced going down had no riser to act on. The rig now runs such a course again, at most 3 times. The whirl is now
+  really made: the rig ends it at once only past 10 times the joint's speed limit.
+- **What check 3 shows, said plainly:** the made boot is not a body of its own (FORCED_C_ACTS, `down_c1h.log:1291`),
+  so C reaches it only through its pose at the going down and the slack's turn. With C on, the slack turns about the
+  let-go shin's end; with C off, about another point; the bar tells the two apart on all three miners. It says
+  nothing about speed, momentum, the boot touching the ground while it slackens, or the right boot. The physicist: the
+  plain courses' 9° slack separates just as well (`:1372`), so the whirl adds nothing to the bar, and "C reaches it
+  only through two things" is inferred, not read.
+- **BAR_WRAP's known-bad now goes through B's own count** (`wrapViolations`): `forced_wrapbadB2` failed it on all 8
+  cases on each miner, and the run passed (`:5513`). The physicist: this proves the counter, not B.
+- **No bar passes on a NaN or on nothing:** each bar counts its NaNs and has a floor, and each was fed one NaN case
+  and one empty case and failed on both (nine feed runs, e.g. `feed_a2.log:1394`; BAR_DAMP, judged once per config,
+  has no empty case).
+- Each bar's number is a named constant, with its unit; FORCED_SET names the bars judged.
+
+What does not stand yet (the report and the reviews; each found again in a log or the code):
+- **New, a fault of the rig, not mended: the boot blows up at some starts with every switch off.** In `forced_bad5`
+  Small's boot passed 100 rad/s within the first 10 steps on all 15 of its cases, touching nothing (up to 9344.5 rad/s
+  in `forced_formbad3`). It comes and goes between runs of one code (`forced_good4` blew, `forced_good5` did not). The
+  start differs from run to run (Small's left boot pinned at 1.860 to 2.115 m), because the body lives its own idle
+  before the rig takes it. The report says Long and Round never blew; **the sceptic found that false:** `forced_bad5`
+  has 9 FORCED_BLOW lines on them, between 101.8 and 149.8 rad/s, and `forced_formbad3` two (101.8 and 102.9). The
+  cause is not found. `forced_bad5` and `forced_formbad3` failed (`:15432`, `:2402`) only from it. Until the rig is
+  mended, a pass on the rig is luck of the start, most of all for Small. Small's axes_far_bad known-bad failed on a
+  blown boot, so it was not seen to fail for its own reason (elsewhere it fails for the swap, 129.7°,
+  `forced_bad5.log:5196`).
+- The passes are single runs: `down_c1h`, `down_c0i`, `forced_good5` and `forced_wrapbadB2`.
+- BAR_AXES_READ's 3° is still set from its data: 0.88° above the worst pass (Long 2.12°, `forced_bad5.log:8186`). The
+  weight's own sag explains 0.09-0.73° of it; the rest is not explained.
+- The floors are loose: 10 steps where the profiles judge 85 to 352 (the code reader). BAR_DAMP has no floor, and its
+  loop leaves silently when the riser changes (`if (own.Riser != riser) break;`). A few numbers are still written
+  inline (115° and 110°, `T.magnitude > 1`), and AxesFarFirstDeg is unused.
+- BAR_FORM's known-bad still flips a switch; BAR_A_SLERP is a reading, never fed by itself.
+
+Not tested: the blow-up's cause; the meadow's uneven ground; each miner's own ways up; the hips moving; the right boot
+and the toes; C with a made boot that has a body. Nothing here is a claim about the game as played, and nothing was
+seen by the Game Director.
+
 ### Not tested
 - That every switch off is the old build, on courses (this test is not the same run to run).
 - Any arm but B on Small at strength 1; the forced checks as mended (see above), the idle's proof, the flows as played,

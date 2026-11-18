@@ -61,6 +61,34 @@ work goes back to the task in hand.
 
 ## Log
 
+### November 18, 2026 (early morning) — the fortieth, short (a stretch closed, before the next step and the report; after a compaction)
+
+- **Where we are.** S3b, step 2: getting up for any body. The ankle build is at step 4. The forced checks' third and
+  fourth builds (4a″, 4a‴) ran and were read. Check 3 with C on passes in one run now. The fourth build found a fault in
+  the rig itself: with every switch off, the boot blows up at some starts, so a pass on the rig is luck of the start,
+  most of all for Small.
+- **Waiting on Luis:** nothing the work needs. His question on a check at every write was answered (it stays off).
+- **He waits on:** the ankle build and a build to play; step 0's stills; the first motion clips.
+- **Built, not in a build:** as in the 39th. The flows as played have still not been run since the default changed
+  (step 5).
+- **The list of holds:** one line added, "Red, the rig" (the start blow-up). Nothing else on it has run since the 37th.
+- **Luis had to correct, repeat or ask:** one question, not a correction: what a check at every write would cost.
+- **Rules broken again:** one, by the builder, caught by the sceptic before anything was written: "Long and Round never
+  blew", where the logs hold 11 lines saying they did. A "never" was written without the count it rests on. **The
+  tool:** briefs now ask that every "never", "none" or "all" in a report quote its count, per miner, with the log line
+  (in the next brief already).
+- **Does the task serve the stage?** The rig is there to show that A, B and C do what their switches say before 4b
+  runs them on courses. It has had four builds, so its finish line is set now: the start blow-up's cause. If the cause
+  is the rig's (how it takes and lifts a living body), the rig is mended and the forced checks are done; the small loose
+  ends wait. If it is the body's own kick, the same that blows the game's get-up up at the foot (12 of 24 as played), it
+  is the ankle build's own question and goes to 4b. Either way it serves the stage.
+- **The order, by the allowance:** at 05:31, 58% of the five hours (they reset at 09:00) and 91% of the week (it resets
+  on November 23 at 17:00). 4a‴ cost about 4% of the week and 28% of a window. The look (one finder, one physicist, at
+  most 8 runs) needs about 2-3% of the week and 15-20% of a window. The week has room for it under the 95% guard; the
+  window has not, now. So it starts at 09:00. Everything else waits for November 23.
+- **What Luis would want to know:** 4a‴ in plain words; that nothing in the game changed, and that the rig's passes on
+  Small are not to be trusted yet; the plan and the allowance.
+
 ### November 18, 2026 (just after midnight) — the thirty-ninth, short (by the counter, 606 tool calls, after a compaction; git's own check read)
 
 - **Where we are.** S3b, step 2: getting up for any body. The ankle build is at step 4. 4a″ is next; its script is
