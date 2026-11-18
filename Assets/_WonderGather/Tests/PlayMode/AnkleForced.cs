@@ -147,6 +147,39 @@ namespace WonderGather.Tests
         // (The fold's own slope against the ask's: at most 3.74 in the physicist's 200,000 random asks with the twist fold,
         // review_physicist.md:57 and :135; research.md §1.4 says 2.4 for the swing fold alone.)
         private const float FoldSlope = 3.75f;
+        // The bars' numbers, each defined once (step 4a‴, November 18), its unit in its name. Where a number came from is
+        // said beside it; forced_checks.md has the same list.
+        private const float BarAMarginDeg = 1f;          // BAR_A, BAR_A_SLERP: the allowance's added degree
+        private const float BarFormDeg = .05f;           // BAR_FORM and BAR_TANH: the target within so many degrees of the form
+        private const float BarFollowDeg = 5f;           // BAR_FOLLOW: the boot within so many degrees of the target, at the hold's end
+        private const float BarAxesDeg = 1f;             // BAR_AXES: the boot's turn and the joint's reading within so many degrees
+        private const float AxesNearMostDeg = 110f;      // BAR_AXES judges targets out to it; BAR_AXES_READ past it
+        private const float AxesFarFirstDeg = 115f;      // axes_far's sweep starts here (5 degrees past AxesNearMostDeg)
+        // BAR_AXES_READ: 3 degrees, set from the data (forced_bad2's settled holds of 130-145 deg sagged 1.2-1.9 deg), not
+        // from a model; the sag the boot's weight gives over the drive's stiffness is read beside it (FORCED_AXES_SAG).
+        private const float BarAxesReadDeg = 3f;
+        private const float SettledRadPerS = 1f;         // a hold "came to rest": under so many rad/s on every axis at its end
+        private const int AxesReadLeastHolds = 5;        // fewer holds judged past AxesNearMostDeg: an event missed
+        private const float TanhShareMissed = .03f;      // check 4: an ask that misses its share of E by more: an event missed
+        private const float WrapOutsideDeg = 180.01f;    // BAR_WRAP: a target written outside half a turn (and a hundredth)
+        private const float HalfTurnDeg = 180f;          // BAR_WRAP judges the steps whose reading is inside it
+        private const double BarDampShare = 1e-4;        // BAR_DAMP: the damping held within this share of research's
+        private const float PivotMovedLeastM = .01f;     // BAR_C_PIVOT judged where the slack moved a point at least so many metres
+        private const float PivotShare = .25f;           // BAR_C_PIVOT: S moved at most this share of what A moved
+        private const int PivotLeastCourses = 3;         // whirled courses judged per miner and setting, at least
+        // (Floors, from the profiles' own lengths and not from any result: fewer judged is an event missed.)
+        private const int LeastWindowSteps = 1;          // BAR_A: steps; the floor is every step the profile's window names (swing_1800dps' 4, swing_instant's 25), never below this
+        private const int LeastSteps = 10;               // BAR_B, BAR_FORM, BAR_WRAP: the shortest profile has 67 steps
+        private static string BarsSaid() => string.Format(Inv,
+            "bars judged now: BAR_A (the form's step at most {0:0.00} x the ask's turn + {1:0} deg; at least {2} window steps), BAR_A_SLERP (a reading: the ask's own step + {1:0} deg), BAR_B (the boot at most Omega rad/s on an axis; at least {3} steps), BAR_FOLLOW ({4:0} deg), BAR_FORM ({5:0.00} deg; at least {3} steps), BAR_TANH ({5:0.00} deg; every ask), BAR_DAMP (within {6:0.0000} of research's c), BAR_WRAP (no target past {7:0.00} deg from a reading inside {8:0} deg; at least {3} steps), BAR_AXES ({9:0} deg, out to {10:0} deg), BAR_AXES_READ ({11:0} deg past {10:0} deg, holds under {12:0} rad/s, at least {13}); a NaN in any measure is a failure",
+            FoldSlope, BarAMarginDeg, LeastWindowSteps, LeastSteps, BarFollowDeg, BarFormDeg, BarDampShare, WrapOutsideDeg, HalfTurnDeg, BarAxesDeg, AxesNearMostDeg, BarAxesReadDeg, SettledRadPerS, AxesReadLeastHolds);
+        // (-forcedFeed BAR_X, a guard's known-bad (step 4a‴): of the cases BAR_X judges in the run, in order, the first is fed
+        // one NaN into its measure and the second nothing at all (its values withheld); the test must fail on both, for those
+        // reasons, and on nothing else. BAR_DAMP judges one value per config: its first case is fed a NaN, its second none.)
+        private string feedBar = "";
+        private int feedCount;
+        private int FeedCase(string bar, bool judged) => feedBar == bar && judged ? feedCount++ : -1;
+        private static readonly FieldInfo slackByF = typeof(OwnBody).GetField("slackBy", Hidden);
 
         private MinerChoice choice;
         private MinerWorkPreview look;
@@ -346,6 +379,10 @@ namespace WonderGather.Tests
         // BAR_FOLLOW's: the boot's drive let go from step 10 to the step it is read, so that it cannot follow; -forcedWrapBad
         // 1, BAR_WRAP's: the rig's own raw writes outside half a turn judged as BAR_WRAP judges B's, as "beyond_raw".)
         private bool formBad, followBad, wrapBad;
+        // (-forcedWrapBadB 1, BAR_WRAP's known-bad on B's own path (step 4a‴): in configs B, AB and edge, B's written target
+        // replaced, after B and before BAR_WRAP's count reads it, by the same turn written the long way, outside half a
+        // turn; read back from the drive by that count; then B's own target written back before the engine steps.)
+        private bool wrapBadB;
 
         private float OmegaOf(float ankleSpeed) => ankleSpeed * Mathf.Sqrt(OwnRiser.AnkleSpeedHeight / tall);
         // (The shin's own long line, from its knee to its ankle: the two joints it is built between, read off the running
@@ -368,6 +405,13 @@ namespace WonderGather.Tests
             if (forcer.WasLost) { profilesLost++; Debug.Log($"FORCED_LOST {who} {config} {p.Name}: the riser was lost while settling"); yield break; }
             p.Start?.Invoke();
             bool judgesA = config == "off" || config == "A" || config == "AB", judgesB = config == "off" || config == "B" || config == "AB" || config == "edge";
+            bool judgesWrap = config == "B" || config == "AB" || config == "edge";
+            // (The guards' known-bads, -forcedFeed: 0, this case is fed one NaN; 1, nothing; -1, as it is.)
+            int fA = FeedCase("BAR_A", p.Window != null && judgesA && !p.AgainstAsk), fB = FeedCase("BAR_B", judgesB && p.Name != "beyond"),
+                fF = FeedCase("BAR_FOLLOW", p.FollowAt > 0), fM = FeedCase("BAR_FORM", !p.Axes || !axesBad), fT = FeedCase("BAR_TANH", p.TanhAt != null && judgesB),
+                fW = FeedCase("BAR_WRAP", judgesWrap), fX = FeedCase("BAR_AXES", p.Axes && !p.AxesRead), fR = FeedCase("BAR_AXES_READ", p.AxesRead);
+            int winNaN = 0, bSteps = 0, bNaN = 0, formNaN = 0, tanhNaN = 0, wrapNaN = 0, axesNaN = 0, farNaN = 0, wrapBadBWrites = 0; bool followRead = false;
+            float sagMost = 0, sagLeast = float.PositiveInfinity, drivenMost = 0; int sagN = 0;
             // (What it reads, step by step.)
             float fastFree = 0, fastTouched = 0, fastVec = 0, shinFast = 0, jumpTurnMost = 0, jumpWrittenMost = 0, askTurnMost = 0, offEMost = 0, followErr = float.NaN;
             int fastAt = -1, jumps60 = 0, winViolations = 0, winSteps = 0, touchedSteps = 0, tanhChecks = 0, tanhFails = 0, clampWouldFail = 0, unslowedWouldFail = 0, reachMissed = 0;
@@ -393,7 +437,7 @@ namespace WonderGather.Tests
             float limitInProfile = float.NaN;
             // (BAR_FOLLOW's known-bad: the drive let go each step from 10 to the step the boot is read, given back after.)
             Action<int> after = p.After;
-            int followLetGo = 0;
+            int followLetGo = 0; bool blowLogged = false;
             if (followBad && p.FollowAt > 0)
                 after = i =>
                 {
@@ -411,9 +455,23 @@ namespace WonderGather.Tests
                 if (bootTouch != null) bootTouch.Touched = false;
                 if (toeTouch != null) toeTouch.Touched = false;
                 var drive = boot.xDrive;
-                if (i > 0)
+                if (i > 0 && fB != 1)
                 {
+                    // (BAR_B's measure: a NaN on any axis counted, never lost in a maximum; fed one at its first step.)
+                    if (fB == 0 && bSteps == 0) v.x = float.NaN;
+                    bSteps++;
+                    if (float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z)) bNaN++;
                     float fast = PerAxis(v);
+                    if (!blowLogged && fast > 100)
+                    {
+                        // (Step 4a‴: forced_good4's Small A swing cases read 1600-13412 rad/s where forced_good3's read
+                        // 23-42; a reading of the first step past 100 rad/s, judging nothing.)
+                        blowLogged = true;
+                        var jp = boot.jointPosition; var jpS = new StringBuilder();
+                        for (int d = 0; d < jp.dofCount; d++) jpS.Append(d > 0 ? " " : "").Append(jp[d].ToString("0.000", Inv));
+                        Debug.Log(string.Format(Inv, "FORCED_BLOW {0} {1} {2}: first past 100 rad/s at step {3}: speeds ({4:0.0} {5:0.0} {6:0.0}) rad/s, the joint at ({7}) rad, the target written {8} deg, touching {9}",
+                            who, config, p.Name, i, v.x, v.y, v.z, jp.dofCount > 0 ? jpS.ToString() : "-", Target(boot).ToString("0.0"), touched));
+                    }
                     if (touched) { touchedSteps++; fastTouched = Mathf.Max(fastTouched, fast); }
                     else if (fast > fastFree)
                     {
@@ -445,14 +503,45 @@ namespace WonderGather.Tests
                 {
                     Vector3 expect = slows && !float.IsNaN(most) ? ResearchTarget(pre, r, drive.forceLimit, drive.stiffness) : pre;
                     float err = (written - expect).magnitude;
-                    formChecks++; if (err > .05f) formFails++; formErrMost = Mathf.Max(formErrMost, err);
+                    if (fM == 0 && formChecks == 0) err = float.NaN;
+                    if (fM != 1)
+                    {
+                        formChecks++;
+                        if (float.IsNaN(err)) formNaN++;
+                        else { if (err > BarFormDeg) formFails++; formErrMost = Mathf.Max(formErrMost, err); }
+                    }
                 }
                 after?.Invoke(i);
                 // (What was written for the step to come, and what the drive holds.)
                 Vector3 T = Target(boot);
                 float rDeg = r.magnitude * Mathf.Rad2Deg;
-                if (p.Raw != null && p.Raw(i)) { if (rDeg <= 180 && T.magnitude > 180.01f) rawOutside++; }
-                else if (rDeg <= 180) { wrapJudged++; wrapTargetMost = Mathf.Max(wrapTargetMost, T.magnitude); if (T.magnitude > 180.01f) wrapViolations++; }
+                // (-forcedWrapBadB 1: B's target replaced by the same turn the long way round, outside half a turn, and read
+                // back from the drive by the count below, the very count that judges B.)
+                Vector3 bWrote = T; bool bReplaced = false;
+                if (wrapBadB && judgesWrap && (p.Raw == null || !p.Raw(i)) && rDeg <= HalfTurnDeg && T.magnitude > 1)
+                {
+                    Vector3 longWay = -T.normalized * (360 - T.magnitude);
+                    boot.SetDriveTarget(ArticulationDriveAxis.X, longWay.x); boot.SetDriveTarget(ArticulationDriveAxis.Y, longWay.y); boot.SetDriveTarget(ArticulationDriveAxis.Z, longWay.z);
+                    T = Target(boot); bReplaced = true; wrapBadBWrites++;
+                }
+                if (p.Raw != null && p.Raw(i)) { if (rDeg <= HalfTurnDeg && T.magnitude > WrapOutsideDeg) rawOutside++; }
+                else if (float.IsNaN(rDeg) || rDeg <= HalfTurnDeg)
+                {
+                    // (BAR_WRAP's measure: a NaN reading or target counted, not lost; fed one at its first step.)
+                    float tm = fW == 0 && wrapJudged == 0 ? float.NaN : T.magnitude;
+                    if (fW != 1)
+                    {
+                        wrapJudged++;
+                        if (float.IsNaN(tm) || float.IsNaN(rDeg)) wrapNaN++;
+                        else { wrapTargetMost = Mathf.Max(wrapTargetMost, tm); if (tm > WrapOutsideDeg) wrapViolations++; }
+                    }
+                }
+                if (bReplaced)
+                {
+                    // (B's own target written back before the engine steps: only the count was shown the long way.)
+                    boot.SetDriveTarget(ArticulationDriveAxis.X, bWrote.x); boot.SetDriveTarget(ArticulationDriveAxis.Y, bWrote.y); boot.SetDriveTarget(ArticulationDriveAxis.Z, bWrote.z);
+                    T = Target(boot);
+                }
                 if (!first)
                 {
                     float jumpW = (T - lastT).magnitude, jumpT = Quaternion.Angle(FromRV(lastT), FromRV(T)), askT = Quaternion.Angle(lastAsk, ask), askV = (RV(ask) - RV(lastAsk)).magnitude;
@@ -462,12 +551,18 @@ namespace WonderGather.Tests
                     // turn, which a quaternion's angle hides, is a jump.)
                     float preJ = (pre - lastPre).magnitude;
                     preJumpMost = Mathf.Max(preJumpMost, preJ);
-                    if (p.Window != null && p.Window(i))
+                    if (p.Window != null && p.Window(i) && fA != 1)
                     {
+                        // (BAR_A's measure: a NaN step counted as a failure; fed one at the window's first step.)
+                        if (fA == 0 && winSteps == 0) preJ = float.NaN;
                         winSteps++;
-                        float allowed = p.AgainstAsk ? askV + 1 : FoldSlope * askT + 1, ratio = preJ / allowed;
-                        if (ratio > winRatioMost) { winRatioMost = ratio; winPreAt = preJ; winAskAt = askT; winAskVecAt = askV; winAt = i; }
-                        if (preJ > allowed) winViolations++;
+                        float allowed = p.AgainstAsk ? askV + BarAMarginDeg : FoldSlope * askT + BarAMarginDeg, ratio = preJ / allowed;
+                        if (float.IsNaN(ratio)) winNaN++;
+                        else
+                        {
+                            if (ratio > winRatioMost) { winRatioMost = ratio; winPreAt = preJ; winAskAt = askT; winAskVecAt = askV; winAt = i; }
+                            if (preJ > allowed) winViolations++;
+                        }
                     }
                 }
                 first = false; lastT = T; lastAsk = ask; lastPre = pre; lastR = r; lastV = v;
@@ -483,32 +578,34 @@ namespace WonderGather.Tests
                         axisSamples++; axisAngleSum += ang; axisAngleMost = Mathf.Max(axisAngleMost, ang); axisShinMost = Mathf.Max(axisShinMost, toShin);
                     }
                 }
-                if (i == p.FollowAt)
+                if (i == p.FollowAt && fF != 1)
                 {
                     Quaternion actual = Quaternion.Inverse(shin.transform.rotation * rested[Foot]) * boot.transform.rotation;
                     followAsk = Quaternion.Angle(actual, Quaternion.Normalize(ask));
-                    followErr = Quaternion.Angle(actual, FromRV(T - driven));
+                    followErr = fF == 0 ? float.NaN : Quaternion.Angle(actual, FromRV(T - driven));
+                    followRead = true;
                 }
                 int tk = p.TanhAt != null ? Array.IndexOf(p.TanhAt, i) : -1;
-                if (tk >= 0 && !float.IsNaN(most))
+                if (tk >= 0 && !float.IsNaN(most) && fT != 1)
                 {
                     Vector3 expect = ResearchTarget(pre, r, drive.forceLimit, drive.stiffness);
                     float m = (pre * Mathf.Deg2Rad - r).magnitude / most;
                     reachMost = Mathf.Max(reachMost, m);
-                    if (Mathf.Abs(m - p.TanhShare[tk]) > .03f) reachMissed++;
+                    if (Mathf.Abs(m - p.TanhShare[tk]) > TanhShareMissed) reachMissed++;
                     // (The lazy forms a check must tell from B's: a hard clamp at E, and no slowing at all.)
                     Vector3 off = pre * Mathf.Deg2Rad - r; float far = off.magnitude;
                     Vector3 clamp = (r + (far > most ? off * (most / far) : off)) * Mathf.Rad2Deg;
                     float err = (T - expect).magnitude, clampDiff = (expect - clamp).magnitude, unslowedDiff = (expect - pre).magnitude;
+                    if (fT == 0 && tanhChecks == 0) err = float.NaN;
                     tanhChecks++;
-                    if (err > .05f) tanhFails++;
-                    tanhErrMost = Mathf.Max(tanhErrMost, err);
-                    if (m >= .99f) { clampDiffLeast = Mathf.Min(clampDiffLeast, clampDiff); if (clampDiff <= .05f) clampWouldFail++; }
-                    unslowedDiffLeast = Mathf.Min(unslowedDiffLeast, unslowedDiff); if (unslowedDiff <= .05f) unslowedWouldFail++;
+                    if (float.IsNaN(err)) tanhNaN++;
+                    else { if (err > BarFormDeg) tanhFails++; tanhErrMost = Mathf.Max(tanhErrMost, err); }
+                    if (m >= .99f) { clampDiffLeast = Mathf.Min(clampDiffLeast, clampDiff); if (clampDiff <= BarFormDeg) clampWouldFail++; }
+                    unslowedDiffLeast = Mathf.Min(unslowedDiffLeast, unslowedDiff); if (unslowedDiff <= BarFormDeg) unslowedWouldFail++;
                     tanhLines.AppendFormat(Inv, "[asked {0:0.00} E along {1}: e/E reached {2:0.000}, written {3:0.000} E from the reading (tanh {4:0.000}), {5:0.0000} deg from research's form; a hard clamp's form {6:0.000} deg from it, no slowing {7:0.000} deg] ",
                         p.TanhShare[tk], V((pre * Mathf.Deg2Rad - r).normalized, "0.00"), m, (T * Mathf.Deg2Rad - r).magnitude / most, Math.Tanh(m), err, clampDiff, unslowedDiff);
                 }
-                if (p.Axes && (i + 1) % p.AxesHold == 0)
+                if (p.Axes && (i + 1) % p.AxesHold == 0 && fX != 1)
                 {
                     // (Read against what the riser wrote, before the rig's own writes: with -forcedAxesBad 1 the rig writes
                     // it wrongly after, and the boot must then be found away from it.)
@@ -517,7 +614,11 @@ namespace WonderGather.Tests
                     Vector3 intended = written;
                     float rvErr = Quaternion.Angle(actual, FromRV(intended)), readErr = (readDeg - intended).magnitude, perm = Quaternion.Angle(actual, FromRV(new Vector3(intended.y, intended.x, intended.z))),
                         eul = Quaternion.Angle(actual, Quaternion.Euler(intended)), readVsGot = (readDeg - got).magnitude;
-                    rvErrMost = Mathf.Max(rvErrMost, rvErr); readErrMost = Mathf.Max(readErrMost, readErr); eulerErrMost = Mathf.Max(eulerErrMost, eul);
+                    // (BAR_AXES' measure: a NaN hold counted, never lost in a maximum; fed one on its first hold.)
+                    if (fX == 0 && axesLines.Count == 0) rvErr = float.NaN;
+                    if (!p.AxesRead && (float.IsNaN(rvErr) || float.IsNaN(readErr))) axesNaN++;
+                    else { rvErrMost = Mathf.Max(rvErrMost, rvErr); readErrMost = Mathf.Max(readErrMost, readErr); }
+                    eulerErrMost = Mathf.Max(eulerErrMost, eul);
                     if (Mathf.Abs(intended.x - intended.y) > 1) permErrLeast = Mathf.Min(permErrLeast, perm);
                     // (The joint's reading against the boot's own turn, as turns: what the reading means, at every angle; the
                     // lazy reading, its X and Y swapped, shown apart from it.)
@@ -527,7 +628,7 @@ namespace WonderGather.Tests
                     if (p.AxesRead)
                     {
                         float endSpeed = PerAxis(v);
-                        bool settled = endSpeed < 1;
+                        bool settled = endSpeed < SettledRadPerS;
                         if (intended.magnitude > 1)
                         {
                             farHolds++;
@@ -535,10 +636,21 @@ namespace WonderGather.Tests
                             else farUnsettledLeast = Mathf.Min(farUnsettledLeast, intended.magnitude);
                             // (BAR_AXES_READ: the holds past 110 deg where the boot came to rest, the boot's turn against the
                             // target the riser wrote (apart from the joint's reading: the bodies' turns against the written).)
-                            if (settled && intended.magnitude > 110)
+                            if (settled && intended.magnitude > AxesNearMostDeg && fR != 1)
                             {
-                                farJudged++; farErrMost = Mathf.Max(farErrMost, rvErr); farJudgedMost = Mathf.Max(farJudgedMost, intended.magnitude);
+                                // (Its measure: a NaN hold counted as a failure, fed one on the first judged hold.)
+                                float farErr = fR == 0 && farJudged == 0 ? float.NaN : rvErr;
+                                farJudged++; farJudgedMost = Mathf.Max(farJudgedMost, intended.magnitude);
+                                if (float.IsNaN(farErr)) farNaN++; else farErrMost = Mathf.Max(farErrMost, farErr);
                                 if (Mathf.Abs(intended.x - intended.y) > 1) farSwappedLeast = Mathf.Min(farSwappedLeast, perm);
+                                // (A reading beside the bar: the sag the boot's and toe's weight gives about the boot's joint over
+                                // the drive's stiffness, read back from the running bodies, in degrees; and what the riser adds
+                                // (drivenNow) to the target.)
+                                Vector3 anchorW = boot.transform.TransformPoint(boot.anchorPosition), torque = Vector3.zero;
+                                foreach (var part in boot.GetComponentsInChildren<ArticulationBody>()) torque += Vector3.Cross(part.worldCenterOfMass - anchorW, part.mass * Physics.gravity);
+                                float kNow = boot.xDrive.stiffness, sag = kNow > 0 ? torque.magnitude / kNow * Mathf.Rad2Deg : float.NaN;
+                                if (!float.IsNaN(sag)) { sagN++; sagMost = Mathf.Max(sagMost, sag); sagLeast = Mathf.Min(sagLeast, sag); }
+                                drivenMost = Mathf.Max(drivenMost, driven.magnitude);
                             }
                         }
                         Debug.Log(string.Format(Inv, "FORCED_AXES_FAR {0} {1}: hold {2}, the riser wrote {3} deg (|{4:0.0}|); at the hold's end the joint reads {5} deg, {6:0.00} rad/s on an axis ({7}); the boot {8:0.00} deg from the written as a turn; the reading {9:0.00} deg from the boot's turn",
@@ -573,27 +685,48 @@ namespace WonderGather.Tests
             // today's clamp only follows the ask's own jump, and no setting of the switches makes a form that jumps beyond
             // the ask; a form made up by the rig to jump would try only the bar's sum, which BAR_A's known-bad (off) already
             // tries on the same lines. Lazy way: an allowance as large as the ask's own jump (it is: the ask's step + 1 deg).
+            // (Step 4a‴: no bar passes on a NaN or on nothing. Each says how many values it judged and how many were NaN; a
+            // NaN fails the bar; fewer judged than its floor is an event missed, and fails the bar too.)
+            if (fA >= 0 || fB >= 0 || fF >= 0 || fM >= 0 || fT >= 0 || fW >= 0 || fX >= 0 || fR >= 0)
+                Debug.Log(string.Format(Inv, "FORCED_FEED {0}: -forcedFeed {1}: this case fed {2}", tag, feedBar, Mathf.Max(fA, Mathf.Max(fB, Mathf.Max(fF, Mathf.Max(fM, Mathf.Max(fT, Mathf.Max(fW, Mathf.Max(fX, fR))))))) == 0 ? "one NaN into its measure" : "nothing (its values withheld)"));
             if (p.Window != null && judgesA)
-                bars.Judge(p.AgainstAsk ? "BAR_A_SLERP" : "BAR_A", who, config, p.Name, winViolations == 0, string.Format(Inv,
-                    "at the crossing ({0} steps) {1} steps over the allowance ({2}); the largest share of it {3:0.000} at step {4} (the form before B moved {5:0.0} deg as written, the ask {6:0.0} as a turn, {7:0.0} as written)",
-                    winSteps, winViolations, p.AgainstAsk ? "the ask's own step as written, and 1 deg" : "3.75 times the ask's turn, and 1 deg", winRatioMost, winAt, winPreAt, winAskAt, winAskVecAt));
+            {
+                string bar = p.AgainstAsk ? "BAR_A_SLERP" : "BAR_A";
+                // (The floor: every step the profile's own window names, counted from the profile, never fewer than
+                // LeastWindowSteps. forced_good4 showed the fixed 5 wrong for swing_1800dps, whose window is 4 steps.)
+                int winOwn = 0; for (int s = 1; s < p.Steps; s++) if (p.Window(s)) winOwn++;
+                int winFloor = Mathf.Max(LeastWindowSteps, winOwn);
+                if (winSteps < winFloor) bars.EventMissed($"{tag}: {bar} judged {winSteps} window steps, fewer than the {winFloor} its window names");
+                bars.Judge(bar, who, config, p.Name, winSteps >= winFloor && winNaN == 0 && winViolations == 0, string.Format(Inv,
+                    "at the crossing ({0} steps, {8} of them NaN) {1} steps over the allowance ({2}); the largest share of it {3:0.000} at step {4} (the form before B moved {5:0.0} deg as written, the ask {6:0.0} as a turn, {7:0.0} as written)",
+                    winSteps, winViolations, p.AgainstAsk ? "the ask's own step as written, and 1 deg" : "3.75 times the ask's turn, and 1 deg", winRatioMost, winAt, winPreAt, winAskAt, winAskVecAt, winNaN));
+            }
             // BAR_B (checks 1, 4): the boot no faster than Omega on any axis, any step, touching or not (the proof of
             // research.md §4.2 is per axis). Lazy way: a profile that never asks fast (caught: off fails it).
             float fastAll = Mathf.Max(fastFree, fastTouched);
             if (judgesB && p.Name != "beyond")
-                bars.Judge("BAR_B", who, config, p.Name, fastAll <= omegaBar, string.Format(Inv, "fastest {0:0.0} rad/s on an axis (touching nothing {1:0.0} at step {2}, {3:0.0} as a vector; touching {4:0.0}), bound {5:0.00}; its shin at most {6:0.0} rad/s; {7}",
-                    fastAll, fastFree, fastAt, fastVec, fastTouched, omegaBar, shinFast, fastWhy));
+            {
+                if (bSteps < LeastSteps) bars.EventMissed($"{tag}: BAR_B judged {bSteps} steps, fewer than {LeastSteps}");
+                bars.Judge("BAR_B", who, config, p.Name, bSteps >= LeastSteps && bNaN == 0 && fastAll <= omegaBar, string.Format(Inv, "fastest {0:0.0} rad/s on an axis (touching nothing {1:0.0} at step {2}, {3:0.0} as a vector; touching {4:0.0}), bound {5:0.00}; {8} steps judged, {9} of them NaN; its shin at most {6:0.0} rad/s; {7}",
+                    fastAll, fastFree, fastAt, fastVec, fastTouched, omegaBar, shinFast, fastWhy, bSteps, bNaN));
+            }
             else Debug.Log(string.Format(Inv, "FORCED_READ {0}: fastest {1:0.0} rad/s on an axis (touching nothing {2:0.0} at step {3}, {4:0.0} as a vector; touching {5:0.0}); {6}", tag, fastAll, fastFree, fastAt, fastVec, fastTouched, fastWhy));
             // BAR_FOLLOW: the boot within 5 deg of the target written, at the step of the hold's end. Lazy way: a target
             // met by not moving (the boot is asked 60 deg away). Known-bad: -forcedFollowBad 1, the drive let go through
             // the hold, so that the boot hangs where gravity leaves it, about 60 deg from the target.
-            if (!float.IsNaN(followErr))
-                bars.Judge("BAR_FOLLOW", who, config, p.Name, followErr <= 5, string.Format(Inv, "at step {0} the boot {1:0.0} deg from the target written, {2:0.0} from its ask", p.FollowAt, followErr, followAsk));
+            if (p.FollowAt > 0)
+            {
+                if (!followRead) bars.EventMissed($"{tag}: BAR_FOLLOW's step {p.FollowAt} was not read");
+                bars.Judge("BAR_FOLLOW", who, config, p.Name, followRead && !float.IsNaN(followErr) && followErr <= BarFollowDeg, string.Format(Inv, "at step {0} the boot {1:0.0} deg from the target written, {2:0.0} from its ask (read {3})", p.FollowAt, followErr, followAsk, followRead));
+            }
             // BAR_FORM: on every step, the target the drive holds is the switch's form of the ask (today's clamp; A's fold
             // by the riser's own AnkleFolds; B's slowing written anew from research). Lazy way: a constant or stale target.
             // Known-bad: -forcedFormBad 1 with A, the riser writing today's clamp while the bar expects A's fold.
             if (!p.Axes || !axesBad)
-                bars.Judge("BAR_FORM", who, config, p.Name, formChecks > 0 && formFails == 0, string.Format(Inv, "{0} steps, {1} more than 0.05 deg off (most {2:0.0000})", formChecks, formFails, formErrMost));
+            {
+                if (formChecks < LeastSteps) bars.EventMissed($"{tag}: BAR_FORM judged {formChecks} steps, fewer than {LeastSteps}");
+                bars.Judge("BAR_FORM", who, config, p.Name, formChecks >= LeastSteps && formNaN == 0 && formFails == 0, string.Format(Inv, "{0} steps, {3} of them NaN, {1} more than 0.05 deg off (most {2:0.0000})", formChecks, formFails, formErrMost, formNaN));
+            }
             // BAR_TANH (check 4): where B writes, the target is research's E tanh(|e| / E) form, within 0.05 deg. Lazy
             // ways: a hard clamp at E, and no slowing (both computed and shown to differ); off fails it.
             if (p.TanhAt != null)
@@ -601,14 +734,22 @@ namespace WonderGather.Tests
                 if (reachMissed > 0) bars.EventMissed($"{tag}: {reachMissed} of {tanhChecks} asks did not reach their share of E within 0.03 (most reached {reachMost:0.000})");
                 if (clampWouldFail > 0 || unslowedWouldFail > 0) bars.EventMissed($"{tag}: a lazy form is not told from research's: a hard clamp within 0.05 deg on {clampWouldFail} asks, no slowing on {unslowedWouldFail}");
                 if (judgesB)
-                    bars.Judge("BAR_TANH", who, config, p.Name, tanhChecks > 0 && tanhFails == 0, string.Format(Inv, "{0} compared, {1} more than 0.05 deg from research's form (most {2:0.0000}); e/E reached at most {3:0.000}; where e >= E a hard clamp's form is at least {4:0.000} deg from research's, no slowing at least {5:0.000} deg; {6}",
-                        tanhChecks, tanhFails, tanhErrMost, reachMost, clampDiffLeast, unslowedDiffLeast, tanhLines));
+                {
+                    if (tanhChecks < p.TanhAt.Length) bars.EventMissed($"{tag}: BAR_TANH compared {tanhChecks} of its {p.TanhAt.Length} asks");
+                    bars.Judge("BAR_TANH", who, config, p.Name, tanhChecks == p.TanhAt.Length && tanhNaN == 0 && tanhFails == 0, string.Format(Inv, "{0} compared of {7}, {8} of them NaN, {1} more than 0.05 deg from research's form (most {2:0.0000}); e/E reached at most {3:0.000}; where e >= E a hard clamp's form is at least {4:0.000} deg from research's, no slowing at least {5:0.000} deg; {6}",
+                        tanhChecks, tanhFails, tanhErrMost, reachMost, clampDiffLeast, unslowedDiffLeast, tanhLines, p.TanhAt.Length, tanhNaN));
+                }
             }
             // BAR_WRAP (check 5): from a reading inside half a turn, B never writes a target outside it (as a vector).
-            // Lazy way: a profile that never asks far; its known-bad: the rig's own raw writes, judged alike as
-            // "beyond_raw" with -forcedWrapBad 1.
-            if (config == "B" || config == "AB" || config == "edge")
-                bars.Judge("BAR_WRAP", who, config, p.Name, wrapViolations == 0, string.Format(Inv, "{0} steps from a reading inside 180 deg, {1} with the target written outside (the largest {2:0.0} deg)", wrapJudged, wrapViolations, wrapTargetMost));
+            // Lazy way: a profile that never asks far; its known-bads: the rig's own raw writes, judged alike as
+            // "beyond_raw" with -forcedWrapBad 1 (a different count); and, on B's own count and verdict line, -forcedWrapBadB 1.
+            if (wrapBadB && judgesWrap)
+                Debug.Log(string.Format(Inv, "FORCED_WRAP_BAD_B {0}: -forcedWrapBadB 1: B's written target replaced by the same turn the long way round on {1} steps, read back by BAR_WRAP's count, then written back", tag, wrapBadBWrites));
+            if (judgesWrap)
+            {
+                if (wrapJudged < LeastSteps) bars.EventMissed($"{tag}: BAR_WRAP judged {wrapJudged} steps, fewer than {LeastSteps}");
+                bars.Judge("BAR_WRAP", who, config, p.Name, wrapJudged >= LeastSteps && wrapNaN == 0 && wrapViolations == 0, string.Format(Inv, "{0} steps from a reading inside 180 deg, {3} of them NaN, {1} with the target written outside (the largest {2:0.0} deg)", wrapJudged, wrapViolations, wrapTargetMost, wrapNaN));
+            }
             if (p.Raw != null)
             {
                 Debug.Log(string.Format(Inv, "FORCED_WRAP_KNOWN_BAD {0}: the rig's own raw writes outside 180 deg from a reading inside it, counted as BAR_WRAP counts: {1} steps", tag, rawOutside));
@@ -622,8 +763,12 @@ namespace WonderGather.Tests
             // and the joint's reading within 1 deg of it; on targets out to 110 deg (past it: axes_far, a reading, below).
             // Lazy way: targets that never leave nothing (they go to 110 deg, on one, two and three axes).
             if (p.Axes && !p.AxesRead)
-                bars.Judge("BAR_AXES", who, config, p.Name, rvErrMost <= 1 && readErrMost <= 1, string.Format(Inv, "{0} holds{1}: the boot's turn at most {2:0.00} deg from the target the riser wrote, read as a turn; the joint's reading at most {3:0.00} from it; read as Euler angles at most {4:0.00}; with X and Y swapped at least {5:0.00}; {6}",
-                    axesLines.Count, p.After != null ? " (-forcedAxesBad 1: the rig wrote each wrongly after the riser)" : "", rvErrMost, readErrMost, eulerErrMost, permErrLeast, string.Join(" ", axesLines)));
+            {
+                int holds = p.Steps / p.AxesHold;
+                if (axesLines.Count < holds) bars.EventMissed($"{tag}: BAR_AXES read {axesLines.Count} of its {holds} holds");
+                bars.Judge("BAR_AXES", who, config, p.Name, axesLines.Count == holds && axesNaN == 0 && rvErrMost <= BarAxesDeg && readErrMost <= BarAxesDeg, string.Format(Inv, "{0} holds of {7}, {8} of them NaN{1}: the boot's turn at most {2:0.00} deg from the target the riser wrote, read as a turn; the joint's reading at most {3:0.00} from it; read as Euler angles at most {4:0.00}; with X and Y swapped at least {5:0.00}; {6}",
+                    axesLines.Count, p.After != null ? " (-forcedAxesBad 1: the rig wrote each wrongly after the riser)" : "", rvErrMost, readErrMost, eulerErrMost, permErrLeast, string.Join(" ", axesLines), holds, axesNaN));
+            }
             // (The joint's reading against the boot's own turn: 0.00 deg on every hold of the second build, a quantity read
             // against itself (the engine's transforms are made from its reading), so a reading, not a bar (November 18).)
             if (p.Axes)
@@ -637,9 +782,11 @@ namespace WonderGather.Tests
             // wrong axis (answered: with X and Y swapped the judged holds are said at least so far away).
             if (p.AxesRead)
             {
-                if (farJudged < 5) bars.EventMissed($"{tag}: only {farJudged} holds past 110 deg came to rest: BAR_AXES_READ has too little to judge");
-                bars.Judge("BAR_AXES_READ", who, config, p.Name, farJudged > 0 && farErrMost <= 3, string.Format(Inv, "{0} holds past 110 deg came to rest (the largest |{1:0.0}| deg){2}: the boot's turn at most {3:0.00} deg from the target the riser wrote, read as a turn; with X and Y swapped at least {4:0.00}",
-                    farJudged, farJudgedMost, p.After != null ? " (-forcedAxesBad 1: the rig wrote each again with X and Y swapped after the riser)" : "", farErrMost, farSwappedLeast));
+                if (farJudged < AxesReadLeastHolds) bars.EventMissed($"{tag}: only {farJudged} holds past 110 deg came to rest: BAR_AXES_READ has too little to judge");
+                bars.Judge("BAR_AXES_READ", who, config, p.Name, farJudged >= AxesReadLeastHolds && farNaN == 0 && farErrMost <= BarAxesReadDeg, string.Format(Inv, "{0} holds past 110 deg came to rest, {5} of them NaN (the largest |{1:0.0}| deg){2}: the boot's turn at most {3:0.00} deg from the target the riser wrote, read as a turn; with X and Y swapped at least {4:0.00}",
+                    farJudged, farJudgedMost, p.After != null ? " (-forcedAxesBad 1: the rig wrote each again with X and Y swapped after the riser)" : "", farErrMost, farSwappedLeast, farNaN));
+                Debug.Log(string.Format(Inv, "FORCED_AXES_SAG {0}: on the {1} judged holds, the sag the boot's and toe's weight gives about its joint over the drive's stiffness (|r x m g| / k) {2:0.00} to {3:0.00} deg; the riser's own addition to the target (drivenNow) at most {4:0.00} deg; the bar {5:0} deg, the boot's turn from the written at most {6:0.00} deg (a reading)",
+                    tag, sagN, sagN > 0 ? sagLeast : float.NaN, sagMost, drivenMost, BarAxesReadDeg, farErrMost));
             }
             if (p.AxesRead)
                 Debug.Log(string.Format(Inv, "FORCED_AXES_FAR_SAID {0}: of {1} holds at a target past nothing, {2} settled (under 1 rad/s at the hold's end), the largest settled |{3:0.0}| deg; the smallest still turning |{4:0.0}| deg", tag, farHolds, farSettled, farSettledMost, farUnsettledLeast));
@@ -867,12 +1014,14 @@ namespace WonderGather.Tests
             formBad = CaptureTools.Argument("-forcedFormBad") == "1";
             followBad = CaptureTools.Argument("-forcedFollowBad") == "1";
             wrapBad = CaptureTools.Argument("-forcedWrapBad") == "1";
+            wrapBadB = CaptureTools.Argument("-forcedWrapBadB") == "1";
+            feedBar = CaptureTools.Argument("-forcedFeed") ?? ""; feedCount = 0;
             string whoArg = CaptureTools.Argument("-liveWho");
             string[] whos = string.IsNullOrEmpty(whoArg) ? new[] { "Small", "Long", "Round" } : whoArg.Split(',');
             int miners = 0;
             try
             {
-                Debug.Log("FORCED_SET " + AnkleMendArguments.Apply() + "; must fail: " + (mustFail.Count == 0 ? "none" : string.Join(",", mustFail)) + "; axes known-bad " + axesBad + ", form known-bad " + formBad + ", follow known-bad " + followBad + ", wrap known-bad " + wrapBad);
+                Debug.Log("FORCED_SET " + AnkleMendArguments.Apply() + "; must fail: " + (mustFail.Count == 0 ? "none" : string.Join(",", mustFail)) + "; axes known-bad " + axesBad + ", form known-bad " + formBad + ", follow known-bad " + followBad + ", wrap known-bad " + wrapBad + ", wrap known-bad on B's own count " + wrapBadB + ", fed " + (feedBar == "" ? "nothing" : feedBar) + "; " + BarsSaid());
                 var text = Resources.Load<TextAsset>("RiseWays/Small");
                 Assert.That(text, Is.Not.Null, "No Resources/RiseWays/Small.txt.");
                 OwnBody.RiseWays = OwnRiser.Read(text.text);
@@ -959,9 +1108,15 @@ namespace WonderGather.Tests
                             {
                                 double want = ResearchDamper(today.damping, today.forceLimit, today.stiffness, dt, bound);
                                 double plain = Math.Max(today.damping, Math.Max(0, today.forceLimit / bound - today.stiffness * dt));
-                                bool same = Math.Abs(now.damping - want) <= 1e-4 * Math.Max(1, want) && Math.Abs(boot.yDrive.damping - want) <= 1e-4 * Math.Max(1, want) && Math.Abs(boot.zDrive.damping - want) <= 1e-4 * Math.Max(1, want);
-                                bars.Judge("BAR_DAMP", who, config, "config", same, string.Format(Inv, "the drive holds c {0:0.0000} (X), {1:0.0000} (Y), {2:0.0000} (Z); research's smooth maximum for Omega {3:0.00} is {4:0.0000} (the plain maximum {5:0.0000}, {6:0.0}% apart; today's {7:0.0000})",
-                                    now.damping, boot.yDrive.damping, boot.zDrive.damping, bound, want, plain, 100 * Math.Abs(want - plain) / want, today.damping));
+                                // (-forcedFeed BAR_DAMP: its first case judged on a NaN in place of X's damping; its second, a
+                                // single value with no set to withhold, as it is.)
+                                int fD = FeedCase("BAR_DAMP", true);
+                                double cX = fD == 0 ? double.NaN : now.damping, cY = boot.yDrive.damping, cZ = boot.zDrive.damping;
+                                if (fD >= 0) Debug.Log($"FORCED_FEED {who} {config} config: -forcedFeed BAR_DAMP: this case fed {(fD == 0 ? "one NaN (X's damping)" : "as it is (one value, nothing to withhold)")}");
+                                bool nanD = double.IsNaN(cX) || double.IsNaN(cY) || double.IsNaN(cZ) || double.IsNaN(want);
+                                bool same = !nanD && Math.Abs(cX - want) <= BarDampShare * Math.Max(1, want) && Math.Abs(cY - want) <= BarDampShare * Math.Max(1, want) && Math.Abs(cZ - want) <= BarDampShare * Math.Max(1, want);
+                                bars.Judge("BAR_DAMP", who, config, "config", same, string.Format(Inv, "the drive holds c {0:0.0000} (X), {1:0.0000} (Y), {2:0.0000} (Z); research's smooth maximum for Omega {3:0.00} is {4:0.0000} (the plain maximum {5:0.0000}, {6:0.0}% apart; today's {7:0.0000}); a NaN among them {8}",
+                                    cX, cY, cZ, bound, want, plain, 100 * Math.Abs(want - plain) / want, today.damping, nanD));
                             }
                             foreach (var p in Profiles(config))
                             {
@@ -1034,7 +1189,11 @@ namespace WonderGather.Tests
             int makesRead = 0, makesMissed = 0;
             try
             {
-                Debug.Log("FORCED_SET " + AnkleMendArguments.Apply() + "; must fail: " + (mustFail.Count == 0 ? "none" : string.Join(",", mustFail)) + string.Format(Inv, "; BAR_C {0:0.000} m; the whirl set at {1:0.0} rad/s at first, and gone down in the step the engine reads 50-80", barC, whirlSpeed));
+                string feedC = CaptureTools.Argument("-forcedFeed") ?? "";
+                bool feedsPivot = feedC == "BAR_C_PIVOT";
+                Debug.Log("FORCED_SET " + AnkleMendArguments.Apply() + "; must fail: " + (mustFail.Count == 0 ? "none" : string.Join(",", mustFail)) + string.Format(Inv,
+                    "; bars judged now: BAR_C_PIVOT (S moved at most {2:0.00} of what A moved; judged where the slack ran to its end and moved a point at least {3:0.000} m; at least {4} whirled courses judged per miner; a NaN read fails it); READ_C and READ_C_PLAIN readings (the old bar's {0:0.000} m said beside, judging nothing); fed {5}; the whirl set at {1:0.0} rad/s at first, and gone down in the step the engine reads 50-80",
+                    barC, whirlSpeed, PivotShare, PivotMovedLeastM, PivotLeastCourses, feedsPivot ? "BAR_C_PIVOT (the first make read is fed a NaN, every later make's slack withheld)" : "nothing"));
                 var text = Resources.Load<TextAsset>("RiseWays/Small");
                 Assert.That(text, Is.Not.Null, "No Resources/RiseWays/Small.txt.");
                 OwnBody.RiseWays = OwnRiser.Read(text.text);
@@ -1052,9 +1211,18 @@ namespace WonderGather.Tests
                     watch.Own = own; watch.Who = who;
                     yield return Wait(.3f);
                     yield return PushedDown(who);
-                    string[] kinds = { "after the panel's push", "plain", "boot whirled", "boot whirled about its second axis", "boot whirled about its third axis", "whipped" };
-                    int[] axisOf = { 0, 0, 0, 1, 2, 0 };
-                    int whirledJudged = 0;
+                    // (Step 4a‴: nine whirled courses per miner and setting, each differing from the others in the whirl's axis
+                    // (the joint's first, second or third), its sense, or the moment of the going down (0.6, 1 or 1.5 s after the
+                    // riser began); the whipped course spins the knee and hip too. A course whose riser ended by itself before
+                    // the going down (its own body went down while the rig waited for the boot to touch nothing:
+                    // down_c1e.log:2787-2800) is tried again on the next getting up, at most 3 times.)
+                    string[] kinds = { "after the panel's push", "plain", "boot whirled", "boot whirled about its second axis", "boot whirled about its third axis", "whipped",
+                        "boot whirled the other way", "boot whirled about its second axis the other way", "boot whirled about its third axis the other way", "boot whirled sooner (0.6 s)", "boot whirled about its second axis later (1.5 s)" };
+                    int[] axisOf = { 0, 0, 0, 1, 2, 0, 0, 1, 2, 0, 1 };
+                    float[] senseOf = { 1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1 };
+                    float[] waitOf = { 0, 1, 1, 1, 1, 1, 1, 1, 1, .6f, 1.5f };
+                    int whirledJudged = 0, whirledCourses = kinds.Length - 2, tries = 0;
+                    Quaternion plainOwnTurn = Quaternion.identity, plainMadeTurn = Quaternion.identity; bool plainRead = false;
                     for (int n = 0; n < kinds.Length; n++)
                     {
                         bool pivotJudged = false, pivotPass = false; string pivotSaid = "";
@@ -1062,10 +1230,23 @@ namespace WonderGather.Tests
                         {
                             var was = own.Riser;
                             if (was == null) { bars.EventMissed($"{who} {kinds[n]}: no riser to go down from"); makesMissed++; break; }
-                            yield return Wait(1);
-                            if (own.Riser != was || own.Riser == null) { bars.EventMissed($"{who} {kinds[n]}: the riser ended by itself first"); makesMissed++; break; }
+                            int goneDownWas = own.WentDown;
+                            yield return Wait(waitOf[n]);
+                            bool lostEarly = own.Riser != was || own.Riser == null;
                             bool whirl = n >= 2, whip = n == 5;
                             int axis = axisOf[n];
+                            if (lostEarly)
+                            {
+                                if (tries < 3 && own != null)
+                                {
+                                    tries++;
+                                    Debug.Log(string.Format(Inv, "FORCED_RETRY {0} {1}: the riser ended by itself while the rig waited {2:0.0} s before the course (its own body went down {3} times meanwhile, OwnBody.WentDown {4} -> {5}); the course tried again on the next getting up (try {6} of 3)", who, kinds[n], waitOf[n], own.WentDown - goneDownWas, goneDownWas, own.WentDown, tries));
+                                    for (float until = Time.time + 40; (own.Riser == null || own.Riser == was) && Time.time < until;) yield return null;
+                                    if (own.Riser == null || own.Riser == was) { bars.EventMissed($"{who} {kinds[n]}: no getting up again within 40 s after its own going down"); makesMissed++; break; }
+                                    n--; continue;
+                                }
+                                bars.EventMissed($"{who} {kinds[n]}: the riser ended by itself first, {tries} tries"); makesMissed++; break;
+                            }
                             var b0 = own.Part(Foot);
                             ArticulationBody t0 = null;
                             foreach (var link in b0.GetComponentsInChildren<ArticulationBody>()) if (link != b0) t0 = link;
@@ -1074,7 +1255,10 @@ namespace WonderGather.Tests
                             bool wentDown = false, startedFree = false, touchedDuring = false, afterNull = false, oldGone = false, oldActive = false;
                             ArticulationBody oldBoot = null;
                             var engine = new List<float>(); var engineRel = new List<float>(); var kneeEngine = new List<float>(); var sets = new List<float>(); var readings = new List<string>();
-                            float setTo = whirlSpeed; string jointSaid = ""; int dofs = -1;
+                            float setTo = senseOf[n] * whirlSpeed; string jointSaid = ""; int dofs = -1;
+                            // (Item 2's reading: the own boot's turn against its own shin as it went down, the made boot's (the
+                            // let-go body's) against the let-go shin, and the slack OwnBody asked (slackBy).)
+                            Quaternion ownTurnAt = Quaternion.identity; float slackAsked = float.NaN; bool madeHasBody = false;
                             Vector3 atGoingV = Vector3.zero; float pivotGap = float.NaN, kneeAt = 0;
                             Vector3 pivotOwn = Vector3.zero, pivotLetGo = Vector3.zero;
                             // (The let-go boot, read from the running fall: its points at S and A in its own frame, and S, A
@@ -1086,8 +1270,10 @@ namespace WonderGather.Tests
                             void DoGoDown(ArticulationBody b)
                             {
                                 oldBoot = b;
+                                ownTurnAt = Quaternion.Inverse(own.Part(Shin).transform.rotation) * b.transform.rotation;
                                 goDownM.Invoke(own, null);
                                 wentDown = true;
+                                if (slackByF != null) slackAsked = Quaternion.Angle(Quaternion.identity, ((Quaternion[])slackByF.GetValue(own))[0]);
                                 // (Where each half of C turns the let-go boot about, read at once: the boot's own ankle, as off
                                 // has it, and the let-go shin's end, as C has it.)
                                 var fall = unit.GetComponent<PhysicalFall>();
@@ -1103,6 +1289,7 @@ namespace WonderGather.Tests
                                         qS = madeBoot.InverseTransformPoint(pivotLetGo); qA = madeBoot.InverseTransformPoint(pivotOwn);
                                         sLocal = fallShin.InverseTransformPoint(pivotLetGo); aLocal = fallShin.InverseTransformPoint(pivotOwn);
                                         turnStart = Quaternion.Inverse(fallShin.rotation) * madeBoot.rotation;
+                                        madeHasBody = madeBoot.GetComponent<Rigidbody>() != null || madeBoot.GetComponent<ArticulationBody>() != null;
                                     }
                                 }
                             }
@@ -1155,10 +1342,14 @@ namespace WonderGather.Tests
                                     // the other way about when the engine kept less than half of it.)
                                     // (And at once when the engine reads more than twice the joint's maxJointVelocity: down_c0d's
                                     // Long whipped, set again 30 times with its knee and hip spun at each, read 1e12 rad/s, log:2571.)
-                                    if ((read >= 50 && read <= 80) || j >= 30 || read > 2 * b.maxJointVelocity) { atGoingV = eng; kneeAt = kv.dofCount > 0 ? kv[0] : 0; DoGoDown(b); return; }
+                                    // (Step 4a‴: down_c1f's Small whipped read 102.7, 95.7, 251.5 (down_c1f.log, FORCED_WHIRL) and
+                                    // went down at once at 2 x maxJointVelocity, the whirl not made; the sets could not go below
+                                    // -whirlSpeed though the engine kept more than was set. Now: at once only past 10 x
+                                    // maxJointVelocity (a blown step, as down_c0d's 1e12), and a set as small as 20 rad/s.)
+                                    if ((read >= 50 && read <= 80) || j >= 30 || read > 10 * b.maxJointVelocity) { atGoingV = eng; kneeAt = kv.dofCount > 0 ? kv[0] : 0; DoGoDown(b); return; }
                                     float size = Mathf.Abs(setTo);
                                     bool flip = read < .5f * size;
-                                    size = Mathf.Clamp(size * 65 / Mathf.Max(read, 1), whirlSpeed, Mathf.Min(95, .95f * b.maxJointVelocity));
+                                    size = Mathf.Clamp(size * 65 / Mathf.Max(read, 1), 20, Mathf.Min(95, .95f * b.maxJointVelocity));
                                     setTo = (flip ? -Mathf.Sign(setTo) : Mathf.Sign(setTo)) * size;
                                 }
                                 DrivesOff(b);
@@ -1176,23 +1367,48 @@ namespace WonderGather.Tests
                                 who, kinds[n], wentDown && !forcer.WasLost, whirl ? (startedFree ? $"after {waited} steps waiting, touching nothing for two; " : $"touching still after {waited} steps of waiting; ") : "",
                                 whirl ? engineSaid : "(not whirled)", string.Join(", ", engineRel.ConvertAll(x => x.ToString("0.0", Inv))), string.Join(", ", kneeEngine.ConvertAll(x => x.ToString("0.0", Inv))),
                                 V(atGoingV), kneeAt, riserWrote, touchedDuring, V(pivotOwn, "0.0000"), V(pivotLetGo, "0.0000"), pivotGap, afterNull, oldGone, oldActive, own.WentDown));
-                            if (!wentDown) { bars.EventMissed($"{who} {kinds[n]}: the going down was not made"); makesMissed++; break; }
+                            if (!wentDown && forcer.WasLost && own != null && tries < 3)
+                            {
+                                tries++;
+                                Debug.Log(string.Format(Inv, "FORCED_RETRY {0} {1}: the riser ended by itself after {2} steps of waiting for the boot to touch nothing (touching still: {3}; its own body went down {4} times meanwhile, OwnBody.WentDown {5} -> {6}); the course tried again on the next getting up (try {7} of 3)",
+                                    who, kinds[n], waited, !startedFree, own.WentDown - goneDownWas, goneDownWas, own.WentDown, tries));
+                                for (float until = Time.time + 40; (own.Riser == null || own.Riser == was) && Time.time < until;) yield return null;
+                                if (own.Riser == null || own.Riser == was) { bars.EventMissed($"{who} {kinds[n]}: no getting up again within 40 s after its own going down"); makesMissed++; break; }
+                                n--; continue;
+                            }
+                            if (!wentDown) { bars.EventMissed($"{who} {kinds[n]}: the going down was not made ({tries} tries)"); makesMissed++; break; }
+                            tries = 0;
                             if (whirl)
                                 Debug.Log(string.Format(Inv, "FORCED_WHIRL {0} {1}: set at {2} rad/s on its joint's axis {6} (of {7} it has), the step after each the engine read {3} rad/s on an axis, the joint reading {4}; {5}",
                                     who, kinds[n], string.Join(", ", sets.ConvertAll(x => x.ToString("0.0", Inv))), engineSaid, string.Join(", ", readings), jointSaid, axis, dofs));
                             if (whirl && (engine.Count < 1 || engine[engine.Count - 1] < 50 || engine[engine.Count - 1] > 80))
                                 bars.EventMissed($"{who} {kinds[n]}: the whirl was not made: the engine read the boot at {engineSaid} rad/s on an axis after each set, the last not 50-80");
-                            for (float until = Time.time + 40; (own.Riser == null || own.Riser == was) && Time.time < until;) { ReadSlack(); yield return null; }
+                            // (-forcedFeed BAR_C_PIVOT: the first make read is fed a NaN (its A point), every later make's slack
+                            // is withheld (not read): the bar must fail on the NaN, and the miner judge too few whirled courses.)
+                            bool withheld = feedsPivot && makesRead > 1;
+                            for (float until = Time.time + 40; (own.Riser == null || own.Riser == was) && Time.time < until;) { if (!withheld) ReadSlack(); yield return null; }
                             if (own.Riser == null || own.Riser == was) { bars.EventMissed($"{who} {kinds[n]}: not made down again within 40 s"); makesMissed++; break; }
-                            // (BAR_C_PIVOT: what the slack turned the let-go boot about.)
+                            bool fedNaN = feedsPivot && makesRead == 1 && slackDone;
+                            if (fedNaN) dA = float.NaN;
+                            if (feedsPivot) Debug.Log($"FORCED_FEED {who} {kinds[n]}: -forcedFeed BAR_C_PIVOT: this make fed {(fedNaN ? "one NaN (its A point's move)" : withheld ? "nothing (its slack not read)" : "as it is")}");
+                            // (BAR_C_PIVOT: what the slack turned the let-go boot about. A NaN read where the slack ran to its end
+                            // is judged, and fails: it is never "not judged".)
+                            bool pivotNaN = slackDone && (float.IsNaN(dS) || float.IsNaN(dA) || float.IsNaN(slackTurn) || float.IsNaN(pivotGap));
                             float predicted = 2 * pivotGap * Mathf.Sin(.5f * slackTurn * Mathf.Deg2Rad), moved = Mathf.Max(dS, dA);
-                            pivotJudged = slackDone && moved >= .01f;
-                            pivotPass = pivotJudged && dS <= .25f * dA;
+                            pivotJudged = slackDone && (pivotNaN || moved >= PivotMovedLeastM);
+                            pivotPass = pivotJudged && !pivotNaN && dS <= PivotShare * dA;
                             pivotSaid = string.Format(Inv, "the slack ran {0:0.00} of its way ({1}, read on {2} steps before the make); it turned the boot {3:0.0} deg against its shin; the boot's point at the let-go shin's end moved {4:0.0000} m, its point at its own body's ankle {5:0.0000} m (|S - A| {6:0.0000} m; 2 |S - A| sin(turn / 2) {7:0.0000} m); {8}",
                                 slackShare, slackDone ? "done" : "not done", slackReads, slackTurn, dS, dA, pivotGap, predicted,
-                                !pivotJudged ? "not judged: " + (!slackDone ? "the slack did not run to its end" : "it moved neither point 1 cm, so nothing tells the pivots apart") : dS <= .25f * dA ? "turned about the let-go shin's end (S stayed)" : "not turned about the let-go shin's end");
+                                pivotNaN ? "a NaN read: a failure" : !pivotJudged ? "not judged: " + (!slackDone ? "the slack did not run to its end" : "it moved neither point 1 cm, so nothing tells the pivots apart") : pivotPass ? "turned about the let-go shin's end (S stayed)" : "not turned about the let-go shin's end");
                             Debug.Log("FORCED_SLACK " + who + " " + kinds[n] + ": " + pivotSaid);
                             if (whirl && pivotJudged) whirledJudged++;
+                            // (Item 2, a reading: what C acts on, and whether the whirl changes it. C acts on the made boot (the
+                            // let-go body's) only: its pose against the let-go shin at the going down, and the slack's turn.)
+                            Quaternion madeTurn = turnStart;
+                            if (n == 1) { plainOwnTurn = ownTurnAt; plainMadeTurn = madeTurn; plainRead = true; }
+                            Debug.Log(string.Format(Inv, "FORCED_C_ACTS {0} {1} {2}: as it went down the own boot was turned {3:0.0} deg against its own shin from where the plain course had it{4}, its joint at {5:0.0} rad/s on an axis; the made boot (the let-go body's: a body of its own {6}, so the whirl's speed is handed to {7}) turned {8:0.0} deg against the let-go shin from the plain course's made boot, {9:0.0} deg from the own boot's turn against its own shin; the slack OwnBody asked (slackBy) {10:0.0} deg, the slack turned it {11:0.0} deg against its shin; |S - A| {12:0.0000} m",
+                                who, cName, kinds[n], plainRead ? Quaternion.Angle(plainOwnTurn, ownTurnAt) : float.NaN, plainRead ? "" : " (no plain course read)", PerAxis(atGoingV), madeHasBody, madeHasBody ? "it" : "nothing",
+                                plainRead ? Quaternion.Angle(plainMadeTurn, madeTurn) : float.NaN, Quaternion.Angle(ownTurnAt, madeTurn), slackAsked, slackTurn, pivotGap));
                         }
                         else if (own.Riser == null) { bars.EventMissed($"{who}: not made down by the push within 40 s"); makesMissed++; break; }
                         // The make: each boot's ankle against the body made standing; how far the refit moved it (C on), what
@@ -1221,7 +1437,8 @@ namespace WonderGather.Tests
                         if (n >= 1 && pivotJudged) bars.Judge("BAR_C_PIVOT", who, cName, kinds[n], pivotPass, pivotSaid);
                         makesRead++;
                     }
-                    if (whirledJudged < 3) bars.EventMissed($"{who} {cName}: only {whirledJudged} of the 4 whirled courses had a slack that tells the pivots apart (BAR_C_PIVOT needs 3)");
+                    if (whirledJudged < PivotLeastCourses) bars.EventMissed($"{who} {cName}: only {whirledJudged} of the {whirledCourses} whirled courses had a slack that tells the pivots apart (BAR_C_PIVOT needs {PivotLeastCourses})");
+                    else Debug.Log($"FORCED_COURSES {who} {cName}: {whirledJudged} of the {whirledCourses} whirled courses judged by BAR_C_PIVOT, each a distinct course (axis, sense or moment), in this run");
                     Debug.Log(watch.Summary());
                     foreach (var line in watch.Lines) if (line.StartsWith("ANKLE_DOWN")) Debug.Log("FORCED_WATCH " + line);
                     Object.Destroy(watch.gameObject); watch = null;
