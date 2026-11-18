@@ -1,6 +1,6 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 18, 2026 (about 06:20), by Claude Opus 5.5. Luis approved the check at every write, for
+**Last updated:** November 18, 2026 (about 06:10), by Claude Opus 5.5. Luis approved the check at every write, for
 this project only (about 05:58); it is built from about 09:03 (`write_check_workflow.js`) if the week has room. At
 06:03 the week was 93% used, so the look for the rig's start blow-up (`rig_blowup_workflow.js`), which 4a‴ called for,
 waits for the week's reset (November 23, 17:00). Done: the forced checks' third and fourth builds read (`a251444`,

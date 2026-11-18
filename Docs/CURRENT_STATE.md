@@ -1,8 +1,8 @@
 # Wonder Gather — Current State
 
-**Updated:** November 18, 2026 (about 06:20). **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 18, 2026 (about 06:10). **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 18, about 06:20): nothing in the game changed. Luis approved the check at every write, for this
+- **Now (November 18, about 06:10): nothing in the game changed. Luis approved the check at every write, for this
   project only (about 05:58); it is built from about 09:03 if the week has room. The look for the rig's start
   blow-up waits for the week's reset (November 23, 17:00).**
   - At 06:03 the week was 93% used and the five hours 72%. The rig look needs 2-3% of the week and does not fit under
