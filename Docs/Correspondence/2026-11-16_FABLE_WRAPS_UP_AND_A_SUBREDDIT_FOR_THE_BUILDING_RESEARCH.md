@@ -164,8 +164,9 @@ At about 05:58 Luis wrote, word for word:
 What is answered: it is restricted to this project by how it is made. It is a hook of Claude Code registered in this
 project's own `.claude/settings.local.json`, not in the settings every project shares. So it runs only when the
 assistant writes or edits a file in a session of this project, and it acts only on files of this repository (the main
-folder and its worktrees, such as `D:/Dev/WG`). It runs no git command, never touches GitHub, and does nothing when he
-edits files himself or uses git or GitHub, here or anywhere else. Git's own check, live since 00:42, was already this
+folder and its worktrees, such as `D:/Dev/WG`). It only asks git, on this computer, whether a file belongs to this
+repository and is not ignored; it never commits, pushes or touches GitHub, and it does nothing when he edits files
+himself or uses git or GitHub, here or anywhere else. Git's own check, live since 00:42, was already this
 repository's alone (its `.git/hooks`).
 
 When: at 06:03 the week was 93% used (between about 05:59 and 06:03, across a compaction of this conversation, it went

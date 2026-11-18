@@ -8,7 +8,8 @@
   - At 06:03 the week was 93% used and the five hours 72%. The rig look needs 2-3% of the week and does not fit under
     the 95% stop; the check at every write, about 1-2%, does if the week is at most 93.5% at 09:03.
   - The check is a hook of Claude Code in this project's `.claude/settings.local.json` only: it runs only when the
-    assistant writes a file in a session of this project, acts only on this repository's files, and runs no git. It
+    assistant writes a file in a session of this project, acts only on this repository's files, and only reads from git
+    on this computer (never a commit, a push or GitHub). It
     is built as a candidate in `.claude/hooks/next/` (`write_check_workflow.js`: one builder, one breaker) and is not
     live until both are read. Luis's words and the answer: Correspondence of November 16, section 10.
 
