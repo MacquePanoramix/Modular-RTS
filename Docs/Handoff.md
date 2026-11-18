@@ -1,6 +1,6 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 18, 2026 (about 04:05), by Claude Opus 5.5. Done: the forced checks' mend read
+**Last updated:** November 18, 2026 (about 04:42), by Claude Opus 5.5. 4a″ read; 4a‴ running since 04:39. Done: the forced checks' mend read
 (`7c6edf0` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and committed on both
 branches. Git's own check, approved for this project only, was built, mended, reviewed twice and read; it was
 installed at 00:42 on November 18, and its guard side (G7, M1) went live at 00:43. Luis's question on the cost of a
@@ -28,14 +28,24 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 39th outlook
 was taken on November 18 at about 00:41, by the counter, after a compaction (`Outlook.md`).
 
-**Now: 4a″ is running, since 04:02 on November 18** (run `wf_e7af121a-bc2`; script
-`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`; the items are below, "Next: 4a″"). At its start
-the five hours were 2% used and the week 84%; it needs about 8-10%, and its agents stop at a clean point past 80% of
-the window or 95% of the week. `D:/Dev/WG` was at `b76f311` with only the known uncommitted files, and no Unity was
-running. When it ends, read its report (`forced_checks.md`), its commits and its three reviews
-(`review_forced3_*.md`) to their end before anything is written or committed. If this session is lost meanwhile: a
-run resumes only in its own session, so read `forced_checks.md` and `git -C D:/Dev/WG log b76f311..HEAD` to see what
+**Now: 4a‴ is running, since 04:39 on November 18** (run `wf_5594be6d-e18`; script
+`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a3_workflow.js`, committed in `8d90e11`; its six items are in its
+brief). They are what the reviews of 4a″ left open: a C-on run of check 3 that passes by itself (Long judged only 2
+of the 3 whirled courses needed); what check 3 shows (the physicist: C's branch, not a physical effect on a whirling
+boot); BAR_WRAP's known-bad through B's own count; no bar passing on a NaN or on nothing; each bar's number defined
+once, BAR_AXES_READ's 3° grounded apart from its data; every run again on the final code. At its start the five hours
+were 30% used and the week 87% (4a″ cost about 3% of the week); its agents stop at a clean point past 80% of the
+window or 95% of the week. `D:/Dev/WG` was at `ef12502` with only the known uncommitted files, and no Unity was
+running. When it ends, read its report (`forced_checks.md`, "Step 4a‴"), its commits and its three reviews
+(`review_forced4_*.md`) to their end before anything is written or committed. If this session is lost meanwhile: a
+run resumes only in its own session, so read `forced_checks.md` and `git -C D:/Dev/WG log ef12502..HEAD` to see what
 the mender reached, and make sure no Unity of `D:/Dev/WG` is still running before anything else.
+
+**4a″ ran 04:02-04:32 and was read** (`wf_e7af121a-bc2`; `a251444` in `D:/Dev/WG`, only `AnkleForced.cs`; no fault
+in A, B or C, arm B stands). What stands and what does not: `Validation.md`, "The forced checks, third build".
+`D:/Dev/WG`'s `AGENTS.md` is now this project's, with a top line pointing here (`ef12502`). After 4a‴: the second
+mend of git's check if the week has room for all of it; 4b, Small's arms and step 5 after the weekly reset
+(November 23, 17:00).
 
 **G6 is live since 13:57 on November 17. Git's own check has been live since 00:42 on November 18, and G7 and M1
 since 00:43 (below).** Luis approved G6
@@ -160,10 +170,10 @@ or C, and arm B need not run again. Open, for 4a″:
 Then 4b. The order, one workflow and one Unity at a time:
 1. the FBX patch, done (18:21);
 2. git's own check, built, mended, read and installed (00:42, November 18);
-3. 4a″ (`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`), running since 04:02 on November 18
-   (`wf_e7af121a-bc2`). Its brief says that git's own hooks refuse the path in `D:/Dev/WG` too;
-4. `D:/Dev/WG`'s `AGENTS.md`;
-5. the second mend of git's check, if the week has room for all of it.
+3. 4a″ (`step4a2_workflow.js`), ran 04:02-04:32 on November 18 and was read;
+4. `D:/Dev/WG`'s `AGENTS.md`, done (`ef12502`);
+5. 4a‴ (`step4a3_workflow.js`), running since 04:39 (`wf_5594be6d-e18`);
+6. the second mend of git's check, if the week has room for all of it.
 
 Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.

@@ -1,8 +1,17 @@
 # Wonder Gather — Current State
 
-**Updated:** November 18, 2026 (just after midnight). **To resume the work from files alone:** [Handoff.md](Handoff.md).
+**Updated:** November 18, 2026 (about 04:42). **To resume the work from files alone:** [Handoff.md](Handoff.md).
 
-- **Now (November 18, just after midnight): nothing in the game changed but two models' path fields. The privacy
+- **Now (November 18, about 04:42): nothing in the game changed. The forced checks' third build (4a″) ran and was
+  read; 4a‴, for what its reviews left open, is running since 04:39 (`wf_5594be6d-e18`).**
+  - 4a″ changed only the test file `AnkleForced.cs` (`a251444` in `D:/Dev/WG`) and found no fault in A, B or C. The
+    three runs passed or failed as they must, on the final file; three more bars have known-bads; check 3 has a
+    measure that separates C off from C on (14 of 14 fail, 21 of 21 pass). Rung: tested on a rig, read to the end.
+  - Open: no C-on run passes by itself; check 3 shows C's branch, not a physical effect on a whirling boot;
+    BAR_WRAP's known-bad misses B's own count; NaN and empty sets could pass. The whole account: `Validation.md`,
+    "The forced checks, third build".
+  - Luis's question on the cost of a check at every write was answered: it stays off unless he asks.
+- **Before (November 18, just after midnight): nothing in the game changed but two models' path fields. The privacy
   work Luis approved is live. Next: 4a″, at the 04:00 reset.**
   - **G6**, live since 13:57 on November 17: a guard rule that refuses a commit or push of the assistant's that would
     carry the path of Luis's profile folder (it holds his user name) into the public repository.
