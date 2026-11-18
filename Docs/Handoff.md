@@ -1,9 +1,10 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 18, 2026 (about 00:55), by Claude Opus 5.5. Done: the forced checks' mend read
+**Last updated:** November 18, 2026 (about 04:05), by Claude Opus 5.5. Done: the forced checks' mend read
 (`7c6edf0` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and committed on both
 branches. Git's own check, approved for this project only, was built, mended, reviewed twice and read; it was
-installed at 00:42 on November 18, and its guard side (G7, M1) went live at 00:43. Next: 4a″ at the 04:00 reset. The
+installed at 00:42 on November 18, and its guard side (G7, M1) went live at 00:43. Luis's question on the cost of a
+check at every write was answered (it stays off). Now: 4a″, running since 04:02 (`wf_e7af121a-bc2`). The
 master is Opus 5.5 at max effort with ultracode, by Luis's word.
 Kept current at every milestone.
 
@@ -27,10 +28,14 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 39th outlook
 was taken on November 18 at about 00:41, by the counter, after a compaction (`Outlook.md`).
 
-**Next: 4a″, at the 04:00 reset of the five hours** (a wake-up is set for 04:04). Its script is
-`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`, written, not run; the items are below ("Next:
-4a″"). Begin it only when the window is low and the week has room for all of it. The week was 82% used at 00:38;
-4a″ needs about 8-10%, and the guard is 95%.
+**Now: 4a″ is running, since 04:02 on November 18** (run `wf_e7af121a-bc2`; script
+`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`; the items are below, "Next: 4a″"). At its start
+the five hours were 2% used and the week 84%; it needs about 8-10%, and its agents stop at a clean point past 80% of
+the window or 95% of the week. `D:/Dev/WG` was at `b76f311` with only the known uncommitted files, and no Unity was
+running. When it ends, read its report (`forced_checks.md`), its commits and its three reviews
+(`review_forced3_*.md`) to their end before anything is written or committed. If this session is lost meanwhile: a
+run resumes only in its own session, so read `forced_checks.md` and `git -C D:/Dev/WG log b76f311..HEAD` to see what
+the mender reached, and make sure no Unity of `D:/Dev/WG` is still running before anything else.
 
 **G6 is live since 13:57 on November 17. Git's own check has been live since 00:42 on November 18, and G7 and M1
 since 00:43 (below).** Luis approved G6
@@ -110,9 +115,11 @@ repository.
   - Then the master reinstalls (`install.sh` with the folder) and copies `next/` live again.
 - **What it cannot see, by kind** (the report): encodings (percent, `\u`, entities, base64, gzip), fullwidth and
   no-break characters, and `Users\x\..\<name>`. It is a seat belt, not a vault.
-- **To tell Luis** (not yet told): it is live. To skip it for one commit of his own: `git commit --no-verify` (or
-  `git push --no-verify`). To take it out: `bash .claude/hooks/git/uninstall.sh "<the project's folder>"`. To ask him:
-  whether to widen the guard's matcher to the Write and Edit tools (a settings change, not approved).
+- **Told Luis** (November 18, about 04:05): it is live. To skip it for one commit of his own: `git commit --no-verify`
+  (or `git push --no-verify`). To take it out: `bash .claude/hooks/git/uninstall.sh "<the project's folder>"`. He
+  asked what widening the guard's matcher to the Write and Edit tools would cost (Correspondence of November 16,
+  section 9): almost no usage to run, an estimated 1-2% of the week to build, a small gain. It stays off (not
+  approved) unless he asks for it.
 - **Found in the whole history** (the report; not changed): the path is in House.fbx and Nature.fbx as committed
   before `16b5636`, still on origin/main, and in older commits of `build.md` and `review_mends_physicist.md`. The
   branch tips are clean. Mending main is a merge, which is Luis's word; he declined rewriting history.
@@ -153,8 +160,8 @@ or C, and arm B need not run again. Open, for 4a″:
 Then 4b. The order, one workflow and one Unity at a time:
 1. the FBX patch, done (18:21);
 2. git's own check, built, mended, read and installed (00:42, November 18);
-3. 4a″ (`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`, written, not run), at the 04:00 reset. Its
-   brief now says that git's own hooks refuse the path in `D:/Dev/WG` too;
+3. 4a″ (`Research/2026-11-15_NaturalRangesAndTheAnkle/step4a2_workflow.js`), running since 04:02 on November 18
+   (`wf_e7af121a-bc2`). Its brief says that git's own hooks refuse the path in `D:/Dev/WG` too;
 4. `D:/Dev/WG`'s `AGENTS.md`;
 5. the second mend of git's check, if the week has room for all of it.
 

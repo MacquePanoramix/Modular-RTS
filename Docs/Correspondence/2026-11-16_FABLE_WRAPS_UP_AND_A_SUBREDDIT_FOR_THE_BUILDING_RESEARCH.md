@@ -137,3 +137,20 @@ or 95% of the week). Kept in the assistant's memory and in `AGENTS.md`, "Session
 week guards were raised from 85% to 95%.
 
 Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.
+
+## 9. November 18, just before 04:00: what a check at every write would cost
+
+After git's own check went live (00:42), I asked whether the guard should also check every file the assistant
+writes or edits for the profile folder's path, the moment it is written; it changes a setting, so only on his word.
+At about 03:58 Luis wrote, word for word:
+
+> For the question, wouldn't doing it like that consume a bunch more of extra usage? Or would it not really be that costly?
+
+What is answered: running it would cost almost no usage. The check runs on the computer, not in the model, and says
+nothing when a file is clean, so nothing enters the conversation; it costs time only, a fraction of a second per
+write (at 04:01 the guard took 0.22 s on an ordinary command and Python 0.07 s to start). A refusal costs one short
+line and redoing that one edit. The usage is in building and testing it once, an estimated 1-2% of the week. Its gain
+is small now that git's own check refuses the path at every commit and push, before anything reaches GitHub: it would
+only catch the path earlier. Recommended: leave it off for now; it stays off unless he says otherwise.
+
+Nothing here changes a design decision, so there is no row in `GAME_VISION.md`.
