@@ -1,9 +1,9 @@
 # Handoff: where the work stands, and how to resume it
 
-**Last updated:** November 18, 2026 (about 06:10), by Claude Opus 5.5. Luis approved the check at every write, for
-this project only (about 05:58); it is built from about 09:03 (`write_check_workflow.js`) if the week has room. At
-06:03 the week was 93% used, so the look for the rig's start blow-up (`rig_blowup_workflow.js`), which 4a‴ called for,
-waits for the week's reset (November 23, 17:00). Done: the forced checks' third and fourth builds read (`a251444`,
+**Last updated:** November 18, 2026 (about 09:05), by Claude Opus 5.5. Luis approved the check at every write, for
+this project only (about 05:58). At 09:03 the week was 94% used, over the 93.5% set for starting it, so it waits for
+the week's reset (November 23, 17:00) and goes first then (`write_check_workflow.js`); the look for the rig's start
+blow-up (`rig_blowup_workflow.js`), which 4a‴ called for, follows it. Done: the forced checks' third and fourth builds read (`a251444`,
 `6408d91` in `D:/Dev/WG`); G6 made live; the two models' path fields patched, checked, reviewed and committed on both
 branches. Git's own check, approved for this project only, was built, mended, reviewed twice and read; it was
 installed at 00:42 on November 18, and its guard side (G7, M1) went live at 00:43. The master is Opus 5.5 at max
@@ -30,8 +30,9 @@ max effort with ultracode and asked it to go on as before
 ([his words](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)). The 40th outlook
 was taken on November 18 at about 05:55, as a stretch closed, after a compaction (`Outlook.md`).
 
-**Now: the check at every write, from about 09:03 on November 18**, when the five hours reset, and only if the week
-is then at most 93.5% (at 06:03 the window was 72% used and the week 93%). Luis approved it at about 05:58, for this
+**Now: nothing runs until the week's reset (November 23, 17:00); then the check at every write goes first.** At 09:03
+on November 18 the five hours were 0% used and the week 94%, over the 93.5% set for starting it, so it did not start
+(at 06:03 the week was 93%). Luis approved it at about 05:58, for this
 project only ([section 10](Correspondence/2026-11-16_FABLE_WRAPS_UP_AND_A_SUBREDDIT_FOR_THE_BUILDING_RESEARCH.md)).
 Script: `Research/2026-11-16_HarnessGuideReview/write_check_workflow.js`. One builder (opus, high) makes a candidate
 in `.claude/hooks/next/` (`guard_write.py`, `guard_write.sh`, `guard_write_test.sh`): a write or edit that adds the
@@ -40,8 +41,7 @@ refused, judged on the file as it would be after the write; everything else pass
 (sonnet) who did not build it (`review_write_check.md`). Their agents stop at a clean point past 80% of the five hours
 or 95% of the week. Nothing is live until both are read to the end; then the master copies it into `.claude/hooks/`,
 adds the PreToolUse entry (matcher `Write|Edit|MultiEdit|NotebookEdit`) to this project's `.claude/settings.local.json`
-only, and shows it firing with one refused edit of an untracked scratch file. A check-in scheduled in this session
-starts it at about 09:03; it lives only in this session. If this session is lost, start it from a new one with
+only, and shows it firing with one refused edit of an untracked scratch file. After the week's reset, start it with
 `Workflow({scriptPath: "D:/Programs/Unity/Projects/Wonder Gather/The Wanderer/Docs/Research/2026-11-16_HarnessGuideReview/write_check_workflow.js"})`
 once both limits have room for all of it.
 
@@ -181,10 +181,10 @@ Then 4b. The order, one workflow and one Unity at a time:
 3. 4a″ (`step4a2_workflow.js`), ran 04:02-04:32 on November 18 and was read;
 4. `D:/Dev/WG`'s `AGENTS.md`, done (`ef12502`);
 5. 4a‴ (`step4a3_workflow.js`), ran 04:39-05:29 on November 18 and was read;
-6. the check at every write (`write_check_workflow.js`), from about 09:03 on November 18 if the week is then at most
-   93.5%;
-7. after the week's reset (November 23, 17:00): the look for the rig's start blow-up (`rig_blowup_workflow.js`), then
-   4b, then Small's arms, then step 5; the second mend of git's check where the week has room for all of it.
+6. after the week's reset (November 23, 17:00): the check at every write (`write_check_workflow.js`; at 09:03 on
+   November 18 the week was 94%, over the 93.5% set for it), then the look for the rig's start blow-up
+   (`rig_blowup_workflow.js`), then 4b, then Small's arms, then step 5; the second mend of git's check where the week
+   has room for all of it.
 
 Each run is read before the next, and no code in `D:/Dev/WG` is edited while one runs. The command lines are `research.md` section 7.3's, except that the heard run is `-ownUnheard 0` and Long's
 runs take `-liveRing 0`. The live test is not the same run to run, so runs are compared by their counts.
