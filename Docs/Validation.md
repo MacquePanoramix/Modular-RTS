@@ -5793,6 +5793,49 @@ What does not stand yet:
 - Some of the report's ranges are misquoted (the sceptic quotes the log lines).
 - The switches the rig sets are restored on the normal path only, with no `finally`.
 
+### The forced checks, third build (step 4a″, `a251444` in `D:/Dev/WG`, November 18)
+The second build (4a′, November 17) is told in `forced_checks.md`, "Second build's summary (kept)", and in the
+Handoff. For the third, one builder (opus) mended the four items left open; a physicist, a sceptic and a code reader
+who did not build it reviewed it (`review_forced3_*.md`, beside the report). Only `AnkleForced.cs` changed: no runtime
+file, nothing on A's, B's or C's paths or on the off path, so arm B stands. Every run below started after the file's
+last write (04:15:18; the sceptic compared the times). I read six of the seven verdict lines, all seven result files,
+and each log's count of profiles that did not end by themselves (none).
+
+What stands, at its rung (tested on a rig, read to the end):
+- The three runs again, on the final file: `forced_barfails3` failed, as it must (`forced_barfails3.log:1362`, three
+  problems with every switch off: BAR_DAMP, BAR_A, BAR_B); `forced_good3` passed (`forced_good3.log:12448`, 420 bars
+  judged, 0 problems, 108 of 108 profiles ended by themselves); `forced_bad3` passed because each of its eight named
+  bars failed on every case on every miner (`forced_bad3.log:15045`).
+- Known-bads that fail for the reason their bar claims: BAR_AXES_READ, rewritten to measure the boot's turn against
+  the target written (X and Y swapped: 161.7-168.8° off, against a bar of 3°; the known-good at most 2.25°), and
+  BAR_FOLLOW (the boot's drive let go on steps 10-34: at least 50.2° off, against 5°).
+- BAR_FORM's known-bad (`forced_formbad`: the riser made to write today's clamp while A is on) fails on all 9 cases,
+  so the bar catches a writer that does not write the switch's form.
+- BAR_A_SLERP and READ_C_PLAIN are readings, with the reasons in the report (off passes BAR_A_SLERP as well as A).
+- Check 3 (C) has a measure that separates: BAR_C_PIVOT, which point of the made boot stays still while the let-go
+  body's boot slackens. With C off every judged case failed (14 of 14: the ankle stayed, the shin's end moved); with C
+  on every judged case passed (21 of 21).
+
+What does not stand yet (the reviews; each found again in the report, a log or the code):
+- **No C-on run passes.** `down_c1d` and `down_c1e` each judged only 2 whirled courses on Long against their own rule
+  of 3 (`down_c1d.log:3243`), and `down_c1e` missed a going down (Long, third axis: the boot still touching after 75
+  steps, `down_c1e.log:2800`). Three courses across two runs is a union of runs, not a test.
+- **Check 3 shows C's branch, not a physical effect on a whirling boot** (the physicist, 85% sure). The slack blends
+  the made boot's pose about a pivot chosen in code, with no joint turned by the engine, so a point staying exactly
+  still shows which pivot the slack was given. The whirling boot is destroyed at the make, and plain makes separate
+  the same way. That the whirl changes the slack is assumed, not read.
+- BAR_WRAP's known-bad judges the rig's own count of raw writes outside half a turn, a different branch from B's own
+  count (`wrapViolations`): B's verdict path has not been seen to fail.
+- Empty and NaN sets could pass (old code; nothing of it in these logs): BAR_FORM counts a NaN error as no failure,
+  BAR_WRAP has no floor on the steps it judges, BAR_FOLLOW is skipped with no missed-event line when its error is
+  NaN, and one NaN hold is lost from BAR_AXES_READ's maximum.
+- BAR_AXES_READ's 3° was set after seeing sags of 1.2-1.9°; the known-good's worst is 2.25° (Round), a margin of
+  0.75°. The bars' numbers are written inline, with their units in comments only.
+- The FORCED_SET line still names the old "BAR_C 0.025 m".
+
+Not tested: the meadow's uneven ground, each miner's own ways up, the hips moving, the right boot, the toes, contact
+while forced. Nothing here is a claim about the game as played, and nothing was seen by the Game Director.
+
 ### Not tested
 - That every switch off is the old build, on courses (this test is not the same run to run).
 - Any arm but B on Small at strength 1; the forced checks as mended (see above), the idle's proof, the flows as played,
